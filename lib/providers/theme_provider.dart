@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
   Color _primaryColor = const Color(0xFFD4AF37);
-  double _textScale = 1.0;
+  double _textScale = 1.5;
 
   Color get primaryColor => _primaryColor;
   double get textScale => _textScale;

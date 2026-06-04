@@ -29,32 +29,7 @@ class MainActivity : AudioServiceActivity() {
         }
     }
 
-    override fun onNewIntent(intent: android.content.Intent) {
-        super.onNewIntent(intent)
-        when (intent.action) {
-            PlayerWidget.ACTION_PLAY_PAUSE -> {
-                val channel = io.flutter.plugin.common.MethodChannel(
-                    flutterEngine?.dartExecutor?.binaryMessenger ?: return,
-                    "com.example.mp3_player/media"
-                )
-                channel.invokeMethod("widgetPlayPause", null)
-            }
-            PlayerWidget.ACTION_NEXT -> {
-                val channel = io.flutter.plugin.common.MethodChannel(
-                    flutterEngine?.dartExecutor?.binaryMessenger ?: return,
-                    "com.example.mp3_player/media"
-                )
-                channel.invokeMethod("widgetNext", null)
-            }
-            PlayerWidget.ACTION_PREV -> {
-                val channel = io.flutter.plugin.common.MethodChannel(
-                    flutterEngine?.dartExecutor?.binaryMessenger ?: return,
-                    "com.example.mp3_player/media"
-                )
-                channel.invokeMethod("widgetPrev", null)
-            }
-        }
-    }
+
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -195,6 +170,18 @@ class MainActivity : AudioServiceActivity() {
                     )
                     for (id in ids) {
                         PlayerWidget.updateAppWidget(this, appWidgetManager, id, title, artist, isPlaying)
+                    }
+                    val ids2 = appWidgetManager.getAppWidgetIds(
+                        android.content.ComponentName(this, PlayerWidget2::class.java)
+                    )
+                    for (id in ids2) {
+                        PlayerWidget2.updateAppWidget(this, appWidgetManager, id, title, artist, isPlaying)
+                    }
+                    val ids3 = appWidgetManager.getAppWidgetIds(
+                        android.content.ComponentName(this, PlayerWidget3::class.java)
+                    )
+                    for (id in ids3) {
+                        PlayerWidget3.updateAppWidget(this, appWidgetManager, id, title, artist, isPlaying)
                     }
                     result.success(true)
                 }

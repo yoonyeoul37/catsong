@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 
-class PlayerWidget : AppWidgetProvider() {
+class PlayerWidget2 : AppWidgetProvider() {
 
     override fun onUpdate(
         context: Context,
@@ -22,10 +22,10 @@ class PlayerWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         when (intent.action) {
-            ACTION_PLAY_PAUSE, ACTION_NEXT, ACTION_PREV -> {
+            PlayerWidget.ACTION_PLAY_PAUSE, PlayerWidget.ACTION_NEXT, PlayerWidget.ACTION_PREV -> {
                 val keyCode = when (intent.action) {
-                    ACTION_PLAY_PAUSE -> android.view.KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE
-                    ACTION_NEXT -> android.view.KeyEvent.KEYCODE_MEDIA_NEXT
+                    PlayerWidget.ACTION_PLAY_PAUSE -> android.view.KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE
+                    PlayerWidget.ACTION_NEXT -> android.view.KeyEvent.KEYCODE_MEDIA_NEXT
                     else -> android.view.KeyEvent.KEYCODE_MEDIA_PREVIOUS
                 }
                 val downEvent = android.view.KeyEvent(android.view.KeyEvent.ACTION_DOWN, keyCode)
@@ -45,10 +45,6 @@ class PlayerWidget : AppWidgetProvider() {
     }
 
     companion object {
-        const val ACTION_PLAY_PAUSE = "com.example.mp3_player.PLAY_PAUSE"
-        const val ACTION_NEXT = "com.example.mp3_player.NEXT"
-        const val ACTION_PREV = "com.example.mp3_player.PREV"
-
         fun updateAppWidget(
             context: Context,
             appWidgetManager: AppWidgetManager,
@@ -57,7 +53,8 @@ class PlayerWidget : AppWidgetProvider() {
             artist: String = "음악을 재생해보세요",
             isPlaying: Boolean = false
         ) {
-            val views = RemoteViews(context.packageName, R.layout.widget_player)
+            val views = RemoteViews(context.packageName, R.layout.widget_player2)
+
             views.setTextViewText(R.id.widget_title, title)
             views.setTextViewText(R.id.widget_artist, artist)
 
@@ -76,23 +73,23 @@ class PlayerWidget : AppWidgetProvider() {
             )
             views.setOnClickPendingIntent(R.id.widget_title, openPendingIntent)
 
-            val prevIntent = Intent(ACTION_PREV).apply { setPackage(context.packageName) }
+            val prevIntent = Intent(PlayerWidget.ACTION_PREV).apply { setPackage(context.packageName) }
             val prevPendingIntent = PendingIntent.getBroadcast(
-                context, 1, prevIntent,
+                context, 4, prevIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             views.setOnClickPendingIntent(R.id.widget_prev, prevPendingIntent)
 
-            val playPauseIntent = Intent(ACTION_PLAY_PAUSE).apply { setPackage(context.packageName) }
+            val playPauseIntent = Intent(PlayerWidget.ACTION_PLAY_PAUSE).apply { setPackage(context.packageName) }
             val playPausePendingIntent = PendingIntent.getBroadcast(
-                context, 2, playPauseIntent,
+                context, 5, playPauseIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             views.setOnClickPendingIntent(R.id.widget_play_pause, playPausePendingIntent)
 
-            val nextIntent = Intent(ACTION_NEXT).apply { setPackage(context.packageName) }
+            val nextIntent = Intent(PlayerWidget.ACTION_NEXT).apply { setPackage(context.packageName) }
             val nextPendingIntent = PendingIntent.getBroadcast(
-                context, 3, nextIntent,
+                context, 6, nextIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             views.setOnClickPendingIntent(R.id.widget_next, nextPendingIntent)

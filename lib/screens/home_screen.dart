@@ -201,7 +201,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
         return Column(
           children: [
-            // 필터 + 버튼 바
             Container(
               color: AppTheme.surface,
               padding:
@@ -249,7 +248,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            // 곡 수
             Container(
               color: AppTheme.background,
               padding:
@@ -293,8 +291,7 @@ class _HomeScreenState extends State<HomeScreen> {
         padding:
             const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         decoration: BoxDecoration(
-          color:
-              isSelected ? primaryColor : AppTheme.surfaceVariant,
+          color: isSelected ? primaryColor : AppTheme.surfaceVariant,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
@@ -316,8 +313,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
           color: outlined ? Colors.transparent : primaryColor,
           borderRadius: BorderRadius.circular(20),
@@ -423,12 +419,10 @@ class _HomeScreenState extends State<HomeScreen> {
               size: 72, color: AppTheme.textHint.withOpacity(0.5)),
           const SizedBox(height: 16),
           const Text('MP3 파일이 없습니다',
-              style:
-                  TextStyle(color: AppTheme.textSecondary, fontSize: 16)),
+              style: TextStyle(color: AppTheme.textSecondary, fontSize: 16)),
           const SizedBox(height: 8),
           const Text('기기에 음악 파일을 추가해 주세요',
-              style:
-                  TextStyle(color: AppTheme.textHint, fontSize: 13)),
+              style: TextStyle(color: AppTheme.textHint, fontSize: 13)),
         ],
       ),
     );

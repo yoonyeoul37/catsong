@@ -82,5 +82,33 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
         </receiver>
+
+        <receiver
+            android:name=".PlayerWidget2"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.example.mp3_player.PLAY_PAUSE" />
+                <action android:name="com.example.mp3_player.NEXT" />
+                <action android:name="com.example.mp3_player.PREV" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info2" />
+        </receiver>
+
+        <receiver
+            android:name=".PlayerWidget3"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.example.mp3_player.PLAY_PAUSE" />
+                <action android:name="com.example.mp3_player.NEXT" />
+                <action android:name="com.example.mp3_player.PREV" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info3" />
+        </receiver>
     </application>
 </manifest>

@@ -20,6 +20,7 @@ dependencies:
   url_launcher: ^6.3.0
   video_player: ^2.9.2
   chewie: ^1.8.5
+  
 
 
 dev_dependencies:

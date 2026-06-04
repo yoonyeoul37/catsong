@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/player_provider.dart';
@@ -98,7 +99,15 @@ class ArtistScreen extends StatelessWidget {
                 ),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.person, color: primaryColor, size: 28),
+              child: artist.songs.first.albumArt != null
+    ? Image.memory(
+        Uint8List.fromList(artist.songs.first.albumArt!),
+        fit: BoxFit.cover,
+        width: 52,
+        height: 52,
+        gaplessPlayback: true,
+      )
+    : Icon(Icons.person, color: primaryColor, size: 28),
             ),
             const SizedBox(width: 14),
             Expanded(

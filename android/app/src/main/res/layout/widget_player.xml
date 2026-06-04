@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="플레이쏭"
             android:textColor="#FFFFFF"
-            android:textSize="13sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end"/>
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:text="음악을 재생해보세요"
             android:textColor="#AAAAAA"
-            android:textSize="11sp"
+            android:textSize="13sp"
             android:maxLines="1"
             android:ellipsize="end"
             android:layout_marginTop="2dp"/>

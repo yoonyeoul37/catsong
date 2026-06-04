@@ -237,11 +237,18 @@ class PlayerProvider extends ChangeNotifier {
     }
   }
 
+  bool _isChangingSong = false;
+
   Future<void> playNext() async {
+    if (_isChangingSong) return;
+    _isChangingSong = true;
     if (hasNext) await _playAtIndex(_currentIndex + 1);
+    _isChangingSong = false;
   }
 
   Future<void> playPrevious() async {
+    if (_isChangingSong) return;
+    _isChangingSong = true;
     if (_position.inSeconds > 3) {
       await _player.seek(Duration.zero);
     } else if (hasPrevious) {
@@ -249,6 +256,7 @@ class PlayerProvider extends ChangeNotifier {
     } else {
       await _player.seek(Duration.zero);
     }
+    _isChangingSong = false;
   }
 
   Future<void> seekTo(Duration position) async {
@@ -369,9 +377,11 @@ class SimpleAudioHandler extends BaseAudioHandler {
   }
 
   void updatePosition(Duration position) {
-    playbackState.add(playbackState.value.copyWith(
-      updatePosition: position,
-    ));
+    try {
+      playbackState.add(playbackState.value.copyWith(
+        updatePosition: position,
+      ));
+    } catch (e) {}
   }
 
   @override

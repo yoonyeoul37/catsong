@@ -217,7 +217,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 24),
           Center(
-            child: Text('케이넥스엠 주식회사',
+            child: Text('KNEXM.Co.,LTD',
                 style: TextStyle(color: AppTheme.textHint, fontSize: 12)),
           ),
           const SizedBox(height: 8),

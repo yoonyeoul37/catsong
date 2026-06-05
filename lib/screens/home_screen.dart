@@ -37,8 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
       final musicProvider = context.read<MusicProvider>();
       if (musicProvider.songs.isEmpty && !musicProvider.isLoading) {
         await musicProvider.initialize();
-        context.read<VideoProvider>().loadVideos();
       }
+      context.read<VideoProvider>().loadVideos();
     });
   }
 
@@ -66,35 +66,31 @@ class _HomeScreenState extends State<HomeScreen> {
 
   PreferredSizeWidget _buildAppBar(Color primaryColor) {
     return AppBar(
-      backgroundColor: AppTheme.surface,
+      backgroundColor: AppTheme.background,
       elevation: 0,
+      titleSpacing: 20,
       title: _isSearching
           ? _buildSearchField()
-          : Row(
-              children: [
-                Icon(Icons.music_note, color: primaryColor, size: 22),
-                const SizedBox(width: 8),
-                Text('플레이쏭',
-                    style: TextStyle(
-                        color: primaryColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold)),
-              ],
-            ),
+          : Text('캣송',
+          style: TextStyle(
+              color: primaryColor,
+              fontSize: 22,
+              fontWeight: FontWeight.w900,
+              letterSpacing: -0.5)),
       actions: [
         if (!_isSearching) ...[
           IconButton(
             onPressed: () => setState(() => _isSearching = true),
-            icon: const Icon(Icons.search, color: AppTheme.textPrimary),
+            icon: const Icon(Icons.search, color: AppTheme.textPrimary, size: 26),
           ),
           IconButton(
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => const SettingsScreen()),
+              MaterialPageRoute(builder: (context) => const SettingsScreen()),
             ),
-            icon: const Icon(Icons.settings, color: AppTheme.textPrimary),
+            icon: const Icon(Icons.settings_outlined, color: AppTheme.textPrimary, size: 24),
           ),
+          const SizedBox(width: 4),
         ] else
           TextButton(
             onPressed: () {
@@ -117,15 +113,13 @@ class _HomeScreenState extends State<HomeScreen> {
         hintText: '곡, 아티스트, 앨범 검색...',
         hintStyle: const TextStyle(color: AppTheme.textHint),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide.none,
         ),
         filled: true,
         fillColor: AppTheme.surfaceVariant,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        prefixIcon:
-            const Icon(Icons.search, color: AppTheme.textHint, size: 18),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        prefixIcon: const Icon(Icons.search, color: AppTheme.textHint, size: 18),
         isDense: true,
       ),
       onChanged: (value) => context.read<MusicProvider>().search(value),
@@ -154,18 +148,12 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }
         return _buildSongsTab();
-      case 1:
-        return const AlbumScreen();
-      case 2:
-        return const ArtistScreen();
-      case 3:
-        return const PlaylistScreen();
-      case 4:
-        return const FolderScreen();
-      case 5:
-        return const VideoScreen();
-      default:
-        return _buildSongsTab();
+      case 1: return const AlbumScreen();
+      case 2: return const ArtistScreen();
+      case 3: return const PlaylistScreen();
+      case 4: return const FolderScreen();
+      case 5: return const VideoScreen();
+      default: return _buildSongsTab();
     }
   }
 
@@ -187,82 +175,64 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }
 
-        if (!musicProvider.hasPermission) {
-          return _buildPermissionDeniedView(musicProvider);
-        }
-
-        if (musicProvider.errorMessage.isNotEmpty) {
-          return _buildErrorView(musicProvider);
-        }
-
-        if (musicProvider.songs.isEmpty) {
-          return _buildEmptySongsView();
-        }
+        if (!musicProvider.hasPermission) return _buildPermissionDeniedView(musicProvider);
+        if (musicProvider.errorMessage.isNotEmpty) return _buildErrorView(musicProvider);
+        if (musicProvider.songs.isEmpty) return _buildEmptySongsView();
 
         return Column(
           children: [
-            Container(
-              color: AppTheme.surface,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            // 필터 + 버튼 바
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
               child: Row(
                 children: [
-                  _buildToggleButton('전체',
-                      !_showFavorites && !_showRecent,
+                  _buildFilterChip('전체', !_showFavorites && !_showRecent,
                       Theme.of(context).colorScheme.primary),
-                  const SizedBox(width: 6),
-                  _buildToggleButton('즐겨찾기', _showFavorites,
+                  const SizedBox(width: 8),
+                  _buildFilterChip('즐겨찾기', _showFavorites,
                       Theme.of(context).colorScheme.primary),
-                  const SizedBox(width: 6),
-                  _buildToggleButton('최근', _showRecent,
+                  const SizedBox(width: 8),
+                  _buildFilterChip('최근', _showRecent,
                       Theme.of(context).colorScheme.primary),
                   const Spacer(),
-                  _buildSmallButton(
-                    Icons.play_arrow,
-                    '전체',
+                  _buildIconButton(
+                    Icons.play_circle_filled,
                     Theme.of(context).colorScheme.primary,
-                    () {
+                        () {
                       if (musicProvider.songs.isNotEmpty) {
-                        context
-                            .read<PlayerProvider>()
+                        context.read<PlayerProvider>()
                             .playFromList(musicProvider.songs, 0);
                       }
                     },
                   ),
-                  const SizedBox(width: 6),
-                  _buildSmallButton(
+                  const SizedBox(width: 8),
+                  _buildIconButton(
                     Icons.shuffle,
-                    '셔플',
-                    Theme.of(context).colorScheme.primary,
-                    () {
+                    AppTheme.textSecondary,
+                        () {
                       if (musicProvider.songs.isNotEmpty) {
-                        final songs =
-                            List.from(musicProvider.songs)..shuffle();
-                        context
-                            .read<PlayerProvider>()
+                        final songs = List.from(musicProvider.songs)..shuffle();
+                        context.read<PlayerProvider>()
                             .playFromList(songs as List<Song>, 0);
                       }
                     },
-                    outlined: true,
                   ),
                 ],
               ),
             ),
-            Container(
-              color: AppTheme.background,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: Row(
                 children: [
                   Text('${musicProvider.songCount}곡',
                       style: const TextStyle(
-                          color: AppTheme.textHint, fontSize: 11)),
+                          color: AppTheme.textHint, fontSize: 12)),
                 ],
               ),
             ),
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.only(bottom: 8),
                 itemCount: musicProvider.songs.length,
                 itemBuilder: (context, index) {
                   final songs = musicProvider.songs;
@@ -280,16 +250,15 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildToggleButton(
-      String label, bool isSelected, Color primaryColor) {
+  Widget _buildFilterChip(String label, bool isSelected, Color primaryColor) {
     return GestureDetector(
       onTap: () => setState(() {
         _showFavorites = label == '즐겨찾기';
         _showRecent = label == '최근';
       }),
-      child: Container(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
           color: isSelected ? primaryColor : AppTheme.surfaceVariant,
           borderRadius: BorderRadius.circular(20),
@@ -298,42 +267,18 @@ class _HomeScreenState extends State<HomeScreen> {
           label,
           style: TextStyle(
             color: isSelected ? Colors.black : AppTheme.textSecondary,
-            fontSize: 12,
-            fontWeight:
-                isSelected ? FontWeight.bold : FontWeight.normal,
+            fontSize: 13,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),
       ),
     );
   }
 
-  Widget _buildSmallButton(IconData icon, String label, Color primaryColor,
-      VoidCallback onTap,
-      {bool outlined = false}) {
+  Widget _buildIconButton(IconData icon, Color color, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-        decoration: BoxDecoration(
-          color: outlined ? Colors.transparent : primaryColor,
-          borderRadius: BorderRadius.circular(20),
-          border: outlined ? Border.all(color: primaryColor) : null,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon,
-                color: outlined ? primaryColor : Colors.black,
-                size: 14),
-            const SizedBox(width: 3),
-            Text(label,
-                style: TextStyle(
-                    color: outlined ? primaryColor : Colors.black,
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold)),
-          ],
-        ),
-      ),
+      child: Icon(icon, color: color, size: 32),
     );
   }
 
@@ -345,8 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.folder_off,
-                size: 72, color: primaryColor.withOpacity(0.5)),
+            Icon(Icons.folder_off, size: 72, color: primaryColor.withOpacity(0.5)),
             const SizedBox(height: 24),
             const Text('저장소 접근 권한 필요',
                 style: TextStyle(
@@ -357,17 +301,14 @@ class _HomeScreenState extends State<HomeScreen> {
             const Text('MP3 파일을 스캔하려면\n저장소 접근 권한이 필요합니다.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: AppTheme.textSecondary,
-                    fontSize: 14,
-                    height: 1.6)),
+                    color: AppTheme.textSecondary, fontSize: 14, height: 1.6)),
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () => musicProvider.initialize(),
               style: ElevatedButton.styleFrom(
                 backgroundColor: primaryColor,
                 foregroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 32, vertical: 14),
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30)),
               ),
@@ -387,8 +328,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline,
-                size: 64, color: Colors.redAccent),
+            const Icon(Icons.error_outline, size: 64, color: Colors.redAccent),
             const SizedBox(height: 16),
             Text(musicProvider.errorMessage,
                 textAlign: TextAlign.center,
@@ -398,8 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               onPressed: () => musicProvider.initialize(),
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    Theme.of(context).colorScheme.primary,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 foregroundColor: Colors.black,
               ),
               child: const Text('다시 시도'),
@@ -415,8 +354,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.music_off,
-              size: 72, color: AppTheme.textHint.withOpacity(0.5)),
+          Icon(Icons.music_off, size: 72, color: AppTheme.textHint.withOpacity(0.5)),
           const SizedBox(height: 16),
           const Text('MP3 파일이 없습니다',
               style: TextStyle(color: AppTheme.textSecondary, fontSize: 16)),
@@ -432,25 +370,20 @@ class _HomeScreenState extends State<HomeScreen> {
     return BottomNavigationBar(
       currentIndex: _currentTabIndex,
       onTap: (index) => setState(() => _currentTabIndex = index),
-      backgroundColor: AppTheme.surface,
+      backgroundColor: const Color(0xFF0A0A0A),
       selectedItemColor: primaryColor,
       unselectedItemColor: AppTheme.textHint,
       type: BottomNavigationBarType.fixed,
-      selectedFontSize: 11,
-      unselectedFontSize: 11,
+      selectedFontSize: 10,
+      unselectedFontSize: 10,
+      elevation: 0,
       items: const [
-        BottomNavigationBarItem(
-            icon: Icon(Icons.music_note), label: '곡'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.album), label: '앨범'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.person), label: '아티스트'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.playlist_play), label: '재생목록'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.folder), label: '폴더'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.video_library), label: '동영상'),
+        BottomNavigationBarItem(icon: Icon(Icons.music_note), label: '곡'),
+        BottomNavigationBarItem(icon: Icon(Icons.album), label: '앨범'),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: '아티스트'),
+        BottomNavigationBarItem(icon: Icon(Icons.playlist_play), label: '재생목록'),
+        BottomNavigationBarItem(icon: Icon(Icons.folder), label: '폴더'),
+        BottomNavigationBarItem(icon: Icon(Icons.video_library), label: '동영상'),
       ],
     );
   }

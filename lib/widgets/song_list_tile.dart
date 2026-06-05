@@ -41,7 +41,7 @@ class SongListTile extends StatelessWidget {
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-                const PlayerScreen(),
+            const PlayerScreen(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               return SlideTransition(
@@ -59,19 +59,13 @@ class SongListTile extends StatelessWidget {
           ),
         );
       },
-      borderRadius: BorderRadius.circular(8),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
-          color: isCurrentSong
-              ? primaryColor.withOpacity(0.08)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        color: Colors.transparent,
         child: Row(
           children: [
             _buildAlbumArt(isCurrentSong, playerProvider, primaryColor),
-            const SizedBox(width: 12),
+            const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,20 +73,22 @@ class SongListTile extends StatelessWidget {
                   Text(
                     song.titleDisplay,
                     style: TextStyle(
-                      color: isCurrentSong ? primaryColor : AppTheme.textPrimary,
-                      fontSize: 14,
-                      fontWeight: isCurrentSong
-                          ? FontWeight.w600
-                          : FontWeight.normal,
+                      color: isCurrentSong ? primaryColor : Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    '${song.artistDisplay} • ${song.albumDisplay}',
-                    style: const TextStyle(
-                        color: AppTheme.textSecondary, fontSize: 12),
+                    song.artistDisplay,
+                    style: TextStyle(
+                      color: isCurrentSong
+                          ? primaryColor.withOpacity(0.7)
+                          : Colors.white38,
+                      fontSize: 13,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -103,14 +99,14 @@ class SongListTile extends StatelessWidget {
             Text(
               song.durationFormatted,
               style: TextStyle(
-                color: isCurrentSong ? primaryColor : AppTheme.textHint,
+                color: isCurrentSong ? primaryColor : Colors.white30,
                 fontSize: 12,
               ),
             ),
             PopupMenuButton<String>(
               icon: Icon(Icons.more_vert,
-                  color: isCurrentSong ? primaryColor : AppTheme.textHint,
-                  size: 18),
+                  color: isCurrentSong ? primaryColor : Colors.white30,
+                  size: 20),
               color: AppTheme.surfaceVariant,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
@@ -143,41 +139,39 @@ class SongListTile extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(4),
           child: song.albumArt != null
               ? Image.memory(
-                  Uint8List.fromList(song.albumArt!),
-                  width: 48,
-                  height: 48,
-                  fit: BoxFit.cover,
-                  gaplessPlayback: true,
-                  cacheWidth: 48,
-                  cacheHeight: 48,
-                )
+            Uint8List.fromList(song.albumArt!),
+            width: 52,
+            height: 52,
+            fit: BoxFit.cover,
+            gaplessPlayback: true,
+            cacheWidth: 52,
+            cacheHeight: 52,
+          )
               : Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: AppTheme.surfaceVariant,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Icon(Icons.music_note,
-                      color: primaryColor.withOpacity(0.6), size: 24),
-                ),
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              color: const Color(0xFF282828),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: const Icon(Icons.music_note,
+                color: Colors.white38, size: 24),
+          ),
         ),
         if (isCurrentSong)
           Container(
-            width: 48,
-            height: 48,
+            width: 52,
+            height: 52,
             decoration: BoxDecoration(
               color: Colors.black54,
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(4),
             ),
-            child: Icon(
-              playerProvider.isPlaying ? Icons.equalizer : Icons.pause,
-              color: primaryColor,
-              size: 20,
-            ),
+            child: playerProvider.isPlaying
+                ? _EqualizerAnimation(color: primaryColor)
+                : Icon(Icons.pause, color: primaryColor, size: 22),
           ),
       ],
     );
@@ -209,7 +203,7 @@ class SongListTile extends StatelessWidget {
         playerProvider.addToPlayNext(song);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('다음에 재생됩니다'),
+            content: const Text('다음에 재생됩니다'),
             backgroundColor: AppTheme.surfaceVariant,
             duration: const Duration(seconds: 2),
           ),
@@ -271,37 +265,35 @@ class SongListTile extends StatelessWidget {
             style: TextStyle(color: AppTheme.textPrimary)),
         content: playlistProvider.playlists.isEmpty
             ? const Text('재생목록이 없습니다.\n재생목록 탭에서 먼저 만들어주세요.',
-                style: TextStyle(color: AppTheme.textSecondary))
+            style: TextStyle(color: AppTheme.textSecondary))
             : SizedBox(
-                width: double.maxFinite,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: playlistProvider.playlists.length,
-                  itemBuilder: (context, index) {
-                    final playlist = playlistProvider.playlists[index];
-                    return ListTile(
-                      leading: Icon(Icons.playlist_play, color: primaryColor),
-                      title: Text(playlist.name,
-                          style:
-                              const TextStyle(color: AppTheme.textPrimary)),
-                      subtitle: Text('${playlist.songCount}곡',
-                          style: const TextStyle(
-                              color: AppTheme.textSecondary)),
-                      onTap: () {
-                        playlistProvider.addSongToPlaylist(playlist.id, song);
-                        Navigator.pop(ctx);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${playlist.name}에 추가됐습니다'),
-                            backgroundColor: AppTheme.surfaceVariant,
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
+          width: double.maxFinite,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: playlistProvider.playlists.length,
+            itemBuilder: (context, index) {
+              final playlist = playlistProvider.playlists[index];
+              return ListTile(
+                leading: Icon(Icons.playlist_play, color: primaryColor),
+                title: Text(playlist.name,
+                    style: const TextStyle(color: AppTheme.textPrimary)),
+                subtitle: Text('${playlist.songCount}곡',
+                    style: const TextStyle(color: AppTheme.textSecondary)),
+                onTap: () {
+                  playlistProvider.addSongToPlaylist(playlist.id, song);
+                  Navigator.pop(ctx);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${playlist.name}에 추가됐습니다'),
+                      backgroundColor: AppTheme.surfaceVariant,
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
@@ -428,6 +420,68 @@ class SongListTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis),
         ],
       ),
+    );
+  }
+}
+
+class _EqualizerAnimation extends StatefulWidget {
+  final Color color;
+  const _EqualizerAnimation({required this.color});
+
+  @override
+  State<_EqualizerAnimation> createState() => _EqualizerAnimationState();
+}
+
+class _EqualizerAnimationState extends State<_EqualizerAnimation>
+    with TickerProviderStateMixin {
+  late List<AnimationController> _controllers;
+  late List<Animation<double>> _animations;
+
+  @override
+  void initState() {
+    super.initState();
+    _controllers = List.generate(3, (i) {
+      return AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 400 + i * 150),
+      )..repeat(reverse: true);
+    });
+    _animations = _controllers.map((c) {
+      return Tween<double>(begin: 0.3, end: 1.0).animate(
+        CurvedAnimation(parent: c, curve: Curves.easeInOut),
+      );
+    }).toList();
+  }
+
+  @override
+  void dispose() {
+    for (final c in _controllers) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: List.generate(3, (i) {
+        return AnimatedBuilder(
+          animation: _animations[i],
+          builder: (context, child) {
+            return Container(
+              width: 3,
+              height: 6 + (12 * _animations[i].value),
+              margin: const EdgeInsets.symmetric(horizontal: 1.5),
+              decoration: BoxDecoration(
+                color: widget.color,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 }

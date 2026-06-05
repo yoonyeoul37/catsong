@@ -21,9 +21,8 @@ dependencies:
   video_player: ^2.9.2
   chewie: ^1.8.5
   share_plus: ^10.0.0
-  
-
-
+  flutter_colorpicker: ^1.1.0
+  google_fonts: ^8.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -43,3 +42,4 @@ flutter:
   assets:
     - assets/play_song.png
     - assets/icon_no_bg.png
+    - assets/cat.png

@@ -38,6 +38,7 @@ class VideoProvider extends ChangeNotifier {
       foundVideos.sort((a, b) => a.title.compareTo(b.title));
       _videos = foundVideos;
       debugPrint('비디오 스캔 완료: ${_videos.length}개');
+      debugPrint('비디오 목록: ${foundVideos.map((v) => v.title).toList()}');
     } catch (e) {
       _errorMessage = '비디오 스캔 오류: $e';
       debugPrint('비디오 스캔 오류: $e');

@@ -4,8 +4,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:torch_light/torch_light.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter/services.dart';
 import '../providers/theme_provider.dart';
+import 'package:provider/provider.dart';
 import '../theme/app_theme.dart';
 import 'ringtone_screen.dart';
 
@@ -70,6 +72,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: '텍스트 크기',
                 subtitle: '앱 전체 텍스트 크기 조절',
                 onTap: () => _showTextSizeDialog(context),
+                primaryColor: primaryColor,
+              ),
+              _buildTileDivider(),
+              _buildTile(
+                context,
+                icon: Icons.font_download_outlined,
+                title: '폰트 변경',
+                subtitle: '앱 전체 폰트 변경',
+                onTap: () => _showFontDialog(context),
                 primaryColor: primaryColor,
               ),
               _buildTileDivider(),
@@ -636,6 +647,96 @@ void _showPlayerStyleDialog(BuildContext context) async {
     );
   }
 
+  void _showFontDialog(BuildContext context) {
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    final themeProvider = context.read<ThemeProvider>();
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: AppTheme.surfaceVariant,
+          title: Row(
+            children: [
+              Icon(Icons.font_download, color: primaryColor, size: 20),
+              const SizedBox(width: 8),
+              const Text('폰트 변경',
+                  style: TextStyle(
+                      color: AppTheme.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold)),
+            ],
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: ThemeProvider.availableFonts.length,
+              itemBuilder: (context, index) {
+                final font = ThemeProvider.availableFonts[index];
+                final isSelected = themeProvider.fontFamily == font['key'];
+                return InkWell(
+                  onTap: () {
+                    themeProvider.setFontFamily(font['key']!);
+                    setDialogState(() {});
+                    Navigator.pop(ctx);
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? primaryColor.withOpacity(0.15)
+                          : AppTheme.background,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isSelected
+                            ? primaryColor
+                            : Colors.transparent,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.font_download,
+                            color: isSelected
+                                ? primaryColor
+                                : AppTheme.textHint,
+                            size: 22),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(font['name']!,
+                              style: TextStyle(
+                                  color: isSelected
+                                      ? primaryColor
+                                      : AppTheme.textPrimary,
+                                  fontSize: 14,
+                                  fontWeight: isSelected
+                                      ? FontWeight.bold
+                                      : FontWeight.normal)),
+                        ),
+                        if (isSelected)
+                          Icon(Icons.check_circle,
+                              color: primaryColor, size: 20),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text('닫기', style: TextStyle(color: primaryColor)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Future<void> _launchUrl(String url) async {
   final uri = Uri.parse(url);
   try {
@@ -648,23 +749,7 @@ void _showPlayerStyleDialog(BuildContext context) async {
   void _showColorPicker(BuildContext context) {
     final themeProvider = context.read<ThemeProvider>();
     final primaryColor = Theme.of(context).colorScheme.primary;
-    final List<Map<String, dynamic>> presetColors = [
-      {'name': '샴페인 골드', 'color': const Color(0xFFD4AF37)},
-      {'name': '로즈 골드', 'color': const Color(0xFFB76E79)},
-      {'name': '블루', 'color': const Color(0xFF2196F3)},
-      {'name': '퍼플', 'color': const Color(0xFF9C27B0)},
-      {'name': '그린', 'color': const Color(0xFF4CAF50)},
-      {'name': '레드', 'color': const Color(0xFFF44336)},
-      {'name': '오렌지', 'color': const Color(0xFFFF9800)},
-      {'name': '민트', 'color': const Color(0xFF00BCD4)},
-    ];
-
-    final hexController = TextEditingController(
-      text: themeProvider.primaryColor.value
-          .toRadixString(16)
-          .substring(2)
-          .toUpperCase(),
-    );
+    Color pickerColor = themeProvider.primaryColor;
 
     showDialog(
       context: context,
@@ -690,56 +775,58 @@ void _showPlayerStyleDialog(BuildContext context) async {
                   ],
                 ),
                 const SizedBox(height: 16),
+                ColorPicker(
+                  pickerColor: pickerColor,
+                  onColorChanged: (color) {
+                    setDialogState(() => pickerColor = color);
+                  },
+                  colorPickerWidth: 280,
+                  pickerAreaHeightPercent: 0.7,
+                  enableAlpha: false,
+                  displayThumbColor: true,
+                  paletteType: PaletteType.hsvWithHue,
+                  labelTypes: const [],
+                  pickerAreaBorderRadius: BorderRadius.circular(12),
+                ),
+                const SizedBox(height: 16),
+                // 프리셋 색상
                 Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  children: presetColors.map((item) {
-                    final isSelected =
-                        themeProvider.primaryColor == item['color'];
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    const Color(0xFFD4AF37),
+                    const Color(0xFFB76E79),
+                    const Color(0xFF2196F3),
+                    const Color(0xFF9C27B0),
+                    const Color(0xFF4CAF50),
+                    const Color(0xFFF44336),
+                    const Color(0xFFFF9800),
+                    const Color(0xFF00BCD4),
+                    const Color(0xFFFFFFFF),
+                    const Color(0xFFFF69B4),
+                  ].map((color) {
+                    final isSelected = pickerColor == color;
                     return GestureDetector(
                       onTap: () {
-                        themeProvider.setPrimaryColor(item['color']);
-                        hexController.text = (item['color'] as Color)
-                            .value
-                            .toRadixString(16)
-                            .substring(2)
-                            .toUpperCase();
-                        setDialogState(() {});
+                        setDialogState(() => pickerColor = color);
                       },
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 44,
-                            height: 44,
-                            decoration: BoxDecoration(
-                              color: item['color'],
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: isSelected
-                                    ? Colors.white
-                                    : Colors.transparent,
-                                width: 3,
-                              ),
-                              boxShadow: isSelected
-                                  ? [
-                                      BoxShadow(
-                                          color: (item['color'] as Color)
-                                              .withOpacity(0.5),
-                                          blurRadius: 8)
-                                    ]
-                                  : null,
-                            ),
-                            child: isSelected
-                                ? const Icon(Icons.check,
-                                    color: Colors.white, size: 20)
-                                : null,
+                      child: Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: color,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isSelected ? Colors.white : Colors.transparent,
+                            width: 3,
                           ),
-                          const SizedBox(height: 4),
-                          Text(item['name'],
-                              style: const TextStyle(
-                                  color: AppTheme.textSecondary,
-                                  fontSize: 9)),
-                        ],
+                          boxShadow: isSelected
+                              ? [BoxShadow(color: color.withOpacity(0.5), blurRadius: 8)]
+                              : null,
+                        ),
+                        child: isSelected
+                            ? const Icon(Icons.check, color: Colors.black, size: 18)
+                            : null,
                       ),
                     );
                   }).toList(),
@@ -747,68 +834,36 @@ void _showPlayerStyleDialog(BuildContext context) async {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    const Text('#',
-                        style: TextStyle(
-                            color: AppTheme.textPrimary,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold)),
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.pop(ctx),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppTheme.textHint,
+                          side: const BorderSide(color: AppTheme.divider),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                        child: const Text('취소'),
+                      ),
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: TextField(
-                        controller: hexController,
-                        style: const TextStyle(color: AppTheme.textPrimary),
-                        maxLength: 6,
-                        decoration: InputDecoration(
-                          hintText: 'D4AF37',
-                          hintStyle:
-                              const TextStyle(color: AppTheme.textHint),
-                          counterText: '',
-                          filled: true,
-                          fillColor: AppTheme.background,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide.none,
-                          ),
-                          isDense: true,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          themeProvider.setPrimaryColor(pickerColor);
+                          Navigator.pop(ctx);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: pickerColor,
+                          foregroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
                         ),
+                        child: const Text('적용',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    ElevatedButton(
-                      onPressed: () {
-                        try {
-                          final hex = hexController.text.trim();
-                          if (hex.length == 6) {
-                            final color =
-                                Color(int.parse('FF$hex', radix: 16));
-                            themeProvider.setPrimaryColor(color);
-                            setDialogState(() {});
-                          }
-                        } catch (e) {}
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: primaryColor,
-                        foregroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                      child: const Text('적용'),
                     ),
                   ],
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.pop(ctx),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                    ),
-                    child: const Text('닫기'),
-                  ),
                 ),
               ],
             ),

@@ -39,6 +39,8 @@ class Song {
 
   String get titleDisplay => title.isEmpty ? '제목 없음' : title;
 
+  
+
   @override
   bool operator ==(Object other) => other is Song && id == other.id;
 

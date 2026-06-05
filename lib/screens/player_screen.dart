@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/song.dart';
 import '../providers/player_provider.dart';
 import '../providers/music_provider.dart';
 import '../providers/lyrics_provider.dart';
@@ -25,6 +27,7 @@ class _PlayerScreenState extends State<PlayerScreen>
   late AnimationController _rotationController;
   late AnimationController _equalizerController;
   int _albumArtStyle = 1;
+  Color _dominantColor = const Color(0xFF1A1A1A);
 
   @override
   void initState() {
@@ -48,7 +51,11 @@ class _PlayerScreenState extends State<PlayerScreen>
           currentSong.artistDisplay,
           filePath: currentSong.uri,
         );
+        _extractColor(currentSong);
       }
+      playerProvider.onSongChanged = (song) {
+        _extractColor(song);
+      };
     });
   }
 
@@ -64,12 +71,61 @@ class _PlayerScreenState extends State<PlayerScreen>
     await prefs.setInt('albumArtStyle', style);
   }
 
+  Future<void> _extractColor(Song song) async {
+    if (song.albumArt == null) {
+      setState(() => _dominantColor = const Color(0xFF1A1A1A));
+      return;
+    }
+    try {
+      final codec = await instantiateImageCodec(
+        Uint8List.fromList(song.albumArt!),
+        targetWidth: 20,
+        targetHeight: 20,
+      );
+      final frame = await codec.getNextFrame();
+      final byteData = await frame.image.toByteData();
+      if (byteData != null) {
+        int totalR = 0, totalG = 0, totalB = 0;
+        int pixelCount = 0;
+        for (int i = 0; i < byteData.lengthInBytes; i += 4) {
+          totalR += byteData.getUint8(i);
+          totalG += byteData.getUint8(i + 1);
+          totalB += byteData.getUint8(i + 2);
+          pixelCount++;
+        }
+        if (pixelCount > 0) {
+          final r = (totalR / pixelCount).toInt();
+          final g = (totalG / pixelCount).toInt();
+          final b = (totalB / pixelCount).toInt();
+          // 너무 어두우면 기본 색상 사용
+          final brightness = (r * 0.299 + g * 0.587 + b * 0.114);
+          if (brightness < 30) {
+            setState(() => _dominantColor = const Color(0xFF2A2A2A));
+          } else {
+            setState(() {
+              _dominantColor = Color.fromRGBO(
+                (r * 0.5).toInt(),
+                (g * 0.5).toInt(),
+                (b * 0.5).toInt(),
+                1,
+              );
+            });
+          }
+        }
+      }
+    } catch (e) {
+      setState(() => _dominantColor = const Color(0xFF1A1A1A));
+    }
+  }
+
   @override
   void dispose() {
     _rotationController.dispose();
     _equalizerController.dispose();
     super.dispose();
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -111,9 +167,28 @@ class _PlayerScreenState extends State<PlayerScreen>
 
     return Scaffold(
       backgroundColor: AppTheme.background,
-      body: SafeArea(
-        bottom: false,
-        child: Column(
+      body: Stack(
+        children: [
+          // 블러 배경
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 800),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  _dominantColor.withOpacity(0.8),
+                  _dominantColor.withOpacity(0.4),
+                  AppTheme.background,
+                  AppTheme.background,
+                ],
+                stops: const [0.0, 0.3, 0.6, 1.0],
+              ),
+            ),
+          ),
+          SafeArea(
+            bottom: false,
+            child: Column(
           children: [
             _buildTopBar(context, playerProvider, primaryColor),
             Expanded(flex: 5, child: _buildAlbumArt(song, primaryColor)),
@@ -125,6 +200,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                     context, playerProvider, musicProvider, song, primaryColor)),
           ],
         ),
+          ),
+        ],
       ),
     );
   }
@@ -210,7 +287,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
   }
 
-  Widget _buildAlbumArt(song, Color primaryColor) {
+  Widget _buildAlbumArt(Song song, Color primaryColor) {
     switch (_albumArtStyle) {
       case 2: return _buildCassetteStyle(song, primaryColor);
       case 3: return _buildCardStyle(song, primaryColor);
@@ -220,13 +297,16 @@ class _PlayerScreenState extends State<PlayerScreen>
     }
   }
 
-  Widget _buildCDStyle(song, Color primaryColor) {
+  Widget _buildCDStyle(Song song, Color primaryColor) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 48),
       child: Center(
-        child: AspectRatio(
-          aspectRatio: 1,
-          child: AnimatedBuilder(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            AspectRatio(
+              aspectRatio: 1,
+              child: AnimatedBuilder(
             animation: _rotationController,
             builder: (context, child) {
               return Transform.rotate(
@@ -265,22 +345,22 @@ class _PlayerScreenState extends State<PlayerScreen>
                       gaplessPlayback: true,
                     )
                         : Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            AppTheme.surfaceVariant,
-                            primaryColor.withOpacity(0.3),
-                          ],
-                        ),
-                      ),
-                      child: Center(
-                        child: Icon(Icons.music_note,
-                            color: primaryColor.withOpacity(0.7),
-                            size: 60),
-                      ),
-                    ),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  AppTheme.surfaceVariant,
+                                  primaryColor.withOpacity(0.3),
+                                ],
+                              ),
+                            ),
+                            child: Center(
+                              child: Icon(Icons.music_note,
+                                  color: primaryColor.withOpacity(0.7),
+                                  size: 60),
+                            ),
+                          ),
                   ),
                 ),
                 Container(
@@ -299,11 +379,18 @@ class _PlayerScreenState extends State<PlayerScreen>
             ),
           ),
         ),
+            // 고양이 흔들흔들
+            Positioned(
+              top: 0,
+              child: _CatDanceAnimation(),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildCassetteStyle(song, Color primaryColor) {
+  Widget _buildCassetteStyle(Song song, Color primaryColor) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Center(
@@ -324,39 +411,34 @@ class _PlayerScreenState extends State<PlayerScreen>
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    // 앨범아트 배경
                     Positioned(
-                      top: 20,
-                      left: 20,
-                      right: 20,
-                      bottom: 25,
+                      top: 20, left: 20, right: 20, bottom: 25,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: song.albumArt != null
                             ? Image.memory(
-                                Uint8List.fromList(song.albumArt!),
-                                fit: BoxFit.cover,
-                                gaplessPlayback: true,
-                              )
+                          Uint8List.fromList(song.albumArt!),
+                          fit: BoxFit.cover,
+                          gaplessPlayback: true,
+                        )
                             : Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      AppTheme.surfaceVariant,
-                                      primaryColor.withOpacity(0.3),
-                                    ],
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Icon(Icons.music_note,
-                                      color: primaryColor, size: 30),
-                                ),
-                              ),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              AppTheme.surfaceVariant,
+                              primaryColor.withOpacity(0.3),
+                            ],
+                          ),
+                        ),
+                        child: Center(
+                          child: Icon(Icons.music_note,
+                              color: primaryColor, size: 30),
+                        ),
+                      ),
                       ),
                     ),
-                    // 상단 테이프 줄
                     Positioned(
                       top: 8, left: 8, right: 8,
                       child: Container(
@@ -367,17 +449,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                         ),
                       ),
                     ),
-                    // 왼쪽 릴
-                    Positioned(
-                      left: 30,
-                      child: _buildReel(primaryColor, song),
-                    ),
-                    // 오른쪽 릴
-                    Positioned(
-                      right: 30,
-                      child: _buildReel(primaryColor, song),
-                    ),
-                    // 테이프 창
+                    Positioned(left: 30, child: _buildReel(primaryColor, song)),
+                    Positioned(right: 30, child: _buildReel(primaryColor, song)),
                     Container(
                       width: 80,
                       height: 20,
@@ -387,16 +460,14 @@ class _PlayerScreenState extends State<PlayerScreen>
                         border: Border.all(color: primaryColor.withOpacity(0.5)),
                       ),
                     ),
-                    // 하단 레이블
                     Positioned(
                       bottom: 6,
                       child: Text(
                         song.titleDisplay,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            shadows: [Shadow(color: Colors.black, blurRadius: 4)]),
+                            fontWeight: FontWeight.bold),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -411,7 +482,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
   }
 
-  Widget _buildReel(Color primaryColor, song) {
+  Widget _buildReel(Color primaryColor, Song song) {
     return AnimatedBuilder(
       animation: _rotationController,
       builder: (context, child) {
@@ -454,7 +525,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
   }
 
-  Widget _buildCardStyle(song, Color primaryColor) {
+  Widget _buildCardStyle(Song song, Color primaryColor) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Center(
@@ -462,10 +533,7 @@ class _PlayerScreenState extends State<PlayerScreen>
           animation: _rotationController,
           builder: (context, child) {
             final scale = _rotationController.isAnimating ? 1.03 : 1.0;
-            return Transform.scale(
-              scale: scale,
-              child: child,
-            );
+            return Transform.scale(scale: scale, child: child);
           },
           child: Container(
             decoration: BoxDecoration(
@@ -489,21 +557,22 @@ class _PlayerScreenState extends State<PlayerScreen>
                   gaplessPlayback: true,
                 )
                     : Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        AppTheme.surfaceVariant,
-                        primaryColor.withOpacity(0.3),
-                      ],
-                    ),
-                  ),
-                  child: Center(
-                    child: Icon(Icons.music_note,
-                        color: primaryColor.withOpacity(0.7), size: 80),
-                  ),
-                ),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              AppTheme.surfaceVariant,
+                              primaryColor.withOpacity(0.3),
+                            ],
+                          ),
+                        ),
+                        child: Center(
+                          child: Icon(Icons.music_note,
+                              color: primaryColor.withOpacity(0.7),
+                              size: 80),
+                        ),
+                      ),
               ),
             ),
           ),
@@ -512,7 +581,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
   }
 
-  Widget _buildVisualizerStyle(song, Color primaryColor) {
+  Widget _buildVisualizerStyle(Song song, Color primaryColor) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 48),
       child: Center(
@@ -545,17 +614,19 @@ class _PlayerScreenState extends State<PlayerScreen>
                     gaplessPlayback: true,
                   )
                       : Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          AppTheme.surfaceVariant,
-                          primaryColor.withOpacity(0.3),
-                        ],
-                      ),
-                    ),
-                    child: Icon(Icons.music_note,
-                        color: primaryColor.withOpacity(0.7), size: 60),
-                  ),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                AppTheme.surfaceVariant,
+                                primaryColor.withOpacity(0.3),
+                              ],
+                            ),
+                          ),
+                          child: Center(
+                            child: Icon(Icons.music_note,
+                                color: primaryColor.withOpacity(0.7), size: 60),
+                          ),
+                        ),
                 ),
               ),
             ],
@@ -565,7 +636,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
   }
 
-  Widget _buildGradientStyle(song, Color primaryColor) {
+  Widget _buildGradientStyle(Song song, Color primaryColor) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Center(
@@ -712,11 +783,11 @@ class _PlayerScreenState extends State<PlayerScreen>
   }
 
   Widget _buildControls(BuildContext context, PlayerProvider playerProvider,
-      MusicProvider musicProvider, song, Color primaryColor) {
+      MusicProvider musicProvider, Song song, Color primaryColor) {
     final isFav = musicProvider.isFavorite(song.id);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+      padding: const EdgeInsets.fromLTRB(28, 4, 28, 0),
       child: Column(
         children: [
           Row(
@@ -728,8 +799,9 @@ class _PlayerScreenState extends State<PlayerScreen>
                     Text(song.titleDisplay,
                         style: const TextStyle(
                             color: AppTheme.textPrimary,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -0.5),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis),
                     const SizedBox(height: 4),
@@ -887,7 +959,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
   }
 
-  void _showAddToPlaylistDialog(BuildContext context, song, Color primaryColor) {
+  void _showAddToPlaylistDialog(BuildContext context, Song song, Color primaryColor) {
     final playlistProvider = context.read<PlaylistProvider>();
     showDialog(
       context: context,
@@ -1544,6 +1616,54 @@ class _SpeedDialogState extends State<_SpeedDialog> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _CatDanceAnimation extends StatefulWidget {
+  const _CatDanceAnimation();
+
+  @override
+  State<_CatDanceAnimation> createState() => _CatDanceAnimationState();
+}
+
+class _CatDanceAnimationState extends State<_CatDanceAnimation>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    )..repeat(reverse: true);
+    _animation = Tween<double>(begin: -0.15, end: 0.15).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Transform.rotate(
+          angle: _animation.value,
+          child: Image.asset(
+            'assets/cat.png',
+            width: 60,
+            height: 60,
+          ),
+        );
+      },
     );
   }
 }

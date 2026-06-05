@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static const Color background = Color(0xFF0A0A0A);
-  static const Color surface = Color(0xFF141414);
-  static const Color surfaceVariant = Color(0xFF1E1E1E);
+  static const Color background = Color(0xFF000000);
+  static const Color surface = Color(0xFF121212);
+  static const Color surfaceVariant = Color(0xFF1A1A1A);
   static const Color cardColor = Color(0xFF1A1A1A);
   static const Color champagneGold = Color(0xFFD4AF37);
   static const Color champagneGoldLight = Color(0xFFE8C84A);
   static const Color champagneGoldDark = Color(0xFFB8960C);
   static const Color textPrimary = Color(0xFFFFFFFF);
-  static const Color textSecondary = Color(0xFFAAAAAA);
-  static const Color textHint = Color(0xFF666666);
-  static const Color divider = Color(0xFF2A2A2A);
+  static const Color textSecondary = Color(0xFFB3B3B3);
+  static const Color textHint = Color(0xFF535353);
+  static const Color divider = Color(0xFF282828);
   static const Color iconColor = Color(0xFFCCCCCC);
 
   static ThemeData buildTheme(Color primaryColor) {

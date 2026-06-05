@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/folder.dart';
+import '../models/song.dart';
 import '../providers/music_provider.dart';
 import '../providers/player_provider.dart';
 import '../theme/app_theme.dart';
@@ -17,29 +18,22 @@ class FolderScreen extends StatelessWidget {
 
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
-          floating: true,
-          snap: true,
-          backgroundColor: AppTheme.background,
-          expandedHeight: 80 * MediaQuery.of(context).textScaler.scale(1.0),
-          flexibleSpace: FlexibleSpaceBar(
-            background: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('폴더',
-                        style: TextStyle(
-                            color: AppTheme.textPrimary,
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold)),
-                    Text('${folders.length}개',
-                        style: const TextStyle(
-                            color: AppTheme.textSecondary, fontSize: 13)),
-                  ],
-                ),
-              ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Row(
+              children: [
+                const Text('폴더',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.5)),
+                const SizedBox(width: 8),
+                Text('${folders.length}',
+                    style: const TextStyle(
+                        color: Colors.white38, fontSize: 16)),
+              ],
             ),
           ),
         ),
@@ -64,7 +58,7 @@ class FolderScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
-                (context, index) {
+                    (context, index) {
                   return _buildFolderTile(context, folders[index], primaryColor);
                 },
                 childCount: folders.length,
@@ -86,43 +80,38 @@ class FolderScreen extends StatelessWidget {
           ),
         );
       },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           children: [
             Container(
-              width: 52,
-              height: 52,
+              width: 56,
+              height: 56,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppTheme.surfaceVariant,
-                    primaryColor.withOpacity(0.2),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(8),
+                color: const Color(0xFF282828),
+                borderRadius: BorderRadius.circular(4),
               ),
               child: Icon(Icons.folder, color: primaryColor, size: 28),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(folder.name,
                       style: const TextStyle(
-                          color: AppTheme.textPrimary,
+                          color: Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.w500)),
                   const SizedBox(height: 3),
                   Text('${folder.songCount}곡',
                       style: const TextStyle(
-                          color: AppTheme.textSecondary, fontSize: 12)),
+                          color: Colors.white38, fontSize: 12)),
                 ],
               ),
             ),
-            const Icon(Icons.arrow_forward_ios,
-                color: AppTheme.textHint, size: 14),
+            const Icon(Icons.chevron_right,
+                color: Colors.white24, size: 20),
           ],
         ),
       ),
@@ -132,7 +121,6 @@ class FolderScreen extends StatelessWidget {
 
 class FolderDetailScreen extends StatelessWidget {
   final MusicFolder folder;
-
   const FolderDetailScreen({super.key, required this.folder});
 
   @override
@@ -143,43 +131,112 @@ class FolderDetailScreen extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 160,
+            expandedHeight: 220,
             pinned: true,
             backgroundColor: AppTheme.background,
             leading: IconButton(
               onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back_ios,
-                  color: AppTheme.textPrimary),
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
             ),
             flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      primaryColor.withOpacity(0.3),
-                      AppTheme.background,
-                    ],
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          primaryColor.withOpacity(0.5),
+                          primaryColor.withOpacity(0.2),
+                          AppTheme.background,
+                        ],
+                        stops: const [0.0, 0.5, 1.0],
+                      ),
+                    ),
                   ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 40),
-                    Icon(Icons.folder,
-                        color: primaryColor.withOpacity(0.8), size: 60),
-                    const SizedBox(height: 8),
-                    Text(folder.name,
-                        style: const TextStyle(
-                            color: AppTheme.textPrimary,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold)),
-                    Text('${folder.songCount}곡',
-                        style: const TextStyle(
-                            color: AppTheme.textSecondary, fontSize: 14)),
-                  ],
-                ),
+                  Positioned(
+                    bottom: 16,
+                    left: 16,
+                    right: 16,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 72,
+                          height: 72,
+                          decoration: BoxDecoration(
+                            color: primaryColor.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(Icons.folder,
+                              color: primaryColor, size: 40),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(folder.name,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: -0.5)),
+                        const SizedBox(height: 4),
+                        Text('${folder.songCount}곡',
+                            style: const TextStyle(
+                                color: Colors.white60, fontSize: 13)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        context.read<PlayerProvider>()
+                            .playFromList(folder.songs, 0);
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        foregroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                      ),
+                      icon: const Icon(Icons.play_arrow, size: 20),
+                      label: const Text('전체 재생',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        final songs = List<Song>.from(folder.songs)..shuffle();
+                        context.read<PlayerProvider>()
+                            .playFromList(songs, 0);
+                        Navigator.pop(context);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.white24),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                      ),
+                      icon: const Icon(Icons.shuffle, size: 20),
+                      label: const Text('셔플',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -187,7 +244,7 @@ class FolderDetailScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
-                (context, index) {
+                    (context, index) {
                   return SongListTile(
                     song: folder.songs[index],
                     index: index,
@@ -200,29 +257,6 @@ class FolderDetailScreen extends StatelessWidget {
           ),
           const SliverPadding(padding: EdgeInsets.only(bottom: 80)),
         ],
-      ),
-      bottomSheet: _buildPlayAllButton(context, primaryColor),
-    );
-  }
-
-  Widget _buildPlayAllButton(BuildContext context, Color primaryColor) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      color: AppTheme.background,
-      child: ElevatedButton(
-        onPressed: () {
-          context.read<PlayerProvider>().playFromList(folder.songs, 0);
-          Navigator.pop(context);
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primaryColor,
-          foregroundColor: Colors.black,
-          minimumSize: const Size(double.infinity, 48),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30)),
-        ),
-        child: const Text('전체 재생',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
       ),
     );
   }

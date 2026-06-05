@@ -22,7 +22,7 @@ class MiniPlayer extends StatelessWidget {
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-                const PlayerScreen(),
+            const PlayerScreen(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               return SlideTransition(
@@ -41,60 +41,65 @@ class MiniPlayer extends StatelessWidget {
         );
       },
       child: Container(
-        height: 64,
+        height: 72,
+        margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
         decoration: BoxDecoration(
-          color: AppTheme.surface,
-          border: Border(
-            top: BorderSide(
-              color: primaryColor.withOpacity(0.3),
-              width: 0.5,
-            ),
-          ),
+          color: const Color(0xFF1A1A1A),
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.4),
-              blurRadius: 12,
-              offset: const Offset(0, -2),
+              color: Colors.black.withOpacity(0.5),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
         child: Column(
           children: [
-            SizedBox(
-              height: 2,
-              child: LinearProgressIndicator(
-                value: playerProvider.progress,
-                backgroundColor: AppTheme.divider,
-                valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+            // 진행바
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+              child: SizedBox(
+                height: 2,
+                child: LinearProgressIndicator(
+                  value: playerProvider.progress,
+                  backgroundColor: Colors.white12,
+                  valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                ),
               ),
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Row(
                   children: [
+                    // 앨범아트
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(8),
                       child: song.albumArt != null
                           ? Image.memory(
-                              Uint8List.fromList(song.albumArt!),
-                              width: 40,
-                              height: 40,
-                              fit: BoxFit.cover,
-                              gaplessPlayback: true,
-                            )
+                        Uint8List.fromList(song.albumArt!),
+                        width: 44,
+                        height: 44,
+                        fit: BoxFit.cover,
+                        gaplessPlayback: true,
+                      )
                           : Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: AppTheme.surfaceVariant,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Icon(Icons.music_note,
-                                  color: primaryColor, size: 20),
-                            ),
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceVariant,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(Icons.music_note,
+                            color: primaryColor, size: 22),
+                      ),
                     ),
                     const SizedBox(width: 12),
+                    // 제목/아티스트
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -103,8 +108,8 @@ class MiniPlayer extends StatelessWidget {
                           Text(
                             song.titleDisplay,
                             style: const TextStyle(
-                                color: AppTheme.textPrimary,
-                                fontSize: 13,
+                                color: Colors.white,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w600),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -113,59 +118,55 @@ class MiniPlayer extends StatelessWidget {
                           Text(
                             song.artistDisplay,
                             style: const TextStyle(
-                                color: AppTheme.textSecondary, fontSize: 11),
+                                color: Colors.white60,
+                                fontSize: 12),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
                     ),
+                    // 이전 버튼
                     IconButton(
-                      onPressed: playerProvider.hasPrevious
-                          ? () => playerProvider.playPrevious()
-                          : null,
-                      icon: Icon(Icons.skip_previous,
-                          color: playerProvider.hasPrevious
-                              ? AppTheme.textPrimary
-                              : AppTheme.textHint),
-                      iconSize: 24,
+                      onPressed: () => playerProvider.playPrevious(),
+                      icon: const Icon(Icons.skip_previous,
+                          color: Colors.white70),
+                      iconSize: 26,
                       padding: const EdgeInsets.all(4),
                       constraints: const BoxConstraints(
                           minWidth: 36, minHeight: 36),
                     ),
+                    // 재생/정지 버튼
                     GestureDetector(
                       onTap: playerProvider.togglePlayPause,
                       child: Container(
-                        width: 36,
-                        height: 36,
+                        width: 40,
+                        height: 40,
                         decoration: BoxDecoration(
                           color: primaryColor,
                           shape: BoxShape.circle,
                         ),
                         child: playerProvider.isLoading
                             ? const Padding(
-                                padding: EdgeInsets.all(8),
-                                child: CircularProgressIndicator(
-                                    strokeWidth: 2, color: Colors.black),
-                              )
+                          padding: EdgeInsets.all(10),
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: Colors.black),
+                        )
                             : Icon(
-                                playerProvider.isPlaying
-                                ? Icons.pause
-                                : Icons.play_arrow,
-                                color: Colors.black,
-                                size: 20,
-                                ),
+                          playerProvider.isPlaying
+                              ? Icons.pause
+                              : Icons.play_arrow,
+                          color: Colors.black,
+                          size: 22,
+                        ),
                       ),
                     ),
+                    // 다음 버튼
                     IconButton(
-                      onPressed: playerProvider.hasNext
-                          ? () => playerProvider.playNext()
-                          : null,
-                      icon: Icon(Icons.skip_next,
-                          color: playerProvider.hasNext
-                              ? AppTheme.textPrimary
-                              : AppTheme.textHint),
-                      iconSize: 24,
+                      onPressed: () => playerProvider.playNext(),
+                      icon: const Icon(Icons.skip_next,
+                          color: Colors.white70),
+                      iconSize: 26,
                       padding: const EdgeInsets.all(4),
                       constraints: const BoxConstraints(
                           minWidth: 36, minHeight: 36),

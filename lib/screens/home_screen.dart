@@ -57,7 +57,12 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           Expanded(child: _buildBody()),
-          const MiniPlayer(),
+          MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: const TextScaler.linear(1.0),
+            ),
+            child: const MiniPlayer(),
+          ),
         ],
       ),
       bottomNavigationBar: _buildBottomNavBar(primaryColor),
@@ -122,7 +127,10 @@ class _HomeScreenState extends State<HomeScreen> {
         prefixIcon: const Icon(Icons.search, color: AppTheme.textHint, size: 18),
         isDense: true,
       ),
-      onChanged: (value) => context.read<MusicProvider>().search(value),
+      onChanged: (value) {
+        context.read<MusicProvider>().search(value);
+        setState(() {});
+      },
     );
   }
 
@@ -148,8 +156,8 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }
         return _buildSongsTab();
-      case 1: return const AlbumScreen();
-      case 2: return const ArtistScreen();
+      case 1: return AlbumScreen(searchQuery: _isSearching ? _searchController.text : '');
+      case 2: return ArtistScreen(searchQuery: _isSearching ? _searchController.text : '');
       case 3: return const PlaylistScreen();
       case 4: return const FolderScreen();
       case 5: return const VideoScreen();

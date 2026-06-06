@@ -738,13 +738,13 @@ void _showPlayerStyleDialog(BuildContext context) async {
   }
 
   Future<void> _launchUrl(String url) async {
-  final uri = Uri.parse(url);
-  try {
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
-  } catch (e) {
-    await launchUrl(uri, mode: LaunchMode.inAppWebView);
+    final uri = Uri.parse(url);
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      await launchUrl(uri, mode: LaunchMode.inAppWebView);
+    }
   }
-}
 
   void _showColorPicker(BuildContext context) {
     final themeProvider = context.read<ThemeProvider>();
@@ -917,9 +917,9 @@ void _showPlayerStyleDialog(BuildContext context) async {
                 const SizedBox(height: 16),
                 Slider(
                                   value: themeProvider.textScale,
-                                  min: 0.8,
-                                  max: 1.5,
-                  divisions: 6,
+                                  min: 1.13,
+                                  max: 2.0,
+                  divisions: 10,
                   label: '${(themeProvider.textScale * 100).toInt()}%',
                   onChanged: (value) {
                     themeProvider.setTextScale(value);
@@ -957,7 +957,7 @@ void _showPlayerStyleDialog(BuildContext context) async {
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () {
-                          themeProvider.setTextScale(1.0);
+                          themeProvider.setTextScale(1.13);
                           setDialogState(() {});
                         },
                         style: OutlinedButton.styleFrom(
@@ -992,3 +992,4 @@ void _showPlayerStyleDialog(BuildContext context) async {
     );
   }
 }
+

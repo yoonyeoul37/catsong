@@ -59,7 +59,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
       _previewPlayer.positionStream.listen((position) {
         if (position.inSeconds >= _endValue.toInt()) {
           _previewPlayer.stop();
-          setState(() => _isPlaying = false);
+          if (mounted) setState(() => _isPlaying = false);
         }
       });
     }
@@ -82,7 +82,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
           icon: const Icon(Icons.arrow_back_ios, color: AppTheme.textPrimary),
         ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,8 +146,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
 
               Row(
                 children: [
-                  const SizedBox(
-                      width: 50,
+                  const SizedBox(width: 50,
                       child: Text('시작',
                           style: TextStyle(color: AppTheme.textSecondary))),
                   Expanded(
@@ -164,19 +163,15 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                       },
                     ),
                   ),
-                  SizedBox(
-                    width: 50,
-                    child: Text(_formatTime(_startValue.toInt()),
-                        style:
-                            const TextStyle(color: AppTheme.textSecondary)),
-                  ),
+                  SizedBox(width: 50,
+                      child: Text(_formatTime(_startValue.toInt()),
+                          style: const TextStyle(color: AppTheme.textSecondary))),
                 ],
               ),
 
               Row(
                 children: [
-                  const SizedBox(
-                      width: 50,
+                  const SizedBox(width: 50,
                       child: Text('끝',
                           style: TextStyle(color: AppTheme.textSecondary))),
                   Expanded(
@@ -193,12 +188,9 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                       },
                     ),
                   ),
-                  SizedBox(
-                    width: 50,
-                    child: Text(_formatTime(_endValue.toInt()),
-                        style:
-                            const TextStyle(color: AppTheme.textSecondary)),
-                  ),
+                  SizedBox(width: 50,
+                      child: Text(_formatTime(_endValue.toInt()),
+                          style: const TextStyle(color: AppTheme.textSecondary))),
                 ],
               ),
 
@@ -263,8 +255,8 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                   child: _isProcessing
                       ? const CircularProgressIndicator(color: Colors.black)
                       : const Text('벨소리로 설정',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16)),
                 ),
               ),
             ],

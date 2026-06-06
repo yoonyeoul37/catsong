@@ -57,7 +57,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
           ),
         ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
@@ -131,9 +131,9 @@ class _EditSongScreenState extends State<EditSongScreen> {
     );
   }
 
-  void _saveSong(BuildContext context) {
+  Future<void> _saveSong(BuildContext context) async {
     final musicProvider = context.read<MusicProvider>();
-    musicProvider.updateSongInfo(
+    await musicProvider.updateSongInfo(
       widget.song,
       title: _titleController.text,
       artist: _artistController.text,

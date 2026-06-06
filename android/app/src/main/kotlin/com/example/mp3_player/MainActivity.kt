@@ -31,8 +31,6 @@ class MainActivity : AudioServiceActivity() {
         }
     }
 
-
-
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
@@ -126,6 +124,17 @@ class MainActivity : AudioServiceActivity() {
                     virtualizer = null
                     result.success(true)
                 }
+                "updateSongMetadata" -> {
+                    val path = call.argument<String>("path")
+                    val title = call.argument<String>("title")
+                    val artist = call.argument<String>("artist")
+                    val album = call.argument<String>("album")
+                    if (path != null) {
+                        result.success(updateSongMetadata(path, title, artist, album))
+                    } else {
+                        result.success(false)
+                    }
+                }
                 "getVideoList" -> {
                     result.success(getVideoList())
                 }
@@ -210,29 +219,9 @@ class MainActivity : AudioServiceActivity() {
                         }
                     } else result.success(false)
                 }
-                "widgetPlayPause" -> {
-                    result.success(true)
-                }
-                "widgetNext" -> {
-                    result.success(true)
-                }
-                "widgetPrev" -> {
-                    result.success(true)
-                }
-                "requestWidgetAdd" -> {
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                        val appWidgetManager = android.appwidget.AppWidgetManager.getInstance(this)
-                        val provider = android.content.ComponentName(this, PlayerWidget::class.java)
-                        if (appWidgetManager.isRequestPinAppWidgetSupported) {
-                            appWidgetManager.requestPinAppWidget(provider, null, null)
-                            result.success(true)
-                        } else {
-                            result.success(false)
-                        }
-                    } else {
-                        result.success(false)
-                    }
-                }
+                "widgetPlayPause" -> { result.success(true) }
+                "widgetNext" -> { result.success(true) }
+                "widgetPrev" -> { result.success(true) }
                 "requestWidgetAdd" -> {
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                         val appWidgetManager = android.appwidget.AppWidgetManager.getInstance(this)
@@ -248,7 +237,7 @@ class MainActivity : AudioServiceActivity() {
                     }
                 }
                 "updateWidget" -> {
-                    val title = call.argument<String>("title") ?: "플레이쏭"
+                    val title = call.argument<String>("title") ?: "캣송"
                     val artist = call.argument<String>("artist") ?: "음악을 재생해보세요"
                     val isPlaying = call.argument<Boolean>("isPlaying") ?: false
                     val appWidgetManager = android.appwidget.AppWidgetManager.getInstance(this)
@@ -378,29 +367,45 @@ class MainActivity : AudioServiceActivity() {
         }
     }
 
+    private fun updateSongMetadata(path: String, title: String?, artist: String?, album: String?): Boolean {
+        return try {
+            val values = ContentValues().apply {
+                if (title != null) put(MediaStore.Audio.Media.TITLE, title)
+                if (artist != null) put(MediaStore.Audio.Media.ARTIST, artist)
+                if (album != null) put(MediaStore.Audio.Media.ALBUM, album)
+            }
+            val updated = contentResolver.update(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                values,
+                "${MediaStore.Audio.Media.DATA}=?",
+                arrayOf(path)
+            )
+            updated > 0
+        } catch (e: Exception) {
+            android.util.Log.e("UpdateMetadata", "Error: ${e.message}", e)
+            false
+        }
+    }
+
     private fun initEqualizer(audioSessionId: Int): Map<String, Any?> {
         return try {
             equalizer?.release()
             equalizer = Equalizer(0, audioSessionId)
             equalizer?.enabled = true
-
             val numBands = equalizer?.numberOfBands?.toInt() ?: 0
             val minLevel = equalizer?.bandLevelRange?.get(0) ?: 0
             val maxLevel = equalizer?.bandLevelRange?.get(1) ?: 0
-
             val bands = mutableListOf<Map<String, Any>>()
             for (i in 0 until numBands) {
                 val freq = equalizer?.getCenterFreq(i.toShort()) ?: 0
                 val level = equalizer?.getBandLevel(i.toShort()) ?: 0
                 bands.add(mapOf("band" to i, "freq" to freq, "level" to level.toInt()))
             }
-
             val numPresets = equalizer?.numberOfPresets?.toInt() ?: 0
             val presets = mutableListOf<String>()
             for (i in 0 until numPresets) {
                 presets.add(equalizer?.getPresetName(i.toShort()) ?: "")
             }
-
             mapOf("numBands" to numBands, "minLevel" to minLevel.toInt(),
                 "maxLevel" to maxLevel.toInt(), "bands" to bands, "presets" to presets)
         } catch (e: Exception) {

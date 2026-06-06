@@ -8,66 +8,76 @@ import '../theme/app_theme.dart';
 import '../widgets/song_list_tile.dart';
 
 class AlbumScreen extends StatelessWidget {
-  const AlbumScreen({super.key});
+  final String searchQuery;
+  const AlbumScreen({super.key, this.searchQuery = ''});
 
   @override
   Widget build(BuildContext context) {
     final musicProvider = context.watch<MusicProvider>();
-    final albums = musicProvider.albums;
+    final albums = searchQuery.isEmpty
+        ? musicProvider.albums
+        : musicProvider.searchAlbums(searchQuery);
     final primaryColor = Theme.of(context).colorScheme.primary;
-
-    if (albums.isEmpty) {
-      return const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.album, size: 72, color: AppTheme.textHint),
-            SizedBox(height: 16),
-            Text('앨범이 없습니다',
-                style: TextStyle(color: AppTheme.textSecondary, fontSize: 16)),
-          ],
-        ),
-      );
-    }
 
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('앨범',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: -0.5)),
-                const SizedBox(width: 8),
-                Text('${albums.length}',
-                    style: const TextStyle(
-                        color: Colors.white38, fontSize: 16)),
+                Row(
+                  children: [
+                    const Text('앨범',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -0.5)),
+                    const SizedBox(width: 8),
+                    Text('${albums.length}',
+                        style: const TextStyle(
+                            color: Colors.white38, fontSize: 16)),
+                  ],
+                ),
+                
               ],
             ),
           ),
         ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          sliver: SliverGrid(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.72,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 16,
+        if (albums.isEmpty)
+          const SliverFillRemaining(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.search_off, size: 72, color: Colors.white24),
+                  SizedBox(height: 16),
+                  Text('검색 결과가 없습니다',
+                      style: TextStyle(color: Colors.white38, fontSize: 16)),
+                ],
+              ),
             ),
-            delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                return _buildAlbumCard(context, albums[index], primaryColor);
-              },
-              childCount: albums.length,
+          )
+        else
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            sliver: SliverGrid(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.72,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 16,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                  return _buildAlbumCard(context, albums[index], primaryColor);
+                },
+                childCount: albums.length,
+              ),
             ),
           ),
-        ),
         const SliverPadding(padding: EdgeInsets.only(bottom: 16)),
       ],
     );

@@ -196,8 +196,10 @@ class _PlayerScreenState extends State<PlayerScreen>
             _buildCurrentLyrics(playerProvider, primaryColor),
             Expanded(
                 flex: 4,
-                child: _buildControls(
-                    context, playerProvider, musicProvider, song, primaryColor)),
+                child: SingleChildScrollView(
+                  child: _buildControls(
+                      context, playerProvider, musicProvider, song, primaryColor),
+                )),
           ],
         ),
           ),
@@ -1658,7 +1660,7 @@ class _CatDanceAnimationState extends State<_CatDanceAnimation>
         return Transform.rotate(
           angle: _animation.value,
           child: Image.asset(
-            'assets/cat.png',
+            'assets/no_album.png',
             width: 60,
             height: 60,
           ),

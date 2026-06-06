@@ -157,8 +157,12 @@ class SongListTile extends StatelessWidget {
               color: const Color(0xFF282828),
               borderRadius: BorderRadius.circular(4),
             ),
-            child: const Icon(Icons.music_note,
-                color: Colors.white38, size: 24),
+            child: Image.asset(
+              'assets/no_album.png',
+              width: 52,
+              height: 52,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         if (isCurrentSong)

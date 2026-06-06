@@ -8,12 +8,15 @@ import '../theme/app_theme.dart';
 import '../widgets/song_list_tile.dart';
 
 class ArtistScreen extends StatelessWidget {
-  const ArtistScreen({super.key});
+  final String searchQuery;
+  const ArtistScreen({super.key, this.searchQuery = ''});
 
   @override
   Widget build(BuildContext context) {
     final musicProvider = context.watch<MusicProvider>();
-    final artists = musicProvider.artists;
+    final artists = searchQuery.isEmpty
+        ? musicProvider.artists
+        : musicProvider.searchArtists(searchQuery);
 
     if (artists.isEmpty) {
       return const Center(

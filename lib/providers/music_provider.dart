@@ -74,10 +74,25 @@ class MusicProvider extends ChangeNotifier {
       }
       notifyListeners();
     }
-void updateSongInfo(Song song, {String? title, String? artist, String? album}) {
+Future<void> updateSongInfo(Song song, {String? title, String? artist, String? album}) async {
     if (title != null) song.title = title;
     if (artist != null) song.artist = artist;
     if (album != null) song.album = album;
+
+    // 실제 파일 메타데이터 업데이트
+    if (song.uri != null) {
+      try {
+        await _channel.invokeMethod('updateSongMetadata', {
+          'path': song.uri,
+          'title': song.title,
+          'artist': song.artist,
+          'album': song.album,
+        });
+      } catch (e) {
+        debugPrint('메타데이터 업데이트 오류: $e');
+      }
+    }
+
     _buildAlbums();
     _buildArtists();
     _buildFolders();
@@ -275,5 +290,22 @@ void updateSongInfo(Song song, {String? title, String? artist, String? album}) {
     void clearSearch() {
       _filteredSongs = List.from(_songs);
       notifyListeners();
+    }
+
+    List<Album> searchAlbums(String query) {
+      final q = query.toLowerCase().trim();
+      if (q.isEmpty) return _albums;
+      return _albums.where((album) {
+        return album.name.toLowerCase().contains(q) ||
+            album.artist.toLowerCase().contains(q);
+      }).toList();
+    }
+
+    List<Artist> searchArtists(String query) {
+      final q = query.toLowerCase().trim();
+      if (q.isEmpty) return _artists;
+      return _artists.where((artist) {
+        return artist.name.toLowerCase().contains(q);
+      }).toList();
     }
   }

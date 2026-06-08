@@ -4,6 +4,7 @@ import '../models/song.dart';
 import '../providers/music_provider.dart';
 import '../providers/player_provider.dart';
 import '../theme/app_theme.dart';
+import '../l10n/app_localizations.dart';
 import '../widgets/song_list_tile.dart';
 
 class FavoritesScreen extends StatelessWidget {
@@ -22,8 +23,8 @@ class FavoritesScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Row(
               children: [
-                const Text('즐겨찾기',
-                    style: TextStyle(
+                Text(AppLocalizations.of(context)!.favorites,
+                    style: const TextStyle(
                         color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
@@ -56,8 +57,8 @@ class FavoritesScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30)),
                       ),
                       icon: const Icon(Icons.play_arrow, size: 20),
-                      label: const Text('전체 재생',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      label: Text(AppLocalizations.of(context)!.playAll,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -75,8 +76,8 @@ class FavoritesScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30)),
                       ),
                       icon: const Icon(Icons.shuffle, size: 20),
-                      label: const Text('셔플',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      label: Text(AppLocalizations.of(context)!.shuffle,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],
@@ -92,12 +93,12 @@ class FavoritesScreen extends StatelessWidget {
                   Icon(Icons.favorite_border,
                       size: 72, color: primaryColor.withOpacity(0.4)),
                   const SizedBox(height: 16),
-                  const Text('즐겨찾기한 곡이 없습니다',
-                      style: TextStyle(
+                  Text(AppLocalizations.of(context)!.favorites,
+                      style: const TextStyle(
                           color: Colors.white38, fontSize: 16)),
                   const SizedBox(height: 8),
-                  const Text('곡 재생 화면에서 하트를 눌러보세요',
-                      style: TextStyle(color: Colors.white24, fontSize: 13)),
+                  Text(AppLocalizations.of(context)!.playMusic,
+                      style: const TextStyle(color: Colors.white24, fontSize: 13)),
                 ],
               ),
             ),

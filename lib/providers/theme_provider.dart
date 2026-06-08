@@ -12,28 +12,27 @@ class ThemeProvider extends ChangeNotifier {
   String get fontFamily => _fontFamily;
 
   static const List<Map<String, String>> availableFonts = [
-    {'key': 'default', 'name': '기본 폰트'},
-    {'key': 'noto_sans', 'name': 'Noto Sans KR (깔끔)'},
-    {'key': 'jua', 'name': 'Jua (귀여운)'},
-    {'key': 'gaegu', 'name': 'Gaegu (손글씨)'},
-    {'key': 'nanum_gothic', 'name': 'Nanum Gothic (부드러운)'},
-    {'key': 'do_hyeon', 'name': 'Do Hyeon (모던)'},
-    {'key': 'cute_font', 'name': 'Cute Font (귀여운)'},
-    {'key': 'stylish', 'name': 'Stylish (세련된)'},
-    {'key': 'sunflower', 'name': 'Sunflower (가벼운)'},
-    {'key': 'hi_melody', 'name': 'Hi Melody (감성적)'},
-    {'key': 'poor_story', 'name': 'Poor Story (손글씨)'},
-    {'key': 'east_sea_dokdo', 'name': 'East Sea Dokdo (독특한)'},
-    {'key': 'nanum_brush', 'name': 'Nanum Brush Script (붓글씨)'},
-    {'key': 'nanum_myeongjo', 'name': 'Nanum Myeongjo (명조체)'},
-    {'key': 'black_and_white', 'name': 'Black And White Picture (특이한)'},
-    {'key': 'gowun_dodum', 'name': 'Gowun Dodum (도담도담)'},
-    {'key': 'gowun_batang', 'name': 'Gowun Batang (바탕체)'},
-    {'key': 'nanum_pen', 'name': 'Nanum Pen Script (펜글씨)'},
-    {'key': 'single_day', 'name': 'Single Day (귀여운)'},
-    {'key': 'yeon_sung', 'name': 'Yeon Sung (연성체)'},
+    {'key': 'default', 'name': 'Default Font'},
+    {'key': 'noto_sans', 'name': 'Noto Sans KR (Clean)'},
+    {'key': 'jua', 'name': 'Jua (Cute)'},
+    {'key': 'gaegu', 'name': 'Gaegu (Handwriting)'},
+    {'key': 'nanum_gothic', 'name': 'Nanum Gothic (Soft)'},
+    {'key': 'do_hyeon', 'name': 'Do Hyeon (Modern)'},
+    {'key': 'cute_font', 'name': 'Cute Font (Cute)'},
+    {'key': 'stylish', 'name': 'Stylish (Elegant)'},
+    {'key': 'sunflower', 'name': 'Sunflower (Light)'},
+    {'key': 'hi_melody', 'name': 'Hi Melody (Emotional)'},
+    {'key': 'poor_story', 'name': 'Poor Story (Handwriting)'},
+    {'key': 'east_sea_dokdo', 'name': 'East Sea Dokdo (Unique)'},
+    {'key': 'nanum_brush', 'name': 'Nanum Brush Script (Brush)'},
+    {'key': 'nanum_myeongjo', 'name': 'Nanum Myeongjo (Serif)'},
+    {'key': 'black_and_white', 'name': 'Black And White Picture (Special)'},
+    {'key': 'gowun_dodum', 'name': 'Gowun Dodum (Round)'},
+    {'key': 'gowun_batang', 'name': 'Gowun Batang (Batang)'},
+    {'key': 'nanum_pen', 'name': 'Nanum Pen Script (Pen)'},
+    {'key': 'single_day', 'name': 'Single Day (Cute)'},
+    {'key': 'yeon_sung', 'name': 'Yeon Sung (Soft)'},
   ];
-
   ThemeProvider() {
     _loadSettings();
   }

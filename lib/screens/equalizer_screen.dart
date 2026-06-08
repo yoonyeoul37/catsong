@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/player_provider.dart';
 import '../theme/app_theme.dart';
+import '../l10n/app_localizations.dart';
 
 class EqualizerScreen extends StatefulWidget {
   const EqualizerScreen({super.key});
@@ -83,8 +84,8 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: AppTheme.background,
-        title: const Text('이퀄라이저',
-            style: TextStyle(color: AppTheme.textPrimary)),
+        title: Text(AppLocalizations.of(context)!.equalizer,
+            style: const TextStyle(color: AppTheme.textPrimary)),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios, color: AppTheme.textPrimary),
@@ -95,14 +96,14 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
           : SingleChildScrollView(
         child: Column(
           children: [
-            // 프리셋 선택
+            // Preset selection
             if (_presets.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('프리셋',
+                    Text(AppLocalizations.of(context)!.preset,
                         style: TextStyle(
                             color: primaryColor,
                             fontSize: 13,
@@ -164,7 +165,7 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
 
             const Divider(color: AppTheme.divider),
 
-            // 밴드 슬라이더
+            // Band sliders
             SizedBox(
               height: 280,
               child: Padding(
@@ -219,7 +220,7 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
 
             const Divider(color: AppTheme.divider),
 
-            // 베이스 부스터
+            // Bass Booster
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
               child: Column(
@@ -229,7 +230,7 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
                     children: [
                       Icon(Icons.speaker, color: primaryColor, size: 16),
                       const SizedBox(width: 6),
-                      Text('베이스 부스터',
+                      Text(AppLocalizations.of(context)!.bassBooster,
                           style: TextStyle(
                               color: primaryColor,
                               fontSize: 13,
@@ -245,7 +246,7 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  const Text('저음을 강화해요',
+                  Text(AppLocalizations.of(context)!.enhancesBass,
                       style: TextStyle(
                           color: AppTheme.textSecondary, fontSize: 11)),
                   Slider(
@@ -263,7 +264,7 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
               ),
             ),
 
-            // 버추얼라이저
+            // Virtualizer
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
               child: Column(
@@ -273,7 +274,7 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
                     children: [
                       Icon(Icons.surround_sound, color: primaryColor, size: 16),
                       const SizedBox(width: 6),
-                      Text('버추얼라이저',
+                      Text(AppLocalizations.of(context)!.virtualizer,
                           style: TextStyle(
                               color: primaryColor,
                               fontSize: 13,
@@ -289,7 +290,7 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  const Text('입체감 있는 소리를 만들어요',
+                  Text(AppLocalizations.of(context)!.surroundEffect,
                       style: TextStyle(
                           color: AppTheme.textSecondary, fontSize: 11)),
                   Slider(
@@ -307,7 +308,7 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
               ),
             ),
 
-            // 초기화 버튼
+            // Reset button
             Padding(
               padding: const EdgeInsets.all(16),
               child: ElevatedButton(
@@ -336,7 +337,7 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                 ),
-                child: const Text('초기화'),
+                child: Text(AppLocalizations.of(context)!.reset),
               ),
             ),
           ],

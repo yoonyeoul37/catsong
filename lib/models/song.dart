@@ -7,6 +7,8 @@ class Song {
   int duration;
   bool isFavorite;
   List<int>? albumArt;
+  bool isEdited = false;
+  DateTime? lastPlayedAt;
 
   Song({
       required this.id,

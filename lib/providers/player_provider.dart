@@ -181,10 +181,10 @@ class PlayerProvider extends ChangeNotifier {
         ));
       }
 
-      await _player.setAudioSource(AudioSource.uri(Uri.parse(song.uri!)));
-      await _player.play();
       onSongPlayed?.call(song);
       onSongChanged?.call(song);
+      await _player.setAudioSource(AudioSource.uri(Uri.parse(song.uri!)));
+      await _player.play();
       _updateWidgetSongInfo(song);
     } catch (e) {
       debugPrint('재생 오류: $e');
@@ -272,9 +272,15 @@ class PlayerProvider extends ChangeNotifier {
   void toggleShuffle() {
     _isShuffled = !_isShuffled;
     if (_isShuffled) {
+      final current = currentSong;
       _queue.shuffle();
-      if (currentSong != null) {
-        _currentIndex = _queue.indexWhere((s) => s.id == currentSong!.id);
+      if (current != null) {
+        final idx = _queue.indexWhere((s) => s.id == current.id);
+        if (idx != -1) {
+          _queue.removeAt(idx);
+          _queue.insert(0, current);
+          _currentIndex = 0;
+        }
       }
     }
     notifyListeners();

@@ -7,9 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter/services.dart';
 import '../providers/theme_provider.dart';
-import 'package:provider/provider.dart';
 import '../theme/app_theme.dart';
 import 'ringtone_screen.dart';
+import '../l10n/app_localizations.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -37,8 +37,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         backgroundColor: AppTheme.background,
         elevation: 0,
-        title: const Text('설정',
-            style: TextStyle(
+        title: Text(AppLocalizations.of(context)!.settings,
+            style: const TextStyle(
                 color: AppTheme.textPrimary,
                 fontSize: 18,
                 fontWeight: FontWeight.bold)),
@@ -53,15 +53,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           _buildSectionCard(
             context,
-            title: '테마 / 디자인',
+            title: AppLocalizations.of(context)!.themeColor,
             icon: Icons.brush,
             primaryColor: primaryColor,
             children: [
               _buildTile(
                 context,
                 icon: Icons.palette_outlined,
-                title: '테마 색상',
-                subtitle: '앱 색상 테마 변경',
+                title: AppLocalizations.of(context)!.themeColor,
+                subtitle: AppLocalizations.of(context)!.themeColor,
                 onTap: () => _showColorPicker(context),
                 primaryColor: primaryColor,
               ),
@@ -69,8 +69,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildTile(
                 context,
                 icon: Icons.text_fields,
-                title: '텍스트 크기',
-                subtitle: '앱 전체 텍스트 크기 조절',
+                title: AppLocalizations.of(context)!.textSize,
+                subtitle: AppLocalizations.of(context)!.textSize,
                 onTap: () => _showTextSizeDialog(context),
                 primaryColor: primaryColor,
               ),
@@ -78,8 +78,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildTile(
                 context,
                 icon: Icons.font_download_outlined,
-                title: '폰트 변경',
-                subtitle: '앱 전체 폰트 변경',
+                title: AppLocalizations.of(context)!.fontChange,
+                subtitle: AppLocalizations.of(context)!.fontChange,
                 onTap: () => _showFontDialog(context),
                 primaryColor: primaryColor,
               ),
@@ -87,8 +87,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildTile(
                 context,
                 icon: Icons.style,
-                title: '재생화면 스타일',
-                subtitle: '재생 화면 디자인 선택',
+                title: AppLocalizations.of(context)!.playerStyle,
+                subtitle: AppLocalizations.of(context)!.playerStyle,
                 onTap: () => _showPlayerStyleDialog(context),
                 primaryColor: primaryColor,
               ),
@@ -97,15 +97,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 16),
           _buildSectionCard(
             context,
-            title: '기능',
+            title: AppLocalizations.of(context)!.equalizer,
             icon: Icons.tune,
             primaryColor: primaryColor,
             children: [
               _buildTile(
                 context,
                 icon: Icons.equalizer,
-                title: '이퀄라이저',
-                subtitle: '음질 조절',
+                title: AppLocalizations.of(context)!.equalizer,
+                subtitle: AppLocalizations.of(context)!.equalizer,
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -119,8 +119,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 icon: _isFlashlightOn
                     ? Icons.flashlight_on
                     : Icons.flashlight_off,
-                title: '손전등',
-                subtitle: _isFlashlightOn ? '켜짐' : '꺼짐',
+                title: AppLocalizations.of(context)!.flashlight,
+                subtitle: _isFlashlightOn
+                    ? AppLocalizations.of(context)!.on
+                    : AppLocalizations.of(context)!.off,
                 onTap: () => _toggleFlashlight(context),
                 primaryColor: primaryColor,
                 trailing: Switch(
@@ -134,8 +136,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildTile(
                 context,
                 icon: Icons.emergency,
-                title: 'SOS 비상등',
-                subtitle: _isSosOn ? '작동 중...' : '빠르게 깜빡이는 비상등',
+                title: AppLocalizations.of(context)!.sos,
+                subtitle: _isSosOn
+                    ? AppLocalizations.of(context)!.sosWorking
+                    : AppLocalizations.of(context)!.sos,
                 onTap: () => _toggleSOS(context),
                 primaryColor: primaryColor,
                 trailing: Switch(
@@ -149,8 +153,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildTile(
                 context,
                 icon: Icons.music_note_outlined,
-                title: '벨소리 지정',
-                subtitle: '곡을 잘라서 벨소리로 설정',
+                title: AppLocalizations.of(context)!.ringtone,
+                subtitle: AppLocalizations.of(context)!.ringtone,
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -163,15 +167,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 16),
           _buildSectionCard(
             context,
-            title: '홈화면',
+            title: AppLocalizations.of(context)!.widget,
             icon: Icons.home_outlined,
             primaryColor: primaryColor,
             children: [
               _buildTile(
                 context,
                 icon: Icons.widgets_outlined,
-                title: '홈화면 위젯',
-                subtitle: '홈화면에 플레이어 위젯 추가',
+                title: AppLocalizations.of(context)!.widget,
+                subtitle: AppLocalizations.of(context)!.widget,
                 onTap: () async {
                   final platform = MethodChannel('com.example.mp3_player/media');
                   try {
@@ -185,20 +189,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 16),
           _buildSectionCard(
             context,
-            title: '앱 정보',
+            title: AppLocalizations.of(context)!.version,
             icon: Icons.info_outline,
             primaryColor: primaryColor,
             children: [
               _buildTile(
                 context,
                 icon: Icons.verified_outlined,
-                title: '버전 정보',
+                title: AppLocalizations.of(context)!.version,
                 subtitle: 'v1.0.0',
                 onTap: () {},
                 primaryColor: primaryColor,
                 trailing: Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: primaryColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
@@ -214,8 +218,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildTile(
                 context,
                 icon: Icons.card_giftcard_outlined,
-                title: '프로모션 코드',
-                subtitle: '코드 입력으로 광고 제거',
+                title: AppLocalizations.of(context)!.promoCode,
+                subtitle: AppLocalizations.of(context)!.promoCode,
                 onTap: () => _showPromoCodeDialog(context),
                 primaryColor: primaryColor,
               ),
@@ -223,20 +227,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildTile(
                 context,
                 icon: Icons.privacy_tip_outlined,
-                title: '개인정보처리방침',
-                subtitle: '개인정보 수집 및 이용 안내',
-                onTap: () =>
-                    _launchUrl('https://yoonyeoul37.github.io/play-song/privacy_policy.html'),
+                title: AppLocalizations.of(context)!.privacyPolicy,
+                subtitle: AppLocalizations.of(context)!.privacyPolicy,
+                onTap: () => _launchUrl(
+                    'https://yoonyeoul37.github.io/play-song/privacy_policy.html'),
                 primaryColor: primaryColor,
               ),
               _buildTileDivider(),
               _buildTile(
                 context,
                 icon: Icons.description_outlined,
-                title: '이용약관',
-                subtitle: '서비스 이용 약관',
-                onTap: () =>
-                   _launchUrl('https://yoonyeoul37.github.io/play-song/terms_of_service.html'),
+                title: AppLocalizations.of(context)!.termsOfService,
+                subtitle: AppLocalizations.of(context)!.termsOfService,
+                onTap: () => _launchUrl(
+                    'https://yoonyeoul37.github.io/play-song/terms_of_service.html'),
                 primaryColor: primaryColor,
               ),
             ],
@@ -253,12 +257,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildSectionCard(
-    BuildContext context, {
-    required String title,
-    required IconData icon,
-    required Color primaryColor,
-    required List<Widget> children,
-  }) {
+      BuildContext context, {
+        required String title,
+        required IconData icon,
+        required Color primaryColor,
+        required List<Widget> children,
+      }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -289,14 +293,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildTile(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-    required Color primaryColor,
-    Widget? trailing,
-  }) {
+      BuildContext context, {
+        required IconData icon,
+        required String title,
+        required String subtitle,
+        required VoidCallback onTap,
+        required Color primaryColor,
+        Widget? trailing,
+      }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
@@ -354,7 +358,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         await TorchLight.disableTorch();
         setState(() => _isFlashlightOn = false);
       } else {
-        // SOS 켜져 있으면 자동으로 끄기
         if (_isSosOn) {
           setState(() => _isSosOn = false);
           await TorchLight.disableTorch();
@@ -366,7 +369,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('손전등 오류: $e'),
+          content: Text('${AppLocalizations.of(context)!.flashlightError}: $e'),
           backgroundColor: AppTheme.surfaceVariant,
           duration: const Duration(seconds: 2),
         ),
@@ -379,7 +382,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       setState(() => _isSosOn = false);
       await TorchLight.disableTorch();
     } else {
-      // 손전등 켜져 있으면 자동으로 끄기
       if (_isFlashlightOn) {
         await TorchLight.disableTorch();
         setState(() => _isFlashlightOn = false);
@@ -391,7 +393,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _startSOS() async {
-    // SOS 패턴: ... --- ... (단단단 장장장 단단단)
     final sosPattern = [
       200, 200, 200, 200, 200, 400,
       600, 200, 600, 200, 600, 400,
@@ -422,7 +423,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (ctx) => Dialog(
         backgroundColor: AppTheme.surfaceVariant,
         shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -432,8 +433,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   Icon(Icons.card_giftcard, color: primaryColor, size: 20),
                   const SizedBox(width: 8),
-                  const Text('프로모션 코드',
-                      style: TextStyle(
+                  Text(AppLocalizations.of(context)!.promoCode,
+                      style: const TextStyle(
                           color: AppTheme.textPrimary,
                           fontSize: 16,
                           fontWeight: FontWeight.bold)),
@@ -447,12 +448,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     color: Colors.green.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Column(
+                  child: Column(
                     children: [
-                      Icon(Icons.check_circle, color: Colors.green, size: 40),
-                      SizedBox(height: 8),
-                      Text('광고가 제거되었습니다! 😊',
-                          style: TextStyle(
+                      const Icon(Icons.check_circle,
+                          color: Colors.green, size: 40),
+                      const SizedBox(height: 8),
+                      Text(AppLocalizations.of(context)!.promoUnlocked,
+                          style: const TextStyle(
                               color: AppTheme.textPrimary,
                               fontWeight: FontWeight.w600)),
                     ],
@@ -469,12 +471,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                     ),
-                    child: const Text('닫기'),
+                    child: Text(AppLocalizations.of(context)!.close),
                   ),
                 ),
               ] else ...[
-                const Text('프로모션 코드를 입력하세요',
-                    style: TextStyle(
+                Text(AppLocalizations.of(context)!.promoEnter,
+                    style: const TextStyle(
                         color: AppTheme.textSecondary, fontSize: 13)),
                 const SizedBox(height: 12),
                 TextField(
@@ -508,29 +510,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: const Text('취소'),
+                        child: Text(AppLocalizations.of(context)!.cancel),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
-                          if (controller.text == '3758') {
+                          if (controller.text == '37258') {
                             await prefs.setBool('promo_unlocked', true);
                             Navigator.pop(ctx);
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('🎉 광고가 제거되었습니다!'),
+                              SnackBar(
+                                content: Text(
+                                    AppLocalizations.of(context)!.promoUnlocked),
                                 backgroundColor: Colors.green,
-                                duration: Duration(seconds: 3),
+                                duration: const Duration(seconds: 3),
                               ),
                             );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('올바르지 않은 코드입니다'),
+                              SnackBar(
+                                content: Text(
+                                    AppLocalizations.of(context)!.promoInvalid),
                                 backgroundColor: Colors.redAccent,
-                                duration: Duration(seconds: 2),
+                                duration: const Duration(seconds: 2),
                               ),
                             );
                           }
@@ -541,9 +545,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: const Text('확인',
-                            style:
-                                TextStyle(fontWeight: FontWeight.bold)),
+                        child: Text(AppLocalizations.of(context)!.confirm,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ],
@@ -556,17 +560,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-void _showPlayerStyleDialog(BuildContext context) async {
+  void _showPlayerStyleDialog(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     int currentStyle = prefs.getInt('albumArtStyle') ?? 1;
     final primaryColor = Theme.of(context).colorScheme.primary;
 
     final styles = [
-      {'id': 1, 'name': 'CD 회전', 'icon': Icons.album, 'desc': '클래식한 CD 회전 애니메이션'},
-      {'id': 2, 'name': '카세트 테이프', 'icon': Icons.settings_input_composite, 'desc': '레트로 카세트 테이프'},
-      {'id': 3, 'name': '앨범아트 카드', 'icon': Icons.image, 'desc': '심플한 앨범아트 카드형'},
-      {'id': 4, 'name': '파형 비주얼라이저', 'icon': Icons.graphic_eq, 'desc': '음파 애니메이션'},
-      {'id': 5, 'name': '그라데이션', 'icon': Icons.gradient, 'desc': '앨범아트 색상 그라데이션 배경'},
+      {'id': 1, 'name': 'CD Rotation', 'icon': Icons.album, 'desc': 'Classic CD rotation animation'},
+      {'id': 2, 'name': 'Cassette Tape', 'icon': Icons.settings_input_composite, 'desc': 'Retro cassette tape style'},
+      {'id': 3, 'name': 'Album Art Card', 'icon': Icons.image, 'desc': 'Simple album art card style'},
+      {'id': 4, 'name': 'Waveform Visualizer', 'icon': Icons.graphic_eq, 'desc': 'Sound wave animation'},
+      {'id': 5, 'name': 'Gradient', 'icon': Icons.gradient, 'desc': 'Album art color gradient background'},
     ];
 
     showDialog(
@@ -578,8 +582,11 @@ void _showPlayerStyleDialog(BuildContext context) async {
             children: [
               Icon(Icons.style, color: primaryColor, size: 20),
               const SizedBox(width: 8),
-              const Text('재생화면 스타일',
-                  style: TextStyle(color: AppTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(AppLocalizations.of(context)!.playerStyle,
+                  style: const TextStyle(
+                      color: AppTheme.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold)),
             ],
           ),
           content: SizedBox(
@@ -600,9 +607,12 @@ void _showPlayerStyleDialog(BuildContext context) async {
                   borderRadius: BorderRadius.circular(12),
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 10),
                     decoration: BoxDecoration(
-                      color: isSelected ? primaryColor.withOpacity(0.15) : AppTheme.background,
+                      color: isSelected
+                          ? primaryColor.withOpacity(0.15)
+                          : AppTheme.background,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: isSelected ? primaryColor : Colors.transparent,
@@ -611,7 +621,10 @@ void _showPlayerStyleDialog(BuildContext context) async {
                     child: Row(
                       children: [
                         Icon(style['icon'] as IconData,
-                            color: isSelected ? primaryColor : AppTheme.textHint, size: 24),
+                            color: isSelected
+                                ? primaryColor
+                                : AppTheme.textHint,
+                            size: 24),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
@@ -619,16 +632,23 @@ void _showPlayerStyleDialog(BuildContext context) async {
                             children: [
                               Text(style['name'] as String,
                                   style: TextStyle(
-                                      color: isSelected ? primaryColor : AppTheme.textPrimary,
+                                      color: isSelected
+                                          ? primaryColor
+                                          : AppTheme.textPrimary,
                                       fontSize: 14,
-                                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal)),
                               Text(style['desc'] as String,
-                                  style: const TextStyle(color: AppTheme.textSecondary, fontSize: 11)),
+                                  style: const TextStyle(
+                                      color: AppTheme.textSecondary,
+                                      fontSize: 11)),
                             ],
                           ),
                         ),
                         if (isSelected)
-                          Icon(Icons.check_circle, color: primaryColor, size: 20),
+                          Icon(Icons.check_circle,
+                              color: primaryColor, size: 20),
                       ],
                     ),
                   ),
@@ -639,7 +659,8 @@ void _showPlayerStyleDialog(BuildContext context) async {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: Text('닫기', style: TextStyle(color: primaryColor)),
+              child: Text(AppLocalizations.of(context)!.close,
+                  style: TextStyle(color: primaryColor)),
             ),
           ],
         ),
@@ -660,8 +681,8 @@ void _showPlayerStyleDialog(BuildContext context) async {
             children: [
               Icon(Icons.font_download, color: primaryColor, size: 20),
               const SizedBox(width: 8),
-              const Text('폰트 변경',
-                  style: TextStyle(
+              Text(AppLocalizations.of(context)!.fontChange,
+                  style: const TextStyle(
                       color: AppTheme.textPrimary,
                       fontSize: 16,
                       fontWeight: FontWeight.bold)),
@@ -692,9 +713,7 @@ void _showPlayerStyleDialog(BuildContext context) async {
                           : AppTheme.background,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: isSelected
-                            ? primaryColor
-                            : Colors.transparent,
+                        color: isSelected ? primaryColor : Colors.transparent,
                       ),
                     ),
                     child: Row(
@@ -729,7 +748,8 @@ void _showPlayerStyleDialog(BuildContext context) async {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: Text('닫기', style: TextStyle(color: primaryColor)),
+              child: Text(AppLocalizations.of(context)!.close,
+                  style: TextStyle(color: primaryColor)),
             ),
           ],
         ),
@@ -767,8 +787,8 @@ void _showPlayerStyleDialog(BuildContext context) async {
                   children: [
                     Icon(Icons.palette, color: primaryColor, size: 20),
                     const SizedBox(width: 8),
-                    const Text('테마 색상',
-                        style: TextStyle(
+                    Text(AppLocalizations.of(context)!.themeColor,
+                        style: const TextStyle(
                             color: AppTheme.textPrimary,
                             fontSize: 16,
                             fontWeight: FontWeight.bold)),
@@ -789,7 +809,6 @@ void _showPlayerStyleDialog(BuildContext context) async {
                   pickerAreaBorderRadius: BorderRadius.circular(12),
                 ),
                 const SizedBox(height: 16),
-                // 프리셋 색상
                 Wrap(
                   spacing: 10,
                   runSpacing: 10,
@@ -817,15 +836,22 @@ void _showPlayerStyleDialog(BuildContext context) async {
                           color: color,
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: isSelected ? Colors.white : Colors.transparent,
+                            color: isSelected
+                                ? Colors.white
+                                : Colors.transparent,
                             width: 3,
                           ),
                           boxShadow: isSelected
-                              ? [BoxShadow(color: color.withOpacity(0.5), blurRadius: 8)]
+                              ? [
+                            BoxShadow(
+                                color: color.withOpacity(0.5),
+                                blurRadius: 8)
+                          ]
                               : null,
                         ),
                         child: isSelected
-                            ? const Icon(Icons.check, color: Colors.black, size: 18)
+                            ? const Icon(Icons.check,
+                            color: Colors.black, size: 18)
                             : null,
                       ),
                     );
@@ -843,7 +869,7 @@ void _showPlayerStyleDialog(BuildContext context) async {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: const Text('취소'),
+                        child: Text(AppLocalizations.of(context)!.cancel),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -859,8 +885,9 @@ void _showPlayerStyleDialog(BuildContext context) async {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: const Text('적용',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: Text(AppLocalizations.of(context)!.apply,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ],
@@ -892,8 +919,8 @@ void _showPlayerStyleDialog(BuildContext context) async {
                   children: [
                     Icon(Icons.text_fields, color: primaryColor, size: 20),
                     const SizedBox(width: 8),
-                    const Text('텍스트 크기',
-                        style: TextStyle(
+                    Text(AppLocalizations.of(context)!.textSize,
+                        style: const TextStyle(
                             color: AppTheme.textPrimary,
                             fontSize: 16,
                             fontWeight: FontWeight.bold)),
@@ -907,7 +934,7 @@ void _showPlayerStyleDialog(BuildContext context) async {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '미리보기 텍스트',
+                    AppLocalizations.of(context)!.preview,
                     style: TextStyle(
                       color: AppTheme.textPrimary,
                       fontSize: 16 * themeProvider.textScale,
@@ -916,9 +943,9 @@ void _showPlayerStyleDialog(BuildContext context) async {
                 ),
                 const SizedBox(height: 16),
                 Slider(
-                                  value: themeProvider.textScale,
-                                  min: 1.13,
-                                  max: 2.0,
+                  value: themeProvider.textScale,
+                  min: 1.13,
+                  max: 2.0,
                   divisions: 10,
                   label: '${(themeProvider.textScale * 100).toInt()}%',
                   onChanged: (value) {
@@ -929,8 +956,8 @@ void _showPlayerStyleDialog(BuildContext context) async {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('작게',
-                        style: TextStyle(
+                    Text(AppLocalizations.of(context)!.small,
+                        style: const TextStyle(
                             color: AppTheme.textSecondary, fontSize: 12)),
                     Container(
                       padding: const EdgeInsets.symmetric(
@@ -946,8 +973,8 @@ void _showPlayerStyleDialog(BuildContext context) async {
                               fontSize: 12,
                               fontWeight: FontWeight.bold)),
                     ),
-                    const Text('크게',
-                        style: TextStyle(
+                    Text(AppLocalizations.of(context)!.large,
+                        style: const TextStyle(
                             color: AppTheme.textSecondary, fontSize: 12)),
                   ],
                 ),
@@ -966,7 +993,8 @@ void _showPlayerStyleDialog(BuildContext context) async {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: const Text('기본값'),
+                        child:
+                        Text(AppLocalizations.of(context)!.defaultValue),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -979,7 +1007,7 @@ void _showPlayerStyleDialog(BuildContext context) async {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: const Text('닫기'),
+                        child: Text(AppLocalizations.of(context)!.close),
                       ),
                     ),
                   ],
@@ -992,4 +1020,3 @@ void _showPlayerStyleDialog(BuildContext context) async {
     );
   }
 }
-

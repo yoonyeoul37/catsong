@@ -5,6 +5,7 @@ import '../models/song.dart';
 import '../providers/player_provider.dart';
 import '../providers/music_provider.dart';
 import '../theme/app_theme.dart';
+import '../l10n/app_localizations.dart';
 import '../widgets/song_list_tile.dart';
 
 class ArtistScreen extends StatelessWidget {
@@ -19,14 +20,14 @@ class ArtistScreen extends StatelessWidget {
         : musicProvider.searchArtists(searchQuery);
 
     if (artists.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.person, size: 72, color: AppTheme.textHint),
-            SizedBox(height: 16),
-            Text('아티스트가 없습니다',
-                style: TextStyle(color: AppTheme.textSecondary, fontSize: 16)),
+            const Icon(Icons.person, size: 72, color: AppTheme.textHint),
+            const SizedBox(height: 16),
+            Text(AppLocalizations.of(context)!.noArtists,
+                style: const TextStyle(color: AppTheme.textSecondary, fontSize: 16)),
           ],
         ),
       );
@@ -39,8 +40,8 @@ class ArtistScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Row(
               children: [
-                const Text('아티스트',
-                    style: TextStyle(
+                Text(AppLocalizations.of(context)!.artists,
+                    style: const TextStyle(
                         color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
@@ -84,7 +85,6 @@ class ArtistScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           children: [
-            // 아티스트 이미지
             ClipOval(
               child: SizedBox(
                 width: 56,
@@ -119,8 +119,7 @@ class ArtistScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right,
-                color: Colors.white24, size: 20),
+            const Icon(Icons.chevron_right, color: Colors.white24, size: 20),
           ],
         ),
       ),
@@ -151,7 +150,6 @@ class ArtistDetailScreen extends StatelessWidget {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  // 배경 이미지
                   if (artist.songs.first.albumArt != null)
                     Image.memory(
                       Uint8List.fromList(artist.songs.first.albumArt!),
@@ -160,7 +158,6 @@ class ArtistDetailScreen extends StatelessWidget {
                     )
                   else
                     Container(color: const Color(0xFF282828)),
-                  // 그라데이션
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -175,7 +172,6 @@ class ArtistDetailScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // 아티스트 정보
                   Positioned(
                     bottom: 16,
                     left: 16,
@@ -200,7 +196,6 @@ class ArtistDetailScreen extends StatelessWidget {
               ),
             ),
           ),
-          // 전체재생/셔플 버튼
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -221,8 +216,8 @@ class ArtistDetailScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30)),
                       ),
                       icon: const Icon(Icons.play_arrow, size: 20),
-                      label: const Text('전체 재생',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      label: Text(AppLocalizations.of(context)!.playAll,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -242,8 +237,8 @@ class ArtistDetailScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30)),
                       ),
                       icon: const Icon(Icons.shuffle, size: 20),
-                      label: const Text('셔플',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      label: Text(AppLocalizations.of(context)!.shuffle,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],

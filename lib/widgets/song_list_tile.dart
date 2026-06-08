@@ -7,6 +7,7 @@ import '../providers/player_provider.dart';
 import '../providers/music_provider.dart';
 import '../providers/playlist_provider.dart';
 import '../theme/app_theme.dart';
+import '../l10n/app_localizations.dart';
 import '../screens/player_screen.dart';
 import '../screens/edit_song_screen.dart';
 import '../screens/ringtone_screen.dart';
@@ -111,20 +112,20 @@ class SongListTile extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
               itemBuilder: (context) => [
-                _buildPopupItem(Icons.play_arrow, '지금 재생', 'play', primaryColor),
-                _buildPopupItem(Icons.skip_next, '다음에 재생', 'play_next', primaryColor),
-                _buildPopupItem(Icons.playlist_add, '재생목록에 추가', 'playlist', primaryColor),
+                _buildPopupItem(Icons.play_arrow, AppLocalizations.of(context)!.play, 'play', primaryColor),
+                _buildPopupItem(Icons.skip_next, AppLocalizations.of(context)!.playNext, 'play_next', primaryColor),
+                _buildPopupItem(Icons.playlist_add, AppLocalizations.of(context)!.addToPlaylist, 'playlist', primaryColor),
                 _buildPopupItem(
                   isFav ? Icons.favorite : Icons.favorite_border,
-                  isFav ? '즐겨찾기 제거' : '즐겨찾기 추가',
+                  isFav ? AppLocalizations.of(context)!.removeFromFavorites : AppLocalizations.of(context)!.addToFavorites,
                   'favorite',
                   isFav ? Colors.redAccent : primaryColor,
                 ),
-                _buildPopupItem(Icons.music_note, '벨소리로 설정', 'ringtone', primaryColor),
-                _buildPopupItem(Icons.info_outline, '곡 정보', 'info', primaryColor),
-                _buildPopupItem(Icons.equalizer, '이퀄라이저', 'equalizer', primaryColor),
-                _buildPopupItem(Icons.share, '공유', 'share', primaryColor),
-                _buildPopupItem(Icons.delete_outline, '삭제', 'delete', Colors.redAccent),
+                _buildPopupItem(Icons.music_note, AppLocalizations.of(context)!.setRingtone, 'ringtone', primaryColor),
+                _buildPopupItem(Icons.info_outline, AppLocalizations.of(context)!.songInfo, 'info', primaryColor),
+                _buildPopupItem(Icons.equalizer, AppLocalizations.of(context)!.equalizer, 'equalizer', primaryColor),
+                _buildPopupItem(Icons.share, AppLocalizations.of(context)!.share, 'share', primaryColor),
+                _buildPopupItem(Icons.delete_outline, AppLocalizations.of(context)!.delete, 'delete', Colors.redAccent),
               ],
               onSelected: (value) => _handleMenuAction(context, value),
             ),
@@ -154,14 +155,16 @@ class SongListTile extends StatelessWidget {
             width: 52,
             height: 52,
             decoration: BoxDecoration(
-              color: const Color(0xFF282828),
+              color: const Color(0xFF3A3A3A),
               borderRadius: BorderRadius.circular(4),
             ),
-            child: Image.asset(
-              'assets/no_album.png',
-              width: 52,
-              height: 52,
-              fit: BoxFit.cover,
+            child: Center(
+              child: Image.asset(
+                'assets/no_album.png',
+                width: 32,
+                height: 32,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
         ),
@@ -207,7 +210,7 @@ class SongListTile extends StatelessWidget {
         playerProvider.addToPlayNext(song);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('다음에 재생됩니다'),
+            content: Text(AppLocalizations.of(context)!.addedToQueue),
             backgroundColor: AppTheme.surfaceVariant,
             duration: const Duration(seconds: 2),
           ),
@@ -265,11 +268,11 @@ class SongListTile extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.surfaceVariant,
-        title: const Text('재생목록에 추가',
-            style: TextStyle(color: AppTheme.textPrimary)),
+        title: Text(AppLocalizations.of(context)!.addToPlaylist,
+            style: const TextStyle(color: AppTheme.textPrimary)),
         content: playlistProvider.playlists.isEmpty
-            ? const Text('재생목록이 없습니다.\n재생목록 탭에서 먼저 만들어주세요.',
-            style: TextStyle(color: AppTheme.textSecondary))
+            ? Text(AppLocalizations.of(context)!.noPlaylists,
+            style: const TextStyle(color: AppTheme.textSecondary))
             : SizedBox(
           width: double.maxFinite,
           child: ListView.builder(
@@ -288,7 +291,7 @@ class SongListTile extends StatelessWidget {
                   Navigator.pop(ctx);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('${playlist.name}에 추가됐습니다'),
+                      content: Text('${playlist.name} ${AppLocalizations.of(context)!.addedToPlaylist}'),
                       backgroundColor: AppTheme.surfaceVariant,
                       duration: const Duration(seconds: 2),
                     ),
@@ -301,7 +304,7 @@ class SongListTile extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('닫기', style: TextStyle(color: primaryColor)),
+            child: Text(AppLocalizations.of(context)!.close, style: TextStyle(color: primaryColor)),
           ),
         ],
       ),
@@ -314,8 +317,8 @@ class SongListTile extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.surfaceVariant,
-        title: const Text('곡 정보',
-            style: TextStyle(color: AppTheme.textPrimary)),
+        title: Text(AppLocalizations.of(context)!.songInfo,
+            style: const TextStyle(color: AppTheme.textPrimary)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -338,12 +341,12 @@ class SongListTile extends StatelessWidget {
                 ),
               );
             },
-            child: Text('편집', style: TextStyle(color: primaryColor)),
+            child: Text(AppLocalizations.of(context)!.editSong, style: TextStyle(color: primaryColor)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('닫기',
-                style: TextStyle(color: AppTheme.textHint)),
+            child: Text(AppLocalizations.of(context)!.close,
+                style: const TextStyle(color: AppTheme.textHint)),
           ),
         ],
       ),
@@ -356,15 +359,15 @@ class SongListTile extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.surfaceVariant,
-        title: const Text('곡 삭제',
-            style: TextStyle(color: AppTheme.textPrimary)),
+        title: Text(AppLocalizations.of(context)!.deleteSong,
+            style: const TextStyle(color: AppTheme.textPrimary)),
         content: Text('${song.titleDisplay}을(를) 삭제할까요?\n기기에서 영구 삭제됩니다.',
             style: const TextStyle(color: AppTheme.textSecondary)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('취소',
-                style: TextStyle(color: AppTheme.textHint)),
+            child: Text(AppLocalizations.of(context)!.cancel,
+                style: const TextStyle(color: AppTheme.textHint)),
           ),
           TextButton(
             onPressed: () async {
@@ -376,16 +379,16 @@ class SongListTile extends StatelessWidget {
                   if (result == true) {
                     context.read<MusicProvider>().loadSongs();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('삭제됐습니다'),
+                      SnackBar(
+                        content: Text(AppLocalizations.of(context)!.deleted),
                         backgroundColor: Colors.redAccent,
                         duration: Duration(seconds: 2),
                       ),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('삭제 실패'),
+                         SnackBar(
+                        content: Text(AppLocalizations.of(context)!.deleteFailed),
                         backgroundColor: Colors.redAccent,
                         duration: Duration(seconds: 2),
                       ),
@@ -402,8 +405,8 @@ class SongListTile extends StatelessWidget {
                 );
               }
             },
-            child: const Text('삭제',
-                style: TextStyle(color: Colors.redAccent)),
+            child: Text(AppLocalizations.of(context)!.delete,
+                style: const TextStyle(color: Colors.redAccent)),
           ),
         ],
       ),

@@ -6,6 +6,7 @@ import '../models/song.dart';
 import '../providers/music_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/song_list_tile.dart';
+import '../l10n/app_localizations.dart';
 
 class AlbumScreen extends StatelessWidget {
   final String searchQuery;
@@ -29,8 +30,8 @@ class AlbumScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Text('앨범',
-                        style: TextStyle(
+                    Text(AppLocalizations.of(context)!.albums,
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 24,
                             fontWeight: FontWeight.w900,
@@ -41,21 +42,20 @@ class AlbumScreen extends StatelessWidget {
                             color: Colors.white38, fontSize: 16)),
                   ],
                 ),
-                
               ],
             ),
           ),
         ),
         if (albums.isEmpty)
-          const SliverFillRemaining(
+          SliverFillRemaining(
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.search_off, size: 72, color: Colors.white24),
-                  SizedBox(height: 16),
-                  Text('검색 결과가 없습니다',
-                      style: TextStyle(color: Colors.white38, fontSize: 16)),
+                  const Icon(Icons.search_off, size: 72, color: Colors.white24),
+                  const SizedBox(height: 16),
+                  Text(AppLocalizations.of(context)!.noAlbums,
+                      style: const TextStyle(color: Colors.white38, fontSize: 16)),
                 ],
               ),
             ),
@@ -96,7 +96,6 @@ class AlbumScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 앨범아트
           AspectRatio(
             aspectRatio: 1,
             child: ClipRRect(
@@ -109,9 +108,8 @@ class AlbumScreen extends StatelessWidget {
               )
                   : Container(
                 color: const Color(0xFF282828),
-                child: Center(
-                  child: Icon(Icons.album,
-                      color: Colors.white24, size: 56),
+                child: const Center(
+                  child: Icon(Icons.album, color: Colors.white24, size: 56),
                 ),
               ),
             ),
@@ -126,8 +124,7 @@ class AlbumScreen extends StatelessWidget {
               overflow: TextOverflow.ellipsis),
           const SizedBox(height: 2),
           Text('${album.displayArtist} • ${album.songCount}곡',
-              style: const TextStyle(
-                  color: Colors.white38, fontSize: 12),
+              style: const TextStyle(color: Colors.white38, fontSize: 12),
               maxLines: 1,
               overflow: TextOverflow.ellipsis),
         ],
@@ -159,7 +156,6 @@ class AlbumDetailScreen extends StatelessWidget {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  // 앨범아트 배경
                   if (album.songs.first.albumArt != null)
                     Image.memory(
                       Uint8List.fromList(album.songs.first.albumArt!),
@@ -168,7 +164,6 @@ class AlbumDetailScreen extends StatelessWidget {
                     )
                   else
                     Container(color: const Color(0xFF282828)),
-                  // 그라데이션 오버레이
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -183,7 +178,6 @@ class AlbumDetailScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // 앨범 정보
                   Positioned(
                     bottom: 16,
                     left: 16,
@@ -212,7 +206,6 @@ class AlbumDetailScreen extends StatelessWidget {
               ),
             ),
           ),
-          // 전체재생/셔플 버튼
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -221,8 +214,7 @@ class AlbumDetailScreen extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        context.read<PlayerProvider>()
-                            .playFromList(album.songs, 0);
+                        context.read<PlayerProvider>().playFromList(album.songs, 0);
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
@@ -233,8 +225,8 @@ class AlbumDetailScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30)),
                       ),
                       icon: const Icon(Icons.play_arrow, size: 20),
-                      label: const Text('전체 재생',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      label: Text(AppLocalizations.of(context)!.playAll,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -242,8 +234,7 @@ class AlbumDetailScreen extends StatelessWidget {
                     child: OutlinedButton.icon(
                       onPressed: () {
                         final songs = List<Song>.from(album.songs)..shuffle();
-                        context.read<PlayerProvider>()
-                            .playFromList(songs, 0);
+                        context.read<PlayerProvider>().playFromList(songs, 0);
                         Navigator.pop(context);
                       },
                       style: OutlinedButton.styleFrom(
@@ -254,8 +245,8 @@ class AlbumDetailScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30)),
                       ),
                       icon: const Icon(Icons.shuffle, size: 20),
-                      label: const Text('셔플',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      label: Text(AppLocalizations.of(context)!.shuffle,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],

@@ -23,6 +23,9 @@ dependencies:
   share_plus: ^10.0.0
   flutter_colorpicker: ^1.1.0
   google_fonts: ^8.1.0
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -39,8 +42,10 @@ flutter_launcher_icons:
 
 flutter:
   uses-material-design: true
+  generate: true
   assets:
     - assets/play_song.png
     - assets/icon_no_bg.png
     - assets/cat.png
     - assets/no_album.png
+    - assets/cat_icon.png

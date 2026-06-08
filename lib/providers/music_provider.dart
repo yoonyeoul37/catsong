@@ -40,6 +40,8 @@ class MusicProvider extends ChangeNotifier {
 
     try {
       await _loadFavorites();
+      await _loadEditedSongs();
+      await _loadRecentSongsUris();
       final granted = await _requestPermissions();
       if (granted) {
         await loadSongs();
@@ -51,6 +53,35 @@ class MusicProvider extends ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Map<String, Map<String, String>> _editedSongs = {};
+
+  Future<void> _loadEditedSongs() async {
+    final prefs = await SharedPreferences.getInstance();
+    final keys = prefs.getKeys().where((k) => k.startsWith('edited_song_'));
+    for (final key in keys) {
+      final uri = key.replaceFirst('edited_song_', '');
+      final data = prefs.getStringList(key);
+      if (data != null && data.length == 3) {
+        _editedSongs[uri] = {
+          'title': data[0],
+          'artist': data[1],
+          'album': data[2],
+        };
+      }
+    }
+  }
+
+  Future<void> _saveEditedSong(Song song) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (song.uri != null) {
+      await prefs.setStringList('edited_song_${song.uri}', [
+        song.title,
+        song.artist,
+        song.album,
+      ]);
     }
   }
 
@@ -66,18 +97,61 @@ class MusicProvider extends ChangeNotifier {
         'favorites', _favoriteIds.map((id) => id.toString()).toList());
   }
 
+  List<String> _recentSongUris = [];
+
+  Future<void> _loadRecentSongsUris() async {
+    final prefs = await SharedPreferences.getInstance();
+    _recentSongUris = prefs.getStringList('recent_songs') ?? [];
+  }
+
+  Future<void> _loadRecentSongs() async {
+    _recentSongs = _recentSongUris
+        .map((uri) => _songs.firstWhere(
+              (s) => s.uri == uri,
+              orElse: () => Song(id: -1, title: '', artist: '', album: '', uri: uri),
+            ))
+        .where((s) => s.id != -1)
+        .toList();
+  }
+
+  Future<void> _saveRecentSongs() async {
+    final prefs = await SharedPreferences.getInstance();
+    final uris = _recentSongs
+        .where((s) => s.uri != null)
+        .map((s) => s.uri!)
+        .take(50)
+        .toList();
+    await prefs.setStringList('recent_songs', uris);
+  }
+
+  Future<void> removeFromRecent(Song song) async {
+    _recentSongs.removeWhere((s) => s.id == song.id);
+    await _saveRecentSongs();
+    notifyListeners();
+  }
+
+  Future<void> clearRecent() async {
+    _recentSongs.clear();
+    await _saveRecentSongs();
+    notifyListeners();
+  }
+
   Future<void> addToRecent(Song song) async {
-      _recentSongs.removeWhere((s) => s.id == song.id);
-      _recentSongs.insert(0, song);
-      if (_recentSongs.length > 50) {
-        _recentSongs = _recentSongs.sublist(0, 50);
-      }
-      notifyListeners();
+    song.lastPlayedAt = DateTime.now();
+    _recentSongs.removeWhere((s) => s.id == song.id);
+    _recentSongs.insert(0, song);
+    if (_recentSongs.length > 50) {
+      _recentSongs = _recentSongs.sublist(0, 50);
     }
+    await _saveRecentSongs();
+    notifyListeners();
+  }
 Future<void> updateSongInfo(Song song, {String? title, String? artist, String? album}) async {
     if (title != null) song.title = title;
     if (artist != null) song.artist = artist;
     if (album != null) song.album = album;
+    song.isEdited = true;
+    await _saveEditedSong(song);
 
     // 실제 파일 메타데이터 업데이트
     if (song.uri != null) {
@@ -186,9 +260,17 @@ Future<void> updateSongInfo(Song song, {String? title, String? artist, String? a
                   final metadata = await _channel.invokeMethod(
                       'getSongMetadata', {'path': song.uri});
                   if (metadata != null) {
-                    song.title = metadata['title'] ?? song.title;
-                    song.artist = metadata['artist'] ?? song.artist;
-                    song.album = metadata['album'] ?? song.album;
+                    final edited = song.uri != null ? _editedSongs[song.uri] : null;
+                    if (edited != null) {
+                      song.title = edited['title'] ?? song.title;
+                      song.artist = edited['artist'] ?? song.artist;
+                      song.album = edited['album'] ?? song.album;
+                      song.isEdited = true;
+                    } else {
+                      song.title = metadata['title'] ?? song.title;
+                      song.artist = metadata['artist'] ?? song.artist;
+                      song.album = metadata['album'] ?? song.album;
+                    }
                     song.duration = (metadata['duration'] as int?) ?? song.duration;
                     song.albumArt = metadata['albumArt'] != null
                         ? List<int>.from(metadata['albumArt'])
@@ -208,6 +290,7 @@ Future<void> updateSongInfo(Song song, {String? title, String? artist, String? a
         _buildFolders();
         notifyListeners();
 
+        await _loadRecentSongs();
         debugPrint('스캔 완료: ${_songs.length}개 곡 발견');
       } catch (e) {
         _errorMessage = '음악 스캔 오류: $e';

@@ -5,6 +5,7 @@ import '../models/song.dart';
 import '../providers/playlist_provider.dart';
 import '../providers/player_provider.dart';
 import '../theme/app_theme.dart';
+import '../l10n/app_localizations.dart';
 import '../widgets/song_list_tile.dart';
 
 class PlaylistScreen extends StatelessWidget {
@@ -23,8 +24,8 @@ class PlaylistScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 16, 8, 8),
             child: Row(
               children: [
-                const Text('재생목록',
-                    style: TextStyle(
+                Text(AppLocalizations.of(context)!.playlists,
+                    style: const TextStyle(
                         color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
@@ -47,12 +48,12 @@ class PlaylistScreen extends StatelessWidget {
                   Icon(Icons.playlist_add,
                       size: 72, color: primaryColor.withOpacity(0.4)),
                   const SizedBox(height: 16),
-                  const Text('재생목록이 없습니다',
-                      style: TextStyle(
+                  Text(AppLocalizations.of(context)!.playlists,
+                      style: const TextStyle(
                           color: AppTheme.textSecondary, fontSize: 16)),
                   const SizedBox(height: 8),
-                  const Text('+ 버튼을 눌러 만들어보세요',
-                      style: TextStyle(color: AppTheme.textHint, fontSize: 13)),
+                  Text(AppLocalizations.of(context)!.playMusic,
+                      style: const TextStyle(color: AppTheme.textHint, fontSize: 13)),
                 ],
               ),
             ),
@@ -351,8 +352,8 @@ class PlaylistDetailScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30)),
                       ),
                       icon: const Icon(Icons.play_arrow, size: 20),
-                      label: const Text('전체 재생',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      label: Text(AppLocalizations.of(context)!.playAll,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -372,8 +373,8 @@ class PlaylistDetailScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30)),
                       ),
                       icon: const Icon(Icons.shuffle, size: 20),
-                      label: const Text('셔플',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      label: Text(AppLocalizations.of(context)!.shuffle,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],
@@ -389,11 +390,11 @@ class PlaylistDetailScreen extends StatelessWidget {
                     Icon(Icons.music_note,
                         size: 64, color: Colors.white12),
                     const SizedBox(height: 16),
-                    const Text('곡이 없습니다',
-                        style: TextStyle(color: Colors.white38, fontSize: 16)),
+                    Text(AppLocalizations.of(context)!.noSongs,
+                        style: const TextStyle(color: Colors.white38, fontSize: 16)),
                     const SizedBox(height: 8),
-                    const Text('곡 목록에서 추가해보세요',
-                        style: TextStyle(color: Colors.white24, fontSize: 13)),
+                    Text(AppLocalizations.of(context)!.addMusic,
+                        style: const TextStyle(color: Colors.white24, fontSize: 13)),
                   ],
                 ),
               ),

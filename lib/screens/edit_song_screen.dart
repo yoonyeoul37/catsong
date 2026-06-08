@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../models/song.dart';
 import '../providers/music_provider.dart';
 import '../theme/app_theme.dart';
+import '../l10n/app_localizations.dart';
 
 class EditSongScreen extends StatefulWidget {
   final Song song;
@@ -40,8 +41,8 @@ class _EditSongScreenState extends State<EditSongScreen> {
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: AppTheme.background,
-        title: const Text('곡 정보 편집',
-            style: TextStyle(color: AppTheme.textPrimary)),
+        title: Text(AppLocalizations.of(context)!.editSong,
+            style: const TextStyle(color: AppTheme.textPrimary)),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios, color: AppTheme.textPrimary),
@@ -49,7 +50,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
         actions: [
           TextButton(
             onPressed: () => _saveSong(context),
-            child: Text('저장',
+            child: Text(AppLocalizations.of(context)!.save,
                 style: TextStyle(
                     color: primaryColor,
                     fontWeight: FontWeight.bold,
@@ -97,8 +98,8 @@ class _EditSongScreenState extends State<EditSongScreen> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                 ),
-                child: const Text('저장',
-                    style: TextStyle(
+                child: Text(AppLocalizations.of(context)!.save,
+                    style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 16)),
               ),
             ),
@@ -141,8 +142,8 @@ class _EditSongScreenState extends State<EditSongScreen> {
     );
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('곡 정보가 저장되었습니다'),
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.songSaved),
         backgroundColor: AppTheme.surfaceVariant,
         duration: Duration(seconds: 2),
       ),

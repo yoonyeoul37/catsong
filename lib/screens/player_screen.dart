@@ -14,6 +14,7 @@ import '../providers/playlist_provider.dart';
 import '../theme/app_theme.dart';
 import 'edit_song_screen.dart';
 import 'lyrics_screen.dart';
+import '../l10n/app_localizations.dart';
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({super.key});
@@ -28,6 +29,7 @@ class _PlayerScreenState extends State<PlayerScreen>
   late AnimationController _equalizerController;
   int _albumArtStyle = 1;
   Color _dominantColor = const Color(0xFF1A1A1A);
+  bool _showSwipeHint = false;
 
   @override
   void initState() {
@@ -61,9 +63,17 @@ class _PlayerScreenState extends State<PlayerScreen>
 
   Future<void> _loadStyle() async {
     final prefs = await SharedPreferences.getInstance();
+    final shown = false;
     setState(() {
       _albumArtStyle = prefs.getInt('albumArtStyle') ?? 1;
+      _showSwipeHint = !shown;
     });
+    if (!shown) {
+      await prefs.setBool('swipe_hint_shown', true);
+      Future.delayed(const Duration(seconds: 3), () {
+        if (mounted) setState(() => _showSwipeHint = false);
+      });
+    }
   }
 
   Future<void> _saveStyle(int style) async {
@@ -97,7 +107,6 @@ class _PlayerScreenState extends State<PlayerScreen>
           final r = (totalR / pixelCount).toInt();
           final g = (totalG / pixelCount).toInt();
           final b = (totalB / pixelCount).toInt();
-          // 너무 어두우면 기본 색상 사용
           final brightness = (r * 0.299 + g * 0.587 + b * 0.114);
           if (brightness < 30) {
             setState(() => _dominantColor = const Color(0xFF2A2A2A));
@@ -125,8 +134,6 @@ class _PlayerScreenState extends State<PlayerScreen>
     super.dispose();
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     final playerProvider = context.watch<PlayerProvider>();
@@ -138,7 +145,7 @@ class _PlayerScreenState extends State<PlayerScreen>
       return const Scaffold(
         backgroundColor: AppTheme.background,
         body: Center(
-          child: Text('재생 중인 곡이 없습니다',
+          child: Text('No song is playing',
               style: TextStyle(color: AppTheme.textSecondary)),
         ),
       );
@@ -165,45 +172,55 @@ class _PlayerScreenState extends State<PlayerScreen>
       _equalizerController.stop();
     }
 
-    return Scaffold(
-      backgroundColor: AppTheme.background,
-      body: Stack(
-        children: [
-          // 블러 배경
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 800),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  _dominantColor.withOpacity(0.8),
-                  _dominantColor.withOpacity(0.4),
-                  AppTheme.background,
-                  AppTheme.background,
-                ],
-                stops: const [0.0, 0.3, 0.6, 1.0],
+    return GestureDetector(
+      onHorizontalDragEnd: (details) {
+        if (details.primaryVelocity == null) return;
+        if (details.primaryVelocity! < -300) {
+          playerProvider.playNext();
+        } else if (details.primaryVelocity! > 300) {
+          playerProvider.playPrevious();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppTheme.background,
+        body: Stack(
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 800),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    _dominantColor.withOpacity(0.8),
+                    _dominantColor.withOpacity(0.4),
+                    AppTheme.background,
+                    AppTheme.background,
+                  ],
+                  stops: const [0.0, 0.3, 0.6, 1.0],
+                ),
               ),
             ),
-          ),
-          SafeArea(
-            bottom: false,
-            child: Column(
-          children: [
-            _buildTopBar(context, playerProvider, primaryColor),
-            Expanded(flex: 5, child: _buildAlbumArt(song, primaryColor)),
-            _buildEqualizer(playerProvider, primaryColor),
-            _buildCurrentLyrics(playerProvider, primaryColor),
-            Expanded(
-                flex: 4,
-                child: SingleChildScrollView(
-                  child: _buildControls(
-                      context, playerProvider, musicProvider, song, primaryColor),
-                )),
+            SafeArea(
+              bottom: false,
+              child: Column(
+                children: [
+                  _buildTopBar(context, playerProvider, primaryColor),
+                  Expanded(flex: 5, child: _buildAlbumArt(song, primaryColor)),
+                  _buildEqualizer(playerProvider, primaryColor),
+                  _buildCurrentLyrics(playerProvider, primaryColor),
+                  Expanded(
+                    flex: 4,
+                    child: SingleChildScrollView(
+                      child: _buildControls(
+                          context, playerProvider, musicProvider, song, primaryColor),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
-          ),
-        ],
       ),
     );
   }
@@ -219,14 +236,25 @@ class _PlayerScreenState extends State<PlayerScreen>
             icon: const Icon(Icons.keyboard_arrow_down,
                 color: AppTheme.textPrimary, size: 30),
           ),
-          const Expanded(
-            child: Text('지금 재생 중',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: AppTheme.textSecondary,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 1.2)),
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(AppLocalizations.of(context)!.nowPlaying,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        color: AppTheme.textSecondary,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 1.2)),
+                const SizedBox(height: 2),
+                Text(AppLocalizations.of(context)!.swipeToChange,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        color: AppTheme.textSecondary,
+                        fontSize: 10)),
+              ],
+            ),
           ),
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: AppTheme.textPrimary),
@@ -240,8 +268,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                   children: [
                     Icon(Icons.edit, color: primaryColor, size: 18),
                     const SizedBox(width: 10),
-                    const Text('곡 정보 편집',
-                        style: TextStyle(color: AppTheme.textPrimary)),
+                    Text(AppLocalizations.of(context)!.editSong,
+                        style: const TextStyle(color: AppTheme.textPrimary)),
                   ],
                 ),
               ),
@@ -251,8 +279,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                   children: [
                     Icon(Icons.playlist_add, color: primaryColor, size: 18),
                     const SizedBox(width: 10),
-                    const Text('재생목록에 추가',
-                        style: TextStyle(color: AppTheme.textPrimary)),
+                    Text(AppLocalizations.of(context)!.addToPlaylist,
+                        style: const TextStyle(color: AppTheme.textPrimary)),
                   ],
                 ),
               ),
@@ -262,8 +290,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                   children: [
                     Icon(Icons.style, color: primaryColor, size: 18),
                     const SizedBox(width: 10),
-                    const Text('재생화면 스타일',
-                        style: TextStyle(color: AppTheme.textPrimary)),
+                    Text(AppLocalizations.of(context)!.playerStyle,
+                        style: const TextStyle(color: AppTheme.textPrimary)),
                   ],
                 ),
               ),
@@ -309,82 +337,80 @@ class _PlayerScreenState extends State<PlayerScreen>
             AspectRatio(
               aspectRatio: 1,
               child: AnimatedBuilder(
-            animation: _rotationController,
-            builder: (context, child) {
-              return Transform.rotate(
-                angle: _rotationController.value * 2 * pi,
-                child: child,
-              );
-            },
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: const Color(0xFF1A1A1A),
-                    boxShadow: [
-                      BoxShadow(
-                        color: primaryColor.withOpacity(0.3),
-                        blurRadius: 30,
-                        spreadRadius: 5,
+                animation: _rotationController,
+                builder: (context, child) {
+                  return Transform.rotate(
+                    angle: _rotationController.value * 2 * pi,
+                    child: child,
+                  );
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color(0xFF1A1A1A),
+                        boxShadow: [
+                          BoxShadow(
+                            color: primaryColor.withOpacity(0.3),
+                            blurRadius: 30,
+                            spreadRadius: 5,
+                          ),
+                        ],
+                        border: Border.all(
+                          color: primaryColor.withOpacity(0.5),
+                          width: 2,
+                        ),
                       ),
-                    ],
-                    border: Border.all(
-                      color: primaryColor.withOpacity(0.5),
-                      width: 2,
                     ),
-                  ),
-                ),
-                FractionallySizedBox(
-                  widthFactor: 0.8,
-                  heightFactor: 0.8,
-                  child: ClipOval(
-                    child: song.albumArt != null
-                        ? Image.memory(
-                      Uint8List.fromList(song.albumArt!),
-                      fit: BoxFit.cover,
-                      gaplessPlayback: true,
-                    )
-                        : Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  AppTheme.surfaceVariant,
-                                  primaryColor.withOpacity(0.3),
-                                ],
-                              ),
-                            ),
-                            child: Center(
-                              child: Icon(Icons.music_note,
-                                  color: primaryColor.withOpacity(0.7),
-                                  size: 60),
+                    FractionallySizedBox(
+                      widthFactor: 0.8,
+                      heightFactor: 0.8,
+                      child: ClipOval(
+                        child: song.albumArt != null
+                            ? Image.memory(
+                          Uint8List.fromList(song.albumArt!),
+                          fit: BoxFit.cover,
+                          gaplessPlayback: true,
+                        )
+                            : Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                AppTheme.surfaceVariant,
+                                primaryColor.withOpacity(0.3),
+                              ],
                             ),
                           ),
-                  ),
-                ),
-                Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppTheme.background,
-                    border: Border.all(
-                      color: primaryColor.withOpacity(0.5),
-                      width: 1,
+                          child: Center(
+                            child: Image.asset(
+                              'assets/no_album.png',
+                              width: 80,
+                              height: 80,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    Container(
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppTheme.background,
+                        border: Border.all(
+                          color: primaryColor.withOpacity(0.5),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        ),
-            // 고양이 흔들흔들
-            Positioned(
-              top: 0,
-              child: _CatDanceAnimation(),
+              ),
             ),
           ],
         ),
@@ -424,21 +450,21 @@ class _PlayerScreenState extends State<PlayerScreen>
                           gaplessPlayback: true,
                         )
                             : Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              AppTheme.surfaceVariant,
-                              primaryColor.withOpacity(0.3),
-                            ],
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                AppTheme.surfaceVariant,
+                                primaryColor.withOpacity(0.3),
+                              ],
+                            ),
+                          ),
+                          child: Center(
+                            child: Icon(Icons.music_note,
+                                color: primaryColor, size: 30),
                           ),
                         ),
-                        child: Center(
-                          child: Icon(Icons.music_note,
-                              color: primaryColor, size: 30),
-                        ),
-                      ),
                       ),
                     ),
                     Positioned(
@@ -559,22 +585,21 @@ class _PlayerScreenState extends State<PlayerScreen>
                   gaplessPlayback: true,
                 )
                     : Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              AppTheme.surfaceVariant,
-                              primaryColor.withOpacity(0.3),
-                            ],
-                          ),
-                        ),
-                        child: Center(
-                          child: Icon(Icons.music_note,
-                              color: primaryColor.withOpacity(0.7),
-                              size: 80),
-                        ),
-                      ),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        AppTheme.surfaceVariant,
+                        primaryColor.withOpacity(0.3),
+                      ],
+                    ),
+                  ),
+                  child: Center(
+                    child: Icon(Icons.music_note,
+                        color: primaryColor.withOpacity(0.7), size: 80),
+                  ),
+                ),
               ),
             ),
           ),
@@ -616,19 +641,19 @@ class _PlayerScreenState extends State<PlayerScreen>
                     gaplessPlayback: true,
                   )
                       : Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                AppTheme.surfaceVariant,
-                                primaryColor.withOpacity(0.3),
-                              ],
-                            ),
-                          ),
-                          child: Center(
-                            child: Icon(Icons.music_note,
-                                color: primaryColor.withOpacity(0.7), size: 60),
-                          ),
-                        ),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          AppTheme.surfaceVariant,
+                          primaryColor.withOpacity(0.3),
+                        ],
+                      ),
+                    ),
+                    child: Center(
+                      child: Icon(Icons.music_note,
+                          color: primaryColor.withOpacity(0.7), size: 60),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -787,7 +812,6 @@ class _PlayerScreenState extends State<PlayerScreen>
   Widget _buildControls(BuildContext context, PlayerProvider playerProvider,
       MusicProvider musicProvider, Song song, Color primaryColor) {
     final isFav = musicProvider.isFavorite(song.id);
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(28, 4, 28, 0),
       child: Column(
@@ -816,7 +840,62 @@ class _PlayerScreenState extends State<PlayerScreen>
                 ),
               ),
               IconButton(
-                onPressed: () => musicProvider.toggleFavorite(song),
+                onPressed: () {
+                  musicProvider.toggleFavorite(song);
+                  final isFavNow = musicProvider.isFavorite(song.id);
+                  final overlay = Overlay.of(context);
+                  final entry = OverlayEntry(
+                    builder: (context) => Positioned(
+                      bottom: 100,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: TweenAnimationBuilder<double>(
+                          tween: Tween(begin: 0.0, end: 1.0),
+                          duration: const Duration(milliseconds: 300),
+                          builder: (context, value, child) {
+                            return Opacity(
+                              opacity: value,
+                              child: Transform.scale(
+                                scale: 0.8 + (0.2 * value),
+                                child: child,
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF1A1A1A),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  isFavNow ? Icons.favorite : Icons.favorite_border,
+                                  color: isFavNow ? Colors.redAccent : Colors.white54,
+                                  size: 18,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  isFavNow
+                                      ? AppLocalizations.of(context)!.addedToFavorites
+                                      : AppLocalizations.of(context)!.removedFromFavorites,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      decoration: TextDecoration.none),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                  overlay.insert(entry);
+                  Future.delayed(const Duration(seconds: 2), () => entry.remove());
+                },
                 icon: Icon(
                   isFav ? Icons.favorite : Icons.favorite_border,
                   color: isFav ? Colors.redAccent : AppTheme.textHint,
@@ -967,11 +1046,11 @@ class _PlayerScreenState extends State<PlayerScreen>
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.surfaceVariant,
-        title: const Text('재생목록에 추가',
-            style: TextStyle(color: AppTheme.textPrimary)),
+        title: Text(AppLocalizations.of(context)!.addToPlaylist,
+            style: const TextStyle(color: AppTheme.textPrimary)),
         content: playlistProvider.playlists.isEmpty
-            ? const Text('재생목록이 없습니다.\n재생목록 탭에서 먼저 만들어주세요.',
-            style: TextStyle(color: AppTheme.textSecondary))
+            ? Text(AppLocalizations.of(context)!.noPlaylists,
+            style: const TextStyle(color: AppTheme.textSecondary))
             : SizedBox(
           width: double.maxFinite,
           child: ListView.builder(
@@ -983,14 +1062,14 @@ class _PlayerScreenState extends State<PlayerScreen>
                 leading: Icon(Icons.playlist_play, color: primaryColor),
                 title: Text(playlist.name,
                     style: const TextStyle(color: AppTheme.textPrimary)),
-                subtitle: Text('${playlist.songCount}곡',
+                subtitle: Text('${playlist.songCount} songs',
                     style: const TextStyle(color: AppTheme.textSecondary)),
                 onTap: () {
                   playlistProvider.addSongToPlaylist(playlist.id, song);
                   Navigator.pop(ctx);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('${playlist.name}에 추가됐습니다'),
+                      content: Text('${playlist.name} ${AppLocalizations.of(context)!.addedToPlaylist}'),
                       backgroundColor: AppTheme.surfaceVariant,
                       duration: const Duration(seconds: 2),
                     ),
@@ -1003,7 +1082,7 @@ class _PlayerScreenState extends State<PlayerScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('닫기', style: TextStyle(color: primaryColor)),
+            child: Text(AppLocalizations.of(context)!.close, style: TextStyle(color: primaryColor)),
           ),
         ],
       ),
@@ -1011,26 +1090,34 @@ class _PlayerScreenState extends State<PlayerScreen>
   }
 
   void _showSleepTimerDialog(BuildContext context, PlayerProvider playerProvider, Color primaryColor) {
-    showDialog(
+    showModalBottomSheet(
       context: context,
+      backgroundColor: AppTheme.surfaceVariant,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) => _SleepTimerDialog(playerProvider: playerProvider, primaryColor: primaryColor),
     );
   }
 
   void _showSpeedDialog(BuildContext context, PlayerProvider playerProvider, Color primaryColor) {
-    showDialog(
+    showModalBottomSheet(
       context: context,
+      backgroundColor: AppTheme.surfaceVariant,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) => _SpeedDialog(playerProvider: playerProvider, primaryColor: primaryColor),
     );
   }
 
   void _showStyleDialog(BuildContext context, Color primaryColor) {
     final styles = [
-      {'id': 1, 'name': 'CD 회전', 'icon': Icons.album, 'desc': '클래식한 CD 회전 애니메이션'},
-      {'id': 2, 'name': '카세트 테이프', 'icon': Icons.settings_input_composite, 'desc': '레트로 카세트 테이프'},
-      {'id': 3, 'name': '앨범아트 카드', 'icon': Icons.image, 'desc': '심플한 앨범아트 카드형'},
-      {'id': 4, 'name': '파형 비주얼라이저', 'icon': Icons.graphic_eq, 'desc': '음파 애니메이션'},
-      {'id': 5, 'name': '그라데이션', 'icon': Icons.gradient, 'desc': '앨범아트 색상 그라데이션 배경'},
+      {'id': 1, 'name': 'CD Rotation', 'icon': Icons.album, 'desc': 'Classic CD rotation animation'},
+      {'id': 2, 'name': 'Cassette Tape', 'icon': Icons.settings_input_composite, 'desc': 'Retro cassette tape style'},
+      {'id': 3, 'name': 'Album Art Card', 'icon': Icons.image, 'desc': 'Simple album art card style'},
+      {'id': 4, 'name': 'Waveform Visualizer', 'icon': Icons.graphic_eq, 'desc': 'Sound wave animation'},
+      {'id': 5, 'name': 'Gradient', 'icon': Icons.gradient, 'desc': 'Album art color gradient background'},
     ];
 
     showDialog(
@@ -1042,8 +1129,8 @@ class _PlayerScreenState extends State<PlayerScreen>
             children: [
               Icon(Icons.style, color: primaryColor, size: 20),
               const SizedBox(width: 8),
-              const Text('재생화면 스타일',
-                  style: TextStyle(color: AppTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(AppLocalizations.of(context)!.playerStyle,
+                  style: const TextStyle(color: AppTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
             ],
           ),
           content: SizedBox(
@@ -1103,7 +1190,7 @@ class _PlayerScreenState extends State<PlayerScreen>
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: Text('닫기', style: TextStyle(color: primaryColor)),
+              child: Text(AppLocalizations.of(context)!.close, style: TextStyle(color: primaryColor)),
             ),
           ],
         ),
@@ -1129,8 +1216,8 @@ void _showLoopModeDialog(BuildContext context, PlayerProvider playerProvider, Co
               children: [
                 Icon(Icons.repeat, color: primaryColor, size: 20),
                 const SizedBox(width: 8),
-                const Text('반복 모드',
-                    style: TextStyle(
+                Text(AppLocalizations.of(context)!.repeatMode,
+                    style: const TextStyle(
                         color: AppTheme.textPrimary,
                         fontSize: 16,
                         fontWeight: FontWeight.bold)),
@@ -1139,8 +1226,8 @@ void _showLoopModeDialog(BuildContext context, PlayerProvider playerProvider, Co
             const SizedBox(height: 16),
             _buildLoopOption(ctx,
               icon: Icons.arrow_forward,
-              title: '반복 없음',
-              subtitle: '목록 끝나면 정지',
+              title: AppLocalizations.of(context)!.noRepeat,
+              subtitle: AppLocalizations.of(context)!.noRepeat,
               isSelected: playerProvider.loopMode == LoopMode.off,
               primaryColor: primaryColor,
               onTap: () {
@@ -1151,8 +1238,8 @@ void _showLoopModeDialog(BuildContext context, PlayerProvider playerProvider, Co
             ),
             _buildLoopOption(ctx,
               icon: Icons.repeat_one,
-              title: '현재 노래 반복',
-              subtitle: '현재 노래를 계속 반복',
+              title: AppLocalizations.of(context)!.repeatOne,
+              subtitle: AppLocalizations.of(context)!.repeatOne,
               isSelected: playerProvider.loopMode == LoopMode.one,
               primaryColor: primaryColor,
               onTap: () {
@@ -1163,8 +1250,8 @@ void _showLoopModeDialog(BuildContext context, PlayerProvider playerProvider, Co
             ),
             _buildLoopOption(ctx,
               icon: Icons.repeat,
-              title: '전체 반복',
-              subtitle: '목록 전체를 계속 반복',
+              title: AppLocalizations.of(context)!.repeatAll,
+              subtitle: AppLocalizations.of(context)!.repeatAll,
               isSelected: playerProvider.loopMode == LoopMode.all,
               primaryColor: primaryColor,
               onTap: () {
@@ -1282,12 +1369,41 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
     super.dispose();
   }
 
+  Widget _quickButton(String label, int hours, int minutes, Color primaryColor) {
+    return GestureDetector(
+      onTap: () {
+        widget.playerProvider.setSleepTimer(
+          Duration(hours: hours, minutes: minutes),
+        );
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('$label until stop'),
+          backgroundColor: AppTheme.surfaceVariant,
+          duration: const Duration(seconds: 2),
+        ));
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: primaryColor.withOpacity(0.15),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: primaryColor.withOpacity(0.5)),
+        ),
+        child: Text(label,
+            style: TextStyle(
+                color: primaryColor,
+                fontSize: 13,
+                fontWeight: FontWeight.bold)),
+      ),
+    );
+  }
+
   String _formatRemaining(Duration d) {
     final hours = d.inHours;
     final minutes = d.inMinutes % 60;
     final seconds = d.inSeconds % 60;
-    if (hours > 0) return '$hours시간 $minutes분 $seconds초 후 종료';
-    return '$minutes분 $seconds초 후 종료';
+    if (hours > 0) return '$hours hr $minutes min $seconds sec until stop';
+    return '$minutes min $seconds sec until stop';
   }
 
   @override
@@ -1295,188 +1411,200 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
     final isActive = widget.playerProvider.isSleepTimerActive;
     final primaryColor = widget.primaryColor;
 
-    return Dialog(
-      backgroundColor: AppTheme.surfaceVariant,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.bedtime, color: primaryColor, size: 20),
+              const SizedBox(width: 8),
+              Text(AppLocalizations.of(context)!.sleepTimer,
+                  style: const TextStyle(
+                      color: AppTheme.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold)),
+            ],
+          ),
+          const SizedBox(height: 16),
+          if (!isActive) ...[
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
               children: [
-                Icon(Icons.bedtime, color: primaryColor, size: 20),
-                const SizedBox(width: 8),
-                const Text('수면 타이머',
-                    style: TextStyle(
-                        color: AppTheme.textPrimary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold)),
+                _quickButton('15 min', 0, 15, primaryColor),
+                _quickButton('30 min', 0, 30, primaryColor),
+                _quickButton('1 hr', 1, 0, primaryColor),
+                _quickButton('2 hr', 2, 0, primaryColor),
+                _quickButton('3 hr', 3, 0, primaryColor),
+                _quickButton('4 hr', 4, 0, primaryColor),
+                _quickButton('5 hr', 5, 0, primaryColor),
               ],
             ),
-            const SizedBox(height: 20),
-            if (isActive) ...[
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  children: [
-                    Icon(Icons.timer, color: primaryColor, size: 32),
-                    const SizedBox(height: 8),
-                    Text(_formatRemaining(_remaining),
-                        style: TextStyle(
-                            color: primaryColor,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600)),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        widget.playerProvider.cancelSleepTimer();
-                        Navigator.pop(context);
-                      },
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.redAccent,
-                        side: const BorderSide(color: Colors.redAccent),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: const Text('타이머 취소'),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: primaryColor,
-                        foregroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: const Text('닫기'),
-                    ),
-                  ),
-                ],
-              ),
-            ] else ...[
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                decoration: BoxDecoration(
-                  color: primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                  child: Text(
-                    '${selectedHours > 0 ? '${selectedHours}시간 ' : ''}${selectedMinutes}분',
-                    style: TextStyle(
-                        color: primaryColor,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 24,
-                    child: Text('분',
-                        style: TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
-                  ),
-                  Expanded(
-                    child: Slider(
-                      value: selectedMinutes.toDouble(),
-                      min: 0, max: 59, divisions: 59,
-                      onChanged: (value) =>
-                          setState(() => selectedMinutes = value.toInt()),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 24,
-                    child: Text('$selectedMinutes',
-                        style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 24,
-                    child: Text('시',
-                        style: TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
-                  ),
-                  Expanded(
-                    child: Slider(
-                      value: selectedHours.toDouble(),
-                      min: 0, max: 6, divisions: 6,
-                      onChanged: (value) =>
-                          setState(() => selectedHours = value.toInt()),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 24,
-                    child: Text('$selectedHours',
-                        style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppTheme.textHint,
-                        side: const BorderSide(color: AppTheme.divider),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: const Text('취소'),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        final total = selectedHours * 60 + selectedMinutes;
-                        if (total > 0) {
-                          widget.playerProvider.setSleepTimer(
-                            Duration(hours: selectedHours, minutes: selectedMinutes),
-                          );
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(
-                                '${selectedHours > 0 ? '${selectedHours}시간 ' : ''}${selectedMinutes}분 후 종료'),
-                            backgroundColor: AppTheme.surfaceVariant,
-                            duration: const Duration(seconds: 2),
-                          ));
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: primaryColor,
-                        foregroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: const Text('설정',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+            const SizedBox(height: 16),
           ],
-        ),
+          if (isActive) ...[
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                children: [
+                  Icon(Icons.timer, color: primaryColor, size: 32),
+                  const SizedBox(height: 8),
+                  Text(_formatRemaining(_remaining),
+                      style: TextStyle(
+                          color: primaryColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600)),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      widget.playerProvider.cancelSleepTimer();
+                      Navigator.pop(context);
+                    },
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.redAccent,
+                      side: const BorderSide(color: Colors.redAccent),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: Text(AppLocalizations.of(context)!.timerCancel),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: Text(AppLocalizations.of(context)!.close),
+                  ),
+                ),
+              ],
+            ),
+          ] else ...[
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(
+                color: primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: Text(
+                  '${selectedHours > 0 ? '${selectedHours} hr ' : ''}${selectedMinutes} min',
+                  style: TextStyle(
+                      color: primaryColor,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                SizedBox(
+                  width: 30,
+                  child: Text('min',
+                      style: TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+                ),
+                Expanded(
+                  child: Slider(
+                    value: selectedMinutes.toDouble(),
+                    min: 0, max: 59, divisions: 59,
+                    onChanged: (value) =>
+                        setState(() => selectedMinutes = value.toInt()),
+                  ),
+                ),
+                SizedBox(
+                  width: 24,
+                  child: Text('$selectedMinutes',
+                      style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 30,
+                  child: Text('hr',
+                      style: TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+                ),
+                Expanded(
+                  child: Slider(
+                    value: selectedHours.toDouble(),
+                    min: 0, max: 6, divisions: 6,
+                    onChanged: (value) =>
+                        setState(() => selectedHours = value.toInt()),
+                  ),
+                ),
+                SizedBox(
+                  width: 24,
+                  child: Text('$selectedHours',
+                      style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppTheme.textHint,
+                      side: const BorderSide(color: AppTheme.divider),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: Text(AppLocalizations.of(context)!.cancel),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final total = selectedHours * 60 + selectedMinutes;
+                      if (total > 0) {
+                        widget.playerProvider.setSleepTimer(
+                          Duration(hours: selectedHours, minutes: selectedMinutes),
+                        );
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              '${selectedHours > 0 ? '${selectedHours} hr ' : ''}${selectedMinutes} min until stop'),
+                          backgroundColor: AppTheme.surfaceVariant,
+                          duration: const Duration(seconds: 2),
+                        ));
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: Text(AppLocalizations.of(context)!.set,
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -1503,169 +1631,116 @@ class _SpeedDialogState extends State<_SpeedDialog> {
   @override
   Widget build(BuildContext context) {
     final primaryColor = widget.primaryColor;
-    return Dialog(
-      backgroundColor: AppTheme.surfaceVariant,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.speed, color: primaryColor, size: 20),
-                const SizedBox(width: 8),
-                const Text('재생 속도',
-                    style: TextStyle(
-                        color: AppTheme.textPrimary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold)),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                child: Text(
-                  '${_speed.toStringAsFixed(2)}x',
-                  style: TextStyle(
-                      color: primaryColor,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Slider(
-              value: _speed,
-              min: 0.5,
-              max: 2.0,
-              divisions: 6,
-              onChanged: (value) {
-                setState(() => _speed = value);
-                widget.playerProvider.setPlaybackSpeed(value);
-              },
-            ),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 6,
-              runSpacing: 6,
-              alignment: WrapAlignment.center,
-              children: [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0].map((speed) {
-                final isSelected = (_speed - speed).abs() < 0.01;
-                return GestureDetector(
-                  onTap: () {
-                    setState(() => _speed = speed);
-                    widget.playerProvider.setPlaybackSpeed(speed);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: isSelected ? primaryColor : AppTheme.background,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                          color: isSelected ? primaryColor : AppTheme.divider),
-                    ),
-                    child: Text(
-                      '${speed}x',
-                      style: TextStyle(
-                          color: isSelected ? Colors.black : AppTheme.textSecondary,
-                          fontSize: 12,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal),
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {
-                      setState(() => _speed = 1.0);
-                      widget.playerProvider.setPlaybackSpeed(1.0);
-                    },
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppTheme.textHint,
-                      side: const BorderSide(color: AppTheme.divider),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                    ),
-                    child: const Text('기본값'),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                    ),
-                    child: const Text('닫기',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CatDanceAnimation extends StatefulWidget {
-  const _CatDanceAnimation();
-
-  @override
-  State<_CatDanceAnimation> createState() => _CatDanceAnimationState();
-}
-
-class _CatDanceAnimationState extends State<_CatDanceAnimation>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 600),
-    )..repeat(reverse: true);
-    _animation = Tween<double>(begin: -0.15, end: 0.15).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return Transform.rotate(
-          angle: _animation.value,
-          child: Image.asset(
-            'assets/no_album.png',
-            width: 60,
-            height: 60,
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.speed, color: primaryColor, size: 20),
+              const SizedBox(width: 8),
+              Text(AppLocalizations.of(context)!.playbackSpeed,
+                  style: const TextStyle(
+                      color: AppTheme.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold)),
+            ],
           ),
-        );
-      },
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: primaryColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Center(
+              child: Text(
+                '${_speed.toStringAsFixed(2)}x',
+                style: TextStyle(
+                    color: primaryColor,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Slider(
+            value: _speed,
+            min: 0.5,
+            max: 2.0,
+            divisions: 6,
+            onChanged: (value) {
+              setState(() => _speed = value);
+              widget.playerProvider.setPlaybackSpeed(value);
+            },
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            alignment: WrapAlignment.center,
+            children: [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0].map((speed) {
+              final isSelected = (_speed - speed).abs() < 0.01;
+              return GestureDetector(
+                onTap: () {
+                  setState(() => _speed = speed);
+                  widget.playerProvider.setPlaybackSpeed(speed);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: isSelected ? primaryColor : AppTheme.background,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: isSelected ? primaryColor : AppTheme.divider),
+                  ),
+                  child: Text(
+                    '${speed}x',
+                    style: TextStyle(
+                        color: isSelected ? Colors.black : AppTheme.textSecondary,
+                        fontSize: 12,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    setState(() => _speed = 1.0);
+                    widget.playerProvider.setPlaybackSpeed(1.0);
+                  },
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppTheme.textHint,
+                    side: const BorderSide(color: AppTheme.divider),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                  child: Text(AppLocalizations.of(context)!.defaultValue),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryColor,
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                  child: Text(AppLocalizations.of(context)!.close),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

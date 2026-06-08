@@ -5,6 +5,7 @@ import '../models/song.dart';
 import '../providers/music_provider.dart';
 import '../providers/player_provider.dart';
 import '../theme/app_theme.dart';
+import '../l10n/app_localizations.dart';
 import '../widgets/song_list_tile.dart';
 
 class FolderScreen extends StatelessWidget {
@@ -23,8 +24,8 @@ class FolderScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Row(
               children: [
-                const Text('폴더',
-                    style: TextStyle(
+                Text(AppLocalizations.of(context)!.folders,
+                    style: const TextStyle(
                         color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
@@ -46,8 +47,8 @@ class FolderScreen extends StatelessWidget {
                   Icon(Icons.folder_open,
                       size: 72, color: primaryColor.withOpacity(0.4)),
                   const SizedBox(height: 16),
-                  const Text('폴더가 없습니다',
-                      style: TextStyle(
+                  Text(AppLocalizations.of(context)!.folders,
+                      style: const TextStyle(
                           color: AppTheme.textSecondary, fontSize: 16)),
                 ],
               ),

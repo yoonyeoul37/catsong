@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/music_provider.dart';
 import '../models/song.dart';
 import '../theme/app_theme.dart';
+import '../l10n/app_localizations.dart';
 
 class RingtoneScreen extends StatefulWidget {
   final Song? initialSong;
@@ -75,8 +76,8 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: AppTheme.background,
-        title: const Text('벨소리 지정',
-            style: TextStyle(color: AppTheme.textPrimary)),
+        title: Text(AppLocalizations.of(context)!.ringtone,
+            style: const TextStyle(color: AppTheme.textPrimary)),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios, color: AppTheme.textPrimary),
@@ -87,7 +88,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('곡 선택',
+            Text('Select Song',
                 style: TextStyle(
                     color: primaryColor,
                     fontSize: 13,
@@ -102,10 +103,10 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<Song>(
                   value: _selectedSong,
-                  hint: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('곡을 선택하세요',
-                        style: TextStyle(color: AppTheme.textHint)),
+                  hint: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(AppLocalizations.of(context)!.searchHint,
+                        style: const TextStyle(color: AppTheme.textHint)),
                   ),
                   isExpanded: true,
                   dropdownColor: AppTheme.surfaceVariant,
@@ -136,7 +137,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
             const SizedBox(height: 24),
 
             if (_selectedSong != null) ...[
-              Text('구간 선택',
+              Text('Select Range',
                   style: TextStyle(
                       color: primaryColor,
                       fontSize: 13,
@@ -146,8 +147,9 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
 
               Row(
                 children: [
-                  const SizedBox(width: 50,
-                      child: Text('시작',
+                  const SizedBox(
+                      width: 50,
+                      child: Text('Start',
                           style: TextStyle(color: AppTheme.textSecondary))),
                   Expanded(
                     child: Slider(
@@ -163,7 +165,8 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                       },
                     ),
                   ),
-                  SizedBox(width: 50,
+                  SizedBox(
+                      width: 50,
                       child: Text(_formatTime(_startValue.toInt()),
                           style: const TextStyle(color: AppTheme.textSecondary))),
                 ],
@@ -171,8 +174,9 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
 
               Row(
                 children: [
-                  const SizedBox(width: 50,
-                      child: Text('끝',
+                  const SizedBox(
+                      width: 50,
+                      child: Text('End',
                           style: TextStyle(color: AppTheme.textSecondary))),
                   Expanded(
                     child: Slider(
@@ -188,7 +192,8 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                       },
                     ),
                   ),
-                  SizedBox(width: 50,
+                  SizedBox(
+                      width: 50,
                       child: Text(_formatTime(_endValue.toInt()),
                           style: const TextStyle(color: AppTheme.textSecondary))),
                 ],
@@ -197,7 +202,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
               const SizedBox(height: 8),
               Center(
                 child: Text(
-                  '선택 구간: ${_formatTime(_startValue.toInt())} ~ ${_formatTime(_endValue.toInt())} (${(_endValue - _startValue).toInt()}초)',
+                  'Range: ${_formatTime(_startValue.toInt())} ~ ${_formatTime(_endValue.toInt())} (${(_endValue - _startValue).toInt()} sec)',
                   style: TextStyle(color: primaryColor, fontSize: 14),
                 ),
               ),
@@ -232,7 +237,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
-                    _isPlaying ? '재생 중...' : '미리듣기',
+                    _isPlaying ? 'Playing...' : 'Preview',
                     style: TextStyle(color: primaryColor, fontSize: 12),
                   ),
                 ),
@@ -254,8 +259,8 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                   ),
                   child: _isProcessing
                       ? const CircularProgressIndicator(color: Colors.black)
-                      : const Text('벨소리로 설정',
-                      style: TextStyle(
+                      : Text(AppLocalizations.of(context)!.setRingtone,
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 16)),
                 ),
               ),
@@ -287,25 +292,25 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
       });
       if (result == true) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('벨소리가 설정됐습니다! 🎵'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.ringtoneSet),
             backgroundColor: Colors.green,
-            duration: Duration(seconds: 3),
+            duration: const Duration(seconds: 3),
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('벨소리 설정에 실패했습니다'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.ringtoneFailed),
             backgroundColor: Colors.redAccent,
-            duration: Duration(seconds: 3),
+            duration: const Duration(seconds: 3),
           ),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('오류: $e'),
+          content: Text('Error: $e'),
           backgroundColor: Colors.redAccent,
           duration: const Duration(seconds: 3),
         ),

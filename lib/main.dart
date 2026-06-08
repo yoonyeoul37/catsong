@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:audio_service/audio_service.dart';
@@ -11,6 +12,7 @@ import 'providers/video_provider.dart';
 import 'providers/theme_provider.dart';
 import 'screens/home_screen.dart';
 import 'theme/app_theme.dart';
+import 'l10n/app_localizations.dart';
 
 late AudioHandler globalAudioHandler;
 
@@ -73,6 +75,18 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: '캣송',
             debugShowCheckedModeBanner: false,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('ko'),
+              Locale('en'),
+              Locale('ja'),
+              Locale('zh'),
+            ],
             theme: AppTheme.buildTheme(themeProvider.primaryColor).copyWith(
               textTheme: AppTheme.buildTheme(themeProvider.primaryColor)
                   .textTheme
@@ -109,6 +123,7 @@ class _AppInitializerState extends State<AppInitializer> {
       final musicProvider = context.read<MusicProvider>();
       if (musicProvider.songs.isEmpty && !musicProvider.isLoading) {
         await musicProvider.initialize();
+        context.read<PlaylistProvider>().restorePlaylistSongs(musicProvider.allSongs);
       }
       await _checkAndRequestReview();
     });

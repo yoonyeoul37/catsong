@@ -13,6 +13,8 @@ class PlaylistProvider extends ChangeNotifier {
     loadPlaylists();
   }
 
+  List<String> _pendingPlaylistUris = [];
+
   Future<void> loadPlaylists() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -24,12 +26,26 @@ class PlaylistProvider extends ChangeNotifier {
           name: e['name'],
           songs: [],
           createdAt: DateTime.parse(e['createdAt']),
+          songUris: List<String>.from(e['songUris'] ?? []),
         )).toList();
         notifyListeners();
       }
     } catch (e) {
       debugPrint('재생목록 불러오기 오류: $e');
     }
+  }
+
+  void restorePlaylistSongs(List<Song> allSongs) {
+    for (final playlist in _playlists) {
+      playlist.songs = playlist.songUris
+          .map((uri) => allSongs.firstWhere(
+                (s) => s.uri == uri,
+                orElse: () => Song(id: -1, title: '', artist: '', album: '', uri: uri),
+              ))
+          .where((s) => s.id != -1)
+          .toList();
+    }
+    notifyListeners();
   }
 
   Future<void> savePlaylists() async {

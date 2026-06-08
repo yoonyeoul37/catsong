@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/player_provider.dart';
 import '../theme/app_theme.dart';
+import '../l10n/app_localizations.dart';
 import '../screens/player_screen.dart';
 
 class MiniPlayer extends StatelessWidget {
@@ -91,11 +92,17 @@ class MiniPlayer extends StatelessWidget {
                         width: 44,
                         height: 44,
                         decoration: BoxDecoration(
-                          color: AppTheme.surfaceVariant,
+                          color: const Color(0xFF2E2E2E),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(Icons.music_note,
-                            color: primaryColor, size: 22),
+                        child: Center(
+                          child: Image.asset(
+                            'assets/no_album.png',
+                            width: 30,
+                            height: 30,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -115,13 +122,26 @@ class MiniPlayer extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 2),
-                          Text(
-                            song.artistDisplay,
-                            style: const TextStyle(
-                                color: Colors.white60,
-                                fontSize: 12),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  song.artistDisplay,
+                                  style: const TextStyle(
+                                      color: Colors.white60,
+                                      fontSize: 12),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                '${playerProvider.formatDuration(playerProvider.position)} / ${playerProvider.formatDuration(playerProvider.duration)}',
+                                style: const TextStyle(
+                                    color: Colors.white38,
+                                    fontSize: 11),
+                              ),
+                            ],
                           ),
                         ],
                       ),

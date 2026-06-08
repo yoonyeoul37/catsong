@@ -230,7 +230,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: AppLocalizations.of(context)!.privacyPolicy,
                 subtitle: AppLocalizations.of(context)!.privacyPolicy,
                 onTap: () => _launchUrl(
-                    'https://yoonyeoul37.github.io/play-song/privacy_policy.html'),
+                    AppLocalizations.of(context)!.privacyPolicyUrl),
                 primaryColor: primaryColor,
               ),
               _buildTileDivider(),
@@ -240,7 +240,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: AppLocalizations.of(context)!.termsOfService,
                 subtitle: AppLocalizations.of(context)!.termsOfService,
                 onTap: () => _launchUrl(
-                    'https://yoonyeoul37.github.io/play-song/terms_of_service.html'),
+                    AppLocalizations.of(context)!.termsOfServiceUrl),
                 primaryColor: primaryColor,
               ),
             ],

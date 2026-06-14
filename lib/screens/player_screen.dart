@@ -202,19 +202,17 @@ class _PlayerScreenState extends State<PlayerScreen>
               ),
             ),
             SafeArea(
-              bottom: false,
+              bottom: true,
               child: Column(
                 children: [
                   _buildTopBar(context, playerProvider, primaryColor),
-                  Expanded(flex: 5, child: _buildAlbumArt(song, primaryColor)),
+                  Expanded(flex: 4, child: _buildAlbumArt(song, primaryColor)),
                   _buildEqualizer(playerProvider, primaryColor),
                   _buildCurrentLyrics(playerProvider, primaryColor),
                   Expanded(
-                    flex: 4,
-                    child: SingleChildScrollView(
-                      child: _buildControls(
-                          context, playerProvider, musicProvider, song, primaryColor),
-                    ),
+                    flex: 5,
+                    child: _buildControls(
+                        context, playerProvider, musicProvider, song, primaryColor),
                   ),
                 ],
               ),
@@ -1035,6 +1033,7 @@ class _PlayerScreenState extends State<PlayerScreen>
               ),
             ],
           ),
+          const SizedBox(height: 8),
         ],
       ),
     );
@@ -1207,7 +1206,7 @@ void _showLoopModeDialog(BuildContext context, PlayerProvider playerProvider, Co
         borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
     builder: (ctx) => StatefulBuilder(
       builder: (context, setDialogState) => Padding(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + MediaQuery.of(context).viewPadding.bottom),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1412,7 +1411,7 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
     final primaryColor = widget.primaryColor;
 
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + MediaQuery.of(context).viewPadding.bottom),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -1632,7 +1631,7 @@ class _SpeedDialogState extends State<_SpeedDialog> {
   Widget build(BuildContext context) {
     final primaryColor = widget.primaryColor;
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + MediaQuery.of(context).viewPadding.bottom),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

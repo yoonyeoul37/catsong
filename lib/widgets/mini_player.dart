@@ -14,6 +14,7 @@ class MiniPlayer extends StatelessWidget {
     final playerProvider = context.watch<PlayerProvider>();
     final song = playerProvider.currentSong;
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
 
     if (song == null) return const SizedBox.shrink();
 
@@ -43,10 +44,13 @@ class MiniPlayer extends StatelessWidget {
       },
       child: Container(
         height: 72,
-        margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         decoration: BoxDecoration(
           color: const Color(0xFF1A1A1A),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: const BorderRadius.only(
+  topLeft: Radius.circular(12),
+  topRight: Radius.circular(12),
+),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.5),
@@ -68,7 +72,8 @@ class MiniPlayer extends StatelessWidget {
                 child: LinearProgressIndicator(
                   value: playerProvider.progress,
                   backgroundColor: Colors.white12,
-                  valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                  valueColor:
+                  AlwaysStoppedAnimation<Color>(primaryColor),
                 ),
               ),
             ),
@@ -93,7 +98,8 @@ class MiniPlayer extends StatelessWidget {
                         height: 44,
                         decoration: BoxDecoration(
                           color: const Color(0xFF2E2E2E),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius:
+                          BorderRadius.circular(8),
                         ),
                         child: Center(
                           child: Image.asset(
@@ -170,7 +176,8 @@ class MiniPlayer extends StatelessWidget {
                             ? const Padding(
                           padding: EdgeInsets.all(10),
                           child: CircularProgressIndicator(
-                              strokeWidth: 2, color: Colors.black),
+                              strokeWidth: 2,
+                              color: Colors.black),
                         )
                             : Icon(
                           playerProvider.isPlaying

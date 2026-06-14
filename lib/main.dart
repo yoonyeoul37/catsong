@@ -4,20 +4,24 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:audio_service/audio_service.dart';
+import 'package:media_kit/media_kit.dart';
 import 'providers/music_provider.dart';
 import 'providers/player_provider.dart';
 import 'providers/playlist_provider.dart';
 import 'providers/lyrics_provider.dart';
 import 'providers/video_provider.dart';
 import 'providers/theme_provider.dart';
+import 'providers/radio_provider.dart';
 import 'screens/home_screen.dart';
 import 'theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
 
 late AudioHandler globalAudioHandler;
+late BaseAudioHandler radioAudioHandler;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
 
   final playerProvider = PlayerProvider();
   final musicProvider = MusicProvider();
@@ -25,8 +29,9 @@ void main() async {
     musicProvider.addToRecent(song);
   };
 
+  final simpleHandler = SimpleAudioHandler(playerProvider);
   globalAudioHandler = await AudioService.init(
-    builder: () => SimpleAudioHandler(playerProvider),
+    builder: () => simpleHandler,
     config: const AudioServiceConfig(
       androidNotificationChannelId: 'kr.ssing.catsong.audio',
       androidNotificationChannelName: 'MP3 Player',
@@ -36,6 +41,19 @@ void main() async {
     ),
   );
   playerProvider.setAudioHandler(globalAudioHandler);
+  radioAudioHandler = simpleHandler;
+
+  // RadioProvider 생성 + 음악/라디오 상호 정지 연결
+  final radioProvider = RadioProvider()
+    ..setAudioHandler(radioAudioHandler);
+
+  radioProvider.setOnStopMusic(() {
+    playerProvider.player.stop();
+  });
+
+  playerProvider.setOnStopRadio(() {
+    radioProvider.stopRadio();
+  });
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -51,13 +69,23 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  runApp(MyApp(playerProvider: playerProvider, musicProvider: musicProvider));
+  runApp(MyApp(
+    playerProvider: playerProvider,
+    musicProvider: musicProvider,
+    radioProvider: radioProvider,
+  ));
 }
 
 class MyApp extends StatelessWidget {
   final PlayerProvider playerProvider;
   final MusicProvider musicProvider;
-  const MyApp({super.key, required this.playerProvider, required this.musicProvider});
+  final RadioProvider radioProvider;
+  const MyApp({
+    super.key,
+    required this.playerProvider,
+    required this.musicProvider,
+    required this.radioProvider,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +97,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LyricsProvider()),
         ChangeNotifierProvider(create: (_) => VideoProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider.value(value: radioProvider),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
@@ -123,7 +152,9 @@ class _AppInitializerState extends State<AppInitializer> {
       final musicProvider = context.read<MusicProvider>();
       if (musicProvider.songs.isEmpty && !musicProvider.isLoading) {
         await musicProvider.initialize();
-        context.read<PlaylistProvider>().restorePlaylistSongs(musicProvider.allSongs);
+        context
+            .read<PlaylistProvider>()
+            .restorePlaylistSongs(musicProvider.allSongs);
       }
       await _checkAndRequestReview();
     });
@@ -156,7 +187,8 @@ class _AppInitializerState extends State<AppInitializer> {
       barrierDismissible: false,
       builder: (ctx) => Dialog(
         backgroundColor: const Color(0xFF1E1E1E),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        shape:
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
@@ -176,7 +208,8 @@ class _AppInitializerState extends State<AppInitializer> {
                     ],
                   ),
                 ),
-                child: const Icon(Icons.music_note, color: Colors.black, size: 36),
+                child: const Icon(Icons.music_note,
+                    color: Colors.black, size: 36),
               ),
               const SizedBox(height: 20),
               Text(
@@ -201,8 +234,10 @@ class _AppInitializerState extends State<AppInitializer> {
               const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(5, (i) =>
-                    Icon(Icons.star_rounded, color: primaryColor, size: 28)),
+                children: List.generate(
+                    5,
+                        (i) => Icon(Icons.star_rounded,
+                        color: primaryColor, size: 28)),
               ),
               const SizedBox(height: 24),
               SizedBox(

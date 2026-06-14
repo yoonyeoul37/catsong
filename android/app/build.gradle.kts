@@ -38,6 +38,14 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
     }
+
+    configurations.all {
+        resolutionStrategy.eachDependency {
+            if (requested.group == "androidx.media3") {
+                useVersion("1.9.2")
+            }
+        }
+    }
 }
 
 kotlin {
@@ -48,4 +56,16 @@ kotlin {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation("androidx.media3:media3-common:1.9.2")
+    implementation("androidx.media3:media3-exoplayer:1.9.2")
+    implementation("androidx.media3:media3-exoplayer-hls:1.9.2")
+    implementation("androidx.media3:media3-exoplayer-dash:1.9.2")
+    implementation("androidx.media3:media3-datasource:1.9.2")
+    implementation("androidx.media3:media3-datasource-okhttp:1.9.2")
+    implementation("androidx.media3:media3-extractor:1.9.2")
+    implementation("androidx.media3:media3-session:1.9.2")
+    implementation("androidx.media3:media3-ui:1.9.2")
 }

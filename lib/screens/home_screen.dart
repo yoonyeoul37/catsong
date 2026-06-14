@@ -17,6 +17,7 @@ import 'favorites_screen.dart';
 import 'recent_screen.dart';
 import 'folder_screen.dart';
 import 'settings_screen.dart';
+import 'radio_home_screen.dart';
 import '../l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -250,6 +251,13 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             onPressed: () => setState(() => _isSearching = true),
             icon: const Icon(Icons.search, color: AppTheme.textPrimary, size: 26),
+          ),
+          IconButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const RadioHomeScreen()),
+            ),
+            icon: const Icon(Icons.radio, color: AppTheme.textPrimary, size: 26),
           ),
           IconButton(
             onPressed: () => Navigator.push(

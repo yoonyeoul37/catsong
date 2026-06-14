@@ -10,6 +10,7 @@ class PlayerProvider extends ChangeNotifier {
   AudioHandler? _audioHandler;
   Function(Song)? onSongPlayed;
   Function(Song)? onSongChanged;
+  VoidCallback? _onStopRadio;
   static const _channel = MethodChannel('kr.ssing.catsong/media');
 
   List<Song> _queue = [];
@@ -46,7 +47,8 @@ class PlayerProvider extends ChangeNotifier {
 
   double get progress {
     if (_duration.inMilliseconds == 0) return 0.0;
-    return (_position.inMilliseconds / _duration.inMilliseconds).clamp(0.0, 1.0);
+    return (_position.inMilliseconds / _duration.inMilliseconds)
+        .clamp(0.0, 1.0);
   }
 
   PlayerProvider() {
@@ -73,6 +75,10 @@ class PlayerProvider extends ChangeNotifier {
 
   void setAudioHandler(AudioHandler handler) {
     _audioHandler = handler;
+  }
+
+  void setOnStopRadio(VoidCallback cb) {
+    _onStopRadio = cb;
   }
 
   void handleWidgetAction(String action) {
@@ -162,6 +168,10 @@ class PlayerProvider extends ChangeNotifier {
 
   Future<void> _playAtIndex(int index) async {
     if (index < 0 || index >= _queue.length) return;
+
+    // 라디오 재생 중이면 정지
+    _onStopRadio?.call();
+
     _currentIndex = index;
     _isLoading = true;
     notifyListeners();
@@ -172,6 +182,7 @@ class PlayerProvider extends ChangeNotifier {
 
       final handler = _audioHandler;
       if (handler is SimpleAudioHandler) {
+        handler.setRadioMode(false);
         handler.updateMediaItem(MediaItem(
           id: song.uri!,
           title: song.titleDisplay,
@@ -350,14 +361,52 @@ class PlayerProvider extends ChangeNotifier {
 class SimpleAudioHandler extends BaseAudioHandler {
   final AudioPlayer _player;
   final PlayerProvider _provider;
+  bool _radioMode = false;
 
   SimpleAudioHandler(this._provider) : _player = _provider.player {
-    _player.playbackEventStream.map(_transformEvent).pipe(playbackState);
+    _player.playbackEventStream.listen((event) {
+      if (!_radioMode) {
+        playbackState.add(_transformEvent(event));
+      }
+    });
+
     _player.durationStream.listen((duration) {
-      if (duration != null && mediaItem.value != null) {
+      if (duration != null && mediaItem.value != null && !_radioMode) {
         mediaItem.add(mediaItem.value!.copyWith(duration: duration));
       }
     });
+  }
+
+  void setRadioMode(bool enabled) {
+    _radioMode = enabled;
+  }
+
+  void setRadioPlaybackState({required bool playing}) {
+    _radioMode = true;
+    playbackState.add(PlaybackState(
+      controls: [
+        if (playing) MediaControl.pause else MediaControl.play,
+        MediaControl.stop,
+      ],
+      playing: playing,
+      processingState: playing
+          ? AudioProcessingState.ready
+          : AudioProcessingState.idle,
+    ));
+  }
+
+  void setRadioMediaItem({
+    required String title,
+    required String artist,
+    String? url,
+  }) {
+    _radioMode = true;
+    mediaItem.add(MediaItem(
+      id: url ?? '',
+      title: title,
+      artist: artist,
+      album: 'CatSong Radio',
+    ));
   }
 
   PlaybackState _transformEvent(PlaybackEvent event) {
@@ -383,6 +432,7 @@ class SimpleAudioHandler extends BaseAudioHandler {
   }
 
   void updatePosition(Duration position) {
+    if (_radioMode) return;
     try {
       playbackState.add(playbackState.value.copyWith(
         updatePosition: position,

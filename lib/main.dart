@@ -55,6 +55,13 @@ void main() async {
     radioProvider.stopRadio();
   });
 
+  simpleHandler.onRadioPlay = () {
+    radioProvider.togglePlayPause();
+  };
+  simpleHandler.onRadioPause = () {
+    radioProvider.togglePlayPause();
+  };
+
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,

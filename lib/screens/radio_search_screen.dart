@@ -93,7 +93,11 @@ class _RadioSearchScreenState extends State<RadioSearchScreen> {
         ),
       ),
       bottomNavigationBar: radioProvider.currentStation != null
-          ? const RadioMiniPlayer()
+          ? Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewPadding.bottom),
+              child: const RadioMiniPlayer(),
+            )
           : null,
     );
   }

@@ -202,7 +202,7 @@ class _PlayerScreenState extends State<PlayerScreen>
               ),
             ),
             SafeArea(
-              bottom: true,
+              bottom: false,
               child: Column(
                 children: [
                   _buildTopBar(context, playerProvider, primaryColor),
@@ -210,7 +210,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   _buildEqualizer(playerProvider, primaryColor),
                   _buildCurrentLyrics(playerProvider, primaryColor),
                   Expanded(
-                    flex: 5,
+                    flex: 4,
                     child: _buildControls(
                         context, playerProvider, musicProvider, song, primaryColor),
                   ),
@@ -828,7 +828,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                             letterSpacing: -0.5),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 0),
                     Text(song.artistDisplay,
                         style: const TextStyle(
                             color: AppTheme.textSecondary, fontSize: 12),

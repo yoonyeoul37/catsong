@@ -81,7 +81,6 @@ class RadioProvider extends ChangeNotifier {
       await nativePlayer.setProperty(
           'user-agent',
           'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36');
-      await nativePlayer.setProperty('demuxer-lavf-format', 'hls');
       await nativePlayer.setProperty('demuxer-lavf-probesize', '4096');
       await nativePlayer.setProperty('stream-lavf-o', 'reconnect=1');
       await nativePlayer.setProperty('network-timeout', '30');
@@ -181,6 +180,29 @@ class RadioProvider extends ChangeNotifier {
 
   Future<String?> _resolveStreamUrl(String url) async {
     try {
+      // KBS API JSON 처리
+      if (url.contains('cfpwwwapi.kbs.co.kr')) {
+        try {
+          final response = await http
+              .get(Uri.parse(url))
+              .timeout(const Duration(seconds: 10));
+          if (response.statusCode == 200) {
+            final data = json.decode(response.body);
+            final items = data['channel_item'] as List?;
+            if (items != null && items.isNotEmpty) {
+              final serviceUrl = items[0]['service_url'] as String?;
+              if (serviceUrl != null && serviceUrl.isNotEmpty) {
+                debugPrint('KBS API URL 추출: $serviceUrl');
+                return serviceUrl;
+              }
+            }
+          }
+        } catch (e) {
+          debugPrint('KBS API 파싱 오류: $e');
+        }
+        return null;
+      }
+
       final client = http.Client();
       final request = http.Request('GET', Uri.parse(url));
       request.headers['User-Agent'] =
@@ -238,7 +260,6 @@ class RadioProvider extends ChangeNotifier {
       return null;
     }
   }
-
   Future<void> playStation(RadioStation station) async {
     if (_playerState == RadioPlayerState.loading) {
       debugPrint('이미 로딩 중 - 중복 호출 무시');
@@ -297,7 +318,7 @@ class RadioProvider extends ChangeNotifier {
 
       debugPrint('FINAL_URL: $playUrl');
 
-      await WakelockPlus.enable();
+      await WakelockPlus.disable();
       _startForeground(station, playUrl);
 
       await _player.open(
@@ -355,7 +376,6 @@ class RadioProvider extends ChangeNotifier {
       await WakelockPlus.disable();
     } else {
       await _player.play();
-      await WakelockPlus.enable();
     }
   }
 
@@ -376,6 +396,48 @@ class RadioProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<RadioStation> _countryStations = [];
+  bool _isLoadingCountryStations = false;
+  List<RadioStation> get countryStations => _countryStations;
+  bool get isLoadingCountryStations => _isLoadingCountryStations;
+
+  Future<void> fetchTopStations(String countryCode, {int limit = 200}) async {
+    _countryStations = [];
+    _isLoadingCountryStations = true;
+    notifyListeners();
+
+    try {
+      for (final server in _apiServers) {
+        final uri = Uri.https(server, '/json/stations/bycountrycodeexact/$countryCode', {
+          'order': 'clickcount',
+          'reverse': 'true',
+          'limit': '$limit',
+          'hidebroken': 'true',
+          'lastcheckok': '1',
+          'codec': 'MP3,AAC,AAC+,OGG',
+        });
+
+        final response = await http
+            .get(uri, headers: _apiHeaders)
+            .timeout(const Duration(seconds: 15));
+
+        if (response.statusCode == 200) {
+          final List<dynamic> data = json.decode(response.body);
+          _countryStations = data
+              .map((j) => RadioStation.fromJson(j as Map<String, dynamic>))
+              .where((s) => s.streamUrl.isNotEmpty)
+              .toList();
+          _mergeFavoriteFlags(_countryStations);
+          break;
+        }
+      }
+    } catch (e) {
+      debugPrint('국가별 방송 로드 오류: $e');
+    }
+
+    _isLoadingCountryStations = false;
+    notifyListeners();
+  }
   Future<void> selectBroadcaster(RadioBroadcaster broadcaster) async {
     _selectedBroadcaster = broadcaster;
     _broadcasterStations = [];

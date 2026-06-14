@@ -362,6 +362,8 @@ class SimpleAudioHandler extends BaseAudioHandler {
   final AudioPlayer _player;
   final PlayerProvider _provider;
   bool _radioMode = false;
+  VoidCallback? onRadioPlay;
+  VoidCallback? onRadioPause;
 
   SimpleAudioHandler(this._provider) : _player = _provider.player {
     _player.playbackEventStream.listen((event) {
@@ -441,10 +443,22 @@ class SimpleAudioHandler extends BaseAudioHandler {
   }
 
   @override
-  Future<void> play() => _player.play();
+  Future<void> play() async {
+    if (_radioMode && onRadioPlay != null) {
+      onRadioPlay!();
+    } else {
+      await _player.play();
+    }
+  }
 
   @override
-  Future<void> pause() => _player.pause();
+  Future<void> pause() async {
+    if (_radioMode && onRadioPause != null) {
+      onRadioPause!();
+    } else {
+      await _player.pause();
+    }
+  }
 
   @override
   Future<void> seek(Duration position) => _player.seek(position);

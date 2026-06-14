@@ -8,6 +8,7 @@ import 'radio_broadcaster_screen.dart';
 import 'radio_search_screen.dart';
 import 'radio_favorites_screen.dart';
 import 'radio_korea_screen2.dart';
+import 'radio_country_stations_screen.dart';
 
 class RadioHomeScreen extends StatelessWidget {
   const RadioHomeScreen({super.key});
@@ -25,7 +26,7 @@ class RadioHomeScreen extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => RadioBroadcasterScreen(country: country),
+          builder: (_) => RadioCountryStationsScreen(country: country),
         ),
       );
     }

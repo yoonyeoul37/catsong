@@ -232,18 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontSize: 18,
                       fontWeight: FontWeight.w900,
                       letterSpacing: -0.5)),
-              Positioned(
-                right: -14,
-                top: -6,
-                child: Transform.rotate(
-                  angle: 0.5,
-                  child: Image.asset(
-                    'assets/cat_icon.png',
-                    width: 16,
-                    height: 16,
-                  ),
-                ),
-              ),
+
             ],
           ),
       actions: [

@@ -7,33 +7,24 @@ import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
 import '../widgets/station_logo.dart';
 import 'radio_player_screen.dart';
+import 'radio_country_stations_screen.dart';
 
-class RadioChannelScreen extends StatefulWidget {
-  final RadioBroadcaster broadcaster;
+class RadioCountryStationsScreen extends StatefulWidget {
   final RadioCountry country;
-  const RadioChannelScreen({
-    super.key,
-    required this.broadcaster,
-    required this.country,
-  });
+  const RadioCountryStationsScreen({super.key, required this.country});
 
   @override
-  State<RadioChannelScreen> createState() => _RadioChannelScreenState();
+  State<RadioCountryStationsScreen> createState() =>
+      _RadioCountryStationsScreenState();
 }
 
-class _RadioChannelScreenState extends State<RadioChannelScreen> {
-  bool _timedOut = false;
-
+class _RadioCountryStationsScreenState
+    extends State<RadioCountryStationsScreen> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<RadioProvider>().selectBroadcaster(widget.broadcaster);
-    });
-    Future.delayed(const Duration(seconds: 5), () {
-      if (mounted) {
-        setState(() => _timedOut = true);
-      }
+      context.read<RadioProvider>().fetchTopStations(widget.country.code);
     });
   }
 
@@ -41,7 +32,8 @@ class _RadioChannelScreenState extends State<RadioChannelScreen> {
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final radioProvider = context.watch<RadioProvider>();
-    final stations = radioProvider.broadcasterStations;
+    final stations = radioProvider.countryStations;
+    final isLoading = radioProvider.isLoadingCountryStations;
     final current = radioProvider.currentStation;
 
     return Scaffold(
@@ -54,45 +46,38 @@ class _RadioChannelScreenState extends State<RadioChannelScreen> {
               color: AppTheme.textPrimary, size: 22),
         ),
         title: Text(
-          widget.broadcaster.name,
+          '${widget.country.flag} ${widget.country.name}',
           style: const TextStyle(
               color: AppTheme.textPrimary,
               fontSize: 20,
               fontWeight: FontWeight.bold),
         ),
       ),
-      body: stations.isEmpty
+      body: isLoading
           ? Center(
-        child: _timedOut
-            ? const Column(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(color: primaryColor),
+            const SizedBox(height: 18),
+            const Text('인기 방송을 불러오는 중...',
+                style: TextStyle(
+                    color: AppTheme.textSecondary, fontSize: 15)),
+          ],
+        ),
+      )
+          : stations.isEmpty
+          ? const Center(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.search_off,
                 color: AppTheme.textHint, size: 48),
             SizedBox(height: 16),
-            Text(
-              '채널을 찾을 수 없습니다',
-              style: TextStyle(
-                  color: AppTheme.textSecondary,
-                  fontSize: 16),
-            ),
-            SizedBox(height: 8),
-            Text(
-              '다른 방송사를 선택해 주세요',
-              style: TextStyle(
-                  color: AppTheme.textHint, fontSize: 13),
-            ),
-          ],
-        )
-            : Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(color: primaryColor),
-            const SizedBox(height: 18),
-            const Text('채널 목록을 불러오는 중...',
+            Text('방송을 찾을 수 없습니다',
                 style: TextStyle(
                     color: AppTheme.textSecondary,
-                    fontSize: 15)),
+                    fontSize: 16)),
           ],
         ),
       )
@@ -102,22 +87,23 @@ class _RadioChannelScreenState extends State<RadioChannelScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
             child: Text(
-              '${stations.length}개 채널',
+              '인기 방송 ${stations.length}개',
               style: const TextStyle(
                   color: AppTheme.textHint, fontSize: 14),
             ),
           ),
           Expanded(
             child: ListView.separated(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 80),
+              padding:
+              const EdgeInsets.fromLTRB(16, 0, 16, 80),
               itemCount: stations.length,
               separatorBuilder: (_, __) =>
               const SizedBox(height: 10),
               itemBuilder: (context, index) {
                 final station = stations[index];
-                final isPlaying =
-                    current?.stationUuid == station.stationUuid;
-                return _ChannelTile(
+                final isPlaying = current?.stationUuid ==
+                    station.stationUuid;
+                return _StationTile(
                   station: station,
                   isPlaying: isPlaying,
                   stationList: stations,
@@ -139,13 +125,13 @@ class _RadioChannelScreenState extends State<RadioChannelScreen> {
   }
 }
 
-class _ChannelTile extends StatelessWidget {
+class _StationTile extends StatelessWidget {
   final RadioStation station;
   final bool isPlaying;
   final List<RadioStation> stationList;
   final int stationIndex;
 
-  const _ChannelTile({
+  const _StationTile({
     required this.station,
     required this.isPlaying,
     required this.stationList,
@@ -177,7 +163,8 @@ class _ChannelTile extends StatelessWidget {
         },
         child: Container(
           constraints: const BoxConstraints(minHeight: 76),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          padding:
+          const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
@@ -205,107 +192,52 @@ class _ChannelTile extends StatelessWidget {
                         color: isPlaying
                             ? primaryColor
                             : AppTheme.textPrimary,
-                        fontSize: 16,
+                        fontSize: 15,
                         fontWeight: FontWeight.w600,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    if (station.bitrate != null && station.bitrate! > 0)
-                      Text(
-                        '${station.bitrate} kbps',
-                        style: const TextStyle(
-                            color: AppTheme.textHint, fontSize: 12),
-                      ),
+                    const SizedBox(height: 2),
+                    Text(
+                      [
+                        if (station.bitrate != null &&
+                            station.bitrate! > 0)
+                          '${station.bitrate} kbps',
+                        if (station.country != null &&
+                            station.country!.isNotEmpty)
+                          station.country!,
+                      ].join('  ·  '),
+                      style: const TextStyle(
+                          color: AppTheme.textHint, fontSize: 12),
+                    ),
                   ],
                 ),
               ),
               if (isPlaying)
-                _PlayingBars()
+                Icon(Icons.graphic_eq, color: primaryColor, size: 24)
               else
-                _FavoriteBtn(station: station),
+                IconButton(
+                  icon: Icon(
+                    context
+                        .watch<RadioProvider>()
+                        .isFavorite(station.stationUuid)
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    color: context
+                        .watch<RadioProvider>()
+                        .isFavorite(station.stationUuid)
+                        ? primaryColor
+                        : AppTheme.textHint,
+                    size: 22,
+                  ),
+                  onPressed: () => context
+                      .read<RadioProvider>()
+                      .toggleFavorite(station),
+                ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _FavoriteBtn extends StatelessWidget {
-  final RadioStation station;
-  const _FavoriteBtn({required this.station});
-
-  @override
-  Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
-    final isFav = context
-        .watch<RadioProvider>()
-        .isFavorite(station.stationUuid);
-
-    return IconButton(
-      icon: Icon(
-        isFav ? Icons.favorite : Icons.favorite_border,
-        color: isFav ? primaryColor : AppTheme.iconColor,
-        size: 22,
-      ),
-      onPressed: () =>
-          context.read<RadioProvider>().toggleFavorite(station),
-    );
-  }
-}
-
-class _PlayingBars extends StatefulWidget {
-  @override
-  State<_PlayingBars> createState() => _PlayingBarsState();
-}
-
-class _PlayingBarsState extends State<_PlayingBars>
-    with TickerProviderStateMixin {
-  late final List<AnimationController> _ctrls;
-
-  @override
-  void initState() {
-    super.initState();
-    _ctrls = List.generate(
-      3,
-          (i) => AnimationController(
-        vsync: this,
-        duration: Duration(milliseconds: 380 + i * 130),
-      )..repeat(reverse: true),
-    );
-  }
-
-  @override
-  void dispose() {
-    for (final c in _ctrls) {
-      c.dispose();
-    }
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
-    return SizedBox(
-      width: 22,
-      height: 22,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: List.generate(3, (i) {
-          return AnimatedBuilder(
-            animation: _ctrls[i],
-            builder: (_, __) => Container(
-              width: 4,
-              height: 6 + _ctrls[i].value * 14,
-              decoration: BoxDecoration(
-                color: primaryColor,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          );
-        }),
       ),
     );
   }

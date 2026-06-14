@@ -8,7 +8,14 @@ import '../widgets/sleep_timer_sheet.dart';
 
 class RadioPlayerScreen extends StatefulWidget {
   final RadioStation station;
-  const RadioPlayerScreen({super.key, required this.station});
+  final List<RadioStation>? stationList;
+  final int? currentIndex;
+  const RadioPlayerScreen({
+    super.key,
+    required this.station,
+    this.stationList,
+    this.currentIndex,
+  });
 
   @override
   State<RadioPlayerScreen> createState() => _RadioPlayerScreenState();
@@ -283,11 +290,25 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // 정지 버튼
+                // 이전 방송
                 GestureDetector(
                   onTap: () {
-                    radioProvider.stopRadio();
-                    Navigator.pop(context);
+                    if (widget.stationList != null &&
+                        widget.currentIndex != null &&
+                        widget.currentIndex! > 0) {
+                      final prevStation =
+                      widget.stationList![widget.currentIndex! - 1];
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => RadioPlayerScreen(
+                            station: prevStation,
+                            stationList: widget.stationList,
+                            currentIndex: widget.currentIndex! - 1,
+                          ),
+                        ),
+                      );
+                    }
                   },
                   child: Container(
                     width: 52,
@@ -299,8 +320,11 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                         color: primaryColor.withOpacity(0.15),
                       ),
                     ),
-                    child: const Icon(Icons.stop,
-                        color: AppTheme.textSecondary, size: 26),
+                    child: Icon(Icons.skip_previous,
+                        color: (widget.currentIndex ?? 0) > 0
+                            ? Colors.white
+                            : Colors.white24,
+                        size: 26),
                   ),
                 ),
                 const SizedBox(width: 28),
@@ -349,10 +373,24 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                   ),
                 ),
                 const SizedBox(width: 28),
-                // 즐겨찾기 버튼
+                // 다음 방송
                 GestureDetector(
                   onTap: () {
-                    radioProvider.toggleFavorite(current);
+                    final list = widget.stationList;
+                    final idx = widget.currentIndex;
+                    if (list != null && idx != null && idx < list.length - 1) {
+                      final nextStation = list[idx + 1];
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => RadioPlayerScreen(
+                            station: nextStation,
+                            stationList: list,
+                            currentIndex: idx + 1,
+                          ),
+                        ),
+                      );
+                    }
                   },
                   child: Container(
                     width: 52,
@@ -364,16 +402,11 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                         color: primaryColor.withOpacity(0.15),
                       ),
                     ),
-                    child: Icon(
-                      radioProvider.isFavorite(current.stationUuid)
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      color:
-                      radioProvider.isFavorite(current.stationUuid)
-                          ? primaryColor
-                          : AppTheme.textSecondary,
-                      size: 24,
-                    ),
+                    child: Icon(Icons.skip_next,
+                        color: ((widget.currentIndex ?? 0) < (widget.stationList?.length ?? 1) - 1)
+                            ? Colors.white
+                            : Colors.white24,
+                        size: 26),
                   ),
                 ),
               ],

@@ -454,6 +454,84 @@ class RadioProvider extends ChangeNotifier {
     _isLoadingCountryStations = false;
     notifyListeners();
   }
+
+  // KBS 편성표
+  List<Map<String, dynamic>> _scheduleList = [];
+  List<Map<String, dynamic>> get scheduleList => _scheduleList;
+  Map<String, dynamic>? _currentProgram;
+  Map<String, dynamic>? get currentProgram => _currentProgram;
+
+  static const _kbsChannelCodes = {
+    'KBS 제1라디오': '21',
+    'KBS 해피FM': '22',
+    'KBS 3라디오': '23',
+    'KBS Classic FM': '24',
+    'KBS Cool FM': '25',
+  };
+
+  Future<void> fetchSchedule(String stationName) async {
+    _scheduleList = [];
+    _currentProgram = null;
+    notifyListeners();
+
+    String? channelCode;
+    for (final entry in _kbsChannelCodes.entries) {
+      if (stationName.contains(entry.key)) {
+        channelCode = entry.value;
+        break;
+      }
+    }
+    if (channelCode == null) return;
+
+    final now = DateTime.now();
+    final dateStr = '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}';
+
+    try {
+      final uri = Uri.parse(
+        'https://static.api.kbs.co.kr/mediafactory/v1/schedule/weekly'
+            '?&rtype=json&local_station_code=00'
+            '&channel_code=$channelCode'
+            '&program_planned_date_from=$dateStr'
+            '&program_planned_date_to=$dateStr',
+      );
+
+      final response = await http
+          .get(uri)
+          .timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        if (data.isNotEmpty) {
+          final schedules = data[0]['schedules'] as List<dynamic>? ?? [];
+          _scheduleList = schedules.cast<Map<String, dynamic>>();
+
+          // 현재 방송 중인 프로그램 찾기
+          final nowTime = '${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}0000';
+          for (final s in _scheduleList) {
+            final start = s['program_planned_start_time'] as String? ?? '';
+            final end = s['program_planned_end_time'] as String? ?? '';
+            if (nowTime.compareTo(start) >= 0 && nowTime.compareTo(end) < 0) {
+              _currentProgram = s;
+              break;
+            }
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('편성표 로드 오류: $e');
+    }
+    notifyListeners();
+  }
+
+  String formatScheduleTime(String time) {
+    if (time.length < 4) return time;
+    int hour = int.tryParse(time.substring(0, 2)) ?? 0;
+    final min = time.substring(2, 4);
+    if (hour >= 24) hour -= 24;
+    final period = hour < 12 ? '오전' : '오후';
+    final h12 = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
+    return '$period $h12:$min';
+  }
   Future<void> selectBroadcaster(RadioBroadcaster broadcaster) async {
     _selectedBroadcaster = broadcaster;
     _broadcasterStations = [];

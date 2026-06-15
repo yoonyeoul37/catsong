@@ -354,6 +354,38 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
 
             const Spacer(flex: 1),
 
+            // 현재 방송 중
+            if (radioProvider.currentProgram != null) ...[
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: primaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: primaryColor.withOpacity(0.2)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.mic, color: primaryColor, size: 16),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        radioProvider.currentProgram!['program_title'] ?? '',
+                        style: TextStyle(
+                          color: primaryColor,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 6),
+            ],
             // 상태 뱃지
             _StatusBadge(state: state),
             const SizedBox(height: 6),

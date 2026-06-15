@@ -278,7 +278,7 @@ class _StationTile extends StatelessWidget {
                 ),
               ),
               if (isPlaying)
-                Icon(Icons.graphic_eq, color: primaryColor, size: 24)
+                _PlayingBars()
               else
                 Icon(Icons.play_circle_outline,
                     color: AppTheme.textHint, size: 24),
@@ -384,3 +384,59 @@ const _koreanStations = <_KStation>[
   _KStation(name: 'KBS 제주 해피FM', region: '제주', broadcaster: 'KBS', subLabel: '제주', frequency: '98.7 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/90_22'),
   _KStation(name: 'KBS 제주 1FM', region: '제주', broadcaster: 'KBS', subLabel: '제주', frequency: '96.5 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/90_24'),
 ];
+
+class _PlayingBars extends StatefulWidget {
+  @override
+  State<_PlayingBars> createState() => _PlayingBarsState();
+}
+
+class _PlayingBarsState extends State<_PlayingBars>
+    with TickerProviderStateMixin {
+  late final List<AnimationController> _ctrls;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrls = List.generate(
+      3,
+          (i) => AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 380 + i * 130),
+      )..repeat(reverse: true),
+    );
+  }
+
+  @override
+  void dispose() {
+    for (final c in _ctrls) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    return SizedBox(
+      width: 22,
+      height: 22,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: List.generate(3, (i) {
+          return AnimatedBuilder(
+            animation: _ctrls[i],
+            builder: (_, __) => Container(
+              width: 4,
+              height: 6 + _ctrls[i].value * 14,
+              decoration: BoxDecoration(
+                color: primaryColor,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+}

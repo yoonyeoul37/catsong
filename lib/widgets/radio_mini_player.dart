@@ -22,8 +22,15 @@ class RadioMiniPlayer extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         PageRouteBuilder(
-          pageBuilder: (_, __, ___) =>
-              RadioPlayerScreen(station: station),
+          pageBuilder: (_, __, ___) => RadioPlayerScreen(
+            station: station,
+            stationList: radioProvider.currentQueue.isNotEmpty
+                ? radioProvider.currentQueue
+                : null,
+            currentIndex: radioProvider.currentQueueIndex >= 0
+                ? radioProvider.currentQueueIndex
+                : null,
+          ),
           transitionsBuilder: (_, animation, __, child) =>
               SlideTransition(
                 position: Tween<Offset>(
@@ -57,7 +64,6 @@ class RadioMiniPlayer extends StatelessWidget {
         ),
         child: Column(
           children: [
-            // LIVE 바 (움직이지 않는 고정 색상)
             Container(
               height: 2,
               decoration: BoxDecoration(

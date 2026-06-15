@@ -33,7 +33,15 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
       duration: const Duration(seconds: 12),
     );
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<RadioProvider>().playStation(widget.station);
+      final radio = context.read<RadioProvider>();
+      if (widget.stationList != null && widget.currentIndex != null) {
+        radio.setQueue(widget.stationList!, widget.currentIndex!);
+      }
+      // 같은 방송 재생 중이면 다시 시작하지 않음
+      if (radio.currentStation?.name != widget.station.name ||
+          (!radio.isPlaying && !radio.isLoading)) {
+        radio.playStation(widget.station);
+      }
     });
   }
 
@@ -161,18 +169,64 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
               final wasFav =
               radioProvider.isFavorite(current.stationUuid);
               radioProvider.toggleFavorite(current);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    wasFav
-                        ? '즐겨찾기에서 제거했습니다'
-                        : '즐겨찾기에 추가했습니다',
-                    style: const TextStyle(fontSize: 15),
+              final overlay = Overlay.of(context);
+              final entry = OverlayEntry(
+                builder: (_) => Positioned(
+                  bottom: 120,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: TweenAnimationBuilder<double>(
+                      tween: Tween(begin: 0.0, end: 1.0),
+                      duration: const Duration(milliseconds: 300),
+                      builder: (_, value, child) => Opacity(
+                        opacity: value,
+                        child: Transform.scale(
+                          scale: 0.8 + (0.2 * value),
+                          child: child,
+                        ),
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF2A2A2A),
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(
+                              color: primaryColor.withOpacity(0.3)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              wasFav
+                                  ? Icons.favorite_border
+                                  : Icons.favorite,
+                              color: wasFav
+                                  ? Colors.white54
+                                  : Colors.redAccent,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              wasFav
+                                  ? '즐겨찾기에서 제거했습니다'
+                                  : '즐겨찾기에 추가했습니다',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  decoration: TextDecoration.none),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                  backgroundColor: AppTheme.surfaceVariant,
-                  duration: const Duration(seconds: 2),
                 ),
               );
+              overlay.insert(entry);
+              Future.delayed(
+                  const Duration(seconds: 2), () => entry.remove());
             },
           ),
           const SizedBox(width: 4),
@@ -256,6 +310,9 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
             Text(
               [
                 if (broadcaster.isNotEmpty) broadcaster,
+                if (current.frequency != null &&
+                    current.frequency!.isNotEmpty)
+                  current.frequency!,
                 if (current.country != null &&
                     current.country!.isNotEmpty)
                   current.country!,
@@ -294,17 +351,18 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                 GestureDetector(
                   onTap: () {
                     if (widget.stationList != null &&
-                        widget.currentIndex != null &&
-                        widget.currentIndex! > 0) {
-                      final prevStation =
-                      widget.stationList![widget.currentIndex! - 1];
+                        widget.currentIndex != null) {
+                      final newIndex = widget.currentIndex! > 0
+                          ? widget.currentIndex! - 1
+                          : widget.stationList!.length - 1;
+                      final prevStation = widget.stationList![newIndex];
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (_) => RadioPlayerScreen(
                             station: prevStation,
                             stationList: widget.stationList,
-                            currentIndex: widget.currentIndex! - 1,
+                            currentIndex: newIndex,
                           ),
                         ),
                       );
@@ -321,9 +379,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                       ),
                     ),
                     child: Icon(Icons.skip_previous,
-                        color: (widget.currentIndex ?? 0) > 0
-                            ? Colors.white
-                            : Colors.white24,
+                        color: Colors.white,
                         size: 26),
                   ),
                 ),
@@ -378,15 +434,16 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                   onTap: () {
                     final list = widget.stationList;
                     final idx = widget.currentIndex;
-                    if (list != null && idx != null && idx < list.length - 1) {
-                      final nextStation = list[idx + 1];
+                    if (list != null && idx != null) {
+                      final newIdx = idx < list.length - 1 ? idx + 1 : 0;
+                      final nextStation = list[newIdx];
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (_) => RadioPlayerScreen(
                             station: nextStation,
                             stationList: list,
-                            currentIndex: idx + 1,
+                            currentIndex: newIdx,
                           ),
                         ),
                       );
@@ -402,10 +459,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                         color: primaryColor.withOpacity(0.15),
                       ),
                     ),
-                    child: Icon(Icons.skip_next,
-                        color: ((widget.currentIndex ?? 0) < (widget.stationList?.length ?? 1) - 1)
-                            ? Colors.white
-                            : Colors.white24,
+                     child: Icon(Icons.skip_next,
+                        color: Colors.white,
                         size: 26),
                   ),
                 ),

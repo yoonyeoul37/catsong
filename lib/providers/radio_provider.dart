@@ -20,6 +20,10 @@ class RadioProvider extends ChangeNotifier {
 
   RadioPlayerState _playerState = RadioPlayerState.idle;
   RadioStation? _currentStation;
+  List<RadioStation> _currentQueue = [];
+  int _currentQueueIndex = -1;
+  List<RadioStation> get currentQueue => _currentQueue;
+  int get currentQueueIndex => _currentQueueIndex;
   String? _errorMessage;
 
   RadioCountry? _selectedCountry;
@@ -271,6 +275,8 @@ class RadioProvider extends ChangeNotifier {
       _isActuallyPlaying = false;
       _setPlayerState(RadioPlayerState.loading);
       _currentStation = station;
+      final qIdx = _currentQueue.indexWhere((s) => s.name == station.name);
+      if (qIdx >= 0) _currentQueueIndex = qIdx;
       notifyListeners();
 
       // 음악 재생 중이면 정지
@@ -389,6 +395,10 @@ class RadioProvider extends ChangeNotifier {
     cancelSleepTimer();
   }
 
+  void setQueue(List<RadioStation> stations, int index) {
+    _currentQueue = List.from(stations);
+    _currentQueueIndex = index;
+  }
   Future<void> selectCountry(RadioCountry country) async {
     _selectedCountry = country;
     _selectedBroadcaster = null;

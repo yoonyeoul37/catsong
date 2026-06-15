@@ -1033,7 +1033,7 @@ class _PlayerScreenState extends State<PlayerScreen>
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
         ],
       ),
     );

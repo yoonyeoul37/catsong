@@ -187,7 +187,9 @@ class _CountryCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${country.broadcasters.length}개 방송사',
+                    country.code == 'KR'
+                        ? '${country.broadcasters.length}개 방송사'
+                        : '인기 200개',
                     style: const TextStyle(
                       color: AppTheme.textHint,
                       fontSize: 11,

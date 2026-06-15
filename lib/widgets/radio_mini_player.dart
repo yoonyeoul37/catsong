@@ -46,7 +46,7 @@ class RadioMiniPlayer extends StatelessWidget {
         ),
       ),
       child: Container(
-        height: 72,
+        height: 80,
         margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         decoration: BoxDecoration(
           color: AppTheme.cardColor,

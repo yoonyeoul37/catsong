@@ -332,7 +332,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 2),
 
             // 방송사 + 국가 + 비트레이트
             Text(

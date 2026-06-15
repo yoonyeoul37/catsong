@@ -62,6 +62,31 @@ void main() async {
     radioProvider.togglePlayPause();
   };
 
+  simpleHandler.onRadioNext = () {
+    final radio = radioProvider;
+    final queue = radio.currentQueue;
+    final idx = radio.currentQueueIndex;
+    if (queue.isNotEmpty && idx < queue.length - 1) {
+      radio.setQueue(queue, idx + 1);
+      radio.playStation(queue[idx + 1]);
+    } else if (queue.isNotEmpty) {
+      radio.setQueue(queue, 0);
+      radio.playStation(queue[0]);
+    }
+  };
+  simpleHandler.onRadioPrevious = () {
+    final radio = radioProvider;
+    final queue = radio.currentQueue;
+    final idx = radio.currentQueueIndex;
+    if (queue.isNotEmpty && idx > 0) {
+      radio.setQueue(queue, idx - 1);
+      radio.playStation(queue[idx - 1]);
+    } else if (queue.isNotEmpty) {
+      radio.setQueue(queue, queue.length - 1);
+      radio.playStation(queue[queue.length - 1]);
+    }
+  };
+
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,

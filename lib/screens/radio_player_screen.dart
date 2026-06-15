@@ -5,6 +5,7 @@ import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/station_logo.dart';
 import '../widgets/sleep_timer_sheet.dart';
+import '../widgets/schedule_sheet.dart';
 
 class RadioPlayerScreen extends StatefulWidget {
   final RadioStation station;
@@ -129,6 +130,33 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         ),
         centerTitle: true,
         actions: [
+          Stack(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.schedule,
+                    color: AppTheme.textPrimary, size: 24),
+                onPressed: () => showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.transparent,
+                  isScrollControlled: true,
+                  builder: (_) => const ScheduleSheet(),
+                ),
+              ),
+              if (radioProvider.schedules.isNotEmpty)
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: Container(
+                    width: 7,
+                    height: 7,
+                    decoration: BoxDecoration(
+                      color: Colors.orangeAccent,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+            ],
+          ),
           Stack(
             children: [
               IconButton(

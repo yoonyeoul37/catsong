@@ -242,44 +242,63 @@ class _RecentSection extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 110,
+          height: 100,
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
             itemCount: recent.length > 10 ? 10 : recent.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 10),
+            separatorBuilder: (_, __) => const SizedBox(width: 8),
             itemBuilder: (context, index) {
               final station = recent[index];
+              final time = station.lastListened;
+              final timeStr = time != null
+                  ? '${time.month}/${time.day} ${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}'
+                  : '';
+
               return GestureDetector(
                 onTap: () =>
                     context.read<RadioProvider>().playStation(station),
                 child: Container(
-                  width: 130,
+                  width: 160,
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: AppTheme.surfaceVariant,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: primaryColor.withOpacity(0.2),
+                      color: primaryColor.withOpacity(0.15),
                     ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(Icons.radio,
-                          color: primaryColor, size: 18),
-                      const SizedBox(height: 5),
-                      Text(
-                        station.name,
-                        style: const TextStyle(
-                          color: AppTheme.textPrimary,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                      Row(
+                        children: [
+                          Icon(Icons.radio,
+                              color: primaryColor, size: 14),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              station.name,
+                              style: const TextStyle(
+                                color: AppTheme.textPrimary,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
+                      if (timeStr.isNotEmpty)
+                        Text(
+                          timeStr,
+                          style: const TextStyle(
+                            color: AppTheme.textHint,
+                            fontSize: 10,
+                          ),
+                        ),
                     ],
                   ),
                 ),

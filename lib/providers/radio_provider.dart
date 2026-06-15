@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' show TimeOfDay, DayPeriod;
 import 'package:http/http.dart' as http;
 import 'package:audio_service/audio_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,6 +35,11 @@ class RadioProvider extends ChangeNotifier {
   List<RadioStation> _favorites = [];
   List<RadioStation> _recentlyListened = [];
 
+  // 예약 채널 전환
+  List<ScheduledStation> _schedules = [];
+  Timer? _scheduleCheckTimer;
+  List<ScheduledStation> get schedules => _schedules;
+  static const _maxSchedules = 5;
   Timer? _sleepTimer;
   Duration? _sleepRemaining;
   Timer? _sleepCountdown;
@@ -584,7 +590,64 @@ class RadioProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addSchedule(TimeOfDay time, RadioStation station) {
+    if (_schedules.length >= _maxSchedules) return;
+    _schedules.add(ScheduledStation(time: time, station: station));
+    _schedules.sort((a, b) {
+      final aMin = a.time.hour * 60 + a.time.minute;
+      final bMin = b.time.hour * 60 + b.time.minute;
+      return aMin.compareTo(bMin);
+    });
+    _startScheduleCheck();
+    notifyListeners();
+  }
+
+  void removeSchedule(int index) {
+    if (index >= 0 && index < _schedules.length) {
+      _schedules.removeAt(index);
+      if (_schedules.isEmpty) _stopScheduleCheck();
+      notifyListeners();
+    }
+  }
+
+  void clearSchedules() {
+    _schedules.clear();
+    _stopScheduleCheck();
+    notifyListeners();
+  }
+
+  void _startScheduleCheck() {
+    _scheduleCheckTimer?.cancel();
+    _scheduleCheckTimer = Timer.periodic(
+      const Duration(seconds: 30),
+          (_) => _checkSchedules(),
+    );
+  }
+
+  void _stopScheduleCheck() {
+    _scheduleCheckTimer?.cancel();
+    _scheduleCheckTimer = null;
+  }
+
+  void _checkSchedules() {
+    if (_schedules.isEmpty) return;
+    final now = TimeOfDay.now();
+    final nowMin = now.hour * 60 + now.minute;
+
+    for (int i = 0; i < _schedules.length; i++) {
+      final s = _schedules[i];
+      final sMin = s.time.hour * 60 + s.time.minute;
+      if (nowMin == sMin && !s.triggered) {
+        playStation(s.station);
+        _schedules.removeAt(i);
+        if (_schedules.isEmpty) _stopScheduleCheck();
+        notifyListeners();
+        break;
+      }
+    }
+  }
   void cancelSleepTimer() {
+    _scheduleCheckTimer?.cancel();
     _sleepTimer?.cancel();
     _sleepCountdown?.cancel();
     _sleepTimer = null;
@@ -615,6 +678,9 @@ class RadioProvider extends ChangeNotifier {
         return null;
       }
     }).whereType<RadioStation>().toList();
+    final oneMonthAgo = DateTime.now().subtract(const Duration(days: 30));
+    _recentlyListened.removeWhere((s) =>
+    s.lastListened != null && s.lastListened!.isBefore(oneMonthAgo));
     notifyListeners();
   }
 
@@ -659,5 +725,23 @@ class RadioProvider extends ChangeNotifier {
     _sleepCountdown?.cancel();
     WakelockPlus.disable();
     super.dispose();
+  }
+}
+class ScheduledStation {
+  final TimeOfDay time;
+  final RadioStation station;
+  bool triggered;
+
+  ScheduledStation({
+    required this.time,
+    required this.station,
+    this.triggered = false,
+  });
+
+  String get timeString {
+    final h = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
+    final m = time.minute.toString().padLeft(2, '0');
+    final period = time.period == DayPeriod.am ? '오전' : '오후';
+    return '$period $h:$m';
   }
 }

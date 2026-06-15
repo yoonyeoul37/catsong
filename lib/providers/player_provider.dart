@@ -364,6 +364,8 @@ class SimpleAudioHandler extends BaseAudioHandler {
   bool _radioMode = false;
   VoidCallback? onRadioPlay;
   VoidCallback? onRadioPause;
+  VoidCallback? onRadioNext;
+  VoidCallback? onRadioPrevious;
 
   SimpleAudioHandler(this._provider) : _player = _provider.player {
     _player.playbackEventStream.listen((event) {
@@ -387,9 +389,11 @@ class SimpleAudioHandler extends BaseAudioHandler {
     _radioMode = true;
     playbackState.add(PlaybackState(
       controls: [
+        MediaControl.skipToPrevious,
         if (playing) MediaControl.pause else MediaControl.play,
-        MediaControl.stop,
+        MediaControl.skipToNext,
       ],
+      androidCompactActionIndices: const [0, 1, 2],
       playing: playing,
       processingState: playing
           ? AudioProcessingState.ready
@@ -465,12 +469,20 @@ class SimpleAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> skipToNext() async {
-    await _provider.playNext();
+    if (_radioMode && onRadioNext != null) {
+      onRadioNext!();
+    } else {
+      await _provider.playNext();
+    }
   }
 
   @override
   Future<void> skipToPrevious() async {
-    await _provider.playPrevious();
+    if (_radioMode && onRadioPrevious != null) {
+      onRadioPrevious!();
+    } else {
+      await _provider.playPrevious();
+    }
   }
 
   Future<void> updateMediaItem(MediaItem item) async {

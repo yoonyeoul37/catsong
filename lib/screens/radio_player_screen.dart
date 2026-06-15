@@ -538,33 +538,44 @@ class _SleepTimerBadge extends StatelessWidget {
     final h = remaining.inHours;
     final m = remaining.inMinutes.remainder(60);
     final s = remaining.inSeconds.remainder(60);
-    final label = h > 0
-        ? '${h}시간 ${m}분 후 종료'
+    final timeText = h > 0
+        ? '${h}시간 ${m}분 ${s}초'
         : m > 0
-        ? '${m}분 ${s}초 후 종료'
-        : '${s}초 후 종료';
+        ? '${m}분 ${s}초'
+        : '${s}초';
 
     return GestureDetector(
       onTap: () => context.read<RadioProvider>().cancelSleepTimer(),
       child: Container(
-        padding:
-        const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: primaryColor.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
-          border:
-          Border.all(color: primaryColor.withOpacity(0.3)),
+          color: primaryColor.withOpacity(0.15),
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: primaryColor.withOpacity(0.4)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.bedtime, color: primaryColor, size: 15),
-            const SizedBox(width: 6),
-            Text(label,
-                style:
-                TextStyle(color: primaryColor, fontSize: 13)),
-            const SizedBox(width: 6),
-            Icon(Icons.close, color: primaryColor, size: 13),
+            Icon(Icons.bedtime, color: primaryColor, size: 16),
+            const SizedBox(width: 8),
+            Text(
+              timeText,
+              style: TextStyle(
+                color: primaryColor,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Text(
+              '후 종료',
+              style: TextStyle(
+                color: primaryColor.withOpacity(0.7),
+                fontSize: 13,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(Icons.close, color: primaryColor.withOpacity(0.5), size: 14),
           ],
         ),
       ),

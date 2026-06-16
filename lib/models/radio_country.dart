@@ -88,6 +88,12 @@ class RadioCountry {
       ],
     ),
     RadioCountry(
+      code: 'CN',
+      name: '중국',
+      flag: '🇨🇳',
+      broadcasters: [],
+    ),
+    RadioCountry(
       code: 'HK',
       name: '홍콩',
       flag: '🇭🇰',

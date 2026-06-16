@@ -49,6 +49,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         radio.fetchScheduleByUrl(stationName, streamUrl);
       } else if (stationName == 'MBC 표준FM' || stationName == 'MBC FM4U') {
         radio.fetchMbcSchedule(stationName);
+      } else if (stationName == 'SBS 파워FM' || stationName == 'SBS 러브FM') {
+        radio.fetchSbsSchedule(stationName);
       } else {
         radio.fetchSchedule(stationName);
       }
@@ -139,6 +141,19 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         ),
         centerTitle: true,
         actions: [
+          if (radioProvider.scheduleList.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.format_list_bulleted,
+                  color: AppTheme.textPrimary, size: 24),
+              onPressed: () => showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.transparent,
+                isScrollControlled: true,
+                builder: (_) => _ScheduleListSheet(
+                  stationName: current.name,
+                ),
+              ),
+            ),
           Stack(
             children: [
               IconButton(
@@ -385,7 +400,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                         children: [
                           Text(
                             (radioProvider.currentProgram!['program_title'] ??
-                            radioProvider.currentProgram!['Title'] ?? ''),
+                            radioProvider.currentProgram!['Title'] ??
+                            radioProvider.currentProgram!['title'] ?? ''),
                             style: TextStyle(
                               color: primaryColor,
                               fontSize: 10,
@@ -410,6 +426,9 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                               return '$h:$m';
                             }
 
+                            final sbsStart = program['start_time'] as String? ?? '';
+                            final sbsEnd = program['end_time'] as String? ?? '';
+
                             if (kbsStart.isNotEmpty && kbsEnd.isNotEmpty) {
                               return Text(
                                 '${radioProvider.formatScheduleTime(kbsStart)} ~ ${radioProvider.formatScheduleTime(kbsEnd)}',
@@ -421,6 +440,14 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                             } else if (mbcStart.isNotEmpty && mbcEnd.isNotEmpty) {
                               return Text(
                                 '${formatMbc(mbcStart)} ~ ${formatMbc(mbcEnd)}',
+                                style: TextStyle(
+                                  color: primaryColor.withOpacity(0.7),
+                                  fontSize: 11,
+                                ),
+                              );
+                            } else if (sbsStart.isNotEmpty && sbsEnd.isNotEmpty) {
+                              return Text(
+                                '$sbsStart ~ $sbsEnd',
                                 style: TextStyle(
                                   color: primaryColor.withOpacity(0.7),
                                   fontSize: 11,
@@ -691,5 +718,168 @@ class _SleepTimerBadge extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _ScheduleListSheet extends StatelessWidget {
+  final String stationName;
+  const _ScheduleListSheet({required this.stationName});
+
+  @override
+  Widget build(BuildContext context) {
+  final primaryColor = Theme.of(context).colorScheme.primary;
+  final radioProvider = context.watch<RadioProvider>();
+  final schedules = radioProvider.scheduleList;
+  final currentProgram = radioProvider.currentProgram;
+
+  return Container(
+  decoration: const BoxDecoration(
+  color: Color(0xFF1E1E1E),
+  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+  ),
+  padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+  child: Column(
+  mainAxisSize: MainAxisSize.min,
+  children: [
+  Container(
+  width: 40,
+  height: 4,
+  decoration: BoxDecoration(
+  color: Colors.white24,
+  borderRadius: BorderRadius.circular(2),
+  ),
+  ),
+  const SizedBox(height: 16),
+  Row(
+  children: [
+  Icon(Icons.format_list_bulleted, color: primaryColor, size: 20),
+  const SizedBox(width: 8),
+  Text(
+  '$stationName 편성표',
+  style: const TextStyle(
+  color: Colors.white,
+  fontSize: 16,
+  fontWeight: FontWeight.bold,
+  ),
+  ),
+  ],
+  ),
+  const SizedBox(height: 12),
+  ConstrainedBox(
+  constraints: BoxConstraints(
+  maxHeight: MediaQuery.of(context).size.height * 0.6,
+  ),
+  child: schedules.isEmpty
+  ? const Center(
+  child: Padding(
+  padding: EdgeInsets.all(32),
+  child: Text(
+  '편성표를 불러오는 중...',
+  style: TextStyle(color: Colors.white54),
+  ),
+  ),
+  )
+      : ListView.builder(
+  shrinkWrap: true,
+  itemCount: schedules.length,
+  itemBuilder: (context, index) {
+  final s = schedules[index];
+  String title = s['program_title'] as String? ?? '';
+  String start = s['program_planned_start_time'] as String? ?? '';
+  String end = s['program_planned_end_time'] as String? ?? '';
+  if (title.isEmpty) title = s['Title'] as String? ?? '';
+  if (start.isEmpty) start = s['StartTime'] as String? ?? '';
+  if (end.isEmpty) end = s['EndTime'] as String? ?? '';
+  if (title.isEmpty) title = s['title'] as String? ?? '';
+  if (start.isEmpty) {
+    start = s['start_time'] as String? ?? '';
+    end = s['end_time'] as String? ?? '';
+  }
+
+  String fmt(String t) {
+  if (t.contains(':')) {
+    final parts = t.split(':');
+    int h = int.tryParse(parts[0]) ?? 0;
+    if (h >= 24) h -= 24;
+    return '$h:${parts[1]}';
+  }
+  if (t.length < 4) return t;
+  int h = int.tryParse(t.substring(0, 2)) ?? 0;
+  final m = t.substring(2, 4);
+  if (h >= 24) h -= 24;
+  return '$h:$m';
+  }
+
+  final isCurrent = currentProgram != null &&
+  (currentProgram['program_planned_start_time'] == start ||
+   currentProgram['StartTime'] == start ||
+   currentProgram['start_time'] == start) &&
+  (currentProgram['program_title'] == title ||
+   currentProgram['Title'] == title ||
+   currentProgram['title'] == title);
+
+  return Container(
+  margin: const EdgeInsets.only(bottom: 4),
+  padding: const EdgeInsets.symmetric(
+  horizontal: 12, vertical: 10),
+  decoration: BoxDecoration(
+  color: isCurrent
+  ? primaryColor.withOpacity(0.15)
+      : Colors.transparent,
+  borderRadius: BorderRadius.circular(10),
+  border: isCurrent
+  ? Border.all(color: primaryColor.withOpacity(0.4))
+      : null,
+  ),
+  child: Row(
+  children: [
+  SizedBox(
+  width: 60,
+  child: Text(
+  fmt(start),
+  style: TextStyle(
+  color: isCurrent ? primaryColor : Colors.white54,
+  fontSize: 13,
+  fontWeight: isCurrent
+  ? FontWeight.bold
+      : FontWeight.normal,
+  ),
+  ),
+  ),
+  if (isCurrent)
+  Container(
+  width: 6,
+  height: 6,
+  margin: const EdgeInsets.only(right: 8),
+  decoration: BoxDecoration(
+  color: primaryColor,
+  shape: BoxShape.circle,
+  ),
+  )
+  else
+  const SizedBox(width: 14),
+  Expanded(
+  child: Text(
+  title,
+  style: TextStyle(
+  color: isCurrent ? Colors.white : Colors.white70,
+  fontSize: 14,
+  fontWeight: isCurrent
+  ? FontWeight.bold
+      : FontWeight.normal,
+  ),
+  maxLines: 1,
+  overflow: TextOverflow.ellipsis,
+  ),
+  ),
+  ],
+  ),
+  );
+  },
+  ),
+  ),
+  ],
+  ),
+  );
   }
 }

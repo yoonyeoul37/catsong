@@ -45,6 +45,10 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
       }
       radio.fetchMbcSchedule('MBC 표준FM');
       radio.fetchMbcSchedule('MBC FM4U');
+      radio.fetchSbsSchedule('SBS 파워FM');
+      radio.fetchSbsSchedule('SBS 러브FM');
+      radio.fetchSbsSchedule('SBS 파워FM');
+      radio.fetchSbsSchedule('SBS 러브FM');
     });
   }
 
@@ -279,8 +283,10 @@ class _StationTile extends StatelessWidget {
                         final isKbs = station.broadcaster == 'KBS' &&
                             station.streamUrl.contains('cfpwwwapi.kbs.co.kr');
                         const mbcNames = ['MBC 표준FM', 'MBC FM4U'];
+                        const sbsNames = ['SBS 파워FM', 'SBS 러브FM'];
                         final isMbc = mbcNames.contains(station.name);
-                        if (!isKbs && !isMbc) {
+                        final isSbs = sbsNames.contains(station.name);
+                        if (!isKbs && !isMbc && !isSbs) {
                           return Text(
                             station.frequency.isNotEmpty
                                 ? station.frequency
@@ -296,6 +302,9 @@ class _StationTile extends StatelessWidget {
                         final program = radio.currentProgramFor(station.name);
                         final start = program?['program_planned_start_time'] as String? ?? '';
                         final end = program?['program_planned_end_time'] as String? ?? '';
+                        // SBS 프로그램명
+                        final sbsTitle = program?['title'] as String?;
+                        final displayNowPlaying = nowPlaying ?? sbsTitle;
                         // 시간 포맷: 15:00~17:00
                         String _fmt(String t) {
                           if (t.length < 4) return t;
@@ -306,24 +315,38 @@ class _StationTile extends StatelessWidget {
                         }
                         // MBC는 Title/StartTime/EndTime 필드 사용
                         final isMbcStation = mbcNames.contains(station.name);
+                        final isSbsStation = sbsNames.contains(station.name);
                         String? rawStart;
                         String? rawEnd;
                         if (isMbcStation) {
                           rawStart = program?['StartTime'] as String?;
                           rawEnd = program?['EndTime'] as String?;
+                        } else if (isSbsStation) {
+                          rawStart = program?['start_time'] as String?;
+                          rawEnd = program?['end_time'] as String?;
                         } else {
                           rawStart = start.isEmpty ? null : start;
                           rawEnd = end.isEmpty ? null : end;
                         }
+                        String _fmtSbs(String t) {
+                          if (t.length >= 5) {
+                            final h = int.tryParse(t.split(':')[0]) ?? 0;
+                            final m = t.split(':')[1];
+                            return '${h >= 24 ? h - 24 : h}:$m';
+                          }
+                          return t;
+                        }
                         final timeStr = rawStart != null && rawEnd != null
-                            ? '${_fmt(rawStart)}~${_fmt(rawEnd)}'
+                            ? isSbsStation
+                                ? '${_fmtSbs(rawStart)}~${_fmtSbs(rawEnd)}'
+                                : '${_fmt(rawStart)}~${_fmt(rawEnd)}'
                             : '';
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (nowPlaying != null && nowPlaying.isNotEmpty)
+                            if (displayNowPlaying != null && displayNowPlaying.isNotEmpty)
                               Text(
-                                nowPlaying,
+                                displayNowPlaying,
                                 style: TextStyle(
                                   color: primaryColor.withOpacity(0.9),
                                   fontSize: 12,

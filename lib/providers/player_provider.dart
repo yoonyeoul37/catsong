@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:audio_service/audio_service.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import '../models/song.dart';
 
 class PlayerProvider extends ChangeNotifier {
@@ -196,6 +197,7 @@ class PlayerProvider extends ChangeNotifier {
       onSongChanged?.call(song);
       await _player.setAudioSource(AudioSource.uri(Uri.parse(song.uri!)));
       await _player.play();
+      await WakelockPlus.enable();
       _updateWidgetSongInfo(song);
     } catch (e) {
       debugPrint('재생 오류: $e');
@@ -243,8 +245,10 @@ class PlayerProvider extends ChangeNotifier {
   Future<void> togglePlayPause() async {
     if (_player.playing) {
       await _player.pause();
+      await WakelockPlus.disable();
     } else {
       await _player.play();
+      await WakelockPlus.enable();
     }
   }
 
@@ -354,6 +358,7 @@ class PlayerProvider extends ChangeNotifier {
     _positionTimer?.cancel();
     _sleepTimer?.cancel();
     _player.dispose();
+    WakelockPlus.disable();
     super.dispose();
   }
 }

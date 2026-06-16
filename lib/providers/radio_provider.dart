@@ -35,7 +35,6 @@ class RadioProvider extends ChangeNotifier {
   List<RadioStation> _favorites = [];
   List<RadioStation> _recentlyListened = [];
 
-  // 예약 채널 전환
   List<ScheduledStation> _schedules = [];
   Timer? _scheduleCheckTimer;
   List<ScheduledStation> get schedules => _schedules;
@@ -90,9 +89,7 @@ class RadioProvider extends ChangeNotifier {
   Future<void> _configurePlayer() async {
     try {
       final nativePlayer = _player.platform as NativePlayer;
-      await nativePlayer.setProperty(
-          'user-agent',
-          'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36');
+      await nativePlayer.setProperty('user-agent', 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36');
       await nativePlayer.setProperty('demuxer-lavf-probesize', '4096');
       await nativePlayer.setProperty('stream-lavf-o', 'reconnect=1');
       await nativePlayer.setProperty('network-timeout', '30');
@@ -192,12 +189,9 @@ class RadioProvider extends ChangeNotifier {
 
   Future<String?> _resolveStreamUrl(String url) async {
     try {
-      // KBS API JSON 처리
       if (url.contains('cfpwwwapi.kbs.co.kr')) {
         try {
-          final response = await http
-              .get(Uri.parse(url))
-              .timeout(const Duration(seconds: 10));
+          final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 10));
           if (response.statusCode == 200) {
             final data = json.decode(response.body);
             final items = data['channel_item'] as List?;
@@ -217,21 +211,14 @@ class RadioProvider extends ChangeNotifier {
 
       final client = http.Client();
       final request = http.Request('GET', Uri.parse(url));
-      request.headers['User-Agent'] =
-      'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36';
+      request.headers['User-Agent'] = 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36';
       request.followRedirects = false;
 
-      final response = await client
-          .send(request)
-          .timeout(const Duration(seconds: 10));
+      final response = await client.send(request).timeout(const Duration(seconds: 10));
       final statusCode = response.statusCode;
-
       debugPrint('resolve statusCode: $statusCode');
 
-      if (statusCode == 301 ||
-          statusCode == 302 ||
-          statusCode == 307 ||
-          statusCode == 308) {
+      if (statusCode == 301 || statusCode == 302 || statusCode == 307 || statusCode == 308) {
         final location = response.headers['location'];
         if (location != null && location.isNotEmpty) {
           debugPrint('리다이렉트: $location');
@@ -245,20 +232,15 @@ class RadioProvider extends ChangeNotifier {
 
       for (final line in lines) {
         final trimmed = line.trim();
-
         if (trimmed.startsWith('File') && trimmed.contains('=')) {
-          final fileUrl =
-          trimmed.substring(trimmed.indexOf('=') + 1).trim();
+          final fileUrl = trimmed.substring(trimmed.indexOf('=') + 1).trim();
           if (fileUrl.startsWith('http')) {
             debugPrint('PLS에서 URL 추출: $fileUrl');
             client.close();
             return await _resolveStreamUrl(fileUrl) ?? fileUrl;
           }
         }
-
-        if (trimmed.isNotEmpty &&
-            !trimmed.startsWith('#') &&
-            trimmed.startsWith('http')) {
+        if (trimmed.isNotEmpty && !trimmed.startsWith('#') && trimmed.startsWith('http')) {
           debugPrint('M3U에서 URL 추출: $trimmed');
           client.close();
           return trimmed;
@@ -272,6 +254,7 @@ class RadioProvider extends ChangeNotifier {
       return null;
     }
   }
+
   Future<void> playStation(RadioStation station) async {
     if (_playerState == RadioPlayerState.loading) {
       debugPrint('이미 로딩 중 - 중복 호출 무시');
@@ -287,7 +270,6 @@ class RadioProvider extends ChangeNotifier {
       if (qIdx >= 0) _currentQueueIndex = qIdx;
       notifyListeners();
 
-      // 음악 재생 중이면 정지
       _onStopMusic?.call();
 
       debugPrint('=== 라디오 재생 시작 ===');
@@ -309,12 +291,8 @@ class RadioProvider extends ChangeNotifier {
       if (playUrl == station.playableUrl) {
         try {
           for (final server in _apiServers) {
-            final uri = Uri.https(
-                server, '/json/url/${station.stationUuid}');
-            final response = await http
-                .get(uri, headers: _apiHeaders)
-                .timeout(const Duration(seconds: 10));
-
+            final uri = Uri.https(server, '/json/url/${station.stationUuid}');
+            final response = await http.get(uri, headers: _apiHeaders).timeout(const Duration(seconds: 10));
             if (response.statusCode == 200) {
               final data = json.decode(response.body);
               final freshUrl = data['url'] as String?;
@@ -339,8 +317,7 @@ class RadioProvider extends ChangeNotifier {
         Media(
           playUrl,
           httpHeaders: {
-            'User-Agent':
-            'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36',
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36',
             'Referer': _getReferer(station),
             'Origin': _getOrigin(station),
           },
@@ -359,9 +336,7 @@ class RadioProvider extends ChangeNotifier {
   String _getReferer(RadioStation station) {
     final url = station.playableUrl.toLowerCase();
     if (url.contains('kbs')) return 'https://www.kbs.co.kr/';
-    if (url.contains('imbc') || url.contains('mbc')) {
-      return 'https://www.imbc.com/';
-    }
+    if (url.contains('imbc') || url.contains('mbc')) return 'https://www.imbc.com/';
     if (url.contains('sbs')) return 'https://www.sbs.co.kr/';
     if (url.contains('ebs')) return 'https://www.ebs.co.kr/';
     if (url.contains('ytn')) return 'https://www.ytn.co.kr/';
@@ -373,9 +348,7 @@ class RadioProvider extends ChangeNotifier {
   String _getOrigin(RadioStation station) {
     final url = station.playableUrl.toLowerCase();
     if (url.contains('kbs')) return 'https://www.kbs.co.kr';
-    if (url.contains('imbc') || url.contains('mbc')) {
-      return 'https://www.imbc.com';
-    }
+    if (url.contains('imbc') || url.contains('mbc')) return 'https://www.imbc.com';
     if (url.contains('sbs')) return 'https://www.sbs.co.kr';
     if (url.contains('ebs')) return 'https://www.ebs.co.kr';
     if (url.contains('ytn')) return 'https://www.ytn.co.kr';
@@ -407,6 +380,7 @@ class RadioProvider extends ChangeNotifier {
     _currentQueue = List.from(stations);
     _currentQueueIndex = index;
   }
+
   Future<void> selectCountry(RadioCountry country) async {
     _selectedCountry = country;
     _selectedBroadcaster = null;
@@ -435,10 +409,7 @@ class RadioProvider extends ChangeNotifier {
           'codec': 'MP3,AAC,AAC+,OGG',
         });
 
-        final response = await http
-            .get(uri, headers: _apiHeaders)
-            .timeout(const Duration(seconds: 15));
-
+        final response = await http.get(uri, headers: _apiHeaders).timeout(const Duration(seconds: 15));
         if (response.statusCode == 200) {
           final List<dynamic> data = json.decode(response.body);
           _countryStations = data
@@ -457,7 +428,7 @@ class RadioProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // KBS 편성표
+  // ══════ 편성표 ══════
   final Map<String, List<Map<String, dynamic>>> _scheduleListMap = {};
   List<Map<String, dynamic>> get scheduleList =>
       _scheduleListMap[_currentStation?.name ?? ''] ?? [];
@@ -472,6 +443,7 @@ class RadioProvider extends ChangeNotifier {
   final Map<String, String> _nowPlayingMap = {};
   String? nowPlayingFor(String stationName) => _nowPlayingMap[stationName];
 
+  // KBS
   static const _kbsChannelCodes = {
     'KBS 제1라디오': '21',
     'KBS 해피FM': '22',
@@ -480,9 +452,6 @@ class RadioProvider extends ChangeNotifier {
     'KBS Cool FM': '25',
   };
 
-  // 스트림 URL에서 local_station_code와 channel_code 추출
-  // 예: channel_code/10_21 → ('10', '21')
-  // 예: channel_code/24 → ('00', '24')
   static Map<String, String>? _parseKbsChannelFromUrl(String streamUrl) {
     final match = RegExp(r'channel_code/(\d+)(?:_(\d+))?$').firstMatch(streamUrl);
     if (match == null) return null;
@@ -520,31 +489,19 @@ class RadioProvider extends ChangeNotifier {
             '&program_planned_date_from=$dateStr'
             '&program_planned_date_to=$dateStr',
       );
-
-      final response = await http
-          .get(uri)
-          .timeout(const Duration(seconds: 10));
-
+      final response = await http.get(uri).timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         if (data.isNotEmpty) {
           final schedules = data[0]['schedules'] as List<dynamic>? ?? [];
           _scheduleListMap[stationName] = schedules.cast<Map<String, dynamic>>();
-          debugPrint('편성표 샘플: ${schedules.isNotEmpty ? schedules[0] : "없음"}');
-
-          // 현재 방송 중인 프로그램 찾기
           final nowTime = '${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}0000';
-          debugPrint('현재시각: $nowTime');
-          for (final s in _scheduleListMap[stationName] ?? []) {
-            debugPrint('프로그램: ${s['program_title']} / ${s['program_planned_start_time']} ~ ${s['program_planned_end_time']}');
-          }
           final currentSchedules = _scheduleListMap[stationName] ?? [];
           for (int i = 0; i < currentSchedules.length; i++) {
             final s = currentSchedules[i];
             final start = s['program_planned_start_time'] as String? ?? '';
             final end = s['program_planned_end_time'] as String? ?? '';
             if (nowTime.compareTo(start) >= 0 && nowTime.compareTo(end) < 0) {
-              // 같은 프로그램 코드로 연속된 항목의 마지막 종료 시간 찾기
               final programCode = s['program_code'] as String? ?? '';
               String finalEnd = end;
               for (int j = i + 1; j < currentSchedules.length; j++) {
@@ -555,7 +512,6 @@ class RadioProvider extends ChangeNotifier {
                   break;
                 }
               }
-              // 종료 시간을 합산한 가상 항목으로 저장
               final merged = Map<String, dynamic>.from(s);
               merged['program_planned_end_time'] = finalEnd;
               _currentProgramMap[stationName] = merged;
@@ -629,15 +585,198 @@ class RadioProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
   String formatScheduleTime(String time) {
     if (time.length < 4) return time;
     int hour = int.tryParse(time.substring(0, 2)) ?? 0;
     final min = time.substring(2, 4);
     if (hour >= 24) hour -= 24;
-    final period = hour < 12 ? '오전' : '오후';
     final h12 = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
     return '$h12:$min';
   }
+
+  // MBC
+  static const _mbcChannelTypes = {
+    'MBC 표준FM': 'FM',
+    'MBC FM4U': 'FM4U',
+  };
+
+  Future<void> fetchMbcSchedule(String stationName) async {
+    final sType = _mbcChannelTypes[stationName];
+    if (sType == null) return;
+
+    _scheduleListMap.remove(stationName);
+    _currentProgramMap.remove(stationName);
+    _nowPlayingMap.remove(stationName);
+
+    try {
+      final uri = Uri.parse('https://control.imbc.com/Schedule/Radio/Time?sType=$sType');
+      final response = await http.get(uri).timeout(const Duration(seconds: 10));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        _scheduleListMap[stationName] = data.cast<Map<String, dynamic>>();
+        final now = DateTime.now();
+        final nowHHMM = '${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}';
+        for (final s in data) {
+          final start = s['StartTime'] as String? ?? '';
+          final end = s['EndTime'] as String? ?? '';
+          final endAdj = end == '2400' ? '0000' : end;
+          if (nowHHMM.compareTo(start) >= 0 &&
+              (end == '2400' || nowHHMM.compareTo(endAdj) < 0)) {
+            _currentProgramMap[stationName] = Map<String, dynamic>.from(s);
+            _nowPlayingMap[stationName] = s['Title'] as String? ?? '';
+            break;
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('MBC 편성표 로드 오류: $e');
+    }
+    notifyListeners();
+  }
+
+  // SBS
+  static const _sbsChannelTypes = {
+    'SBS 파워FM': 'Power',
+    'SBS 러브FM': 'Love',
+  };
+
+  Future<void> fetchSbsSchedule(String stationName) async {
+    final type = _sbsChannelTypes[stationName];
+    if (type == null) return;
+
+    _scheduleListMap.remove(stationName);
+    _currentProgramMap.remove(stationName);
+    _nowPlayingMap.remove(stationName);
+
+    try {
+      final now = DateTime.now();
+      final uri = Uri.parse(
+        'https://static.cloud.sbs.co.kr/schedule/${now.year}/${now.month}/${now.day}/$type.json',
+      );
+      final response = await http.get(uri).timeout(const Duration(seconds: 10));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        _scheduleListMap[stationName] = data.cast<Map<String, dynamic>>();
+        final nowHHMM = '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+        for (final s in data) {
+          final start = s['start_time'] as String? ?? '';
+          var end = s['end_time'] as String? ?? '';
+          if (end.isNotEmpty && int.parse(end.split(':')[0]) >= 24) end = '23:59';
+          if (nowHHMM.compareTo(start) >= 0 && nowHHMM.compareTo(end) < 0) {
+            _currentProgramMap[stationName] = Map<String, dynamic>.from(s);
+            _nowPlayingMap[stationName] = s['title'] as String? ?? '';
+            break;
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('SBS 편성표 로드 오류: $e');
+    }
+    notifyListeners();
+  }
+
+  void _updateCurrentPrograms() {
+    final now = DateTime.now();
+    final nowTime = '${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}0000';
+    final nowHHMM = '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+    final nowHHMMno = '${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}';
+    bool changed = false;
+
+    // MBC
+    for (final stationName in _mbcChannelTypes.keys) {
+      if (!_scheduleListMap.containsKey(stationName)) continue;
+      final schedules = _scheduleListMap[stationName] ?? [];
+      for (final s in schedules) {
+        final start = s['StartTime'] as String? ?? '';
+        final end = s['EndTime'] as String? ?? '';
+        final endAdj = end == '2400' ? '0000' : end;
+        if (nowHHMMno.compareTo(start) >= 0 &&
+            (end == '2400' || nowHHMMno.compareTo(endAdj) < 0)) {
+          _currentProgramMap[stationName] = Map<String, dynamic>.from(s);
+          _nowPlayingMap[stationName] = s['Title'] as String? ?? '';
+          changed = true;
+          break;
+        }
+      }
+    }
+
+    // SBS
+    for (final stationName in _sbsChannelTypes.keys) {
+      if (!_scheduleListMap.containsKey(stationName)) continue;
+      final schedules = _scheduleListMap[stationName] ?? [];
+      for (final s in schedules) {
+        final start = s['start_time'] as String? ?? '';
+        var end = s['end_time'] as String? ?? '';
+        if (end.isNotEmpty && int.parse(end.split(':')[0]) >= 24) end = '23:59';
+        if (nowHHMM.compareTo(start) >= 0 && nowHHMM.compareTo(end) < 0) {
+          _currentProgramMap[stationName] = Map<String, dynamic>.from(s);
+          _nowPlayingMap[stationName] = s['title'] as String? ?? '';
+          changed = true;
+          break;
+        }
+      }
+    }
+
+    // KBS
+    for (final stationName in _scheduleListMap.keys) {
+      if (_mbcChannelTypes.containsKey(stationName)) continue;
+      if (_sbsChannelTypes.containsKey(stationName)) continue;
+      final currentSchedules = _scheduleListMap[stationName] ?? [];
+      for (int i = 0; i < currentSchedules.length; i++) {
+        final s = currentSchedules[i];
+        final start = s['program_planned_start_time'] as String? ?? '';
+        final end = s['program_planned_end_time'] as String? ?? '';
+        if (nowTime.compareTo(start) >= 0 && nowTime.compareTo(end) < 0) {
+          final programCode = s['program_code'] as String? ?? '';
+          String finalEnd = end;
+          for (int j = i + 1; j < currentSchedules.length; j++) {
+            final next = currentSchedules[j];
+            if (next['program_code'] == programCode) {
+              finalEnd = next['program_planned_end_time'] as String? ?? finalEnd;
+            } else {
+              break;
+            }
+          }
+          final merged = Map<String, dynamic>.from(s);
+          merged['program_planned_end_time'] = finalEnd;
+          _currentProgramMap[stationName] = merged;
+          _nowPlayingMap[stationName] = s['program_title'] as String? ?? '';
+          changed = true;
+          break;
+        }
+      }
+    }
+
+    if (changed) notifyListeners();
+  }
+
+  Timer? _scheduleRefreshTimer;
+  Timer? _scheduleDisplayTimer;
+
+  void _startScheduleRefreshTimer() {
+    _scheduleRefreshTimer?.cancel();
+    _scheduleRefreshTimer = Timer.periodic(
+      const Duration(minutes: 10),
+          (_) {
+        for (final name in _kbsChannelCodes.keys) {
+          if (_scheduleListMap.containsKey(name)) fetchSchedule(name);
+        }
+        for (final name in _mbcChannelTypes.keys) {
+          if (_scheduleListMap.containsKey(name)) fetchMbcSchedule(name);
+        }
+        for (final name in _sbsChannelTypes.keys) {
+          if (_scheduleListMap.containsKey(name)) fetchSbsSchedule(name);
+        }
+      },
+    );
+    _scheduleDisplayTimer?.cancel();
+    _scheduleDisplayTimer = Timer.periodic(
+      const Duration(minutes: 1),
+          (_) => _updateCurrentPrograms(),
+    );
+  }
+
   Future<void> selectBroadcaster(RadioBroadcaster broadcaster) async {
     _selectedBroadcaster = broadcaster;
     _broadcasterStations = [];
@@ -653,21 +792,15 @@ class RadioProvider extends ChangeNotifier {
           'reverse': 'true',
           'hidebroken': 'true',
         });
-
-        final response = await http
-            .get(uri, headers: _apiHeaders)
-            .timeout(const Duration(seconds: 15));
-
+        final response = await http.get(uri, headers: _apiHeaders).timeout(const Duration(seconds: 15));
         if (response.statusCode == 200) {
           final List<dynamic> data = json.decode(response.body);
           _broadcasterStations = data
-              .map((j) =>
-              RadioStation.fromJson(j as Map<String, dynamic>))
+              .map((j) => RadioStation.fromJson(j as Map<String, dynamic>))
               .where((s) => s.streamUrl.isNotEmpty)
               .toList();
           _mergeFavoriteFlags(_broadcasterStations);
           notifyListeners();
-          // KBS 채널이면 편성표 자동 fetch
           for (final station in _broadcasterStations) {
             if (_kbsChannelCodes.keys.any((k) => station.name.contains(k))) {
               fetchSchedule(station.name);
@@ -698,16 +831,11 @@ class RadioProvider extends ChangeNotifier {
           'reverse': 'true',
           'hidebroken': 'true',
         });
-
-        final response = await http
-            .get(uri, headers: _apiHeaders)
-            .timeout(const Duration(seconds: 15));
-
+        final response = await http.get(uri, headers: _apiHeaders).timeout(const Duration(seconds: 15));
         if (response.statusCode == 200) {
           final List<dynamic> data = json.decode(response.body);
           _searchResults = data
-              .map((j) =>
-              RadioStation.fromJson(j as Map<String, dynamic>))
+              .map((j) => RadioStation.fromJson(j as Map<String, dynamic>))
               .where((s) => s.streamUrl.isNotEmpty)
               .toList();
           _mergeFavoriteFlags(_searchResults);
@@ -727,8 +855,7 @@ class RadioProvider extends ChangeNotifier {
   }
 
   Future<void> toggleFavorite(RadioStation station) async {
-    final idx = _favorites
-        .indexWhere((s) => s.stationUuid == station.stationUuid);
+    final idx = _favorites.indexWhere((s) => s.stationUuid == station.stationUuid);
     if (idx >= 0) {
       _favorites.removeAt(idx);
       station.isFavorite = false;
@@ -746,8 +873,7 @@ class RadioProvider extends ChangeNotifier {
 
   Future<void> recordListened(RadioStation station) async {
     station.lastListened = DateTime.now();
-    _recentlyListened
-        .removeWhere((s) => s.stationUuid == station.stationUuid);
+    _recentlyListened.removeWhere((s) => s.stationUuid == station.stationUuid);
     _recentlyListened.insert(0, station);
     if (_recentlyListened.length > _maxRecent) {
       _recentlyListened = _recentlyListened.sublist(0, _maxRecent);
@@ -768,15 +894,23 @@ class RadioProvider extends ChangeNotifier {
       cancelSleepTimer();
     });
     _sleepCountdown = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (_sleepRemaining == null ||
-          _sleepRemaining!.inSeconds <= 0) {
+      if (_sleepRemaining == null || _sleepRemaining!.inSeconds <= 0) {
         cancelSleepTimer();
         return;
       }
-      _sleepRemaining =
-          _sleepRemaining! - const Duration(seconds: 1);
+      _sleepRemaining = _sleepRemaining! - const Duration(seconds: 1);
       notifyListeners();
     });
+    notifyListeners();
+  }
+
+  void cancelSleepTimer() {
+    _scheduleCheckTimer?.cancel();
+    _sleepTimer?.cancel();
+    _sleepCountdown?.cancel();
+    _sleepTimer = null;
+    _sleepCountdown = null;
+    _sleepRemaining = null;
     notifyListeners();
   }
 
@@ -800,61 +934,6 @@ class RadioProvider extends ChangeNotifier {
       _saveSchedules();
       notifyListeners();
     }
-  }
-
-  Timer? _scheduleRefreshTimer;
-  Timer? _scheduleDisplayTimer;
-
-  void _startScheduleRefreshTimer() {
-    _scheduleRefreshTimer?.cancel();
-    _scheduleRefreshTimer = Timer.periodic(
-      const Duration(minutes: 10),
-      (_) {
-        for (final name in _kbsChannelCodes.keys) {
-          if (_scheduleListMap.containsKey(name)) {
-            fetchSchedule(name);
-          }
-        }
-      },
-    );
-    _scheduleDisplayTimer?.cancel();
-    _scheduleDisplayTimer = Timer.periodic(
-      const Duration(minutes: 1),
-      (_) => _updateCurrentPrograms(),
-    );
-  }
-
-  void _updateCurrentPrograms() {
-    final now = DateTime.now();
-    final nowTime = '${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}0000';
-    bool changed = false;
-    for (final stationName in _scheduleListMap.keys) {
-      final currentSchedules = _scheduleListMap[stationName] ?? [];
-      for (int i = 0; i < currentSchedules.length; i++) {
-        final s = currentSchedules[i];
-        final start = s['program_planned_start_time'] as String? ?? '';
-        final end = s['program_planned_end_time'] as String? ?? '';
-        if (nowTime.compareTo(start) >= 0 && nowTime.compareTo(end) < 0) {
-          final programCode = s['program_code'] as String? ?? '';
-          String finalEnd = end;
-          for (int j = i + 1; j < currentSchedules.length; j++) {
-            final next = currentSchedules[j];
-            if (next['program_code'] == programCode) {
-              finalEnd = next['program_planned_end_time'] as String? ?? finalEnd;
-            } else {
-              break;
-            }
-          }
-          final merged = Map<String, dynamic>.from(s);
-          merged['program_planned_end_time'] = finalEnd;
-          _currentProgramMap[stationName] = merged;
-          _nowPlayingMap[stationName] = s['program_title'] as String? ?? '';
-          changed = true;
-          break;
-        }
-      }
-    }
-    if (changed) notifyListeners();
   }
 
   void clearSchedules() {
@@ -895,24 +974,13 @@ class RadioProvider extends ChangeNotifier {
       }
     }
   }
-  void cancelSleepTimer() {
-    _scheduleCheckTimer?.cancel();
-    _sleepTimer?.cancel();
-    _sleepCountdown?.cancel();
-    _sleepTimer = null;
-    _sleepCountdown = null;
-    _sleepRemaining = null;
-    notifyListeners();
-  }
 
   Future<void> _loadFromPrefs() async {
     final prefs = await SharedPreferences.getInstance();
     final favJson = prefs.getStringList(_keyFavorites) ?? [];
     _favorites = favJson.map((s) {
       try {
-        return RadioStation.fromJson(
-            json.decode(s) as Map<String, dynamic>)
-          ..isFavorite = true;
+        return RadioStation.fromJson(json.decode(s) as Map<String, dynamic>)..isFavorite = true;
       } catch (_) {
         return null;
       }
@@ -921,21 +989,18 @@ class RadioProvider extends ChangeNotifier {
     final recentJson = prefs.getStringList(_keyRecent) ?? [];
     _recentlyListened = recentJson.map((s) {
       try {
-        return RadioStation.fromJson(
-            json.decode(s) as Map<String, dynamic>);
+        return RadioStation.fromJson(json.decode(s) as Map<String, dynamic>);
       } catch (_) {
         return null;
       }
     }).whereType<RadioStation>().toList();
     final oneMonthAgo = DateTime.now().subtract(const Duration(days: 30));
-    _recentlyListened.removeWhere((s) =>
-    s.lastListened != null && s.lastListened!.isBefore(oneMonthAgo));
+    _recentlyListened.removeWhere((s) => s.lastListened != null && s.lastListened!.isBefore(oneMonthAgo));
 
     final scheduleJson = prefs.getStringList(_keySchedules) ?? [];
     _schedules = scheduleJson.map((s) {
       try {
-        return ScheduledStation.fromJson(
-            json.decode(s) as Map<String, dynamic>);
+        return ScheduledStation.fromJson(json.decode(s) as Map<String, dynamic>);
       } catch (_) {
         return null;
       }
@@ -949,22 +1014,13 @@ class RadioProvider extends ChangeNotifier {
 
   Future<void> _saveToPrefs() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList(
-      _keyFavorites,
-      _favorites.map((s) => json.encode(s.toJson())).toList(),
-    );
-    await prefs.setStringList(
-      _keyRecent,
-      _recentlyListened.map((s) => json.encode(s.toJson())).toList(),
-    );
+    await prefs.setStringList(_keyFavorites, _favorites.map((s) => json.encode(s.toJson())).toList());
+    await prefs.setStringList(_keyRecent, _recentlyListened.map((s) => json.encode(s.toJson())).toList());
   }
 
   Future<void> _saveSchedules() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList(
-      _keySchedules,
-      _schedules.map((s) => json.encode(s.toJson())).toList(),
-    );
+    await prefs.setStringList(_keySchedules, _schedules.map((s) => json.encode(s.toJson())).toList());
   }
 
   void _setPlayerState(RadioPlayerState state) {
@@ -1000,6 +1056,7 @@ class RadioProvider extends ChangeNotifier {
     super.dispose();
   }
 }
+
 class ScheduledStation {
   final TimeOfDay time;
   final RadioStation station;

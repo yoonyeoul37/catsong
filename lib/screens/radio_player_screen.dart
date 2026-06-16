@@ -44,10 +44,13 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         radio.playStation(widget.station);
       }
       final streamUrl = widget.station.streamUrl;
+      final stationName = widget.station.name;
       if (streamUrl.contains('cfpwwwapi.kbs.co.kr')) {
-        radio.fetchScheduleByUrl(widget.station.name, streamUrl);
+        radio.fetchScheduleByUrl(stationName, streamUrl);
+      } else if (stationName == 'MBC 표준FM' || stationName == 'MBC FM4U') {
+        radio.fetchMbcSchedule(stationName);
       } else {
-        radio.fetchSchedule(widget.station.name);
+        radio.fetchSchedule(stationName);
       }
     });
   }
@@ -381,7 +384,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            radioProvider.currentProgram!['program_title'] ?? '',
+                            (radioProvider.currentProgram!['program_title'] ??
+                            radioProvider.currentProgram!['Title'] ?? ''),
                             style: TextStyle(
                               color: primaryColor,
                               fontSize: 10,
@@ -391,16 +395,39 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                             overflow: TextOverflow.ellipsis,
                           ),
                           Builder(builder: (ctx) {
-                            final start = radioProvider.currentProgram!['program_planned_start_time'] as String? ?? '';
-                            final end = radioProvider.currentProgram!['program_planned_end_time'] as String? ?? '';
-                            if (start.isEmpty || end.isEmpty) return const SizedBox.shrink();
-                            return Text(
-                              '${radioProvider.formatScheduleTime(start)} ~ ${radioProvider.formatScheduleTime(end)}',
-                              style: TextStyle(
-                                color: primaryColor.withOpacity(0.7),
-                                fontSize: 11,
-                              ),
-                            );
+                            final program = radioProvider.currentProgram!;
+                            // KBS는 program_planned_start_time, MBC는 StartTime
+                            final kbsStart = program['program_planned_start_time'] as String? ?? '';
+                            final kbsEnd = program['program_planned_end_time'] as String? ?? '';
+                            final mbcStart = program['StartTime'] as String? ?? '';
+                            final mbcEnd = program['EndTime'] as String? ?? '';
+
+                            String formatMbc(String t) {
+                              if (t.length < 4) return t;
+                              int h = int.tryParse(t.substring(0, 2)) ?? 0;
+                              final m = t.substring(2, 4);
+                              if (h >= 24) h -= 24;
+                              return '$h:$m';
+                            }
+
+                            if (kbsStart.isNotEmpty && kbsEnd.isNotEmpty) {
+                              return Text(
+                                '${radioProvider.formatScheduleTime(kbsStart)} ~ ${radioProvider.formatScheduleTime(kbsEnd)}',
+                                style: TextStyle(
+                                  color: primaryColor.withOpacity(0.7),
+                                  fontSize: 11,
+                                ),
+                              );
+                            } else if (mbcStart.isNotEmpty && mbcEnd.isNotEmpty) {
+                              return Text(
+                                '${formatMbc(mbcStart)} ~ ${formatMbc(mbcEnd)}',
+                                style: TextStyle(
+                                  color: primaryColor.withOpacity(0.7),
+                                  fontSize: 11,
+                                ),
+                              );
+                            }
+                            return const SizedBox.shrink();
                           }),
                         ],
                       ),

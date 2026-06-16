@@ -43,7 +43,12 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
           (!radio.isPlaying && !radio.isLoading)) {
         radio.playStation(widget.station);
       }
-      radio.fetchSchedule(widget.station.name);
+      final streamUrl = widget.station.streamUrl;
+      if (streamUrl.contains('cfpwwwapi.kbs.co.kr')) {
+        radio.fetchScheduleByUrl(widget.station.name, streamUrl);
+      } else {
+        radio.fetchSchedule(widget.station.name);
+      }
     });
   }
 

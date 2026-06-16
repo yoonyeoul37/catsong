@@ -37,12 +37,11 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
         TabController(length: _regions.length, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final radio = context.read<RadioProvider>();
-      final kbsNames = [
-        'KBS 제1라디오', 'KBS 해피FM', 'KBS 3라디오',
-        'KBS Classic FM', 'KBS Cool FM',
-      ];
-      for (final name in kbsNames) {
-        radio.fetchSchedule(name);
+      for (final station in _koreanStations) {
+        if (station.broadcaster == 'KBS' &&
+            station.streamUrl.contains('cfpwwwapi.kbs.co.kr')) {
+          radio.fetchScheduleByUrl(station.name, station.streamUrl);
+        }
       }
     });
   }
@@ -275,11 +274,9 @@ class _StationTile extends StatelessWidget {
                     ),
                     Builder(
                       builder: (ctx) {
-                        const kbsNames = [
-                          'KBS 제1라디오', 'KBS 해피FM', 'KBS 3라디오',
-                          'KBS Classic FM', 'KBS Cool FM',
-                        ];
-                        if (!kbsNames.contains(station.name)) {
+                        final isKbs = station.broadcaster == 'KBS' &&
+                            station.streamUrl.contains('cfpwwwapi.kbs.co.kr');
+                        if (!isKbs) {
                           return Text(
                             station.frequency.isNotEmpty
                                 ? station.frequency

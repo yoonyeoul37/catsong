@@ -480,6 +480,19 @@ class RadioProvider extends ChangeNotifier {
     'KBS Cool FM': '25',
   };
 
+  // 스트림 URL에서 local_station_code와 channel_code 추출
+  // 예: channel_code/10_21 → ('10', '21')
+  // 예: channel_code/24 → ('00', '24')
+  static Map<String, String>? _parseKbsChannelFromUrl(String streamUrl) {
+    final match = RegExp(r'channel_code/(\d+)(?:_(\d+))?$').firstMatch(streamUrl);
+    if (match == null) return null;
+    if (match.group(2) != null) {
+      return {'local': match.group(1)!, 'channel': match.group(2)!};
+    } else {
+      return {'local': '00', 'channel': match.group(1)!};
+    }
+  }
+
   Future<void> fetchSchedule(String stationName) async {
     _scheduleListMap.remove(stationName);
     _currentProgramMap.remove(stationName);
@@ -558,6 +571,64 @@ class RadioProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> fetchScheduleByUrl(String stationName, String streamUrl) async {
+    final codes = _parseKbsChannelFromUrl(streamUrl);
+    if (codes == null) return;
+    final localCode = codes['local']!;
+    final channelCode = codes['channel']!;
+
+    _scheduleListMap.remove(stationName);
+    _currentProgramMap.remove(stationName);
+    _nowPlayingMap.remove(stationName);
+
+    final now = DateTime.now();
+    final dateStr = '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}';
+
+    try {
+      final uri = Uri.parse(
+        'https://static.api.kbs.co.kr/mediafactory/v1/schedule/weekly'
+            '?rtype=json&local_station_code=$localCode'
+            '&channel_code=$channelCode'
+            '&program_planned_date_from=$dateStr'
+            '&program_planned_date_to=$dateStr',
+      );
+      final response = await http.get(uri).timeout(const Duration(seconds: 10));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        if (data.isNotEmpty) {
+          final schedules = data[0]['schedules'] as List<dynamic>? ?? [];
+          _scheduleListMap[stationName] = schedules.cast<Map<String, dynamic>>();
+          final nowTime = '${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}0000';
+          final currentSchedules = _scheduleListMap[stationName] ?? [];
+          for (int i = 0; i < currentSchedules.length; i++) {
+            final s = currentSchedules[i];
+            final start = s['program_planned_start_time'] as String? ?? '';
+            final end = s['program_planned_end_time'] as String? ?? '';
+            if (nowTime.compareTo(start) >= 0 && nowTime.compareTo(end) < 0) {
+              final programCode = s['program_code'] as String? ?? '';
+              String finalEnd = end;
+              for (int j = i + 1; j < currentSchedules.length; j++) {
+                final next = currentSchedules[j];
+                if (next['program_code'] == programCode) {
+                  finalEnd = next['program_planned_end_time'] as String? ?? finalEnd;
+                } else {
+                  break;
+                }
+              }
+              final merged = Map<String, dynamic>.from(s);
+              merged['program_planned_end_time'] = finalEnd;
+              _currentProgramMap[stationName] = merged;
+              _nowPlayingMap[stationName] = s['program_title'] as String? ?? '';
+              break;
+            }
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('지방 편성표 로드 오류: $e');
+    }
+    notifyListeners();
+  }
   String formatScheduleTime(String time) {
     if (time.length < 4) return time;
     int hour = int.tryParse(time.substring(0, 2)) ?? 0;

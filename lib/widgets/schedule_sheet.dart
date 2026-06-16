@@ -229,7 +229,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                 ),
               )
                   : SizedBox(
-                height: 120,
+                height: 200,
                 child: ListView.builder(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 8, vertical: 4),
@@ -243,7 +243,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                               () => _selectedStation = station),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
+                            horizontal: 14, vertical: 12),
                         margin:
                         const EdgeInsets.only(bottom: 4),
                         decoration: BoxDecoration(
@@ -272,7 +272,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                                   color: isSelected
                                       ? primaryColor
                                       : AppTheme.textPrimary,
-                                  fontSize: 13,
+                                  fontSize: 15,
                                   fontWeight: isSelected
                                       ? FontWeight.bold
                                       : FontWeight.normal,

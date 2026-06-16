@@ -479,14 +479,17 @@ class RadioProvider extends ChangeNotifier {
     if (channelCode == null) return;
 
     final now = DateTime.now();
-    final dateStr = '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}';
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final dateStr = '${today.year}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}';
+    final yesterdayStr = '${yesterday.year}${yesterday.month.toString().padLeft(2, '0')}${yesterday.day.toString().padLeft(2, '0')}';
 
     try {
       final uri = Uri.parse(
         'https://static.api.kbs.co.kr/mediafactory/v1/schedule/weekly'
             '?&rtype=json&local_station_code=00'
             '&channel_code=$channelCode'
-            '&program_planned_date_from=$dateStr'
+            '&program_planned_date_from=$yesterdayStr'
             '&program_planned_date_to=$dateStr',
       );
       final response = await http.get(uri).timeout(const Duration(seconds: 10));
@@ -538,14 +541,17 @@ class RadioProvider extends ChangeNotifier {
     _nowPlayingMap.remove(stationName);
 
     final now = DateTime.now();
-    final dateStr = '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}';
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final dateStr = '${today.year}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}';
+    final yesterdayStr = '${yesterday.year}${yesterday.month.toString().padLeft(2, '0')}${yesterday.day.toString().padLeft(2, '0')}';
 
     try {
       final uri = Uri.parse(
         'https://static.api.kbs.co.kr/mediafactory/v1/schedule/weekly'
             '?rtype=json&local_station_code=$localCode'
             '&channel_code=$channelCode'
-            '&program_planned_date_from=$dateStr'
+            '&program_planned_date_from=$yesterdayStr'
             '&program_planned_date_to=$dateStr',
       );
       final response = await http.get(uri).timeout(const Duration(seconds: 10));
@@ -610,10 +616,23 @@ class RadioProvider extends ChangeNotifier {
     _nowPlayingMap.remove(stationName);
 
     try {
-      final uri = Uri.parse('https://control.imbc.com/Schedule/Radio/Time?sType=$sType');
-      final response = await http.get(uri).timeout(const Duration(seconds: 10));
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+      final now = DateTime.now();
+      final yesterday = now.subtract(const Duration(days: 1));
+      final todayStr = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+      final yesterdayStr = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
+
+      final responses = await Future.wait([
+        http.get(Uri.parse('https://control.imbc.com/Schedule/Radio/Time?sType=$sType&broadDate=$yesterdayStr')).timeout(const Duration(seconds: 10)),
+        http.get(Uri.parse('https://control.imbc.com/Schedule/Radio/Time?sType=$sType')).timeout(const Duration(seconds: 10)),
+      ]);
+
+      final List<dynamic> data = [];
+      for (final response in responses) {
+        if (response.statusCode == 200) {
+          data.addAll(json.decode(response.body) as List<dynamic>);
+        }
+      }
+      if (data.isNotEmpty) {
         _scheduleListMap[stationName] = data.cast<Map<String, dynamic>>();
         final now = DateTime.now();
         final nowHHMM = '${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}';
@@ -651,12 +670,24 @@ class RadioProvider extends ChangeNotifier {
 
     try {
       final now = DateTime.now();
-      final uri = Uri.parse(
+      final yesterday = now.subtract(const Duration(days: 1));
+      final uriYesterday = Uri.parse(
+        'https://static.cloud.sbs.co.kr/schedule/${yesterday.year}/${yesterday.month}/${yesterday.day}/$type.json',
+      );
+      final uriToday = Uri.parse(
         'https://static.cloud.sbs.co.kr/schedule/${now.year}/${now.month}/${now.day}/$type.json',
       );
-      final response = await http.get(uri).timeout(const Duration(seconds: 10));
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+      final responses = await Future.wait([
+        http.get(uriYesterday).timeout(const Duration(seconds: 10)),
+        http.get(uriToday).timeout(const Duration(seconds: 10)),
+      ]);
+      final List<dynamic> data = [];
+      for (final response in responses) {
+        if (response.statusCode == 200) {
+          data.addAll(json.decode(response.body) as List<dynamic>);
+        }
+      }
+      if (data.isNotEmpty) {
         _scheduleListMap[stationName] = data.cast<Map<String, dynamic>>();
         final nowHHMM = '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
         for (final s in data) {

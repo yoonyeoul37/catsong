@@ -189,7 +189,7 @@ class _CountryCard extends StatelessWidget {
                   ),
                   Text(
                     country.code == 'KR'
-                        ? '${country.broadcasters.length}개 방송사'
+                        ? '${koreanStations.length}개 채널'
                         : '인기 200개',
                     style: const TextStyle(
                       color: AppTheme.textHint,

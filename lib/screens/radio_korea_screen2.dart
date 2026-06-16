@@ -37,7 +37,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
         TabController(length: _regions.length, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final radio = context.read<RadioProvider>();
-      for (final station in _koreanStations) {
+      for (final station in koreanStations) {
         if (station.broadcaster == 'KBS' &&
             station.streamUrl.contains('cfpwwwapi.kbs.co.kr')) {
           radio.fetchScheduleByUrl(station.name, station.streamUrl);
@@ -59,8 +59,8 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
   }
 
   List<_KStation> _filtered(String region) {
-    if (region == '전체') return _koreanStations;
-    return _koreanStations.where((s) => s.region == region).toList();
+    if (region == '전체') return koreanStations;
+    return koreanStations.where((s) => s.region == region).toList();
   }
 
   static RadioStation _toRadioStation(_KStation ks) {
@@ -403,7 +403,7 @@ class _KStation {
   });
 }
 
-const _koreanStations = <_KStation>[
+const koreanStations = <_KStation>[
   // ══════ 수도권 ══════
   _KStation(name: 'KBS Classic FM', region: '수도권', broadcaster: 'KBS', subLabel: '서울', frequency: '93.1 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/24'),
   _KStation(name: 'KBS Cool FM', region: '수도권', broadcaster: 'KBS', subLabel: '서울', frequency: '89.1 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/25'),

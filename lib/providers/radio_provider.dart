@@ -84,6 +84,7 @@ class RadioProvider extends ChangeNotifier {
     _configurePlayer();
     _initPlayerStreams();
     _loadFromPrefs();
+    _startScheduleRefreshTimer();
   }
 
   Future<void> _configurePlayer() async {
@@ -457,14 +458,17 @@ class RadioProvider extends ChangeNotifier {
   }
 
   // KBS 편성표
-  List<Map<String, dynamic>> _scheduleList = [];
-  List<Map<String, dynamic>> get scheduleList => _scheduleList;
+  final Map<String, List<Map<String, dynamic>>> _scheduleListMap = {};
+  List<Map<String, dynamic>> get scheduleList =>
+      _scheduleListMap[_currentStation?.name ?? ''] ?? [];
   final Map<String, Map<String, dynamic>> _currentProgramMap = {};
   Map<String, dynamic>? get currentProgram {
     final station = _currentStation;
     if (station == null) return null;
     return _currentProgramMap[station.name];
   }
+  Map<String, dynamic>? currentProgramFor(String stationName) =>
+      _currentProgramMap[stationName];
   final Map<String, String> _nowPlayingMap = {};
   String? nowPlayingFor(String stationName) => _nowPlayingMap[stationName];
 
@@ -477,7 +481,7 @@ class RadioProvider extends ChangeNotifier {
   };
 
   Future<void> fetchSchedule(String stationName) async {
-    _scheduleList = [];
+    _scheduleListMap.remove(stationName);
     _currentProgramMap.remove(stationName);
     _nowPlayingMap.remove(stationName);
     notifyListeners();
@@ -512,15 +516,36 @@ class RadioProvider extends ChangeNotifier {
         final List<dynamic> data = json.decode(response.body);
         if (data.isNotEmpty) {
           final schedules = data[0]['schedules'] as List<dynamic>? ?? [];
-          _scheduleList = schedules.cast<Map<String, dynamic>>();
+          _scheduleListMap[stationName] = schedules.cast<Map<String, dynamic>>();
+          debugPrint('편성표 샘플: ${schedules.isNotEmpty ? schedules[0] : "없음"}');
 
           // 현재 방송 중인 프로그램 찾기
           final nowTime = '${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}0000';
-          for (final s in _scheduleList) {
+          debugPrint('현재시각: $nowTime');
+          for (final s in _scheduleListMap[stationName] ?? []) {
+            debugPrint('프로그램: ${s['program_title']} / ${s['program_planned_start_time']} ~ ${s['program_planned_end_time']}');
+          }
+          final currentSchedules = _scheduleListMap[stationName] ?? [];
+          for (int i = 0; i < currentSchedules.length; i++) {
+            final s = currentSchedules[i];
             final start = s['program_planned_start_time'] as String? ?? '';
             final end = s['program_planned_end_time'] as String? ?? '';
             if (nowTime.compareTo(start) >= 0 && nowTime.compareTo(end) < 0) {
-              _currentProgramMap[stationName] = s;
+              // 같은 프로그램 코드로 연속된 항목의 마지막 종료 시간 찾기
+              final programCode = s['program_code'] as String? ?? '';
+              String finalEnd = end;
+              for (int j = i + 1; j < currentSchedules.length; j++) {
+                final next = currentSchedules[j];
+                if (next['program_code'] == programCode) {
+                  finalEnd = next['program_planned_end_time'] as String? ?? finalEnd;
+                } else {
+                  break;
+                }
+              }
+              // 종료 시간을 합산한 가상 항목으로 저장
+              final merged = Map<String, dynamic>.from(s);
+              merged['program_planned_end_time'] = finalEnd;
+              _currentProgramMap[stationName] = merged;
               _nowPlayingMap[stationName] = s['program_title'] as String? ?? '';
               break;
             }
@@ -540,7 +565,7 @@ class RadioProvider extends ChangeNotifier {
     if (hour >= 24) hour -= 24;
     final period = hour < 12 ? '오전' : '오후';
     final h12 = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
-    return '$period $h12:$min';
+    return '$h12:$min';
   }
   Future<void> selectBroadcaster(RadioBroadcaster broadcaster) async {
     _selectedBroadcaster = broadcaster;
@@ -706,6 +731,61 @@ class RadioProvider extends ChangeNotifier {
     }
   }
 
+  Timer? _scheduleRefreshTimer;
+  Timer? _scheduleDisplayTimer;
+
+  void _startScheduleRefreshTimer() {
+    _scheduleRefreshTimer?.cancel();
+    _scheduleRefreshTimer = Timer.periodic(
+      const Duration(minutes: 10),
+      (_) {
+        for (final name in _kbsChannelCodes.keys) {
+          if (_scheduleListMap.containsKey(name)) {
+            fetchSchedule(name);
+          }
+        }
+      },
+    );
+    _scheduleDisplayTimer?.cancel();
+    _scheduleDisplayTimer = Timer.periodic(
+      const Duration(minutes: 1),
+      (_) => _updateCurrentPrograms(),
+    );
+  }
+
+  void _updateCurrentPrograms() {
+    final now = DateTime.now();
+    final nowTime = '${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}0000';
+    bool changed = false;
+    for (final stationName in _scheduleListMap.keys) {
+      final currentSchedules = _scheduleListMap[stationName] ?? [];
+      for (int i = 0; i < currentSchedules.length; i++) {
+        final s = currentSchedules[i];
+        final start = s['program_planned_start_time'] as String? ?? '';
+        final end = s['program_planned_end_time'] as String? ?? '';
+        if (nowTime.compareTo(start) >= 0 && nowTime.compareTo(end) < 0) {
+          final programCode = s['program_code'] as String? ?? '';
+          String finalEnd = end;
+          for (int j = i + 1; j < currentSchedules.length; j++) {
+            final next = currentSchedules[j];
+            if (next['program_code'] == programCode) {
+              finalEnd = next['program_planned_end_time'] as String? ?? finalEnd;
+            } else {
+              break;
+            }
+          }
+          final merged = Map<String, dynamic>.from(s);
+          merged['program_planned_end_time'] = finalEnd;
+          _currentProgramMap[stationName] = merged;
+          _nowPlayingMap[stationName] = s['program_title'] as String? ?? '';
+          changed = true;
+          break;
+        }
+      }
+    }
+    if (changed) notifyListeners();
+  }
+
   void clearSchedules() {
     _schedules.clear();
     _stopScheduleCheck();
@@ -843,6 +923,8 @@ class RadioProvider extends ChangeNotifier {
     _player.dispose();
     _sleepTimer?.cancel();
     _sleepCountdown?.cancel();
+    _scheduleRefreshTimer?.cancel();
+    _scheduleDisplayTimer?.cancel();
     WakelockPlus.disable();
     super.dispose();
   }

@@ -371,15 +371,33 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                     Icon(Icons.mic, color: primaryColor, size: 16),
                     const SizedBox(width: 8),
                     Flexible(
-                      child: Text(
-                        radioProvider.currentProgram!['program_title'] ?? '',
-                        style: TextStyle(
-                          color: primaryColor,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            radioProvider.currentProgram!['program_title'] ?? '',
+                            style: TextStyle(
+                              color: primaryColor,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Builder(builder: (ctx) {
+                            final start = radioProvider.currentProgram!['program_planned_start_time'] as String? ?? '';
+                            final end = radioProvider.currentProgram!['program_planned_end_time'] as String? ?? '';
+                            if (start.isEmpty || end.isEmpty) return const SizedBox.shrink();
+                            return Text(
+                              '${radioProvider.formatScheduleTime(start)} ~ ${radioProvider.formatScheduleTime(end)}',
+                              style: TextStyle(
+                                color: primaryColor.withOpacity(0.7),
+                                fontSize: 11,
+                              ),
+                            );
+                          }),
+                        ],
                       ),
                     ),
                   ],

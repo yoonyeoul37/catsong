@@ -273,16 +273,6 @@ class _StationTile extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      station.frequency.isNotEmpty
-                          ? '${station.region}  ${station.frequency}'
-                          : station.region,
-                      style: const TextStyle(
-                        color: AppTheme.textHint,
-                        fontSize: 12,
-                      ),
-                    ),
                     Builder(
                       builder: (ctx) {
                         const kbsNames = [
@@ -290,23 +280,57 @@ class _StationTile extends StatelessWidget {
                           'KBS Classic FM', 'KBS Cool FM',
                         ];
                         if (!kbsNames.contains(station.name)) {
-                          return const SizedBox.shrink();
+                          return Text(
+                            station.frequency.isNotEmpty
+                                ? station.frequency
+                                : '',
+                            style: const TextStyle(
+                              color: AppTheme.textHint,
+                              fontSize: 12,
+                            ),
+                          );
                         }
-                        final nowPlaying = ctx
-                            .watch<RadioProvider>()
-                            .nowPlayingFor(station.name);
-                        if (nowPlaying == null || nowPlaying.isEmpty) {
-                          return const SizedBox.shrink();
+                        final radio = ctx.watch<RadioProvider>();
+                        final nowPlaying = radio.nowPlayingFor(station.name);
+                        final program = radio.currentProgramFor(station.name);
+                        final start = program?['program_planned_start_time'] as String? ?? '';
+                        final end = program?['program_planned_end_time'] as String? ?? '';
+                        // 시간 포맷: 15:00~17:00
+                        String _fmt(String t) {
+                          if (t.length < 4) return t;
+                          int h = int.tryParse(t.substring(0, 2)) ?? 0;
+                          final m = t.substring(2, 4);
+                          if (h >= 24) h -= 24;
+                          return '$h:$m';
                         }
-                        return Text(
-                          nowPlaying,
-                          style: TextStyle(
-                            color: Theme.of(ctx).colorScheme.primary.withOpacity(0.85),
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                        final timeStr = start.isNotEmpty && end.isNotEmpty
+                            ? '${_fmt(start)}~${_fmt(end)}'
+                            : '';
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (nowPlaying != null && nowPlaying.isNotEmpty)
+                              Text(
+                                nowPlaying,
+                                style: TextStyle(
+                                  color: primaryColor.withOpacity(0.9),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            Text(
+                              [
+                                if (station.frequency.isNotEmpty) station.frequency,
+                                if (timeStr.isNotEmpty) timeStr,
+                              ].join(' · '),
+                              style: const TextStyle(
+                                color: AppTheme.textHint,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
                         );
                       },
                     ),

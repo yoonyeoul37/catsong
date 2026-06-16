@@ -46,6 +46,7 @@ class RadioProvider extends ChangeNotifier {
 
   static const _keyFavorites = 'radio_favorites';
   static const _keyRecent = 'radio_recent';
+  static const _keySchedules = 'radio_schedules';
   static const _maxRecent = 20;
 
   static const _apiServers = [
@@ -677,6 +678,7 @@ class RadioProvider extends ChangeNotifier {
       return aMin.compareTo(bMin);
     });
     _startScheduleCheck();
+    _saveSchedules();
     notifyListeners();
   }
 
@@ -684,6 +686,7 @@ class RadioProvider extends ChangeNotifier {
     if (index >= 0 && index < _schedules.length) {
       _schedules.removeAt(index);
       if (_schedules.isEmpty) _stopScheduleCheck();
+      _saveSchedules();
       notifyListeners();
     }
   }
@@ -691,6 +694,7 @@ class RadioProvider extends ChangeNotifier {
   void clearSchedules() {
     _schedules.clear();
     _stopScheduleCheck();
+    _saveSchedules();
     notifyListeners();
   }
 
@@ -719,6 +723,7 @@ class RadioProvider extends ChangeNotifier {
         playStation(s.station);
         _schedules.removeAt(i);
         if (_schedules.isEmpty) _stopScheduleCheck();
+        _saveSchedules();
         notifyListeners();
         break;
       }
@@ -759,6 +764,20 @@ class RadioProvider extends ChangeNotifier {
     final oneMonthAgo = DateTime.now().subtract(const Duration(days: 30));
     _recentlyListened.removeWhere((s) =>
     s.lastListened != null && s.lastListened!.isBefore(oneMonthAgo));
+
+    final scheduleJson = prefs.getStringList(_keySchedules) ?? [];
+    _schedules = scheduleJson.map((s) {
+      try {
+        return ScheduledStation.fromJson(
+            json.decode(s) as Map<String, dynamic>);
+      } catch (_) {
+        return null;
+      }
+    }).whereType<ScheduledStation>().toList();
+    if (_schedules.isNotEmpty) {
+      _startScheduleCheck();
+    }
+
     notifyListeners();
   }
 
@@ -771,6 +790,14 @@ class RadioProvider extends ChangeNotifier {
     await prefs.setStringList(
       _keyRecent,
       _recentlyListened.map((s) => json.encode(s.toJson())).toList(),
+    );
+  }
+
+  Future<void> _saveSchedules() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(
+      _keySchedules,
+      _schedules.map((s) => json.encode(s.toJson())).toList(),
     );
   }
 
@@ -821,5 +848,21 @@ class ScheduledStation {
     final m = time.minute.toString().padLeft(2, '0');
     final period = time.period == DayPeriod.am ? '오전' : '오후';
     return '$period $h:$m';
+  }
+
+  Map<String, dynamic> toJson() => {
+    'hour': time.hour,
+    'minute': time.minute,
+    'station': station.toJson(),
+  };
+
+  factory ScheduledStation.fromJson(Map<String, dynamic> json) {
+    return ScheduledStation(
+      time: TimeOfDay(
+        hour: json['hour'] as int,
+        minute: json['minute'] as int,
+      ),
+      station: RadioStation.fromJson(json['station'] as Map<String, dynamic>),
+    );
   }
 }

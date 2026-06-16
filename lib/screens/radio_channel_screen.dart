@@ -217,6 +217,26 @@ class _ChannelTile extends StatelessWidget {
                         style: const TextStyle(
                             color: AppTheme.textHint, fontSize: 12),
                       ),
+                    Builder(
+                      builder: (context) {
+                        final nowPlaying = context
+                            .watch<RadioProvider>()
+                            .nowPlayingFor(station.name);
+                        if (nowPlaying == null || nowPlaying.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
+                        return Text(
+                          '지금: $nowPlaying',
+                          style: TextStyle(
+                            color: primaryColor.withOpacity(0.8),
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),

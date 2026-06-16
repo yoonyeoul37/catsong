@@ -35,6 +35,16 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
     super.initState();
     _tabController =
         TabController(length: _regions.length, vsync: this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final radio = context.read<RadioProvider>();
+      final kbsNames = [
+        'KBS 제1라디오', 'KBS 해피FM', 'KBS 3라디오',
+        'KBS Classic FM', 'KBS Cool FM',
+      ];
+      for (final name in kbsNames) {
+        radio.fetchSchedule(name);
+      }
+    });
   }
 
   @override
@@ -204,8 +214,7 @@ class _StationTile extends StatelessWidget {
           );
         },
         child: Container(
-          height: 76,
-          padding: const EdgeInsets.symmetric(horizontal: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
@@ -273,6 +282,33 @@ class _StationTile extends StatelessWidget {
                         color: AppTheme.textHint,
                         fontSize: 12,
                       ),
+                    ),
+                    Builder(
+                      builder: (ctx) {
+                        const kbsNames = [
+                          'KBS 제1라디오', 'KBS 해피FM', 'KBS 3라디오',
+                          'KBS Classic FM', 'KBS Cool FM',
+                        ];
+                        if (!kbsNames.contains(station.name)) {
+                          return const SizedBox.shrink();
+                        }
+                        final nowPlaying = ctx
+                            .watch<RadioProvider>()
+                            .nowPlayingFor(station.name);
+                        if (nowPlaying == null || nowPlaying.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
+                        return Text(
+                          nowPlaying,
+                          style: TextStyle(
+                            color: Theme.of(ctx).colorScheme.primary.withOpacity(0.85),
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        );
+                      },
                     ),
                   ],
                 ),

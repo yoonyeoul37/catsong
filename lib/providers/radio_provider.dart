@@ -459,8 +459,14 @@ class RadioProvider extends ChangeNotifier {
   // KBS 편성표
   List<Map<String, dynamic>> _scheduleList = [];
   List<Map<String, dynamic>> get scheduleList => _scheduleList;
-  Map<String, dynamic>? _currentProgram;
-  Map<String, dynamic>? get currentProgram => _currentProgram;
+  final Map<String, Map<String, dynamic>> _currentProgramMap = {};
+  Map<String, dynamic>? get currentProgram {
+    final station = _currentStation;
+    if (station == null) return null;
+    return _currentProgramMap[station.name];
+  }
+  final Map<String, String> _nowPlayingMap = {};
+  String? nowPlayingFor(String stationName) => _nowPlayingMap[stationName];
 
   static const _kbsChannelCodes = {
     'KBS 제1라디오': '21',
@@ -472,7 +478,8 @@ class RadioProvider extends ChangeNotifier {
 
   Future<void> fetchSchedule(String stationName) async {
     _scheduleList = [];
-    _currentProgram = null;
+    _currentProgramMap.remove(stationName);
+    _nowPlayingMap.remove(stationName);
     notifyListeners();
 
     String? channelCode;
@@ -482,6 +489,7 @@ class RadioProvider extends ChangeNotifier {
         break;
       }
     }
+    debugPrint('fetchSchedule 호출됨: $stationName / channelCode: $channelCode');
     if (channelCode == null) return;
 
     final now = DateTime.now();
@@ -512,7 +520,8 @@ class RadioProvider extends ChangeNotifier {
             final start = s['program_planned_start_time'] as String? ?? '';
             final end = s['program_planned_end_time'] as String? ?? '';
             if (nowTime.compareTo(start) >= 0 && nowTime.compareTo(end) < 0) {
-              _currentProgram = s;
+              _currentProgramMap[stationName] = s;
+              _nowPlayingMap[stationName] = s['program_title'] as String? ?? '';
               break;
             }
           }
@@ -562,6 +571,12 @@ class RadioProvider extends ChangeNotifier {
               .toList();
           _mergeFavoriteFlags(_broadcasterStations);
           notifyListeners();
+          // KBS 채널이면 편성표 자동 fetch
+          for (final station in _broadcasterStations) {
+            if (_kbsChannelCodes.keys.any((k) => station.name.contains(k))) {
+              fetchSchedule(station.name);
+            }
+          }
           return;
         }
       }

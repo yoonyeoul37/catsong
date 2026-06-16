@@ -43,6 +43,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
           (!radio.isPlaying && !radio.isLoading)) {
         radio.playStation(widget.station);
       }
+      radio.fetchSchedule(widget.station.name);
     });
   }
 

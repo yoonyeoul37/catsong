@@ -18,6 +18,8 @@ import 'recent_screen.dart';
 import 'folder_screen.dart';
 import 'settings_screen.dart';
 import 'radio_home_screen.dart';
+import '../widgets/radio_mini_player.dart';
+import '../providers/radio_provider.dart';
 import '../l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
 
@@ -138,7 +140,17 @@ class _HomeScreenState extends State<HomeScreen> {
             data: MediaQuery.of(context).copyWith(
               textScaler: const TextScaler.linear(1.0),
             ),
-            child: const MiniPlayer(),
+            child: Consumer2<RadioProvider, PlayerProvider>(
+              builder: (context, radioProvider, playerProvider, _) {
+                if (playerProvider.currentSong != null) {
+                  return const MiniPlayer();
+                }
+                if (radioProvider.currentStation != null) {
+                  return const RadioMiniPlayer();
+                }
+                return const SizedBox.shrink();
+              },
+            ),
           ),
         ],
       ),

@@ -362,8 +362,10 @@ class RadioProvider extends ChangeNotifier {
     if (_playerState == RadioPlayerState.playing) {
       await _player.pause();
       await WakelockPlus.disable();
-    } else {
-      await _player.play();
+    } else if (_playerState == RadioPlayerState.paused) {
+      if (_currentStation != null) {
+        await playStation(_currentStation!);
+      }
     }
   }
 
@@ -371,8 +373,7 @@ class RadioProvider extends ChangeNotifier {
     await _player.stop();
     _isActuallyPlaying = false;
     _stopForeground();
-    _currentStation = null;
-    _setPlayerState(RadioPlayerState.idle);
+    _setPlayerState(RadioPlayerState.paused);
     await WakelockPlus.disable();
     cancelSleepTimer();
   }

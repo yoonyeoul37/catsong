@@ -138,7 +138,6 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(child: _buildBody()),
           MediaQuery(
             data: MediaQuery.of(context).copyWith(
-              textScaler: const TextScaler.linear(1.0),
             ),
             child: Consumer2<RadioProvider, PlayerProvider>(
               builder: (context, radioProvider, playerProvider, _) {

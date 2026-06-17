@@ -509,7 +509,7 @@ class _PlayingBarsState extends State<_PlayingBars>
       3,
           (i) => AnimationController(
         vsync: this,
-        duration: Duration(milliseconds: 380 + i * 130),
+        duration: Duration(milliseconds: 1000 + i * 300),
       )..repeat(reverse: true),
     );
   }

@@ -111,18 +111,72 @@ class RadioMiniPlayer extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 2),
-                          Text(
-                            isLoading
-                                ? '접속 중...'
-                                : isPlaying
-                                ? '● LIVE'
-                                : '일시정지',
-                            style: TextStyle(
-                              color: isPlaying
-                                  ? Colors.redAccent
-                                  : AppTheme.textHint,
-                              fontSize: 12,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                isLoading
+                                    ? '접속 중...'
+                                    : isPlaying
+                                    ? '● LIVE'
+                                    : '일시정지',
+                                style: TextStyle(
+                                  color: isPlaying
+                                      ? Colors.redAccent
+                                      : AppTheme.textHint,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              if (isPlaying || radioProvider.currentStation != null) ...[
+                                const SizedBox(width: 6),
+                                Flexible(
+                                  child: Builder(builder: (ctx) {
+                                    final nowPlaying = radioProvider.nowPlayingFor(station.name);
+                                    final program = radioProvider.currentProgramFor(station.name);
+                                    final kbsStart = program?['program_planned_start_time'] as String? ?? '';
+                                    final kbsEnd = program?['program_planned_end_time'] as String? ?? '';
+                                    final mbcStart = program?['StartTime'] as String? ?? '';
+                                    final mbcEnd = program?['EndTime'] as String? ?? '';
+                                    final sbsStart = program?['start_time'] as String? ?? '';
+                                    final sbsEnd = program?['end_time'] as String? ?? '';
+
+                                    String fmt(String t) {
+                                      if (t.contains(':')) {
+                                        final parts = t.split(':');
+                                        int h = int.tryParse(parts[0]) ?? 0;
+                                        if (h >= 24) h -= 24;
+                                        return '$h:${parts[1]}';
+                                      }
+                                      if (t.length < 4) return t;
+                                      int h = int.tryParse(t.substring(0, 2)) ?? 0;
+                                      if (h >= 24) h -= 24;
+                                      return '$h:${t.substring(2, 4)}';
+                                    }
+
+                                    String timeStr = '';
+                                    if (kbsStart.isNotEmpty && kbsEnd.isNotEmpty) {
+                                      timeStr = '${fmt(kbsStart)}~${fmt(kbsEnd)}';
+                                    } else if (mbcStart.isNotEmpty && mbcEnd.isNotEmpty) {
+                                      timeStr = '${fmt(mbcStart)}~${fmt(mbcEnd)}';
+                                    } else if (sbsStart.isNotEmpty && sbsEnd.isNotEmpty) {
+                                      timeStr = '$sbsStart~$sbsEnd';
+                                    }
+
+                                    if (nowPlaying == null || nowPlaying.isEmpty) {
+                                      return const SizedBox.shrink();
+                                    }
+                                    return Text(
+                                      timeStr.isNotEmpty ? '$nowPlaying  $timeStr' : nowPlaying,
+                                      style: const TextStyle(
+                                        color: AppTheme.textSecondary,
+                                        fontSize: 8,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    );
+                                  }),
+                                ),
+                              ],
+                            ],
                           ),
                         ],
                       ),

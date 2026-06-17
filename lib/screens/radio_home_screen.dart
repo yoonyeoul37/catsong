@@ -245,7 +245,7 @@ class _RecentSection extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 100,
+          height: 120,
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
@@ -294,14 +294,78 @@ class _RecentSection extends StatelessWidget {
                           ),
                         ],
                       ),
-                      if (timeStr.isNotEmpty)
-                        Text(
-                          timeStr,
-                          style: const TextStyle(
-                            color: AppTheme.textHint,
-                            fontSize: 10,
-                          ),
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Builder(builder: (ctx) {
+                            final nowPlaying = radioProvider.nowPlayingFor(station.name);
+                            final program = radioProvider.currentProgramFor(station.name);
+                            final kbsStart = program?['program_planned_start_time'] as String? ?? '';
+                            final kbsEnd = program?['program_planned_end_time'] as String? ?? '';
+                            final mbcStart = program?['StartTime'] as String? ?? '';
+                            final mbcEnd = program?['EndTime'] as String? ?? '';
+                            final sbsStart = program?['start_time'] as String? ?? '';
+                            final sbsEnd = program?['end_time'] as String? ?? '';
+
+                            String fmt(String t) {
+                              if (t.contains(':')) {
+                                final parts = t.split(':');
+                                int h = int.tryParse(parts[0]) ?? 0;
+                                if (h >= 24) h -= 24;
+                                return '$h:${parts[1]}';
+                              }
+                              if (t.length < 4) return t;
+                              int h = int.tryParse(t.substring(0, 2)) ?? 0;
+                              if (h >= 24) h -= 24;
+                              return '$h:${t.substring(2, 4)}';
+                            }
+
+                            String timeRange = '';
+                            if (kbsStart.isNotEmpty && kbsEnd.isNotEmpty) {
+                              timeRange = '${fmt(kbsStart)}~${fmt(kbsEnd)}';
+                            } else if (mbcStart.isNotEmpty && mbcEnd.isNotEmpty) {
+                              timeRange = '${fmt(mbcStart)}~${fmt(mbcEnd)}';
+                            } else if (sbsStart.isNotEmpty && sbsEnd.isNotEmpty) {
+                              timeRange = '$sbsStart~$sbsEnd';
+                            }
+
+                            if (nowPlaying == null || nowPlaying.isEmpty) {
+                              return const SizedBox.shrink();
+                            }
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  nowPlaying,
+                                  style: TextStyle(
+                                    color: primaryColor.withOpacity(0.8),
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                if (timeRange.isNotEmpty)
+                                  Text(
+                                    timeRange,
+                                    style: const TextStyle(
+                                      color: AppTheme.textHint,
+                                      fontSize: 9,
+                                    ),
+                                  ),
+                              ],
+                            );
+                          }),
+                          if (timeStr.isNotEmpty)
+                            Text(
+                              timeStr,
+                              style: const TextStyle(
+                                color: AppTheme.textHint,
+                                fontSize: 10,
+                              ),
+                            ),
+                        ],
+                      ),
                     ],
                   ),
                 ),

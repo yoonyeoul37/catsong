@@ -199,9 +199,7 @@ class _StationTile extends StatelessWidget {
     final primaryColor = Theme.of(context).colorScheme.primary;
 
     return Material(
-      color: isPlaying
-          ? primaryColor.withOpacity(0.12)
-          : AppTheme.cardColor,
+      color: AppTheme.cardColor,
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
@@ -221,13 +219,34 @@ class _StationTile extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
+            gradient: isPlaying
+                ? LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                primaryColor.withOpacity(0.13),
+                primaryColor.withOpacity(0.03),
+              ],
+            )
+                : null,
             border: Border.all(
               color: isPlaying
-                  ? primaryColor
+                  ? primaryColor.withOpacity(0.15)
                   : primaryColor.withOpacity(0.08),
-              width: isPlaying ? 1.5 : 1,
+              width: 1,
             ),
           ),
+          foregroundDecoration: isPlaying
+              ? BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border(
+              top: BorderSide(
+                color: primaryColor.withOpacity(0.8),
+                width: 1.5,
+              ),
+            ),
+          )
+              : null,
           child: Row(
             children: [
               Container(
@@ -336,8 +355,8 @@ class _StationTile extends StatelessWidget {
                         }
                         final timeStr = rawStart != null && rawEnd != null
                             ? isSbsStation
-                                ? '${_fmtSbs(rawStart)}~${_fmtSbs(rawEnd)}'
-                                : '${_fmt(rawStart)}~${_fmt(rawEnd)}'
+                            ? '${_fmtSbs(rawStart)}~${_fmtSbs(rawEnd)}'
+                            : '${_fmt(rawStart)}~${_fmt(rawEnd)}'
                             : '';
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -459,7 +478,7 @@ const koreanStations = <_KStation>[
   _KStation(name: 'KBS 목포 1FM', region: '광주/전남', broadcaster: 'KBS', subLabel: '목포', frequency: '101.1 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/41_24'),
   _KStation(name: 'KBS 순천 1라디오', region: '광주/전남', broadcaster: 'KBS', subLabel: '순천', frequency: '95.7 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/43_21'),
   // ══════ 전북 ══════
-  
+
   _KStation(name: 'KBS 전주 1라디오', region: '전북', broadcaster: 'KBS', subLabel: '전주', frequency: '96.9 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/50_21'),
   _KStation(name: 'KBS 전주 해피FM', region: '전북', broadcaster: 'KBS', subLabel: '전주', frequency: '91.1 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/50_22'),
   _KStation(name: 'KBS 전주 1FM', region: '전북', broadcaster: 'KBS', subLabel: '전주', frequency: '93.5 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/50_24'),

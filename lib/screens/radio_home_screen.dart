@@ -61,13 +61,7 @@ class RadioHomeScreen extends StatelessWidget {
             const _RecentSection(),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 10),
-              child: Row(
-                children: [
-                  Container(width: 3, height: 18, decoration: BoxDecoration(color: primaryColor, borderRadius: BorderRadius.circular(2))),
-                  const SizedBox(width: 10),
-                  const Text('국가 선택', style: TextStyle(color: AppTheme.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
-                ],
-              ),
+              child: _SectionHeader(title: '국가 선택'),
             ),
             Expanded(
               child: GridView.builder(
@@ -168,13 +162,7 @@ class _RecentSection extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-          child: Row(
-            children: [
-              Container(width: 3, height: 18, decoration: BoxDecoration(color: primaryColor, borderRadius: BorderRadius.circular(2))),
-              const SizedBox(width: 10),
-              const Text('최근 청취', style: TextStyle(color: AppTheme.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
-            ],
-          ),
+          child: _SectionHeader(title: '최근 청취'),
         ),
         SizedBox(
           height: 95,
@@ -249,6 +237,41 @@ class _RecentSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
+      ],
+    );
+  }
+}
+
+// ── 섹션 헤더 (D안: 구분선 가운데 텍스트) ──
+class _SectionHeader extends StatelessWidget {
+  final String title;
+  const _SectionHeader({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 16, height: 1,
+          color: const Color(0xFF2a2a2a),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          title,
+          style: const TextStyle(
+            color: Color(0xFF666666),
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 1.5,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Container(
+            height: 1,
+            color: const Color(0xFF1e1e1e),
+          ),
+        ),
       ],
     );
   }

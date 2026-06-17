@@ -157,9 +157,7 @@ class _ChannelTile extends StatelessWidget {
     final primaryColor = Theme.of(context).colorScheme.primary;
 
     return Material(
-      color: isPlaying
-          ? primaryColor.withOpacity(0.12)
-          : AppTheme.cardColor,
+      color: AppTheme.cardColor,
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
@@ -180,13 +178,34 @@ class _ChannelTile extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
+            gradient: isPlaying
+                ? LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                primaryColor.withOpacity(0.13),
+                primaryColor.withOpacity(0.03),
+              ],
+            )
+                : null,
             border: Border.all(
               color: isPlaying
-                  ? primaryColor
+                  ? primaryColor.withOpacity(0.15)
                   : primaryColor.withOpacity(0.08),
-              width: isPlaying ? 1.5 : 1,
+              width: 1,
             ),
           ),
+          foregroundDecoration: isPlaying
+              ? BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border(
+              top: BorderSide(
+                color: primaryColor.withOpacity(0.8),
+                width: 1.5,
+              ),
+            ),
+          )
+              : null,
           child: Row(
             children: [
               StationLogo(

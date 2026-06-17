@@ -17,19 +17,9 @@ class RadioHomeScreen extends StatelessWidget {
   void _onCountryTap(BuildContext context, RadioCountry country) {
     context.read<RadioProvider>().selectCountry(country);
     if (country.code == 'KR') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => RadioKoreaScreen(),
-        ),
-      );
+      Navigator.push(context, MaterialPageRoute(builder: (_) => RadioKoreaScreen()));
     } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => RadioCountryStationsScreen(country: country),
-        ),
-      );
+      Navigator.push(context, MaterialPageRoute(builder: (_) => RadioCountryStationsScreen(country: country)));
     }
   }
 
@@ -44,40 +34,22 @@ class RadioHomeScreen extends StatelessWidget {
         backgroundColor: AppTheme.background,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios,
-              color: AppTheme.textPrimary, size: 22),
+          icon: const Icon(Icons.arrow_back_ios, color: AppTheme.textPrimary, size: 22),
         ),
         title: Row(
           children: [
             Icon(Icons.radio, color: primaryColor, size: 24),
             const SizedBox(width: 8),
-            Text(
-              '라디오',
-              style: TextStyle(
-                color: primaryColor,
-                fontSize: 20,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.5,
-              ),
-            ),
+            Text('라디오', style: TextStyle(color: primaryColor, fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -0.5)),
           ],
         ),
         actions: [
           IconButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => const RadioSearchScreen()),
-            ),
-            icon: const Icon(Icons.search,
-                color: AppTheme.textPrimary, size: 26),
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RadioSearchScreen())),
+            icon: const Icon(Icons.search, color: AppTheme.textPrimary, size: 26),
           ),
           IconButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => const RadioFavoritesScreen()),
-            ),
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RadioFavoritesScreen())),
             icon: Icon(Icons.favorite, color: primaryColor, size: 24),
           ),
           const SizedBox(width: 4),
@@ -91,43 +63,22 @@ class RadioHomeScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 10),
               child: Row(
                 children: [
-                  Container(
-                    width: 3,
-                    height: 18,
-                    decoration: BoxDecoration(
-                      color: primaryColor,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
+                  Container(width: 3, height: 18, decoration: BoxDecoration(color: primaryColor, borderRadius: BorderRadius.circular(2))),
                   const SizedBox(width: 10),
-                  const Text(
-                    '국가 선택',
-                    style: TextStyle(
-                      color: AppTheme.textPrimary,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  const Text('국가 선택', style: TextStyle(color: AppTheme.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
                 ],
               ),
             ),
             Expanded(
               child: GridView.builder(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                gridDelegate:
-                const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 1.9,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, crossAxisSpacing: 12, mainAxisSpacing: 12, childAspectRatio: 1.9,
                 ),
                 itemCount: RadioCountry.supported.length,
                 itemBuilder: (context, index) {
                   final country = RadioCountry.supported[index];
-                  return _CountryCard(
-                    country: country,
-                    onTap: () => _onCountryTap(context, country),
-                  );
+                  return _CountryCard(country: country, onTap: () => _onCountryTap(context, country));
                 },
               ),
             ),
@@ -135,10 +86,7 @@ class RadioHomeScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: radioProvider.currentStation != null
-          ? const SafeArea(
-        top: false,
-        child: RadioMiniPlayer(),
-      )
+          ? const SafeArea(top: false, child: RadioMiniPlayer())
           : null,
     );
   }
@@ -152,7 +100,6 @@ class _CountryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
-
     return Material(
       color: AppTheme.cardColor,
       borderRadius: BorderRadius.circular(16),
@@ -162,39 +109,21 @@ class _CountryCard extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: primaryColor.withOpacity(0.12),
-              width: 1,
-            ),
+            border: Border.all(color: primaryColor.withOpacity(0.12), width: 1),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                country.flag,
-                style: const TextStyle(fontSize: 28),
-              ),
+              Text(country.flag, style: const TextStyle(fontSize: 28)),
               const SizedBox(width: 10),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(country.name, style: const TextStyle(color: AppTheme.textPrimary, fontSize: 15, fontWeight: FontWeight.w700)),
                   Text(
-                    country.name,
-                    style: const TextStyle(
-                      color: AppTheme.textPrimary,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  Text(
-                    country.code == 'KR'
-                        ? '${koreanStations.length}개 채널'
-                        : '인기 200개',
-                    style: const TextStyle(
-                      color: AppTheme.textHint,
-                      fontSize: 11,
-                    ),
+                    country.code == 'KR' ? '${koreanStations.length}개 채널' : '인기 200개',
+                    style: const TextStyle(color: AppTheme.textHint, fontSize: 11),
                   ),
                 ],
               ),
@@ -217,6 +146,23 @@ class _RecentSection extends StatelessWidget {
 
     if (recent.isEmpty) return const SizedBox.shrink();
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      for (final station in recent.take(10)) {
+        if (radioProvider.nowPlayingFor(station.name) == null) {
+          final streamUrl = station.streamUrl;
+          if (streamUrl.contains('cfpwwwapi.kbs.co.kr')) {
+            radioProvider.fetchScheduleByUrl(station.name, streamUrl);
+          } else if (station.name == 'MBC 표준FM' || station.name == 'MBC FM4U') {
+            radioProvider.fetchMbcSchedule(station.name);
+          } else if (station.name == 'SBS 파워FM' || station.name == 'SBS 러브FM') {
+            radioProvider.fetchSbsSchedule(station.name);
+          } else if (station.name.contains('KBS')) {
+            radioProvider.fetchSchedule(station.name);
+          }
+        }
+      }
+    });
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -224,28 +170,14 @@ class _RecentSection extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
           child: Row(
             children: [
-              Container(
-                width: 3,
-                height: 18,
-                decoration: BoxDecoration(
-                  color: primaryColor,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
+              Container(width: 3, height: 18, decoration: BoxDecoration(color: primaryColor, borderRadius: BorderRadius.circular(2))),
               const SizedBox(width: 10),
-              const Text(
-                '최근 청취',
-                style: TextStyle(
-                  color: AppTheme.textPrimary,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              const Text('최근 청취', style: TextStyle(color: AppTheme.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
             ],
           ),
         ),
         SizedBox(
-          height: 120,
+          height: 95,
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
@@ -259,113 +191,56 @@ class _RecentSection extends StatelessWidget {
                   : '';
 
               return GestureDetector(
-                onTap: () =>
-                    context.read<RadioProvider>().playStation(station),
+                onTap: () => context.read<RadioProvider>().playStation(station),
                 child: Container(
-                  width: 160,
+                  width: 190,
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: AppTheme.surfaceVariant,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: primaryColor.withOpacity(0.15),
-                    ),
+                    border: Border.all(color: primaryColor.withOpacity(0.15)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.radio,
-                              color: primaryColor, size: 14),
-                          const SizedBox(width: 8),
+                          Icon(Icons.radio, color: primaryColor, size: 13),
+                          const SizedBox(width: 6),
                           Expanded(
                             child: Text(
                               station.name,
-                              style: const TextStyle(
-                                color: AppTheme.textPrimary,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              maxLines: 2,
+                              style: const TextStyle(color: AppTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.w600),
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Builder(builder: (ctx) {
-                            final nowPlaying = radioProvider.nowPlayingFor(station.name);
-                            final program = radioProvider.currentProgramFor(station.name);
-                            final kbsStart = program?['program_planned_start_time'] as String? ?? '';
-                            final kbsEnd = program?['program_planned_end_time'] as String? ?? '';
-                            final mbcStart = program?['StartTime'] as String? ?? '';
-                            final mbcEnd = program?['EndTime'] as String? ?? '';
-                            final sbsStart = program?['start_time'] as String? ?? '';
-                            final sbsEnd = program?['end_time'] as String? ?? '';
-
-                            String fmt(String t) {
-                              if (t.contains(':')) {
-                                final parts = t.split(':');
-                                int h = int.tryParse(parts[0]) ?? 0;
-                                if (h >= 24) h -= 24;
-                                return '$h:${parts[1]}';
-                              }
-                              if (t.length < 4) return t;
-                              int h = int.tryParse(t.substring(0, 2)) ?? 0;
-                              if (h >= 24) h -= 24;
-                              return '$h:${t.substring(2, 4)}';
-                            }
-
-                            String timeRange = '';
-                            if (kbsStart.isNotEmpty && kbsEnd.isNotEmpty) {
-                              timeRange = '${fmt(kbsStart)}~${fmt(kbsEnd)}';
-                            } else if (mbcStart.isNotEmpty && mbcEnd.isNotEmpty) {
-                              timeRange = '${fmt(mbcStart)}~${fmt(mbcEnd)}';
-                            } else if (sbsStart.isNotEmpty && sbsEnd.isNotEmpty) {
-                              timeRange = '$sbsStart~$sbsEnd';
-                            }
-
-                            if (nowPlaying == null || nowPlaying.isEmpty) {
-                              return const SizedBox.shrink();
-                            }
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  nowPlaying,
-                                  style: TextStyle(
-                                    color: primaryColor.withOpacity(0.8),
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                if (timeRange.isNotEmpty)
-                                  Text(
-                                    timeRange,
-                                    style: const TextStyle(
-                                      color: AppTheme.textHint,
-                                      fontSize: 9,
-                                    ),
-                                  ),
-                              ],
-                            );
-                          }),
-                          if (timeStr.isNotEmpty)
-                            Text(
-                              timeStr,
-                              style: const TextStyle(
-                                color: AppTheme.textHint,
-                                fontSize: 10,
+                      const SizedBox(height: 4),
+                      Builder(builder: (ctx) {
+                        final nowPlaying = radioProvider.nowPlayingFor(station.name);
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (nowPlaying != null && nowPlaying.isNotEmpty)
+                              Text(
+                                nowPlaying,
+                                style: const TextStyle(color: Color(0xFFAAAAAA), fontSize: 10),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                        ],
-                      ),
+                            if (timeStr.isNotEmpty)
+                              Text(
+                                timeStr,
+                                style: const TextStyle(color: Color(0xFF888888), fontSize: 10),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                          ],
+                        );
+                      }),
                     ],
                   ),
                 ),

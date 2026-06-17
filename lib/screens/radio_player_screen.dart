@@ -184,6 +184,9 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                   onTap: () => showModalBottomSheet(
                     context: context,
                     backgroundColor: Colors.transparent,
+                    barrierColor: Colors.black.withOpacity(0.7),
+                    isScrollControlled: true,
+                    useSafeArea: true,
                     builder: (_) => const SleepTimerSheet(),
                   ),
                 ),
@@ -790,23 +793,32 @@ class _ProgramCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 6),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: Colors.redAccent.withOpacity(0.12),
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: Colors.redAccent.withOpacity(0.3)),
-                      ),
-                      child: const Text(
-                        '● LIVE',
-                        style: TextStyle(
-                          color: Colors.redAccent,
-                          fontSize: 8,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.8,
+                    Builder(builder: (ctx) {
+                      final isRerun = program['is_rerun'] as bool? ?? false;
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: isRerun
+                              ? Colors.blueGrey.withOpacity(0.15)
+                              : Colors.redAccent.withOpacity(0.12),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                            color: isRerun
+                                ? Colors.blueGrey.withOpacity(0.4)
+                                : Colors.redAccent.withOpacity(0.3),
+                          ),
                         ),
-                      ),
-                    ),
+                        child: Text(
+                          isRerun ? '재방송' : '● LIVE',
+                          style: TextStyle(
+                            color: isRerun ? Colors.blueGrey : Colors.redAccent,
+                            fontSize: 8,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.8,
+                          ),
+                        ),
+                      );
+                    }),
                   ],
                 ),
                 const SizedBox(height: 3),
@@ -814,14 +826,17 @@ class _ProgramCard extends StatelessWidget {
                 Row(
                   children: [
                     if (timeStr.isNotEmpty)
-                      Text(
-                        timeStr,
-                        style: TextStyle(
-                          color: primaryColor.withOpacity(0.6),
-                          fontSize: 11,
+                      Expanded(
+                        child: Text(
+                          timeStr,
+                          style: TextStyle(
+                            color: primaryColor.withOpacity(0.6),
+                            fontSize: 11,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                       ),
-                    const Spacer(),
                     if (freq.isNotEmpty)
                       Text(
                         freq,
@@ -1032,39 +1047,43 @@ class _BottomBarItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                icon,
-                color: AppTheme.textHint,
-                size: 22,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                label,
-                style: const TextStyle(
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  icon,
                   color: AppTheme.textHint,
-                  fontSize: 10,
+                  size: 22,
                 ),
-              ),
-            ],
-          ),
-          if (hasIndicator)
-            Positioned(
-              right: -4, top: -2,
-              child: Container(
-                width: 6, height: 6,
-                decoration: BoxDecoration(
-                  color: primaryColor,
-                  shape: BoxShape.circle,
+                const SizedBox(height: 4),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    color: AppTheme.textHint,
+                    fontSize: 10,
+                  ),
                 ),
-              ),
+              ],
             ),
-        ],
+            if (hasIndicator)
+              Positioned(
+                right: -4, top: -2,
+                child: Container(
+                  width: 6, height: 6,
+                  decoration: BoxDecoration(
+                    color: primaryColor,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -1295,12 +1314,13 @@ class _ScheduleListSheet extends StatelessWidget {
     final schedules = radioProvider.scheduleList;
     final currentProgram = radioProvider.currentProgram;
 
+    final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
     return Container(
       decoration: const BoxDecoration(
         color: Color(0xFF1E1E1E),
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+      padding: EdgeInsets.fromLTRB(20, 16, 20, 16 + bottomPadding),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -1327,87 +1347,104 @@ class _ScheduleListSheet extends StatelessWidget {
                 child: Text('편성표를 불러오는 중...', style: TextStyle(color: Colors.white54)),
               ),
             )
-                : ListView.builder(
-              shrinkWrap: true,
-              itemCount: schedules.length,
-              itemBuilder: (context, index) {
-                final s = schedules[index];
-                String title = s['program_title'] as String? ?? '';
-                String start = s['program_planned_start_time'] as String? ?? '';
-                String end = s['program_planned_end_time'] as String? ?? '';
-                if (title.isEmpty) title = s['Title'] as String? ?? '';
-                if (start.isEmpty) start = s['StartTime'] as String? ?? '';
-                if (end.isEmpty) end = s['EndTime'] as String? ?? '';
-                if (title.isEmpty) title = s['title'] as String? ?? '';
-                if (start.isEmpty) {
-                  start = s['start_time'] as String? ?? '';
-                  end = s['end_time'] as String? ?? '';
-                }
-
-                String fmt(String t) {
-                  if (t.contains(':')) {
-                    final parts = t.split(':');
-                    int h = int.tryParse(parts[0]) ?? 0;
-                    if (h >= 24) h -= 24;
-                    return '$h:${parts[1]}';
+                : Builder(builder: (ctx) {
+              // 새벽 방송(0000~0559)을 맨 아래로 정렬
+              final sorted = List<Map<String, dynamic>>.from(schedules);
+              sorted.sort((a, b) {
+                String sa = (a['StartTime'] as String? ?? a['program_planned_start_time'] as String? ?? a['start_time'] as String? ?? '');
+                String sb = (b['StartTime'] as String? ?? b['program_planned_start_time'] as String? ?? b['start_time'] as String? ?? '');
+                // 4자리로 통일 (KBS는 8자리라 앞 4자리만)
+                if (sa.length > 4) sa = sa.substring(0, 4);
+                if (sb.length > 4) sb = sb.substring(0, 4);
+                // 새벽(0000~0559)은 2400 이후로 취급
+                final ia = int.tryParse(sa) ?? 0;
+                final ib = int.tryParse(sb) ?? 0;
+                final wa = ia < 600 ? ia + 2400 : ia;
+                final wb = ib < 600 ? ib + 2400 : ib;
+                return wa.compareTo(wb);
+              });
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: sorted.length,
+                itemBuilder: (context, index) {
+                  final s = sorted[index];
+                  String title = s['program_title'] as String? ?? '';
+                  String start = s['program_planned_start_time'] as String? ?? '';
+                  String end = s['program_planned_end_time'] as String? ?? '';
+                  if (title.isEmpty) title = s['Title'] as String? ?? '';
+                  if (start.isEmpty) start = s['StartTime'] as String? ?? '';
+                  if (end.isEmpty) end = s['EndTime'] as String? ?? '';
+                  if (title.isEmpty) title = s['title'] as String? ?? '';
+                  if (start.isEmpty) {
+                    start = s['start_time'] as String? ?? '';
+                    end = s['end_time'] as String? ?? '';
                   }
-                  if (t.length < 4) return t;
-                  int h = int.tryParse(t.substring(0, 2)) ?? 0;
-                  final m = t.substring(2, 4);
-                  if (h >= 24) h -= 24;
-                  return '$h:$m';
-                }
 
-                final isCurrent = currentProgram != null &&
-                    (currentProgram['program_planned_start_time'] == start ||
-                        currentProgram['StartTime'] == start ||
-                        currentProgram['start_time'] == start) &&
-                    (currentProgram['program_title'] == title ||
-                        currentProgram['Title'] == title ||
-                        currentProgram['title'] == title);
+                  String fmt(String t) {
+                    if (t.contains(':')) {
+                      final parts = t.split(':');
+                      int h = int.tryParse(parts[0]) ?? 0;
+                      if (h >= 24) h -= 24;
+                      return '$h:${parts[1]}';
+                    }
+                    if (t.length < 4) return t;
+                    int h = int.tryParse(t.substring(0, 2)) ?? 0;
+                    final m = t.substring(2, 4);
+                    if (h >= 24) h -= 24;
+                    return '$h:$m';
+                  }
 
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 4),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: isCurrent ? primaryColor.withOpacity(0.15) : Colors.transparent,
-                    borderRadius: BorderRadius.circular(10),
-                    border: isCurrent ? Border.all(color: primaryColor.withOpacity(0.4)) : null,
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 60,
-                        child: Text(fmt(start),
-                            style: TextStyle(
-                              color: isCurrent ? primaryColor : Colors.white54,
-                              fontSize: 13,
-                              fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
-                            )),
-                      ),
-                      if (isCurrent)
-                        Container(
-                          width: 6, height: 6,
-                          margin: const EdgeInsets.only(right: 8),
-                          decoration: BoxDecoration(color: primaryColor, shape: BoxShape.circle),
-                        )
-                      else
-                        const SizedBox(width: 14),
-                      Expanded(
-                        child: Text(title,
-                            style: TextStyle(
-                              color: isCurrent ? Colors.white : Colors.white70,
-                              fontSize: 14,
-                              fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
+                  final isCurrent = currentProgram != null &&
+                      (currentProgram['program_planned_start_time'] == start ||
+                          currentProgram['StartTime'] == start ||
+                          currentProgram['start_time'] == start) &&
+                      (currentProgram['program_title'] == title ||
+                          currentProgram['Title'] == title ||
+                          currentProgram['title'] == title);
+
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: isCurrent ? primaryColor.withOpacity(0.15) : Colors.transparent,
+                      borderRadius: BorderRadius.circular(10),
+                      border: isCurrent ? Border.all(color: primaryColor.withOpacity(0.4)) : null,
+                    ),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 60,
+                          child: Text(fmt(start),
+                              style: TextStyle(
+                                color: isCurrent ? primaryColor : Colors.white54,
+                                fontSize: 13,
+                                fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
+                              )),
+                        ),
+                        if (isCurrent)
+                          Container(
+                            width: 6, height: 6,
+                            margin: const EdgeInsets.only(right: 8),
+                            decoration: BoxDecoration(color: primaryColor, shape: BoxShape.circle),
+                          )
+                        else
+                          const SizedBox(width: 14),
+                        Expanded(
+                          child: Text(title,
+                              style: TextStyle(
+                                color: isCurrent ? Colors.white : Colors.white70,
+                                fontSize: 14,
+                                fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            }),
           ),
         ],
       ),

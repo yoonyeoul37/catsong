@@ -55,7 +55,7 @@ class RadioFavoritesScreen extends StatelessWidget {
       )
           : ListView.builder(
         padding:
-        const EdgeInsets.fromLTRB(16, 12, 16, 80),
+        EdgeInsets.fromLTRB(16, 12, 16, 80 + MediaQuery.of(context).viewPadding.bottom),
         itemCount: favorites.length,
         itemBuilder: (context, index) {
           final station = favorites[index];
@@ -85,10 +85,10 @@ class RadioFavoritesScreen extends StatelessWidget {
       ),
       bottomNavigationBar: radioProvider.currentStation != null
           ? Padding(
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewPadding.bottom),
-              child: const RadioMiniPlayer(),
-            )
+        padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewPadding.bottom),
+        child: const RadioMiniPlayer(),
+      )
           : null,
     );
   }

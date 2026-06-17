@@ -145,15 +145,15 @@ class RadioBroadcasterScreen extends StatelessWidget {
         ),
       ),
       body: ListView(
-        padding: const EdgeInsets.only(bottom: 80),
+        padding: EdgeInsets.only(bottom: 80 + MediaQuery.of(context).viewPadding.bottom),
         children: widgets,
       ),
       bottomNavigationBar: radioProvider.currentStation != null
           ? Padding(
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewPadding.bottom),
-              child: const RadioMiniPlayer(),
-            )
+        padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewPadding.bottom),
+        child: const RadioMiniPlayer(),
+      )
           : null,
     );
   }

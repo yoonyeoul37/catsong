@@ -165,7 +165,7 @@ class _RecentSection extends StatelessWidget {
           child: _SectionHeader(title: '최근 청취'),
         ),
         SizedBox(
-          height: 95,
+          height: 105,
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,

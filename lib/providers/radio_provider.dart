@@ -502,7 +502,9 @@ class RadioProvider extends ChangeNotifier {
           for (final d in data) {
             allSchedules.addAll(d['schedules'] as List<dynamic>? ?? []);
           }
-          _scheduleListMap[stationName] = allSchedules.cast<Map<String, dynamic>>();
+          // program_code 기준으로 연속된 항목 병합
+          final merged = _mergeKbsSchedules(allSchedules.cast<Map<String, dynamic>>());
+          _scheduleListMap[stationName] = merged;
           final nowHour = now.hour;
           final nowMin = now.minute;
           // 자정 이후면 24시간 형식으로 변환 (예: 00:30 → 2430 형식)
@@ -554,17 +556,18 @@ class RadioProvider extends ChangeNotifier {
     _nowPlayingMap.remove(stationName);
 
     final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final yesterday = today.subtract(const Duration(days: 1));
-    final dateStr = '${today.year}${today.month.toString().padLeft(2, '0')}${today.day.toString().padLeft(2, '0')}';
-    final yesterdayStr = '${yesterday.year}${yesterday.month.toString().padLeft(2, '0')}${yesterday.day.toString().padLeft(2, '0')}';
+    // 새벽 0~5시는 어제 날짜 데이터에 자정 이후 편성이 포함되어 있음
+    final targetDay = now.hour < 5
+        ? DateTime.now().subtract(const Duration(days: 1))
+        : DateTime.now();
+    final dateStr = '${targetDay.year}${targetDay.month.toString().padLeft(2, '0')}${targetDay.day.toString().padLeft(2, '0')}';
 
     try {
       final uri = Uri.parse(
         'https://static.api.kbs.co.kr/mediafactory/v1/schedule/weekly'
             '?rtype=json&local_station_code=$localCode'
             '&channel_code=$channelCode'
-            '&program_planned_date_from=$yesterdayStr'
+            '&program_planned_date_from=$dateStr'
             '&program_planned_date_to=$dateStr',
       );
       final response = await http.get(uri).timeout(const Duration(seconds: 10));
@@ -575,8 +578,9 @@ class RadioProvider extends ChangeNotifier {
           for (final d in data) {
             allSchedules.addAll(d['schedules'] as List<dynamic>? ?? []);
           }
-          final schedules = allSchedules;
-          _scheduleListMap[stationName] = schedules.cast<Map<String, dynamic>>();
+          // program_code 기준으로 연속된 항목 병합
+          final merged = _mergeKbsSchedules(allSchedules.cast<Map<String, dynamic>>());
+          _scheduleListMap[stationName] = merged;
           final nowHour = now.hour;
           final nowMin = now.minute;
           final nowTimeInt = nowHour < 6
@@ -615,6 +619,36 @@ class RadioProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // KBS 편성표: 같은 program_code 연속 항목을 하나로 병합
+  // 재방송 여부: rerun_classification == '재방'
+  List<Map<String, dynamic>> _mergeKbsSchedules(List<Map<String, dynamic>> schedules) {
+    if (schedules.isEmpty) return [];
+    final result = <Map<String, dynamic>>[];
+    Map<String, dynamic>? current;
+
+    for (final s in schedules) {
+      final code = s['program_code'] as String? ?? '';
+      final isRerun = (s['rerun_classification'] as String? ?? '') == '재방';
+
+      if (current == null) {
+        current = Map<String, dynamic>.from(s);
+        current['is_rerun'] = isRerun;
+      } else {
+        final currentCode = current['program_code'] as String? ?? '';
+        if (code == currentCode) {
+          // 같은 프로그램 → 끝 시간만 업데이트
+          current['program_planned_end_time'] = s['program_planned_end_time'];
+        } else {
+          result.add(current);
+          current = Map<String, dynamic>.from(s);
+          current['is_rerun'] = isRerun;
+        }
+      }
+    }
+    if (current != null) result.add(current);
+    return result;
+  }
+
   String formatScheduleTime(String time) {
     if (time.length < 4) return time;
     int hour = int.tryParse(time.substring(0, 2)) ?? 0;
@@ -641,31 +675,56 @@ class RadioProvider extends ChangeNotifier {
 
     try {
       final now = DateTime.now();
-      final yesterday = now.subtract(const Duration(days: 1));
-      final todayStr = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
-      final yesterdayStr = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
+      // 새벽 0~6시는 어제 날짜 요청 (어제 데이터에 새벽 방송 포함)
+      final targetDay = now.hour < 6
+          ? now.subtract(const Duration(days: 1))
+          : now;
+      final targetDateStr = '${targetDay.year}-${targetDay.month.toString().padLeft(2, '0')}-${targetDay.day.toString().padLeft(2, '0')}';
 
-      final responses = await Future.wait([
-        http.get(Uri.parse('https://control.imbc.com/Schedule/Radio/Time?sType=$sType&broadDate=$yesterdayStr')).timeout(const Duration(seconds: 10)),
-        http.get(Uri.parse('https://control.imbc.com/Schedule/Radio/Time?sType=$sType')).timeout(const Duration(seconds: 10)),
-      ]);
+      final response = await http.get(
+        Uri.parse('https://control.imbc.com/Schedule/Radio/Time?sType=$sType&broadDate=$targetDateStr'),
+      ).timeout(const Duration(seconds: 10));
 
       final List<dynamic> data = [];
-      for (final response in responses) {
-        if (response.statusCode == 200) {
-          data.addAll(json.decode(response.body) as List<dynamic>);
-        }
+      if (response.statusCode == 200) {
+        data.addAll(json.decode(response.body) as List<dynamic>);
       }
       if (data.isNotEmpty) {
-        _scheduleListMap[stationName] = data.cast<Map<String, dynamic>>();
-        final now = DateTime.now();
-        final nowHHMM = '${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}';
-        for (final s in data) {
+        // IsToday:N 이고 StartTime >= 0600 인 항목 제외 (내일 낮 방송)
+        final filtered = data.where((s) {
+          final isToday = s['IsToday'] as String? ?? 'N';
           final start = s['StartTime'] as String? ?? '';
-          final end = s['EndTime'] as String? ?? '';
-          final endAdj = end == '2400' ? '0000' : end;
-          if (nowHHMM.compareTo(start) >= 0 &&
-              (end == '2400' || nowHHMM.compareTo(endAdj) < 0)) {
+          // IsToday:Y 는 무조건 포함
+          if (isToday == 'Y') return true;
+          // IsToday:N 이어도 새벽 방송(0000~0559)은 포함
+          final startInt = int.tryParse(start) ?? 9999;
+          return startInt < 600;
+        }).toList();
+
+        // 시간 순 정렬: 새벽(0000~0559)은 맨 뒤로
+        filtered.sort((a, b) {
+          final sa = int.tryParse(a['StartTime'] as String? ?? '0') ?? 0;
+          final sb = int.tryParse(b['StartTime'] as String? ?? '0') ?? 0;
+          final wa = sa < 600 ? sa + 2400 : sa;
+          final wb = sb < 600 ? sb + 2400 : sb;
+          return wa.compareTo(wb);
+        });
+        _scheduleListMap[stationName] = filtered.cast<Map<String, dynamic>>();
+        final now = DateTime.now();
+        // 새벽이면 분을 2400 이후로 변환해서 비교
+        final nowH = now.hour;
+        final nowM = now.minute;
+        final nowHHMM = nowH < 6
+            ? '${(nowH + 24).toString().padLeft(2, '0')}${nowM.toString().padLeft(2, '0')}'
+            : '${nowH.toString().padLeft(2, '0')}${nowM.toString().padLeft(2, '0')}';
+        for (final s in data) {
+          String start = s['StartTime'] as String? ?? '';
+          String end = s['EndTime'] as String? ?? '';
+          // 새벽 방송 시간 보정
+          if (start.compareTo('0600') < 0) start = '${int.parse(start) + 2400}';
+          final endInt = int.tryParse(end) ?? 0;
+          final endAdj = endInt >= 2400 ? '$endInt' : (endInt < 600 ? '${endInt + 2400}' : end);
+          if (nowHHMM.compareTo(start) >= 0 && nowHHMM.compareTo(endAdj) < 0) {
             _currentProgramMap[stationName] = Map<String, dynamic>.from(s);
             _nowPlayingMap[stationName] = s['Title'] as String? ?? '';
             break;
@@ -694,31 +753,34 @@ class RadioProvider extends ChangeNotifier {
 
     try {
       final now = DateTime.now();
-      final yesterday = now.subtract(const Duration(days: 1));
-      final uriYesterday = Uri.parse(
-        'https://static.cloud.sbs.co.kr/schedule/${yesterday.year}/${yesterday.month}/${yesterday.day}/$type.json',
+      // 새벽 0~5시는 어제 날짜 데이터에 새벽 방송 포함
+      final targetDay = now.hour < 5
+          ? now.subtract(const Duration(days: 1))
+          : now;
+      final uri = Uri.parse(
+        'https://static.cloud.sbs.co.kr/schedule/${targetDay.year}/${targetDay.month}/${targetDay.day}/$type.json',
       );
-      final uriToday = Uri.parse(
-        'https://static.cloud.sbs.co.kr/schedule/${now.year}/${now.month}/${now.day}/$type.json',
-      );
-      final responses = await Future.wait([
-        http.get(uriYesterday).timeout(const Duration(seconds: 10)),
-        http.get(uriToday).timeout(const Duration(seconds: 10)),
-      ]);
+      final response = await http.get(uri).timeout(const Duration(seconds: 10));
       final List<dynamic> data = [];
-      for (final response in responses) {
-        if (response.statusCode == 200) {
-          data.addAll(json.decode(response.body) as List<dynamic>);
-        }
+      if (response.statusCode == 200) {
+        data.addAll(json.decode(response.body) as List<dynamic>);
       }
       if (data.isNotEmpty) {
         _scheduleListMap[stationName] = data.cast<Map<String, dynamic>>();
-        final nowHHMM = '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+        // 현재 방송 찾기 (25:00 형식 처리)
+        final nowH = now.hour;
+        final nowM = now.minute;
+        // 새벽이면 24 더해서 비교 (예: 01:30 → 25:30)
+        final nowTotal = nowH < 5 ? (nowH + 24) * 60 + nowM : nowH * 60 + nowM;
         for (final s in data) {
           final start = s['start_time'] as String? ?? '';
-          var end = s['end_time'] as String? ?? '';
-          if (end.isNotEmpty && int.parse(end.split(':')[0]) >= 24) end = '23:59';
-          if (nowHHMM.compareTo(start) >= 0 && nowHHMM.compareTo(end) < 0) {
+          final end = s['end_time'] as String? ?? '';
+          if (start.isEmpty || end.isEmpty) continue;
+          final startParts = start.split(':');
+          final endParts = end.split(':');
+          final startTotal = int.parse(startParts[0]) * 60 + int.parse(startParts[1]);
+          final endTotal = int.parse(endParts[0]) * 60 + int.parse(endParts[1]);
+          if (nowTotal >= startTotal && nowTotal < endTotal) {
             _currentProgramMap[stationName] = Map<String, dynamic>.from(s);
             _nowPlayingMap[stationName] = s['title'] as String? ?? '';
             break;

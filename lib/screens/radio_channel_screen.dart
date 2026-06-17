@@ -109,7 +109,7 @@ class _RadioChannelScreenState extends State<RadioChannelScreen> {
           ),
           Expanded(
             child: ListView.separated(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 80),
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 80 + MediaQuery.of(context).viewPadding.bottom),
               itemCount: stations.length,
               separatorBuilder: (_, __) =>
               const SizedBox(height: 10),

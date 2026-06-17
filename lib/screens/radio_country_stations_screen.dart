@@ -95,7 +95,7 @@ class _RadioCountryStationsScreenState
           Expanded(
             child: ListView.separated(
               padding:
-              const EdgeInsets.fromLTRB(16, 0, 16, 80),
+              EdgeInsets.fromLTRB(16, 0, 16, 80 + MediaQuery.of(context).viewPadding.bottom),
               itemCount: stations.length,
               separatorBuilder: (_, __) =>
               const SizedBox(height: 10),

@@ -27,6 +27,8 @@ class _PlayerScreenState extends State<PlayerScreen>
     with TickerProviderStateMixin {
   late AnimationController _rotationController;
   late AnimationController _equalizerController;
+  late List<AnimationController> _eqControllers;
+  late List<Animation<double>> _eqAnimations;
   int _albumArtStyle = 1;
   Color _dominantColor = const Color(0xFF1A1A1A);
   bool _showSwipeHint = false;
@@ -40,8 +42,9 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
     _equalizerController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 800),
-    )..repeat(reverse: true);
+      duration: const Duration(milliseconds: 1200),
+    )..repeat();
+    _startEqAnimations();
 
     _loadStyle();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -127,12 +130,35 @@ class _PlayerScreenState extends State<PlayerScreen>
     }
   }
 
+  void _startEqAnimations() {
+    final durations = [900, 1100, 800, 1300];
+    final delays = [0, 200, 400, 100];
+    _eqControllers = List.generate(4, (i) {
+      final ctrl = AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: durations[i]),
+      );
+      Future.delayed(Duration(milliseconds: delays[i]), () {
+        if (mounted) ctrl.repeat(reverse: true);
+      });
+      return ctrl;
+    });
+    _eqAnimations = List.generate(4, (i) {
+      return Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: _eqControllers[i], curve: Curves.easeInOut),
+      );
+    });
+  }
+
   @override
   void dispose() {
     _rotationController.dispose();
     _equalizerController.dispose();
+    for (final c in _eqControllers) c.dispose();
     super.dispose();
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -245,7 +271,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                         letterSpacing: 1.2)),
-                const SizedBox(height: 2),
+                const SizedBox(height: 0),
                 Text(AppLocalizations.of(context)!.swipeToChange,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
@@ -754,29 +780,37 @@ class _PlayerScreenState extends State<PlayerScreen>
   }
 
   Widget _buildEqualizer(PlayerProvider playerProvider, Color primaryColor) {
+    if (!playerProvider.isPlaying) return const SizedBox(height: 20);
+    final minHeights = [6.0, 4.0, 8.0, 5.0];
+    final maxHeights = [18.0, 16.0, 20.0, 14.0];
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(5, (index) {
-          return AnimatedBuilder(
-            animation: _equalizerController,
-            builder: (context, child) {
-              final value = playerProvider.isPlaying
-                  ? (0.3 + (index % 3) * 0.2 + _equalizerController.value * 0.5)
-                  : 0.2;
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 3),
-                width: 4,
-                height: 24 * value,
-                decoration: BoxDecoration(
-                  color: primaryColor,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              );
-            },
-          );
-        }),
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: SizedBox(
+        height: 20,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(4, (i) {
+            return AnimatedBuilder(
+              animation: _eqAnimations[i],
+              builder: (context, child) {
+                final height = minHeights[i] +
+                    (maxHeights[i] - minHeights[i]) * _eqAnimations[i].value;
+                return Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 3),
+                    width: 3,
+                    height: height,
+                    decoration: BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                );
+              },
+            );
+          }),
+        ),
       ),
     );
   }
@@ -1376,8 +1410,9 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
         );
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('$label until stop'),
-          backgroundColor: AppTheme.surfaceVariant,
+          content: Text('$label 후 자동으로 꺼집니다',
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          backgroundColor: primaryColor,
           duration: const Duration(seconds: 2),
         ));
       },
@@ -1401,8 +1436,8 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
     final hours = d.inHours;
     final minutes = d.inMinutes % 60;
     final seconds = d.inSeconds % 60;
-    if (hours > 0) return '$hours hr $minutes min $seconds sec until stop';
-    return '$minutes min $seconds sec until stop';
+    if (hours > 0) return '$hours시간 $minutes분 $seconds초 후 자동 종료';
+    return '$minutes분 $seconds초 후 자동 종료';
   }
 
   @override
@@ -1432,13 +1467,13 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
               spacing: 8,
               runSpacing: 8,
               children: [
-                _quickButton('15 min', 0, 15, primaryColor),
-                _quickButton('30 min', 0, 30, primaryColor),
-                _quickButton('1 hr', 1, 0, primaryColor),
-                _quickButton('2 hr', 2, 0, primaryColor),
-                _quickButton('3 hr', 3, 0, primaryColor),
-                _quickButton('4 hr', 4, 0, primaryColor),
-                _quickButton('5 hr', 5, 0, primaryColor),
+                _quickButton('15분', 0, 15, primaryColor),
+                _quickButton('30분', 0, 30, primaryColor),
+                _quickButton('1시간', 1, 0, primaryColor),
+                _quickButton('2시간', 2, 0, primaryColor),
+                _quickButton('3시간', 3, 0, primaryColor),
+                _quickButton('4시간', 4, 0, primaryColor),
+                _quickButton('5시간', 5, 0, primaryColor),
               ],
             ),
             const SizedBox(height: 16),
@@ -1504,7 +1539,7 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
               ),
               child: Center(
                 child: Text(
-                  '${selectedHours > 0 ? '${selectedHours} hr ' : ''}${selectedMinutes} min',
+                  '${selectedHours > 0 ? '${selectedHours}시간 ' : ''}${selectedMinutes}분',
                   style: TextStyle(
                       color: primaryColor,
                       fontSize: 22,
@@ -1584,8 +1619,9 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text(
-                              '${selectedHours > 0 ? '${selectedHours} hr ' : ''}${selectedMinutes} min until stop'),
-                          backgroundColor: AppTheme.surfaceVariant,
+                              '${selectedHours > 0 ? '${selectedHours}시간 ' : ''}${selectedMinutes}분 후 자동으로 꺼집니다',
+                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          backgroundColor: primaryColor,
                           duration: const Duration(seconds: 2),
                         ));
                       }

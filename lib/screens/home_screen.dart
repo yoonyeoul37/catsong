@@ -19,6 +19,7 @@ import 'folder_screen.dart';
 import 'settings_screen.dart';
 import 'radio_home_screen.dart';
 import '../l10n/app_localizations.dart';
+import 'package:flutter/services.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -33,8 +34,9 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _showRecent = false;
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
-
   bool _showBanner = false;
+  bool _isSelectionMode = false;
+  Set<int> _selectedSongIds = {};
 
   @override
   void initState() {
@@ -54,24 +56,73 @@ class _HomeScreenState extends State<HomeScreen> {
     final prefs = await SharedPreferences.getInstance();
     final isUnlocked = prefs.getBool('promo_unlocked') ?? false;
     if (isUnlocked) return;
-
     final now = DateTime.now();
     final start = DateTime(2026, 6, 7);
     final end = DateTime(2026, 7, 7);
     if (now.isBefore(start) || now.isAfter(end)) return;
-
     final lastShown = prefs.getString('banner_last_shown');
     final today = '${now.year}-${now.month}-${now.day}';
     if (lastShown == today) return;
-
     await prefs.setString('banner_last_shown', today);
-    // setState(() => _showBanner = true);
   }
 
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _showMultiDeleteDialog(BuildContext context, MusicProvider musicProvider) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppTheme.surfaceVariant,
+        title: const Text('선택 삭제', style: TextStyle(color: AppTheme.textPrimary)),
+        content: Text('${_selectedSongIds.length}개 곡을 삭제할까요?\n기기에서 영구 삭제됩니다.',
+            style: const TextStyle(color: AppTheme.textSecondary)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('취소', style: TextStyle(color: AppTheme.textHint)),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              const platform = MethodChannel('kr.ssing.catsong/media');
+              int successCount = 0;
+              final selectedSongs = musicProvider.songs
+                  .where((s) => _selectedSongIds.contains(s.id))
+                  .toList();
+              for (final song in selectedSongs) {
+                try {
+                  if (song.uri != null) {
+                    final result = await platform.invokeMethod('deleteSong', {'uri': song.uri});
+                    if (result == true) successCount++;
+                  }
+                } catch (e) {
+                  debugPrint('삭제 실패: $e');
+                }
+              }
+              setState(() {
+                _isSelectionMode = false;
+                _selectedSongIds.clear();
+              });
+              musicProvider.loadSongs();
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('$successCount개 삭제됐습니다'),
+                    backgroundColor: Colors.redAccent,
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              }
+            },
+            child: const Text('삭제', style: TextStyle(color: Colors.redAccent)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -82,127 +133,6 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: _buildAppBar(primaryColor),
       body: Column(
         children: [
-          if (_showBanner)
-            GestureDetector(
-              onTap: () {
-                setState(() => _showBanner = false);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SettingsScreen()),
-                );
-              },
-              child: Container(
-                margin: const EdgeInsets.fromLTRB(12, 8, 12, 0),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      const Color(0xFF2A2200),
-                      const Color(0xFF1A1500),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.6), width: 1.5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFFD4AF37).withOpacity(0.15),
-                      blurRadius: 12,
-                      spreadRadius: 1,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFD4AF37).withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Icon(Icons.card_giftcard, color: Color(0xFFD4AF37), size: 20),
-                        ),
-                        const SizedBox(width: 10),
-                        const Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '🎉 출시 기념 이벤트!',
-                                style: TextStyle(
-                                  color: Color(0xFFD4AF37),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 2),
-                              Text(
-                                '프로모션 코드 입력하고 광고 없이 즐기세요',
-                                style: TextStyle(color: Color(0xFFCCCCCC), fontSize: 11),
-                              ),
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () => setState(() => _showBanner = false),
-                          child: const Icon(Icons.close, color: Color(0xFF888888), size: 16),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFD4AF37).withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.4)),
-                      ),
-                      child: const Column(
-                        children: [
-                          Text(
-                            '프로모션 코드',
-                            style: TextStyle(color: Color(0xFFAAAAAA), fontSize: 11),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            '37258',
-                            style: TextStyle(
-                              color: Color(0xFFD4AF37),
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 8,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFD4AF37),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Text(
-                        '지금 코드 입력하기 →',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           Expanded(child: _buildBody()),
           MediaQuery(
             data: MediaQuery.of(context).copyWith(
@@ -223,18 +153,12 @@ class _HomeScreenState extends State<HomeScreen> {
       titleSpacing: 20,
       title: _isSearching
           ? _buildSearchField()
-          : Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Text(AppLocalizations.of(context)!.appName,
-                  style: TextStyle(
-                      color: primaryColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -0.5)),
-
-            ],
-          ),
+          : Text(AppLocalizations.of(context)!.appName,
+          style: TextStyle(
+              color: primaryColor,
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+              letterSpacing: -0.5)),
       actions: [
         if (!_isSearching) ...[
           IconButton(
@@ -263,7 +187,8 @@ class _HomeScreenState extends State<HomeScreen> {
               _searchController.clear();
               context.read<MusicProvider>().clearSearch();
             },
-            child: Text(AppLocalizations.of(context)!.cancel, style: TextStyle(color: primaryColor)),
+            child: Text(AppLocalizations.of(context)!.cancel,
+                style: TextStyle(color: primaryColor)),
           ),
       ],
     );
@@ -316,12 +241,18 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }
         return _buildSongsTab();
-      case 1: return AlbumScreen(searchQuery: _isSearching ? _searchController.text : '');
-      case 2: return ArtistScreen(searchQuery: _isSearching ? _searchController.text : '');
-      case 3: return const PlaylistScreen();
-      case 4: return const FolderScreen();
-      case 5: return const VideoScreen();
-      default: return _buildSongsTab();
+      case 1:
+        return AlbumScreen(searchQuery: _isSearching ? _searchController.text : '');
+      case 2:
+        return ArtistScreen(searchQuery: _isSearching ? _searchController.text : '');
+      case 3:
+        return const PlaylistScreen();
+      case 4:
+        return const FolderScreen();
+      case 5:
+        return const VideoScreen();
+      default:
+        return _buildSongsTab();
     }
   }
 
@@ -333,8 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircularProgressIndicator(
-                    color: Theme.of(context).colorScheme.primary),
+                CircularProgressIndicator(color: Theme.of(context).colorScheme.primary),
                 const SizedBox(height: 16),
                 Text(AppLocalizations.of(context)!.scanningMusic,
                     style: const TextStyle(color: AppTheme.textSecondary)),
@@ -349,25 +279,60 @@ class _HomeScreenState extends State<HomeScreen> {
 
         return Column(
           children: [
-            // 필터 + 버튼 바
+            if (_isSelectionMode)
+              Container(
+                color: AppTheme.surfaceVariant,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white),
+                      onPressed: () => setState(() {
+                        _isSelectionMode = false;
+                        _selectedSongIds.clear();
+                      }),
+                    ),
+                    Text(
+                      '${_selectedSongIds.length}개 선택됨',
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    const Spacer(),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectedSongIds = musicProvider.songs.map((s) => s.id).toSet();
+                        });
+                      },
+                      child: Text('전체선택',
+                          style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                      onPressed: _selectedSongIds.isEmpty
+                          ? null
+                          : () => _showMultiDeleteDialog(context, musicProvider),
+                    ),
+                  ],
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
               child: Row(
                 children: [
-                  _buildFilterChip(AppLocalizations.of(context)!.all, !_showFavorites && !_showRecent,
+                  _buildFilterChip(AppLocalizations.of(context)!.all,
+                      !_showFavorites && !_showRecent,
                       Theme.of(context).colorScheme.primary),
                   const SizedBox(width: 8),
-                  _buildFilterChip(AppLocalizations.of(context)!.favorites, _showFavorites,
-                      Theme.of(context).colorScheme.primary),
+                  _buildFilterChip(AppLocalizations.of(context)!.favorites,
+                      _showFavorites, Theme.of(context).colorScheme.primary),
                   const SizedBox(width: 8),
-                  _buildFilterChip(AppLocalizations.of(context)!.recent, _showRecent,
-                      Theme.of(context).colorScheme.primary),
+                  _buildFilterChip(AppLocalizations.of(context)!.recent,
+                      _showRecent, Theme.of(context).colorScheme.primary),
                   const Spacer(),
                   IconButton(
                     onPressed: () {
                       if (musicProvider.songs.isNotEmpty) {
-                        context.read<PlayerProvider>()
-                            .playFromList(musicProvider.songs, 0);
+                        context.read<PlayerProvider>().playFromList(musicProvider.songs, 0);
                       }
                     },
                     icon: Icon(Icons.play_circle_filled,
@@ -378,11 +343,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (musicProvider.songs.isNotEmpty) {
                         final songs = List<Song>.from(musicProvider.songs)..shuffle();
                         context.read<PlayerProvider>().playFromList(songs, 0);
-                        
                       }
                     },
-                    icon: const Icon(Icons.shuffle,
-                        color: AppTheme.textSecondary, size: 26),
+                    icon: const Icon(Icons.shuffle, color: AppTheme.textSecondary, size: 26),
                   ),
                 ],
               ),
@@ -397,17 +360,69 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.only(bottom: 8),
-                itemCount: musicProvider.songs.length,
-                itemBuilder: (context, index) {
-                  final songs = musicProvider.songs;
-                  return SongListTile(
-                    song: songs[index],
-                    index: index,
-                    songList: songs,
-                  );
-                },
+              child: RefreshIndicator(
+                color: Theme.of(context).colorScheme.primary,
+                onRefresh: () => musicProvider.loadSongs(),
+                child: ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  itemCount: musicProvider.songs.length,
+                  itemBuilder: (context, index) {
+                    final songs = musicProvider.songs;
+                    final song = songs[index];
+                    final isSelected = _selectedSongIds.contains(song.id);
+                    return GestureDetector(
+                      onLongPress: () {
+                        setState(() {
+                          _isSelectionMode = true;
+                          _selectedSongIds.add(song.id);
+                        });
+                      },
+                      onTap: _isSelectionMode
+                          ? () {
+                        setState(() {
+                          if (isSelected) {
+                            _selectedSongIds.remove(song.id);
+                            if (_selectedSongIds.isEmpty) {
+                              _isSelectionMode = false;
+                            }
+                          } else {
+                            _selectedSongIds.add(song.id);
+                          }
+                        });
+                      }
+                          : null,
+                      child: Container(
+                        color: isSelected
+                            ? Theme.of(context).colorScheme.primary.withOpacity(0.15)
+                            : Colors.transparent,
+                        child: Row(
+                          children: [
+                            if (_isSelectionMode)
+                              Padding(
+                                padding: const EdgeInsets.only(left: 12),
+                                child: Icon(
+                                  isSelected
+                                      ? Icons.check_circle
+                                      : Icons.radio_button_unchecked,
+                                  color: isSelected
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Colors.white38,
+                                  size: 22,
+                                ),
+                              ),
+                            Expanded(
+                              child: SongListTile(
+                                song: song,
+                                index: index,
+                                songList: songs,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ],
@@ -441,17 +456,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildIconButton(IconData icon, Color color, VoidCallback onTap) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Icon(icon, color: color, size: 30),
-      ),
-    );
-  }
-
   Widget _buildPermissionDeniedView(MusicProvider musicProvider) {
     final primaryColor = Theme.of(context).colorScheme.primary;
     return Center(
@@ -479,8 +483,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundColor: primaryColor,
                 foregroundColor: Colors.black,
                 padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
               ),
               child: Text(AppLocalizations.of(context)!.allowPermission,
                   style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -502,8 +505,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 16),
             Text(musicProvider.errorMessage,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                    color: AppTheme.textSecondary, fontSize: 14)),
+                style: const TextStyle(color: AppTheme.textSecondary, fontSize: 14)),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () => musicProvider.initialize(),
@@ -548,12 +550,24 @@ class _HomeScreenState extends State<HomeScreen> {
       unselectedFontSize: 10,
       elevation: 0,
       items: [
-        BottomNavigationBarItem(icon: Icon(Icons.music_note), label: AppLocalizations.of(context)!.songs),
-        BottomNavigationBarItem(icon: Icon(Icons.album), label: AppLocalizations.of(context)!.albums),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: AppLocalizations.of(context)!.artists),
-        BottomNavigationBarItem(icon: Icon(Icons.playlist_play), label: AppLocalizations.of(context)!.playlists),
-        BottomNavigationBarItem(icon: Icon(Icons.folder), label: AppLocalizations.of(context)!.folders),
-        BottomNavigationBarItem(icon: Icon(Icons.video_library), label: AppLocalizations.of(context)!.videos),
+        BottomNavigationBarItem(
+            icon: const Icon(Icons.music_note),
+            label: AppLocalizations.of(context)!.songs),
+        BottomNavigationBarItem(
+            icon: const Icon(Icons.album),
+            label: AppLocalizations.of(context)!.albums),
+        BottomNavigationBarItem(
+            icon: const Icon(Icons.person),
+            label: AppLocalizations.of(context)!.artists),
+        BottomNavigationBarItem(
+            icon: const Icon(Icons.playlist_play),
+            label: AppLocalizations.of(context)!.playlists),
+        BottomNavigationBarItem(
+            icon: const Icon(Icons.folder),
+            label: AppLocalizations.of(context)!.folders),
+        BottomNavigationBarItem(
+            icon: const Icon(Icons.video_library),
+            label: AppLocalizations.of(context)!.videos),
       ],
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static const Color background = Color(0xFF000000);
+  static const Color background = Colors.transparent;
   static const Color surface = Color(0xFF121212);
   static const Color surfaceVariant = Color(0xFF1A1A1A);
   static const Color cardColor = Color(0xFF1A1A1A);
@@ -14,12 +14,24 @@ class AppTheme {
   static const Color divider = Color(0xFF282828);
   static const Color iconColor = Color(0xFFCCCCCC);
 
+  static const LinearGradient backgroundGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      Color(0xFF0A0A0A),
+      Color(0xFF0D0D0D),
+      Color(0xFF0F0D12),
+      Color(0xFF130D1A),
+    ],
+    stops: [0.0, 0.5, 0.75, 1.0],
+  );
+
   static ThemeData buildTheme(Color primaryColor) {
     final primaryLight = Color.lerp(primaryColor, Colors.white, 0.2)!;
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: background,
+      scaffoldBackgroundColor: Colors.transparent,
       colorScheme: ColorScheme.dark(
         primary: primaryColor,
         secondary: primaryLight,
@@ -29,7 +41,7 @@ class AppTheme {
         onSurface: textPrimary,
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: background,
+        backgroundColor: Colors.transparent,
         foregroundColor: textPrimary,
         elevation: 0,
         centerTitle: false,
@@ -41,7 +53,7 @@ class AppTheme {
         ),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: surface,
+        backgroundColor: Color(0xFF0A0A0A),
         selectedItemColor: primaryColor,
         unselectedItemColor: textHint,
         type: BottomNavigationBarType.fixed,

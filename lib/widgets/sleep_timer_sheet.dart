@@ -164,22 +164,28 @@ class SleepTimerSheet extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 12),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF2A2A2A),
+                                color: primaryColor,
                                 borderRadius: BorderRadius.circular(30),
-                                border: Border.all(
-                                    color: primaryColor.withOpacity(0.3)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: primaryColor.withOpacity(0.4),
+                                    blurRadius: 12,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.bedtime,
-                                      color: primaryColor, size: 18),
+                                  const Icon(Icons.bedtime,
+                                      color: Colors.white, size: 18),
                                   const SizedBox(width: 8),
                                   Text(
                                     '${opt.label} 후 자동으로 꺼집니다',
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 13,
+                                        fontWeight: FontWeight.bold,
                                         decoration: TextDecoration.none),
                                   ),
                                 ],

@@ -36,6 +36,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
     _tabController =
         TabController(length: _regions.length, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugPrint('한국 라디오 initState 실행됨');
       final radio = context.read<RadioProvider>();
       for (final station in koreanStations) {
         if (station.broadcaster == 'KBS' &&
@@ -45,8 +46,6 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
       }
       radio.fetchMbcSchedule('MBC 표준FM');
       radio.fetchMbcSchedule('MBC FM4U');
-      radio.fetchSbsSchedule('SBS 파워FM');
-      radio.fetchSbsSchedule('SBS 러브FM');
       radio.fetchSbsSchedule('SBS 파워FM');
       radio.fetchSbsSchedule('SBS 러브FM');
     });
@@ -280,8 +279,7 @@ class _StationTile extends StatelessWidget {
                     ),
                     Builder(
                       builder: (ctx) {
-                        final isKbs = station.broadcaster == 'KBS' &&
-                            station.streamUrl.contains('cfpwwwapi.kbs.co.kr');
+                        final isKbs = station.broadcaster == 'KBS';
                         const mbcNames = ['MBC 표준FM', 'MBC FM4U'];
                         const sbsNames = ['SBS 파워FM', 'SBS 러브FM'];
                         final isMbc = mbcNames.contains(station.name);

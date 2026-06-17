@@ -271,6 +271,7 @@ class RadioProvider extends ChangeNotifier {
       notifyListeners();
 
       _onStopMusic?.call();
+      await Future.delayed(const Duration(milliseconds: 200));
 
       debugPrint('=== 라디오 재생 시작 ===');
       debugPrint('방송국: ${station.name}');
@@ -496,15 +497,25 @@ class RadioProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         if (data.isNotEmpty) {
-          final schedules = data[0]['schedules'] as List<dynamic>? ?? [];
-          _scheduleListMap[stationName] = schedules.cast<Map<String, dynamic>>();
-          final nowTime = '${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}0000';
+          final List<dynamic> allSchedules = [];
+          for (final d in data) {
+            allSchedules.addAll(d['schedules'] as List<dynamic>? ?? []);
+          }
+          _scheduleListMap[stationName] = allSchedules.cast<Map<String, dynamic>>();
+          final nowHour = now.hour;
+          final nowMin = now.minute;
+          // 자정 이후면 24시간 형식으로 변환 (예: 00:30 → 2430 형식)
+          final nowTimeInt = nowHour < 6
+              ? (24 + nowHour) * 1000000 + nowMin * 10000
+              : nowHour * 1000000 + nowMin * 10000;
           final currentSchedules = _scheduleListMap[stationName] ?? [];
           for (int i = 0; i < currentSchedules.length; i++) {
             final s = currentSchedules[i];
             final start = s['program_planned_start_time'] as String? ?? '';
             final end = s['program_planned_end_time'] as String? ?? '';
-            if (nowTime.compareTo(start) >= 0 && nowTime.compareTo(end) < 0) {
+            final startInt = int.tryParse(start) ?? 0;
+            final endInt = int.tryParse(end) ?? 0;
+            if (nowTimeInt >= startInt && nowTimeInt < endInt) {
               final programCode = s['program_code'] as String? ?? '';
               String finalEnd = end;
               for (int j = i + 1; j < currentSchedules.length; j++) {
@@ -532,6 +543,7 @@ class RadioProvider extends ChangeNotifier {
 
   Future<void> fetchScheduleByUrl(String stationName, String streamUrl) async {
     final codes = _parseKbsChannelFromUrl(streamUrl);
+    debugPrint('fetchScheduleByUrl 호출됨: $stationName / codes: $codes');
     if (codes == null) return;
     final localCode = codes['local']!;
     final channelCode = codes['channel']!;
@@ -558,15 +570,25 @@ class RadioProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         if (data.isNotEmpty) {
-          final schedules = data[0]['schedules'] as List<dynamic>? ?? [];
+          final List<dynamic> allSchedules = [];
+          for (final d in data) {
+            allSchedules.addAll(d['schedules'] as List<dynamic>? ?? []);
+          }
+          final schedules = allSchedules;
           _scheduleListMap[stationName] = schedules.cast<Map<String, dynamic>>();
-          final nowTime = '${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}0000';
+          final nowHour = now.hour;
+          final nowMin = now.minute;
+          final nowTimeInt = nowHour < 6
+              ? (24 + nowHour) * 1000000 + nowMin * 10000
+              : nowHour * 1000000 + nowMin * 10000;
           final currentSchedules = _scheduleListMap[stationName] ?? [];
           for (int i = 0; i < currentSchedules.length; i++) {
             final s = currentSchedules[i];
             final start = s['program_planned_start_time'] as String? ?? '';
             final end = s['program_planned_end_time'] as String? ?? '';
-            if (nowTime.compareTo(start) >= 0 && nowTime.compareTo(end) < 0) {
+            final startInt = int.tryParse(start) ?? 0;
+            final endInt = int.tryParse(end) ?? 0;
+            if (nowTimeInt >= startInt && nowTimeInt < endInt) {
               final programCode = s['program_code'] as String? ?? '';
               String finalEnd = end;
               for (int j = i + 1; j < currentSchedules.length; j++) {
@@ -597,8 +619,9 @@ class RadioProvider extends ChangeNotifier {
     int hour = int.tryParse(time.substring(0, 2)) ?? 0;
     final min = time.substring(2, 4);
     if (hour >= 24) hour -= 24;
+    final period = hour < 12 ? '오전' : '오후';
     final h12 = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
-    return '$h12:$min';
+    return '$period $h12:$min';
   }
 
   // MBC
@@ -750,6 +773,11 @@ class RadioProvider extends ChangeNotifier {
     }
 
     // KBS
+    final nowHour2 = now.hour;
+    final nowMin2 = now.minute;
+    final nowTimeInt2 = nowHour2 < 6
+        ? (24 + nowHour2) * 1000000 + nowMin2 * 10000
+        : nowHour2 * 1000000 + nowMin2 * 10000;
     for (final stationName in _scheduleListMap.keys) {
       if (_mbcChannelTypes.containsKey(stationName)) continue;
       if (_sbsChannelTypes.containsKey(stationName)) continue;
@@ -758,7 +786,9 @@ class RadioProvider extends ChangeNotifier {
         final s = currentSchedules[i];
         final start = s['program_planned_start_time'] as String? ?? '';
         final end = s['program_planned_end_time'] as String? ?? '';
-        if (nowTime.compareTo(start) >= 0 && nowTime.compareTo(end) < 0) {
+        final startInt = int.tryParse(start) ?? 0;
+        final endInt = int.tryParse(end) ?? 0;
+        if (nowTimeInt2 >= startInt && nowTimeInt2 < endInt) {
           final programCode = s['program_code'] as String? ?? '';
           String finalEnd = end;
           for (int j = i + 1; j < currentSchedules.length; j++) {

@@ -247,6 +247,8 @@ class PlayerProvider extends ChangeNotifier {
       await _player.pause();
       await WakelockPlus.disable();
     } else {
+      _onStopRadio?.call();
+      await Future.delayed(const Duration(milliseconds: 100));
       await _player.play();
       await WakelockPlus.enable();
     }

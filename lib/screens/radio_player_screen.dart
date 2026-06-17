@@ -25,6 +25,7 @@ class RadioPlayerScreen extends StatefulWidget {
 class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _rotCtrl;
+  late int _currentIdx;
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
       vsync: this,
       duration: const Duration(seconds: 12),
     );
+    _currentIdx = widget.currentIndex ?? 0;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final radio = context.read<RadioProvider>();
       if (widget.stationList != null && widget.currentIndex != null) {
@@ -106,7 +108,9 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     final primaryColor = Theme.of(context).colorScheme.primary;
     final radioProvider = context.watch<RadioProvider>();
     final state = radioProvider.playerState;
-    final current = radioProvider.currentStation ?? widget.station;
+    final current = (widget.stationList != null && _currentIdx < widget.stationList!.length)
+        ? widget.stationList![_currentIdx]
+        : (radioProvider.currentStation ?? widget.station);
     final isPlaying = state == RadioPlayerState.playing;
     final isLoading = state == RadioPlayerState.loading;
     final isError = state == RadioPlayerState.error;
@@ -488,22 +492,13 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                 // 이전 방송
                 GestureDetector(
                   onTap: () {
-                    if (widget.stationList != null &&
-                        widget.currentIndex != null) {
-                      final newIndex = widget.currentIndex! > 0
-                          ? widget.currentIndex! - 1
-                          : widget.stationList!.length - 1;
-                      final prevStation = widget.stationList![newIndex];
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => RadioPlayerScreen(
-                            station: prevStation,
-                            stationList: widget.stationList,
-                            currentIndex: newIndex,
-                          ),
-                        ),
-                      );
+                    final list = widget.stationList;
+                    if (list != null) {
+                      final newIdx = _currentIdx > 0 ? _currentIdx - 1 : list.length - 1;
+                      final radio = context.read<RadioProvider>();
+                      setState(() => _currentIdx = newIdx);
+                      radio.setQueue(list, newIdx);
+                      radio.playStation(list[newIdx]);
                     }
                   },
                   child: Container(
@@ -571,20 +566,12 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                 GestureDetector(
                   onTap: () {
                     final list = widget.stationList;
-                    final idx = widget.currentIndex;
-                    if (list != null && idx != null) {
-                      final newIdx = idx < list.length - 1 ? idx + 1 : 0;
-                      final nextStation = list[newIdx];
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => RadioPlayerScreen(
-                            station: nextStation,
-                            stationList: list,
-                            currentIndex: newIdx,
-                          ),
-                        ),
-                      );
+                    if (list != null) {
+                      final newIdx = _currentIdx < list.length - 1 ? _currentIdx + 1 : 0;
+                      final radio = context.read<RadioProvider>();
+                      setState(() => _currentIdx = newIdx);
+                      radio.setQueue(list, newIdx);
+                      radio.playStation(list[newIdx]);
                     }
                   },
                   child: Container(

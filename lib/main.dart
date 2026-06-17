@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'providers/music_provider.dart';
 import 'providers/player_provider.dart';
 import 'providers/playlist_provider.dart';
@@ -47,12 +48,13 @@ void main() async {
   final radioProvider = RadioProvider()
     ..setAudioHandler(radioAudioHandler);
 
-  radioProvider.setOnStopMusic(() {
-    playerProvider.player.stop();
+  radioProvider.setOnStopMusic(() async {
+    await playerProvider.player.stop();
+    await WakelockPlus.disable();
   });
 
-  playerProvider.setOnStopRadio(() {
-    radioProvider.stopRadio();
+  playerProvider.setOnStopRadio(() async {
+    await radioProvider.stopRadio();
   });
 
   simpleHandler.onRadioPlay = () {
@@ -158,7 +160,12 @@ class MyApp extends StatelessWidget {
                 data: MediaQuery.of(context).copyWith(
                   textScaler: TextScaler.linear(themeProvider.textScale),
                 ),
-                child: child!,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: AppTheme.backgroundGradient,
+                  ),
+                  child: child!,
+                ),
               );
             },
             home: const AppInitializer(),

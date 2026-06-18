@@ -102,6 +102,18 @@ class RadioCountry {
         RadioBroadcaster(id: 'CRHK',    name: 'Commercial Radio',   keyword: 'Commercial Radio HK'),
       ],
     ),
+    RadioCountry(
+      code: 'GB',
+      name: '영국',
+      flag: '🇬🇧',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'VN',
+      name: '베트남',
+      flag: '🇻🇳',
+      broadcasters: [],
+    ),
   ];
 }
 

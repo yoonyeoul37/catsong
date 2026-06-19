@@ -29,7 +29,7 @@ class RadioHomeScreen extends StatelessWidget {
     final radioProvider = context.watch<RadioProvider>();
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: const Color(0xFF0A0A0A),
       appBar: AppBar(
         backgroundColor: AppTheme.background,
         leading: IconButton(

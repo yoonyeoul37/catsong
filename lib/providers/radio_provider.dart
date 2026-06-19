@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart' show TimeOfDay, DayPeriod;
 import 'package:http/http.dart' as http;
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:media_kit/media_kit.dart';
@@ -10,6 +12,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import '../models/radio_station.dart';
 import '../models/radio_country.dart';
 import 'player_provider.dart' show SimpleAudioHandler;
+import '../services/schedule_service.dart';
 
 enum RadioPlayerState { idle, loading, playing, paused, error }
 
@@ -74,7 +77,12 @@ class RadioProvider extends ChangeNotifier {
   Duration? get sleepRemaining => _sleepRemaining;
   bool get isSleepTimerActive => _sleepTimer != null;
 
+  final ScheduleService _scheduleService = ScheduleService();
+
+  StreamSubscription? _connectivitySubscription;
+
   RadioProvider() {
+    _listenConnectivity();
     _player = Player(
       configuration: PlayerConfiguration(
         logLevel: MPVLogLevel.debug,
@@ -84,6 +92,11 @@ class RadioProvider extends ChangeNotifier {
     _initPlayerStreams();
     _loadFromPrefs();
     _startScheduleRefreshTimer();
+    _scheduleService.loadSchedule().then((_) {
+      fetchJsonSchedule('CBS 음악FM');
+      fetchJsonSchedule('CBS 표준FM');
+      notifyListeners();
+    });
   }
 
   Future<void> _configurePlayer() async {
@@ -264,8 +277,14 @@ class RadioProvider extends ChangeNotifier {
     try {
       _errorMessage = null;
       _isActuallyPlaying = false;
+      // 다른 방송국으로 바뀔 때만 편성표 초기화
+      final prevStationName = _currentStation?.name;
       _setPlayerState(RadioPlayerState.loading);
       _currentStation = station;
+      if (prevStationName != station.name) {
+        _currentProgramMap.remove(station.name);
+        _nowPlayingMap.remove(station.name);
+      }
       final qIdx = _currentQueue.indexWhere((s) => s.name == station.name);
       if (qIdx >= 0) _currentQueueIndex = qIdx;
       notifyListeners();
@@ -327,6 +346,54 @@ class RadioProvider extends ChangeNotifier {
       );
 
       await recordListened(station);
+      _updateWidget(station.name, station.country ?? '', true);
+
+      // JSON 편성표 확인 (KBS/MBC/SBS 아닌 경우만)
+      if (station.name == '국방FM') {
+        fetchKfnSchedule();
+      }
+      // KBS 편성표
+      if (station.broadcaster == null && station.streamUrl.contains('cfpwwwapi.kbs.co.kr')) {
+        fetchScheduleByUrl(station.name, station.streamUrl);
+      } else if (station.name.contains('KBS')) {
+        fetchScheduleByUrl(station.name, station.streamUrl);
+      }
+      // MBC/SBS 편성표
+      if (station.name == 'MBC 표준FM' || station.name == 'MBC FM4U') {
+        fetchMbcSchedule(station.name);
+      }
+      if (station.name == 'SBS 파워FM' || station.name == 'SBS 러브FM') {
+        fetchSbsSchedule(station.name);
+      }
+      if (station.name == 'EBS 반디') {
+        fetchEbsBandiSchedule();
+      }
+      if (station.name == 'EBS FM') {
+        fetchEbsFmSchedule();
+      }
+      final isKbsMbcSbs = station.name.contains('KBS') ||
+          station.name.contains('MBC') ||
+          station.name.contains('SBS');
+      if (!isKbsMbcSbs && _scheduleService.hasSchedule(station.name)) {
+        final program = _scheduleService.getCurrentProgram(station.name);
+        if (program != null) {
+          _currentProgramMap[station.name] = {
+            'program_title': program['title'],
+            'start_time': program['start'],
+            'end_time': program['end'],
+            'is_rerun': false,
+          };
+          _nowPlayingMap[station.name] = program['title'] as String? ?? '';
+          notifyListeners();
+        }
+        _scheduleListMap[station.name] =
+            _scheduleService.getScheduleList(station.name).map((p) => {
+              'program_title': p['title'],
+              'start_time': p['start'],
+              'end_time': p['end'],
+            }).toList();
+        notifyListeners();
+      }
     } catch (e) {
       debugPrint('라디오 재생 실패: $e');
       _errorMessage = '방송을 불러올 수 없습니다.\n다른 채널을 선택해 주세요.';
@@ -616,6 +683,7 @@ class RadioProvider extends ChangeNotifier {
     } catch (e) {
       debugPrint('지방 편성표 로드 오류: $e');
     }
+    _updateNotification(stationName);
     notifyListeners();
   }
 
@@ -666,6 +734,9 @@ class RadioProvider extends ChangeNotifier {
   };
 
   Future<void> fetchMbcSchedule(String stationName) async {
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    final cacheKey = '${stationName}_$today';
+    if (_scheduleListMap.containsKey(cacheKey) && _scheduleListMap[cacheKey]!.isNotEmpty) return;
     final sType = _mbcChannelTypes[stationName];
     if (sType == null) return;
 
@@ -734,6 +805,7 @@ class RadioProvider extends ChangeNotifier {
     } catch (e) {
       debugPrint('MBC 편성표 로드 오류: $e');
     }
+    _updateNotification(stationName);
     notifyListeners();
   }
 
@@ -743,7 +815,314 @@ class RadioProvider extends ChangeNotifier {
     'SBS 러브FM': 'Love',
   };
 
+  void _listenConnectivity() {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((result) async {
+      if (result != ConnectivityResult.none && _currentStation != null) {
+        debugPrint('네트워크 변경 감지 - 라디오 재연결 시도');
+        await Future.delayed(const Duration(seconds: 2));
+        if (_currentStation != null) {
+          await playStation(_currentStation!);
+        }
+      }
+    });
+  }
+
+  // dispose는 아래 기존 것에 합칩니다
+
+  void _updateNotification(String stationName) {
+    if (_currentStation?.name != stationName) return;
+    final program = _currentProgramMap[stationName];
+    debugPrint('=== _updateNotification: $stationName / program: $program ===');
+    if (program == null) return;
+    final programTitle = program['program_title'] as String?
+        ?? program['Title'] as String?
+        ?? program['title'] as String?
+        ?? _nowPlayingMap[stationName]
+        ?? '';
+    if (programTitle.isEmpty) return;
+    // 시간 추출
+    final start = program['program_planned_start_time'] as String?
+        ?? program['StartTime'] as String?
+        ?? program['start_time'] as String?
+        ?? '';
+    final end = program['program_planned_end_time'] as String?
+        ?? program['EndTime'] as String?
+        ?? program['end_time'] as String?
+        ?? '';
+    String artist = programTitle;
+    if (start.isNotEmpty && end.isNotEmpty) {
+      // KBS 시간 포맷 변환 (20000000 → 20:00)
+      String fmtTime(String t) {
+        if (t.length >= 6) {
+          int h = int.tryParse(t.substring(0, 2)) ?? 0;
+          final m = t.substring(2, 4);
+          if (h >= 24) h -= 24;
+          return '$h:$m';
+        }
+        if (t.contains(':')) return t;
+        if (t.length == 4) {
+          int h = int.tryParse(t.substring(0, 2)) ?? 0;
+          final m = t.substring(2, 4);
+          if (h >= 24) h -= 24;
+          return '$h:$m';
+        }
+        return t;
+      }
+      artist = '$programTitle ${fmtTime(start)}~${fmtTime(end)}';
+    }
+    _simpleHandler?.setRadioMediaItem(
+      title: stationName,
+      artist: artist,
+      url: _currentStation?.streamUrl ?? '',
+    );
+  }
+
+  Future<void> _updateWidget(String title, String artist, bool isPlaying) async {
+    try {
+      const platform = MethodChannel('kr.ssing.catsong/media');
+      final program = _currentProgramMap[title];
+      String schedule = '';
+      String programTitle = '';
+      if (program != null) {
+        programTitle = program['program_title'] as String? ?? '';
+        final start = program['start_time'] as String? ?? '';
+        final end = program['end_time'] as String? ?? '';
+        if (programTitle.isNotEmpty) {
+          schedule = start.isNotEmpty ? '$programTitle $start~$end' : programTitle;
+        }
+      }
+      await platform.invokeMethod('updateWidget', {
+        'title': title,
+        'artist': artist,
+        'isPlaying': isPlaying,
+        'schedule': schedule,
+      });
+      // 알림바(미디어 컨트롤)도 업데이트
+      if (programTitle.isNotEmpty) {
+        _simpleHandler?.setRadioMediaItem(
+          title: title,
+          artist: programTitle,
+          url: '',
+        );
+      }
+    } catch (e) {
+      debugPrint('위젯 업데이트 오류: $e');
+    }
+  }
+
+  Future<void> fetchKfnSchedule() async {
+    const stationName = '국방FM';
+    debugPrint('=== fetchKfnSchedule 호출됨 ===');
+    try {
+      final response = await http.post(
+        Uri.parse('https://radio.dema.mil.kr/web/api/v1/media/fm/nowProgram/ajaxList.do'),
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36',
+          'Referer': 'https://radio.dema.mil.kr/web/radio/main.do',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'sort_type': 'TIME',
+          'program_type': '',
+          'select_type': '',
+        }),
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        // debugPrint('=== KFN API 응답: ${response.body} ===');
+        final map = data['map'];
+        if (map == null) {
+          debugPrint('=== KFN map null ===');
+          return;
+        }
+
+        // 현재 방송 중인 프로그램
+        final current = map['timeTableExt'];
+        final title = current['fm_program_title'] as String? ?? '';
+        final start = current['fm_program_time'] as String? ?? '';
+        final end = current['fm_program_end_time'] as String? ?? '';
+
+        if (title.isNotEmpty) {
+          // 시간 포맷 변환 (1605 → 16:05)
+          String fmt(String t) {
+            if (t.length < 4) return t;
+            return '${t.substring(0, 2)}:${t.substring(2, 4)}';
+          }
+          _currentProgramMap[stationName] = {
+            'program_title': title,
+            'start_time': fmt(start),
+            'end_time': fmt(end),
+            'is_rerun': false,
+          };
+          _nowPlayingMap[stationName] = title;
+        }
+
+        // 전체 편성표
+        final list = map['fmNowHomeList'] as List<dynamic>? ?? [];
+        final schedules = <Map<String, dynamic>>[];
+        for (final item in list) {
+          final name = item['homepage_nm'] as String? ?? '';
+          final time = item['regular_brodcasting'] as String? ?? '';
+          if (name.isEmpty || time.isEmpty || time.trim().isEmpty) continue;
+
+          // "(월~일) 16:05~18:00" 파싱
+          final match = RegExp(r'(\d{2}:\d{2})~(\d{2}:\d{2})').firstMatch(time);
+          if (match != null) {
+            schedules.add({
+              'program_title': name,
+              'start_time': match.group(1)!,
+              'end_time': match.group(2)!,
+            });
+          }
+        }
+        // 시간순 정렬
+        schedules.sort((a, b) {
+          final sa = a['start_time'] as String;
+          final sb = b['start_time'] as String;
+          return sa.compareTo(sb);
+        });
+        _scheduleListMap[stationName] = schedules;
+        notifyListeners();
+        if (_currentStation?.name == stationName) {
+          _updateWidget(stationName, _currentStation?.country ?? '', true);
+        }
+      }
+    } catch (e) {
+      debugPrint('국방FM 편성표 로드 오류: $e');
+    }
+  }
+
+  Future<void> fetchEbsFmSchedule() async {
+    const stationName = 'EBS FM';
+    try {
+      final response = await http.get(
+        Uri.parse('https://www.ebs.co.kr/onair/scheduleNew.json?channelCodeString=FM&mode=newlist'),
+        headers: {'User-Agent': 'Mozilla/5.0'},
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final now = data['nowProgram'];
+        if (now != null) {
+          final title = now['title'] as String? ?? '';
+          final start = now['start'] as String? ?? '';
+          final end = now['end'] as String? ?? '';
+          if (title.isNotEmpty) {
+            _currentProgramMap[stationName] = {
+              'program_title': title,
+              'start_time': start,
+              'end_time': end,
+            };
+            _nowPlayingMap[stationName] = title;
+          }
+        }
+        final list = data['program'] as List<dynamic>? ?? [];
+        final schedules = <Map<String, dynamic>>[];
+        final seenTimes = <String>{};
+        for (final item in list) {
+          final title = item['title'] as String? ?? '';
+          final start = item['start'] as String? ?? '';
+          final end = item['end'] as String? ?? '';
+          if (title.isEmpty || title == '라디오 캠페인') continue;
+          if (seenTimes.contains(start)) continue;
+          seenTimes.add(start);
+          schedules.add({
+            'program_title': title,
+            'start_time': start,
+            'end_time': end,
+          });
+        }
+        _scheduleListMap[stationName] = schedules;
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('EBS FM 편성표 로드 오류: $e');
+    }
+  }
+
+  Future<void> fetchEbsBandiSchedule() async {
+    const stationName = 'EBS 반디';
+    try {
+      final response = await http.get(
+        Uri.parse('https://www.ebs.co.kr/onair/scheduleNew.json?channelCodeString=IRADIO&mode=newlist'),
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        // 현재 방송 중인 프로그램
+        final now = data['nowProgram'];
+        if (now != null) {
+          final title = now['title'] as String? ?? '';
+          final start = now['start'] as String? ?? '';
+          final end = now['end'] as String? ?? '';
+          if (title.isNotEmpty) {
+            _currentProgramMap[stationName] = {
+              'program_title': title,
+              'start_time': start,
+              'end_time': end,
+            };
+            _nowPlayingMap[stationName] = title;
+          }
+        }
+
+        // 전체 편성표 (라디오 캠페인 제외, 중복 시간 제거)
+        final list = data['program'] as List<dynamic>? ?? [];
+        final schedules = <Map<String, dynamic>>[];
+        final seenTimes = <String>{};
+        for (final item in list) {
+          final title = item['title'] as String? ?? '';
+          final start = item['start'] as String? ?? '';
+          final end = item['end'] as String? ?? '';
+          if (title.isEmpty || title == '라디오 캠페인') continue;
+          if (seenTimes.contains(start)) continue;
+          seenTimes.add(start);
+          schedules.add({
+            'program_title': title,
+            'start_time': start,
+            'end_time': end,
+          });
+        }
+        _scheduleListMap[stationName] = schedules;
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('EBS 반디 편성표 로드 오류: $e');
+    }
+  }
+
+  Future<void> fetchJsonSchedule(String stationName) async {
+    debugPrint('=== fetchJsonSchedule 호출: $stationName ===');
+    debugPrint('=== hasSchedule: ${_scheduleService.hasSchedule(stationName)} ===');
+    if (!_scheduleService.hasSchedule(stationName)) return;
+    final program = _scheduleService.getCurrentProgram(stationName);
+    debugPrint('=== getCurrentProgram: $program ===');
+    if (program != null) {
+      _currentProgramMap[stationName] = {
+        'program_title': program['title'],
+        'start_time': program['start'],
+        'end_time': program['end'],
+        'is_rerun': false,
+      };
+      _nowPlayingMap[stationName] = program['title'] as String? ?? '';
+    }
+    _scheduleListMap[stationName] =
+        _scheduleService.getScheduleList(stationName).map((p) => {
+          'program_title': p['title'],
+          'start_time': p['start'],
+          'end_time': p['end'],
+        }).toList();
+    notifyListeners();
+    if (_currentStation?.name == stationName) {
+      _updateWidget(stationName, _currentStation?.country ?? '', true);
+    }
+  }
+
   Future<void> fetchSbsSchedule(String stationName) async {
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    final cacheKey = '${stationName}_$today';
+    if (_scheduleListMap.containsKey(cacheKey) && _scheduleListMap[cacheKey]!.isNotEmpty) return;
     final type = _sbsChannelTypes[stationName];
     if (type == null) return;
 
@@ -790,6 +1169,7 @@ class RadioProvider extends ChangeNotifier {
     } catch (e) {
       debugPrint('SBS 편성표 로드 오류: $e');
     }
+    _updateNotification(stationName);
     notifyListeners();
   }
 
@@ -1171,6 +1551,7 @@ class RadioProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    _connectivitySubscription?.cancel();
     _player.dispose();
     _sleepTimer?.cancel();
     _sleepCountdown?.cancel();

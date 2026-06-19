@@ -240,24 +240,25 @@ class MainActivity : AudioServiceActivity() {
                     val title = call.argument<String>("title") ?: "캣송"
                     val artist = call.argument<String>("artist") ?: "음악을 재생해보세요"
                     val isPlaying = call.argument<Boolean>("isPlaying") ?: false
+                    val schedule = call.argument<String>("schedule") ?: ""
                     val appWidgetManager = android.appwidget.AppWidgetManager.getInstance(this)
                     val ids = appWidgetManager.getAppWidgetIds(
                         android.content.ComponentName(this, PlayerWidget::class.java)
                     )
                     for (id in ids) {
-                        PlayerWidget.updateAppWidget(this, appWidgetManager, id, title, artist, isPlaying)
+                        PlayerWidget.updateAppWidget(this, appWidgetManager, id, title, artist, isPlaying, schedule)
                     }
                     val ids2 = appWidgetManager.getAppWidgetIds(
                         android.content.ComponentName(this, PlayerWidget2::class.java)
                     )
                     for (id in ids2) {
-                        PlayerWidget2.updateAppWidget(this, appWidgetManager, id, title, artist, isPlaying)
+                        PlayerWidget2.updateAppWidget(this, appWidgetManager, id, title, artist, isPlaying, schedule)
                     }
                     val ids3 = appWidgetManager.getAppWidgetIds(
                         android.content.ComponentName(this, PlayerWidget3::class.java)
                     )
                     for (id in ids3) {
-                        PlayerWidget3.updateAppWidget(this, appWidgetManager, id, title, artist, isPlaying)
+                        PlayerWidget3.updateAppWidget(this, appWidgetManager, id, title, artist, isPlaying, schedule)
                     }
                     result.success(true)
                 }

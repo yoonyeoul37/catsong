@@ -9,7 +9,7 @@ class AppLocalizationsKo extends AppLocalizations {
   AppLocalizationsKo([String locale = 'ko']) : super(locale);
 
   @override
-  String get appName => '캣송';
+  String get appName => '뮤직웨이브';
 
   @override
   String get songs => '곡';

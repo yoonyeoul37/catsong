@@ -136,7 +136,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           return MaterialApp(
-            title: '캣송',
+            title: '뮤직웨이브',
             debugShowCheckedModeBanner: false,
             localizationsDelegates: const [
               AppLocalizations.delegate,
@@ -153,7 +153,8 @@ class MyApp extends StatelessWidget {
             theme: AppTheme.buildTheme(themeProvider.primaryColor).copyWith(
               textTheme: AppTheme.buildTheme(themeProvider.primaryColor)
                   .textTheme
-                  .merge(themeProvider.getTextTheme()),
+                  .merge(themeProvider.getTextTheme())
+                  .apply(fontFamily: themeProvider.fontFamily.isEmpty ? 'SpoqaHanSansNeo' : themeProvider.fontFamily),
             ),
             builder: (context, child) {
               return MediaQuery(
@@ -161,8 +162,9 @@ class MyApp extends StatelessWidget {
                   textScaler: TextScaler.linear(themeProvider.textScale),
                 ),
                 child: Container(
-                  decoration: const BoxDecoration(
-                    gradient: AppTheme.backgroundGradient,
+                  decoration: BoxDecoration(
+                    gradient: AppTheme.dynamicBackgroundGradient(
+                        themeProvider.primaryColor),
                   ),
                   child: child!,
                 ),

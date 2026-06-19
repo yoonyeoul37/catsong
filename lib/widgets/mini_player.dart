@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../providers/player_provider.dart';
 import '../theme/app_theme.dart';
@@ -27,18 +28,21 @@ class MiniPlayer extends StatelessWidget {
             const PlayerScreen(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
-              return SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0, 1),
-                  end: Offset.zero,
-                ).animate(CurvedAnimation(
-                  parent: animation,
-                  curve: Curves.easeOutCubic,
-                )),
-                child: child,
+              return FadeTransition(
+                opacity: animation,
+                child: SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0, 1),
+                    end: Offset.zero,
+                  ).animate(CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeOutCubic,
+                  )),
+                  child: child,
+                ),
               );
             },
-            transitionDuration: const Duration(milliseconds: 300),
+            transitionDuration: const Duration(milliseconds: 350),
           ),
         );
       },
@@ -102,8 +106,8 @@ class MiniPlayer extends StatelessWidget {
                           BorderRadius.circular(8),
                         ),
                         child: Center(
-                          child: Image.asset(
-                            'assets/no_album.png',
+                          child: SvgPicture.asset(
+                            'assets/no_album.svg',
                             width: 30,
                             height: 30,
                             fit: BoxFit.contain,

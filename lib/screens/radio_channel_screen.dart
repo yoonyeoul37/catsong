@@ -45,9 +45,9 @@ class _RadioChannelScreenState extends State<RadioChannelScreen> {
     final current = radioProvider.currentStation;
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: const Color(0xFF0A0A0A),
       appBar: AppBar(
-        backgroundColor: AppTheme.background,
+        backgroundColor: const Color(0xFF0A0A0A),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios,

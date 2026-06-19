@@ -402,9 +402,7 @@ class SimpleAudioHandler extends BaseAudioHandler {
       ],
       androidCompactActionIndices: const [0, 1, 2],
       playing: playing,
-      processingState: playing
-          ? AudioProcessingState.ready
-          : AudioProcessingState.idle,
+      processingState: AudioProcessingState.ready,
     ));
   }
 

@@ -1,3 +1,4 @@
+import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
@@ -158,7 +159,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     super.dispose();
   }
 
-  
+
 
   @override
   Widget build(BuildContext context) {
@@ -355,88 +356,99 @@ class _PlayerScreenState extends State<PlayerScreen>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 48),
       child: Center(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            AspectRatio(
-              aspectRatio: 1,
-              child: AnimatedBuilder(
-                animation: _rotationController,
-                builder: (context, child) {
-                  return Transform.rotate(
-                    angle: _rotationController.value * 2 * pi,
-                    child: child,
-                  );
-                },
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: AnimatedBuilder(
+            animation: _rotationController,
+            builder: (context, child) {
+              return Transform.rotate(
+                angle: _rotationController.value * 2 * pi,
+                child: child,
+              );
+            },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // 바이닐 배경
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFF111111),
+                    boxShadow: [
+                      BoxShadow(
+                        color: primaryColor.withOpacity(0.3),
+                        blurRadius: 30,
+                        spreadRadius: 5,
+                      ),
+                    ],
+                  ),
+                ),
+                // 홈(groove) 라인들
+                ...List.generate(6, (i) {
+                  final factor = 0.95 - (i * 0.08);
+                  return FractionallySizedBox(
+                    widthFactor: factor,
+                    heightFactor: factor,
+                    child: Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: const Color(0xFF1A1A1A),
-                        boxShadow: [
-                          BoxShadow(
-                            color: primaryColor.withOpacity(0.3),
-                            blurRadius: 30,
-                            spreadRadius: 5,
-                          ),
-                        ],
                         border: Border.all(
-                          color: primaryColor.withOpacity(0.5),
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                    FractionallySizedBox(
-                      widthFactor: 0.8,
-                      heightFactor: 0.8,
-                      child: ClipOval(
-                        child: song.albumArt != null
-                            ? Image.memory(
-                          Uint8List.fromList(song.albumArt!),
-                          fit: BoxFit.cover,
-                          gaplessPlayback: true,
-                        )
-                            : Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                AppTheme.surfaceVariant,
-                                primaryColor.withOpacity(0.3),
-                              ],
-                            ),
-                          ),
-                          child: Center(
-                            child: Image.asset(
-                              'assets/no_album.png',
-                              width: 80,
-                              height: 80,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 20,
-                      height: 20,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppTheme.background,
-                        border: Border.all(
-                          color: primaryColor.withOpacity(0.5),
+                          color: Colors.white.withOpacity(0.04),
                           width: 1,
                         ),
                       ),
                     ),
-                  ],
+                  );
+                }),
+                // 앨범 아트 중앙
+                FractionallySizedBox(
+                  widthFactor: 0.45,
+                  heightFactor: 0.45,
+                  child: ClipOval(
+                    child: song.albumArt != null
+                        ? Image.memory(
+                      Uint8List.fromList(song.albumArt!),
+                      fit: BoxFit.cover,
+                      gaplessPlayback: true,
+                    )
+                        : Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            primaryColor.withOpacity(0.6),
+                            primaryColor.withOpacity(0.2),
+                          ],
+                        ),
+                      ),
+                      child: Center(
+                        child: SvgPicture.asset(
+                          'assets/no_album.svg',
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                // 중앙 구멍
+                Container(
+                  width: 14,
+                  height: 14,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFF0A0A0A),
+                    border: Border.all(
+                      color: primaryColor.withOpacity(0.4),
+                      width: 1,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

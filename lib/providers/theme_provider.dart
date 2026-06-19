@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  Color _primaryColor = const Color(0xFFD4AF37);
-  double _textScale = 1.5;
+  Color _primaryColor = const Color(0xFFE4D194);
+  double _textScale = 1.12;
   String _fontFamily = 'default';
 
   Color get primaryColor => _primaryColor;

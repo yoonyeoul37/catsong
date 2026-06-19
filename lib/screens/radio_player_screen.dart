@@ -54,8 +54,9 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
       if (widget.stationList != null && widget.currentIndex != null) {
         radio.setQueue(widget.stationList!, widget.currentIndex!);
       }
-      if (radio.currentStation?.name != widget.station.name ||
-          (!radio.isPlaying && !radio.isLoading)) {
+      if (radio.currentStation?.name != widget.station.name) {
+        radio.playStation(widget.station);
+      } else if (!radio.isPlaying && !radio.isLoading) {
         radio.playStation(widget.station);
       }
       final streamUrl = widget.station.streamUrl;
@@ -66,9 +67,10 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         radio.fetchMbcSchedule(stationName);
       } else if (stationName == 'SBS 파워FM' || stationName == 'SBS 러브FM') {
         radio.fetchSbsSchedule(stationName);
-      } else {
+      } else if (stationName.contains('KBS')) {
         radio.fetchSchedule(stationName);
       }
+      // CBS 등 JSON 편성표는 playStation에서 처리하므로 여기서 호출 안 함
     });
   }
 
@@ -85,7 +87,11 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     final lower = name.toLowerCase();
     return lower.contains('kbs') ||
         name.contains('MBC') ||
-        name.contains('SBS');
+        name.contains('SBS') ||
+        name.contains('CBS') ||
+        name == '국방FM' ||
+        name == 'EBS 반디' ||
+        name == 'EBS FM';
   }
 
   String _getBroadcaster(String name) {
@@ -261,7 +267,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                   const SizedBox(height: 16),
 
                   // ── 편성표 ──
-                  if (radioProvider.currentProgram != null && _isKoreanBroadcast(current.name))
+                  if (radioProvider.currentProgram != null)
                     _ProgramCard(
                       program: radioProvider.currentProgram!,
                       primaryColor: primaryColor,

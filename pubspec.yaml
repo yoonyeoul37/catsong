@@ -26,9 +26,11 @@ dependencies:
   media_kit: ^1.1.11
   media_kit_libs_android_video: ^1.0.5
   wakelock_plus: ^1.2.8
+  connectivity_plus: ^6.0.0
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.2
+  flutter_svg: ^2.0.10
 
 dev_dependencies:
   flutter_test:
@@ -47,9 +49,22 @@ flutter_launcher_icons:
 flutter:
   uses-material-design: true
   generate: true
+  fonts:
+    - family: SpoqaHanSansNeo
+      fonts:
+        - asset: assets/fonts/SpoqaHanSansNeo-Light.ttf
+          weight: 300
+        - asset: assets/fonts/SpoqaHanSansNeo-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/SpoqaHanSansNeo-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/SpoqaHanSansNeo-Bold.ttf
+          weight: 700
+
   assets:
     - assets/play_song.png
     - assets/icon_no_bg.png
     - assets/cat.png
     - assets/no_album.png
     - assets/cat_icon.png
+    - assets/no_album.svg

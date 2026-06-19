@@ -105,7 +105,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In ko, this message translates to:
-  /// **'캣송'**
+  /// **'뮤직웨이브'**
   String get appName;
 
   /// No description provided for @songs.

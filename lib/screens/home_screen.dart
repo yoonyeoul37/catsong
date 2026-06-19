@@ -362,11 +362,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              padding: const EdgeInsets.fromLTRB(25, 0, 16, 8),
               child: Row(
                 children: [
                   Text('${musicProvider.songCount} ${AppLocalizations.of(context)!.songCount}',
-                      style: const TextStyle(color: AppTheme.textHint, fontSize: 12)),
+                      style: const TextStyle(color: AppTheme.textPrimary, fontSize: 12)),
                 ],
               ),
             ),

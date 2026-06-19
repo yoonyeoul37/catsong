@@ -120,7 +120,7 @@ class RadioBroadcasterScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: const Color(0xFF0A0A0A),
       appBar: AppBar(
         backgroundColor: AppTheme.background,
         leading: IconButton(

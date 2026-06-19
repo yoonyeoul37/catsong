@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../models/song.dart';
@@ -155,12 +156,12 @@ class SongListTile extends StatelessWidget {
             width: 52,
             height: 52,
             decoration: BoxDecoration(
-              color: const Color(0xFF3A3A3A),
+              color: primaryColor.withOpacity(0.15),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Center(
-              child: Image.asset(
-                'assets/no_album.png',
+              child: SvgPicture.asset(
+                'assets/no_album.svg',
                 width: 32,
                 height: 32,
                 fit: BoxFit.contain,

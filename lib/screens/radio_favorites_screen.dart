@@ -15,9 +15,9 @@ class RadioFavoritesScreen extends StatelessWidget {
     final favorites     = radioProvider.favorites;
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: const Color(0xFF0A0A0A),
       appBar: AppBar(
-        backgroundColor: AppTheme.background,
+        backgroundColor: const Color(0xFF0A0A0A),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios,
               color: AppTheme.textPrimary),

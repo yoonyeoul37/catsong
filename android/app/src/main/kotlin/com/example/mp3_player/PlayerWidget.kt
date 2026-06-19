@@ -55,11 +55,13 @@ class PlayerWidget : AppWidgetProvider() {
             appWidgetId: Int,
             title: String = "캣송",
             artist: String = "음악을 재생해보세요",
-            isPlaying: Boolean = false
+            isPlaying: Boolean = false,
+            schedule: String = ""
         ) {
             val views = RemoteViews(context.packageName, R.layout.widget_player)
             views.setTextViewText(R.id.widget_title, title)
             views.setTextViewText(R.id.widget_artist, artist)
+            views.setTextViewText(R.id.widget_schedule, schedule)
 
             val playPauseIcon = if (isPlaying)
                 android.R.drawable.ic_media_pause

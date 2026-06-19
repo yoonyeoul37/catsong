@@ -48,6 +48,12 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
       radio.fetchMbcSchedule('MBC FM4U');
       radio.fetchSbsSchedule('SBS 파워FM');
       radio.fetchSbsSchedule('SBS 러브FM');
+      // JSON 편성표 방송국
+      radio.fetchJsonSchedule('CBS 음악FM');
+      radio.fetchJsonSchedule('CBS 표준FM');
+      radio.fetchKfnSchedule();
+      radio.fetchEbsBandiSchedule();
+      // radio.fetchEbsFmSchedule();
     });
   }
 
@@ -88,7 +94,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
     final radioProvider = context.watch<RadioProvider>();
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: const Color(0xFF0A0A0A),
       appBar: AppBar(
         backgroundColor: AppTheme.background,
         leading: IconButton(
@@ -303,7 +309,9 @@ class _StationTile extends StatelessWidget {
                         const sbsNames = ['SBS 파워FM', 'SBS 러브FM'];
                         final isMbc = mbcNames.contains(station.name);
                         final isSbs = sbsNames.contains(station.name);
-                        if (!isKbs && !isMbc && !isSbs) {
+                        final radio = ctx.watch<RadioProvider>();
+                        final hasJsonSchedule = radio.nowPlayingFor(station.name) != null;
+                        if (!isKbs && !isMbc && !isSbs && !hasJsonSchedule) {
                           return Text(
                             station.frequency.isNotEmpty
                                 ? station.frequency
@@ -314,7 +322,6 @@ class _StationTile extends StatelessWidget {
                             ),
                           );
                         }
-                        final radio = ctx.watch<RadioProvider>();
                         final nowPlaying = radio.nowPlayingFor(station.name);
                         final program = radio.currentProgramFor(station.name);
                         final start = program?['program_planned_start_time'] as String? ?? '';
@@ -341,6 +348,9 @@ class _StationTile extends StatelessWidget {
                         } else if (isSbsStation) {
                           rawStart = program?['start_time'] as String?;
                           rawEnd = program?['end_time'] as String?;
+                        } else if (hasJsonSchedule) {
+                          rawStart = program?['start_time'] as String?;
+                          rawEnd = program?['end_time'] as String?;
                         } else {
                           rawStart = start.isEmpty ? null : start;
                           rawEnd = end.isEmpty ? null : end;
@@ -356,6 +366,8 @@ class _StationTile extends StatelessWidget {
                         final timeStr = rawStart != null && rawEnd != null
                             ? isSbsStation
                             ? '${_fmtSbs(rawStart)}~${_fmtSbs(rawEnd)}'
+                            : hasJsonSchedule
+                            ? '$rawStart~$rawEnd'
                             : '${_fmt(rawStart)}~${_fmt(rawEnd)}'
                             : '';
                         return Column(
@@ -433,10 +445,12 @@ const koreanStations = <_KStation>[
   _KStation(name: 'SBS 파워FM', region: '수도권', broadcaster: 'SBS', subLabel: '서울', frequency: '107.7 MHz', streamUrl: 'http://serpent0.duckdns.org:8088/sbsfm.pls'),
   _KStation(name: 'SBS 러브FM', region: '수도권', broadcaster: 'SBS', subLabel: '서울', frequency: '103.5 MHz', streamUrl: 'http://serpent0.duckdns.org:8088/sbs2fm.pls'),
   _KStation(name: 'CBS 음악FM', region: '수도권', broadcaster: 'CBS', subLabel: '서울', frequency: '93.9 MHz', streamUrl: 'https://m-aac.cbs.co.kr/mweb_cbs939/_definst_/cbs939.stream/playlist.m3u8'),
+  _KStation(name: 'CBS 표준FM', region: '수도권', broadcaster: 'CBS', subLabel: '서울', frequency: '98.1 MHz', streamUrl: 'https://m-aac.cbs.co.kr/mweb_cbs981/_definst_/cbs981.stream/playlist.m3u8'),
   _KStation(name: 'YTN 라디오', region: '수도권', broadcaster: 'YTN', subLabel: '서울', frequency: '94.5 MHz', streamUrl: 'https://radiolive.ytn.co.kr/radio/_definst_/20211118_fmlive/playlist.m3u8'),
   _KStation(name: 'TBS FM', region: '수도권', broadcaster: 'TBS', subLabel: '서울', frequency: '95.1 MHz', streamUrl: 'https://cdnfm.tbs.seoul.kr/tbs/_definst_/tbs_fm_web_360.smil/chunklist.m3u8'),
   _KStation(name: 'TBS eFM', region: '수도권', broadcaster: 'TBS', subLabel: '서울', frequency: '101.3 MHz', streamUrl: 'https://cdnefm.tbs.seoul.kr/tbs/_definst_/tbs_efm_web_360.smil/chunklist.m3u8'),
   _KStation(name: 'EBS FM', region: '수도권', broadcaster: 'EBS', subLabel: '서울', frequency: '104.5 MHz', streamUrl: 'https://ebsonair.ebs.co.kr/fmradiofamilypc/familypc1m/playlist.m3u8'),
+  _KStation(name: 'EBS 반디', region: '수도권', broadcaster: 'EBS', subLabel: '외국어', frequency: '', streamUrl: 'https://ebsonair.ebs.co.kr/cloud1/iradio/playlist.m3u8'),
   _KStation(name: 'OBS 라디오', region: '수도권', broadcaster: 'OBS', subLabel: '경기', frequency: '90.1 MHz', streamUrl: 'https://vod3.obs.co.kr:444/live/obsstream1/radio.stream/playlist.m3u8'),
   _KStation(name: '경인방송', region: '수도권', broadcaster: 'OBS', subLabel: '인천', frequency: '90.7 MHz', streamUrl: 'https://stream.ifm.kr/live/aod1/playlist.m3u8'),
   _KStation(name: 'CPBC 가톨릭', region: '수도권', broadcaster: 'CPBC', subLabel: '서울', frequency: '101.7 MHz', streamUrl: 'http://serpent0.duckdns.org:8088/cpbc.pls'),

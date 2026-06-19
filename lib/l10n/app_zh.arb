@@ -146,5 +146,6 @@
 "styleVisualizer": "波形視覺化",
 "styleVisualizerDesc": "音波動畫",
 "styleGradient": "漸層",
-"styleGradientDesc": "專輯封面顏色漸層背景"
+"styleGradientDesc": "專輯封面顏色漸層背景",
+  "themeColorHint": "您可以在設定中變更背景顏色"
 }

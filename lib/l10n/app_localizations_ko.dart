@@ -448,4 +448,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get styleGradientDesc => '앨범아트 색상 그라데이션 배경';
+
+  @override
+  String get themeColorHint => '설정에서 배경색을 바꿀 수 있어요';
 }

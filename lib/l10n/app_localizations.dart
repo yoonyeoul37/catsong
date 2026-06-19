@@ -983,6 +983,12 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'앨범아트 색상 그라데이션 배경'**
   String get styleGradientDesc;
+
+  /// No description provided for @themeColorHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'설정에서 배경색을 바꿀 수 있어요'**
+  String get themeColorHint;
 }
 
 class _AppLocalizationsDelegate

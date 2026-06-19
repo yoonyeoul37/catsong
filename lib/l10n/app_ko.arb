@@ -146,5 +146,6 @@
 "styleVisualizer": "파형 비주얼라이저",
 "styleVisualizerDesc": "음파 애니메이션",
 "styleGradient": "그라데이션",
-"styleGradientDesc": "앨범아트 색상 그라데이션 배경"
+"styleGradientDesc": "앨범아트 색상 그라데이션 배경",
+  "themeColorHint": "설정에서 배경색을 바꿀 수 있어요"
 }

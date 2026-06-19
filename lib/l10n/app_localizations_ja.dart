@@ -449,4 +449,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get styleGradientDesc => 'アルバムアートカラーグラデーション背景';
+
+  @override
+  String get themeColorHint => '設定で背景色を変更できます';
 }

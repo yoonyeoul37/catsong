@@ -452,4 +452,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get styleGradientDesc => 'Album art color gradient background';
+
+  @override
+  String get themeColorHint =>
+      'You can change the background color in Settings';
 }

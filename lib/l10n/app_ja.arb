@@ -146,5 +146,6 @@
 "styleVisualizer": "波形ビジュアライザー",
 "styleVisualizerDesc": "音波アニメーション",
 "styleGradient": "グラデーション",
-"styleGradientDesc": "アルバムアートカラーグラデーション背景"
+"styleGradientDesc": "アルバムアートカラーグラデーション背景",
+  "themeColorHint": "設定で背景色を変更できます"
 }

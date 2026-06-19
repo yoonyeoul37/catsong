@@ -146,5 +146,6 @@
 "styleVisualizer": "Waveform Visualizer",
 "styleVisualizerDesc": "Sound wave animation",
 "styleGradient": "Gradient",
-"styleGradientDesc": "Album art color gradient background"
+"styleGradientDesc": "Album art color gradient background",
+  "themeColorHint": "You can change the background color in Settings"
 }

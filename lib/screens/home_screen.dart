@@ -22,6 +22,8 @@ import '../widgets/radio_mini_player.dart';
 import '../providers/radio_provider.dart';
 import '../l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
+import 'package:marquee/marquee.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -39,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _showBanner = false;
   bool _isSelectionMode = false;
   Set<int> _selectedSongIds = {};
+  bool _showThemeHint = false;
 
   @override
   void initState() {
@@ -51,7 +54,20 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       context.read<VideoProvider>().loadVideos();
       await _checkBanner();
+      await _checkThemeHint();
     });
+  }
+
+  Future<void> _checkThemeHint() async {
+    final prefs = await SharedPreferences.getInstance();
+    final count = prefs.getInt('theme_hint_shown_count') ?? 0;
+    if (count < 20) {
+      await prefs.setInt('theme_hint_shown_count', count + 1);
+      if (mounted) setState(() => _showThemeHint = true);
+      Future.delayed(const Duration(seconds: 20), () {
+        if (mounted) setState(() => _showThemeHint = false);
+      });
+    }
   }
 
   Future<void> _checkBanner() async {
@@ -174,21 +190,21 @@ class _HomeScreenState extends State<HomeScreen> {
         if (!_isSearching) ...[
           IconButton(
             onPressed: () => setState(() => _isSearching = true),
-            icon: const Icon(Icons.search, color: AppTheme.textPrimary, size: 26),
+            icon: const Icon(Icons.search, color: AppTheme.textPrimary, size: 23),
           ),
           IconButton(
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const RadioHomeScreen()),
             ),
-            icon: const Icon(Icons.radio, color: AppTheme.textPrimary, size: 26),
+            icon: const Icon(Icons.settings_input_antenna, color: AppTheme.textPrimary, size: 23),
           ),
           IconButton(
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const SettingsScreen()),
             ),
-            icon: const Icon(Icons.settings_outlined, color: AppTheme.textPrimary, size: 24),
+            icon: const Icon(Icons.settings_outlined, color: AppTheme.textPrimary, size: 23),
           ),
           const SizedBox(width: 4),
         ] else
@@ -327,27 +343,86 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
               child: Row(
                 children: [
-                  _buildFilterChip(AppLocalizations.of(context)!.all,
-                      !_showFavorites && !_showRecent,
-                      Theme.of(context).colorScheme.primary),
-                  const SizedBox(width: 8),
-                  _buildFilterChip(AppLocalizations.of(context)!.favorites,
-                      _showFavorites, Theme.of(context).colorScheme.primary),
-                  const SizedBox(width: 8),
-                  _buildFilterChip(AppLocalizations.of(context)!.recent,
-                      _showRecent, Theme.of(context).colorScheme.primary),
-                  const Spacer(),
+                  _buildFilterTab(
+                    AppLocalizations.of(context)!.all,
+                    !_showFavorites && !_showRecent,
+                        () => setState(() {
+                      _showFavorites = false;
+                      _showRecent = false;
+                    }),
+                    Theme.of(context).colorScheme.primary,
+                  ),
+                  _buildFilterTab(
+                    AppLocalizations.of(context)!.favorites,
+                    _showFavorites,
+                        () => setState(() {
+                      _showFavorites = true;
+                      _showRecent = false;
+                    }),
+                    Theme.of(context).colorScheme.primary,
+                  ),
+                  _buildFilterTab(
+                    AppLocalizations.of(context)!.recent,
+                    _showRecent,
+                        () => setState(() {
+                      _showFavorites = false;
+                      _showRecent = true;
+                    }),
+                    Theme.of(context).colorScheme.primary,
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 0),
+              height: 1,
+              color: Colors.white.withOpacity(0.06),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 12, 8),
+              child: Row(
+                children: [
+                  Text('${musicProvider.songCount} ${AppLocalizations.of(context)!.songCount}',
+                      style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+                  if (_showThemeHint)
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: GestureDetector(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                          ),
+                          child: SizedBox(
+                            height: 14,
+                            child: Marquee(
+                              text: '· ${AppLocalizations.of(context)!.themeColorHint}',
+                              style: const TextStyle(color: Colors.white60, fontSize: 11),
+                              scrollAxis: Axis.horizontal,
+                              blankSpace: 40,
+                              velocity: 30,
+                              pauseAfterRound: const Duration(seconds: 1),
+                              startPadding: 0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  else
+                    const Spacer(),
                   IconButton(
                     onPressed: () {
                       if (musicProvider.songs.isNotEmpty) {
                         context.read<PlayerProvider>().playFromList(musicProvider.songs, 0);
                       }
                     },
-                    icon: Icon(Icons.play_circle_filled,
-                        color: Theme.of(context).colorScheme.primary, size: 30),
+                    icon: Icon(Icons.play_arrow,
+                        color: Theme.of(context).colorScheme.primary, size: 22),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
                   IconButton(
                     onPressed: () {
@@ -356,17 +431,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         context.read<PlayerProvider>().playFromList(songs, 0);
                       }
                     },
-                    icon: const Icon(Icons.shuffle, color: AppTheme.textSecondary, size: 26),
+                    icon: const Icon(Icons.shuffle, color: AppTheme.textSecondary, size: 20),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(25, 0, 16, 8),
-              child: Row(
-                children: [
-                  Text('${musicProvider.songCount} ${AppLocalizations.of(context)!.songCount}',
-                      style: const TextStyle(color: AppTheme.textPrimary, fontSize: 12)),
                 ],
               ),
             ),
@@ -442,25 +510,26 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildFilterChip(String label, bool isSelected, Color primaryColor) {
+  Widget _buildFilterTab(String label, bool isSelected, VoidCallback onTap, Color primaryColor) {
     return GestureDetector(
-      onTap: () => setState(() {
-        _showFavorites = label == '즐겨찾기';
-        _showRecent = label == '최근';
-      }),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(right: 20),
+        padding: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
-          color: isSelected ? primaryColor : AppTheme.surfaceVariant,
-          borderRadius: BorderRadius.circular(20),
+          border: Border(
+            bottom: BorderSide(
+              color: isSelected ? primaryColor : Colors.transparent,
+              width: 2,
+            ),
+          ),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? Colors.black : AppTheme.textSecondary,
-            fontSize: 13,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            color: isSelected ? primaryColor : Colors.white70,
+            fontSize: 14,
+            fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
           ),
         ),
       ),

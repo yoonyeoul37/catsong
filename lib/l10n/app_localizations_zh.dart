@@ -449,4 +449,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get styleGradientDesc => '專輯封面顏色漸層背景';
+
+  @override
+  String get themeColorHint => '您可以在設定中變更背景顏色';
 }

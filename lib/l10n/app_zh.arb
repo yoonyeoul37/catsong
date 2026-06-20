@@ -269,5 +269,11 @@
   "sleepCountdownMS": "{minutes}分{seconds}秒",
   "sleepCountdownS": "{seconds}秒",
   "sleepAutoStopToast": "{time}後自動關閉",
-  "radioKoreaTitle": "韓國廣播"
+  "radioKoreaTitle": "韓國廣播",
+  "selectSong": "選擇歌曲",
+  "selectRange": "選擇範圍",
+  "start": "開始",
+  "end": "結束",
+  "rangeFormat": "範圍: {start} ~ {end} ({seconds}秒)",
+  "deselectAll": "取消全選"
 }

@@ -863,4 +863,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get radioKoreaTitle => 'Korea Radio';
+
+  @override
+  String get selectSong => 'Select Song';
+
+  @override
+  String get selectRange => 'Select Range';
+
+  @override
+  String get start => 'Start';
+
+  @override
+  String get end => 'End';
+
+  @override
+  String rangeFormat(Object end, Object seconds, Object start) {
+    return 'Range: $start ~ $end ($seconds sec)';
+  }
+
+  @override
+  String get deselectAll => 'Deselect All';
 }

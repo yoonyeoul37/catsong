@@ -1703,6 +1703,42 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'한국 라디오'**
   String get radioKoreaTitle;
+
+  /// No description provided for @selectSong.
+  ///
+  /// In ko, this message translates to:
+  /// **'곡 선택'**
+  String get selectSong;
+
+  /// No description provided for @selectRange.
+  ///
+  /// In ko, this message translates to:
+  /// **'구간 선택'**
+  String get selectRange;
+
+  /// No description provided for @start.
+  ///
+  /// In ko, this message translates to:
+  /// **'시작'**
+  String get start;
+
+  /// No description provided for @end.
+  ///
+  /// In ko, this message translates to:
+  /// **'끝'**
+  String get end;
+
+  /// No description provided for @rangeFormat.
+  ///
+  /// In ko, this message translates to:
+  /// **'구간: {start} ~ {end} ({seconds}초)'**
+  String rangeFormat(Object end, Object seconds, Object start);
+
+  /// No description provided for @deselectAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'선택 해제'**
+  String get deselectAll;
 }
 
 class _AppLocalizationsDelegate

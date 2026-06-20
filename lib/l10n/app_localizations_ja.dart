@@ -857,4 +857,24 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get radioKoreaTitle => '韓国ラジオ';
+
+  @override
+  String get selectSong => '曲を選択';
+
+  @override
+  String get selectRange => '範囲を選択';
+
+  @override
+  String get start => '開始';
+
+  @override
+  String get end => '終了';
+
+  @override
+  String rangeFormat(Object end, Object seconds, Object start) {
+    return '範囲: $start ~ $end ($seconds秒)';
+  }
+
+  @override
+  String get deselectAll => '選択解除';
 }

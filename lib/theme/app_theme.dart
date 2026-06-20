@@ -49,15 +49,14 @@ class AppTheme {
       1.0,
     );
     return LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
       colors: [
         bright,
         mid,
         dark,
-        const Color(0xFF080808),
       ],
-      stops: const [0.0, 0.35, 0.65, 1.0],
+      stops: const [0.0, 0.5, 1.0],
     );
   }
 

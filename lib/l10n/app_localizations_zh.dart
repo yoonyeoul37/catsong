@@ -857,4 +857,24 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get radioKoreaTitle => '韓國廣播';
+
+  @override
+  String get selectSong => '選擇歌曲';
+
+  @override
+  String get selectRange => '選擇範圍';
+
+  @override
+  String get start => '開始';
+
+  @override
+  String get end => '結束';
+
+  @override
+  String rangeFormat(Object end, Object seconds, Object start) {
+    return '範圍: $start ~ $end ($seconds秒)';
+  }
+
+  @override
+  String get deselectAll => '取消全選';
 }

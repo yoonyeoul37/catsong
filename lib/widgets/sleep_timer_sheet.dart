@@ -102,7 +102,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
               Text(
                 l.remainingTime,
                 style: const TextStyle(
-                  color: AppTheme.textHint,
+                  color: AppTheme.textSecondary,
                   fontSize: 10,
                   letterSpacing: 2,
                   fontWeight: FontWeight.w600,
@@ -123,7 +123,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
               Text(
                 l.radioAfterEnd,
                 style: const TextStyle(
-                  color: AppTheme.textHint,
+                  color: AppTheme.textSecondary,
                   fontSize: 13,
                 ),
               ),
@@ -180,7 +180,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                     const SizedBox(height: 4),
                     Text(
                       l.radioAfterEnd,
-                      style: const TextStyle(color: AppTheme.textHint, fontSize: 12),
+                      style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
                     ),
                   ],
                 ),
@@ -206,10 +206,10 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(l.sleepMinuteUnit(15), style: const TextStyle(color: Color(0xFF333333), fontSize: 10)),
-                    Text(l.sleepHourUnit(2), style: const TextStyle(color: Color(0xFF333333), fontSize: 10)),
-                    Text(l.sleepHourUnit(4), style: const TextStyle(color: Color(0xFF333333), fontSize: 10)),
-                    Text(l.sleepHourUnit(6), style: const TextStyle(color: Color(0xFF333333), fontSize: 10)),
+                    Text(l.sleepMinuteUnit(15), style: const TextStyle(color: Color(0xFF707070), fontSize: 10)),
+                    Text(l.sleepHourUnit(2), style: const TextStyle(color: Color(0xFF707070), fontSize: 10)),
+                    Text(l.sleepHourUnit(4), style: const TextStyle(color: Color(0xFF707070), fontSize: 10)),
+                    Text(l.sleepHourUnit(6), style: const TextStyle(color: Color(0xFF707070), fontSize: 10)),
                   ],
                 ),
               ),
@@ -243,7 +243,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                         child: Text(
                           opt.label,
                           style: TextStyle(
-                            color: isSelected ? primaryColor : AppTheme.textHint,
+                            color: isSelected ? primaryColor : const Color(0xFFBBBBBB),
                             fontSize: 11,
                             fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                           ),

@@ -526,7 +526,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const SizedBox(height: 16),
               Slider(
-                value: themeProvider.textScale, min: 1.13, max: 2.0, divisions: 10,
+                value: themeProvider.textScale.clamp(1.0, 2.0), min: 1.0, max: 2.0, divisions: 10,
                 label: '${(themeProvider.textScale * 100).toInt()}%',
                 onChanged: (value) { themeProvider.setTextScale(value); setDialogState(() {}); },
               ),

@@ -197,12 +197,18 @@ class _HomeScreenState extends State<HomeScreen> {
               context,
               MaterialPageRoute(builder: (_) => const RadioHomeScreen()),
             ),
-            icon: const Icon(Icons.settings_input_antenna, color: AppTheme.textPrimary, size: 23),
+            icon: const Icon(Icons.radio_outlined, color: AppTheme.textPrimary, size: 23),
           ),
           IconButton(
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const SettingsScreen()),
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) => const SettingsScreen(),
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+                transitionDuration: const Duration(milliseconds: 250),
+              ),
             ),
             icon: const Icon(Icons.settings_outlined, color: AppTheme.textPrimary, size: 23),
           ),
@@ -327,10 +333,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          _selectedSongIds = musicProvider.songs.map((s) => s.id).toSet();
+                          final allIds = musicProvider.songs.map((s) => s.id).toSet();
+                          if (_selectedSongIds.length == allIds.length) {
+                            _selectedSongIds.clear();
+                          } else {
+                            _selectedSongIds = allIds;
+                          }
                         });
                       },
-                      child: Text(AppLocalizations.of(context)!.selectAll,
+                      child: Text(
+                          _selectedSongIds.length == musicProvider.songs.length
+                              ? AppLocalizations.of(context)!.deselectAll
+                              : AppLocalizations.of(context)!.selectAll,
                           style: TextStyle(color: Theme.of(context).colorScheme.primary)),
                     ),
                     IconButton(
@@ -397,7 +411,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             MaterialPageRoute(builder: (context) => const SettingsScreen()),
                           ),
                           child: SizedBox(
-                            height: 14,
+                            height: 18,
                             child: Marquee(
                               text: '· ${AppLocalizations.of(context)!.themeColorHint}',
                               style: const TextStyle(color: Colors.white60, fontSize: 11),

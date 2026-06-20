@@ -39,7 +39,7 @@ class RadioHomeScreen extends StatelessWidget {
         ),
         title: Row(
           children: [
-            Icon(Icons.radio, color: primaryColor, size: 24),
+            Icon(Icons.radio_outlined, color: primaryColor, size: 24),
             const SizedBox(width: 8),
             Text(AppLocalizations.of(context)!.radioTitle, style: TextStyle(color: primaryColor, fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -0.5)),
           ],

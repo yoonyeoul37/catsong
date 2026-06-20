@@ -88,7 +88,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Select Song',
+            Text(AppLocalizations.of(context)!.selectSong,
                 style: TextStyle(
                     color: primaryColor,
                     fontSize: 13,
@@ -137,7 +137,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
             const SizedBox(height: 24),
 
             if (_selectedSong != null) ...[
-              Text('Select Range',
+              Text(AppLocalizations.of(context)!.selectRange,
                   style: TextStyle(
                       color: primaryColor,
                       fontSize: 13,
@@ -147,10 +147,10 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
 
               Row(
                 children: [
-                  const SizedBox(
+                  SizedBox(
                       width: 50,
-                      child: Text('Start',
-                          style: TextStyle(color: AppTheme.textSecondary))),
+                      child: Text(AppLocalizations.of(context)!.start,
+                          style: const TextStyle(color: AppTheme.textSecondary))),
                   Expanded(
                     child: Slider(
                       value: _startValue,
@@ -174,10 +174,10 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
 
               Row(
                 children: [
-                  const SizedBox(
+                  SizedBox(
                       width: 50,
-                      child: Text('End',
-                          style: TextStyle(color: AppTheme.textSecondary))),
+                      child: Text(AppLocalizations.of(context)!.end,
+                          style: const TextStyle(color: AppTheme.textSecondary))),
                   Expanded(
                     child: Slider(
                       value: _endValue,
@@ -202,7 +202,11 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
               const SizedBox(height: 8),
               Center(
                 child: Text(
-                  'Range: ${_formatTime(_startValue.toInt())} ~ ${_formatTime(_endValue.toInt())} (${(_endValue - _startValue).toInt()} sec)',
+                  AppLocalizations.of(context)!.rangeFormat(
+                    _formatTime(_startValue.toInt()),
+                    _formatTime(_endValue.toInt()),
+                    (_endValue - _startValue).toInt(),
+                  ),
                   style: TextStyle(color: primaryColor, fontSize: 14),
                 ),
               ),
@@ -237,7 +241,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
-                    _isPlaying ? 'Playing...' : 'Preview',
+                    _isPlaying ? AppLocalizations.of(context)!.playing : AppLocalizations.of(context)!.preview,
                     style: TextStyle(color: primaryColor, fontSize: 12),
                   ),
                 ),

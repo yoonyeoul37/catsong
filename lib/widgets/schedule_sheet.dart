@@ -186,7 +186,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                     Icon(Icons.access_time,
                         color: _selectedTime != null
                             ? primaryColor
-                            : AppTheme.textHint,
+                            : AppTheme.textSecondary,
                         size: 20),
                     const SizedBox(width: 8),
                     Text(
@@ -196,7 +196,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                       style: TextStyle(
                         color: _selectedTime != null
                             ? primaryColor
-                            : AppTheme.textHint,
+                            : AppTheme.textSecondary,
                         fontSize: 15,
                         fontWeight: _selectedTime != null
                             ? FontWeight.bold
@@ -404,7 +404,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                   backgroundColor: primaryColor,
                   foregroundColor: Colors.black,
                   disabledBackgroundColor: AppTheme.cardColor,
-                  disabledForegroundColor: AppTheme.textHint,
+                  disabledForegroundColor: AppTheme.textSecondary,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14)),

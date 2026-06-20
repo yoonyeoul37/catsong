@@ -856,4 +856,24 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get radioKoreaTitle => '한국 라디오';
+
+  @override
+  String get selectSong => '곡 선택';
+
+  @override
+  String get selectRange => '구간 선택';
+
+  @override
+  String get start => '시작';
+
+  @override
+  String get end => '끝';
+
+  @override
+  String rangeFormat(Object end, Object seconds, Object start) {
+    return '구간: $start ~ $end ($seconds초)';
+  }
+
+  @override
+  String get deselectAll => '선택 해제';
 }

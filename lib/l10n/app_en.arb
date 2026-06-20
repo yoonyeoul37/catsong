@@ -266,5 +266,11 @@
   "sleepCountdownMS": "{minutes}m {seconds}s",
   "sleepCountdownS": "{seconds}s",
   "sleepAutoStopToast": "Turns off automatically in {time}",
-  "radioKoreaTitle": "Korea Radio"
+  "radioKoreaTitle": "Korea Radio",
+  "selectSong": "Select Song",
+  "selectRange": "Select Range",
+  "start": "Start",
+  "end": "End",
+  "rangeFormat": "Range: {start} ~ {end} ({seconds} sec)",
+  "deselectAll": "Deselect All"
 }

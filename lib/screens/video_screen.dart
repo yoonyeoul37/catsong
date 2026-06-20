@@ -5,18 +5,76 @@ import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:permission_handler/permission_handler.dart';
 import '../providers/video_provider.dart';
 import '../models/video.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 
-class VideoScreen extends StatelessWidget {
+class VideoScreen extends StatefulWidget {
   const VideoScreen({super.key});
+
+  @override
+  State<VideoScreen> createState() => _VideoScreenState();
+}
+
+class _VideoScreenState extends State<VideoScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = context.read<VideoProvider>();
+      if (!provider.hasPermission && provider.videos.isEmpty) {
+        provider.requestPermissionAndLoad();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final videoProvider = context.watch<VideoProvider>();
     final primaryColor = Theme.of(context).colorScheme.primary;
+
+    if (videoProvider.permissionDenied) {
+      return Scaffold(
+        backgroundColor: AppTheme.background,
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.video_library_outlined,
+                    size: 72, color: primaryColor.withOpacity(0.5)),
+                const SizedBox(height: 24),
+                Text(AppLocalizations.of(context)!.videoPermissionRequired,
+                    style: const TextStyle(
+                        color: AppTheme.textPrimary,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold)),
+                const SizedBox(height: 12),
+                Text(AppLocalizations.of(context)!.videoPermissionMessage,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        color: AppTheme.textSecondary, fontSize: 14, height: 1.6)),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: () => openAppSettings(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryColor,
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  ),
+                  child: Text(AppLocalizations.of(context)!.openSettings,
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
 
     if (videoProvider.isLoading) {
       return Scaffold(

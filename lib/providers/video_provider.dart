@@ -1,17 +1,41 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../models/video.dart';
 
 class VideoProvider extends ChangeNotifier {
   List<Video> _videos = [];
   bool _isLoading = false;
   String _errorMessage = '';
+  bool _hasPermission = false;
+  bool _permissionDenied = false;
 
   static const _channel = MethodChannel('kr.ssing.catsong/media');
 
   List<Video> get videos => _videos;
   bool get isLoading => _isLoading;
   String get errorMessage => _errorMessage;
+  bool get hasPermission => _hasPermission;
+  bool get permissionDenied => _permissionDenied;
+
+  Future<void> requestPermissionAndLoad() async {
+    _isLoading = true;
+    _permissionDenied = false;
+    notifyListeners();
+
+    final status = await Permission.videos.request();
+
+    if (status.isGranted) {
+      _hasPermission = true;
+      _permissionDenied = false;
+      await loadVideos();
+    } else {
+      _hasPermission = false;
+      _permissionDenied = true;
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 
   Future<void> loadVideos() async {
     _isLoading = true;

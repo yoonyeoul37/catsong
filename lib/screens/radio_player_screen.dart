@@ -1065,14 +1065,14 @@ class _BottomBarItem extends StatelessWidget {
               children: [
                 Icon(
                   icon,
-                  color: AppTheme.textHint,
+                  color: AppTheme.textSecondary,
                   size: 22,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   label,
                   style: const TextStyle(
-                    color: AppTheme.textHint,
+                    color: AppTheme.textSecondary,
                     fontSize: 10,
                   ),
                 ),

@@ -349,7 +349,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reset => '重置';
 
   @override
-  String get reviewTitle => '您喜歡 cat song 嗎？';
+  String get reviewTitle => '您喜歡 MusicWave 嗎？';
 
   @override
   String get reviewMessage => '請留下評分！\n這將幫助我們改善應用程式 😊';

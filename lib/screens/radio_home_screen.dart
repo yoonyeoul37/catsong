@@ -120,7 +120,7 @@ class _CountryCard extends StatelessWidget {
                     country.code == 'KR'
                         ? '${koreanStations.length}${AppLocalizations.of(context)!.radioChannelCount}'
                         : AppLocalizations.of(context)!.radioPopular200,
-                    style: const TextStyle(color: AppTheme.textHint, fontSize: 11),
+                    style: const TextStyle(color: AppTheme.textSecondary, fontSize: 11),
                   ),
                 ],
               ),
@@ -262,7 +262,7 @@ class _SectionHeader extends StatelessWidget {
         Text(
           title,
           style: const TextStyle(
-            color: Color(0xFF666666),
+            color: Color(0xFF999999),
             fontSize: 11,
             fontWeight: FontWeight.w700,
             letterSpacing: 1.5,

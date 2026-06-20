@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
@@ -229,81 +230,72 @@ class _AppInitializerState extends State<AppInitializer> {
       context: context,
       barrierDismissible: false,
       builder: (ctx) => Dialog(
-        backgroundColor: const Color(0xFF1E1E1E),
+        backgroundColor: const Color(0xFF1A1A1A),
         shape:
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.fromLTRB(28, 32, 28, 24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: 72,
-                height: 72,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      primaryColor.withOpacity(0.8),
-                      primaryColor,
-                    ],
-                  ),
-                ),
-                child: const Icon(Icons.music_note,
-                    color: Colors.black, size: 36),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                    5,
+                        (i) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      child: Icon(Icons.star_rounded,
+                          color: primaryColor, size: 26),
+                    )),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
               Text(
                 l.reviewTitle,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               Text(
                 l.reviewMessage,
                 style: const TextStyle(
-                  color: Colors.white60,
+                  color: Colors.white54,
                   fontSize: 13,
                   height: 1.5,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                    5,
-                        (i) => Icon(Icons.star_rounded,
-                        color: primaryColor, size: 28)),
-              ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 28),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
+                child: TextButton(
                   onPressed: () async {
                     Navigator.pop(ctx);
                     await prefs.setInt('last_review_request',
                         DateTime.now().millisecondsSinceEpoch);
+                    final uri = Uri.parse(
+                        'https://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                    try {
+                      await launchUrl(uri,
+                          mode: LaunchMode.externalApplication);
+                    } catch (e) {}
                   },
-                  style: ElevatedButton.styleFrom(
+                  style: TextButton.styleFrom(
                     backgroundColor: primaryColor,
                     foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: const EdgeInsets.symmetric(vertical: 13),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14)),
+                        borderRadius: BorderRadius.circular(10)),
                   ),
                   child: Text(l.reviewButton,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 15)),
+                          fontWeight: FontWeight.w600, fontSize: 14)),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 4),
               SizedBox(
                 width: double.infinity,
                 child: TextButton(

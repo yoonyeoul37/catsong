@@ -348,7 +348,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get reset => '초기화';
 
   @override
-  String get reviewTitle => '캣송이 마음에 드시나요?';
+  String get reviewTitle => '뮤직웨이브가 마음에 드시나요?';
 
   @override
   String get reviewMessage => '별점을 남겨주시면\n앱 개선에 큰 도움이 됩니다 😊';

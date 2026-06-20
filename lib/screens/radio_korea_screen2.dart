@@ -133,7 +133,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
           isScrollable: true,
           indicatorColor: primaryColor,
           labelColor: primaryColor,
-          unselectedLabelColor: AppTheme.textHint,
+          unselectedLabelColor: AppTheme.textSecondary,
           labelStyle: const TextStyle(
               fontSize: 14, fontWeight: FontWeight.bold),
           unselectedLabelStyle: const TextStyle(fontSize: 14),
@@ -335,7 +335,7 @@ class _StationTile extends StatelessWidget {
                                 ? station.frequency
                                 : '',
                             style: const TextStyle(
-                              color: AppTheme.textHint,
+                              color: Color(0xFF707070),
                               fontSize: 12,
                             ),
                           );
@@ -408,7 +408,7 @@ class _StationTile extends StatelessWidget {
                                 if (timeStr.isNotEmpty) timeStr,
                               ].join(' · '),
                               style: const TextStyle(
-                                color: AppTheme.textHint,
+                                color: Color(0xFF707070),
                                 fontSize: 11,
                               ),
                             ),

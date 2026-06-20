@@ -783,7 +783,7 @@ abstract class AppLocalizations {
   /// No description provided for @reviewTitle.
   ///
   /// In ko, this message translates to:
-  /// **'캣송이 마음에 드시나요?'**
+  /// **'뮤직웨이브가 마음에 드시나요?'**
   String get reviewTitle;
 
   /// No description provided for @reviewMessage.

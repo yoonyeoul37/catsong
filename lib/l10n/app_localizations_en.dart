@@ -351,7 +351,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reset => 'Reset';
 
   @override
-  String get reviewTitle => 'Do you enjoy CatSong?';
+  String get reviewTitle => 'Do you enjoy MusicWave?';
 
   @override
   String get reviewMessage =>

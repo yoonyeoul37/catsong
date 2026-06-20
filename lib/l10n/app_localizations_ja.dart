@@ -349,7 +349,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get reset => 'リセット';
 
   @override
-  String get reviewTitle => 'cat songはいかがですか？';
+  String get reviewTitle => 'MusicWaveはいかがですか？';
 
   @override
   String get reviewMessage => '評価を残していただけると\nアプリ改善に大変役立ちます 😊';

@@ -452,4 +452,89 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get themeColorHint => '設定で背景色を変更できます';
+
+  @override
+  String get hourWord => '時間';
+
+  @override
+  String autoStopFormat(Object time) {
+    return '$time後に自動的にオフになります';
+  }
+
+  @override
+  String get autoStopCountdownSuffix => '後に自動終了';
+
+  @override
+  String get secondShort => '秒';
+
+  @override
+  String get unknownArtist => '不明なアーティスト';
+
+  @override
+  String get unknownAlbum => '不明なアルバム';
+
+  @override
+  String get noTitle => 'タイトルなし';
+
+  @override
+  String selectedCount(Object count) {
+    return '$count件選択';
+  }
+
+  @override
+  String get selectAll => 'すべて選択';
+
+  @override
+  String get deleteSelected => '選択を削除';
+
+  @override
+  String deleteSelectedConfirm(Object count) {
+    return '$count曲を削除しますか？\n端末から完全に削除されます。';
+  }
+
+  @override
+  String deletedCount(Object count) {
+    return '$count件削除しました';
+  }
+
+  @override
+  String get noVideosFound => '動画が見つかりません';
+
+  @override
+  String videoCount(Object count) {
+    return '$count件';
+  }
+
+  @override
+  String get rename => '名前を変更';
+
+  @override
+  String get deleteVideoTitle => '動画を削除';
+
+  @override
+  String deleteVideoConfirm(Object name) {
+    return '$nameを削除しますか？';
+  }
+
+  @override
+  String get nameChanged => '名前が変更されました';
+
+  @override
+  String renameFailed(Object error) {
+    return '名前変更に失敗しました: $error';
+  }
+
+  @override
+  String deleteFailedWithError(Object error) {
+    return '削除に失敗しました: $error';
+  }
+
+  @override
+  String get videoPermissionRequired => '動画アクセス権限が必要です';
+
+  @override
+  String get videoPermissionMessage => '動画を表示するには\nアクセス権限が必要です。';
+
+  @override
+  String get openSettings => '設定を開く';
 }

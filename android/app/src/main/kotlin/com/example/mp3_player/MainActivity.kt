@@ -18,6 +18,9 @@ class MainActivity : AudioServiceActivity() {
     private var bassBoost: android.media.audiofx.BassBoost? = null
     private var virtualizer: android.media.audiofx.Virtualizer? = null
     private var deleteResult: MethodChannel.Result? = null
+    private var renameResult: MethodChannel.Result? = null
+    private var pendingRenameName: String? = null
+    private var pendingRenameUri: android.net.Uri? = null
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: android.content.Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -28,6 +31,27 @@ class MainActivity : AudioServiceActivity() {
                 deleteResult?.success(false)
             }
             deleteResult = null
+        }
+        if (requestCode == 103) {
+            android.util.Log.d("RenameVideo", "onActivityResult 103 호출됨, resultCode=$resultCode")
+            if (resultCode == android.app.Activity.RESULT_OK) {
+                val uri = pendingRenameUri
+                val newName = pendingRenameName
+                android.util.Log.d("RenameVideo", "uri=$uri, newName=$newName")
+                if (uri != null && newName != null) {
+                    val success = doRenameVideo(uri, newName)
+                    android.util.Log.d("RenameVideo", "doRenameVideo 결과=$success")
+                    renameResult?.success(success)
+                } else {
+                    renameResult?.success(false)
+                }
+            } else {
+                android.util.Log.d("RenameVideo", "사용자가 거부했거나 resultCode 다름")
+                renameResult?.success(false)
+            }
+            renameResult = null
+            pendingRenameUri = null
+            pendingRenameName = null
         }
     }
 
@@ -136,12 +160,28 @@ class MainActivity : AudioServiceActivity() {
                     }
                 }
                 "getVideoList" -> {
-                    result.success(getVideoList())
+                    val list = getVideoList()
+                    android.util.Log.d("RenameVideo", "getVideoList 결과: $list")
+                    result.success(list)
                 }
                 "getVideoThumbnail" -> {
                     val path = call.argument<String>("path")
                     if (path != null) result.success(getVideoThumbnail(path))
                     else result.success(null)
+                }
+                "renameVideo" -> {
+                    val uri = call.argument<String>("uri")
+                    val newName = call.argument<String>("newName")
+                    if (uri != null && newName != null) {
+                        renameVideo(uri, newName, result)
+                    } else result.success(false)
+                }
+                "refreshMediaStore" -> {
+                    android.media.MediaScannerConnection.scanFile(
+                        this, arrayOf(android.os.Environment.getExternalStorageDirectory().absolutePath),
+                        null, null
+                    )
+                    result.success(true)
                 }
                 "deleteSong" -> {
                     val uri = call.argument<String>("uri")
@@ -420,23 +460,25 @@ class MainActivity : AudioServiceActivity() {
         val videos = mutableListOf<Map<String, Any?>>()
         val projection = arrayOf(
             MediaStore.Video.Media._ID,
-            MediaStore.Video.Media.TITLE,
+            MediaStore.Video.Media.DISPLAY_NAME,
             MediaStore.Video.Media.DURATION,
             MediaStore.Video.Media.DATA
         )
         val cursor = contentResolver.query(
             MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
             projection, null, null,
-            MediaStore.Video.Media.TITLE + " ASC"
+            MediaStore.Video.Media.DISPLAY_NAME + " ASC"
         )
         cursor?.use {
-            val titleColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE)
+            val nameColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
             val durationColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION)
             val dataColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
             while (it.moveToNext()) {
                 val path = it.getString(dataColumn)
+                val displayName = it.getString(nameColumn) ?: ""
+                val titleWithoutExt = displayName.substringBeforeLast('.')
                 videos.add(mapOf(
-                    "title" to it.getString(titleColumn),
+                    "title" to titleWithoutExt,
                     "duration" to it.getLong(durationColumn),
                     "uri" to path
                 ))
@@ -457,5 +499,75 @@ class MainActivity : AudioServiceActivity() {
                 stream.toByteArray()
             } else null
         } catch (e: Exception) { null }
+    }
+
+    private fun doRenameVideo(videoUri: android.net.Uri, newName: String): Boolean {
+        return try {
+            var extension = "mp4"
+            val cursor = contentResolver.query(
+                videoUri, arrayOf(MediaStore.Video.Media.DISPLAY_NAME), null, null, null
+            )
+            cursor?.use {
+                if (it.moveToFirst()) {
+                    val oldDisplayName = it.getString(0) ?: ""
+                    val dotIndex = oldDisplayName.lastIndexOf('.')
+                    if (dotIndex != -1) {
+                        extension = oldDisplayName.substring(dotIndex + 1)
+                    }
+                }
+            }
+            val newDisplayName = if (newName.contains('.')) newName else "$newName.$extension"
+            val values = ContentValues().apply {
+                put(MediaStore.Video.Media.TITLE, newName)
+                put(MediaStore.Video.Media.DISPLAY_NAME, newDisplayName)
+            }
+            val updated = contentResolver.update(videoUri, values, null, null)
+            contentResolver.notifyChange(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null)
+            updated > 0
+        } catch (e: Exception) {
+            android.util.Log.e("RenameVideo", "Error: ${e.message}", e)
+            false
+        }
+    }
+
+    private fun renameVideo(path: String, newName: String, result: MethodChannel.Result) {
+        android.util.Log.d("RenameVideo", "renameVideo 호출됨, path=$path, newName=$newName")
+        try {
+            val cursor = contentResolver.query(
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                arrayOf(MediaStore.Video.Media._ID),
+                "${MediaStore.Video.Media.DATA}=?",
+                arrayOf(path), null
+            )
+            cursor?.use {
+                if (it.moveToFirst()) {
+                    val id = it.getLong(it.getColumnIndexOrThrow(MediaStore.Video.Media._ID))
+                    val videoUri = android.net.Uri.withAppendedPath(
+                        MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id.toString()
+                    )
+                    android.util.Log.d("RenameVideo", "videoUri 찾음: $videoUri")
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                        renameResult = result
+                        pendingRenameUri = videoUri
+                        pendingRenameName = newName
+                        val pendingIntent = MediaStore.createWriteRequest(
+                            contentResolver, listOf(videoUri)
+                        )
+                        android.util.Log.d("RenameVideo", "권한 요청 시작")
+                        startIntentSenderForResult(
+                            pendingIntent.intentSender, 103, null, 0, 0, 0
+                        )
+                    } else {
+                        result.success(doRenameVideo(videoUri, newName))
+                    }
+                } else {
+                    android.util.Log.d("RenameVideo", "DB에서 영상을 못 찾음")
+                    result.success(false)
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("RenameVideo", "Error: ${e.message}", e)
+            result.success(false)
+        }
     }
 }

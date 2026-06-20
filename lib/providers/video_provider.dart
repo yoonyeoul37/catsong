@@ -19,6 +19,10 @@ class VideoProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
+      try {
+        await _channel.invokeMethod('refreshMediaStore');
+        await Future.delayed(const Duration(milliseconds: 300));
+      } catch (e) {}
       final result = await _channel.invokeMethod('getVideoList');
       final List<Video> foundVideos = [];
       int idCounter = 0;

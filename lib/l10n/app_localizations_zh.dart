@@ -452,4 +452,89 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get themeColorHint => '您可以在設定中變更背景顏色';
+
+  @override
+  String get hourWord => '小時';
+
+  @override
+  String autoStopFormat(Object time) {
+    return '$time後自動關閉';
+  }
+
+  @override
+  String get autoStopCountdownSuffix => '後自動結束';
+
+  @override
+  String get secondShort => '秒';
+
+  @override
+  String get unknownArtist => '未知藝術家';
+
+  @override
+  String get unknownAlbum => '未知專輯';
+
+  @override
+  String get noTitle => '無標題';
+
+  @override
+  String selectedCount(Object count) {
+    return '已選擇$count項';
+  }
+
+  @override
+  String get selectAll => '全選';
+
+  @override
+  String get deleteSelected => '刪除所選';
+
+  @override
+  String deleteSelectedConfirm(Object count) {
+    return '要刪除$count首歌曲嗎？\n將從裝置中永久刪除。';
+  }
+
+  @override
+  String deletedCount(Object count) {
+    return '已刪除$count項';
+  }
+
+  @override
+  String get noVideosFound => '找不到影片';
+
+  @override
+  String videoCount(Object count) {
+    return '$count部';
+  }
+
+  @override
+  String get rename => '重新命名';
+
+  @override
+  String get deleteVideoTitle => '刪除影片';
+
+  @override
+  String deleteVideoConfirm(Object name) {
+    return '要刪除$name嗎？';
+  }
+
+  @override
+  String get nameChanged => '名稱已變更';
+
+  @override
+  String renameFailed(Object error) {
+    return '重新命名失敗：$error';
+  }
+
+  @override
+  String deleteFailedWithError(Object error) {
+    return '刪除失敗：$error';
+  }
+
+  @override
+  String get videoPermissionRequired => '需要影片存取權限';
+
+  @override
+  String get videoPermissionMessage => '需要存取權限\n才能觀看影片。';
+
+  @override
+  String get openSettings => '開啟設定';
 }

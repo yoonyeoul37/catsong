@@ -1,3 +1,5 @@
+import '../l10n/locale_holder.dart';
+
 class Song {
   final int id;
    String title;
@@ -33,13 +35,20 @@ class Song {
    return '$minutes:${seconds.toString().padLeft(2, '0')}';
  }
 
-  String get artistDisplay =>
-      (artist.isEmpty || artist == '<unknown>') ? '알 수 없는 아티스트' : artist;
+  String get artistDisplay {
+    if (artist.isNotEmpty && artist != '<unknown>') return artist;
+    return AppLocale.current?.unknownArtist ?? '알 수 없는 아티스트';
+  }
 
-  String get albumDisplay =>
-      (album.isEmpty || album == '<unknown>') ? '알 수 없는 앨범' : album;
+  String get albumDisplay {
+    if (album.isNotEmpty && album != '<unknown>') return album;
+    return AppLocale.current?.unknownAlbum ?? '알 수 없는 앨범';
+  }
 
-  String get titleDisplay => title.isEmpty ? '제목 없음' : title;
+  String get titleDisplay {
+    if (title.isNotEmpty) return title;
+    return AppLocale.current?.noTitle ?? '제목 없음';
+  }
 
   
 

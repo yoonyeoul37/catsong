@@ -95,13 +95,13 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.surfaceVariant,
-        title: const Text('선택 삭제', style: TextStyle(color: AppTheme.textPrimary)),
-        content: Text('${_selectedSongIds.length}개 곡을 삭제할까요?\n기기에서 영구 삭제됩니다.',
+        title: Text(AppLocalizations.of(context)!.deleteSelected, style: const TextStyle(color: AppTheme.textPrimary)),
+        content: Text(AppLocalizations.of(context)!.deleteSelectedConfirm(_selectedSongIds.length),
             style: const TextStyle(color: AppTheme.textSecondary)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('취소', style: TextStyle(color: AppTheme.textHint)),
+            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: AppTheme.textHint)),
           ),
           TextButton(
             onPressed: () async {
@@ -129,14 +129,14 @@ class _HomeScreenState extends State<HomeScreen> {
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('$successCount개 삭제됐습니다'),
+                    content: Text(AppLocalizations.of(context)!.deletedCount(successCount)),
                     backgroundColor: Colors.redAccent,
                     duration: const Duration(seconds: 2),
                   ),
                 );
               }
             },
-            child: const Text('삭제', style: TextStyle(color: Colors.redAccent)),
+            child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.redAccent)),
           ),
         ],
       ),
@@ -320,7 +320,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       }),
                     ),
                     Text(
-                      '${_selectedSongIds.length}개 선택됨',
+                      AppLocalizations.of(context)!.selectedCount(_selectedSongIds.length),
                       style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                     const Spacer(),
@@ -330,7 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           _selectedSongIds = musicProvider.songs.map((s) => s.id).toSet();
                         });
                       },
-                      child: Text('전체선택',
+                      child: Text(AppLocalizations.of(context)!.selectAll,
                           style: TextStyle(color: Theme.of(context).colorScheme.primary)),
                     ),
                     IconButton(

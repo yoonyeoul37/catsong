@@ -1,13 +1,14 @@
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
+import 'dart:io';
+import 'dart:typed_data';
 import '../providers/video_provider.dart';
 import '../models/video.dart';
 import '../theme/app_theme.dart';
+import '../l10n/app_localizations.dart';
 
 class VideoScreen extends StatelessWidget {
   const VideoScreen({super.key});
@@ -36,8 +37,8 @@ class VideoScreen extends StatelessWidget {
               Icon(Icons.video_library_outlined,
                   size: 72, color: primaryColor.withOpacity(0.4)),
               const SizedBox(height: 16),
-              const Text('동영상이 없습니다',
-                  style: TextStyle(
+              Text(AppLocalizations.of(context)!.noVideosFound,
+                  style: const TextStyle(
                       color: AppTheme.textSecondary, fontSize: 16)),
             ],
           ),
@@ -61,12 +62,12 @@ class VideoScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('동영상',
-                          style: TextStyle(
+                      Text(AppLocalizations.of(context)!.videos,
+                          style: const TextStyle(
                               color: AppTheme.textPrimary,
                               fontSize: 18,
                               fontWeight: FontWeight.bold)),
-                      Text('${videoProvider.videos.length}개',
+                      Text(AppLocalizations.of(context)!.videoCount(videoProvider.videos.length),
                           style: const TextStyle(
                               color: AppTheme.textSecondary, fontSize: 13)),
                     ],
@@ -143,28 +144,30 @@ class _VideoTileState extends State<_VideoTile> {
       backgroundColor: AppTheme.surfaceVariant,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
-      builder: (ctx) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            leading: Icon(Icons.edit, color: primaryColor),
-            title: const Text('이름 변경',
-                style: TextStyle(color: AppTheme.textPrimary)),
-            onTap: () {
-              Navigator.pop(ctx);
-              _renameVideo(context);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.delete, color: Colors.redAccent),
-            title: const Text('삭제',
-                style: TextStyle(color: AppTheme.textPrimary)),
-            onTap: () {
-              Navigator.pop(ctx);
-              _deleteVideo(context);
-            },
-          ),
-        ],
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(Icons.edit, color: primaryColor),
+              title: Text(AppLocalizations.of(context)!.rename,
+                  style: const TextStyle(color: AppTheme.textPrimary)),
+              onTap: () {
+                Navigator.pop(ctx);
+                _renameVideo(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete, color: Colors.redAccent),
+              title: Text(AppLocalizations.of(context)!.delete,
+                  style: const TextStyle(color: AppTheme.textPrimary)),
+              onTap: () {
+                Navigator.pop(ctx);
+                _deleteVideo(context);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -176,8 +179,8 @@ class _VideoTileState extends State<_VideoTile> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.surfaceVariant,
-        title: const Text('이름 변경',
-            style: TextStyle(color: AppTheme.textPrimary)),
+        title: Text(AppLocalizations.of(context)!.rename,
+            style: const TextStyle(color: AppTheme.textPrimary)),
         content: TextField(
           controller: controller,
           autofocus: true,
@@ -192,12 +195,12 @@ class _VideoTileState extends State<_VideoTile> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('취소',
-                style: TextStyle(color: AppTheme.textHint)),
+            child: Text(AppLocalizations.of(context)!.cancel,
+                style: const TextStyle(color: AppTheme.textHint)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, controller.text),
-            child: Text('변경', style: TextStyle(color: primaryColor)),
+            child: Text(AppLocalizations.of(context)!.save, style: TextStyle(color: primaryColor)),
           ),
         ],
       ),
@@ -212,14 +215,18 @@ class _VideoTileState extends State<_VideoTile> {
         context.read<VideoProvider>().loadVideos();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('이름이 변경됐습니다'),
+            content: Text(AppLocalizations.of(context)!.nameChanged,
+                style: const TextStyle(color: Colors.white)),
             backgroundColor: AppTheme.surfaceVariant,
             duration: const Duration(seconds: 2),
           ),
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('이름 변경 실패: $e')),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.renameFailed(e.toString()),
+                style: const TextStyle(color: Colors.white)),
+          ),
         );
       }
     }
@@ -230,20 +237,20 @@ class _VideoTileState extends State<_VideoTile> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.surfaceVariant,
-        title: const Text('동영상 삭제',
-            style: TextStyle(color: AppTheme.textPrimary)),
-        content: Text('${widget.video.titleDisplay}을 삭제할까요?',
+        title: Text(AppLocalizations.of(context)!.deleteVideoTitle,
+            style: const TextStyle(color: AppTheme.textPrimary)),
+        content: Text(AppLocalizations.of(context)!.deleteVideoConfirm(widget.video.titleDisplay),
             style: const TextStyle(color: AppTheme.textSecondary)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('취소',
-                style: TextStyle(color: AppTheme.textHint)),
+            child: Text(AppLocalizations.of(context)!.cancel,
+                style: const TextStyle(color: AppTheme.textHint)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('삭제',
-                style: TextStyle(color: Colors.redAccent)),
+            child: Text(AppLocalizations.of(context)!.delete,
+                style: const TextStyle(color: Colors.redAccent)),
           ),
         ],
       ),
@@ -254,15 +261,15 @@ class _VideoTileState extends State<_VideoTile> {
         await _channel.invokeMethod('deleteVideo', {'uri': widget.video.uri});
         context.read<VideoProvider>().loadVideos();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('삭제됐습니다'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.deleted),
             backgroundColor: Colors.redAccent,
-            duration: Duration(seconds: 2),
+            duration: const Duration(seconds: 2),
           ),
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('삭제 실패: $e')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.deleteFailedWithError(e.toString()))),
         );
       }
     }
@@ -412,23 +419,23 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12)),
             itemBuilder: (context) => [
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'rename',
                             child: Row(
                               children: [
-                                Icon(Icons.edit, color: Colors.white, size: 18),
-                                SizedBox(width: 10),
-                                Text('이름 변경', style: TextStyle(color: Colors.white)),
+                                const Icon(Icons.edit, color: Colors.white, size: 18),
+                                const SizedBox(width: 10),
+                                Text(AppLocalizations.of(context)!.rename, style: const TextStyle(color: Colors.white)),
                               ],
                             ),
                           ),
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'delete',
                 child: Row(
                   children: [
-                    Icon(Icons.delete, color: Colors.redAccent, size: 18),
-                    SizedBox(width: 10),
-                    Text('삭제', style: TextStyle(color: Colors.white)),
+                    const Icon(Icons.delete, color: Colors.redAccent, size: 18),
+                    const SizedBox(width: 10),
+                    Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.white)),
                   ],
                 ),
               ),
@@ -440,8 +447,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                               context: context,
                               builder: (ctx) => AlertDialog(
                                 backgroundColor: AppTheme.surfaceVariant,
-                                title: const Text('이름 변경',
-                                    style: TextStyle(color: AppTheme.textPrimary)),
+                                title: Text(AppLocalizations.of(context)!.rename,
+                                    style: const TextStyle(color: AppTheme.textPrimary)),
                                 content: TextField(
                                   controller: controller,
                                   autofocus: true,
@@ -456,13 +463,13 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(ctx),
-                                    child: const Text('취소',
-                                        style: TextStyle(color: AppTheme.textHint)),
+                                    child: Text(AppLocalizations.of(context)!.cancel,
+                                        style: const TextStyle(color: AppTheme.textHint)),
                                   ),
                                   TextButton(
                                     onPressed: () => Navigator.pop(ctx, controller.text),
-                                    child: const Text('변경',
-                                        style: TextStyle(color: Colors.white)),
+                                    child: Text(AppLocalizations.of(context)!.save,
+                                        style: const TextStyle(color: Colors.white)),
                                   ),
                                 ],
                               ),
@@ -480,21 +487,21 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   context: context,
                   builder: (ctx) => AlertDialog(
                     backgroundColor: AppTheme.surfaceVariant,
-                    title: const Text('동영상 삭제',
-                        style: TextStyle(color: AppTheme.textPrimary)),
-                    content: Text('${widget.video.titleDisplay}을 삭제할까요?',
+                    title: Text(AppLocalizations.of(context)!.deleteVideoTitle,
+                        style: const TextStyle(color: AppTheme.textPrimary)),
+                    content: Text(AppLocalizations.of(context)!.deleteVideoConfirm(widget.video.titleDisplay),
                         style:
                             const TextStyle(color: AppTheme.textSecondary)),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(ctx, false),
-                        child: const Text('취소',
-                            style: TextStyle(color: AppTheme.textHint)),
+                        child: Text(AppLocalizations.of(context)!.cancel,
+                            style: const TextStyle(color: AppTheme.textHint)),
                       ),
                       TextButton(
                         onPressed: () => Navigator.pop(ctx, true),
-                        child: const Text('삭제',
-                            style: TextStyle(color: Colors.redAccent)),
+                        child: Text(AppLocalizations.of(context)!.delete,
+                            style: const TextStyle(color: Colors.redAccent)),
                       ),
                     ],
                   ),

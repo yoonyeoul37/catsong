@@ -16,6 +16,7 @@ import 'providers/radio_provider.dart';
 import 'screens/home_screen.dart';
 import 'theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
+import 'l10n/locale_holder.dart';
 
 late AudioHandler globalAudioHandler;
 late BaseAudioHandler radioAudioHandler;
@@ -157,6 +158,7 @@ class MyApp extends StatelessWidget {
                   .apply(fontFamily: themeProvider.fontFamily.isEmpty ? 'SpoqaHanSansNeo' : themeProvider.fontFamily),
             ),
             builder: (context, child) {
+              AppLocale.current = AppLocalizations.of(context);
               return MediaQuery(
                 data: MediaQuery.of(context).copyWith(
                   textScaler: TextScaler.linear(themeProvider.textScale),

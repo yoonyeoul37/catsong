@@ -989,6 +989,144 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'설정에서 배경색을 바꿀 수 있어요'**
   String get themeColorHint;
+
+  /// No description provided for @hourWord.
+  ///
+  /// In ko, this message translates to:
+  /// **'시간'**
+  String get hourWord;
+
+  /// No description provided for @autoStopFormat.
+  ///
+  /// In ko, this message translates to:
+  /// **'{time} 후 자동으로 꺼집니다'**
+  String autoStopFormat(Object time);
+
+  /// No description provided for @autoStopCountdownSuffix.
+  ///
+  /// In ko, this message translates to:
+  /// **'후 자동 종료'**
+  String get autoStopCountdownSuffix;
+
+  /// No description provided for @secondShort.
+  ///
+  /// In ko, this message translates to:
+  /// **'초'**
+  String get secondShort;
+
+  /// No description provided for @unknownArtist.
+  ///
+  /// In ko, this message translates to:
+  /// **'알 수 없는 아티스트'**
+  String get unknownArtist;
+
+  /// No description provided for @unknownAlbum.
+  ///
+  /// In ko, this message translates to:
+  /// **'알 수 없는 앨범'**
+  String get unknownAlbum;
+
+  /// No description provided for @noTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'제목 없음'**
+  String get noTitle;
+
+  /// No description provided for @selectedCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}개 선택됨'**
+  String selectedCount(Object count);
+
+  /// No description provided for @selectAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체선택'**
+  String get selectAll;
+
+  /// No description provided for @deleteSelected.
+  ///
+  /// In ko, this message translates to:
+  /// **'선택 삭제'**
+  String get deleteSelected;
+
+  /// No description provided for @deleteSelectedConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}개 곡을 삭제할까요?\n기기에서 영구 삭제됩니다.'**
+  String deleteSelectedConfirm(Object count);
+
+  /// No description provided for @deletedCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}개 삭제됐습니다'**
+  String deletedCount(Object count);
+
+  /// No description provided for @noVideosFound.
+  ///
+  /// In ko, this message translates to:
+  /// **'동영상이 없습니다'**
+  String get noVideosFound;
+
+  /// No description provided for @videoCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}개'**
+  String videoCount(Object count);
+
+  /// No description provided for @rename.
+  ///
+  /// In ko, this message translates to:
+  /// **'이름 변경'**
+  String get rename;
+
+  /// No description provided for @deleteVideoTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'동영상 삭제'**
+  String get deleteVideoTitle;
+
+  /// No description provided for @deleteVideoConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}을 삭제할까요?'**
+  String deleteVideoConfirm(Object name);
+
+  /// No description provided for @nameChanged.
+  ///
+  /// In ko, this message translates to:
+  /// **'이름이 변경됐습니다'**
+  String get nameChanged;
+
+  /// No description provided for @renameFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'이름 변경 실패: {error}'**
+  String renameFailed(Object error);
+
+  /// No description provided for @deleteFailedWithError.
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제 실패: {error}'**
+  String deleteFailedWithError(Object error);
+
+  /// No description provided for @videoPermissionRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'동영상 접근 권한 필요'**
+  String get videoPermissionRequired;
+
+  /// No description provided for @videoPermissionMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'동영상을 보려면\n접근 권한이 필요합니다.'**
+  String get videoPermissionMessage;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In ko, this message translates to:
+  /// **'설정 열기'**
+  String get openSettings;
 }
 
 class _AppLocalizationsDelegate

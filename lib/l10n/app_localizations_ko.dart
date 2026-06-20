@@ -451,4 +451,89 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get themeColorHint => '설정에서 배경색을 바꿀 수 있어요';
+
+  @override
+  String get hourWord => '시간';
+
+  @override
+  String autoStopFormat(Object time) {
+    return '$time 후 자동으로 꺼집니다';
+  }
+
+  @override
+  String get autoStopCountdownSuffix => '후 자동 종료';
+
+  @override
+  String get secondShort => '초';
+
+  @override
+  String get unknownArtist => '알 수 없는 아티스트';
+
+  @override
+  String get unknownAlbum => '알 수 없는 앨범';
+
+  @override
+  String get noTitle => '제목 없음';
+
+  @override
+  String selectedCount(Object count) {
+    return '$count개 선택됨';
+  }
+
+  @override
+  String get selectAll => '전체선택';
+
+  @override
+  String get deleteSelected => '선택 삭제';
+
+  @override
+  String deleteSelectedConfirm(Object count) {
+    return '$count개 곡을 삭제할까요?\n기기에서 영구 삭제됩니다.';
+  }
+
+  @override
+  String deletedCount(Object count) {
+    return '$count개 삭제됐습니다';
+  }
+
+  @override
+  String get noVideosFound => '동영상이 없습니다';
+
+  @override
+  String videoCount(Object count) {
+    return '$count개';
+  }
+
+  @override
+  String get rename => '이름 변경';
+
+  @override
+  String get deleteVideoTitle => '동영상 삭제';
+
+  @override
+  String deleteVideoConfirm(Object name) {
+    return '$name을 삭제할까요?';
+  }
+
+  @override
+  String get nameChanged => '이름이 변경됐습니다';
+
+  @override
+  String renameFailed(Object error) {
+    return '이름 변경 실패: $error';
+  }
+
+  @override
+  String deleteFailedWithError(Object error) {
+    return '삭제 실패: $error';
+  }
+
+  @override
+  String get videoPermissionRequired => '동영상 접근 권한 필요';
+
+  @override
+  String get videoPermissionMessage => '동영상을 보려면\n접근 권한이 필요합니다.';
+
+  @override
+  String get openSettings => '설정 열기';
 }

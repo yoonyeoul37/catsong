@@ -232,8 +232,8 @@ Future<void> updateSongInfo(Song song, {String? title, String? artist, String? a
                 foundSongs.add(Song(
                   id: idCounter++,
                   title: _getFileName(entity.path),
-                  artist: '알 수 없는 아티스트',
-                  album: '알 수 없는 앨범',
+                  artist: '',
+                  album: '',
                   uri: entity.path,
                   duration: 0,
                   isFavorite: _favoriteIds.contains(idCounter - 1),

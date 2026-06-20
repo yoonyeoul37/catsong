@@ -456,4 +456,90 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get themeColorHint =>
       'You can change the background color in Settings';
+
+  @override
+  String get hourWord => 'hr';
+
+  @override
+  String autoStopFormat(Object time) {
+    return 'Turns off automatically in $time';
+  }
+
+  @override
+  String get autoStopCountdownSuffix => 'until auto stop';
+
+  @override
+  String get secondShort => 'sec';
+
+  @override
+  String get unknownArtist => 'Unknown Artist';
+
+  @override
+  String get unknownAlbum => 'Unknown Album';
+
+  @override
+  String get noTitle => 'No Title';
+
+  @override
+  String selectedCount(Object count) {
+    return '$count selected';
+  }
+
+  @override
+  String get selectAll => 'Select All';
+
+  @override
+  String get deleteSelected => 'Delete Selected';
+
+  @override
+  String deleteSelectedConfirm(Object count) {
+    return 'Delete $count song(s)?\nThis will be permanently deleted from your device.';
+  }
+
+  @override
+  String deletedCount(Object count) {
+    return '$count deleted';
+  }
+
+  @override
+  String get noVideosFound => 'No videos found';
+
+  @override
+  String videoCount(Object count) {
+    return '$count';
+  }
+
+  @override
+  String get rename => 'Rename';
+
+  @override
+  String get deleteVideoTitle => 'Delete Video';
+
+  @override
+  String deleteVideoConfirm(Object name) {
+    return 'Delete $name?';
+  }
+
+  @override
+  String get nameChanged => 'Name changed';
+
+  @override
+  String renameFailed(Object error) {
+    return 'Failed to rename: $error';
+  }
+
+  @override
+  String deleteFailedWithError(Object error) {
+    return 'Delete failed: $error';
+  }
+
+  @override
+  String get videoPermissionRequired => 'Video Access Required';
+
+  @override
+  String get videoPermissionMessage =>
+      'Access permission is needed\nto view videos.';
+
+  @override
+  String get openSettings => 'Open Settings';
 }

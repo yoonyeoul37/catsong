@@ -1422,7 +1422,7 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
         );
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('$label 후 자동으로 꺼집니다',
+          content: Text(AppLocalizations.of(context)!.autoStopFormat(label),
               style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           backgroundColor: primaryColor,
           duration: const Duration(seconds: 2),
@@ -1448,8 +1448,11 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
     final hours = d.inHours;
     final minutes = d.inMinutes % 60;
     final seconds = d.inSeconds % 60;
-    if (hours > 0) return '$hours시간 $minutes분 $seconds초 후 자동 종료';
-    return '$minutes분 $seconds초 후 자동 종료';
+    final l = AppLocalizations.of(context)!;
+    final timeStr = hours > 0
+        ? '$hours${l.hourWord} $minutes${l.minuteShort} $seconds${l.secondShort}'
+        : '$minutes${l.minuteShort} $seconds${l.secondShort}';
+    return '$timeStr ${l.autoStopCountdownSuffix}';
   }
 
   @override
@@ -1479,13 +1482,13 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
               spacing: 8,
               runSpacing: 8,
               children: [
-                _quickButton('15분', 0, 15, primaryColor),
-                _quickButton('30분', 0, 30, primaryColor),
-                _quickButton('1시간', 1, 0, primaryColor),
-                _quickButton('2시간', 2, 0, primaryColor),
-                _quickButton('3시간', 3, 0, primaryColor),
-                _quickButton('4시간', 4, 0, primaryColor),
-                _quickButton('5시간', 5, 0, primaryColor),
+                _quickButton('15${AppLocalizations.of(context)!.minuteShort}', 0, 15, primaryColor),
+                _quickButton('30${AppLocalizations.of(context)!.minuteShort}', 0, 30, primaryColor),
+                _quickButton('1${AppLocalizations.of(context)!.hourWord}', 1, 0, primaryColor),
+                _quickButton('2${AppLocalizations.of(context)!.hourWord}', 2, 0, primaryColor),
+                _quickButton('3${AppLocalizations.of(context)!.hourWord}', 3, 0, primaryColor),
+                _quickButton('4${AppLocalizations.of(context)!.hourWord}', 4, 0, primaryColor),
+                _quickButton('5${AppLocalizations.of(context)!.hourWord}', 5, 0, primaryColor),
               ],
             ),
             const SizedBox(height: 16),
@@ -1551,7 +1554,7 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
               ),
               child: Center(
                 child: Text(
-                  '${selectedHours > 0 ? '${selectedHours}시간 ' : ''}${selectedMinutes}분',
+                  '${selectedHours > 0 ? '$selectedHours${AppLocalizations.of(context)!.hourWord} ' : ''}$selectedMinutes${AppLocalizations.of(context)!.minuteShort}',
                   style: TextStyle(
                       color: primaryColor,
                       fontSize: 22,
@@ -1629,9 +1632,10 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
                           Duration(hours: selectedHours, minutes: selectedMinutes),
                         );
                         Navigator.pop(context);
+                        final timeLabel = '${selectedHours > 0 ? '$selectedHours${AppLocalizations.of(context)!.hourWord} ' : ''}$selectedMinutes${AppLocalizations.of(context)!.minuteShort}';
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text(
-                              '${selectedHours > 0 ? '${selectedHours}시간 ' : ''}${selectedMinutes}분 후 자동으로 꺼집니다',
+                              AppLocalizations.of(context)!.autoStopFormat(timeLabel),
                               style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                           backgroundColor: primaryColor,
                           duration: const Duration(seconds: 2),

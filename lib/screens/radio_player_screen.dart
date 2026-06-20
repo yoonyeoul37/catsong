@@ -6,6 +6,7 @@ import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/sleep_timer_sheet.dart';
 import '../widgets/schedule_sheet.dart';
+import '../l10n/app_localizations.dart';
 
 class RadioPlayerScreen extends StatefulWidget {
   final RadioStation station;
@@ -172,7 +173,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                 if (_isKoreanBroadcast(current.name))
                   _BottomBarItem(
                     icon: Icons.format_list_bulleted,
-                    label: '편성표',
+                    label: AppLocalizations.of(context)!.radioBroadcastSchedule,
                     hasIndicator: radioProvider.scheduleList.isNotEmpty,
                     primaryColor: primaryColor,
                     onTap: () => showModalBottomSheet(
@@ -184,7 +185,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                   ),
                 _BottomBarItem(
                   icon: Icons.bedtime_outlined,
-                  label: '수면',
+                  label: AppLocalizations.of(context)!.radioSleep,
                   hasIndicator: radioProvider.isSleepTimerActive,
                   primaryColor: primaryColor,
                   onTap: () => showModalBottomSheet(
@@ -198,7 +199,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                 ),
                 _BottomBarItem(
                   icon: Icons.schedule,
-                  label: '예약',
+                  label: AppLocalizations.of(context)!.radioSchedule,
                   hasIndicator: radioProvider.schedules.isNotEmpty,
                   primaryColor: primaryColor,
                   onTap: () => showModalBottomSheet(
@@ -210,7 +211,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                 ),
                 _BottomBarItem(
                   icon: Icons.favorite_border,
-                  label: '즐겨찾기',
+                  label: AppLocalizations.of(context)!.favorites,
                   hasIndicator: false,
                   primaryColor: primaryColor,
                   onTap: () => showModalBottomSheet(
@@ -284,7 +285,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                     Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: Text(
-                        radioProvider.errorMessage ?? '재생에 실패했습니다.',
+                        radioProvider.errorMessage ?? AppLocalizations.of(context)!.radioPlaybackFailed,
                         textAlign: TextAlign.center,
                         style: const TextStyle(color: Colors.redAccent, fontSize: 13),
                       ),
@@ -361,7 +362,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
-                                      wasFav ? '즐겨찾기에서 제거했습니다' : '즐겨찾기에 추가했습니다',
+                                      wasFav ? AppLocalizations.of(context)!.radioRemovedFromFavorites : AppLocalizations.of(context)!.radioAddedToFavoritesToast,
                                       style: const TextStyle(color: Colors.white, fontSize: 13, decoration: TextDecoration.none),
                                     ),
                                   ],
@@ -815,7 +816,7 @@ class _ProgramCard extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          isRerun ? '재방송' : '● LIVE',
+                          isRerun ? AppLocalizations.of(context)!.radioRerun : AppLocalizations.of(context)!.radioLive,
                           style: TextStyle(
                             color: isRerun ? Colors.blueGrey : Colors.redAccent,
                             fontSize: 8,
@@ -881,15 +882,15 @@ class _StatusBadge extends StatelessWidget {
       case RadioPlayerState.playing:
         return const SizedBox.shrink(); // 편성표 카드 안에 LIVE 표시
       case RadioPlayerState.loading:
-        label = '접속 중...';
+        label = AppLocalizations.of(context)!.radioStatusConnecting;
         color = primaryColor;
         break;
       case RadioPlayerState.error:
-        label = '연결 실패';
+        label = AppLocalizations.of(context)!.radioStatusFailed;
         color = Colors.redAccent;
         break;
       case RadioPlayerState.paused:
-        label = '일시정지';
+        label = AppLocalizations.of(context)!.radioStatusPaused;
         color = AppTheme.textHint;
         break;
       default:
@@ -1162,7 +1163,7 @@ class _FavoritesSheet extends StatelessWidget {
               Icon(Icons.favorite, color: primaryColor, size: 20),
               const SizedBox(width: 8),
               Text(
-                '즐겨찾기 (${favorites.length})',
+                '${AppLocalizations.of(context)!.favorites} (${favorites.length})',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -1181,14 +1182,14 @@ class _FavoritesSheet extends StatelessWidget {
                   Icon(Icons.favorite_border,
                       size: 48, color: primaryColor.withOpacity(0.3)),
                   const SizedBox(height: 12),
-                  const Text(
-                    '즐겨찾기한 방송이 없습니다',
-                    style: TextStyle(color: AppTheme.textSecondary, fontSize: 14),
+                  Text(
+                    AppLocalizations.of(context)!.radioNoFavorites,
+                    style: const TextStyle(color: AppTheme.textSecondary, fontSize: 14),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    '하트 버튼을 눌러 추가해보세요',
-                    style: TextStyle(color: AppTheme.textHint, fontSize: 12),
+                  Text(
+                    AppLocalizations.of(context)!.radioNoFavoritesDesc,
+                    style: const TextStyle(color: AppTheme.textHint, fontSize: 12),
                   ),
                 ],
               ),
@@ -1275,10 +1276,15 @@ class _SleepTimerBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final l = AppLocalizations.of(context)!;
     final h = remaining.inHours;
     final m = remaining.inMinutes.remainder(60);
     final s = remaining.inSeconds.remainder(60);
-    final timeText = h > 0 ? '${h}시간 ${m}분 ${s}초' : m > 0 ? '${m}분 ${s}초' : '${s}초';
+    final timeText = h > 0
+        ? l.sleepCountdownHMS(h, m, s)
+        : m > 0
+            ? l.sleepCountdownMS(m, s)
+            : l.sleepCountdownS(s);
 
     return GestureDetector(
       onTap: () => context.read<RadioProvider>().cancelSleepTimer(),
@@ -1296,7 +1302,7 @@ class _SleepTimerBadge extends StatelessWidget {
             const SizedBox(width: 8),
             Text(timeText, style: TextStyle(color: primaryColor, fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(width: 4),
-            Text('후 종료', style: TextStyle(color: primaryColor.withOpacity(0.7), fontSize: 13)),
+            Text(AppLocalizations.of(context)!.radioAfterEnd, style: TextStyle(color: primaryColor.withOpacity(0.7), fontSize: 13)),
             const SizedBox(width: 8),
             Icon(Icons.close, color: primaryColor.withOpacity(0.5), size: 14),
           ],
@@ -1339,7 +1345,7 @@ class _ScheduleListSheet extends StatelessWidget {
             children: [
               Icon(Icons.format_list_bulleted, color: primaryColor, size: 20),
               const SizedBox(width: 8),
-              Text('$stationName 편성표',
+              Text(AppLocalizations.of(context)!.radioScheduleTitle(stationName),
                   style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
             ],
           ),
@@ -1347,10 +1353,10 @@ class _ScheduleListSheet extends StatelessWidget {
           ConstrainedBox(
             constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.6),
             child: schedules.isEmpty
-                ? const Center(
+                ? Center(
               child: Padding(
-                padding: EdgeInsets.all(32),
-                child: Text('편성표를 불러오는 중...', style: TextStyle(color: Colors.white54)),
+                padding: const EdgeInsets.all(32),
+                child: Text(AppLocalizations.of(context)!.radioLoadingSchedule, style: const TextStyle(color: Colors.white54)),
               ),
             )
                 : Builder(builder: (ctx) {

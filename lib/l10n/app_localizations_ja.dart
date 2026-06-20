@@ -697,4 +697,164 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get categoryEtc => 'その他';
+
+  @override
+  String get regionAll => 'すべて';
+
+  @override
+  String get regionCapital => '首都圏';
+
+  @override
+  String get regionBusanGyeongnam => '釜山/慶南';
+
+  @override
+  String get regionDaeguGyeongbuk => '大邱/慶北';
+
+  @override
+  String get regionGwangjuJeonnam => '光州/全南';
+
+  @override
+  String get regionJeonbuk => '全北';
+
+  @override
+  String get regionDaejeonChungnam => '大田/忠南';
+
+  @override
+  String get regionChungbuk => '忠北';
+
+  @override
+  String get regionGangwon => '江原';
+
+  @override
+  String get regionJeju => '済州';
+
+  @override
+  String get radioNoFavorites => 'お気に入りがありません';
+
+  @override
+  String get radioNoFavoritesDesc => 'チャンネル一覧で♡をタップして追加してみてください';
+
+  @override
+  String get radioRemovedFromFavorites => 'お気に入りから削除しました';
+
+  @override
+  String get radioAddedToFavoritesToast => 'お気に入りに追加しました';
+
+  @override
+  String get radioConnecting => '接続中...';
+
+  @override
+  String radioPopularCount(Object count) {
+    return '人気放送$count件';
+  }
+
+  @override
+  String get radioLoadingPopular => '人気放送を読み込み中...';
+
+  @override
+  String radioScheduleTitle(Object station) {
+    return '$station 編成表';
+  }
+
+  @override
+  String get radioLoadingSchedule => '編成表を読み込み中...';
+
+  @override
+  String get radioScheduleChannelSwitch => '予約チャンネル切替';
+
+  @override
+  String radioMaxSchedules(Object count) {
+    return '最大5個 ($count/5)';
+  }
+
+  @override
+  String get radioSelectTime => '時間を選択';
+
+  @override
+  String get radioSetSchedule => '予約設定';
+
+  @override
+  String get radioBroadcastSchedule => '編成表';
+
+  @override
+  String get radioPlayFirst => 'まずラジオを再生してください';
+
+  @override
+  String get radioCancelAllSchedules => 'すべての予約をキャンセル';
+
+  @override
+  String get radioScheduleSetToast => '予約が設定されました';
+
+  @override
+  String radioScheduleCompleteToast(Object time, Object title) {
+    return '$title $time 予約完了';
+  }
+
+  @override
+  String get radioPlaybackFailed => '再生に失敗しました。';
+
+  @override
+  String get radioRerun => '再放送';
+
+  @override
+  String get radioLive => '● LIVE';
+
+  @override
+  String get radioStatusConnecting => '接続中...';
+
+  @override
+  String get radioStatusFailed => '接続失敗';
+
+  @override
+  String get radioStatusPaused => '一時停止';
+
+  @override
+  String get radioAfterEnd => '後に終了';
+
+  @override
+  String get radioNoStationsFound => '放送が見つかりません';
+
+  @override
+  String get sleepMin => '分';
+
+  @override
+  String get sleepHour => '時間';
+
+  @override
+  String sleepMinuteUnit(Object minutes) {
+    return '$minutes分';
+  }
+
+  @override
+  String sleepHourUnit(Object hours) {
+    return '$hours時間';
+  }
+
+  @override
+  String sleepHourMinuteUnit(Object hours, Object minutes) {
+    return '$hours時間$minutes分';
+  }
+
+  @override
+  String sleepCountdownHMS(Object hours, Object minutes, Object seconds) {
+    return '$hours時間$minutes分$seconds秒';
+  }
+
+  @override
+  String sleepCountdownMS(Object minutes, Object seconds) {
+    return '$minutes分$seconds秒';
+  }
+
+  @override
+  String sleepCountdownS(Object seconds) {
+    return '$seconds秒';
+  }
+
+  @override
+  String sleepAutoStopToast(Object time) {
+    return '$time後に自動的にオフになります';
+  }
+
+  @override
+  String get radioKoreaTitle => '韓国ラジオ';
 }

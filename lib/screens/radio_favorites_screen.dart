@@ -4,6 +4,7 @@ import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
 import '../widgets/station_tile.dart';
+import '../l10n/app_localizations.dart';
 
 class RadioFavoritesScreen extends StatelessWidget {
   const RadioFavoritesScreen({super.key});
@@ -24,7 +25,7 @@ class RadioFavoritesScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          '즐겨찾기',
+          AppLocalizations.of(context)!.favorites,
           style: TextStyle(
             color: primaryColor,
             fontSize: 20,
@@ -41,13 +42,13 @@ class RadioFavoritesScreen extends StatelessWidget {
                 size: 72,
                 color: primaryColor.withOpacity(0.3)),
             const SizedBox(height: 18),
-            const Text('즐겨찾기가 없습니다',
-                style: TextStyle(
+            Text(AppLocalizations.of(context)!.radioNoFavorites,
+                style: const TextStyle(
                     color: AppTheme.textSecondary,
                     fontSize: 17)),
             const SizedBox(height: 8),
-            const Text('채널 목록에서 ♡를 눌러 추가해 보세요',
-                style: TextStyle(
+            Text(AppLocalizations.of(context)!.radioNoFavoritesDesc,
+                style: const TextStyle(
                     color: AppTheme.textHint,
                     fontSize: 13)),
           ],
@@ -72,10 +73,10 @@ class RadioFavoritesScreen extends StatelessWidget {
             onDismissed: (_) {
               radioProvider.toggleFavorite(station);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('즐겨찾기에서 제거했습니다'),
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.radioRemovedFromFavorites),
                   backgroundColor: AppTheme.surfaceVariant,
-                  duration: Duration(seconds: 2),
+                  duration: const Duration(seconds: 2),
                 ),
               );
             },

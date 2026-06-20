@@ -1427,6 +1427,282 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'기타'**
   String get categoryEtc;
+
+  /// No description provided for @regionAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체'**
+  String get regionAll;
+
+  /// No description provided for @regionCapital.
+  ///
+  /// In ko, this message translates to:
+  /// **'수도권'**
+  String get regionCapital;
+
+  /// No description provided for @regionBusanGyeongnam.
+  ///
+  /// In ko, this message translates to:
+  /// **'부산/경남'**
+  String get regionBusanGyeongnam;
+
+  /// No description provided for @regionDaeguGyeongbuk.
+  ///
+  /// In ko, this message translates to:
+  /// **'대구/경북'**
+  String get regionDaeguGyeongbuk;
+
+  /// No description provided for @regionGwangjuJeonnam.
+  ///
+  /// In ko, this message translates to:
+  /// **'광주/전남'**
+  String get regionGwangjuJeonnam;
+
+  /// No description provided for @regionJeonbuk.
+  ///
+  /// In ko, this message translates to:
+  /// **'전북'**
+  String get regionJeonbuk;
+
+  /// No description provided for @regionDaejeonChungnam.
+  ///
+  /// In ko, this message translates to:
+  /// **'대전/충남'**
+  String get regionDaejeonChungnam;
+
+  /// No description provided for @regionChungbuk.
+  ///
+  /// In ko, this message translates to:
+  /// **'충북'**
+  String get regionChungbuk;
+
+  /// No description provided for @regionGangwon.
+  ///
+  /// In ko, this message translates to:
+  /// **'강원'**
+  String get regionGangwon;
+
+  /// No description provided for @regionJeju.
+  ///
+  /// In ko, this message translates to:
+  /// **'제주'**
+  String get regionJeju;
+
+  /// No description provided for @radioNoFavorites.
+  ///
+  /// In ko, this message translates to:
+  /// **'즐겨찾기가 없습니다'**
+  String get radioNoFavorites;
+
+  /// No description provided for @radioNoFavoritesDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'채널 목록에서 ♡를 눌러 추가해 보세요'**
+  String get radioNoFavoritesDesc;
+
+  /// No description provided for @radioRemovedFromFavorites.
+  ///
+  /// In ko, this message translates to:
+  /// **'즐겨찾기에서 제거했습니다'**
+  String get radioRemovedFromFavorites;
+
+  /// No description provided for @radioAddedToFavoritesToast.
+  ///
+  /// In ko, this message translates to:
+  /// **'즐겨찾기에 추가했습니다'**
+  String get radioAddedToFavoritesToast;
+
+  /// No description provided for @radioConnecting.
+  ///
+  /// In ko, this message translates to:
+  /// **'접속 중...'**
+  String get radioConnecting;
+
+  /// No description provided for @radioPopularCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'인기 방송 {count}개'**
+  String radioPopularCount(Object count);
+
+  /// No description provided for @radioLoadingPopular.
+  ///
+  /// In ko, this message translates to:
+  /// **'인기 방송을 불러오는 중...'**
+  String get radioLoadingPopular;
+
+  /// No description provided for @radioScheduleTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'{station} 편성표'**
+  String radioScheduleTitle(Object station);
+
+  /// No description provided for @radioLoadingSchedule.
+  ///
+  /// In ko, this message translates to:
+  /// **'편성표를 불러오는 중...'**
+  String get radioLoadingSchedule;
+
+  /// No description provided for @radioScheduleChannelSwitch.
+  ///
+  /// In ko, this message translates to:
+  /// **'예약 채널 전환'**
+  String get radioScheduleChannelSwitch;
+
+  /// No description provided for @radioMaxSchedules.
+  ///
+  /// In ko, this message translates to:
+  /// **'최대 5개 ({count}/5)'**
+  String radioMaxSchedules(Object count);
+
+  /// No description provided for @radioSelectTime.
+  ///
+  /// In ko, this message translates to:
+  /// **'시간 선택'**
+  String get radioSelectTime;
+
+  /// No description provided for @radioSetSchedule.
+  ///
+  /// In ko, this message translates to:
+  /// **'예약 설정'**
+  String get radioSetSchedule;
+
+  /// No description provided for @radioBroadcastSchedule.
+  ///
+  /// In ko, this message translates to:
+  /// **'편성표'**
+  String get radioBroadcastSchedule;
+
+  /// No description provided for @radioPlayFirst.
+  ///
+  /// In ko, this message translates to:
+  /// **'먼저 라디오를 재생해주세요'**
+  String get radioPlayFirst;
+
+  /// No description provided for @radioCancelAllSchedules.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 예약 취소'**
+  String get radioCancelAllSchedules;
+
+  /// No description provided for @radioScheduleSetToast.
+  ///
+  /// In ko, this message translates to:
+  /// **'예약이 설정되었습니다'**
+  String get radioScheduleSetToast;
+
+  /// No description provided for @radioScheduleCompleteToast.
+  ///
+  /// In ko, this message translates to:
+  /// **'{title} {time} 예약 완료'**
+  String radioScheduleCompleteToast(Object time, Object title);
+
+  /// No description provided for @radioPlaybackFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'재생에 실패했습니다.'**
+  String get radioPlaybackFailed;
+
+  /// No description provided for @radioRerun.
+  ///
+  /// In ko, this message translates to:
+  /// **'재방송'**
+  String get radioRerun;
+
+  /// No description provided for @radioLive.
+  ///
+  /// In ko, this message translates to:
+  /// **'● LIVE'**
+  String get radioLive;
+
+  /// No description provided for @radioStatusConnecting.
+  ///
+  /// In ko, this message translates to:
+  /// **'접속 중...'**
+  String get radioStatusConnecting;
+
+  /// No description provided for @radioStatusFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'연결 실패'**
+  String get radioStatusFailed;
+
+  /// No description provided for @radioStatusPaused.
+  ///
+  /// In ko, this message translates to:
+  /// **'일시정지'**
+  String get radioStatusPaused;
+
+  /// No description provided for @radioAfterEnd.
+  ///
+  /// In ko, this message translates to:
+  /// **'후 종료'**
+  String get radioAfterEnd;
+
+  /// No description provided for @radioNoStationsFound.
+  ///
+  /// In ko, this message translates to:
+  /// **'방송을 찾을 수 없습니다'**
+  String get radioNoStationsFound;
+
+  /// No description provided for @sleepMin.
+  ///
+  /// In ko, this message translates to:
+  /// **'분'**
+  String get sleepMin;
+
+  /// No description provided for @sleepHour.
+  ///
+  /// In ko, this message translates to:
+  /// **'시간'**
+  String get sleepHour;
+
+  /// No description provided for @sleepMinuteUnit.
+  ///
+  /// In ko, this message translates to:
+  /// **'{minutes}분'**
+  String sleepMinuteUnit(Object minutes);
+
+  /// No description provided for @sleepHourUnit.
+  ///
+  /// In ko, this message translates to:
+  /// **'{hours}시간'**
+  String sleepHourUnit(Object hours);
+
+  /// No description provided for @sleepHourMinuteUnit.
+  ///
+  /// In ko, this message translates to:
+  /// **'{hours}시간 {minutes}분'**
+  String sleepHourMinuteUnit(Object hours, Object minutes);
+
+  /// No description provided for @sleepCountdownHMS.
+  ///
+  /// In ko, this message translates to:
+  /// **'{hours}시간 {minutes}분 {seconds}초'**
+  String sleepCountdownHMS(Object hours, Object minutes, Object seconds);
+
+  /// No description provided for @sleepCountdownMS.
+  ///
+  /// In ko, this message translates to:
+  /// **'{minutes}분 {seconds}초'**
+  String sleepCountdownMS(Object minutes, Object seconds);
+
+  /// No description provided for @sleepCountdownS.
+  ///
+  /// In ko, this message translates to:
+  /// **'{seconds}초'**
+  String sleepCountdownS(Object seconds);
+
+  /// No description provided for @sleepAutoStopToast.
+  ///
+  /// In ko, this message translates to:
+  /// **'{time} 후 자동으로 꺼집니다'**
+  String sleepAutoStopToast(Object time);
+
+  /// No description provided for @radioKoreaTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'한국 라디오'**
+  String get radioKoreaTitle;
 }
 
 class _AppLocalizationsDelegate

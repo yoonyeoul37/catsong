@@ -703,4 +703,164 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get categoryEtc => 'Others';
+
+  @override
+  String get regionAll => 'All';
+
+  @override
+  String get regionCapital => 'Capital Area';
+
+  @override
+  String get regionBusanGyeongnam => 'Busan/Gyeongnam';
+
+  @override
+  String get regionDaeguGyeongbuk => 'Daegu/Gyeongbuk';
+
+  @override
+  String get regionGwangjuJeonnam => 'Gwangju/Jeonnam';
+
+  @override
+  String get regionJeonbuk => 'Jeonbuk';
+
+  @override
+  String get regionDaejeonChungnam => 'Daejeon/Chungnam';
+
+  @override
+  String get regionChungbuk => 'Chungbuk';
+
+  @override
+  String get regionGangwon => 'Gangwon';
+
+  @override
+  String get regionJeju => 'Jeju';
+
+  @override
+  String get radioNoFavorites => 'No favorites yet';
+
+  @override
+  String get radioNoFavoritesDesc => 'Tap ♡ on a channel to add it';
+
+  @override
+  String get radioRemovedFromFavorites => 'Removed from favorites';
+
+  @override
+  String get radioAddedToFavoritesToast => 'Added to favorites';
+
+  @override
+  String get radioConnecting => 'Connecting...';
+
+  @override
+  String radioPopularCount(Object count) {
+    return '$count popular stations';
+  }
+
+  @override
+  String get radioLoadingPopular => 'Loading popular stations...';
+
+  @override
+  String radioScheduleTitle(Object station) {
+    return '$station Schedule';
+  }
+
+  @override
+  String get radioLoadingSchedule => 'Loading schedule...';
+
+  @override
+  String get radioScheduleChannelSwitch => 'Scheduled Channel Switch';
+
+  @override
+  String radioMaxSchedules(Object count) {
+    return 'Max 5 ($count/5)';
+  }
+
+  @override
+  String get radioSelectTime => 'Select Time';
+
+  @override
+  String get radioSetSchedule => 'Set Schedule';
+
+  @override
+  String get radioBroadcastSchedule => 'Schedule';
+
+  @override
+  String get radioPlayFirst => 'Please play a radio station first';
+
+  @override
+  String get radioCancelAllSchedules => 'Cancel All Schedules';
+
+  @override
+  String get radioScheduleSetToast => 'Schedule has been set';
+
+  @override
+  String radioScheduleCompleteToast(Object time, Object title) {
+    return '$title $time scheduled';
+  }
+
+  @override
+  String get radioPlaybackFailed => 'Playback failed.';
+
+  @override
+  String get radioRerun => 'Rerun';
+
+  @override
+  String get radioLive => '● LIVE';
+
+  @override
+  String get radioStatusConnecting => 'Connecting...';
+
+  @override
+  String get radioStatusFailed => 'Connection failed';
+
+  @override
+  String get radioStatusPaused => 'Paused';
+
+  @override
+  String get radioAfterEnd => 'until stop';
+
+  @override
+  String get radioNoStationsFound => 'No stations found';
+
+  @override
+  String get sleepMin => 'min';
+
+  @override
+  String get sleepHour => 'hr';
+
+  @override
+  String sleepMinuteUnit(Object minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String sleepHourUnit(Object hours) {
+    return '$hours hr';
+  }
+
+  @override
+  String sleepHourMinuteUnit(Object hours, Object minutes) {
+    return '$hours hr $minutes min';
+  }
+
+  @override
+  String sleepCountdownHMS(Object hours, Object minutes, Object seconds) {
+    return '${hours}h ${minutes}m ${seconds}s';
+  }
+
+  @override
+  String sleepCountdownMS(Object minutes, Object seconds) {
+    return '${minutes}m ${seconds}s';
+  }
+
+  @override
+  String sleepCountdownS(Object seconds) {
+    return '${seconds}s';
+  }
+
+  @override
+  String sleepAutoStopToast(Object time) {
+    return 'Turns off automatically in $time';
+  }
+
+  @override
+  String get radioKoreaTitle => 'Korea Radio';
 }

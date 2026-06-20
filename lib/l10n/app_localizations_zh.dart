@@ -697,4 +697,164 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get categoryEtc => '其他';
+
+  @override
+  String get regionAll => '全部';
+
+  @override
+  String get regionCapital => '首都圈';
+
+  @override
+  String get regionBusanGyeongnam => '釜山/慶南';
+
+  @override
+  String get regionDaeguGyeongbuk => '大邱/慶北';
+
+  @override
+  String get regionGwangjuJeonnam => '光州/全南';
+
+  @override
+  String get regionJeonbuk => '全北';
+
+  @override
+  String get regionDaejeonChungnam => '大田/忠南';
+
+  @override
+  String get regionChungbuk => '忠北';
+
+  @override
+  String get regionGangwon => '江原';
+
+  @override
+  String get regionJeju => '濟州';
+
+  @override
+  String get radioNoFavorites => '沒有收藏的頻道';
+
+  @override
+  String get radioNoFavoritesDesc => '在頻道列表中點擊♡來新增收藏';
+
+  @override
+  String get radioRemovedFromFavorites => '已從我的最愛移除';
+
+  @override
+  String get radioAddedToFavoritesToast => '已加入我的最愛';
+
+  @override
+  String get radioConnecting => '連線中...';
+
+  @override
+  String radioPopularCount(Object count) {
+    return '熱門廣播$count個';
+  }
+
+  @override
+  String get radioLoadingPopular => '正在載入熱門廣播...';
+
+  @override
+  String radioScheduleTitle(Object station) {
+    return '$station 節目表';
+  }
+
+  @override
+  String get radioLoadingSchedule => '正在載入節目表...';
+
+  @override
+  String get radioScheduleChannelSwitch => '預約頻道切換';
+
+  @override
+  String radioMaxSchedules(Object count) {
+    return '最多5個 ($count/5)';
+  }
+
+  @override
+  String get radioSelectTime => '選擇時間';
+
+  @override
+  String get radioSetSchedule => '設定預約';
+
+  @override
+  String get radioBroadcastSchedule => '節目表';
+
+  @override
+  String get radioPlayFirst => '請先播放廣播';
+
+  @override
+  String get radioCancelAllSchedules => '取消全部預約';
+
+  @override
+  String get radioScheduleSetToast => '已設定預約';
+
+  @override
+  String radioScheduleCompleteToast(Object time, Object title) {
+    return '$title $time 預約完成';
+  }
+
+  @override
+  String get radioPlaybackFailed => '播放失敗。';
+
+  @override
+  String get radioRerun => '重播';
+
+  @override
+  String get radioLive => '● LIVE';
+
+  @override
+  String get radioStatusConnecting => '連線中...';
+
+  @override
+  String get radioStatusFailed => '連線失敗';
+
+  @override
+  String get radioStatusPaused => '已暫停';
+
+  @override
+  String get radioAfterEnd => '後結束';
+
+  @override
+  String get radioNoStationsFound => '找不到廣播';
+
+  @override
+  String get sleepMin => '分';
+
+  @override
+  String get sleepHour => '小時';
+
+  @override
+  String sleepMinuteUnit(Object minutes) {
+    return '$minutes分';
+  }
+
+  @override
+  String sleepHourUnit(Object hours) {
+    return '$hours小時';
+  }
+
+  @override
+  String sleepHourMinuteUnit(Object hours, Object minutes) {
+    return '$hours小時$minutes分';
+  }
+
+  @override
+  String sleepCountdownHMS(Object hours, Object minutes, Object seconds) {
+    return '$hours小時$minutes分$seconds秒';
+  }
+
+  @override
+  String sleepCountdownMS(Object minutes, Object seconds) {
+    return '$minutes分$seconds秒';
+  }
+
+  @override
+  String sleepCountdownS(Object seconds) {
+    return '$seconds秒';
+  }
+
+  @override
+  String sleepAutoStopToast(Object time) {
+    return '$time後自動關閉';
+  }
+
+  @override
+  String get radioKoreaTitle => '韓國廣播';
 }

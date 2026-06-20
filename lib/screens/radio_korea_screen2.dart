@@ -5,6 +5,7 @@ import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
 import 'radio_player_screen.dart';
+import '../l10n/app_localizations.dart';
 
 class RadioKoreaScreen extends StatefulWidget {
   const RadioKoreaScreen({super.key});
@@ -63,6 +64,23 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
     super.dispose();
   }
 
+  String _regionLabel(BuildContext context, String region) {
+    final l = AppLocalizations.of(context)!;
+    switch (region) {
+      case '전체': return l.regionAll;
+      case '수도권': return l.regionCapital;
+      case '부산/경남': return l.regionBusanGyeongnam;
+      case '대구/경북': return l.regionDaeguGyeongbuk;
+      case '광주/전남': return l.regionGwangjuJeonnam;
+      case '전북': return l.regionJeonbuk;
+      case '대전/충남': return l.regionDaejeonChungnam;
+      case '충북': return l.regionChungbuk;
+      case '강원': return l.regionGangwon;
+      case '제주': return l.regionJeju;
+      default: return region;
+    }
+  }
+
   List<_KStation> _filtered(String region) {
     if (region == '전체') return koreanStations;
     return koreanStations.where((s) => s.region == region).toList();
@@ -102,9 +120,9 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
           icon: const Icon(Icons.arrow_back_ios,
               color: AppTheme.textPrimary, size: 22),
         ),
-        title: const Text(
-          '한국 라디오',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(context)!.radioKoreaTitle,
+          style: const TextStyle(
             color: AppTheme.textPrimary,
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -120,7 +138,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
               fontSize: 14, fontWeight: FontWeight.bold),
           unselectedLabelStyle: const TextStyle(fontSize: 14),
           tabAlignment: TabAlignment.start,
-          tabs: _regions.map((r) => Tab(text: r)).toList(),
+          tabs: _regions.map((r) => Tab(text: _regionLabel(context, r))).toList(),
         ),
       ),
       body: TabBarView(

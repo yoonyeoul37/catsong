@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../models/radio_station.dart';
 import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
+import '../l10n/app_localizations.dart';
 
 class ScheduleSheet extends StatefulWidget {
   const ScheduleSheet({super.key});
@@ -64,15 +65,15 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('예약 채널 전환',
-                      style: TextStyle(
+                  Text(AppLocalizations.of(context)!.radioScheduleChannelSwitch,
+                      style: const TextStyle(
                         color: AppTheme.textPrimary,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       )),
                   const SizedBox(height: 2),
                   Text(
-                    '최대 5개 (${schedules.length}/5)',
+                    AppLocalizations.of(context)!.radioMaxSchedules(schedules.length),
                     style: const TextStyle(
                         color: AppTheme.textSecondary, fontSize: 12),
                   ),
@@ -191,7 +192,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                     Text(
                       _selectedTime != null
                           ? _formatTime(_selectedTime!)
-                          : '시간 선택',
+                          : AppLocalizations.of(context)!.radioSelectTime,
                       style: TextStyle(
                         color: _selectedTime != null
                             ? primaryColor
@@ -219,11 +220,11 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                     color: primaryColor.withOpacity(0.15)),
               ),
               child: stationList.isEmpty
-                  ? const Padding(
-                padding: EdgeInsets.symmetric(vertical: 14),
+                  ? Padding(
+                padding: const EdgeInsets.symmetric(vertical: 14),
                 child: Center(
-                  child: Text('먼저 라디오를 재생해주세요',
-                      style: TextStyle(
+                  child: Text(AppLocalizations.of(context)!.radioPlayFirst,
+                      style: const TextStyle(
                           color: AppTheme.textHint,
                           fontSize: 13)),
                 ),
@@ -380,7 +381,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                                     size: 18),
                                 const SizedBox(width: 8),
                                 Text(
-                                  '예약이 설정되었습니다',
+                                  AppLocalizations.of(context)!.radioScheduleSetToast,
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 13,
@@ -408,8 +409,8 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14)),
                 ),
-                child: const Text('예약 설정',
-                    style: TextStyle(
+                child: Text(AppLocalizations.of(context)!.radioSetSchedule,
+                    style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 15)),
               ),
             ),
@@ -425,7 +426,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                   radioProvider.clearSchedules();
                 },
                 icon: const Icon(Icons.close, size: 18),
-                label: const Text('전체 예약 취소'),
+                label: Text(AppLocalizations.of(context)!.radioCancelAllSchedules),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.redAccent,
                   side: const BorderSide(color: Colors.redAccent),
@@ -479,7 +480,7 @@ class _ScheduleListBottomSheet extends StatelessWidget {
             children: [
               Icon(Icons.format_list_bulleted, color: primaryColor, size: 20),
               const SizedBox(width: 8),
-              Text('$stationName 편성표',
+              Text(AppLocalizations.of(context)!.radioScheduleTitle(stationName),
                   style: const TextStyle(
                       color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
             ],
@@ -490,11 +491,11 @@ class _ScheduleListBottomSheet extends StatelessWidget {
               maxHeight: MediaQuery.of(context).size.height * 0.5,
             ),
             child: schedules.isEmpty
-                ? const Center(
+                ? Center(
               child: Padding(
-                padding: EdgeInsets.all(32),
-                child: Text('편성표를 불러오는 중...',
-                    style: TextStyle(color: Colors.white54)),
+                padding: const EdgeInsets.all(32),
+                child: Text(AppLocalizations.of(context)!.radioLoadingSchedule,
+                    style: const TextStyle(color: Colors.white54)),
               ),
             )
                 : ListView.builder(
@@ -543,7 +544,7 @@ class _ScheduleListBottomSheet extends StatelessWidget {
                         .firstWhere((s) => s.name == stationName, orElse: () => radioProvider.currentStation!);
                     radioProvider.addSchedule(TimeOfDay(hour: h, minute: m), station);
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('$title ${fmt(start)} 예약 완료'),
+                      content: Text(AppLocalizations.of(context)!.radioScheduleCompleteToast(title, fmt(start))),
                       backgroundColor: primaryColor,
                     ));
                   },

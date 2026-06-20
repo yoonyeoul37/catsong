@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
+import '../l10n/app_localizations.dart';
 
 class SleepTimerSheet extends StatefulWidget {
   const SleepTimerSheet({super.key});
@@ -13,23 +14,24 @@ class SleepTimerSheet extends StatefulWidget {
 class _SleepTimerSheetState extends State<SleepTimerSheet> {
   int _selectedMinutes = 30;
 
-  static const _quickOptions = [
-    _QuickOption('15분', 15),
-    _QuickOption('30분', 30),
-    _QuickOption('1시간', 60),
-    _QuickOption('2시간', 120),
-    _QuickOption('3시간', 180),
-    _QuickOption('4시간', 240),
-    _QuickOption('5시간', 300),
-    _QuickOption('6시간', 360),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final primaryColor = Theme.of(context).colorScheme.primary;
     final radioProvider = context.watch<RadioProvider>();
     final sleep = radioProvider.sleepRemaining;
     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
+
+    final quickOptions = [
+      _QuickOption(l.sleepMinuteUnit(15), 15),
+      _QuickOption(l.sleepMinuteUnit(30), 30),
+      _QuickOption(l.sleepHourUnit(1), 60),
+      _QuickOption(l.sleepHourUnit(2), 120),
+      _QuickOption(l.sleepHourUnit(3), 180),
+      _QuickOption(l.sleepHourUnit(4), 240),
+      _QuickOption(l.sleepHourUnit(5), 300),
+      _QuickOption(l.sleepHourUnit(6), 360),
+    ];
 
     return ColoredBox(
       color: AppTheme.surfaceVariant,
@@ -67,11 +69,12 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                       color: primaryColor, size: 20),
                 ),
                 const SizedBox(width: 12),
-                Column(
+                Expanded(
+                  child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('수면 타이머',
-                        style: TextStyle(
+                    Text(l.sleepTimer,
+                        style: const TextStyle(
                           color: AppTheme.textPrimary,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -79,12 +82,15 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                     const SizedBox(height: 2),
                     Text(
                       radioProvider.isSleepTimerActive
-                          ? '타이머가 작동 중입니다'
-                          : '선택한 시간 후 자동으로 꺼집니다',
+                          ? l.sleepTimerActiveDesc
+                          : l.sleepTimerDesc,
                       style: const TextStyle(
                           color: AppTheme.textSecondary, fontSize: 12),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
+                ),
                 ),
               ],
             ),
@@ -93,9 +99,9 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
             // 남은 시간 표시 (B안 - 미니멀 큰 숫자)
             if (radioProvider.isSleepTimerActive && sleep != null) ...[
               // 남은 시간 레이블
-              const Text(
-                '남은 시간',
-                style: TextStyle(
+              Text(
+                l.remainingTime,
+                style: const TextStyle(
                   color: AppTheme.textHint,
                   fontSize: 10,
                   letterSpacing: 2,
@@ -115,8 +121,8 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
               ),
               const SizedBox(height: 6),
               Text(
-                '후 자동 종료',
-                style: TextStyle(
+                l.radioAfterEnd,
+                style: const TextStyle(
                   color: AppTheme.textHint,
                   fontSize: 13,
                 ),
@@ -131,10 +137,10 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                   context.read<RadioProvider>().cancelSleepTimer();
                   Navigator.pop(context);
                 },
-                child: const Center(
+                child: Center(
                   child: Text(
-                    '× 타이머 취소',
-                    style: TextStyle(
+                    l.cancelTimerX,
+                    style: const TextStyle(
                       color: Colors.redAccent,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -161,7 +167,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                       textBaseline: TextBaseline.alphabetic,
                       children: [
                         Text(
-                          _formatSelected(_selectedMinutes),
+                          _formatSelected(l, _selectedMinutes),
                           style: TextStyle(
                             color: primaryColor,
                             fontSize: 36,
@@ -173,8 +179,8 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '후 자동 종료',
-                      style: TextStyle(color: AppTheme.textHint, fontSize: 12),
+                      l.radioAfterEnd,
+                      style: const TextStyle(color: AppTheme.textHint, fontSize: 12),
                     ),
                   ],
                 ),
@@ -199,11 +205,11 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text('15분', style: TextStyle(color: Color(0xFF333333), fontSize: 10)),
-                    Text('2시간', style: TextStyle(color: Color(0xFF333333), fontSize: 10)),
-                    Text('4시간', style: TextStyle(color: Color(0xFF333333), fontSize: 10)),
-                    Text('6시간', style: TextStyle(color: Color(0xFF333333), fontSize: 10)),
+                  children: [
+                    Text(l.sleepMinuteUnit(15), style: const TextStyle(color: Color(0xFF333333), fontSize: 10)),
+                    Text(l.sleepHourUnit(2), style: const TextStyle(color: Color(0xFF333333), fontSize: 10)),
+                    Text(l.sleepHourUnit(4), style: const TextStyle(color: Color(0xFF333333), fontSize: 10)),
+                    Text(l.sleepHourUnit(6), style: const TextStyle(color: Color(0xFF333333), fontSize: 10)),
                   ],
                 ),
               ),
@@ -217,7 +223,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 crossAxisSpacing: 6,
                 mainAxisSpacing: 6,
                 childAspectRatio: 1.8,
-                children: _quickOptions.map((opt) {
+                children: quickOptions.map((opt) {
                   final isSelected = _selectedMinutes == opt.minutes;
                   return GestureDetector(
                     onTap: () => setState(() => _selectedMinutes = opt.minutes),
@@ -283,7 +289,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                                   const Icon(Icons.bedtime, color: Colors.white, size: 18),
                                   const SizedBox(width: 8),
                                   Text(
-                                    '${_formatSelected(_selectedMinutes)} 후 자동으로 꺼집니다',
+                                    l.sleepAutoStopToast(_formatSelected(l, _selectedMinutes)),
                                     style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold, decoration: TextDecoration.none),
                                   ),
                                 ],
@@ -302,7 +308,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                   ),
-                  child: const Text('설정', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  child: Text(l.set, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                 ),
               ),
             ],
@@ -312,12 +318,12 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
     );
   }
 
-  String _formatSelected(int minutes) {
-    if (minutes < 60) return '$minutes분';
+  String _formatSelected(AppLocalizations l, int minutes) {
+    if (minutes < 60) return l.sleepMinuteUnit(minutes);
     final h = minutes ~/ 60;
     final m = minutes % 60;
-    if (m == 0) return '$h시간';
-    return '$h시간 $m분';
+    if (m == 0) return l.sleepHourUnit(h);
+    return l.sleepHourMinuteUnit(h, m);
   }
 
   // MM:SS 형식
@@ -329,15 +335,6 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
       return '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
     }
     return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
-  }
-
-  String _formatRemaining(Duration d) {
-    final h = d.inHours;
-    final m = d.inMinutes.remainder(60);
-    final s = d.inSeconds.remainder(60);
-    if (h > 0) return '${h}시간 ${m}분 ${s}초';
-    if (m > 0) return '${m}분 ${s}초';
-    return '${s}초';
   }
 }
 

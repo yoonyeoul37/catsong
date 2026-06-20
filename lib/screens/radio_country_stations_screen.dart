@@ -8,6 +8,7 @@ import '../widgets/radio_mini_player.dart';
 import '../widgets/station_logo.dart';
 import 'radio_player_screen.dart';
 import 'radio_country_stations_screen.dart';
+import '../l10n/app_localizations.dart';
 
 class RadioCountryStationsScreen extends StatefulWidget {
   final RadioCountry country;
@@ -60,22 +61,22 @@ class _RadioCountryStationsScreenState
           children: [
             CircularProgressIndicator(color: primaryColor),
             const SizedBox(height: 18),
-            const Text('인기 방송을 불러오는 중...',
-                style: TextStyle(
+            Text(AppLocalizations.of(context)!.radioLoadingPopular,
+                style: const TextStyle(
                     color: AppTheme.textSecondary, fontSize: 15)),
           ],
         ),
       )
           : stations.isEmpty
-          ? const Center(
+          ? Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search_off,
+            const Icon(Icons.search_off,
                 color: AppTheme.textHint, size: 48),
-            SizedBox(height: 16),
-            Text('방송을 찾을 수 없습니다',
-                style: TextStyle(
+            const SizedBox(height: 16),
+            Text(AppLocalizations.of(context)!.radioNoStationsFound,
+                style: const TextStyle(
                     color: AppTheme.textSecondary,
                     fontSize: 16)),
           ],
@@ -87,7 +88,7 @@ class _RadioCountryStationsScreenState
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
             child: Text(
-              '인기 방송 ${stations.length}개',
+              AppLocalizations.of(context)!.radioPopularCount(stations.length),
               style: const TextStyle(
                   color: AppTheme.textHint, fontSize: 14),
             ),

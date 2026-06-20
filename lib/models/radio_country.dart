@@ -1,3 +1,5 @@
+import '../l10n/locale_holder.dart';
+
 class RadioCountry {
   final String code;
   final String name;
@@ -10,6 +12,22 @@ class RadioCountry {
     required this.flag,
     this.broadcasters = const [],
   });
+
+  String get displayName {
+    final l = AppLocale.current;
+    if (l == null) return name;
+    switch (code) {
+      case 'KR': return l.countryKR;
+      case 'US': return l.countryUS;
+      case 'JP': return l.countryJP;
+      case 'TW': return l.countryTW;
+      case 'CN': return l.countryCN;
+      case 'HK': return l.countryHK;
+      case 'GB': return l.countryGB;
+      case 'VN': return l.countryVN;
+      default: return name;
+    }
+  }
 
   static const List<RadioCountry> supported = [
     RadioCountry(
@@ -129,4 +147,18 @@ class RadioBroadcaster {
     required this.keyword,
     this.category = '',
   });
+
+  String get displayCategory {
+    final l = AppLocale.current;
+    if (l == null) return category;
+    switch (category) {
+      case '전국': return l.categoryNational;
+      case '서울/경기': return l.categorySeoulGyeonggi;
+      case '지역 MBC': return l.categoryRegionalMBC;
+      case '지역 민방': return l.categoryRegionalPrivate;
+      case '교통방송': return l.categoryTraffic;
+      case '기타': return l.categoryEtc;
+      default: return category;
+    }
+  }
 }

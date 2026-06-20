@@ -6,6 +6,7 @@ import '../providers/player_provider.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../screens/player_screen.dart';
+import 'equalizer_animation.dart';
 
 class MiniPlayer extends StatelessWidget {
   const MiniPlayer({super.key});
@@ -87,33 +88,54 @@ class MiniPlayer extends StatelessWidget {
                 child: Row(
                   children: [
                     // 앨범아트
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: song.albumArt != null
-                          ? Image.memory(
-                        Uint8List.fromList(song.albumArt!),
-                        width: 44,
-                        height: 44,
-                        fit: BoxFit.cover,
-                        gaplessPlayback: true,
-                      )
-                          : Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF2E2E2E),
-                          borderRadius:
-                          BorderRadius.circular(8),
-                        ),
-                        child: Center(
-                          child: SvgPicture.asset(
-                            'assets/no_album.svg',
-                            width: 30,
-                            height: 30,
-                            fit: BoxFit.contain,
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: song.albumArt != null
+                              ? Image.memory(
+                            Uint8List.fromList(song.albumArt!),
+                            width: 44,
+                            height: 44,
+                            fit: BoxFit.cover,
+                            gaplessPlayback: true,
+                          )
+                              : Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF2E2E2E),
+                              borderRadius:
+                              BorderRadius.circular(8),
+                            ),
+                            child: Center(
+                              child: SvgPicture.asset(
+                                'assets/no_album.svg',
+                                width: 30,
+                                height: 30,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        if (playerProvider.isPlaying)
+                          Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: Colors.black45,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Center(
+                              child: SizedBox(
+                                width: 20,
+                                height: 16,
+                                child: EqualizerAnimation(color: primaryColor),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                     const SizedBox(width: 12),
                     // 제목/아티스트

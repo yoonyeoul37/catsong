@@ -1277,6 +1277,156 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'전체 삭제'**
   String get deleteAllTooltip;
+
+  /// No description provided for @radioTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'라디오'**
+  String get radioTitle;
+
+  /// No description provided for @radioRecentListening.
+  ///
+  /// In ko, this message translates to:
+  /// **'최근 청취'**
+  String get radioRecentListening;
+
+  /// No description provided for @radioSelectCountry.
+  ///
+  /// In ko, this message translates to:
+  /// **'국가 선택'**
+  String get radioSelectCountry;
+
+  /// No description provided for @radioChannelCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'개 채널'**
+  String get radioChannelCount;
+
+  /// No description provided for @radioPopular200.
+  ///
+  /// In ko, this message translates to:
+  /// **'인기 200개'**
+  String get radioPopular200;
+
+  /// No description provided for @radioSleep.
+  ///
+  /// In ko, this message translates to:
+  /// **'수면'**
+  String get radioSleep;
+
+  /// No description provided for @radioSchedule.
+  ///
+  /// In ko, this message translates to:
+  /// **'예약'**
+  String get radioSchedule;
+
+  /// No description provided for @sleepTimerDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'선택한 시간 후 자동으로 꺼집니다'**
+  String get sleepTimerDesc;
+
+  /// No description provided for @sleepTimerActiveDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'타이머가 작동 중입니다'**
+  String get sleepTimerActiveDesc;
+
+  /// No description provided for @remainingTime.
+  ///
+  /// In ko, this message translates to:
+  /// **'남은 시간'**
+  String get remainingTime;
+
+  /// No description provided for @cancelTimerX.
+  ///
+  /// In ko, this message translates to:
+  /// **'× 타이머 취소'**
+  String get cancelTimerX;
+
+  /// No description provided for @countryKR.
+  ///
+  /// In ko, this message translates to:
+  /// **'한국'**
+  String get countryKR;
+
+  /// No description provided for @countryUS.
+  ///
+  /// In ko, this message translates to:
+  /// **'미국'**
+  String get countryUS;
+
+  /// No description provided for @countryJP.
+  ///
+  /// In ko, this message translates to:
+  /// **'일본'**
+  String get countryJP;
+
+  /// No description provided for @countryTW.
+  ///
+  /// In ko, this message translates to:
+  /// **'대만'**
+  String get countryTW;
+
+  /// No description provided for @countryCN.
+  ///
+  /// In ko, this message translates to:
+  /// **'중국'**
+  String get countryCN;
+
+  /// No description provided for @countryHK.
+  ///
+  /// In ko, this message translates to:
+  /// **'홍콩'**
+  String get countryHK;
+
+  /// No description provided for @countryGB.
+  ///
+  /// In ko, this message translates to:
+  /// **'영국'**
+  String get countryGB;
+
+  /// No description provided for @countryVN.
+  ///
+  /// In ko, this message translates to:
+  /// **'베트남'**
+  String get countryVN;
+
+  /// No description provided for @categoryNational.
+  ///
+  /// In ko, this message translates to:
+  /// **'전국'**
+  String get categoryNational;
+
+  /// No description provided for @categorySeoulGyeonggi.
+  ///
+  /// In ko, this message translates to:
+  /// **'서울/경기'**
+  String get categorySeoulGyeonggi;
+
+  /// No description provided for @categoryRegionalMBC.
+  ///
+  /// In ko, this message translates to:
+  /// **'지역 MBC'**
+  String get categoryRegionalMBC;
+
+  /// No description provided for @categoryRegionalPrivate.
+  ///
+  /// In ko, this message translates to:
+  /// **'지역 민방'**
+  String get categoryRegionalPrivate;
+
+  /// No description provided for @categoryTraffic.
+  ///
+  /// In ko, this message translates to:
+  /// **'교통방송'**
+  String get categoryTraffic;
+
+  /// No description provided for @categoryEtc.
+  ///
+  /// In ko, this message translates to:
+  /// **'기타'**
+  String get categoryEtc;
 }
 
 class _AppLocalizationsDelegate

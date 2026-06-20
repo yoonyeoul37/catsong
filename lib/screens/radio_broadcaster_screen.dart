@@ -5,6 +5,7 @@ import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
 import 'radio_channel_screen.dart';
+import '../l10n/app_localizations.dart';
 
 class RadioBroadcasterScreen extends StatelessWidget {
   final RadioCountry country;
@@ -59,7 +60,7 @@ class RadioBroadcasterScreen extends StatelessWidget {
     // 카테고리별 그룹화
     final categories = <String, List<RadioBroadcaster>>{};
     for (final b in broadcasters) {
-      final cat = b.category.isEmpty ? '방송사' : b.category;
+      final cat = b.category.isEmpty ? AppLocalizations.of(context)!.radioTitle : b.displayCategory;
       categories.putIfAbsent(cat, () => []);
       categories[cat]!.add(b);
     }
@@ -134,7 +135,7 @@ class RadioBroadcasterScreen extends StatelessWidget {
                 style: const TextStyle(fontSize: 22)),
             const SizedBox(width: 8),
             Text(
-              country.name,
+              country.displayName,
               style: const TextStyle(
                 color: AppTheme.textPrimary,
                 fontSize: 20,

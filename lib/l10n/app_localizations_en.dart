@@ -627,4 +627,80 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteAllTooltip => 'Delete All';
+
+  @override
+  String get radioTitle => 'Radio';
+
+  @override
+  String get radioRecentListening => 'Recently Listened';
+
+  @override
+  String get radioSelectCountry => 'Select Country';
+
+  @override
+  String get radioChannelCount => 'channels';
+
+  @override
+  String get radioPopular200 => 'Popular 200';
+
+  @override
+  String get radioSleep => 'Sleep';
+
+  @override
+  String get radioSchedule => 'Schedule';
+
+  @override
+  String get sleepTimerDesc =>
+      'Turns off automatically after the selected time';
+
+  @override
+  String get sleepTimerActiveDesc => 'Timer is running';
+
+  @override
+  String get remainingTime => 'Time Remaining';
+
+  @override
+  String get cancelTimerX => '× Cancel Timer';
+
+  @override
+  String get countryKR => 'Korea';
+
+  @override
+  String get countryUS => 'USA';
+
+  @override
+  String get countryJP => 'Japan';
+
+  @override
+  String get countryTW => 'Taiwan';
+
+  @override
+  String get countryCN => 'China';
+
+  @override
+  String get countryHK => 'Hong Kong';
+
+  @override
+  String get countryGB => 'UK';
+
+  @override
+  String get countryVN => 'Vietnam';
+
+  @override
+  String get categoryNational => 'National';
+
+  @override
+  String get categorySeoulGyeonggi => 'Seoul/Gyeonggi';
+
+  @override
+  String get categoryRegionalMBC => 'Regional MBC';
+
+  @override
+  String get categoryRegionalPrivate => 'Regional Private';
+
+  @override
+  String get categoryTraffic => 'Traffic Broadcasting';
+
+  @override
+  String get categoryEtc => 'Others';
 }

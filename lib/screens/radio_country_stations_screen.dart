@@ -46,7 +46,7 @@ class _RadioCountryStationsScreenState
               color: AppTheme.textPrimary, size: 22),
         ),
         title: Text(
-          '${widget.country.flag} ${widget.country.name}',
+          '${widget.country.flag} ${widget.country.displayName}',
           style: const TextStyle(
               color: AppTheme.textPrimary,
               fontSize: 20,

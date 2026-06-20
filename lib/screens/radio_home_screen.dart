@@ -9,6 +9,7 @@ import 'radio_search_screen.dart';
 import 'radio_favorites_screen.dart';
 import 'radio_korea_screen2.dart';
 import 'radio_country_stations_screen.dart';
+import '../l10n/app_localizations.dart';
 
 
 class RadioHomeScreen extends StatelessWidget {
@@ -40,7 +41,7 @@ class RadioHomeScreen extends StatelessWidget {
           children: [
             Icon(Icons.radio, color: primaryColor, size: 24),
             const SizedBox(width: 8),
-            Text('라디오', style: TextStyle(color: primaryColor, fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -0.5)),
+            Text(AppLocalizations.of(context)!.radioTitle, style: TextStyle(color: primaryColor, fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -0.5)),
           ],
         ),
         actions: [
@@ -61,7 +62,7 @@ class RadioHomeScreen extends StatelessWidget {
             const _RecentSection(),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 10),
-              child: _SectionHeader(title: '국가 선택'),
+              child: _SectionHeader(title: AppLocalizations.of(context)!.radioSelectCountry),
             ),
             Expanded(
               child: GridView.builder(
@@ -114,9 +115,11 @@ class _CountryCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(country.name, style: const TextStyle(color: AppTheme.textPrimary, fontSize: 15, fontWeight: FontWeight.w700)),
+                  Text(country.displayName, style: const TextStyle(color: AppTheme.textPrimary, fontSize: 15, fontWeight: FontWeight.w700)),
                   Text(
-                    country.code == 'KR' ? '${koreanStations.length}개 채널' : '인기 200개',
+                    country.code == 'KR'
+                        ? '${koreanStations.length}${AppLocalizations.of(context)!.radioChannelCount}'
+                        : AppLocalizations.of(context)!.radioPopular200,
                     style: const TextStyle(color: AppTheme.textHint, fontSize: 11),
                   ),
                 ],
@@ -162,7 +165,7 @@ class _RecentSection extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-          child: _SectionHeader(title: '최근 청취'),
+          child: _SectionHeader(title: AppLocalizations.of(context)!.radioRecentListening),
         ),
         SizedBox(
           height: 105,

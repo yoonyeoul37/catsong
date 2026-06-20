@@ -622,4 +622,79 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get deleteAllTooltip => 'すべて削除';
+
+  @override
+  String get radioTitle => 'ラジオ';
+
+  @override
+  String get radioRecentListening => '最近聴いた';
+
+  @override
+  String get radioSelectCountry => '国を選択';
+
+  @override
+  String get radioChannelCount => 'チャンネル';
+
+  @override
+  String get radioPopular200 => '人気200';
+
+  @override
+  String get radioSleep => 'スリープ';
+
+  @override
+  String get radioSchedule => '予約';
+
+  @override
+  String get sleepTimerDesc => '選択した時間後に自動的にオフになります';
+
+  @override
+  String get sleepTimerActiveDesc => 'タイマー作動中です';
+
+  @override
+  String get remainingTime => '残り時間';
+
+  @override
+  String get cancelTimerX => '× タイマーをキャンセル';
+
+  @override
+  String get countryKR => '韓国';
+
+  @override
+  String get countryUS => 'アメリカ';
+
+  @override
+  String get countryJP => '日本';
+
+  @override
+  String get countryTW => '台湾';
+
+  @override
+  String get countryCN => '中国';
+
+  @override
+  String get countryHK => '香港';
+
+  @override
+  String get countryGB => 'イギリス';
+
+  @override
+  String get countryVN => 'ベトナム';
+
+  @override
+  String get categoryNational => '全国';
+
+  @override
+  String get categorySeoulGyeonggi => 'ソウル/京畿';
+
+  @override
+  String get categoryRegionalMBC => '地域MBC';
+
+  @override
+  String get categoryRegionalPrivate => '地域民放';
+
+  @override
+  String get categoryTraffic => '交通放送';
+
+  @override
+  String get categoryEtc => 'その他';
 }

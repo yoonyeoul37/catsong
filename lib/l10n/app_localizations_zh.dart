@@ -622,4 +622,79 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get deleteAllTooltip => '全部刪除';
+
+  @override
+  String get radioTitle => '廣播';
+
+  @override
+  String get radioRecentListening => '最近收聽';
+
+  @override
+  String get radioSelectCountry => '選擇國家';
+
+  @override
+  String get radioChannelCount => '個頻道';
+
+  @override
+  String get radioPopular200 => '熱門200個';
+
+  @override
+  String get radioSleep => '睡眠';
+
+  @override
+  String get radioSchedule => '預約';
+
+  @override
+  String get sleepTimerDesc => '選擇的時間後將自動關閉';
+
+  @override
+  String get sleepTimerActiveDesc => '計時器運作中';
+
+  @override
+  String get remainingTime => '剩餘時間';
+
+  @override
+  String get cancelTimerX => '× 取消計時器';
+
+  @override
+  String get countryKR => '韓國';
+
+  @override
+  String get countryUS => '美國';
+
+  @override
+  String get countryJP => '日本';
+
+  @override
+  String get countryTW => '台灣';
+
+  @override
+  String get countryCN => '中國';
+
+  @override
+  String get countryHK => '香港';
+
+  @override
+  String get countryGB => '英國';
+
+  @override
+  String get countryVN => '越南';
+
+  @override
+  String get categoryNational => '全國';
+
+  @override
+  String get categorySeoulGyeonggi => '首爾/京畿';
+
+  @override
+  String get categoryRegionalMBC => '地區MBC';
+
+  @override
+  String get categoryRegionalPrivate => '地區民營';
+
+  @override
+  String get categoryTraffic => '交通廣播';
+
+  @override
+  String get categoryEtc => '其他';
 }

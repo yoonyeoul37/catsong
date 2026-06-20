@@ -537,4 +537,89 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get openSettings => '開啟設定';
+
+  @override
+  String deleteSongConfirmFormat(Object title) {
+    return '要刪除$title嗎？\n將從裝置中永久刪除。';
+  }
+
+  @override
+  String get playTime => '播放時間';
+
+  @override
+  String get path => '路徑';
+
+  @override
+  String get newPlaylist => '新增播放清單';
+
+  @override
+  String get playlistNameHint => '播放清單名稱';
+
+  @override
+  String get create => '建立';
+
+  @override
+  String get playlistLabel => '播放清單';
+
+  @override
+  String get renamePlaylistTitle => '重新命名';
+
+  @override
+  String get deletePlaylistTitle => '刪除播放清單';
+
+  @override
+  String deletePlaylistConfirm(Object name) {
+    return '要刪除$name嗎？';
+  }
+
+  @override
+  String get change => '變更';
+
+  @override
+  String get songCountSuffix => '首';
+
+  @override
+  String get lyrics => '歌詞';
+
+  @override
+  String get lyricsLoading => '正在載入歌詞...';
+
+  @override
+  String get lyricsNotFound => '找不到歌詞';
+
+  @override
+  String get lyricsSearchPrompt => '搜尋歌詞看看';
+
+  @override
+  String get lyricsSearchButton => '搜尋歌詞';
+
+  @override
+  String get lyricsErrorNotFound => '找不到歌詞';
+
+  @override
+  String get lyricsErrorLoadFailed => '歌詞載入失敗';
+
+  @override
+  String get lyricsErrorNetwork => '請確認網路連線';
+
+  @override
+  String get justNow => '剛剛';
+
+  @override
+  String minutesAgo(Object minutes) {
+    return '$minutes分鐘前';
+  }
+
+  @override
+  String hoursAgo(Object hours) {
+    return '$hours小時前';
+  }
+
+  @override
+  String dateFormat(Object day, Object month, Object year) {
+    return '$year年$month月$day日';
+  }
+
+  @override
+  String get deleteAllTooltip => '全部刪除';
 }

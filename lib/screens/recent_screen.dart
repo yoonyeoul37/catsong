@@ -9,13 +9,14 @@ import '../l10n/app_localizations.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/app_localizations.dart';
 
-String _formatPlayedAt(DateTime dt) {
+String _formatPlayedAt(BuildContext context, DateTime dt) {
   final now = DateTime.now();
   final diff = now.difference(dt);
-  if (diff.inMinutes < 1) return '방금 전';
-  if (diff.inMinutes < 60) return '${diff.inMinutes}분 전';
-  if (diff.inHours < 24) return '${diff.inHours}시간 전';
-  return '${dt.year}년 ${dt.month}월 ${dt.day}일';
+  final l = AppLocalizations.of(context)!;
+  if (diff.inMinutes < 1) return l.justNow;
+  if (diff.inMinutes < 60) return l.minutesAgo(diff.inMinutes);
+  if (diff.inHours < 24) return l.hoursAgo(diff.inHours);
+  return l.dateFormat(dt.year, dt.month, dt.day);
 }
 
 class RecentScreen extends StatelessWidget {
@@ -50,7 +51,7 @@ class RecentScreen extends StatelessWidget {
                     onPressed: () => _showClearAllDialog(context),
                     icon: const Icon(Icons.delete_sweep,
                         color: Colors.white38, size: 24),
-                    tooltip: '전체 삭제',
+                    tooltip: AppLocalizations.of(context)!.deleteAllTooltip,
                   ),
               ],
             ),
@@ -148,7 +149,7 @@ class RecentScreen extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                             child: Text(
-                              _formatPlayedAt(song.lastPlayedAt!),
+                              _formatPlayedAt(context, song.lastPlayedAt!),
                               style: const TextStyle(
                                   color: Colors.white24, fontSize: 11),
                             ),

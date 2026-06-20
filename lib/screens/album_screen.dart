@@ -123,7 +123,7 @@ class AlbumScreen extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis),
           const SizedBox(height: 2),
-          Text('${album.displayArtist} • ${album.songCount}곡',
+          Text('${album.displayArtist} • ${album.songCount} ${AppLocalizations.of(context)!.songCount}',
               style: const TextStyle(color: Colors.white38, fontSize: 12),
               maxLines: 1,
               overflow: TextOverflow.ellipsis),
@@ -196,7 +196,7 @@ class AlbumDetailScreen extends StatelessWidget {
                             style: const TextStyle(
                                 color: Colors.white70, fontSize: 14)),
                         const SizedBox(height: 2),
-                        Text('${album.songCount}곡',
+                        Text('${album.songCount} ${AppLocalizations.of(context)!.songCount}',
                             style: const TextStyle(
                                 color: Colors.white38, fontSize: 13)),
                       ],

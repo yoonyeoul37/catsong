@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/lyrics_provider.dart';
 import '../providers/player_provider.dart';
 import '../theme/app_theme.dart';
+import '../l10n/app_localizations.dart';
 
 class LyricsScreen extends StatefulWidget {
   const LyricsScreen({super.key});
@@ -47,8 +48,8 @@ class _LyricsScreenState extends State<LyricsScreen> {
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: AppTheme.background,
-        title: const Text('가사',
-            style: TextStyle(color: AppTheme.textPrimary)),
+        title: Text(AppLocalizations.of(context)!.lyrics,
+            style: const TextStyle(color: AppTheme.textPrimary)),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios, color: AppTheme.textPrimary),
@@ -78,8 +79,8 @@ class _LyricsScreenState extends State<LyricsScreen> {
           children: [
             CircularProgressIndicator(color: primaryColor),
             const SizedBox(height: 16),
-            const Text('가사를 불러오는 중...',
-                style: TextStyle(color: AppTheme.textSecondary)),
+            Text(AppLocalizations.of(context)!.lyricsLoading,
+                style: const TextStyle(color: AppTheme.textSecondary)),
           ],
         ),
       );
@@ -95,7 +96,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
             const SizedBox(height: 16),
             Text(
               lyricsProvider.errorMessage.isEmpty
-                  ? '가사를 검색해보세요'
+                  ? AppLocalizations.of(context)!.lyricsSearchPrompt
                   : lyricsProvider.errorMessage,
               style: const TextStyle(
                   color: AppTheme.textSecondary, fontSize: 16),
@@ -115,8 +116,8 @@ class _LyricsScreenState extends State<LyricsScreen> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30)),
               ),
-              child: const Text('가사 검색',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              child: Text(AppLocalizations.of(context)!.lyricsSearchButton,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
           ],
         ),

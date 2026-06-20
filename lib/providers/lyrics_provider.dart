@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import '../l10n/locale_holder.dart';
 
 class LyricsLine {
   final Duration time;
@@ -72,15 +73,15 @@ class LyricsProvider extends ChangeNotifier {
           _plainLyrics = plainLyrics;
           _hasLyrics = true;
         } else {
-          _errorMessage = '가사를 찾을 수 없습니다';
+          _errorMessage = AppLocale.current?.lyricsErrorNotFound ?? '가사를 찾을 수 없습니다';
         }
       } else if (response.statusCode == 404) {
-        _errorMessage = '가사를 찾을 수 없습니다';
+        _errorMessage = AppLocale.current?.lyricsErrorNotFound ?? '가사를 찾을 수 없습니다';
       } else {
-        _errorMessage = '가사 로딩 실패';
+        _errorMessage = AppLocale.current?.lyricsErrorLoadFailed ?? '가사 로딩 실패';
       }
     } catch (e) {
-      _errorMessage = '인터넷 연결을 확인해주세요';
+      _errorMessage = AppLocale.current?.lyricsErrorNetwork ?? '인터넷 연결을 확인해주세요';
       debugPrint('가사 로딩 오류: $e');
     } finally {
       _isLoading = false;

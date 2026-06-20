@@ -536,4 +536,89 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get openSettings => '설정 열기';
+
+  @override
+  String deleteSongConfirmFormat(Object title) {
+    return '$title을(를) 삭제할까요?\n기기에서 영구 삭제됩니다.';
+  }
+
+  @override
+  String get playTime => '재생 시간';
+
+  @override
+  String get path => '경로';
+
+  @override
+  String get newPlaylist => '새 재생목록';
+
+  @override
+  String get playlistNameHint => '재생목록 이름';
+
+  @override
+  String get create => '만들기';
+
+  @override
+  String get playlistLabel => '재생목록';
+
+  @override
+  String get renamePlaylistTitle => '이름 변경';
+
+  @override
+  String get deletePlaylistTitle => '재생목록 삭제';
+
+  @override
+  String deletePlaylistConfirm(Object name) {
+    return '$name을 삭제할까요?';
+  }
+
+  @override
+  String get change => '변경';
+
+  @override
+  String get songCountSuffix => '곡';
+
+  @override
+  String get lyrics => '가사';
+
+  @override
+  String get lyricsLoading => '가사를 불러오는 중...';
+
+  @override
+  String get lyricsNotFound => '가사를 찾을 수 없습니다';
+
+  @override
+  String get lyricsSearchPrompt => '가사를 검색해보세요';
+
+  @override
+  String get lyricsSearchButton => '가사 검색';
+
+  @override
+  String get lyricsErrorNotFound => '가사를 찾을 수 없습니다';
+
+  @override
+  String get lyricsErrorLoadFailed => '가사 로딩 실패';
+
+  @override
+  String get lyricsErrorNetwork => '인터넷 연결을 확인해주세요';
+
+  @override
+  String get justNow => '방금 전';
+
+  @override
+  String minutesAgo(Object minutes) {
+    return '$minutes분 전';
+  }
+
+  @override
+  String hoursAgo(Object hours) {
+    return '$hours시간 전';
+  }
+
+  @override
+  String dateFormat(Object day, Object month, Object year) {
+    return '$year년 $month월 $day일';
+  }
+
+  @override
+  String get deleteAllTooltip => '전체 삭제';
 }

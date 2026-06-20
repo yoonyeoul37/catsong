@@ -537,4 +537,89 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get openSettings => '設定を開く';
+
+  @override
+  String deleteSongConfirmFormat(Object title) {
+    return '$titleを削除しますか？\n端末から完全に削除されます。';
+  }
+
+  @override
+  String get playTime => '再生時間';
+
+  @override
+  String get path => 'パス';
+
+  @override
+  String get newPlaylist => '新しいプレイリスト';
+
+  @override
+  String get playlistNameHint => 'プレイリスト名';
+
+  @override
+  String get create => '作成';
+
+  @override
+  String get playlistLabel => 'プレイリスト';
+
+  @override
+  String get renamePlaylistTitle => '名前を変更';
+
+  @override
+  String get deletePlaylistTitle => 'プレイリストを削除';
+
+  @override
+  String deletePlaylistConfirm(Object name) {
+    return '$nameを削除しますか？';
+  }
+
+  @override
+  String get change => '変更';
+
+  @override
+  String get songCountSuffix => '曲';
+
+  @override
+  String get lyrics => '歌詞';
+
+  @override
+  String get lyricsLoading => '歌詞を読み込み中...';
+
+  @override
+  String get lyricsNotFound => '歌詞が見つかりません';
+
+  @override
+  String get lyricsSearchPrompt => '歌詞を検索してみてください';
+
+  @override
+  String get lyricsSearchButton => '歌詞検索';
+
+  @override
+  String get lyricsErrorNotFound => '歌詞が見つかりません';
+
+  @override
+  String get lyricsErrorLoadFailed => '歌詞の読み込みに失敗しました';
+
+  @override
+  String get lyricsErrorNetwork => 'インターネット接続をご確認ください';
+
+  @override
+  String get justNow => 'たった今';
+
+  @override
+  String minutesAgo(Object minutes) {
+    return '$minutes分前';
+  }
+
+  @override
+  String hoursAgo(Object hours) {
+    return '$hours時間前';
+  }
+
+  @override
+  String dateFormat(Object day, Object month, Object year) {
+    return '$year年$month月$day日';
+  }
+
+  @override
+  String get deleteAllTooltip => 'すべて削除';
 }

@@ -109,7 +109,7 @@ class PlaylistScreen extends StatelessWidget {
                           fontSize: 15,
                           fontWeight: FontWeight.w500)),
                   const SizedBox(height: 3),
-                  Text('재생목록 • ${playlist.songCount}곡',
+                  Text('${AppLocalizations.of(context)!.playlistLabel} • ${playlist.songCount}${AppLocalizations.of(context)!.songCountSuffix}',
                       style: const TextStyle(
                           color: Colors.white38, fontSize: 12)),
                 ],
@@ -121,8 +121,8 @@ class PlaylistScreen extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
               itemBuilder: (context) => [
-                _buildPopupItem(Icons.edit, '이름 변경', 'rename', primaryColor),
-                _buildPopupItem(Icons.delete, '삭제', 'delete', Colors.redAccent),
+                _buildPopupItem(Icons.edit, AppLocalizations.of(context)!.rename, 'rename', primaryColor),
+                _buildPopupItem(Icons.delete, AppLocalizations.of(context)!.delete, 'delete', Colors.redAccent),
               ],
               onSelected: (value) {
                 if (value == 'rename') {
@@ -159,14 +159,14 @@ class PlaylistScreen extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: const Color(0xFF282828),
-        title: const Text('새 재생목록',
-            style: TextStyle(color: Colors.white)),
+        title: Text(AppLocalizations.of(context)!.newPlaylist,
+            style: const TextStyle(color: Colors.white)),
         content: TextField(
           controller: controller,
           autofocus: true,
           style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
-            hintText: '재생목록 이름',
+            hintText: AppLocalizations.of(context)!.playlistNameHint,
             hintStyle: const TextStyle(color: Colors.white38),
             enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: primaryColor)),
@@ -177,7 +177,7 @@ class PlaylistScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('취소', style: TextStyle(color: Colors.white38)),
+            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.white38)),
           ),
           TextButton(
             onPressed: () {
@@ -186,7 +186,7 @@ class PlaylistScreen extends StatelessWidget {
                 Navigator.pop(ctx);
               }
             },
-            child: Text('만들기', style: TextStyle(color: primaryColor)),
+            child: Text(AppLocalizations.of(context)!.create, style: TextStyle(color: primaryColor)),
           ),
         ],
       ),
@@ -200,8 +200,8 @@ class PlaylistScreen extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: const Color(0xFF282828),
-        title: const Text('이름 변경',
-            style: TextStyle(color: Colors.white)),
+        title: Text(AppLocalizations.of(context)!.renamePlaylistTitle,
+            style: const TextStyle(color: Colors.white)),
         content: TextField(
           controller: controller,
           autofocus: true,
@@ -216,7 +216,7 @@ class PlaylistScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('취소', style: TextStyle(color: Colors.white38)),
+            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.white38)),
           ),
           TextButton(
             onPressed: () {
@@ -226,7 +226,7 @@ class PlaylistScreen extends StatelessWidget {
                 Navigator.pop(ctx);
               }
             },
-            child: Text('변경', style: TextStyle(color: primaryColor)),
+            child: Text(AppLocalizations.of(context)!.change, style: TextStyle(color: primaryColor)),
           ),
         ],
       ),
@@ -238,21 +238,21 @@ class PlaylistScreen extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: const Color(0xFF282828),
-        title: const Text('재생목록 삭제',
-            style: TextStyle(color: Colors.white)),
-        content: Text('${playlist.name}을 삭제할까요?',
+        title: Text(AppLocalizations.of(context)!.deletePlaylistTitle,
+            style: const TextStyle(color: Colors.white)),
+        content: Text(AppLocalizations.of(context)!.deletePlaylistConfirm(playlist.name),
             style: const TextStyle(color: Colors.white60)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('취소', style: TextStyle(color: Colors.white38)),
+            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.white38)),
           ),
           TextButton(
             onPressed: () {
               context.read<PlaylistProvider>().deletePlaylist(playlist.id);
               Navigator.pop(ctx);
             },
-            child: const Text('삭제', style: TextStyle(color: Colors.redAccent)),
+            child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.redAccent)),
           ),
         ],
       ),

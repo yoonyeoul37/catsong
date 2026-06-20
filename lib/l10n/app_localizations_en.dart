@@ -542,4 +542,89 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openSettings => 'Open Settings';
+
+  @override
+  String deleteSongConfirmFormat(Object title) {
+    return 'Delete $title?\nThis will be permanently deleted from your device.';
+  }
+
+  @override
+  String get playTime => 'Duration';
+
+  @override
+  String get path => 'Path';
+
+  @override
+  String get newPlaylist => 'New Playlist';
+
+  @override
+  String get playlistNameHint => 'Playlist name';
+
+  @override
+  String get create => 'Create';
+
+  @override
+  String get playlistLabel => 'Playlist';
+
+  @override
+  String get renamePlaylistTitle => 'Rename';
+
+  @override
+  String get deletePlaylistTitle => 'Delete Playlist';
+
+  @override
+  String deletePlaylistConfirm(Object name) {
+    return 'Delete $name?';
+  }
+
+  @override
+  String get change => 'Change';
+
+  @override
+  String get songCountSuffix => 'songs';
+
+  @override
+  String get lyrics => 'Lyrics';
+
+  @override
+  String get lyricsLoading => 'Loading lyrics...';
+
+  @override
+  String get lyricsNotFound => 'Lyrics not found';
+
+  @override
+  String get lyricsSearchPrompt => 'Search for lyrics';
+
+  @override
+  String get lyricsSearchButton => 'Search Lyrics';
+
+  @override
+  String get lyricsErrorNotFound => 'Lyrics not found';
+
+  @override
+  String get lyricsErrorLoadFailed => 'Failed to load lyrics';
+
+  @override
+  String get lyricsErrorNetwork => 'Please check your internet connection';
+
+  @override
+  String get justNow => 'Just now';
+
+  @override
+  String minutesAgo(Object minutes) {
+    return '${minutes}m ago';
+  }
+
+  @override
+  String hoursAgo(Object hours) {
+    return '${hours}h ago';
+  }
+
+  @override
+  String dateFormat(Object day, Object month, Object year) {
+    return '$year-$month-$day';
+  }
+
+  @override
+  String get deleteAllTooltip => 'Delete All';
 }

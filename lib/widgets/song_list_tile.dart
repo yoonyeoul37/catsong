@@ -38,6 +38,7 @@ class SongListTile extends StatelessWidget {
 
     return InkWell(
       onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
         context.read<PlayerProvider>().playFromList(songList, index);
         Navigator.push(
           context,
@@ -324,11 +325,11 @@ class SongListTile extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _infoRow('제목', song.titleDisplay, primaryColor),
-            _infoRow('아티스트', song.artistDisplay, primaryColor),
-            _infoRow('앨범', song.albumDisplay, primaryColor),
-            _infoRow('재생 시간', song.durationFormatted, primaryColor),
-            if (song.uri != null) _infoRow('경로', song.uri!, primaryColor),
+            _infoRow(AppLocalizations.of(context)!.title, song.titleDisplay, primaryColor),
+            _infoRow(AppLocalizations.of(context)!.artist, song.artistDisplay, primaryColor),
+            _infoRow(AppLocalizations.of(context)!.album, song.albumDisplay, primaryColor),
+            _infoRow(AppLocalizations.of(context)!.playTime, song.durationFormatted, primaryColor),
+            if (song.uri != null) _infoRow(AppLocalizations.of(context)!.path, song.uri!, primaryColor),
           ],
         ),
         actions: [
@@ -362,7 +363,7 @@ class SongListTile extends StatelessWidget {
         backgroundColor: AppTheme.surfaceVariant,
         title: Text(AppLocalizations.of(context)!.deleteSong,
             style: const TextStyle(color: AppTheme.textPrimary)),
-        content: Text('${song.titleDisplay}을(를) 삭제할까요?\n기기에서 영구 삭제됩니다.',
+        content: Text(AppLocalizations.of(context)!.deleteSongConfirmFormat(song.titleDisplay),
             style: const TextStyle(color: AppTheme.textSecondary)),
         actions: [
           TextButton(

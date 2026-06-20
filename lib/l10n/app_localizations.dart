@@ -1127,6 +1127,156 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'설정 열기'**
   String get openSettings;
+
+  /// No description provided for @deleteSongConfirmFormat.
+  ///
+  /// In ko, this message translates to:
+  /// **'{title}을(를) 삭제할까요?\n기기에서 영구 삭제됩니다.'**
+  String deleteSongConfirmFormat(Object title);
+
+  /// No description provided for @playTime.
+  ///
+  /// In ko, this message translates to:
+  /// **'재생 시간'**
+  String get playTime;
+
+  /// No description provided for @path.
+  ///
+  /// In ko, this message translates to:
+  /// **'경로'**
+  String get path;
+
+  /// No description provided for @newPlaylist.
+  ///
+  /// In ko, this message translates to:
+  /// **'새 재생목록'**
+  String get newPlaylist;
+
+  /// No description provided for @playlistNameHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'재생목록 이름'**
+  String get playlistNameHint;
+
+  /// No description provided for @create.
+  ///
+  /// In ko, this message translates to:
+  /// **'만들기'**
+  String get create;
+
+  /// No description provided for @playlistLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'재생목록'**
+  String get playlistLabel;
+
+  /// No description provided for @renamePlaylistTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'이름 변경'**
+  String get renamePlaylistTitle;
+
+  /// No description provided for @deletePlaylistTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'재생목록 삭제'**
+  String get deletePlaylistTitle;
+
+  /// No description provided for @deletePlaylistConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}을 삭제할까요?'**
+  String deletePlaylistConfirm(Object name);
+
+  /// No description provided for @change.
+  ///
+  /// In ko, this message translates to:
+  /// **'변경'**
+  String get change;
+
+  /// No description provided for @songCountSuffix.
+  ///
+  /// In ko, this message translates to:
+  /// **'곡'**
+  String get songCountSuffix;
+
+  /// No description provided for @lyrics.
+  ///
+  /// In ko, this message translates to:
+  /// **'가사'**
+  String get lyrics;
+
+  /// No description provided for @lyricsLoading.
+  ///
+  /// In ko, this message translates to:
+  /// **'가사를 불러오는 중...'**
+  String get lyricsLoading;
+
+  /// No description provided for @lyricsNotFound.
+  ///
+  /// In ko, this message translates to:
+  /// **'가사를 찾을 수 없습니다'**
+  String get lyricsNotFound;
+
+  /// No description provided for @lyricsSearchPrompt.
+  ///
+  /// In ko, this message translates to:
+  /// **'가사를 검색해보세요'**
+  String get lyricsSearchPrompt;
+
+  /// No description provided for @lyricsSearchButton.
+  ///
+  /// In ko, this message translates to:
+  /// **'가사 검색'**
+  String get lyricsSearchButton;
+
+  /// No description provided for @lyricsErrorNotFound.
+  ///
+  /// In ko, this message translates to:
+  /// **'가사를 찾을 수 없습니다'**
+  String get lyricsErrorNotFound;
+
+  /// No description provided for @lyricsErrorLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'가사 로딩 실패'**
+  String get lyricsErrorLoadFailed;
+
+  /// No description provided for @lyricsErrorNetwork.
+  ///
+  /// In ko, this message translates to:
+  /// **'인터넷 연결을 확인해주세요'**
+  String get lyricsErrorNetwork;
+
+  /// No description provided for @justNow.
+  ///
+  /// In ko, this message translates to:
+  /// **'방금 전'**
+  String get justNow;
+
+  /// No description provided for @minutesAgo.
+  ///
+  /// In ko, this message translates to:
+  /// **'{minutes}분 전'**
+  String minutesAgo(Object minutes);
+
+  /// No description provided for @hoursAgo.
+  ///
+  /// In ko, this message translates to:
+  /// **'{hours}시간 전'**
+  String hoursAgo(Object hours);
+
+  /// No description provided for @dateFormat.
+  ///
+  /// In ko, this message translates to:
+  /// **'{year}년 {month}월 {day}일'**
+  String dateFormat(Object day, Object month, Object year);
+
+  /// No description provided for @deleteAllTooltip.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 삭제'**
+  String get deleteAllTooltip;
 }
 
 class _AppLocalizationsDelegate

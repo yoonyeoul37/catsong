@@ -230,18 +230,30 @@ class _PlayerScreenState extends State<PlayerScreen>
             ),
             SafeArea(
               bottom: false,
-              child: Column(
-                children: [
-                  _buildTopBar(context, playerProvider, primaryColor),
-                  Expanded(flex: 4, child: _buildAlbumArt(song, primaryColor)),
-                  _buildEqualizer(playerProvider, primaryColor),
-                  _buildCurrentLyrics(playerProvider, primaryColor),
-                  Expanded(
-                    flex: 4,
-                    child: _buildControls(
-                        context, playerProvider, musicProvider, song, primaryColor),
-                  ),
-                ],
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                      child: IntrinsicHeight(
+                        child: Column(
+                          children: [
+                            _buildTopBar(context, playerProvider, primaryColor),
+                            Expanded(flex: 4, child: _buildAlbumArt(song, primaryColor)),
+                            _buildEqualizer(playerProvider, primaryColor),
+                            _buildCurrentLyrics(playerProvider, primaryColor),
+                            Expanded(
+                              flex: 4,
+                              child: _buildControls(
+                                  context, playerProvider, musicProvider, song, primaryColor),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ],

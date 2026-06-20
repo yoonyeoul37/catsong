@@ -113,7 +113,7 @@ class ArtistScreen extends StatelessWidget {
                           fontSize: 15,
                           fontWeight: FontWeight.w500)),
                   const SizedBox(height: 3),
-                  Text('${artist.songCount}곡 • ${artist.albumCount}앨범',
+                  Text('${artist.songCount} ${AppLocalizations.of(context)!.songCount} • ${artist.albumCount} ${AppLocalizations.of(context)!.albums}',
                       style: const TextStyle(
                           color: Colors.white38, fontSize: 12)),
                 ],
@@ -186,7 +186,7 @@ class ArtistDetailScreen extends StatelessWidget {
                                 fontWeight: FontWeight.w900,
                                 letterSpacing: -0.5)),
                         const SizedBox(height: 4),
-                        Text('${artist.songCount}곡 • ${artist.albumCount}앨범',
+                        Text('${artist.songCount} ${AppLocalizations.of(context)!.songCount} • ${artist.albumCount} ${AppLocalizations.of(context)!.albums}',
                             style: const TextStyle(
                                 color: Colors.white60, fontSize: 14)),
                       ],

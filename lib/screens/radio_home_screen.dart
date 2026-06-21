@@ -1,3 +1,4 @@
+import 'dart:ui' show PlatformDispatcher;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/radio_country.dart';
@@ -14,6 +15,19 @@ import '../l10n/app_localizations.dart';
 
 class RadioHomeScreen extends StatelessWidget {
   const RadioHomeScreen({super.key});
+
+  List<RadioCountry> get _sortedCountries {
+    final deviceCountryCode = PlatformDispatcher.instance.locale.countryCode;
+    final list = List<RadioCountry>.from(RadioCountry.supported);
+    if (deviceCountryCode != null) {
+      final myIndex = list.indexWhere((c) => c.code == deviceCountryCode);
+      if (myIndex > 0) {
+        final myCountry = list.removeAt(myIndex);
+        list.insert(0, myCountry);
+      }
+    }
+    return list;
+  }
 
   void _onCountryTap(BuildContext context, RadioCountry country) {
     context.read<RadioProvider>().selectCountry(country);
@@ -70,9 +84,9 @@ class RadioHomeScreen extends StatelessWidget {
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2, crossAxisSpacing: 12, mainAxisSpacing: 12, childAspectRatio: 1.9,
                 ),
-                itemCount: RadioCountry.supported.length,
+                itemCount: _sortedCountries.length,
                 itemBuilder: (context, index) {
-                  final country = RadioCountry.supported[index];
+                  final country = _sortedCountries[index];
                   return _CountryCard(country: country, onTap: () => _onCountryTap(context, country));
                 },
               ),

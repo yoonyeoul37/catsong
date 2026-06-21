@@ -33,6 +33,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _isScrollingUp = true;
+  double _lastScrollOffset = 0;
   int _currentTabIndex = 0;
   bool _showFavorites = false;
   bool _showRecent = false;
@@ -463,54 +465,72 @@ class _HomeScreenState extends State<HomeScreen> {
                     final songs = musicProvider.songs;
                     final song = songs[index];
                     final isSelected = _selectedSongIds.contains(song.id);
-                    return GestureDetector(
-                      onLongPress: () {
-                        setState(() {
-                          _isSelectionMode = true;
-                          _selectedSongIds.add(song.id);
-                        });
+                    return TweenAnimationBuilder<double>(
+                      key: ValueKey('anim_${song.id}'),
+                      tween: Tween(begin: 0.0, end: 1.0),
+                      duration: const Duration(milliseconds: 320),
+                      curve: Curves.easeOutCubic,
+                      builder: (context, value, child) {
+                        return Transform.translate(
+                          offset: Offset((1 - value) * 24, 0.0),
+                          child: Transform.scale(
+                            scale: 0.95 + (0.05 * value),
+                            child: Opacity(
+                              opacity: value.clamp(0.0, 1.0),
+                              child: child,
+                            ),
+                          ),
+                        );
                       },
-                      onTap: _isSelectionMode
-                          ? () {
-                        setState(() {
-                          if (isSelected) {
-                            _selectedSongIds.remove(song.id);
-                            if (_selectedSongIds.isEmpty) {
-                              _isSelectionMode = false;
-                            }
-                          } else {
+                      child: GestureDetector(
+                        onLongPress: () {
+                          setState(() {
+                            _isSelectionMode = true;
                             _selectedSongIds.add(song.id);
-                          }
-                        });
-                      }
-                          : null,
-                      child: Container(
-                        color: isSelected
-                            ? Theme.of(context).colorScheme.primary.withOpacity(0.15)
-                            : Colors.transparent,
-                        child: Row(
-                          children: [
-                            if (_isSelectionMode)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 12),
-                                child: Icon(
-                                  isSelected
-                                      ? Icons.check_circle
-                                      : Icons.radio_button_unchecked,
-                                  color: isSelected
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Colors.white38,
-                                  size: 22,
+                          });
+                        },
+                        onTap: _isSelectionMode
+                            ? () {
+                          setState(() {
+                            if (isSelected) {
+                              _selectedSongIds.remove(song.id);
+                              if (_selectedSongIds.isEmpty) {
+                                _isSelectionMode = false;
+                              }
+                            } else {
+                              _selectedSongIds.add(song.id);
+                            }
+                          });
+                        }
+                            : null,
+                        child: Container(
+                          color: isSelected
+                              ? Theme.of(context).colorScheme.primary.withOpacity(0.15)
+                              : Colors.transparent,
+                          child: Row(
+                            children: [
+                              if (_isSelectionMode)
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 12),
+                                  child: Icon(
+                                    isSelected
+                                        ? Icons.check_circle
+                                        : Icons.radio_button_unchecked,
+                                    color: isSelected
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Colors.white38,
+                                    size: 22,
+                                  ),
+                                ),
+                              Expanded(
+                                child: SongListTile(
+                                  song: song,
+                                  index: index,
+                                  songList: songs,
                                 ),
                               ),
-                            Expanded(
-                              child: SongListTile(
-                                song: song,
-                                index: index,
-                                songList: songs,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     );

@@ -90,12 +90,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildTile(context, icon: Icons.font_download_outlined, title: l.fontChange, onTap: () => _showFontDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.style, title: l.playerStyle, onTap: () => _showPlayerStyleDialog(context), primaryColor: primaryColor, isLast: true),
           _buildSection(l.equalizer),
-          _buildTile(context, icon: Icons.equalizer, title: l.equalizer, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const EqualizerScreen())), primaryColor: primaryColor, isFirst: true),
+          _buildTile(context, icon: Icons.equalizer, title: l.equalizer, onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const EqualizerScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor, isFirst: true),
           _buildTile(context, icon: _isFlashlightOn ? Icons.flashlight_on : Icons.flashlight_off, title: l.flashlight, subtitle: _isFlashlightOn ? l.on : l.off, onTap: () => _toggleFlashlight(context), primaryColor: primaryColor,
               trailing: Switch(value: _isFlashlightOn, onChanged: (_) => _toggleFlashlight(context), activeColor: primaryColor, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
           _buildTile(context, icon: Icons.emergency, title: l.sos, subtitle: _isSosOn ? l.sosWorking : l.sos, onTap: () => _toggleSOS(context), primaryColor: primaryColor,
               trailing: Switch(value: _isSosOn, onChanged: (_) => _toggleSOS(context), activeColor: Colors.redAccent, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
-          _buildTile(context, icon: Icons.music_note_outlined, title: l.ringtone, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const RingtoneScreen())), primaryColor: primaryColor, isLast: true),
+          _buildTile(context, icon: Icons.music_note_outlined, title: l.ringtone, onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const RingtoneScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor, isLast: true),
           _buildSection(l.widget),
           _buildTile(context, icon: Icons.widgets_outlined, title: l.widget, onTap: () async {
             const platform = MethodChannel('kr.ssing.catsong/media');
@@ -526,7 +526,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const SizedBox(height: 16),
               Slider(
-                value: themeProvider.textScale.clamp(1.0, 2.0), min: 1.0, max: 2.0, divisions: 10,
+                value: themeProvider.textScale.clamp(1.0, 1.5), min: 1.0, max: 1.5, divisions: 10,
                 label: '${(themeProvider.textScale * 100).toInt()}%',
                 onChanged: (value) { themeProvider.setTextScale(value); setDialogState(() {}); },
               ),

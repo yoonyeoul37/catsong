@@ -153,10 +153,13 @@ class MyApp extends StatelessWidget {
               Locale('zh'),
             ],
             theme: AppTheme.buildTheme(themeProvider.primaryColor).copyWith(
-              textTheme: AppTheme.buildTheme(themeProvider.primaryColor)
-                  .textTheme
-                  .merge(themeProvider.getTextTheme())
-                  .apply(fontFamily: themeProvider.fontFamily.isEmpty ? 'SpoqaHanSansNeo' : themeProvider.fontFamily),
+              textTheme: themeProvider.fontFamily == 'default'
+                  ? AppTheme.buildTheme(themeProvider.primaryColor)
+                      .textTheme
+                      .apply(fontFamily: 'SpoqaHanSansNeo')
+                  : AppTheme.buildTheme(themeProvider.primaryColor)
+                      .textTheme
+                      .merge(themeProvider.getTextTheme()),
             ),
             builder: (context, child) {
               AppLocale.current = AppLocalizations.of(context);

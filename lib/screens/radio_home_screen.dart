@@ -1,4 +1,4 @@
-import 'dart:ui' show PlatformDispatcher;
+import 'dart:ui' show PlatformDispatcher, ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/radio_country.dart';
@@ -42,55 +42,68 @@ class RadioHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final radioProvider = context.watch<RadioProvider>();
+    final countries = _sortedCountries;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0A),
+      backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: false,
       appBar: AppBar(
-        backgroundColor: AppTheme.background,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios, color: AppTheme.textPrimary, size: 22),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
         ),
         title: Row(
           children: [
-            Icon(Icons.radio_outlined, color: primaryColor, size: 24),
+            Icon(Icons.radio_outlined, color: primaryColor, size: 22),
             const SizedBox(width: 8),
-            Text(AppLocalizations.of(context)!.radioTitle, style: TextStyle(color: primaryColor, fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -0.5)),
+            Text(AppLocalizations.of(context)!.radioTitle,
+                style: TextStyle(color: primaryColor, fontSize: 19, fontWeight: FontWeight.w800, letterSpacing: -0.5)),
           ],
         ),
         actions: [
           IconButton(
             onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RadioSearchScreen())),
-            icon: const Icon(Icons.search, color: AppTheme.textPrimary, size: 26),
+            icon: const Icon(Icons.search, color: Colors.white70, size: 23),
           ),
           IconButton(
             onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RadioFavoritesScreen())),
-            icon: Icon(Icons.favorite, color: primaryColor, size: 24),
+            icon: Icon(Icons.favorite, color: primaryColor, size: 21),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 6),
         ],
       ),
       body: SafeArea(
-        child: Column(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
           children: [
             const _RecentSection(),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 10),
-              child: _SectionHeader(title: AppLocalizations.of(context)!.radioSelectCountry),
-            ),
-            Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, crossAxisSpacing: 12, mainAxisSpacing: 12, childAspectRatio: 1.9,
-                ),
-                itemCount: _sortedCountries.length,
-                itemBuilder: (context, index) {
-                  final country = _sortedCountries[index];
-                  return _CountryCard(country: country, onTap: () => _onCountryTap(context, country));
-                },
+            const SizedBox(height: 36),
+            Text(
+              AppLocalizations.of(context)!.radioSelectCountry,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.4),
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 2,
               ),
             ),
+            const SizedBox(height: 4),
+            ...List.generate(countries.length, (index) {
+              final country = countries[index];
+              return Column(
+                children: [
+                  _CountryListTile(
+                    country: country,
+                    onTap: () => _onCountryTap(context, country),
+                  ),
+                  if (index != countries.length - 1)
+                    Divider(height: 1, color: Colors.white.withOpacity(0.06), indent: 48),
+                ],
+              );
+            }),
+            const SizedBox(height: 80),
           ],
         ),
       ),
@@ -101,45 +114,49 @@ class RadioHomeScreen extends StatelessWidget {
   }
 }
 
-class _CountryCard extends StatelessWidget {
+class _CountryListTile extends StatelessWidget {
   final RadioCountry country;
   final VoidCallback onTap;
-  const _CountryCard({required this.country, required this.onTap});
+  const _CountryListTile({required this.country, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
-    return Material(
-      color: AppTheme.cardColor,
-      borderRadius: BorderRadius.circular(16),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: primaryColor.withOpacity(0.12), width: 1),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(country.flag, style: const TextStyle(fontSize: 28)),
-              const SizedBox(width: 10),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+    return InkWell(
+      onTap: onTap,
+      splashColor: Colors.white.withOpacity(0.04),
+      highlightColor: Colors.transparent,
+      borderRadius: BorderRadius.circular(14),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Row(
+          children: [
+            Text(country.flag, style: const TextStyle(fontSize: 30)),
+            const SizedBox(width: 18),
+            Expanded(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(country.displayName, style: const TextStyle(color: AppTheme.textPrimary, fontSize: 15, fontWeight: FontWeight.w700)),
+                  Text(
+                    country.displayName,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.5,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
                   Text(
                     country.code == 'KR'
                         ? '${koreanStations.length}${AppLocalizations.of(context)!.radioChannelCount}'
                         : AppLocalizations.of(context)!.radioPopular200,
-                    style: const TextStyle(color: AppTheme.textSecondary, fontSize: 11),
+                    style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12.5),
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+            Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.25), size: 20),
+          ],
         ),
       ),
     );
@@ -177,17 +194,23 @@ class _RecentSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-          child: _SectionHeader(title: AppLocalizations.of(context)!.radioRecentListening),
+        Text(
+          AppLocalizations.of(context)!.radioRecentListening,
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.4),
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 2,
+          ),
         ),
+        const SizedBox(height: 14),
         SizedBox(
-          height: 105,
+          height: 92,
           child: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.none,
             itemCount: recent.length > 10 ? 10 : recent.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 8),
+            separatorBuilder: (_, __) => const SizedBox(width: 10),
             itemBuilder: (context, index) {
               final station = recent[index];
               final time = station.lastListened;
@@ -197,96 +220,66 @@ class _RecentSection extends StatelessWidget {
 
               return GestureDetector(
                 onTap: () => context.read<RadioProvider>().playStation(station),
-                child: Container(
-                  width: 190,
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: AppTheme.surfaceVariant,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: primaryColor.withOpacity(0.15)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(18),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+                    child: Container(
+                      width: 180,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.06),
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(color: Colors.white.withOpacity(0.10)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.radio, color: primaryColor, size: 13),
-                          const SizedBox(width: 6),
-                          Expanded(
-                            child: Text(
-                              station.name,
-                              style: const TextStyle(color: AppTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.w600),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                          Row(
+                            children: [
+                              Icon(Icons.radio, color: primaryColor, size: 13),
+                              const SizedBox(width: 6),
+                              Expanded(
+                                child: Text(
+                                  station.name,
+                                  style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
+                          const SizedBox(height: 5),
+                          Builder(builder: (ctx) {
+                            final nowPlaying = radioProvider.nowPlayingFor(station.name);
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (nowPlaying != null && nowPlaying.isNotEmpty)
+                                  Text(
+                                    nowPlaying,
+                                    style: TextStyle(color: Colors.white.withOpacity(0.55), fontSize: 10.5),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                if (timeStr.isNotEmpty)
+                                  Text(
+                                    timeStr,
+                                    style: TextStyle(color: Colors.white.withOpacity(0.35), fontSize: 10.5),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                              ],
+                            );
+                          }),
                         ],
                       ),
-                      const SizedBox(height: 4),
-                      Builder(builder: (ctx) {
-                        final nowPlaying = radioProvider.nowPlayingFor(station.name);
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (nowPlaying != null && nowPlaying.isNotEmpty)
-                              Text(
-                                nowPlaying,
-                                style: const TextStyle(color: Color(0xFFAAAAAA), fontSize: 10),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            if (timeStr.isNotEmpty)
-                              Text(
-                                timeStr,
-                                style: const TextStyle(color: Color(0xFF888888), fontSize: 10),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                          ],
-                        );
-                      }),
-                    ],
+                    ),
                   ),
                 ),
               );
             },
-          ),
-        ),
-        const SizedBox(height: 8),
-      ],
-    );
-  }
-}
-
-// ── 섹션 헤더 (D안: 구분선 가운데 텍스트) ──
-class _SectionHeader extends StatelessWidget {
-  final String title;
-  const _SectionHeader({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 16, height: 1,
-          color: const Color(0xFF2a2a2a),
-        ),
-        const SizedBox(width: 10),
-        Text(
-          title,
-          style: const TextStyle(
-            color: Color(0xFF999999),
-            fontSize: 11,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 1.5,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Container(
-            height: 1,
-            color: const Color(0xFF1e1e1e),
           ),
         ),
       ],

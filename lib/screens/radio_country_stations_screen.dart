@@ -152,7 +152,7 @@ class _RadioCountryStationsScreenState
                     EdgeInsets.fromLTRB(24, 0, 24, 80 + MediaQuery.of(context).viewPadding.bottom),
                     itemCount: stations.length,
                     separatorBuilder: (_, __) =>
-                        Divider(height: 1, color: Colors.white.withOpacity(0.10)),
+                        Divider(height: 1, color: Colors.white.withOpacity(0.16)),
                     itemBuilder: (context, index) {
                       final station = stations[index];
                       final isPlaying = current?.stationUuid ==

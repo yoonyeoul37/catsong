@@ -14,6 +14,7 @@ class EditSongScreen extends StatefulWidget {
 }
 
 class _EditSongScreenState extends State<EditSongScreen> {
+  static const _accent = AppTheme.fixedAccent;
   late TextEditingController _titleController;
   late TextEditingController _artistController;
   late TextEditingController _albumController;
@@ -36,23 +37,23 @@ class _EditSongScreenState extends State<EditSongScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: AppTheme.background,
+        backgroundColor: Colors.white,
+        elevation: 0,
         title: Text(AppLocalizations.of(context)!.editSong,
-            style: const TextStyle(color: AppTheme.textPrimary)),
+            style: const TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w600)),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios, color: AppTheme.textPrimary),
+          icon: const Icon(Icons.arrow_back_ios, color: _accent, size: 20),
         ),
         actions: [
           TextButton(
             onPressed: () => _saveSong(context),
             child: Text(AppLocalizations.of(context)!.save,
-                style: TextStyle(
-                    color: primaryColor,
+                style: const TextStyle(
+                    color: _accent,
                     fontWeight: FontWeight.bold,
                     fontSize: 16)),
           ),
@@ -70,30 +71,30 @@ class _EditSongScreenState extends State<EditSongScreen> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    AppTheme.surfaceVariant,
-                    primaryColor.withOpacity(0.2),
+                    const Color(0xFFF5F5F5),
+                    _accent.withOpacity(0.15),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Center(
-                child: Icon(Icons.music_note, color: primaryColor, size: 50),
+              child: const Center(
+                child: Icon(Icons.music_note, color: _accent, size: 50),
               ),
             ),
             const SizedBox(height: 32),
-            _buildTextField('제목', _titleController, Icons.title, primaryColor),
+            _buildTextField('제목', _titleController, Icons.title),
             const SizedBox(height: 16),
-            _buildTextField('아티스트', _artistController, Icons.person, primaryColor),
+            _buildTextField('아티스트', _artistController, Icons.person),
             const SizedBox(height: 16),
-            _buildTextField('앨범', _albumController, Icons.album, primaryColor),
+            _buildTextField('앨범', _albumController, Icons.album),
             const SizedBox(height: 32),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () => _saveSong(context),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  foregroundColor: Colors.black,
+                  backgroundColor: _accent,
+                  foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
@@ -110,24 +111,24 @@ class _EditSongScreenState extends State<EditSongScreen> {
   }
 
   Widget _buildTextField(
-      String label, TextEditingController controller, IconData icon, Color primaryColor) {
+      String label, TextEditingController controller, IconData icon) {
     return TextField(
       controller: controller,
-      style: const TextStyle(color: AppTheme.textPrimary),
+      style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: AppTheme.textSecondary),
-        prefixIcon: Icon(icon, color: primaryColor),
+        labelStyle: const TextStyle(color: Colors.black54),
+        prefixIcon: Icon(icon, color: _accent),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppTheme.divider),
+          borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: primaryColor),
+          borderSide: const BorderSide(color: _accent),
         ),
         filled: true,
-        fillColor: AppTheme.surfaceVariant,
+        fillColor: const Color(0xFFF5F5F5),
       ),
     );
   }
@@ -145,7 +146,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
       SnackBar(
         content: Text(AppLocalizations.of(context)!.songSaved),
         backgroundColor: AppTheme.surfaceVariant,
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
       ),
     );
   }

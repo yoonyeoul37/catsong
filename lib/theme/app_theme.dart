@@ -31,23 +31,23 @@ class AppTheme {
   static LinearGradient dynamicBackgroundGradient(Color primaryColor) {
     // 밝은 버전 (왼쪽 상단)
     final bright = Color.fromRGBO(
-      (primaryColor.red * 0.6).toInt().clamp(0, 255),
-      (primaryColor.green * 0.6).toInt().clamp(0, 255),
-      (primaryColor.blue * 0.6).toInt().clamp(0, 255),
+      (primaryColor.red * 0.90).toInt().clamp(0, 255),
+      (primaryColor.green * 0.90).toInt().clamp(0, 255),
+      (primaryColor.blue * 0.90).toInt().clamp(0, 255),
       1.0,
     );
     // 중간
     final mid = Color.fromRGBO(
-      (primaryColor.red * 0.35).toInt().clamp(0, 255),
-      (primaryColor.green * 0.35).toInt().clamp(0, 255),
-      (primaryColor.blue * 0.35).toInt().clamp(0, 255),
+      (primaryColor.red * 0.55).toInt().clamp(0, 255),
+      (primaryColor.green * 0.55).toInt().clamp(0, 255),
+      (primaryColor.blue * 0.55).toInt().clamp(0, 255),
       1.0,
     );
     // 어두운 버전 (오른쪽 하단)
     final dark = Color.fromRGBO(
-      (primaryColor.red * 0.15).toInt().clamp(0, 255),
-      (primaryColor.green * 0.15).toInt().clamp(0, 255),
-      (primaryColor.blue * 0.15).toInt().clamp(0, 255),
+      (primaryColor.red * 0.28).toInt().clamp(0, 255),
+      (primaryColor.green * 0.28).toInt().clamp(0, 255),
+      (primaryColor.blue * 0.28).toInt().clamp(0, 255),
       1.0,
     );
     return LinearGradient(

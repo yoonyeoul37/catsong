@@ -295,7 +295,7 @@ class _PlayerScreenState extends State<PlayerScreen>
           ),
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: AppTheme.textPrimary),
-            color: AppTheme.surfaceVariant,
+            color: Colors.white,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12)),
             itemBuilder: (context) => [
@@ -303,10 +303,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                 value: 'edit',
                 child: Row(
                   children: [
-                    Icon(Icons.edit, color: primaryColor, size: 18),
+                    const Icon(Icons.edit, color: AppTheme.fixedAccent, size: 18),
                     const SizedBox(width: 10),
                     Text(AppLocalizations.of(context)!.editSong,
-                        style: const TextStyle(color: AppTheme.textPrimary)),
+                        style: const TextStyle(color: Colors.black87)),
                   ],
                 ),
               ),
@@ -314,10 +314,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                 value: 'playlist',
                 child: Row(
                   children: [
-                    Icon(Icons.playlist_add, color: primaryColor, size: 18),
+                    const Icon(Icons.playlist_add, color: AppTheme.fixedAccent, size: 18),
                     const SizedBox(width: 10),
                     Text(AppLocalizations.of(context)!.addToPlaylist,
-                        style: const TextStyle(color: AppTheme.textPrimary)),
+                        style: const TextStyle(color: Colors.black87)),
                   ],
                 ),
               ),
@@ -325,10 +325,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                 value: 'style',
                 child: Row(
                   children: [
-                    Icon(Icons.style, color: primaryColor, size: 18),
+                    const Icon(Icons.style, color: AppTheme.fixedAccent, size: 18),
                     const SizedBox(width: 10),
                     Text(AppLocalizations.of(context)!.playerStyle,
-                        style: const TextStyle(color: AppTheme.textPrimary)),
+                        style: const TextStyle(color: Colors.black87)),
                   ],
                 ),
               ),
@@ -954,7 +954,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 },
                 icon: Icon(
                   isFav ? Icons.favorite : Icons.favorite_border,
-                  color: isFav ? Colors.redAccent : AppTheme.textHint,
+                  color: isFav ? Colors.redAccent : Colors.white60,
                 ),
               ),
             ],
@@ -1047,7 +1047,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 icon: Icon(Icons.shuffle,
                     color: playerProvider.isShuffled
                         ? primaryColor
-                        : AppTheme.textHint),
+                        : Colors.white60),
                 iconSize: 22,
               ),
               IconButton(
@@ -1058,7 +1058,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                         : Icons.repeat,
                     color: playerProvider.loopMode != LoopMode.off
                         ? primaryColor
-                        : AppTheme.textHint),
+                        : Colors.white60),
                 iconSize: 22,
               ),
               IconButton(
@@ -1066,7 +1066,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 icon: Icon(Icons.bedtime,
                     color: playerProvider.isSleepTimerActive
                         ? primaryColor
-                        : AppTheme.textHint),
+                        : Colors.white60),
                 iconSize: 22,
               ),
               IconButton(
@@ -1074,7 +1074,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 icon: Icon(Icons.speed,
                     color: playerProvider.playbackSpeed != 1.0
                         ? primaryColor
-                        : AppTheme.textHint),
+                        : Colors.white60),
                 iconSize: 22,
               ),
               IconButton(
@@ -1086,7 +1086,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     ),
                   );
                 },
-                icon: const Icon(Icons.lyrics_outlined, color: AppTheme.textHint),
+                icon: const Icon(Icons.lyrics_outlined, color: Colors.white60),
                 iconSize: 22,
               ),
             ],
@@ -1099,15 +1099,16 @@ class _PlayerScreenState extends State<PlayerScreen>
 
   void _showAddToPlaylistDialog(BuildContext context, Song song, Color primaryColor) {
     final playlistProvider = context.read<PlaylistProvider>();
+    const accent = AppTheme.fixedAccent;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.surfaceVariant,
+        backgroundColor: Colors.white,
         title: Text(AppLocalizations.of(context)!.addToPlaylist,
-            style: const TextStyle(color: AppTheme.textPrimary)),
+            style: const TextStyle(color: Colors.black)),
         content: playlistProvider.playlists.isEmpty
             ? Text(AppLocalizations.of(context)!.noPlaylists,
-            style: const TextStyle(color: AppTheme.textSecondary))
+            style: const TextStyle(color: Colors.black54))
             : SizedBox(
           width: double.maxFinite,
           child: ListView.builder(
@@ -1116,11 +1117,11 @@ class _PlayerScreenState extends State<PlayerScreen>
             itemBuilder: (context, index) {
               final playlist = playlistProvider.playlists[index];
               return ListTile(
-                leading: Icon(Icons.playlist_play, color: primaryColor),
+                leading: const Icon(Icons.playlist_play, color: accent),
                 title: Text(playlist.name,
-                    style: const TextStyle(color: AppTheme.textPrimary)),
+                    style: const TextStyle(color: Colors.black)),
                 subtitle: Text('${playlist.songCount} songs',
-                    style: const TextStyle(color: AppTheme.textSecondary)),
+                    style: const TextStyle(color: Colors.black54)),
                 onTap: () {
                   playlistProvider.addSongToPlaylist(playlist.id, song);
                   Navigator.pop(ctx);
@@ -1139,7 +1140,7 @@ class _PlayerScreenState extends State<PlayerScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text(AppLocalizations.of(context)!.close, style: TextStyle(color: primaryColor)),
+            child: Text(AppLocalizations.of(context)!.close, style: const TextStyle(color: accent)),
           ),
         ],
       ),
@@ -1149,26 +1150,27 @@ class _PlayerScreenState extends State<PlayerScreen>
   void _showSleepTimerDialog(BuildContext context, PlayerProvider playerProvider, Color primaryColor) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.surfaceVariant,
+      backgroundColor: Colors.white,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (ctx) => _SleepTimerDialog(playerProvider: playerProvider, primaryColor: primaryColor),
+      builder: (ctx) => _SleepTimerDialog(playerProvider: playerProvider, primaryColor: AppTheme.fixedAccent),
     );
   }
 
   void _showSpeedDialog(BuildContext context, PlayerProvider playerProvider, Color primaryColor) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.surfaceVariant,
+      backgroundColor: Colors.white,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (ctx) => _SpeedDialog(playerProvider: playerProvider, primaryColor: primaryColor),
+      builder: (ctx) => _SpeedDialog(playerProvider: playerProvider, primaryColor: AppTheme.fixedAccent),
     );
   }
 
   void _showStyleDialog(BuildContext context, Color primaryColor) {
+    const accent = AppTheme.fixedAccent;
     final styles = [
       {'id': 1, 'name': AppLocalizations.of(context)!.styleCD, 'icon': Icons.album, 'desc': AppLocalizations.of(context)!.styleCDDesc},
       {'id': 2, 'name': AppLocalizations.of(context)!.styleCassette, 'icon': Icons.settings_input_composite, 'desc': AppLocalizations.of(context)!.styleCassetteDesc},
@@ -1181,13 +1183,13 @@ class _PlayerScreenState extends State<PlayerScreen>
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          backgroundColor: AppTheme.surfaceVariant,
+          backgroundColor: Colors.white,
           title: Row(
             children: [
-              Icon(Icons.style, color: primaryColor, size: 20),
+              const Icon(Icons.style, color: accent, size: 20),
               const SizedBox(width: 8),
               Text(AppLocalizations.of(context)!.playerStyle,
-                  style: const TextStyle(color: AppTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
+                  style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
             ],
           ),
           content: SizedBox(
@@ -1210,16 +1212,16 @@ class _PlayerScreenState extends State<PlayerScreen>
                     margin: const EdgeInsets.only(bottom: 8),
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                     decoration: BoxDecoration(
-                      color: isSelected ? primaryColor.withOpacity(0.15) : AppTheme.background,
+                      color: isSelected ? accent.withOpacity(0.10) : const Color(0xFFF5F5F5),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: isSelected ? primaryColor : Colors.transparent,
+                        color: isSelected ? accent : Colors.transparent,
                       ),
                     ),
                     child: Row(
                       children: [
                         Icon(style['icon'] as IconData,
-                            color: isSelected ? primaryColor : AppTheme.textHint, size: 24),
+                            color: isSelected ? accent : Colors.black38, size: 24),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
@@ -1227,16 +1229,16 @@ class _PlayerScreenState extends State<PlayerScreen>
                             children: [
                               Text(style['name'] as String,
                                   style: TextStyle(
-                                      color: isSelected ? primaryColor : AppTheme.textPrimary,
+                                      color: isSelected ? accent : Colors.black87,
                                       fontSize: 14,
                                       fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
                               Text(style['desc'] as String,
-                                  style: const TextStyle(color: AppTheme.textSecondary, fontSize: 11)),
+                                  style: const TextStyle(color: Colors.black45, fontSize: 11)),
                             ],
                           ),
                         ),
                         if (isSelected)
-                          Icon(Icons.check_circle, color: primaryColor, size: 20),
+                          const Icon(Icons.check_circle, color: accent, size: 20),
                       ],
                     ),
                   ),
@@ -1247,7 +1249,7 @@ class _PlayerScreenState extends State<PlayerScreen>
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: Text(AppLocalizations.of(context)!.close, style: TextStyle(color: primaryColor)),
+              child: Text(AppLocalizations.of(context)!.close, style: const TextStyle(color: accent)),
             ),
           ],
         ),
@@ -1257,9 +1259,10 @@ class _PlayerScreenState extends State<PlayerScreen>
 }
 
 void _showLoopModeDialog(BuildContext context, PlayerProvider playerProvider, Color primaryColor) {
+  const accent = AppTheme.fixedAccent;
   showModalBottomSheet(
     context: context,
-    backgroundColor: AppTheme.surfaceVariant,
+    backgroundColor: Colors.white,
     shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
     builder: (ctx) => StatefulBuilder(
@@ -1271,11 +1274,11 @@ void _showLoopModeDialog(BuildContext context, PlayerProvider playerProvider, Co
           children: [
             Row(
               children: [
-                Icon(Icons.repeat, color: primaryColor, size: 20),
+                const Icon(Icons.repeat, color: accent, size: 20),
                 const SizedBox(width: 8),
                 Text(AppLocalizations.of(context)!.repeatMode,
                     style: const TextStyle(
-                        color: AppTheme.textPrimary,
+                        color: Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.bold)),
               ],
@@ -1286,7 +1289,7 @@ void _showLoopModeDialog(BuildContext context, PlayerProvider playerProvider, Co
               title: AppLocalizations.of(context)!.noRepeat,
               subtitle: AppLocalizations.of(context)!.noRepeat,
               isSelected: playerProvider.loopMode == LoopMode.off,
-              primaryColor: primaryColor,
+              primaryColor: accent,
               onTap: () {
                 playerProvider.setLoopMode(LoopMode.off);
                 setDialogState(() {});
@@ -1298,7 +1301,7 @@ void _showLoopModeDialog(BuildContext context, PlayerProvider playerProvider, Co
               title: AppLocalizations.of(context)!.repeatOne,
               subtitle: AppLocalizations.of(context)!.repeatOne,
               isSelected: playerProvider.loopMode == LoopMode.one,
-              primaryColor: primaryColor,
+              primaryColor: accent,
               onTap: () {
                 playerProvider.setLoopMode(LoopMode.one);
                 setDialogState(() {});
@@ -1310,7 +1313,7 @@ void _showLoopModeDialog(BuildContext context, PlayerProvider playerProvider, Co
               title: AppLocalizations.of(context)!.repeatAll,
               subtitle: AppLocalizations.of(context)!.repeatAll,
               isSelected: playerProvider.loopMode == LoopMode.all,
-              primaryColor: primaryColor,
+              primaryColor: accent,
               onTap: () {
                 playerProvider.setLoopMode(LoopMode.all);
                 setDialogState(() {});
@@ -1345,11 +1348,11 @@ Widget _buildLoopOption(
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: isSelected ? primaryColor.withOpacity(0.15) : AppTheme.background,
+              color: isSelected ? primaryColor.withOpacity(0.12) : const Color(0xFFF5F5F5),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(icon,
-                color: isSelected ? primaryColor : AppTheme.textHint, size: 20),
+                color: isSelected ? primaryColor : Colors.black38, size: 20),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -1358,11 +1361,11 @@ Widget _buildLoopOption(
               children: [
                 Text(title,
                     style: TextStyle(
-                        color: isSelected ? primaryColor : AppTheme.textPrimary,
+                        color: isSelected ? primaryColor : Colors.black87,
                         fontSize: 14,
                         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
                 Text(subtitle,
-                    style: const TextStyle(color: AppTheme.textSecondary, fontSize: 11)),
+                    style: const TextStyle(color: Colors.black45, fontSize: 11)),
               ],
             ),
           ),
@@ -1443,9 +1446,9 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: primaryColor.withOpacity(0.15),
+          color: primaryColor.withOpacity(0.10),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: primaryColor.withOpacity(0.5)),
+          border: Border.all(color: primaryColor.withOpacity(0.4)),
         ),
         child: Text(label,
             style: TextStyle(
@@ -1470,7 +1473,7 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
   @override
   Widget build(BuildContext context) {
     final isActive = widget.playerProvider.isSleepTimerActive;
-    final primaryColor = widget.primaryColor;
+    final primaryColor = AppTheme.fixedAccent;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + MediaQuery.of(context).viewPadding.bottom),
@@ -1483,7 +1486,7 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
               const SizedBox(width: 8),
               Text(AppLocalizations.of(context)!.sleepTimer,
                   style: const TextStyle(
-                      color: AppTheme.textPrimary,
+                      color: Colors.black,
                       fontSize: 16,
                       fontWeight: FontWeight.bold)),
             ],
@@ -1509,7 +1512,7 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.1),
+                color: primaryColor.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
@@ -1548,7 +1551,7 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
                     onPressed: () => Navigator.pop(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
-                      foregroundColor: Colors.black,
+                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                     ),
@@ -1561,7 +1564,7 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.1),
+                color: primaryColor.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
@@ -1580,20 +1583,27 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
                 SizedBox(
                   width: 30,
                   child: Text(AppLocalizations.of(context)!.minuteShort,
-                      style: TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+                      style: const TextStyle(color: Colors.black45, fontSize: 12)),
                 ),
                 Expanded(
-                  child: Slider(
-                    value: selectedMinutes.toDouble(),
-                    min: 0, max: 59, divisions: 59,
-                    onChanged: (value) =>
-                        setState(() => selectedMinutes = value.toInt()),
+                  child: SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      activeTrackColor: primaryColor,
+                      inactiveTrackColor: primaryColor.withOpacity(0.15),
+                      thumbColor: primaryColor,
+                    ),
+                    child: Slider(
+                      value: selectedMinutes.toDouble(),
+                      min: 0, max: 59, divisions: 59,
+                      onChanged: (value) =>
+                          setState(() => selectedMinutes = value.toInt()),
+                    ),
                   ),
                 ),
                 SizedBox(
                   width: 24,
                   child: Text('$selectedMinutes',
-                      style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+                      style: const TextStyle(color: Colors.black45, fontSize: 12)),
                 ),
               ],
             ),
@@ -1602,20 +1612,27 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
                 SizedBox(
                   width: 30,
                   child: Text(AppLocalizations.of(context)!.hourShort,
-                      style: TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+                      style: const TextStyle(color: Colors.black45, fontSize: 12)),
                 ),
                 Expanded(
-                  child: Slider(
-                    value: selectedHours.toDouble(),
-                    min: 0, max: 6, divisions: 6,
-                    onChanged: (value) =>
-                        setState(() => selectedHours = value.toInt()),
+                  child: SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      activeTrackColor: primaryColor,
+                      inactiveTrackColor: primaryColor.withOpacity(0.15),
+                      thumbColor: primaryColor,
+                    ),
+                    child: Slider(
+                      value: selectedHours.toDouble(),
+                      min: 0, max: 6, divisions: 6,
+                      onChanged: (value) =>
+                          setState(() => selectedHours = value.toInt()),
+                    ),
                   ),
                 ),
                 SizedBox(
                   width: 24,
                   child: Text('$selectedHours',
-                      style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+                      style: const TextStyle(color: Colors.black45, fontSize: 12)),
                 ),
               ],
             ),
@@ -1626,8 +1643,8 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
                   child: OutlinedButton(
                     onPressed: () => Navigator.pop(context),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: AppTheme.textHint,
-                      side: const BorderSide(color: AppTheme.divider),
+                      foregroundColor: Colors.black45,
+                      side: const BorderSide(color: Color(0xFFE5E5E5)),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                     ),
@@ -1656,7 +1673,7 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
-                      foregroundColor: Colors.black,
+                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                     ),
@@ -1693,7 +1710,7 @@ class _SpeedDialogState extends State<_SpeedDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = widget.primaryColor;
+    final primaryColor = AppTheme.fixedAccent;
     return Padding(
       padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + MediaQuery.of(context).viewPadding.bottom),
       child: Column(
@@ -1705,7 +1722,7 @@ class _SpeedDialogState extends State<_SpeedDialog> {
               const SizedBox(width: 8),
               Text(AppLocalizations.of(context)!.playbackSpeed,
                   style: const TextStyle(
-                      color: AppTheme.textPrimary,
+                      color: Colors.black,
                       fontSize: 16,
                       fontWeight: FontWeight.bold)),
             ],
@@ -1714,7 +1731,7 @@ class _SpeedDialogState extends State<_SpeedDialog> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
-              color: primaryColor.withOpacity(0.1),
+              color: primaryColor.withOpacity(0.08),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
@@ -1728,15 +1745,22 @@ class _SpeedDialogState extends State<_SpeedDialog> {
             ),
           ),
           const SizedBox(height: 12),
-          Slider(
-            value: _speed,
-            min: 0.5,
-            max: 2.0,
-            divisions: 6,
-            onChanged: (value) {
-              setState(() => _speed = value);
-              widget.playerProvider.setPlaybackSpeed(value);
-            },
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              activeTrackColor: primaryColor,
+              inactiveTrackColor: primaryColor.withOpacity(0.15),
+              thumbColor: primaryColor,
+            ),
+            child: Slider(
+              value: _speed,
+              min: 0.5,
+              max: 2.0,
+              divisions: 6,
+              onChanged: (value) {
+                setState(() => _speed = value);
+                widget.playerProvider.setPlaybackSpeed(value);
+              },
+            ),
           ),
           const SizedBox(height: 8),
           Wrap(
@@ -1753,15 +1777,15 @@ class _SpeedDialogState extends State<_SpeedDialog> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: isSelected ? primaryColor : AppTheme.background,
+                    color: isSelected ? primaryColor : const Color(0xFFF5F5F5),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                        color: isSelected ? primaryColor : AppTheme.divider),
+                        color: isSelected ? primaryColor : const Color(0xFFE5E5E5)),
                   ),
                   child: Text(
                     '${speed}x',
                     style: TextStyle(
-                        color: isSelected ? Colors.black : AppTheme.textSecondary,
+                        color: isSelected ? Colors.white : Colors.black54,
                         fontSize: 12,
                         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal),
                   ),
@@ -1779,8 +1803,8 @@ class _SpeedDialogState extends State<_SpeedDialog> {
                     widget.playerProvider.setPlaybackSpeed(1.0);
                   },
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: AppTheme.textHint,
-                    side: const BorderSide(color: AppTheme.divider),
+                    foregroundColor: Colors.black45,
+                    side: const BorderSide(color: Color(0xFFE5E5E5)),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
@@ -1793,7 +1817,7 @@ class _SpeedDialogState extends State<_SpeedDialog> {
                   onPressed: () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
-                    foregroundColor: Colors.black,
+                    foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),

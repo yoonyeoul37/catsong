@@ -50,8 +50,8 @@ class FavoritesScreen extends StatelessWidget {
                             .playFromList(favorites, 0);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: primaryColor,
-                        foregroundColor: Colors.black,
+                        backgroundColor: Color.lerp(primaryColor, Colors.black, 0.15),
+                        foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),

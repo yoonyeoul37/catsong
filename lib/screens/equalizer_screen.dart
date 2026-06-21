@@ -14,6 +14,7 @@ class EqualizerScreen extends StatefulWidget {
 
 class _EqualizerScreenState extends State<EqualizerScreen> {
   static const _channel = MethodChannel('kr.ssing.catsong/media');
+  static const _accent = AppTheme.fixedAccent;
 
   bool _isLoading = true;
   int _numBands = 0;
@@ -78,21 +79,20 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
-
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: AppTheme.background,
+        backgroundColor: Colors.white,
+        elevation: 0,
         title: Text(AppLocalizations.of(context)!.equalizer,
-            style: const TextStyle(color: AppTheme.textPrimary)),
+            style: const TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w600)),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios, color: AppTheme.textPrimary),
+          icon: const Icon(Icons.arrow_back_ios, color: _accent, size: 20),
         ),
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator(color: primaryColor))
+          ? const Center(child: CircularProgressIndicator(color: _accent))
           : SingleChildScrollView(
         child: Column(
           children: [
@@ -104,8 +104,8 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(AppLocalizations.of(context)!.preset,
-                        style: TextStyle(
-                            color: primaryColor,
+                        style: const TextStyle(
+                            color: _accent,
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.2)),
@@ -138,16 +138,21 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
                                   horizontal: 14, vertical: 8),
                               decoration: BoxDecoration(
                                 color: isSelected
-                                    ? primaryColor
-                                    : AppTheme.surfaceVariant,
+                                    ? _accent
+                                    : const Color(0xFFF5F5F5),
                                 borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? _accent
+                                      : const Color(0xFFE5E5E5),
+                                ),
                               ),
                               child: Text(
                                 _presets[index],
                                 style: TextStyle(
                                   color: isSelected
-                                      ? Colors.black
-                                      : AppTheme.textSecondary,
+                                      ? Colors.white
+                                      : Colors.black54,
                                   fontSize: 12,
                                   fontWeight: isSelected
                                       ? FontWeight.bold
@@ -163,7 +168,7 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
                 ),
               ),
 
-            const Divider(color: AppTheme.divider),
+            const Divider(color: Color(0xFFE5E5E5)),
 
             // Band sliders
             SizedBox(
@@ -182,34 +187,42 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
                       children: [
                         Text(
                           '${level > 0 ? '+' : ''}${(level / 100).toStringAsFixed(0)}',
-                          style: TextStyle(
-                              color: primaryColor, fontSize: 11),
+                          style: const TextStyle(
+                              color: _accent, fontSize: 11),
                         ),
                         Expanded(
                           child: RotatedBox(
                             quarterTurns: 3,
-                            child: Slider(
-                              value: level.toDouble(),
-                              min: _minLevel.toDouble(),
-                              max: _maxLevel.toDouble(),
-                              onChanged: (value) async {
-                                setState(() {
-                                  _bands[index]['level'] = value.toInt();
-                                  _selectedPreset = -1;
-                                });
-                                await _channel.invokeMethod(
-                                    'setEqualizerBand', {
-                                  'band': index,
-                                  'level': value.toInt(),
-                                });
-                              },
+                            child: SliderTheme(
+                              data: SliderTheme.of(context).copyWith(
+                                activeTrackColor: _accent,
+                                inactiveTrackColor: _accent.withOpacity(0.15),
+                                thumbColor: _accent,
+                                overlayColor: _accent.withOpacity(0.1),
+                              ),
+                              child: Slider(
+                                value: level.toDouble(),
+                                min: _minLevel.toDouble(),
+                                max: _maxLevel.toDouble(),
+                                onChanged: (value) async {
+                                  setState(() {
+                                    _bands[index]['level'] = value.toInt();
+                                    _selectedPreset = -1;
+                                  });
+                                  await _channel.invokeMethod(
+                                      'setEqualizerBand', {
+                                    'band': index,
+                                    'level': value.toInt(),
+                                  });
+                                },
+                              ),
                             ),
                           ),
                         ),
                         Text(
                           _formatFreq(freq),
                           style: const TextStyle(
-                              color: AppTheme.textSecondary, fontSize: 10),
+                              color: Colors.black45, fontSize: 10),
                         ),
                       ],
                     );
@@ -218,7 +231,7 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
               ),
             ),
 
-            const Divider(color: AppTheme.divider),
+            const Divider(color: Color(0xFFE5E5E5)),
 
             // Bass Booster
             Padding(
@@ -228,18 +241,18 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.speaker, color: primaryColor, size: 16),
+                      const Icon(Icons.speaker, color: _accent, size: 16),
                       const SizedBox(width: 6),
                       Text(AppLocalizations.of(context)!.bassBooster,
-                          style: TextStyle(
-                              color: primaryColor,
+                          style: const TextStyle(
+                              color: _accent,
                               fontSize: 13,
                               fontWeight: FontWeight.bold)),
                       const Spacer(),
                       Text(
                         '${(_bassBoostStrength / 10).toStringAsFixed(0)}%',
-                        style: TextStyle(
-                            color: primaryColor,
+                        style: const TextStyle(
+                            color: _accent,
                             fontSize: 12,
                             fontWeight: FontWeight.bold),
                       ),
@@ -247,18 +260,26 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(AppLocalizations.of(context)!.enhancesBass,
-                      style: TextStyle(
-                          color: AppTheme.textSecondary, fontSize: 11)),
-                  Slider(
-                    value: _bassBoostStrength,
-                    min: 0,
-                    max: 1000,
-                    onChanged: (value) async {
-                      setState(() => _bassBoostStrength = value);
-                      await _channel.invokeMethod('setBassBoost', {
-                        'strength': value.toInt(),
-                      });
-                    },
+                      style: const TextStyle(
+                          color: Colors.black45, fontSize: 11)),
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      activeTrackColor: _accent,
+                      inactiveTrackColor: _accent.withOpacity(0.15),
+                      thumbColor: _accent,
+                      overlayColor: _accent.withOpacity(0.1),
+                    ),
+                    child: Slider(
+                      value: _bassBoostStrength,
+                      min: 0,
+                      max: 1000,
+                      onChanged: (value) async {
+                        setState(() => _bassBoostStrength = value);
+                        await _channel.invokeMethod('setBassBoost', {
+                          'strength': value.toInt(),
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -272,18 +293,18 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.surround_sound, color: primaryColor, size: 16),
+                      const Icon(Icons.surround_sound, color: _accent, size: 16),
                       const SizedBox(width: 6),
                       Text(AppLocalizations.of(context)!.virtualizer,
-                          style: TextStyle(
-                              color: primaryColor,
+                          style: const TextStyle(
+                              color: _accent,
                               fontSize: 13,
                               fontWeight: FontWeight.bold)),
                       const Spacer(),
                       Text(
                         '${(_virtualizerStrength / 10).toStringAsFixed(0)}%',
-                        style: TextStyle(
-                            color: primaryColor,
+                        style: const TextStyle(
+                            color: _accent,
                             fontSize: 12,
                             fontWeight: FontWeight.bold),
                       ),
@@ -291,18 +312,26 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(AppLocalizations.of(context)!.surroundEffect,
-                      style: TextStyle(
-                          color: AppTheme.textSecondary, fontSize: 11)),
-                  Slider(
-                    value: _virtualizerStrength,
-                    min: 0,
-                    max: 1000,
-                    onChanged: (value) async {
-                      setState(() => _virtualizerStrength = value);
-                      await _channel.invokeMethod('setVirtualizer', {
-                        'strength': value.toInt(),
-                      });
-                    },
+                      style: const TextStyle(
+                          color: Colors.black45, fontSize: 11)),
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      activeTrackColor: _accent,
+                      inactiveTrackColor: _accent.withOpacity(0.15),
+                      thumbColor: _accent,
+                      overlayColor: _accent.withOpacity(0.1),
+                    ),
+                    child: Slider(
+                      value: _virtualizerStrength,
+                      min: 0,
+                      max: 1000,
+                      onChanged: (value) async {
+                        setState(() => _virtualizerStrength = value);
+                        await _channel.invokeMethod('setVirtualizer', {
+                          'strength': value.toInt(),
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -331,13 +360,14 @@ class _EqualizerScreenState extends State<EqualizerScreen> {
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.surfaceVariant,
-                  foregroundColor: primaryColor,
+                  backgroundColor: _accent,
+                  foregroundColor: Colors.white,
                   minimumSize: const Size(double.infinity, 48),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                 ),
-                child: Text(AppLocalizations.of(context)!.reset),
+                child: Text(AppLocalizations.of(context)!.reset,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
           ],

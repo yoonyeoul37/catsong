@@ -64,16 +64,16 @@ class RadioHomeScreen extends StatelessWidget {
         ),
         title: Row(
           children: [
-            Icon(Icons.radio_outlined, color: primaryColor, size: 22),
+            const Icon(Icons.radio_outlined, color: Colors.white, size: 22),
             const SizedBox(width: 8),
             Text(AppLocalizations.of(context)!.radioTitle,
-                style: TextStyle(color: primaryColor, fontSize: 19, fontWeight: FontWeight.w800, letterSpacing: -0.5)),
+                style: const TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.w800, letterSpacing: -0.5)),
           ],
         ),
         actions: [
           IconButton(
             onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RadioFavoritesScreen())),
-            icon: Icon(Icons.favorite, color: primaryColor, size: 21),
+            icon: Icon(Icons.favorite, color: Color.lerp(AppTheme.fixedAccent, Colors.white, 0.35), size: 21),
           ),
           const SizedBox(width: 6),
         ],
@@ -87,7 +87,7 @@ class RadioHomeScreen extends StatelessWidget {
             Text(
               AppLocalizations.of(context)!.radioSelectCountry,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.4),
+                color: Colors.white.withOpacity(0.65),
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 2,
@@ -103,7 +103,7 @@ class RadioHomeScreen extends StatelessWidget {
                     onTap: () => _onCountryTap(context, country),
                   ),
                   if (index != countries.length - 1)
-                    Divider(height: 1, color: Colors.white.withOpacity(0.10), indent: 48),
+                    Divider(height: 1, color: Colors.white.withOpacity(0.16), indent: 48),
                 ],
               );
             }),
@@ -201,7 +201,7 @@ class _RecentSection extends StatelessWidget {
         Text(
           AppLocalizations.of(context)!.radioRecentListening,
           style: TextStyle(
-            color: Colors.white.withOpacity(0.4),
+            color: Colors.white.withOpacity(0.65),
             fontSize: 12,
             fontWeight: FontWeight.w700,
             letterSpacing: 2,
@@ -209,7 +209,7 @@ class _RecentSection extends StatelessWidget {
         ),
         const SizedBox(height: 14),
         SizedBox(
-          height: 92,
+          height: 116,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             clipBehavior: Clip.none,
@@ -229,7 +229,7 @@ class _RecentSection extends StatelessWidget {
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
                     child: Container(
-                      width: 180,
+                      width: 200,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.06),
@@ -239,10 +239,11 @@ class _RecentSection extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.radio, color: primaryColor, size: 13),
+                              Icon(Icons.radio, color: Color.lerp(AppTheme.fixedAccent, Colors.white, 0.35), size: 13),
                               const SizedBox(width: 6),
                               Expanded(
                                 child: Text(
@@ -259,6 +260,7 @@ class _RecentSection extends StatelessWidget {
                             final nowPlaying = radioProvider.nowPlayingFor(station.name);
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 if (nowPlaying != null && nowPlaying.isNotEmpty)
                                   Text(

@@ -146,7 +146,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
                 indicatorColor: primaryColor,
                 indicatorWeight: 2,
                 labelColor: primaryColor,
-                unselectedLabelColor: Colors.white.withOpacity(0.4),
+                unselectedLabelColor: Colors.white.withOpacity(0.6),
                 labelStyle: const TextStyle(
                     fontSize: 13.5, fontWeight: FontWeight.w700),
                 unselectedLabelStyle: const TextStyle(fontSize: 13.5),
@@ -208,7 +208,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
             padding: const EdgeInsets.fromLTRB(24, 8, 24, 90),
             itemCount: stations.length,
             separatorBuilder: (_, __) =>
-                Divider(height: 1, color: Colors.white.withOpacity(0.10), indent: 0),
+                Divider(height: 1, color: Colors.white.withOpacity(0.16), indent: 0),
             itemBuilder: (context, index) {
               final ks = stations[index];
               final current = radioProvider.currentStation;
@@ -334,7 +334,7 @@ class _StationTile extends StatelessWidget {
                   Text(
                     station.name,
                     style: TextStyle(
-                      color: isPlaying ? primaryColor : Colors.white,
+                      color: isPlaying ? AppTheme.fixedAccent : Colors.white,
                       fontSize: 15.5,
                       fontWeight: FontWeight.w600,
                       letterSpacing: -0.2,
@@ -415,7 +415,7 @@ class _StationTile extends StatelessWidget {
                             Text(
                               displayNowPlaying,
                               style: TextStyle(
-                                color: primaryColor.withOpacity(0.85),
+                                color: Colors.white.withOpacity(0.65),
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),

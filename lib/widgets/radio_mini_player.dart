@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/radio_provider.dart';
@@ -11,7 +12,6 @@ class RadioMiniPlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     final radioProvider = context.watch<RadioProvider>();
     final station = radioProvider.currentStation;
-    final primaryColor = Theme.of(context).colorScheme.primary;
 
     if (station == null) return const SizedBox.shrink();
 
@@ -45,175 +45,170 @@ class RadioMiniPlayer extends StatelessWidget {
           transitionDuration: const Duration(milliseconds: 300),
         ),
       ),
-      child: Container(
-        height: 80,
-        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-        decoration: BoxDecoration(
-          color: AppTheme.cardColor,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(12),
-            topRight: Radius.circular(12),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.5),
-              blurRadius: 16,
-              offset: const Offset(0, 4),
-            ),
-          ],
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
         ),
-        child: Column(
-          children: [
-            Container(
-              height: 2,
-              decoration: BoxDecoration(
-                color: isPlaying
-                    ? Colors.redAccent
-                    : primaryColor.withOpacity(0.3),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                ),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+          child: Container(
+            height: 80,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.08),
+              border: Border(
+                top: BorderSide(color: Colors.white.withOpacity(0.10)),
               ),
             ),
-            Expanded(
-              child: Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 12),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: primaryColor.withOpacity(0.15),
-                        border: Border.all(
-                            color: primaryColor.withOpacity(0.4)),
-                      ),
-                      child: Icon(Icons.radio,
-                          color: primaryColor, size: 22),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            station.name,
-                            style: const TextStyle(
-                              color: AppTheme.textPrimary,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+            child: Column(
+              children: [
+                Container(
+                  height: 2,
+                  decoration: BoxDecoration(
+                    color: isPlaying
+                        ? Colors.redAccent
+                        : AppTheme.fixedAccent.withOpacity(0.3),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppTheme.fixedAccent.withOpacity(0.15),
+                            border: Border.all(
+                                color: AppTheme.fixedAccent.withOpacity(0.4)),
                           ),
-                          const SizedBox(height: 2),
-                          Row(
+                          child: const Icon(Icons.radio,
+                              color: AppTheme.fixedAccent, size: 22),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                isLoading
-                                    ? '접속 중...'
-                                    : isPlaying
-                                    ? '● LIVE'
-                                    : '일시정지',
-                                style: TextStyle(
-                                  color: isPlaying
-                                      ? Colors.redAccent
-                                      : AppTheme.textHint,
-                                  fontSize: 12,
+                                station.name,
+                                style: const TextStyle(
+                                  color: AppTheme.textPrimary,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
                                 ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              if (isPlaying || radioProvider.currentStation != null) ...[
-                                const SizedBox(width: 6),
-                                Flexible(
-                                  child: Builder(builder: (ctx) {
-                                    final nowPlaying = radioProvider.nowPlayingFor(station.name);
-                                    final program = radioProvider.currentProgramFor(station.name);
-                                    final kbsStart = program?['program_planned_start_time'] as String? ?? '';
-                                    final kbsEnd = program?['program_planned_end_time'] as String? ?? '';
-                                    final mbcStart = program?['StartTime'] as String? ?? '';
-                                    final mbcEnd = program?['EndTime'] as String? ?? '';
-                                    final sbsStart = program?['start_time'] as String? ?? '';
-                                    final sbsEnd = program?['end_time'] as String? ?? '';
+                              const SizedBox(height: 2),
+                              Row(
+                                children: [
+                                  Text(
+                                    isLoading
+                                        ? '접속 중...'
+                                        : isPlaying
+                                        ? '● LIVE'
+                                        : '일시정지',
+                                    style: TextStyle(
+                                      color: isPlaying
+                                          ? Colors.redAccent
+                                          : AppTheme.textHint,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  if (isPlaying || radioProvider.currentStation != null) ...[
+                                    const SizedBox(width: 6),
+                                    Flexible(
+                                      child: Builder(builder: (ctx) {
+                                        final nowPlaying = radioProvider.nowPlayingFor(station.name);
+                                        final program = radioProvider.currentProgramFor(station.name);
+                                        final kbsStart = program?['program_planned_start_time'] as String? ?? '';
+                                        final kbsEnd = program?['program_planned_end_time'] as String? ?? '';
+                                        final mbcStart = program?['StartTime'] as String? ?? '';
+                                        final mbcEnd = program?['EndTime'] as String? ?? '';
+                                        final sbsStart = program?['start_time'] as String? ?? '';
+                                        final sbsEnd = program?['end_time'] as String? ?? '';
 
-                                    String fmt(String t) {
-                                      if (t.contains(':')) {
-                                        final parts = t.split(':');
-                                        int h = int.tryParse(parts[0]) ?? 0;
-                                        if (h >= 24) h -= 24;
-                                        return '$h:${parts[1]}';
-                                      }
-                                      if (t.length < 4) return t;
-                                      int h = int.tryParse(t.substring(0, 2)) ?? 0;
-                                      if (h >= 24) h -= 24;
-                                      return '$h:${t.substring(2, 4)}';
-                                    }
+                                        String fmt(String t) {
+                                          if (t.contains(':')) {
+                                            final parts = t.split(':');
+                                            int h = int.tryParse(parts[0]) ?? 0;
+                                            if (h >= 24) h -= 24;
+                                            return '$h:${parts[1]}';
+                                          }
+                                          if (t.length < 4) return t;
+                                          int h = int.tryParse(t.substring(0, 2)) ?? 0;
+                                          if (h >= 24) h -= 24;
+                                          return '$h:${t.substring(2, 4)}';
+                                        }
 
-                                    String timeStr = '';
-                                    if (kbsStart.isNotEmpty && kbsEnd.isNotEmpty) {
-                                      timeStr = '${fmt(kbsStart)}~${fmt(kbsEnd)}';
-                                    } else if (mbcStart.isNotEmpty && mbcEnd.isNotEmpty) {
-                                      timeStr = '${fmt(mbcStart)}~${fmt(mbcEnd)}';
-                                    } else if (sbsStart.isNotEmpty && sbsEnd.isNotEmpty) {
-                                      timeStr = '$sbsStart~$sbsEnd';
-                                    }
+                                        String timeStr = '';
+                                        if (kbsStart.isNotEmpty && kbsEnd.isNotEmpty) {
+                                          timeStr = '${fmt(kbsStart)}~${fmt(kbsEnd)}';
+                                        } else if (mbcStart.isNotEmpty && mbcEnd.isNotEmpty) {
+                                          timeStr = '${fmt(mbcStart)}~${fmt(mbcEnd)}';
+                                        } else if (sbsStart.isNotEmpty && sbsEnd.isNotEmpty) {
+                                          timeStr = '$sbsStart~$sbsEnd';
+                                        }
 
-                                    if (nowPlaying == null || nowPlaying.isEmpty) {
-                                      return const SizedBox.shrink();
-                                    }
-                                    return Text(
-                                      timeStr.isNotEmpty ? '$nowPlaying  $timeStr' : nowPlaying,
-                                      style: const TextStyle(
-                                        color: AppTheme.textSecondary,
-                                        fontSize: 8,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    );
-                                  }),
-                                ),
-                              ],
+                                        if (nowPlaying == null || nowPlaying.isEmpty) {
+                                          return const SizedBox.shrink();
+                                        }
+                                        return Text(
+                                          timeStr.isNotEmpty ? '$nowPlaying  $timeStr' : nowPlaying,
+                                          style: const TextStyle(
+                                            color: AppTheme.textSecondary,
+                                            fontSize: 8,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        );
+                                      }),
+                                    ),
+                                  ],
+                                ],
+                              ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: isLoading
-                          ? null
-                          : radioProvider.togglePlayPause,
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: primaryColor,
-                          shape: BoxShape.circle,
                         ),
-                        child: isLoading
-                            ? const Padding(
-                          padding: EdgeInsets.all(10),
-                          child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.black),
-                        )
-                            : Icon(
-                          isPlaying
-                              ? Icons.pause
-                              : Icons.play_arrow,
-                          color: Colors.black,
-                          size: 22,
+                        GestureDetector(
+                          onTap: isLoading
+                              ? null
+                              : radioProvider.togglePlayPause,
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: const BoxDecoration(
+                              color: AppTheme.fixedAccent,
+                              shape: BoxShape.circle,
+                            ),
+                            child: isLoading
+                                ? const Padding(
+                              padding: EdgeInsets.all(10),
+                              child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white),
+                            )
+                                : Icon(
+                              isPlaying
+                                  ? Icons.pause
+                                  : Icons.play_arrow,
+                              color: Colors.white,
+                              size: 22,
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 4),
+                      ],
                     ),
-                    const SizedBox(width: 4),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

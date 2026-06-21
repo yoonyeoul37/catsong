@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -47,24 +48,23 @@ class MiniPlayer extends StatelessWidget {
           ),
         );
       },
-      child: Container(
-        height: 72,
-        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-        decoration: BoxDecoration(
-          color: const Color(0xFF1A1A1A),
-          borderRadius: const BorderRadius.only(
-  topLeft: Radius.circular(12),
-  topRight: Radius.circular(12),
-),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.5),
-              blurRadius: 16,
-              offset: const Offset(0, 4),
-            ),
-          ],
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
         ),
-        child: Column(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+          child: Container(
+            height: 72,
+            margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.08),
+              border: Border(
+                top: BorderSide(color: Colors.white.withOpacity(0.10)),
+              ),
+            ),
+            child: Column(
           children: [
             // 진행바
             ClipRRect(
@@ -78,7 +78,7 @@ class MiniPlayer extends StatelessWidget {
                   value: playerProvider.progress,
                   backgroundColor: Colors.white12,
                   valueColor:
-                  AlwaysStoppedAnimation<Color>(primaryColor),
+                  const AlwaysStoppedAnimation<Color>(AppTheme.fixedAccent),
                 ),
               ),
             ),
@@ -127,11 +127,11 @@ class MiniPlayer extends StatelessWidget {
                               color: Colors.black45,
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Center(
+                            child: const Center(
                               child: SizedBox(
                                 width: 20,
                                 height: 16,
-                                child: EqualizerAnimation(color: primaryColor),
+                                child: EqualizerAnimation(color: AppTheme.fixedAccent),
                               ),
                             ),
                           ),
@@ -194,8 +194,8 @@ class MiniPlayer extends StatelessWidget {
                       child: Container(
                         width: 40,
                         height: 40,
-                        decoration: BoxDecoration(
-                          color: primaryColor,
+                        decoration: const BoxDecoration(
+                          color: AppTheme.fixedAccent,
                           shape: BoxShape.circle,
                         ),
                         child: playerProvider.isLoading
@@ -203,13 +203,13 @@ class MiniPlayer extends StatelessWidget {
                           padding: EdgeInsets.all(10),
                           child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: Colors.black),
+                              color: Colors.white),
                         )
                             : Icon(
                           playerProvider.isPlaying
                               ? Icons.pause
                               : Icons.play_arrow,
-                          color: Colors.black,
+                          color: Colors.white,
                           size: 22,
                         ),
                       ),
@@ -230,7 +230,9 @@ class MiniPlayer extends StatelessWidget {
             ),
           ],
         ),
-      ),
+            ),
+          ),
+        ),
     );
   }
 }

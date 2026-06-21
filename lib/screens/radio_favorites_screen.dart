@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/radio_provider.dart';
@@ -11,25 +12,25 @@ class RadioFavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor  = Theme.of(context).colorScheme.primary;
+    const accent = AppTheme.fixedAccent;
     final radioProvider = context.watch<RadioProvider>();
     final favorites     = radioProvider.favorites;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0A),
+      backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0A0A0A),
+        backgroundColor: AppTheme.background,
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios,
-              color: AppTheme.textPrimary),
+          icon: const Icon(Icons.arrow_back_ios, color: AppTheme.textPrimary, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           AppLocalizations.of(context)!.favorites,
-          style: TextStyle(
-            color: primaryColor,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+          style: const TextStyle(
+            color: AppTheme.textPrimary,
+            fontSize: 17,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -40,7 +41,7 @@ class RadioFavoritesScreen extends StatelessWidget {
           children: [
             Icon(Icons.favorite_border,
                 size: 72,
-                color: primaryColor.withOpacity(0.3)),
+                color: accent.withOpacity(0.4)),
             const SizedBox(height: 18),
             Text(AppLocalizations.of(context)!.radioNoFavorites,
                 style: const TextStyle(
@@ -48,16 +49,18 @@ class RadioFavoritesScreen extends StatelessWidget {
                     fontSize: 17)),
             const SizedBox(height: 8),
             Text(AppLocalizations.of(context)!.radioNoFavoritesDesc,
-                style: const TextStyle(
-                    color: AppTheme.textHint,
+                style: TextStyle(
+                    color: Colors.white.withOpacity(0.45),
                     fontSize: 13)),
           ],
         ),
       )
-          : ListView.builder(
+          : ListView.separated(
         padding:
-        EdgeInsets.fromLTRB(16, 12, 16, 80 + MediaQuery.of(context).viewPadding.bottom),
+        EdgeInsets.fromLTRB(24, 12, 24, 80 + MediaQuery.of(context).viewPadding.bottom),
         itemCount: favorites.length,
+        separatorBuilder: (_, __) =>
+            Divider(height: 1, color: Colors.white.withOpacity(0.16)),
         itemBuilder: (context, index) {
           final station = favorites[index];
           return Dismissible(
@@ -66,9 +69,8 @@ class RadioFavoritesScreen extends StatelessWidget {
             background: Container(
               alignment: Alignment.centerRight,
               padding: const EdgeInsets.only(right: 20),
-              color: Colors.redAccent.withOpacity(0.8),
               child: const Icon(Icons.delete,
-                  color: Colors.white, size: 26),
+                  color: Colors.redAccent, size: 26),
             ),
             onDismissed: (_) {
               radioProvider.toggleFavorite(station);

@@ -77,7 +77,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: Text(l.settings, style: const TextStyle(color: _sText, fontSize: 17, fontWeight: FontWeight.w600, letterSpacing: -0.3)),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back_ios, color: primaryColor, size: 20),
+          icon: const Icon(Icons.arrow_back_ios, color: AppTheme.fixedAccent, size: 20),
         ),
         bottom: const PreferredSize(preferredSize: Size.fromHeight(1), child: Divider(height: 1, color: _sBorder)),
       ),
@@ -103,7 +103,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           }, primaryColor: primaryColor, isFirst: true, isLast: true),
           _buildSection(l.version),
           _buildTile(context, icon: Icons.verified_outlined, title: l.version, onTap: () {}, primaryColor: primaryColor, isFirst: true,
-              trailing: Text('v1.0.0', style: TextStyle(color: primaryColor, fontSize: 12, fontWeight: FontWeight.w600))),
+              trailing: const Text('v1.0.0', style: TextStyle(color: AppTheme.fixedAccent, fontSize: 12, fontWeight: FontWeight.w600))),
           _buildTile(context, icon: Icons.card_giftcard_outlined, title: l.promoCode, onTap: () => _showPromoCodeDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.privacy_tip_outlined, title: l.privacyPolicy, onTap: () => _launchUrl(l.privacyPolicyUrl), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.description_outlined, title: l.termsOfService, onTap: () => _launchUrl(l.termsOfServiceUrl), primaryColor: primaryColor, isLast: true),
@@ -196,7 +196,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _showPromoCodeDialog(BuildContext context) async {
     final controller = TextEditingController();
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    const accent = AppTheme.fixedAccent;
     final prefs = await SharedPreferences.getInstance();
     final isUnlocked = prefs.getBool('promo_unlocked') ?? false;
     showDialog(
@@ -208,7 +208,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           padding: const EdgeInsets.all(20),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             Row(children: [
-              Icon(Icons.card_giftcard, color: primaryColor, size: 20), const SizedBox(width: 8),
+              const Icon(Icons.card_giftcard, color: accent, size: 20), const SizedBox(width: 8),
               Text(AppLocalizations.of(context)!.promoCode, style: const TextStyle(color: _sText, fontSize: 16, fontWeight: FontWeight.bold)),
             ]),
             const SizedBox(height: 20),
@@ -226,7 +226,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               SizedBox(width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () => Navigator.pop(ctx),
-                    style: ElevatedButton.styleFrom(backgroundColor: primaryColor, foregroundColor: primaryColor.computeLuminance() > 0.5 ? Colors.black : Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                    style: ElevatedButton.styleFrom(backgroundColor: accent, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                     child: Text(AppLocalizations.of(context)!.close),
                   )),
             ] else ...[
@@ -256,7 +256,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.promoInvalid), backgroundColor: Colors.redAccent, duration: const Duration(seconds: 2)));
                     }
                   },
-                  style: ElevatedButton.styleFrom(backgroundColor: primaryColor, foregroundColor: primaryColor.computeLuminance() > 0.5 ? Colors.black : Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  style: ElevatedButton.styleFrom(backgroundColor: accent, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                   child: Text(AppLocalizations.of(context)!.confirm, style: const TextStyle(fontWeight: FontWeight.bold)),
                 )),
               ]),
@@ -270,7 +270,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _showPlayerStyleDialog(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     int currentStyle = prefs.getInt('albumArtStyle') ?? 1;
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    const accent = AppTheme.fixedAccent;
     final l = AppLocalizations.of(context)!;
     final styles = [
       {'id': 1, 'name': l.styleCD, 'icon': Icons.album, 'desc': l.styleCDDesc},
@@ -285,7 +285,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         builder: (context, setDialogState) => AlertDialog(
           backgroundColor: _sBg,
           title: Row(children: [
-            Icon(Icons.style, color: primaryColor, size: 20), const SizedBox(width: 8),
+            const Icon(Icons.style, color: accent, size: 20), const SizedBox(width: 8),
             Text(l.playerStyle, style: const TextStyle(color: _sText, fontSize: 16, fontWeight: FontWeight.bold)),
           ]),
           content: SizedBox(width: double.maxFinite,
@@ -302,32 +302,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     margin: const EdgeInsets.only(bottom: 8),
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                     decoration: BoxDecoration(
-                      color: isSelected ? primaryColor.withOpacity(0.1) : _sInputBg,
+                      color: isSelected ? accent.withOpacity(0.1) : _sInputBg,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: isSelected ? primaryColor : Colors.transparent),
+                      border: Border.all(color: isSelected ? accent : Colors.transparent),
                     ),
                     child: Row(children: [
-                      Icon(style['icon'] as IconData, color: isSelected ? primaryColor : _sTextHint, size: 24),
+                      Icon(style['icon'] as IconData, color: isSelected ? accent : _sTextHint, size: 24),
                       const SizedBox(width: 12),
                       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Text(style['name'] as String, style: TextStyle(color: isSelected ? primaryColor : _sText, fontSize: 14, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+                        Text(style['name'] as String, style: TextStyle(color: isSelected ? accent : _sText, fontSize: 14, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
                         Text(style['desc'] as String, style: const TextStyle(color: _sTextSub, fontSize: 11)),
                       ])),
-                      if (isSelected) Icon(Icons.check_circle, color: primaryColor, size: 20),
+                      if (isSelected) const Icon(Icons.check_circle, color: accent, size: 20),
                     ]),
                   ),
                 );
               },
             ),
           ),
-          actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l.close, style: TextStyle(color: primaryColor)))],
+          actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l.close, style: const TextStyle(color: accent)))],
         ),
       ),
     );
   }
 
   void _showFontDialog(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    const accent = AppTheme.fixedAccent;
     final themeProvider = context.read<ThemeProvider>();
     showDialog(
       context: context,
@@ -335,7 +335,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         builder: (context, setDialogState) => AlertDialog(
           backgroundColor: _sBg,
           title: Row(children: [
-            Icon(Icons.font_download, color: primaryColor, size: 20), const SizedBox(width: 8),
+            const Icon(Icons.font_download, color: accent, size: 20), const SizedBox(width: 8),
             Text(AppLocalizations.of(context)!.fontChange, style: const TextStyle(color: _sText, fontSize: 16, fontWeight: FontWeight.bold)),
           ]),
           content: SizedBox(width: double.maxFinite,
@@ -352,22 +352,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     margin: const EdgeInsets.only(bottom: 8),
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                     decoration: BoxDecoration(
-                      color: isSelected ? primaryColor.withOpacity(0.1) : _sInputBg,
+                      color: isSelected ? accent.withOpacity(0.1) : _sInputBg,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: isSelected ? primaryColor : Colors.transparent),
+                      border: Border.all(color: isSelected ? accent : Colors.transparent),
                     ),
                     child: Row(children: [
-                      Icon(Icons.font_download, color: isSelected ? primaryColor : _sTextHint, size: 22),
+                      Icon(Icons.font_download, color: isSelected ? accent : _sTextHint, size: 22),
                       const SizedBox(width: 12),
-                      Expanded(child: Text(_getFontName(context, font['key']!), style: TextStyle(color: isSelected ? primaryColor : _sText, fontSize: 14, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal))),
-                      if (isSelected) Icon(Icons.check_circle, color: primaryColor, size: 20),
+                      Expanded(child: Text(_getFontName(context, font['key']!), style: TextStyle(color: isSelected ? accent : _sText, fontSize: 14, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal))),
+                      if (isSelected) const Icon(Icons.check_circle, color: accent, size: 20),
                     ]),
                   ),
                 );
               },
             ),
           ),
-          actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: Text(AppLocalizations.of(context)!.close, style: TextStyle(color: primaryColor)))],
+          actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: Text(AppLocalizations.of(context)!.close, style: const TextStyle(color: accent)))],
         ),
       ),
     );
@@ -504,7 +504,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _showTextSizeDialog(BuildContext context) {
     final themeProvider = context.read<ThemeProvider>();
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    const accent = AppTheme.fixedAccent;
     showDialog(
       context: context,
       builder: (ctx) => StatefulBuilder(
@@ -515,7 +515,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             padding: const EdgeInsets.all(20),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               Row(children: [
-                Icon(Icons.text_fields, color: primaryColor, size: 20), const SizedBox(width: 8),
+                const Icon(Icons.text_fields, color: accent, size: 20), const SizedBox(width: 8),
                 Text(AppLocalizations.of(context)!.textSize, style: const TextStyle(color: _sText, fontSize: 16, fontWeight: FontWeight.bold)),
               ]),
               const SizedBox(height: 16),
@@ -525,17 +525,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Text(AppLocalizations.of(context)!.preview, style: TextStyle(color: _sText, fontSize: 16 * themeProvider.textScale)),
               ),
               const SizedBox(height: 16),
-              Slider(
-                value: themeProvider.textScale.clamp(1.0, 1.5), min: 1.0, max: 1.5, divisions: 10,
-                label: '${(themeProvider.textScale * 100).toInt()}%',
-                onChanged: (value) { themeProvider.setTextScale(value); setDialogState(() {}); },
+              SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  activeTrackColor: accent,
+                  inactiveTrackColor: accent.withOpacity(0.2),
+                  thumbColor: accent,
+                ),
+                child: Slider(
+                  value: themeProvider.textScale.clamp(1.0, 1.5), min: 1.0, max: 1.5, divisions: 10,
+                  label: '${(themeProvider.textScale * 100).toInt()}%',
+                  onChanged: (value) { themeProvider.setTextScale(value); setDialogState(() {}); },
+                ),
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Text(AppLocalizations.of(context)!.small, style: const TextStyle(color: _sTextSub, fontSize: 12)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(color: primaryColor.withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
-                  child: Text('${(themeProvider.textScale * 100).toInt()}%', style: TextStyle(color: primaryColor, fontSize: 12, fontWeight: FontWeight.bold)),
+                  decoration: BoxDecoration(color: accent.withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
+                  child: Text('${(themeProvider.textScale * 100).toInt()}%', style: const TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.bold)),
                 ),
                 Text(AppLocalizations.of(context)!.large, style: const TextStyle(color: _sTextSub, fontSize: 12)),
               ]),
@@ -549,7 +556,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(width: 8),
                 Expanded(child: ElevatedButton(
                   onPressed: () => Navigator.pop(ctx),
-                  style: ElevatedButton.styleFrom(backgroundColor: primaryColor, foregroundColor: primaryColor.computeLuminance() > 0.5 ? Colors.black : Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  style: ElevatedButton.styleFrom(backgroundColor: accent, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                   child: Text(AppLocalizations.of(context)!.close),
                 )),
               ]),

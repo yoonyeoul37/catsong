@@ -205,8 +205,8 @@ class FolderDetailScreen extends StatelessWidget {
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: primaryColor,
-                        foregroundColor: Colors.black,
+                        backgroundColor: Color.lerp(primaryColor, Colors.black, 0.15),
+                        foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),

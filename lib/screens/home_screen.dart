@@ -187,8 +187,8 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(AppLocalizations.of(context)!.appName,
-                    style: TextStyle(
-                        color: primaryColor,
+                    style: const TextStyle(
+                        color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.w900,
                         letterSpacing: -0.5)),
@@ -197,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.only(left: 4),
                     child: Text('MusicWave',
                         style: TextStyle(
-                            color: primaryColor.withOpacity(0.5),
+                            color: Colors.white.withOpacity(0.55),
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
                             letterSpacing: 0.5)),
@@ -214,7 +214,12 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () => Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) => const RadioHomeScreen(),
+                pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(
+                  data: MediaQuery.of(context).copyWith(
+                    textScaler: const TextScaler.linear(1.25),
+                  ),
+                  child: const RadioHomeScreen(),
+                ),
                 transitionsBuilder: (context, animation, secondaryAnimation, child) {
                   return FadeTransition(opacity: animation, child: child);
                 },
@@ -255,18 +260,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return TextField(
       controller: _searchController,
       autofocus: true,
-      style: const TextStyle(color: AppTheme.textPrimary),
+      style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
         hintText: AppLocalizations.of(context)!.searchHint,
-        hintStyle: const TextStyle(color: AppTheme.textHint),
+        hintStyle: const TextStyle(color: Colors.black38),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide.none,
         ),
         filled: true,
-        fillColor: AppTheme.surfaceVariant,
+        fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        prefixIcon: const Icon(Icons.search, color: AppTheme.textHint, size: 18),
+        prefixIcon: const Icon(Icons.search, color: AppTheme.fixedAccent, size: 18),
         isDense: true,
       ),
       onChanged: (value) {
@@ -679,7 +684,7 @@ class _HomeScreenState extends State<HomeScreen> {
       currentIndex: _currentTabIndex,
       onTap: (index) => setState(() => _currentTabIndex = index),
       backgroundColor: const Color(0xFF0A0A0A),
-      selectedItemColor: primaryColor,
+      selectedItemColor: AppTheme.fixedAccent,
       unselectedItemColor: AppTheme.textSecondary,
       type: BottomNavigationBarType.fixed,
       selectedFontSize: 10,

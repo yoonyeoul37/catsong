@@ -17,6 +17,7 @@ class RingtoneScreen extends StatefulWidget {
 
 class _RingtoneScreenState extends State<RingtoneScreen> {
   static const _channel = MethodChannel('kr.ssing.catsong/media');
+  static const _accent = AppTheme.fixedAccent;
   Song? _selectedSong;
   double _startValue = 0.0;
   double _endValue = 30.0;
@@ -68,19 +69,19 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
     final musicProvider = context.watch<MusicProvider>();
     final songs = musicProvider.allSongs;
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: AppTheme.background,
+        backgroundColor: Colors.white,
+        elevation: 0,
         title: Text(AppLocalizations.of(context)!.ringtone,
-            style: const TextStyle(color: AppTheme.textPrimary)),
+            style: const TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w600)),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios, color: AppTheme.textPrimary),
+          icon: const Icon(Icons.arrow_back_ios, color: _accent, size: 20),
         ),
       ),
       body: SingleChildScrollView(
@@ -89,16 +90,17 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(AppLocalizations.of(context)!.selectSong,
-                style: TextStyle(
-                    color: primaryColor,
+                style: const TextStyle(
+                    color: _accent,
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.2)),
             const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
-                color: AppTheme.surfaceVariant,
+                color: const Color(0xFFF5F5F5),
                 borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFE5E5E5)),
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<Song>(
@@ -106,16 +108,16 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                   hint: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(AppLocalizations.of(context)!.searchHint,
-                        style: const TextStyle(color: AppTheme.textHint)),
+                        style: const TextStyle(color: Colors.black38)),
                   ),
                   isExpanded: true,
-                  dropdownColor: AppTheme.surfaceVariant,
+                  dropdownColor: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   items: songs.map((song) {
                     return DropdownMenuItem<Song>(
                       value: song,
                       child: Text(song.titleDisplay,
-                          style: const TextStyle(color: AppTheme.textPrimary),
+                          style: const TextStyle(color: Colors.black87),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis),
                     );
@@ -138,8 +140,8 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
 
             if (_selectedSong != null) ...[
               Text(AppLocalizations.of(context)!.selectRange,
-                  style: TextStyle(
-                      color: primaryColor,
+                  style: const TextStyle(
+                      color: _accent,
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.2)),
@@ -150,25 +152,33 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                   SizedBox(
                       width: 50,
                       child: Text(AppLocalizations.of(context)!.start,
-                          style: const TextStyle(color: AppTheme.textSecondary))),
+                          style: const TextStyle(color: Colors.black54))),
                   Expanded(
-                    child: Slider(
-                      value: _startValue,
-                      min: 0,
-                      max: (_selectedSong!.duration / 1000).toDouble(),
-                      onChanged: (value) {
-                        if (value < _endValue) {
-                          setState(() => _startValue = value);
-                          _previewPlayer.stop();
-                          setState(() => _isPlaying = false);
-                        }
-                      },
+                    child: SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        activeTrackColor: _accent,
+                        inactiveTrackColor: _accent.withOpacity(0.15),
+                        thumbColor: _accent,
+                        overlayColor: _accent.withOpacity(0.1),
+                      ),
+                      child: Slider(
+                        value: _startValue,
+                        min: 0,
+                        max: (_selectedSong!.duration / 1000).toDouble(),
+                        onChanged: (value) {
+                          if (value < _endValue) {
+                            setState(() => _startValue = value);
+                            _previewPlayer.stop();
+                            setState(() => _isPlaying = false);
+                          }
+                        },
+                      ),
                     ),
                   ),
                   SizedBox(
                       width: 50,
                       child: Text(_formatTime(_startValue.toInt()),
-                          style: const TextStyle(color: AppTheme.textSecondary))),
+                          style: const TextStyle(color: Colors.black54))),
                 ],
               ),
 
@@ -177,25 +187,33 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                   SizedBox(
                       width: 50,
                       child: Text(AppLocalizations.of(context)!.end,
-                          style: const TextStyle(color: AppTheme.textSecondary))),
+                          style: const TextStyle(color: Colors.black54))),
                   Expanded(
-                    child: Slider(
-                      value: _endValue,
-                      min: 0,
-                      max: (_selectedSong!.duration / 1000).toDouble(),
-                      onChanged: (value) {
-                        if (value > _startValue) {
-                          setState(() => _endValue = value);
-                          _previewPlayer.stop();
-                          setState(() => _isPlaying = false);
-                        }
-                      },
+                    child: SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        activeTrackColor: _accent,
+                        inactiveTrackColor: _accent.withOpacity(0.15),
+                        thumbColor: _accent,
+                        overlayColor: _accent.withOpacity(0.1),
+                      ),
+                      child: Slider(
+                        value: _endValue,
+                        min: 0,
+                        max: (_selectedSong!.duration / 1000).toDouble(),
+                        onChanged: (value) {
+                          if (value > _startValue) {
+                            setState(() => _endValue = value);
+                            _previewPlayer.stop();
+                            setState(() => _isPlaying = false);
+                          }
+                        },
+                      ),
                     ),
                   ),
                   SizedBox(
                       width: 50,
                       child: Text(_formatTime(_endValue.toInt()),
-                          style: const TextStyle(color: AppTheme.textSecondary))),
+                          style: const TextStyle(color: Colors.black54))),
                 ],
               ),
 
@@ -207,7 +225,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                     _formatTime(_endValue.toInt()),
                     (_endValue - _startValue).toInt(),
                   ),
-                  style: TextStyle(color: primaryColor, fontSize: 14),
+                  style: const TextStyle(color: _accent, fontSize: 14),
                 ),
               ),
               const SizedBox(height: 16),
@@ -219,11 +237,11 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                     width: 60,
                     height: 60,
                     decoration: BoxDecoration(
-                      color: primaryColor,
+                      color: _accent,
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: primaryColor.withOpacity(0.4),
+                          color: _accent.withOpacity(0.3),
                           blurRadius: 15,
                           spreadRadius: 2,
                         ),
@@ -231,7 +249,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                     ),
                     child: Icon(
                       _isPlaying ? Icons.stop : Icons.play_arrow,
-                      color: Colors.black,
+                      color: Colors.white,
                       size: 30,
                     ),
                   ),
@@ -242,7 +260,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
                     _isPlaying ? AppLocalizations.of(context)!.playing : AppLocalizations.of(context)!.preview,
-                    style: TextStyle(color: primaryColor, fontSize: 12),
+                    style: const TextStyle(color: _accent, fontSize: 12),
                   ),
                 ),
               ),
@@ -253,16 +271,16 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                 child: ElevatedButton(
                   onPressed: _isProcessing
                       ? null
-                      : () => _setRingtone(context, primaryColor),
+                      : () => _setRingtone(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryColor,
-                    foregroundColor: Colors.black,
+                    backgroundColor: _accent,
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30)),
                   ),
                   child: _isProcessing
-                      ? const CircularProgressIndicator(color: Colors.black)
+                      ? const CircularProgressIndicator(color: Colors.white)
                       : Text(AppLocalizations.of(context)!.setRingtone,
                       style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 16)),
@@ -281,7 +299,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
     return '$m:${s.toString().padLeft(2, '0')}';
   }
 
-  Future<void> _setRingtone(BuildContext context, Color primaryColor) async {
+  Future<void> _setRingtone(BuildContext context) async {
     if (_selectedSong?.uri == null) return;
     await _previewPlayer.stop();
     setState(() {

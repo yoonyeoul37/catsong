@@ -53,7 +53,7 @@ class PlaylistScreen extends StatelessWidget {
                           color: AppTheme.textSecondary, fontSize: 16)),
                   const SizedBox(height: 8),
                   Text(AppLocalizations.of(context)!.playMusic,
-                      style: const TextStyle(color: AppTheme.textHint, fontSize: 13)),
+                      style: TextStyle(color: Colors.white.withOpacity(0.45), fontSize: 13)),
                 ],
               ),
             ),
@@ -117,11 +117,11 @@ class PlaylistScreen extends StatelessWidget {
             ),
             PopupMenuButton<String>(
               icon: const Icon(Icons.more_vert, color: Colors.white38, size: 20),
-              color: const Color(0xFF282828),
+              color: Colors.white,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
               itemBuilder: (context) => [
-                _buildPopupItem(Icons.edit, AppLocalizations.of(context)!.rename, 'rename', primaryColor),
+                _buildPopupItem(Icons.edit, AppLocalizations.of(context)!.rename, 'rename', AppTheme.fixedAccent),
                 _buildPopupItem(Icons.delete, AppLocalizations.of(context)!.delete, 'delete', Colors.redAccent),
               ],
               onSelected: (value) {
@@ -146,7 +146,7 @@ class PlaylistScreen extends StatelessWidget {
         children: [
           Icon(icon, color: color, size: 18),
           const SizedBox(width: 10),
-          Text(label, style: const TextStyle(color: Colors.white)),
+          Text(label, style: const TextStyle(color: Colors.black87)),
         ],
       ),
     );
@@ -154,30 +154,30 @@ class PlaylistScreen extends StatelessWidget {
 
   void _showCreateDialog(BuildContext context) {
     final controller = TextEditingController();
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    const accent = AppTheme.fixedAccent;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF282828),
+        backgroundColor: Colors.white,
         title: Text(AppLocalizations.of(context)!.newPlaylist,
-            style: const TextStyle(color: Colors.white)),
+            style: const TextStyle(color: Colors.black)),
         content: TextField(
           controller: controller,
           autofocus: true,
-          style: const TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.black),
           decoration: InputDecoration(
             hintText: AppLocalizations.of(context)!.playlistNameHint,
-            hintStyle: const TextStyle(color: Colors.white38),
-            enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: primaryColor)),
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: primaryColor)),
+            hintStyle: const TextStyle(color: Colors.black38),
+            enabledBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: accent)),
+            focusedBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: accent)),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.white38)),
+            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.black38)),
           ),
           TextButton(
             onPressed: () {
@@ -186,7 +186,7 @@ class PlaylistScreen extends StatelessWidget {
                 Navigator.pop(ctx);
               }
             },
-            child: Text(AppLocalizations.of(context)!.create, style: TextStyle(color: primaryColor)),
+            child: Text(AppLocalizations.of(context)!.create, style: const TextStyle(color: accent)),
           ),
         ],
       ),
@@ -195,28 +195,28 @@ class PlaylistScreen extends StatelessWidget {
 
   void _showRenameDialog(BuildContext context, Playlist playlist) {
     final controller = TextEditingController(text: playlist.name);
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    const accent = AppTheme.fixedAccent;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF282828),
+        backgroundColor: Colors.white,
         title: Text(AppLocalizations.of(context)!.renamePlaylistTitle,
-            style: const TextStyle(color: Colors.white)),
+            style: const TextStyle(color: Colors.black)),
         content: TextField(
           controller: controller,
           autofocus: true,
-          style: const TextStyle(color: Colors.white),
-          decoration: InputDecoration(
+          style: const TextStyle(color: Colors.black),
+          decoration: const InputDecoration(
             enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: primaryColor)),
+                borderSide: BorderSide(color: accent)),
             focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: primaryColor)),
+                borderSide: BorderSide(color: accent)),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.white38)),
+            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.black38)),
           ),
           TextButton(
             onPressed: () {
@@ -226,7 +226,7 @@ class PlaylistScreen extends StatelessWidget {
                 Navigator.pop(ctx);
               }
             },
-            child: Text(AppLocalizations.of(context)!.change, style: TextStyle(color: primaryColor)),
+            child: Text(AppLocalizations.of(context)!.change, style: const TextStyle(color: accent)),
           ),
         ],
       ),
@@ -237,15 +237,15 @@ class PlaylistScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF282828),
+        backgroundColor: Colors.white,
         title: Text(AppLocalizations.of(context)!.deletePlaylistTitle,
-            style: const TextStyle(color: Colors.white)),
+            style: const TextStyle(color: Colors.black)),
         content: Text(AppLocalizations.of(context)!.deletePlaylistConfirm(playlist.name),
-            style: const TextStyle(color: Colors.white60)),
+            style: const TextStyle(color: Colors.black54)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.white38)),
+            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.black38)),
           ),
           TextButton(
             onPressed: () {
@@ -345,8 +345,8 @@ class PlaylistDetailScreen extends StatelessWidget {
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: primaryColor,
-                        foregroundColor: Colors.black,
+                        backgroundColor: Color.lerp(primaryColor, Colors.black, 0.15),
+                        foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),

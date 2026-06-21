@@ -157,11 +157,11 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     final freq = current.frequency ?? '';
 
     return Scaffold(
-      backgroundColor: const Color(0xFF131313),
+      backgroundColor: Colors.transparent,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF0e0e0e),
-          border: Border(top: BorderSide(color: Colors.white.withOpacity(0.05))),
+          color: Colors.white.withOpacity(0.03),
+          border: Border(top: BorderSide(color: Colors.white.withOpacity(0.06))),
         ),
         child: SafeArea(
           top: false,
@@ -514,9 +514,9 @@ class _InnerDialPainter extends CustomPainter {
       center: const Alignment(-0.35, -0.35),
       radius: 1.0,
       colors: [
-        Color.lerp(bcColor, const Color(0xFF2a2a2a), 0.7)!,
-        const Color(0xFF1a1a1a),
-        const Color(0xFF0d0d0d),
+        Color.lerp(bcColor, Color.lerp(primaryColor, const Color(0xFF2a2a2a), 0.6)!, 0.5)!,
+        Color.lerp(primaryColor, const Color(0xFF1a1a1a), 0.78)!,
+        Color.lerp(primaryColor, const Color(0xFF0d0d0d), 0.85)!,
       ],
       stops: const [0.0, 0.5, 1.0],
     );
@@ -524,11 +524,11 @@ class _InnerDialPainter extends CustomPainter {
 
     // 안쪽 원 그림자
     final shadowD = Paint()
-      ..color = const Color(0xFF050505)
+      ..color = Color.lerp(primaryColor, const Color(0xFF050505), 0.85)!
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
     canvas.drawCircle(center + const Offset(4, 4), r, shadowD);
     final shadowL = Paint()
-      ..color = const Color(0xFF252525)
+      ..color = Color.lerp(primaryColor, const Color(0xFF252525), 0.65)!
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
     canvas.drawCircle(center - const Offset(4, 4), r, shadowL);
     canvas.drawCircle(center, r, Paint()..shader = bgGrad.createShader(bgRect));
@@ -548,8 +548,8 @@ class _InnerDialPainter extends CustomPainter {
       final tickLen = isMajor ? 7.0 : 4.0;
       final brightness = (cos(angle) * 0.5 + 0.5);
       final tickColor = Color.lerp(
-        const Color(0xFF151515),
-        const Color(0xFF353535),
+        Color.lerp(primaryColor, const Color(0xFF151515), 0.8)!,
+        Color.lerp(primaryColor, const Color(0xFF353535), 0.45)!,
         brightness,
       )!;
       final start = Offset(
@@ -605,13 +605,13 @@ class _DialPainter extends CustomPainter {
 
     // ── 어두운 그림자 (우하단)
     final shadowDark = Paint()
-      ..color = const Color(0xFF050505)
+      ..color = Color.lerp(primaryColor, const Color(0xFF050505), 0.85)!
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 14);
     canvas.drawCircle(center + const Offset(8, 8), outerR, shadowDark);
 
     // ── 밝은 그림자 (좌상단)
     final shadowLight = Paint()
-      ..color = const Color(0xFF252525)
+      ..color = Color.lerp(primaryColor, const Color(0xFF252525), 0.65)!
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 14);
     canvas.drawCircle(center - const Offset(8, 8), outerR, shadowLight);
 
@@ -621,9 +621,9 @@ class _DialPainter extends CustomPainter {
       center: const Alignment(-0.4, -0.4),
       radius: 1.0,
       colors: [
-        const Color(0xFF242424), // 좌상단 밝게
-        const Color(0xFF161616),
-        const Color(0xFF0e0e0e), // 우하단 어둡게
+        Color.lerp(primaryColor, const Color(0xFF242424), 0.75)!,
+        Color.lerp(primaryColor, const Color(0xFF161616), 0.82)!,
+        Color.lerp(primaryColor, const Color(0xFF0e0e0e), 0.88)!,
       ],
       stops: const [0.0, 0.5, 1.0],
     );
@@ -636,11 +636,11 @@ class _DialPainter extends CustomPainter {
       startAngle: -pi / 2,
       endAngle: 3 * pi / 2,
       colors: [
-        const Color(0xFF3a3a3a),
-        const Color(0xFF1a1a1a),
-        const Color(0xFF0a0a0a),
-        const Color(0xFF1a1a1a),
-        const Color(0xFF3a3a3a),
+        Color.lerp(primaryColor, const Color(0xFF3a3a3a), 0.55)!,
+        Color.lerp(primaryColor, const Color(0xFF1a1a1a), 0.78)!,
+        Color.lerp(primaryColor, const Color(0xFF0a0a0a), 0.85)!,
+        Color.lerp(primaryColor, const Color(0xFF1a1a1a), 0.78)!,
+        Color.lerp(primaryColor, const Color(0xFF3a3a3a), 0.55)!,
       ],
       stops: const [0.0, 0.25, 0.5, 0.75, 1.0],
     );
@@ -661,8 +661,8 @@ class _DialPainter extends CustomPainter {
       // 상단 쪽 눈금은 좀 더 밝게
       final brightness = (cos(angle + pi / 2) * 0.5 + 0.5);
       final tickColor = Color.lerp(
-        const Color(0xFF1a1a1a),
-        const Color(0xFF444444),
+        Color.lerp(primaryColor, const Color(0xFF1a1a1a), 0.75)!,
+        Color.lerp(primaryColor, const Color(0xFF444444), 0.4)!,
         brightness,
       )!;
       final start = Offset(
@@ -758,15 +758,11 @@ class _ProgramCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
       decoration: BoxDecoration(
-        color: const Color(0xFF131313),
+        color: Colors.white.withOpacity(0.05),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(color: Color(0xFF080808), blurRadius: 10, offset: Offset(4, 4)),
-          BoxShadow(color: Color(0xFF1e1e1e), blurRadius: 10, offset: Offset(-4, -4)),
-        ],
-        border: Border.all(color: primaryColor.withOpacity(0.15)),
+        border: Border.all(color: primaryColor.withOpacity(0.18)),
       ),
       child: Row(
         children: [
@@ -847,10 +843,10 @@ class _ProgramCard extends StatelessWidget {
                     if (freq.isNotEmpty)
                       Text(
                         freq,
-                        style: const TextStyle(
-                          color: AppTheme.textHint,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.65),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
                           letterSpacing: 0.5,
                         ),
                       ),
@@ -971,11 +967,7 @@ class _Controls extends StatelessWidget {
             height: 82,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: const Color(0xFF131313),
-              boxShadow: [
-                const BoxShadow(color: Color(0xFF080808), blurRadius: 14, offset: Offset(5, 5)),
-                const BoxShadow(color: Color(0xFF1e1e1e), blurRadius: 14, offset: Offset(-5, -5)),
-              ],
+              color: Colors.white.withOpacity(0.06),
               border: Border.all(color: primaryColor, width: 2.5),
             ),
             child: isLoading
@@ -1109,13 +1101,10 @@ class _NeuButton extends StatelessWidget {
       child: Container(
         width: size,
         height: size,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Color(0xFF131313),
-          boxShadow: [
-            BoxShadow(color: Color(0xFF080808), blurRadius: 10, offset: Offset(4, 4)),
-            BoxShadow(color: Color(0xFF1e1e1e), blurRadius: 10, offset: Offset(-4, -4)),
-          ],
+          color: Colors.white.withOpacity(0.05),
+          border: Border.all(color: Colors.white.withOpacity(0.08)),
         ),
         child: Center(child: child),
       ),
@@ -1135,37 +1124,36 @@ class _FavoritesSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accent = AppTheme.fixedAccent;
     final radioProvider = context.watch<RadioProvider>();
     final favorites = radioProvider.favorites;
     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
 
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFF1a1a1a),
+        color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.fromLTRB(20, 16, 20, 16 + bottomPadding),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // 핸들
           Container(
             width: 40, height: 4,
             decoration: BoxDecoration(
-              color: Colors.white24,
+              color: Colors.black12,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
           const SizedBox(height: 16),
-          // 타이틀
           Row(
             children: [
-              Icon(Icons.favorite, color: primaryColor, size: 20),
+              Icon(Icons.favorite, color: accent, size: 20),
               const SizedBox(width: 8),
               Text(
                 '${AppLocalizations.of(context)!.favorites} (${favorites.length})',
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -1173,23 +1161,22 @@ class _FavoritesSheet extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          // 목록
           if (favorites.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 32),
               child: Column(
                 children: [
                   Icon(Icons.favorite_border,
-                      size: 48, color: primaryColor.withOpacity(0.3)),
+                      size: 48, color: accent.withOpacity(0.3)),
                   const SizedBox(height: 12),
                   Text(
                     AppLocalizations.of(context)!.radioNoFavorites,
-                    style: const TextStyle(color: AppTheme.textSecondary, fontSize: 14),
+                    style: const TextStyle(color: Colors.black54, fontSize: 14),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     AppLocalizations.of(context)!.radioNoFavoritesDesc,
-                    style: const TextStyle(color: AppTheme.textHint, fontSize: 12),
+                    style: const TextStyle(color: Colors.black38, fontSize: 12),
                   ),
                 ],
               ),
@@ -1203,7 +1190,7 @@ class _FavoritesSheet extends StatelessWidget {
                 shrinkWrap: true,
                 itemCount: favorites.length,
                 separatorBuilder: (_, __) => const Divider(
-                  color: Color(0xFF252525), height: 1,
+                  color: Color(0xFFE5E5E5), height: 1,
                 ),
                 itemBuilder: (context, index) {
                   final station = favorites[index];
@@ -1215,22 +1202,22 @@ class _FavoritesSheet extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: isCurrent
-                            ? primaryColor.withOpacity(0.15)
-                            : Colors.white.withOpacity(0.05),
+                            ? accent.withOpacity(0.10)
+                            : const Color(0xFFF5F5F5),
                         border: Border.all(
                           color: isCurrent
-                              ? primaryColor.withOpacity(0.4)
-                              : Colors.white.withOpacity(0.08),
+                              ? accent.withOpacity(0.4)
+                              : const Color(0xFFE5E5E5),
                         ),
                       ),
                       child: Icon(Icons.radio,
-                          color: isCurrent ? primaryColor : AppTheme.textHint,
+                          color: isCurrent ? accent : Colors.black38,
                           size: 20),
                     ),
                     title: Text(
                       station.name,
                       style: TextStyle(
-                        color: isCurrent ? primaryColor : Colors.white,
+                        color: isCurrent ? accent : Colors.black87,
                         fontSize: 14,
                         fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w500,
                       ),
@@ -1243,7 +1230,7 @@ class _FavoritesSheet extends StatelessWidget {
                         return Text(
                           nowPlaying,
                           style: TextStyle(
-                            color: primaryColor.withOpacity(0.7),
+                            color: accent.withOpacity(0.7),
                             fontSize: 11,
                           ),
                           maxLines: 1,
@@ -1253,7 +1240,7 @@ class _FavoritesSheet extends StatelessWidget {
                       return const SizedBox.shrink();
                     }),
                     trailing: isCurrent
-                        ? Icon(Icons.graphic_eq, color: primaryColor, size: 20)
+                        ? Icon(Icons.graphic_eq, color: accent, size: 20)
                         : null,
                     onTap: () {
                       Navigator.pop(context);
@@ -1321,7 +1308,7 @@ class _ScheduleListSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    final primaryColor = AppTheme.fixedAccent;
     final radioProvider = context.watch<RadioProvider>();
     final schedules = radioProvider.scheduleList;
     final currentProgram = radioProvider.currentProgram;
@@ -1329,7 +1316,7 @@ class _ScheduleListSheet extends StatelessWidget {
     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFF1E1E1E),
+        color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.fromLTRB(20, 16, 20, 16 + bottomPadding),
@@ -1338,7 +1325,7 @@ class _ScheduleListSheet extends StatelessWidget {
         children: [
           Container(
             width: 40, height: 4,
-            decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2)),
+            decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.circular(2)),
           ),
           const SizedBox(height: 16),
           Row(
@@ -1346,7 +1333,7 @@ class _ScheduleListSheet extends StatelessWidget {
               Icon(Icons.format_list_bulleted, color: primaryColor, size: 20),
               const SizedBox(width: 8),
               Text(AppLocalizations.of(context)!.radioScheduleTitle(stationName),
-                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                  style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
             ],
           ),
           const SizedBox(height: 12),
@@ -1356,7 +1343,7 @@ class _ScheduleListSheet extends StatelessWidget {
                 ? Center(
               child: Padding(
                 padding: const EdgeInsets.all(32),
-                child: Text(AppLocalizations.of(context)!.radioLoadingSchedule, style: const TextStyle(color: Colors.white54)),
+                child: Text(AppLocalizations.of(context)!.radioLoadingSchedule, style: const TextStyle(color: Colors.black45)),
               ),
             )
                 : Builder(builder: (ctx) {
@@ -1418,7 +1405,7 @@ class _ScheduleListSheet extends StatelessWidget {
                     margin: const EdgeInsets.only(bottom: 4),
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                     decoration: BoxDecoration(
-                      color: isCurrent ? primaryColor.withOpacity(0.15) : Colors.transparent,
+                      color: isCurrent ? primaryColor.withOpacity(0.10) : Colors.transparent,
                       borderRadius: BorderRadius.circular(10),
                       border: isCurrent ? Border.all(color: primaryColor.withOpacity(0.4)) : null,
                     ),
@@ -1428,7 +1415,7 @@ class _ScheduleListSheet extends StatelessWidget {
                           width: 60,
                           child: Text(fmt(start),
                               style: TextStyle(
-                                color: isCurrent ? primaryColor : Colors.white54,
+                                color: isCurrent ? primaryColor : Colors.black45,
                                 fontSize: 13,
                                 fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
                               )),
@@ -1444,7 +1431,7 @@ class _ScheduleListSheet extends StatelessWidget {
                         Expanded(
                           child: Text(title,
                               style: TextStyle(
-                                color: isCurrent ? Colors.white : Colors.white70,
+                                color: isCurrent ? Colors.black : Colors.black87,
                                 fontSize: 14,
                                 fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
                               ),

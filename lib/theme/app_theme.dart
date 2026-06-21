@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static const Color background = Colors.transparent;
+  // 테마 색상 변경에 영향받지 않는 고정 강조색 (흰색 모달 전용)
+  static const Color fixedAccent = Color(0xFF4A6B8A);
   static const Color surface = Color(0xFF121212);
   static const Color surfaceVariant = Color(0xFF1A1A1A);
   static const Color cardColor = Color(0xFF1A1A1A);

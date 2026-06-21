@@ -96,14 +96,14 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.surfaceVariant,
-        title: Text(AppLocalizations.of(context)!.deleteSelected, style: const TextStyle(color: AppTheme.textPrimary)),
+        backgroundColor: Colors.white,
+        title: Text(AppLocalizations.of(context)!.deleteSelected, style: const TextStyle(color: Colors.black)),
         content: Text(AppLocalizations.of(context)!.deleteSelectedConfirm(_selectedSongIds.length),
-            style: const TextStyle(color: AppTheme.textSecondary)),
+            style: const TextStyle(color: Colors.black54)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: AppTheme.textHint)),
+            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.black38)),
           ),
           TextButton(
             onPressed: () async {
@@ -182,12 +182,28 @@ class _HomeScreenState extends State<HomeScreen> {
       titleSpacing: 20,
       title: _isSearching
           ? _buildSearchField()
-          : Text(AppLocalizations.of(context)!.appName,
-          style: TextStyle(
-              color: primaryColor,
-              fontSize: 18,
-              fontWeight: FontWeight.w900,
-              letterSpacing: -0.5)),
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(AppLocalizations.of(context)!.appName,
+                    style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.5)),
+                if (Localizations.localeOf(context).languageCode == 'ko')
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4),
+                    child: Text('MusicWave',
+                        style: TextStyle(
+                            color: primaryColor.withOpacity(0.5),
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 0.5)),
+                  ),
+              ],
+            ),
       actions: [
         if (!_isSearching) ...[
           IconButton(
@@ -197,7 +213,13 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const RadioHomeScreen()),
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) => const RadioHomeScreen(),
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+                transitionDuration: const Duration(milliseconds: 250),
+              ),
             ),
             icon: const Icon(Icons.radio_outlined, color: AppTheme.textPrimary, size: 23),
           ),

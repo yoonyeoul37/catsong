@@ -111,23 +111,23 @@ class SongListTile extends StatelessWidget {
               icon: Icon(Icons.more_vert,
                   color: isCurrentSong ? primaryColor : Colors.white30,
                   size: 20),
-              color: AppTheme.surfaceVariant,
+              color: Colors.white,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
               itemBuilder: (context) => [
-                _buildPopupItem(Icons.play_arrow, AppLocalizations.of(context)!.play, 'play', primaryColor),
-                _buildPopupItem(Icons.skip_next, AppLocalizations.of(context)!.playNext, 'play_next', primaryColor),
-                _buildPopupItem(Icons.playlist_add, AppLocalizations.of(context)!.addToPlaylist, 'playlist', primaryColor),
+                _buildPopupItem(Icons.play_arrow, AppLocalizations.of(context)!.play, 'play', AppTheme.fixedAccent),
+                _buildPopupItem(Icons.skip_next, AppLocalizations.of(context)!.playNext, 'play_next', AppTheme.fixedAccent),
+                _buildPopupItem(Icons.playlist_add, AppLocalizations.of(context)!.addToPlaylist, 'playlist', AppTheme.fixedAccent),
                 _buildPopupItem(
                   isFav ? Icons.favorite : Icons.favorite_border,
                   isFav ? AppLocalizations.of(context)!.removeFromFavorites : AppLocalizations.of(context)!.addToFavorites,
                   'favorite',
-                  isFav ? Colors.redAccent : primaryColor,
+                  isFav ? Colors.redAccent : AppTheme.fixedAccent,
                 ),
-                _buildPopupItem(Icons.music_note, AppLocalizations.of(context)!.setRingtone, 'ringtone', primaryColor),
-                _buildPopupItem(Icons.info_outline, AppLocalizations.of(context)!.songInfo, 'info', primaryColor),
-                _buildPopupItem(Icons.equalizer, AppLocalizations.of(context)!.equalizer, 'equalizer', primaryColor),
-                _buildPopupItem(Icons.share, AppLocalizations.of(context)!.share, 'share', primaryColor),
+                _buildPopupItem(Icons.music_note, AppLocalizations.of(context)!.setRingtone, 'ringtone', AppTheme.fixedAccent),
+                _buildPopupItem(Icons.info_outline, AppLocalizations.of(context)!.songInfo, 'info', AppTheme.fixedAccent),
+                _buildPopupItem(Icons.equalizer, AppLocalizations.of(context)!.equalizer, 'equalizer', AppTheme.fixedAccent),
+                _buildPopupItem(Icons.share, AppLocalizations.of(context)!.share, 'share', AppTheme.fixedAccent),
                 _buildPopupItem(Icons.delete_outline, AppLocalizations.of(context)!.delete, 'delete', Colors.redAccent),
               ],
               onSelected: (value) => _handleMenuAction(context, value),
@@ -195,7 +195,7 @@ class SongListTile extends StatelessWidget {
         children: [
           Icon(icon, color: primaryColor, size: 18),
           const SizedBox(width: 10),
-          Text(label, style: const TextStyle(color: AppTheme.textPrimary)),
+          Text(label, style: const TextStyle(color: Colors.black87)),
         ],
       ),
     );
@@ -266,16 +266,16 @@ class SongListTile extends StatelessWidget {
 
   void _showAddToPlaylistDialog(BuildContext context, song) {
     final playlistProvider = context.read<PlaylistProvider>();
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    final primaryColor = AppTheme.fixedAccent;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.surfaceVariant,
+        backgroundColor: Colors.white,
         title: Text(AppLocalizations.of(context)!.addToPlaylist,
-            style: const TextStyle(color: AppTheme.textPrimary)),
+            style: const TextStyle(color: Colors.black)),
         content: playlistProvider.playlists.isEmpty
             ? Text(AppLocalizations.of(context)!.noPlaylists,
-            style: const TextStyle(color: AppTheme.textSecondary))
+            style: const TextStyle(color: Colors.black54))
             : SizedBox(
           width: double.maxFinite,
           child: ListView.builder(
@@ -286,9 +286,9 @@ class SongListTile extends StatelessWidget {
               return ListTile(
                 leading: Icon(Icons.playlist_play, color: primaryColor),
                 title: Text(playlist.name,
-                    style: const TextStyle(color: AppTheme.textPrimary)),
+                    style: const TextStyle(color: Colors.black)),
                 subtitle: Text('${playlist.songCount}곡',
-                    style: const TextStyle(color: AppTheme.textSecondary)),
+                    style: const TextStyle(color: Colors.black54)),
                 onTap: () {
                   playlistProvider.addSongToPlaylist(playlist.id, song);
                   Navigator.pop(ctx);
@@ -315,13 +315,13 @@ class SongListTile extends StatelessWidget {
   }
 
   void _showSongInfo(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    final primaryColor = AppTheme.fixedAccent;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.surfaceVariant,
+        backgroundColor: Colors.white,
         title: Text(AppLocalizations.of(context)!.songInfo,
-            style: const TextStyle(color: AppTheme.textPrimary)),
+            style: const TextStyle(color: Colors.black)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -349,7 +349,7 @@ class SongListTile extends StatelessWidget {
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(AppLocalizations.of(context)!.close,
-                style: const TextStyle(color: AppTheme.textHint)),
+                style: const TextStyle(color: Colors.black38)),
           ),
         ],
       ),
@@ -357,20 +357,20 @@ class SongListTile extends StatelessWidget {
   }
 
   void _showDeleteDialog(BuildContext context, Song song) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    final primaryColor = AppTheme.fixedAccent;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.surfaceVariant,
+        backgroundColor: Colors.white,
         title: Text(AppLocalizations.of(context)!.deleteSong,
-            style: const TextStyle(color: AppTheme.textPrimary)),
+            style: const TextStyle(color: Colors.black)),
         content: Text(AppLocalizations.of(context)!.deleteSongConfirmFormat(song.titleDisplay),
-            style: const TextStyle(color: AppTheme.textSecondary)),
+            style: const TextStyle(color: Colors.black54)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(AppLocalizations.of(context)!.cancel,
-                style: const TextStyle(color: AppTheme.textHint)),
+                style: const TextStyle(color: Colors.black38)),
           ),
           TextButton(
             onPressed: () async {
@@ -390,7 +390,7 @@ class SongListTile extends StatelessWidget {
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                         SnackBar(
+                      SnackBar(
                         content: Text(AppLocalizations.of(context)!.deleteFailed),
                         backgroundColor: Colors.redAccent,
                         duration: Duration(seconds: 2),
@@ -425,7 +425,7 @@ class SongListTile extends StatelessWidget {
           Text(label, style: TextStyle(color: primaryColor, fontSize: 11)),
           Text(value,
               style: const TextStyle(
-                  color: AppTheme.textPrimary, fontSize: 13),
+                  color: Colors.black87, fontSize: 13),
               maxLines: 2,
               overflow: TextOverflow.ellipsis),
         ],

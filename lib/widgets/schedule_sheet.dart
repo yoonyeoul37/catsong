@@ -18,44 +18,41 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    final primaryColor = AppTheme.fixedAccent;
     final radioProvider = context.watch<RadioProvider>();
     final schedules = radioProvider.schedules;
     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
 
-    // 채널 목록: 현재 큐 또는 최근 청취
     final stationList = radioProvider.currentQueue.isNotEmpty
         ? radioProvider.currentQueue
         : radioProvider.recentlyListened;
 
     return Container(
       decoration: const BoxDecoration(
-        color: AppTheme.surfaceVariant,
+        color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.fromLTRB(24, 16, 24, 24 + bottomPadding),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // 핸들
           Container(
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.white24,
+              color: Colors.black12,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
           const SizedBox(height: 20),
 
-          // 타이틀
           Row(
             children: [
               Container(
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: primaryColor.withOpacity(0.15),
+                  color: primaryColor.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(Icons.schedule,
@@ -67,7 +64,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                 children: [
                   Text(AppLocalizations.of(context)!.radioScheduleChannelSwitch,
                       style: const TextStyle(
-                        color: AppTheme.textPrimary,
+                        color: Colors.black,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       )),
@@ -75,7 +72,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                   Text(
                     AppLocalizations.of(context)!.radioMaxSchedules(schedules.length),
                     style: const TextStyle(
-                        color: AppTheme.textSecondary, fontSize: 12),
+                        color: Colors.black45, fontSize: 12),
                   ),
                 ],
               ),
@@ -83,7 +80,6 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
           ),
           const SizedBox(height: 20),
 
-          // 현재 예약 목록
           if (schedules.isNotEmpty) ...[
             ...List.generate(schedules.length, (i) {
               final s = schedules[i];
@@ -93,13 +89,13 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                     horizontal: 14, vertical: 10),
                 decoration: BoxDecoration(
                   color: s.triggered
-                      ? primaryColor.withOpacity(0.15)
-                      : AppTheme.cardColor,
+                      ? primaryColor.withOpacity(0.10)
+                      : const Color(0xFFF5F5F5),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: s.triggered
                         ? primaryColor.withOpacity(0.4)
-                        : primaryColor.withOpacity(0.1),
+                        : const Color(0xFFE5E5E5),
                   ),
                 ),
                 child: Row(
@@ -108,7 +104,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                       s.triggered ? Icons.check_circle : Icons.schedule,
                       color: s.triggered
                           ? primaryColor
-                          : AppTheme.textHint,
+                          : Colors.black38,
                       size: 20,
                     ),
                     const SizedBox(width: 10),
@@ -121,14 +117,14 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    Icon(Icons.arrow_forward,
-                        color: AppTheme.textHint, size: 16),
+                    const Icon(Icons.arrow_forward,
+                        color: Colors.black38, size: 16),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         s.station.name,
                         style: const TextStyle(
-                          color: AppTheme.textPrimary,
+                          color: Colors.black87,
                           fontSize: 13,
                         ),
                         maxLines: 1,
@@ -147,9 +143,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
             const SizedBox(height: 12),
           ],
 
-          // 새 예약 추가
           if (schedules.length < 5) ...[
-            // 시간 선택
             GestureDetector(
               onTap: () async {
                 final time = await showTimePicker(
@@ -158,9 +152,8 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                   builder: (context, child) {
                     return Theme(
                       data: Theme.of(context).copyWith(
-                        colorScheme: ColorScheme.dark(
+                        colorScheme: ColorScheme.light(
                           primary: primaryColor,
-                          surface: AppTheme.surfaceVariant,
                         ),
                       ),
                       child: child!,
@@ -175,7 +168,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 decoration: BoxDecoration(
-                  color: AppTheme.cardColor,
+                  color: const Color(0xFFF5F5F5),
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
                       color: primaryColor.withOpacity(0.15)),
@@ -186,7 +179,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                     Icon(Icons.access_time,
                         color: _selectedTime != null
                             ? primaryColor
-                            : AppTheme.textSecondary,
+                            : Colors.black45,
                         size: 20),
                     const SizedBox(width: 8),
                     Text(
@@ -196,7 +189,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                       style: TextStyle(
                         color: _selectedTime != null
                             ? primaryColor
-                            : AppTheme.textSecondary,
+                            : Colors.black45,
                         fontSize: 15,
                         fontWeight: _selectedTime != null
                             ? FontWeight.bold
@@ -209,12 +202,11 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
             ),
             const SizedBox(height: 10),
 
-            // 채널 선택
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 4),
               decoration: BoxDecoration(
-                color: AppTheme.cardColor,
+                color: const Color(0xFFF5F5F5),
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
                     color: primaryColor.withOpacity(0.15)),
@@ -225,7 +217,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                 child: Center(
                   child: Text(AppLocalizations.of(context)!.radioPlayFirst,
                       style: const TextStyle(
-                          color: AppTheme.textHint,
+                          color: Colors.black45,
                           fontSize: 13)),
                 ),
               )
@@ -249,7 +241,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                         const EdgeInsets.only(bottom: 4),
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? primaryColor.withOpacity(0.15)
+                              ? primaryColor.withOpacity(0.10)
                               : Colors.transparent,
                           borderRadius:
                           BorderRadius.circular(10),
@@ -262,7 +254,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                                   : Icons.radio_button_off,
                               color: isSelected
                                   ? primaryColor
-                                  : AppTheme.textHint,
+                                  : Colors.black38,
                               size: 18,
                             ),
                             const SizedBox(width: 10),
@@ -275,7 +267,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                                     style: TextStyle(
                                       color: isSelected
                                           ? primaryColor
-                                          : AppTheme.textPrimary,
+                                          : Colors.black87,
                                       fontSize: 15,
                                       fontWeight: isSelected
                                           ? FontWeight.bold
@@ -311,11 +303,11 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                                   ),
                                 );
                               },
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 8),
+                              child: const Padding(
+                                padding: EdgeInsets.only(left: 8),
                                 child: Icon(
                                   Icons.format_list_bulleted,
-                                  color: AppTheme.textHint,
+                                  color: Colors.black38,
                                   size: 18,
                                 ),
                               ),
@@ -330,7 +322,6 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
             ),
             const SizedBox(height: 14),
 
-            // 예약 버튼
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -402,9 +393,9 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                     : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primaryColor,
-                  foregroundColor: Colors.black,
-                  disabledBackgroundColor: AppTheme.cardColor,
-                  disabledForegroundColor: AppTheme.textSecondary,
+                  foregroundColor: Colors.white,
+                  disabledBackgroundColor: const Color(0xFFE5E5E5),
+                  disabledForegroundColor: Colors.black38,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14)),
@@ -416,7 +407,6 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
             ),
           ],
 
-          // 전체 취소
           if (schedules.isNotEmpty) ...[
             const SizedBox(height: 10),
             SizedBox(
@@ -455,13 +445,13 @@ class _ScheduleListBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    final primaryColor = AppTheme.fixedAccent;
     final radioProvider = context.watch<RadioProvider>();
     final schedules = radioProvider.scheduleList;
 
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFF1E1E1E),
+        color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.fromLTRB(20, 16, 20, 32 + MediaQuery.of(context).viewPadding.bottom),
@@ -471,7 +461,7 @@ class _ScheduleListBottomSheet extends StatelessWidget {
           Container(
             width: 40, height: 4,
             decoration: BoxDecoration(
-              color: Colors.white24,
+              color: Colors.black12,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -482,7 +472,7 @@ class _ScheduleListBottomSheet extends StatelessWidget {
               const SizedBox(width: 8),
               Text(AppLocalizations.of(context)!.radioScheduleTitle(stationName),
                   style: const TextStyle(
-                      color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                      color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
             ],
           ),
           const SizedBox(height: 12),
@@ -495,7 +485,7 @@ class _ScheduleListBottomSheet extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(32),
                 child: Text(AppLocalizations.of(context)!.radioLoadingSchedule,
-                    style: const TextStyle(color: Colors.white54)),
+                    style: const TextStyle(color: Colors.black45)),
               ),
             )
                 : ListView.builder(
@@ -528,7 +518,6 @@ class _ScheduleListBottomSheet extends StatelessWidget {
                 return GestureDetector(
                   onTap: () async {
                     Navigator.pop(context);
-                    // 시작 시간으로 예약
                     if (start.isEmpty) return;
                     int h, m;
                     if (start.contains(':')) {
@@ -559,12 +548,12 @@ class _ScheduleListBottomSheet extends StatelessWidget {
                         SizedBox(
                           width: 60,
                           child: Text(fmt(start),
-                              style: const TextStyle(color: Colors.white54, fontSize: 13)),
+                              style: const TextStyle(color: Colors.black45, fontSize: 13)),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(title,
-                              style: const TextStyle(color: Colors.white70, fontSize: 14),
+                              style: const TextStyle(color: Colors.black87, fontSize: 14),
                               maxLines: 1, overflow: TextOverflow.ellipsis),
                         ),
                         Icon(Icons.alarm_add, color: primaryColor.withOpacity(0.6), size: 18),

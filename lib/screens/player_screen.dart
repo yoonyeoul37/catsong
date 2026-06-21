@@ -1051,7 +1051,74 @@ class _PlayerScreenState extends State<PlayerScreen>
                 iconSize: 22,
               ),
               IconButton(
-                onPressed: () => _showLoopModeDialog(context, playerProvider, primaryColor),
+                onPressed: () {
+                  playerProvider.toggleLoopMode();
+                  final mode = playerProvider.loopMode;
+                  final label = mode == LoopMode.one
+                      ? AppLocalizations.of(context)!.repeatOne
+                      : mode == LoopMode.all
+                          ? AppLocalizations.of(context)!.repeatAll
+                          : AppLocalizations.of(context)!.noRepeat;
+                  final overlay = Overlay.of(context);
+                  final entry = OverlayEntry(
+                    builder: (context) => Positioned(
+                      bottom: 140,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: TweenAnimationBuilder<double>(
+                          tween: Tween(begin: 0.0, end: 1.0),
+                          duration: const Duration(milliseconds: 200),
+                          builder: (context, value, child) {
+                            return Opacity(
+                              opacity: value,
+                              child: Transform.scale(
+                                scale: 0.85 + (0.15 * value),
+                                child: child,
+                              ),
+                            );
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.12),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(color: Colors.white.withOpacity(0.15)),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      mode == LoopMode.one ? Icons.repeat_one : Icons.repeat,
+                                      color: mode == LoopMode.off
+                                          ? Colors.white54
+                                          : Color.lerp(primaryColor, Colors.white, 0.3),
+                                      size: 14,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      label,
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          decoration: TextDecoration.none),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                  overlay.insert(entry);
+                  Future.delayed(const Duration(milliseconds: 1200), () => entry.remove());
+                },
                 icon: Icon(
                     playerProvider.loopMode == LoopMode.one
                         ? Icons.repeat_one
@@ -1059,7 +1126,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     color: playerProvider.loopMode != LoopMode.off
                         ? primaryColor
                         : Colors.white60),
-                iconSize: 22,
+                iconSize: 27,
               ),
               IconButton(
                 onPressed: () => _showSleepTimerDialog(context, playerProvider, primaryColor),

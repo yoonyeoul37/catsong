@@ -77,7 +77,7 @@ class SongListTile extends StatelessWidget {
                   Text(
                     song.titleDisplay,
                     style: TextStyle(
-                      color: isCurrentSong ? primaryColor : Colors.white,
+                      color: isCurrentSong ? AppTheme.fixedAccent : Colors.white,
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -89,7 +89,7 @@ class SongListTile extends StatelessWidget {
                     song.artistDisplay,
                     style: TextStyle(
                       color: isCurrentSong
-                          ? primaryColor.withOpacity(0.7)
+                          ? Color.lerp(AppTheme.fixedAccent, Colors.white, 0.3)
                           : Colors.white38,
                       fontSize: 13,
                     ),
@@ -103,13 +103,13 @@ class SongListTile extends StatelessWidget {
             Text(
               song.durationFormatted,
               style: TextStyle(
-                color: isCurrentSong ? primaryColor : Colors.white30,
+                color: isCurrentSong ? AppTheme.fixedAccent : Colors.white30,
                 fontSize: 12,
               ),
             ),
             PopupMenuButton<String>(
               icon: Icon(Icons.more_vert,
-                  color: isCurrentSong ? primaryColor : Colors.white30,
+                  color: isCurrentSong ? AppTheme.fixedAccent : Colors.white30,
                   size: 20),
               color: Colors.white,
               shape: RoundedRectangleBorder(

@@ -143,9 +143,9 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
               TabBar(
                 controller: _tabController,
                 isScrollable: true,
-                indicatorColor: primaryColor,
+                indicatorColor: AppTheme.fixedAccent,
                 indicatorWeight: 2,
-                labelColor: primaryColor,
+                labelColor: AppTheme.fixedAccent,
                 unselectedLabelColor: Colors.white.withOpacity(0.6),
                 labelStyle: const TextStyle(
                     fontSize: 13.5, fontWeight: FontWeight.w700),

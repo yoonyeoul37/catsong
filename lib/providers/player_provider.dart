@@ -306,12 +306,12 @@ class PlayerProvider extends ChangeNotifier {
   void toggleLoopMode() {
     switch (_loopMode) {
       case LoopMode.off:
-        _loopMode = LoopMode.all;
-        break;
-      case LoopMode.all:
         _loopMode = LoopMode.one;
         break;
       case LoopMode.one:
+        _loopMode = LoopMode.all;
+        break;
+      case LoopMode.all:
         _loopMode = LoopMode.off;
         break;
     }

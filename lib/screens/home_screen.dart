@@ -374,7 +374,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           _selectedSongIds.length == musicProvider.songs.length
                               ? AppLocalizations.of(context)!.deselectAll
                               : AppLocalizations.of(context)!.selectAll,
-                          style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+                          style: const TextStyle(color: AppTheme.fixedAccent)),
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
@@ -462,8 +462,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         context.read<PlayerProvider>().playFromList(musicProvider.songs, 0);
                       }
                     },
-                    icon: Icon(Icons.play_arrow,
-                        color: Theme.of(context).colorScheme.primary, size: 22),
+                    icon: const Icon(Icons.play_arrow,
+                        color: AppTheme.fixedAccent, size: 26),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
@@ -580,7 +580,7 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: isSelected ? primaryColor : Colors.transparent,
+              color: isSelected ? AppTheme.fixedAccent : Colors.transparent,
               width: 2,
             ),
           ),
@@ -588,7 +588,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? primaryColor : Colors.white70,
+            color: isSelected ? AppTheme.fixedAccent : Colors.white70,
             fontSize: 14,
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
           ),

@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  Color _primaryColor = const Color(0xFF1E90FF);
+  Color _primaryColor = const Color(0xFF0884EF);
   double _textScale = 1.12;
   String _fontFamily = 'default';
 

@@ -1272,7 +1272,7 @@ class _SleepTimerBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    const accent = AppTheme.fixedAccent;
     final l = AppLocalizations.of(context)!;
     final h = remaining.inHours;
     final m = remaining.inMinutes.remainder(60);
@@ -1288,20 +1288,20 @@ class _SleepTimerBadge extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: primaryColor.withOpacity(0.15),
+          color: Colors.white.withOpacity(0.08),
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: primaryColor.withOpacity(0.4)),
+          border: Border.all(color: Colors.white.withOpacity(0.20)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.bedtime, color: primaryColor, size: 16),
+            const Icon(Icons.bedtime, color: accent, size: 16),
             const SizedBox(width: 8),
-            Text(timeText, style: TextStyle(color: primaryColor, fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(timeText, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(width: 4),
-            Text(AppLocalizations.of(context)!.radioAfterEnd, style: TextStyle(color: primaryColor.withOpacity(0.7), fontSize: 13)),
+            Text(AppLocalizations.of(context)!.radioAfterEnd, style: TextStyle(color: Colors.white.withOpacity(0.65), fontSize: 13)),
             const SizedBox(width: 8),
-            Icon(Icons.close, color: primaryColor.withOpacity(0.5), size: 14),
+            Icon(Icons.close, color: Colors.white.withOpacity(0.5), size: 14),
           ],
         ),
       ),

@@ -31,11 +31,19 @@ class RadioHomeScreen extends StatelessWidget {
 
   void _onCountryTap(BuildContext context, RadioCountry country) {
     context.read<RadioProvider>().selectCountry(country);
-    if (country.code == 'KR') {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => RadioKoreaScreen()));
-    } else {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => RadioCountryStationsScreen(country: country)));
-    }
+    final screen = country.code == 'KR'
+        ? RadioKoreaScreen()
+        : RadioCountryStationsScreen(country: country);
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => screen,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+        transitionDuration: const Duration(milliseconds: 250),
+      ),
+    );
   }
 
   @override
@@ -63,10 +71,6 @@ class RadioHomeScreen extends StatelessWidget {
           ],
         ),
         actions: [
-          IconButton(
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RadioSearchScreen())),
-            icon: const Icon(Icons.search, color: Colors.white70, size: 23),
-          ),
           IconButton(
             onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RadioFavoritesScreen())),
             icon: Icon(Icons.favorite, color: primaryColor, size: 21),
@@ -99,7 +103,7 @@ class RadioHomeScreen extends StatelessWidget {
                     onTap: () => _onCountryTap(context, country),
                   ),
                   if (index != countries.length - 1)
-                    Divider(height: 1, color: Colors.white.withOpacity(0.06), indent: 48),
+                    Divider(height: 1, color: Colors.white.withOpacity(0.10), indent: 48),
                 ],
               );
             }),

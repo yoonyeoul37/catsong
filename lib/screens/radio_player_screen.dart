@@ -157,11 +157,11 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     final freq = current.frequency ?? '';
 
     return Scaffold(
-      backgroundColor: const Color(0xFF131313),
+      backgroundColor: Colors.transparent,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF0e0e0e),
-          border: Border(top: BorderSide(color: Colors.white.withOpacity(0.05))),
+          color: Colors.white.withOpacity(0.03),
+          border: Border(top: BorderSide(color: Colors.white.withOpacity(0.06))),
         ),
         child: SafeArea(
           top: false,
@@ -514,9 +514,9 @@ class _InnerDialPainter extends CustomPainter {
       center: const Alignment(-0.35, -0.35),
       radius: 1.0,
       colors: [
-        Color.lerp(bcColor, const Color(0xFF2a2a2a), 0.7)!,
-        const Color(0xFF1a1a1a),
-        const Color(0xFF0d0d0d),
+        Color.lerp(bcColor, Color.lerp(primaryColor, const Color(0xFF2a2a2a), 0.6)!, 0.5)!,
+        Color.lerp(primaryColor, const Color(0xFF1a1a1a), 0.78)!,
+        Color.lerp(primaryColor, const Color(0xFF0d0d0d), 0.85)!,
       ],
       stops: const [0.0, 0.5, 1.0],
     );
@@ -524,11 +524,11 @@ class _InnerDialPainter extends CustomPainter {
 
     // 안쪽 원 그림자
     final shadowD = Paint()
-      ..color = const Color(0xFF050505)
+      ..color = Color.lerp(primaryColor, const Color(0xFF050505), 0.85)!
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
     canvas.drawCircle(center + const Offset(4, 4), r, shadowD);
     final shadowL = Paint()
-      ..color = const Color(0xFF252525)
+      ..color = Color.lerp(primaryColor, const Color(0xFF252525), 0.65)!
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
     canvas.drawCircle(center - const Offset(4, 4), r, shadowL);
     canvas.drawCircle(center, r, Paint()..shader = bgGrad.createShader(bgRect));
@@ -548,8 +548,8 @@ class _InnerDialPainter extends CustomPainter {
       final tickLen = isMajor ? 7.0 : 4.0;
       final brightness = (cos(angle) * 0.5 + 0.5);
       final tickColor = Color.lerp(
-        const Color(0xFF151515),
-        const Color(0xFF353535),
+        Color.lerp(primaryColor, const Color(0xFF151515), 0.8)!,
+        Color.lerp(primaryColor, const Color(0xFF353535), 0.45)!,
         brightness,
       )!;
       final start = Offset(
@@ -605,13 +605,13 @@ class _DialPainter extends CustomPainter {
 
     // ── 어두운 그림자 (우하단)
     final shadowDark = Paint()
-      ..color = const Color(0xFF050505)
+      ..color = Color.lerp(primaryColor, const Color(0xFF050505), 0.85)!
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 14);
     canvas.drawCircle(center + const Offset(8, 8), outerR, shadowDark);
 
     // ── 밝은 그림자 (좌상단)
     final shadowLight = Paint()
-      ..color = const Color(0xFF252525)
+      ..color = Color.lerp(primaryColor, const Color(0xFF252525), 0.65)!
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 14);
     canvas.drawCircle(center - const Offset(8, 8), outerR, shadowLight);
 
@@ -621,9 +621,9 @@ class _DialPainter extends CustomPainter {
       center: const Alignment(-0.4, -0.4),
       radius: 1.0,
       colors: [
-        const Color(0xFF242424), // 좌상단 밝게
-        const Color(0xFF161616),
-        const Color(0xFF0e0e0e), // 우하단 어둡게
+        Color.lerp(primaryColor, const Color(0xFF242424), 0.75)!,
+        Color.lerp(primaryColor, const Color(0xFF161616), 0.82)!,
+        Color.lerp(primaryColor, const Color(0xFF0e0e0e), 0.88)!,
       ],
       stops: const [0.0, 0.5, 1.0],
     );
@@ -636,11 +636,11 @@ class _DialPainter extends CustomPainter {
       startAngle: -pi / 2,
       endAngle: 3 * pi / 2,
       colors: [
-        const Color(0xFF3a3a3a),
-        const Color(0xFF1a1a1a),
-        const Color(0xFF0a0a0a),
-        const Color(0xFF1a1a1a),
-        const Color(0xFF3a3a3a),
+        Color.lerp(primaryColor, const Color(0xFF3a3a3a), 0.55)!,
+        Color.lerp(primaryColor, const Color(0xFF1a1a1a), 0.78)!,
+        Color.lerp(primaryColor, const Color(0xFF0a0a0a), 0.85)!,
+        Color.lerp(primaryColor, const Color(0xFF1a1a1a), 0.78)!,
+        Color.lerp(primaryColor, const Color(0xFF3a3a3a), 0.55)!,
       ],
       stops: const [0.0, 0.25, 0.5, 0.75, 1.0],
     );
@@ -661,8 +661,8 @@ class _DialPainter extends CustomPainter {
       // 상단 쪽 눈금은 좀 더 밝게
       final brightness = (cos(angle + pi / 2) * 0.5 + 0.5);
       final tickColor = Color.lerp(
-        const Color(0xFF1a1a1a),
-        const Color(0xFF444444),
+        Color.lerp(primaryColor, const Color(0xFF1a1a1a), 0.75)!,
+        Color.lerp(primaryColor, const Color(0xFF444444), 0.4)!,
         brightness,
       )!;
       final start = Offset(
@@ -758,15 +758,11 @@ class _ProgramCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 28),
       decoration: BoxDecoration(
-        color: const Color(0xFF131313),
+        color: Colors.white.withOpacity(0.05),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(color: Color(0xFF080808), blurRadius: 10, offset: Offset(4, 4)),
-          BoxShadow(color: Color(0xFF1e1e1e), blurRadius: 10, offset: Offset(-4, -4)),
-        ],
-        border: Border.all(color: primaryColor.withOpacity(0.15)),
+        border: Border.all(color: primaryColor.withOpacity(0.18)),
       ),
       child: Row(
         children: [
@@ -847,10 +843,10 @@ class _ProgramCard extends StatelessWidget {
                     if (freq.isNotEmpty)
                       Text(
                         freq,
-                        style: const TextStyle(
-                          color: AppTheme.textHint,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.65),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
                           letterSpacing: 0.5,
                         ),
                       ),
@@ -971,11 +967,7 @@ class _Controls extends StatelessWidget {
             height: 82,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: const Color(0xFF131313),
-              boxShadow: [
-                const BoxShadow(color: Color(0xFF080808), blurRadius: 14, offset: Offset(5, 5)),
-                const BoxShadow(color: Color(0xFF1e1e1e), blurRadius: 14, offset: Offset(-5, -5)),
-              ],
+              color: Colors.white.withOpacity(0.06),
               border: Border.all(color: primaryColor, width: 2.5),
             ),
             child: isLoading
@@ -1109,13 +1101,10 @@ class _NeuButton extends StatelessWidget {
       child: Container(
         width: size,
         height: size,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Color(0xFF131313),
-          boxShadow: [
-            BoxShadow(color: Color(0xFF080808), blurRadius: 10, offset: Offset(4, 4)),
-            BoxShadow(color: Color(0xFF1e1e1e), blurRadius: 10, offset: Offset(-4, -4)),
-          ],
+          color: Colors.white.withOpacity(0.05),
+          border: Border.all(color: Colors.white.withOpacity(0.08)),
         ),
         child: Center(child: child),
       ),

@@ -21,6 +21,9 @@ class RadioCountryStationsScreen extends StatefulWidget {
 
 class _RadioCountryStationsScreenState
     extends State<RadioCountryStationsScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _query = '';
+
   @override
   void initState() {
     super.initState();
@@ -30,87 +33,140 @@ class _RadioCountryStationsScreenState
   }
 
   @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final radioProvider = context.watch<RadioProvider>();
-    final stations = radioProvider.countryStations;
+    final allStations = radioProvider.countryStations;
+    final stations = _query.isEmpty
+        ? allStations
+        : allStations
+        .where((s) => s.name.toLowerCase().contains(_query.toLowerCase()))
+        .toList();
     final isLoading = radioProvider.isLoadingCountryStations;
     final current = radioProvider.currentStation;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0A),
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-        backgroundColor: AppTheme.background,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios,
-              color: AppTheme.textPrimary, size: 22),
+              color: Colors.white, size: 20),
         ),
         title: Text(
           '${widget.country.flag} ${widget.country.displayName}',
           style: const TextStyle(
-              color: AppTheme.textPrimary,
-              fontSize: 20,
-              fontWeight: FontWeight.bold),
+              color: Colors.white,
+              fontSize: 19,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.3),
         ),
       ),
-      body: isLoading
-          ? Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(color: primaryColor),
-            const SizedBox(height: 18),
-            Text(AppLocalizations.of(context)!.radioLoadingPopular,
-                style: const TextStyle(
-                    color: AppTheme.textSecondary, fontSize: 15)),
-          ],
-        ),
-      )
-          : stations.isEmpty
-          ? Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.search_off,
-                color: AppTheme.textHint, size: 48),
-            const SizedBox(height: 16),
-            Text(AppLocalizations.of(context)!.radioNoStationsFound,
-                style: const TextStyle(
-                    color: AppTheme.textSecondary,
-                    fontSize: 16)),
-          ],
-        ),
-      )
-          : Column(
+      body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
-            child: Text(
-              AppLocalizations.of(context)!.radioPopularCount(stations.length),
-              style: const TextStyle(
-                  color: AppTheme.textHint, fontSize: 14),
+            padding: const EdgeInsets.fromLTRB(24, 4, 24, 4),
+            child: Container(
+              height: 42,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.06),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.white.withOpacity(0.08)),
+              ),
+              child: TextField(
+                controller: _searchController,
+                onChanged: (v) => setState(() => _query = v),
+                style: const TextStyle(color: Colors.white, fontSize: 14.5),
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context)!.search,
+                  hintStyle: TextStyle(color: Colors.white.withOpacity(0.35), fontSize: 14.5),
+                  prefixIcon: Icon(Icons.search, color: Colors.white.withOpacity(0.4), size: 20),
+                  suffixIcon: _query.isNotEmpty
+                      ? IconButton(
+                    icon: Icon(Icons.close, color: Colors.white.withOpacity(0.4), size: 18),
+                    onPressed: () {
+                      _searchController.clear();
+                      setState(() => _query = '');
+                    },
+                  )
+                      : null,
+                  border: InputBorder.none,
+                  isDense: true,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                ),
+              ),
             ),
           ),
           Expanded(
-            child: ListView.separated(
-              padding:
-              EdgeInsets.fromLTRB(16, 0, 16, 80 + MediaQuery.of(context).viewPadding.bottom),
-              itemCount: stations.length,
-              separatorBuilder: (_, __) =>
-              const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                final station = stations[index];
-                final isPlaying = current?.stationUuid ==
-                    station.stationUuid;
-                return _StationTile(
-                  station: station,
-                  isPlaying: isPlaying,
-                  stationList: stations,
-                  stationIndex: index,
-                );
-              },
+            child: isLoading
+                ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(color: primaryColor),
+                  const SizedBox(height: 18),
+                  Text(AppLocalizations.of(context)!.radioLoadingPopular,
+                      style: TextStyle(
+                          color: Colors.white.withOpacity(0.4), fontSize: 14)),
+                ],
+              ),
+            )
+                : stations.isEmpty
+                ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.search_off,
+                      color: Colors.white.withOpacity(0.25), size: 44),
+                  const SizedBox(height: 16),
+                  Text(AppLocalizations.of(context)!.radioNoStationsFound,
+                      style: TextStyle(
+                          color: Colors.white.withOpacity(0.4),
+                          fontSize: 15)),
+                ],
+              ),
+            )
+                : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 10, 24, 6),
+                  child: Text(
+                    AppLocalizations.of(context)!.radioPopularCount(stations.length),
+                    style: TextStyle(
+                        color: Colors.white.withOpacity(0.35), fontSize: 12.5),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.separated(
+                    padding:
+                    EdgeInsets.fromLTRB(24, 0, 24, 80 + MediaQuery.of(context).viewPadding.bottom),
+                    itemCount: stations.length,
+                    separatorBuilder: (_, __) =>
+                        Divider(height: 1, color: Colors.white.withOpacity(0.10)),
+                    itemBuilder: (context, index) {
+                      final station = stations[index];
+                      final isPlaying = current?.stationUuid ==
+                          station.stationUuid;
+                      return _StationTile(
+                        station: station,
+                        isPlaying: isPlaying,
+                        stationList: stations,
+                        stationIndex: index,
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -143,125 +199,94 @@ class _StationTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
 
-    return Material(
-      color: AppTheme.cardColor,
-      borderRadius: BorderRadius.circular(14),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(14),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => RadioPlayerScreen(
-                station: station,
-                stationList: stationList,
-                currentIndex: stationIndex,
-              ),
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => RadioPlayerScreen(
+              station: station,
+              stationList: stationList,
+              currentIndex: stationIndex,
             ),
-          );
-        },
-        child: Container(
-          constraints: const BoxConstraints(minHeight: 76),
-          padding:
-          const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            gradient: isPlaying
-                ? LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                primaryColor.withOpacity(0.13),
-                primaryColor.withOpacity(0.03),
-              ],
-            )
-                : null,
-            border: Border.all(
-              color: isPlaying
-                  ? primaryColor.withOpacity(0.15)
-                  : primaryColor.withOpacity(0.08),
-              width: 1,
-            ),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            transitionDuration: const Duration(milliseconds: 250),
           ),
-          foregroundDecoration: isPlaying
-              ? BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            border: Border(
-              top: BorderSide(
-                color: primaryColor.withOpacity(0.8),
-                width: 1.5,
-              ),
-            ),
-          )
-              : null,
-          child: Row(
-            children: [
-              StationLogo(
-                  logoUrl: station.logoUrl,
-                  name: station.name,
-                  size: 50),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      station.name,
-                      style: TextStyle(
-                        color: isPlaying
-                            ? primaryColor
-                            : AppTheme.textPrimary,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+        );
+      },
+      splashColor: Colors.white.withOpacity(0.04),
+      highlightColor: Colors.transparent,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 13),
+        child: Row(
+          children: [
+            StationLogo(
+                logoUrl: station.logoUrl,
+                name: station.name,
+                size: 46),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    station.name,
+                    style: TextStyle(
+                      color: isPlaying ? primaryColor : Colors.white,
+                      fontSize: 15.5,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: -0.2,
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      [
-                        if (station.bitrate != null &&
-                            station.bitrate! > 0)
-                          '${station.bitrate} kbps',
-                        if (station.country != null &&
-                            station.country!.isNotEmpty)
-                          station.country!,
-                      ].join('  ·  '),
-                      style: const TextStyle(
-                          color: AppTheme.textHint, fontSize: 12),
-                    ),
-                  ],
-                ),
-              ),
-              if (isPlaying)
-                _PlayingBars()
-              else
-                IconButton(
-                  icon: Icon(
-                    context
-                        .watch<RadioProvider>()
-                        .isFavorite(station.stationUuid)
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    color: context
-                        .watch<RadioProvider>()
-                        .isFavorite(station.stationUuid)
-                        ? primaryColor
-                        : AppTheme.textHint,
-                    size: 22,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  onPressed: () => context
-                      .read<RadioProvider>()
-                      .toggleFavorite(station),
+                  const SizedBox(height: 3),
+                  Text(
+                    [
+                      if (station.bitrate != null &&
+                          station.bitrate! > 0)
+                        '${station.bitrate} kbps',
+                      if (station.country != null &&
+                          station.country!.isNotEmpty)
+                        station.country!,
+                    ].join('  ·  '),
+                    style: TextStyle(
+                        color: Colors.white.withOpacity(0.32), fontSize: 11.5),
+                  ),
+                ],
+              ),
+            ),
+            if (isPlaying)
+              _PlayingBars()
+            else
+              IconButton(
+                icon: Icon(
+                  context
+                      .watch<RadioProvider>()
+                      .isFavorite(station.stationUuid)
+                      ? Icons.favorite
+                      : Icons.favorite_border,
+                  color: context
+                      .watch<RadioProvider>()
+                      .isFavorite(station.stationUuid)
+                      ? primaryColor
+                      : Colors.white.withOpacity(0.25),
+                  size: 21,
                 ),
-            ],
-          ),
+                onPressed: () => context
+                    .read<RadioProvider>()
+                    .toggleFavorite(station),
+              ),
+          ],
         ),
       ),
     );
   }
 }
+
 class _PlayingBars extends StatefulWidget {
   @override
   State<_PlayingBars> createState() => _PlayingBarsState();

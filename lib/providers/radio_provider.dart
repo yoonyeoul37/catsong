@@ -462,10 +462,12 @@ class RadioProvider extends ChangeNotifier {
   List<RadioStation> get countryStations => _countryStations;
   bool get isLoadingCountryStations => _isLoadingCountryStations;
 
-  Future<void> fetchTopStations(String countryCode, {int limit = 200}) async {
-    _countryStations = [];
-    _isLoadingCountryStations = true;
-    notifyListeners();
+  Future<void> fetchTopStations(String countryCode, {int limit = 200, int retryCount = 0}) async {
+    if (retryCount == 0) {
+      _countryStations = [];
+      _isLoadingCountryStations = true;
+      notifyListeners();
+    }
 
     try {
       for (final server in _apiServers) {
@@ -491,6 +493,12 @@ class RadioProvider extends ChangeNotifier {
       }
     } catch (e) {
       debugPrint('국가별 방송 로드 오류: $e');
+    }
+
+    if (_countryStations.isEmpty && retryCount < 2) {
+      debugPrint('국가별 방송 재시도: ${retryCount + 1}회차');
+      await Future.delayed(const Duration(milliseconds: 800));
+      return fetchTopStations(countryCode, limit: limit, retryCount: retryCount + 1);
     }
 
     _isLoadingCountryStations = false;

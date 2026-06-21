@@ -17,6 +17,8 @@ class RadioKoreaScreen extends StatefulWidget {
 class _RadioKoreaScreenState extends State<RadioKoreaScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final TextEditingController _searchController = TextEditingController();
+  String _query = '';
 
   static const _regions = [
     '전체',
@@ -49,18 +51,17 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
       radio.fetchMbcSchedule('MBC FM4U');
       radio.fetchSbsSchedule('SBS 파워FM');
       radio.fetchSbsSchedule('SBS 러브FM');
-      // JSON 편성표 방송국
       radio.fetchJsonSchedule('CBS 음악FM');
       radio.fetchJsonSchedule('CBS 표준FM');
       radio.fetchKfnSchedule();
       radio.fetchEbsBandiSchedule();
-      // radio.fetchEbsFmSchedule();
     });
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -82,8 +83,13 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
   }
 
   List<_KStation> _filtered(String region) {
-    if (region == '전체') return koreanStations;
-    return koreanStations.where((s) => s.region == region).toList();
+    Iterable<_KStation> list = region == '전체'
+        ? koreanStations
+        : koreanStations.where((s) => s.region == region);
+    if (_query.isNotEmpty) {
+      list = list.where((s) => s.name.toLowerCase().contains(_query.toLowerCase()));
+    }
+    return list.toList();
   }
 
   static RadioStation _toRadioStation(_KStation ks) {
@@ -112,33 +118,77 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
     final radioProvider = context.watch<RadioProvider>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0A),
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-        backgroundColor: AppTheme.background,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios,
-              color: AppTheme.textPrimary, size: 22),
+              color: Colors.white, size: 20),
         ),
         title: Text(
           AppLocalizations.of(context)!.radioKoreaTitle,
           style: const TextStyle(
-            color: AppTheme.textPrimary,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            fontSize: 19,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.3,
           ),
         ),
-        bottom: TabBar(
-          controller: _tabController,
-          isScrollable: true,
-          indicatorColor: primaryColor,
-          labelColor: primaryColor,
-          unselectedLabelColor: AppTheme.textSecondary,
-          labelStyle: const TextStyle(
-              fontSize: 14, fontWeight: FontWeight.bold),
-          unselectedLabelStyle: const TextStyle(fontSize: 14),
-          tabAlignment: TabAlignment.start,
-          tabs: _regions.map((r) => Tab(text: _regionLabel(context, r))).toList(),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(96),
+          child: Column(
+            children: [
+              TabBar(
+                controller: _tabController,
+                isScrollable: true,
+                indicatorColor: primaryColor,
+                indicatorWeight: 2,
+                labelColor: primaryColor,
+                unselectedLabelColor: Colors.white.withOpacity(0.4),
+                labelStyle: const TextStyle(
+                    fontSize: 13.5, fontWeight: FontWeight.w700),
+                unselectedLabelStyle: const TextStyle(fontSize: 13.5),
+                tabAlignment: TabAlignment.start,
+                dividerColor: Colors.transparent,
+                tabs: _regions.map((r) => Tab(text: _regionLabel(context, r))).toList(),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 6, 24, 8),
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.06),
+                    borderRadius: BorderRadius.circular(11),
+                    border: Border.all(color: Colors.white.withOpacity(0.08)),
+                  ),
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: (v) => setState(() => _query = v),
+                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)!.search,
+                      hintStyle: TextStyle(color: Colors.white.withOpacity(0.35), fontSize: 14),
+                      prefixIcon: Icon(Icons.search, color: Colors.white.withOpacity(0.4), size: 19),
+                      suffixIcon: _query.isNotEmpty
+                          ? IconButton(
+                        icon: Icon(Icons.close, color: Colors.white.withOpacity(0.4), size: 17),
+                        onPressed: () {
+                          _searchController.clear();
+                          setState(() => _query = '');
+                        },
+                      )
+                          : null,
+                      border: InputBorder.none,
+                      isDense: true,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 9),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       body: TabBarView(
@@ -146,18 +196,19 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
         children: _regions.map((region) {
           final stations = _filtered(region);
           if (stations.isEmpty) {
-            return const Center(
-              child: Text('준비 중입니다',
+            return Center(
+              child: Text(AppLocalizations.of(context)!.radioNoStationsFound,
                   style: TextStyle(
-                      color: AppTheme.textHint, fontSize: 15)),
+                      color: Colors.white.withOpacity(0.35), fontSize: 14)),
             );
           }
           final radioStations =
           stations.map((ks) => _toRadioStation(ks)).toList();
           return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 80),
+            padding: const EdgeInsets.fromLTRB(24, 8, 24, 90),
             itemCount: stations.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 8),
+            separatorBuilder: (_, __) =>
+                Divider(height: 1, color: Colors.white.withOpacity(0.10), indent: 0),
             itemBuilder: (context, index) {
               final ks = stations[index];
               final current = radioProvider.currentStation;
@@ -222,210 +273,178 @@ class _StationTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
 
-    return Material(
-      color: AppTheme.cardColor,
-      borderRadius: BorderRadius.circular(14),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(14),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => RadioPlayerScreen(
-                station: radioStation,
-                stationList: stationList,
-                currentIndex: stationIndex,
-              ),
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => RadioPlayerScreen(
+              station: radioStation,
+              stationList: stationList,
+              currentIndex: stationIndex,
             ),
-          );
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            gradient: isPlaying
-                ? LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                primaryColor.withOpacity(0.13),
-                primaryColor.withOpacity(0.03),
-              ],
-            )
-                : null,
-            border: Border.all(
-              color: isPlaying
-                  ? primaryColor.withOpacity(0.15)
-                  : primaryColor.withOpacity(0.08),
-              width: 1,
-            ),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            transitionDuration: const Duration(milliseconds: 250),
           ),
-          foregroundDecoration: isPlaying
-              ? BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            border: Border(
-              top: BorderSide(
-                color: primaryColor.withOpacity(0.8),
-                width: 1.5,
+        );
+      },
+      splashColor: Colors.white.withOpacity(0.04),
+      highlightColor: Colors.transparent,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        child: Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: _brandColor(station.broadcaster).withOpacity(0.85),
+                borderRadius: BorderRadius.circular(11),
               ),
-            ),
-          )
-              : null,
-          child: Row(
-            children: [
-              Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: _brandColor(station.broadcaster),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    station.broadcaster,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (station.subLabel.isNotEmpty)
                     Text(
-                      station.broadcaster,
+                      station.subLabel,
                       style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
+                        color: Colors.white70,
+                        fontSize: 8.5,
                       ),
                     ),
-                    if (station.subLabel.isNotEmpty)
-                      Text(
-                        station.subLabel,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 9,
-                        ),
-                      ),
-                  ],
-                ),
+                ],
               ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      station.name,
-                      style: TextStyle(
-                        color: isPlaying
-                            ? primaryColor
-                            : AppTheme.textPrimary,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    station.name,
+                    style: TextStyle(
+                      color: isPlaying ? primaryColor : Colors.white,
+                      fontSize: 15.5,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: -0.2,
                     ),
-                    Builder(
-                      builder: (ctx) {
-                        final isKbs = station.broadcaster == 'KBS';
-                        const mbcNames = ['MBC 표준FM', 'MBC FM4U'];
-                        const sbsNames = ['SBS 파워FM', 'SBS 러브FM'];
-                        final isMbc = mbcNames.contains(station.name);
-                        final isSbs = sbsNames.contains(station.name);
-                        final radio = ctx.watch<RadioProvider>();
-                        final hasJsonSchedule = radio.nowPlayingFor(station.name) != null;
-                        if (!isKbs && !isMbc && !isSbs && !hasJsonSchedule) {
-                          return Text(
-                            station.frequency.isNotEmpty
-                                ? station.frequency
-                                : '',
-                            style: const TextStyle(
-                              color: Color(0xFF707070),
-                              fontSize: 12,
-                            ),
-                          );
-                        }
-                        final nowPlaying = radio.nowPlayingFor(station.name);
-                        final program = radio.currentProgramFor(station.name);
-                        final start = program?['program_planned_start_time'] as String? ?? '';
-                        final end = program?['program_planned_end_time'] as String? ?? '';
-                        // SBS 프로그램명
-                        final sbsTitle = program?['title'] as String?;
-                        final displayNowPlaying = nowPlaying ?? sbsTitle;
-                        // 시간 포맷: 15:00~17:00
-                        String _fmt(String t) {
-                          if (t.length < 4) return t;
-                          int h = int.tryParse(t.substring(0, 2)) ?? 0;
-                          final m = t.substring(2, 4);
-                          if (h >= 24) h -= 24;
-                          return '$h:$m';
-                        }
-                        // MBC는 Title/StartTime/EndTime 필드 사용
-                        final isMbcStation = mbcNames.contains(station.name);
-                        final isSbsStation = sbsNames.contains(station.name);
-                        String? rawStart;
-                        String? rawEnd;
-                        if (isMbcStation) {
-                          rawStart = program?['StartTime'] as String?;
-                          rawEnd = program?['EndTime'] as String?;
-                        } else if (isSbsStation) {
-                          rawStart = program?['start_time'] as String?;
-                          rawEnd = program?['end_time'] as String?;
-                        } else if (hasJsonSchedule) {
-                          rawStart = program?['start_time'] as String?;
-                          rawEnd = program?['end_time'] as String?;
-                        } else {
-                          rawStart = start.isEmpty ? null : start;
-                          rawEnd = end.isEmpty ? null : end;
-                        }
-                        String _fmtSbs(String t) {
-                          if (t.length >= 5) {
-                            final h = int.tryParse(t.split(':')[0]) ?? 0;
-                            final m = t.split(':')[1];
-                            return '${h >= 24 ? h - 24 : h}:$m';
-                          }
-                          return t;
-                        }
-                        final timeStr = rawStart != null && rawEnd != null
-                            ? isSbsStation
-                            ? '${_fmtSbs(rawStart)}~${_fmtSbs(rawEnd)}'
-                            : hasJsonSchedule
-                            ? '$rawStart~$rawEnd'
-                            : '${_fmt(rawStart)}~${_fmt(rawEnd)}'
-                            : '';
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (displayNowPlaying != null && displayNowPlaying.isNotEmpty)
-                              Text(
-                                displayNowPlaying,
-                                style: TextStyle(
-                                  color: primaryColor.withOpacity(0.9),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            Text(
-                              [
-                                if (station.frequency.isNotEmpty) station.frequency,
-                                if (timeStr.isNotEmpty) timeStr,
-                              ].join(' · '),
-                              style: const TextStyle(
-                                color: Color(0xFF707070),
-                                fontSize: 11,
-                              ),
-                            ),
-                          ],
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 2),
+                  Builder(
+                    builder: (ctx) {
+                      final isKbs = station.broadcaster == 'KBS';
+                      const mbcNames = ['MBC 표준FM', 'MBC FM4U'];
+                      const sbsNames = ['SBS 파워FM', 'SBS 러브FM'];
+                      final isMbc = mbcNames.contains(station.name);
+                      final isSbs = sbsNames.contains(station.name);
+                      final radio = ctx.watch<RadioProvider>();
+                      final hasJsonSchedule = radio.nowPlayingFor(station.name) != null;
+                      if (!isKbs && !isMbc && !isSbs && !hasJsonSchedule) {
+                        return Text(
+                          station.frequency.isNotEmpty
+                              ? station.frequency
+                              : '',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.4),
+                            fontSize: 12,
+                          ),
                         );
-                      },
-                    ),
-                  ],
-                ),
+                      }
+                      final nowPlaying = radio.nowPlayingFor(station.name);
+                      final program = radio.currentProgramFor(station.name);
+                      final start = program?['program_planned_start_time'] as String? ?? '';
+                      final end = program?['program_planned_end_time'] as String? ?? '';
+                      final sbsTitle = program?['title'] as String?;
+                      final displayNowPlaying = nowPlaying ?? sbsTitle;
+                      String _fmt(String t) {
+                        if (t.length < 4) return t;
+                        int h = int.tryParse(t.substring(0, 2)) ?? 0;
+                        final m = t.substring(2, 4);
+                        if (h >= 24) h -= 24;
+                        return '$h:$m';
+                      }
+                      final isMbcStation = mbcNames.contains(station.name);
+                      final isSbsStation = sbsNames.contains(station.name);
+                      String? rawStart;
+                      String? rawEnd;
+                      if (isMbcStation) {
+                        rawStart = program?['StartTime'] as String?;
+                        rawEnd = program?['EndTime'] as String?;
+                      } else if (isSbsStation) {
+                        rawStart = program?['start_time'] as String?;
+                        rawEnd = program?['end_time'] as String?;
+                      } else if (hasJsonSchedule) {
+                        rawStart = program?['start_time'] as String?;
+                        rawEnd = program?['end_time'] as String?;
+                      } else {
+                        rawStart = start.isEmpty ? null : start;
+                        rawEnd = end.isEmpty ? null : end;
+                      }
+                      String _fmtSbs(String t) {
+                        if (t.length >= 5) {
+                          final h = int.tryParse(t.split(':')[0]) ?? 0;
+                          final m = t.split(':')[1];
+                          return '${h >= 24 ? h - 24 : h}:$m';
+                        }
+                        return t;
+                      }
+                      final timeStr = rawStart != null && rawEnd != null
+                          ? isSbsStation
+                          ? '${_fmtSbs(rawStart)}~${_fmtSbs(rawEnd)}'
+                          : hasJsonSchedule
+                          ? '$rawStart~$rawEnd'
+                          : '${_fmt(rawStart)}~${_fmt(rawEnd)}'
+                          : '';
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (displayNowPlaying != null && displayNowPlaying.isNotEmpty)
+                            Text(
+                              displayNowPlaying,
+                              style: TextStyle(
+                                color: primaryColor.withOpacity(0.85),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          Text(
+                            [
+                              if (station.frequency.isNotEmpty) station.frequency,
+                              if (timeStr.isNotEmpty) timeStr,
+                            ].join(' · '),
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.32),
+                              fontSize: 11,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
               ),
-              if (isPlaying)
-                _PlayingBars()
-              else
-                Icon(Icons.play_circle_outline,
-                    color: AppTheme.textHint, size: 24),
-            ],
-          ),
+            ),
+            if (isPlaying)
+              _PlayingBars()
+            else
+              Icon(Icons.play_circle_outline,
+                  color: Colors.white.withOpacity(0.25), size: 23),
+          ],
         ),
       ),
     );
@@ -451,7 +470,6 @@ class _KStation {
 }
 
 const koreanStations = <_KStation>[
-  // ══════ 수도권 ══════
   _KStation(name: 'KBS Classic FM', region: '수도권', broadcaster: 'KBS', subLabel: '서울', frequency: '93.1 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/24'),
   _KStation(name: 'KBS Cool FM', region: '수도권', broadcaster: 'KBS', subLabel: '서울', frequency: '89.1 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/25'),
   _KStation(name: 'KBS 제1라디오', region: '수도권', broadcaster: 'KBS', subLabel: '서울', frequency: '97.3 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/21'),
@@ -475,7 +493,6 @@ const koreanStations = <_KStation>[
   _KStation(name: '국악FM', region: '수도권', broadcaster: 'KBS', subLabel: '서울', frequency: '99.1 MHz', streamUrl: 'http://mgugaklive.nowcdn.co.kr/gugakradio/gugakradio.stream/playlist.m3u8'),
   _KStation(name: '국방FM', region: '수도권', broadcaster: 'KBS', subLabel: '서울', frequency: '100.5 MHz', streamUrl: 'http://serpent0.duckdns.org:8088/gbfm.pls'),
   _KStation(name: 'TBN 경인교통', region: '수도권', broadcaster: 'TBN', subLabel: '경기', frequency: '99.9 MHz', streamUrl: 'http://radio2.tbn.or.kr:1935/gyeongin/myStream/playlist.m3u8'),
-  // ══════ 부산/경남 ══════
   _KStation(name: '부산MBC 표준FM', region: '부산/경남', broadcaster: 'MBC', subLabel: '부산', frequency: '95.9 MHz', streamUrl: 'https://stream.bsmbc.com/live/BusanMBC_AM_onairstream.sbhhqc/playlist.m3u8'),
   _KStation(name: '부산MBC FM4U', region: '부산/경남', broadcaster: 'MBC', subLabel: '부산', frequency: '88.9 MHz', streamUrl: 'https://stream.bsmbc.com/live/mp4:BusanMBC.Live-FM-0415/playlist.m3u8'),
   _KStation(name: '울산MBC 표준FM', region: '부산/경남', broadcaster: 'MBC', subLabel: '울산', frequency: '97.5 MHz', streamUrl: 'https://5ddfd163bd00d.streamlock.net/STDFM/STDFM/playlist.m3u8'),
@@ -489,7 +506,6 @@ const koreanStations = <_KStation>[
   _KStation(name: 'KBS 진주 1라디오', region: '부산/경남', broadcaster: 'KBS', subLabel: '진주', frequency: '90.3 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/21_21'),
   _KStation(name: 'BeFM', region: '부산/경남', broadcaster: 'BeFM', subLabel: '부산', frequency: '90.5 MHz', streamUrl: 'http://befm905.live.smilecdn.com:1935/befm905_live/live/playlist.m3u8'),
   _KStation(name: 'TBN 울산교통', region: '부산/경남', broadcaster: 'TBN', subLabel: '울산', frequency: '98.7 MHz', streamUrl: 'http://radio2.tbn.or.kr:1935/ulsan/myStream/playlist.m3u8'),
-  // ══════ 대구/경북 ══════
   _KStation(name: 'KBS 대구 1라디오', region: '대구/경북', broadcaster: 'KBS', subLabel: '대구', frequency: '101.3 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/30_21'),
   _KStation(name: 'KBS 대구 해피FM', region: '대구/경북', broadcaster: 'KBS', subLabel: '대구', frequency: '96.3 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/30_22'),
   _KStation(name: 'KBS 대구 1FM', region: '대구/경북', broadcaster: 'KBS', subLabel: '대구', frequency: '98.7 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/30_24'),
@@ -499,7 +515,6 @@ const koreanStations = <_KStation>[
   _KStation(name: '안동MBC FM4U', region: '대구/경북', broadcaster: 'MBC', subLabel: '안동', frequency: '103.1 MHz', streamUrl: 'https://live.andongmbc.co.kr/live/fmlive/playlist.m3u8'),
   _KStation(name: '대구MBC 표준FM', region: '대구/경북', broadcaster: 'MBC', subLabel: '대구', frequency: '95.7 MHz', streamUrl: 'https://5ee1ec6f32118.streamlock.net/amradio/am/playlist.m3u8'),
   _KStation(name: '포항MBC 표준FM', region: '대구/경북', broadcaster: 'MBC', subLabel: '포항', frequency: '104.3 MHz', streamUrl: 'http://stream.yubinet.com:1935/live/_definst_/Radio_Am/playlist.m3u8'),
-  // ══════ 광주/전남 ══════
   _KStation(name: '광주MBC 표준FM', region: '광주/전남', broadcaster: 'MBC', subLabel: '광주', frequency: '97.9 MHz', streamUrl: 'https://media.kjmbc.co.kr/hls/amlive/GWANGJU-MBC-AM/playlist.m3u8'),
   _KStation(name: '광주MBC FM4U', region: '광주/전남', broadcaster: 'MBC', subLabel: '광주', frequency: '89.5 MHz', streamUrl: 'https://media.kjmbc.co.kr/hls/fmlive/GWANGJU-MBC-FM/playlist.m3u8'),
   _KStation(name: '목포MBC 표준FM', region: '광주/전남', broadcaster: 'MBC', subLabel: '목포', frequency: '97.9 MHz', streamUrl: 'https://vod.mpmbc.co.kr/live/encoder-am/playlist.m3u8'),
@@ -509,24 +524,19 @@ const koreanStations = <_KStation>[
   _KStation(name: 'KBS 목포 1라디오', region: '광주/전남', broadcaster: 'KBS', subLabel: '목포', frequency: '105.9 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/41_21'),
   _KStation(name: 'KBS 목포 1FM', region: '광주/전남', broadcaster: 'KBS', subLabel: '목포', frequency: '101.1 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/41_24'),
   _KStation(name: 'KBS 순천 1라디오', region: '광주/전남', broadcaster: 'KBS', subLabel: '순천', frequency: '95.7 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/43_21'),
-  // ══════ 전북 ══════
-
   _KStation(name: 'KBS 전주 1라디오', region: '전북', broadcaster: 'KBS', subLabel: '전주', frequency: '96.9 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/50_21'),
   _KStation(name: 'KBS 전주 해피FM', region: '전북', broadcaster: 'KBS', subLabel: '전주', frequency: '91.1 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/50_22'),
   _KStation(name: 'KBS 전주 1FM', region: '전북', broadcaster: 'KBS', subLabel: '전주', frequency: '93.5 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/50_24'),
   _KStation(name: 'JTV 매직FM', region: '전북', broadcaster: 'JTV', subLabel: '전주', frequency: '99.1 MHz', streamUrl: 'https://61ff3340258d2.streamlock.net/jtv_radio/myStream/chunklist_w111659793.m3u8'),
-  // ══════ 대전/충남 ══════
   _KStation(name: '대전MBC 표준FM', region: '대전/충남', broadcaster: 'MBC', subLabel: '대전', frequency: '99.5 MHz', streamUrl: 'https://ns1.tjmbc.co.kr/live_am/live_am.stream/playlist.m3u8'),
   _KStation(name: 'KBS 대전 1라디오', region: '대전/충남', broadcaster: 'KBS', subLabel: '대전', frequency: '94.7 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/60_21'),
   _KStation(name: 'KBS 대전 해피FM', region: '대전/충남', broadcaster: 'KBS', subLabel: '대전', frequency: '100.5 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/60_22'),
   _KStation(name: 'KBS 대전 1FM', region: '대전/충남', broadcaster: 'KBS', subLabel: '대전', frequency: '99.7 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/60_24'),
-  // ══════ 충북 ══════
   _KStation(name: 'KBS 청주 1라디오', region: '충북', broadcaster: 'KBS', subLabel: '청주', frequency: '89.3 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/70_21'),
   _KStation(name: 'KBS 청주 해피FM', region: '충북', broadcaster: 'KBS', subLabel: '청주', frequency: '99.3 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/70_22'),
   _KStation(name: 'KBS 청주 1FM', region: '충북', broadcaster: 'KBS', subLabel: '청주', frequency: '91.7 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/70_24'),
   _KStation(name: 'MBC충북 표준FM', region: '충북', broadcaster: 'MBC', subLabel: '충북', frequency: '93.3 MHz', streamUrl: 'http://211.33.246.4:32954/radio_stfm/myStream.sdp/chunklist_w392819215.m3u8'),
   _KStation(name: 'MBC충북 FM4U', region: '충북', broadcaster: 'MBC', subLabel: '충북', frequency: '96.7 MHz', streamUrl: 'http://211.33.246.4:32954/radio_fm/myStream.sdp/chunklist_w348337231.m3u8'),
-  // ══════ 강원 ══════
   _KStation(name: '춘천MBC 표준FM', region: '강원', broadcaster: 'MBC', subLabel: '춘천', frequency: '92.3 MHz', streamUrl: 'https://stream.chmbc.co.kr/live_radio/fm2/playlist.m3u8'),
   _KStation(name: '춘천MBC FM4U', region: '강원', broadcaster: 'MBC', subLabel: '춘천', frequency: '97.9 MHz', streamUrl: 'https://stream.chmbc.co.kr/live_radio2/fm1/playlist.m3u8'),
   _KStation(name: 'KBS 춘천 1라디오', region: '강원', broadcaster: 'KBS', subLabel: '춘천', frequency: '99.5 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/80_21'),
@@ -536,7 +546,6 @@ const koreanStations = <_KStation>[
   _KStation(name: 'KBS 강릉 1FM', region: '강원', broadcaster: 'KBS', subLabel: '강릉', frequency: '90.3 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/81_24'),
   _KStation(name: 'KBS 원주 1라디오', region: '강원', broadcaster: 'KBS', subLabel: '원주', frequency: '97.1 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/82_21'),
   _KStation(name: 'KBS 원주 1FM', region: '강원', broadcaster: 'KBS', subLabel: '원주', frequency: '100.5 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/82_24'),
-  // ══════ 제주 ══════
   _KStation(name: '제주MBC 표준FM', region: '제주', broadcaster: 'MBC', subLabel: '제주', frequency: '97.9 MHz', streamUrl: 'https://wowza.jejumbc.com/live/_definst_/mp3:radio1/playlist.m3u8'),
   _KStation(name: '제주MBC FM4U', region: '제주', broadcaster: 'MBC', subLabel: '제주', frequency: '89.9 MHz', streamUrl: 'https://wowza.jejumbc.com/live/_definst_/mp3:radio2/playlist.m3u8'),
   _KStation(name: 'KBS 제주 1라디오', region: '제주', broadcaster: 'KBS', subLabel: '제주', frequency: '93.3 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/90_21'),

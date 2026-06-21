@@ -122,18 +122,42 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        centerTitle: true,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios,
               color: Colors.white, size: 20),
         ),
-        title: Text(
-          AppLocalizations.of(context)!.radioKoreaTitle,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 19,
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.3,
+        title: RichText(
+          text: TextSpan(
+            children: [
+              const TextSpan(
+                text: '\u201C',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              TextSpan(
+                text: AppLocalizations.of(context)!.radioKoreaSlogan,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  fontStyle: FontStyle.italic,
+                  letterSpacing: -0.2,
+                ),
+              ),
+              const TextSpan(
+                text: ' \u201D',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
           ),
         ),
         bottom: PreferredSize(
@@ -155,34 +179,37 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
                 tabs: _regions.map((r) => Tab(text: _regionLabel(context, r))).toList(),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 6, 24, 8),
+                padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
                 child: Container(
-                  height: 40,
+                  height: 46,
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.06),
                     borderRadius: BorderRadius.circular(11),
                     border: Border.all(color: Colors.white.withOpacity(0.08)),
                   ),
-                  child: TextField(
-                    controller: _searchController,
-                    onChanged: (v) => setState(() => _query = v),
-                    style: const TextStyle(color: Colors.white, fontSize: 14),
-                    decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context)!.search,
-                      hintStyle: TextStyle(color: Colors.white.withOpacity(0.35), fontSize: 14),
-                      prefixIcon: Icon(Icons.search, color: Colors.white.withOpacity(0.4), size: 19),
-                      suffixIcon: _query.isNotEmpty
-                          ? IconButton(
-                        icon: Icon(Icons.close, color: Colors.white.withOpacity(0.4), size: 17),
-                        onPressed: () {
-                          _searchController.clear();
-                          setState(() => _query = '');
-                        },
-                      )
-                          : null,
-                      border: InputBorder.none,
-                      isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 9),
+                  child: Center(
+                    child: TextField(
+                      controller: _searchController,
+                      onChanged: (v) => setState(() => _query = v),
+                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                      textAlignVertical: TextAlignVertical.center,
+                      decoration: InputDecoration(
+                        hintText: AppLocalizations.of(context)!.search,
+                        hintStyle: TextStyle(color: Colors.white.withOpacity(0.35), fontSize: 14),
+                        prefixIcon: Icon(Icons.search, color: Colors.white.withOpacity(0.4), size: 19),
+                        suffixIcon: _query.isNotEmpty
+                            ? IconButton(
+                          icon: Icon(Icons.close, color: Colors.white.withOpacity(0.4), size: 17),
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() => _query = '');
+                          },
+                        )
+                            : null,
+                        border: InputBorder.none,
+                        isDense: true,
+                        contentPadding: EdgeInsets.zero,
+                      ),
                     ),
                   ),
                 ),
@@ -205,21 +232,37 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
           final radioStations =
           stations.map((ks) => _toRadioStation(ks)).toList();
           return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(24, 8, 24, 90),
-            itemCount: stations.length,
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 90),
+            itemCount: stations.length + 1,
             separatorBuilder: (_, __) =>
                 Divider(height: 1, color: Colors.white.withOpacity(0.16), indent: 0),
             itemBuilder: (context, index) {
-              final ks = stations[index];
+              if (index == 0) {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 14, 0, 6),
+                  child: Row(
+                    children: [
+                      const Text('🇰🇷', style: TextStyle(fontSize: 13)),
+                      const SizedBox(width: 6),
+                      Text(
+                        AppLocalizations.of(context)!.radioPopularCount(stations.length),
+                        style: TextStyle(color: Colors.white.withOpacity(0.35), fontSize: 12.5),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              final i = index - 1;
+              final ks = stations[i];
               final current = radioProvider.currentStation;
               final isPlaying =
                   current?.name == ks.name && radioProvider.isPlaying;
               return _StationTile(
                 station: ks,
                 isPlaying: isPlaying,
-                radioStation: radioStations[index],
+                radioStation: radioStations[i],
                 stationList: radioStations,
-                stationIndex: index,
+                stationIndex: i,
               );
             },
           );

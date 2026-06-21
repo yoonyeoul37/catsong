@@ -63,7 +63,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get repeat => 'Repeat';
 
   @override
-  String get nowPlaying => 'Now Playing';
+  String get nowPlaying => 'Playing';
 
   @override
   String get noSongs => 'No MP3 files found';
@@ -863,6 +863,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get radioKoreaTitle => 'Korea Radio';
+
+  @override
+  String get radioOnAirTitle => 'ON AIR';
+
+  @override
+  String get radioKoreaSlogan => 'Sounds from Around the World';
+
+  @override
+  String get radioSloganUS => 'The Voice of Freedom';
+
+  @override
+  String get radioSloganJP => 'A Little Comfort in Daily Life';
+
+  @override
+  String get radioSloganTW => 'Songs Flowing Through the Island';
+
+  @override
+  String get radioSloganCN => 'Sounds of a Vast Land';
+
+  @override
+  String get radioSloganHK => 'Riding the City\'s Rhythm';
+
+  @override
+  String get radioSloganGB => 'Where Tradition Meets the Present';
+
+  @override
+  String get radioSloganVN => 'Melodies of the Mekong';
 
   @override
   String get selectSong => 'Select Song';

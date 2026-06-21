@@ -58,17 +58,34 @@ class RadioHomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        centerTitle: true,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
         ),
-        title: Row(
-          children: [
-            const Icon(Icons.radio_outlined, color: Colors.white, size: 22),
-            const SizedBox(width: 8),
-            Text(AppLocalizations.of(context)!.radioTitle,
-                style: const TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.w800, letterSpacing: -0.5)),
-          ],
+        title: RichText(
+          text: TextSpan(
+            children: [
+              const TextSpan(
+                text: '\u201C',
+                style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w700),
+              ),
+              TextSpan(
+                text: AppLocalizations.of(context)!.radioOnAirTitle,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                  fontStyle: FontStyle.italic,
+                  letterSpacing: 1.5,
+                ),
+              ),
+              const TextSpan(
+                text: ' \u201D',
+                style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
         ),
         actions: [
           IconButton(
@@ -180,7 +197,9 @@ class _RecentSection extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       for (final station in recent.take(10)) {
-        if (radioProvider.nowPlayingFor(station.name) == null) {
+        if (radioProvider.nowPlayingFor(station.name) == null &&
+            !radioProvider.hasAttemptedSchedule(station.name)) {
+          radioProvider.markScheduleAttempted(station.name);
           final streamUrl = station.streamUrl;
           if (streamUrl.contains('cfpwwwapi.kbs.co.kr')) {
             radioProvider.fetchScheduleByUrl(station.name, streamUrl);

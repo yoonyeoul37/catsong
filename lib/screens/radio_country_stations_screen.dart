@@ -7,7 +7,6 @@ import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
 import '../widgets/station_logo.dart';
 import 'radio_player_screen.dart';
-import 'radio_country_stations_screen.dart';
 import '../l10n/app_localizations.dart';
 
 class RadioCountryStationsScreen extends StatefulWidget {
@@ -38,6 +37,19 @@ class _RadioCountryStationsScreenState
     super.dispose();
   }
 
+  String _sloganFor(BuildContext context, String countryCode) {
+    switch (countryCode) {
+      case 'US': return 'The Voice of Freedom';
+      case 'JP': return '日常に寄り添う小さな癒し';
+      case 'TW': return '流淌在島嶼的歌';
+      case 'CN': return '遼闊大地之聲';
+      case 'HK': return '乘上城市的節奏';
+      case 'GB': return 'Where Tradition Meets the Present';
+      case 'VN': return 'Giai điệu sông Mekong';
+      default: return widget.country.displayName;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
@@ -56,18 +68,35 @@ class _RadioCountryStationsScreenState
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        centerTitle: true,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios,
               color: Colors.white, size: 20),
         ),
-        title: Text(
-          '${widget.country.flag} ${widget.country.displayName}',
-          style: const TextStyle(
-              color: Colors.white,
-              fontSize: 19,
-              fontWeight: FontWeight.w700,
-              letterSpacing: -0.3),
+        title: RichText(
+          text: TextSpan(
+            children: [
+              const TextSpan(
+                text: '\u201C',
+                style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w700),
+              ),
+              TextSpan(
+                text: _sloganFor(context, widget.country.code),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  fontStyle: FontStyle.italic,
+                  letterSpacing: -0.2,
+                ),
+              ),
+              const TextSpan(
+                text: ' \u201D',
+                style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
         ),
       ),
       body: Column(
@@ -76,32 +105,35 @@ class _RadioCountryStationsScreenState
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 4, 24, 4),
             child: Container(
-              height: 42,
+              height: 48,
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.06),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.white.withOpacity(0.08)),
               ),
-              child: TextField(
-                controller: _searchController,
-                onChanged: (v) => setState(() => _query = v),
-                style: const TextStyle(color: Colors.white, fontSize: 14.5),
-                decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)!.search,
-                  hintStyle: TextStyle(color: Colors.white.withOpacity(0.35), fontSize: 14.5),
-                  prefixIcon: Icon(Icons.search, color: Colors.white.withOpacity(0.4), size: 20),
-                  suffixIcon: _query.isNotEmpty
-                      ? IconButton(
-                    icon: Icon(Icons.close, color: Colors.white.withOpacity(0.4), size: 18),
-                    onPressed: () {
-                      _searchController.clear();
-                      setState(() => _query = '');
-                    },
-                  )
-                      : null,
-                  border: InputBorder.none,
-                  isDense: true,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10),
+              child: Center(
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: (v) => setState(() => _query = v),
+                  style: const TextStyle(color: Colors.white, fontSize: 14.5),
+                  textAlignVertical: TextAlignVertical.center,
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!.search,
+                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.35), fontSize: 14.5),
+                    prefixIcon: Icon(Icons.search, color: Colors.white.withOpacity(0.4), size: 20),
+                    suffixIcon: _query.isNotEmpty
+                        ? IconButton(
+                      icon: Icon(Icons.close, color: Colors.white.withOpacity(0.4), size: 18),
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() => _query = '');
+                      },
+                    )
+                        : null,
+                    border: InputBorder.none,
+                    isDense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
                 ),
               ),
             ),
@@ -140,10 +172,16 @@ class _RadioCountryStationsScreenState
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24, 10, 24, 6),
-                  child: Text(
-                    AppLocalizations.of(context)!.radioPopularCount(stations.length),
-                    style: TextStyle(
-                        color: Colors.white.withOpacity(0.35), fontSize: 12.5),
+                  child: Row(
+                    children: [
+                      Text(widget.country.flag, style: const TextStyle(fontSize: 13)),
+                      const SizedBox(width: 6),
+                      Text(
+                        AppLocalizations.of(context)!.radioPopularCount(stations.length),
+                        style: TextStyle(
+                            color: Colors.white.withOpacity(0.35), fontSize: 12.5),
+                      ),
+                    ],
                   ),
                 ),
                 Expanded(
@@ -197,8 +235,6 @@ class _StationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
-
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -235,7 +271,7 @@ class _StationTile extends StatelessWidget {
                   Text(
                     station.name,
                     style: TextStyle(
-                      color: isPlaying ? primaryColor : Colors.white,
+                      color: isPlaying ? AppTheme.fixedAccent : Colors.white,
                       fontSize: 15.5,
                       fontWeight: FontWeight.w600,
                       letterSpacing: -0.2,
@@ -272,7 +308,7 @@ class _StationTile extends StatelessWidget {
                   color: context
                       .watch<RadioProvider>()
                       .isFavorite(station.stationUuid)
-                      ? primaryColor
+                      ? AppTheme.fixedAccent
                       : Colors.white.withOpacity(0.25),
                   size: 21,
                 ),
@@ -303,7 +339,7 @@ class _PlayingBarsState extends State<_PlayingBars>
       3,
           (i) => AnimationController(
         vsync: this,
-        duration: Duration(milliseconds: 380 + i * 130),
+        duration: Duration(milliseconds: 1000 + i * 300),
       )..repeat(reverse: true),
     );
   }
@@ -318,7 +354,6 @@ class _PlayingBarsState extends State<_PlayingBars>
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
     return SizedBox(
       width: 22,
       height: 22,
@@ -331,9 +366,9 @@ class _PlayingBarsState extends State<_PlayingBars>
             builder: (_, __) => Container(
               width: 4,
               height: 6 + _ctrls[i].value * 14,
-              decoration: BoxDecoration(
-                color: primaryColor,
-                borderRadius: BorderRadius.circular(2),
+              decoration: const BoxDecoration(
+                color: AppTheme.fixedAccent,
+                borderRadius: BorderRadius.all(Radius.circular(2)),
               ),
             ),
           );

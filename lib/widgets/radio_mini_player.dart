@@ -161,7 +161,7 @@ class RadioMiniPlayer extends StatelessWidget {
                                           timeStr.isNotEmpty ? '$nowPlaying  $timeStr' : nowPlaying,
                                           style: const TextStyle(
                                             color: AppTheme.textSecondary,
-                                            fontSize: 8,
+                                            fontSize: 10,
                                           ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,

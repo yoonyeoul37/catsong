@@ -6,7 +6,18 @@ import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/sleep_timer_sheet.dart';
 import '../widgets/schedule_sheet.dart';
+import '../widgets/fm_tuner_dial.dart';
+import '../widgets/global_radio_dial.dart';
 import '../l10n/app_localizations.dart';
+
+double? _parseFrequency(String? freq) {
+  if (freq == null || freq.isEmpty) return null;
+  final match = RegExp(r'(\d+\.?\d*)').firstMatch(freq);
+  if (match == null) return null;
+  return double.tryParse(match.group(1)!);
+}
+
+bool _isKoreanStation(String countryCode) => countryCode == 'KR';
 
 class RadioPlayerScreen extends StatefulWidget {
   final RadioStation station;
@@ -236,18 +247,24 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                   const SizedBox(height: 90),
 
                   // ── 다이얼 ──
-                  _DialWidget(
-                    broadcaster: broadcaster.isNotEmpty
-                        ? broadcaster
-                        : current.name.substring(0, current.name.length.clamp(0, 4)).toUpperCase(),
-                    bcColor: bcColor,
-                    freq: freq,
-                    isPlaying: isPlaying,
-                    pulseCtrl: _pulseCtrl,
-                    dialCtrl: _dialCtrl,
-                    rotCtrl: _rotCtrl,
-                    primaryColor: primaryColor,
-                  ),
+                  current.countryCode == 'KR'
+                      ? FmTunerDial(
+                          broadcaster: broadcaster.isNotEmpty
+                              ? broadcaster
+                              : current.name.substring(0, current.name.length.clamp(0, 4)).toUpperCase(),
+                          frequency: _parseFrequency(freq),
+                          isPlaying: isPlaying,
+                          bcColor: bcColor,
+                          primaryColor: primaryColor,
+                          pulseCtrl: _pulseCtrl,
+                        )
+                      : GlobalRadioDial(
+                          stationName: current.name,
+                          logoUrl: current.logoUrl,
+                          isPlaying: isPlaying,
+                          primaryColor: primaryColor,
+                          pulseCtrl: _pulseCtrl,
+                        ),
 
                   const SizedBox(height: 12),
 
@@ -823,9 +840,9 @@ class _ProgramCard extends StatelessWidget {
                           isRerun ? AppLocalizations.of(context)!.radioRerun : AppLocalizations.of(context)!.radioLive,
                           style: TextStyle(
                             color: isRerun ? Colors.blueGrey : Colors.redAccent,
-                            fontSize: 8,
+                            fontSize: 12,
                             fontWeight: FontWeight.w800,
-                            letterSpacing: 0.8,
+                            letterSpacing: 0.6,
                           ),
                         ),
                       );
@@ -879,7 +896,6 @@ class _StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
     String label;
     Color color;
     switch (state) {
@@ -887,7 +903,7 @@ class _StatusBadge extends StatelessWidget {
         return const SizedBox.shrink(); // 편성표 카드 안에 LIVE 표시
       case RadioPlayerState.loading:
         label = AppLocalizations.of(context)!.radioStatusConnecting;
-        color = primaryColor;
+        color = AppTheme.fixedAccent;
         break;
       case RadioPlayerState.error:
         label = AppLocalizations.of(context)!.radioStatusFailed;

@@ -229,11 +229,12 @@ class _AppInitializerState extends State<AppInitializer> {
     final prefs = await SharedPreferences.getInstance();
     final l = AppLocalizations.of(context)!;
 
+    const accent = AppTheme.fixedAccent;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => Dialog(
-        backgroundColor: const Color(0xFF1A1A1A),
+        backgroundColor: Colors.white,
         shape:
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Padding(
@@ -245,27 +246,30 @@ class _AppInitializerState extends State<AppInitializer> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
                     5,
-                        (i) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                        (i) => const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 2),
                       child: Icon(Icons.star_rounded,
-                          color: primaryColor, size: 26),
+                          color: accent, size: 26),
                     )),
               ),
               const SizedBox(height: 24),
               Text(
                 l.reviewTitle,
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
                 ),
                 textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.visible,
+                softWrap: false,
               ),
               const SizedBox(height: 8),
               Text(
                 l.reviewMessage,
                 style: const TextStyle(
-                  color: Colors.white54,
+                  color: Colors.black54,
                   fontSize: 13,
                   height: 1.5,
                 ),
@@ -287,8 +291,8 @@ class _AppInitializerState extends State<AppInitializer> {
                     } catch (e) {}
                   },
                   style: TextButton.styleFrom(
-                    backgroundColor: primaryColor,
-                    foregroundColor: Colors.black,
+                    backgroundColor: accent,
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 13),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
@@ -308,7 +312,7 @@ class _AppInitializerState extends State<AppInitializer> {
                         DateTime.now().millisecondsSinceEpoch);
                   },
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.white38,
+                    foregroundColor: Colors.black38,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
                   child: Text(l.reviewLater,

@@ -274,23 +274,14 @@ class _PlayerScreenState extends State<PlayerScreen>
                 color: AppTheme.textPrimary, size: 30),
           ),
           Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(AppLocalizations.of(context)!.nowPlaying,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        color: AppTheme.textSecondary,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 1.2)),
-                const SizedBox(height: 0),
-                Text(AppLocalizations.of(context)!.swipeToChange,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        color: AppTheme.textSecondary,
-                        fontSize: 10)),
-              ],
+            child: Center(
+              child: Text(AppLocalizations.of(context)!.nowPlaying,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      color: AppTheme.textSecondary,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 1.2)),
             ),
           ),
           PopupMenuButton<String>(

@@ -53,9 +53,38 @@ class RadioProvider extends ChangeNotifier {
 
   static const _apiServers = [
     'de1.api.radio-browser.info',
+    'de2.api.radio-browser.info',
     'nl1.api.radio-browser.info',
-    'at1.api.radio-browser.info',
   ];
+
+  List<String>? _resolvedServers;
+
+  Future<List<String>> _getApiServers() async {
+    if (_resolvedServers != null && _resolvedServers!.isNotEmpty) {
+      return _resolvedServers!;
+    }
+    try {
+      final response = await http
+          .get(Uri.https('all.api.radio-browser.info', '/json/servers'), headers: _apiHeaders)
+          .timeout(const Duration(seconds: 8));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        final servers = data
+            .map((e) => e['name'] as String?)
+            .where((s) => s != null && s.isNotEmpty)
+            .cast<String>()
+            .toList();
+        if (servers.isNotEmpty) {
+          _resolvedServers = servers;
+          debugPrint('동적 서버 목록 획득: $servers');
+          return servers;
+        }
+      }
+    } catch (e) {
+      debugPrint('서버 목록 조회 실패, 기본 목록 사용: $e');
+    }
+    return _apiServers;
+  }
   static const _apiHeaders = {
     'User-Agent': 'CatSong/1.0 (kr.ssing.catsong)'
   };
@@ -470,7 +499,8 @@ class RadioProvider extends ChangeNotifier {
     }
 
     try {
-      for (final server in _apiServers) {
+      final servers = await _getApiServers();
+      for (final server in servers) {
         final uri = Uri.https(server, '/json/stations/bycountrycodeexact/$countryCode', {
           'order': 'clickcount',
           'reverse': 'true',
@@ -495,9 +525,9 @@ class RadioProvider extends ChangeNotifier {
       debugPrint('국가별 방송 로드 오류: $e');
     }
 
-    if (_countryStations.isEmpty && retryCount < 2) {
+    if (_countryStations.isEmpty && retryCount < 4) {
       debugPrint('국가별 방송 재시도: ${retryCount + 1}회차');
-      await Future.delayed(const Duration(milliseconds: 800));
+      await Future.delayed(const Duration(milliseconds: 1000));
       return fetchTopStations(countryCode, limit: limit, retryCount: retryCount + 1);
     }
 
@@ -519,6 +549,10 @@ class RadioProvider extends ChangeNotifier {
       _currentProgramMap[stationName];
   final Map<String, String> _nowPlayingMap = {};
   String? nowPlayingFor(String stationName) => _nowPlayingMap[stationName];
+
+  final Set<String> _scheduleAttempted = {};
+  bool hasAttemptedSchedule(String stationName) => _scheduleAttempted.contains(stationName);
+  void markScheduleAttempted(String stationName) => _scheduleAttempted.add(stationName);
 
   // KBS
   static const _kbsChannelCodes = {
@@ -742,10 +776,9 @@ class RadioProvider extends ChangeNotifier {
   };
 
   Future<void> fetchMbcSchedule(String stationName) async {
-    final today = DateTime.now().toIso8601String().substring(0, 10);
-    final cacheKey = '${stationName}_$today';
-    if (_scheduleListMap.containsKey(cacheKey) && _scheduleListMap[cacheKey]!.isNotEmpty) return;
+    debugPrint('=== fetchMbcSchedule 호출됨: $stationName ===');
     final sType = _mbcChannelTypes[stationName];
+    debugPrint('=== sType: $sType ===');
     if (sType == null) return;
 
     _scheduleListMap.remove(stationName);
@@ -754,31 +787,34 @@ class RadioProvider extends ChangeNotifier {
 
     try {
       final now = DateTime.now();
-      // 새벽 0~6시는 어제 날짜 요청 (어제 데이터에 새벽 방송 포함)
-      final targetDay = now.hour < 6
-          ? now.subtract(const Duration(days: 1))
-          : now;
-      final targetDateStr = '${targetDay.year}-${targetDay.month.toString().padLeft(2, '0')}-${targetDay.day.toString().padLeft(2, '0')}';
+      final targetDateStr = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+
+      debugPrint('=== MBC API 호출: sType=$sType, date=$targetDateStr ===');
 
       final response = await http.get(
         Uri.parse('https://control.imbc.com/Schedule/Radio/Time?sType=$sType&broadDate=$targetDateStr'),
       ).timeout(const Duration(seconds: 10));
 
+      debugPrint('=== MBC API statusCode: ${response.statusCode} ===');
+      debugPrint('=== MBC API body 앞부분: ${response.body.substring(0, response.body.length > 200 ? 200 : response.body.length)} ===');
+
       final List<dynamic> data = [];
       if (response.statusCode == 200) {
         data.addAll(json.decode(response.body) as List<dynamic>);
       }
+      debugPrint('=== MBC data.length: ${data.length} ===');
       if (data.isNotEmpty) {
-        // IsToday:N 이고 StartTime >= 0600 인 항목 제외 (내일 낮 방송)
-        final filtered = data.where((s) {
+        var filtered = data.where((s) {
           final isToday = s['IsToday'] as String? ?? 'N';
           final start = s['StartTime'] as String? ?? '';
-          // IsToday:Y 는 무조건 포함
           if (isToday == 'Y') return true;
-          // IsToday:N 이어도 새벽 방송(0000~0559)은 포함
           final startInt = int.tryParse(start) ?? 9999;
           return startInt < 600;
         }).toList();
+        // 필터 결과가 비면(새벽 시간대처럼 새벽 프로그램 정보가 없는 경우) 전체 데이터 사용
+        if (filtered.isEmpty) {
+          filtered = List.from(data);
+        }
 
         // 시간 순 정렬: 새벽(0000~0559)은 맨 뒤로
         filtered.sort((a, b) {
@@ -1226,7 +1262,7 @@ class RadioProvider extends ChangeNotifier {
     // KBS
     final nowHour2 = now.hour;
     final nowMin2 = now.minute;
-    final nowTimeInt2 = nowHour2 < 6
+    final nowTimeInt2 = nowHour2 < 5
         ? (24 + nowHour2) * 1000000 + nowMin2 * 10000
         : nowHour2 * 1000000 + nowMin2 * 10000;
     for (final stationName in _scheduleListMap.keys) {

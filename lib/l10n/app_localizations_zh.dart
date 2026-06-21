@@ -63,7 +63,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get repeat => '重複';
 
   @override
-  String get nowPlaying => '正在播放';
+  String get nowPlaying => '播放中';
 
   @override
   String get noSongs => '找不到MP3檔案';
@@ -857,6 +857,33 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get radioKoreaTitle => '韓國廣播';
+
+  @override
+  String get radioOnAirTitle => '直播中';
+
+  @override
+  String get radioKoreaSlogan => '聆聽世界之聲';
+
+  @override
+  String get radioSloganUS => '聆聽自由之聲';
+
+  @override
+  String get radioSloganJP => '日常中的小確幸';
+
+  @override
+  String get radioSloganTW => '流淌在島嶼的歌';
+
+  @override
+  String get radioSloganCN => '遼闊大地之聲';
+
+  @override
+  String get radioSloganHK => '乘上城市的節奏';
+
+  @override
+  String get radioSloganGB => '傳統與當代的交會';
+
+  @override
+  String get radioSloganVN => '湄公河的旋律';
 
   @override
   String get selectSong => '選擇歌曲';

@@ -213,7 +213,7 @@ abstract class AppLocalizations {
   /// No description provided for @nowPlaying.
   ///
   /// In ko, this message translates to:
-  /// **'지금 재생 중'**
+  /// **'재생 중'**
   String get nowPlaying;
 
   /// No description provided for @noSongs.
@@ -1701,8 +1701,62 @@ abstract class AppLocalizations {
   /// No description provided for @radioKoreaTitle.
   ///
   /// In ko, this message translates to:
-  /// **'한국 라디오'**
+  /// **'\"세상의 소리를 담다\"'**
   String get radioKoreaTitle;
+
+  /// No description provided for @radioOnAirTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'ON AIR'**
+  String get radioOnAirTitle;
+
+  /// No description provided for @radioKoreaSlogan.
+  ///
+  /// In ko, this message translates to:
+  /// **'세상의 소리를 담다'**
+  String get radioKoreaSlogan;
+
+  /// No description provided for @radioSloganUS.
+  ///
+  /// In ko, this message translates to:
+  /// **'자유의 목소리를 듣다'**
+  String get radioSloganUS;
+
+  /// No description provided for @radioSloganJP.
+  ///
+  /// In ko, this message translates to:
+  /// **'일상 속 작은 위로'**
+  String get radioSloganJP;
+
+  /// No description provided for @radioSloganTW.
+  ///
+  /// In ko, this message translates to:
+  /// **'섬을 흐르는 노래'**
+  String get radioSloganTW;
+
+  /// No description provided for @radioSloganCN.
+  ///
+  /// In ko, this message translates to:
+  /// **'광활한 대륙의 소리'**
+  String get radioSloganCN;
+
+  /// No description provided for @radioSloganHK.
+  ///
+  /// In ko, this message translates to:
+  /// **'도시의 리듬을 타다'**
+  String get radioSloganHK;
+
+  /// No description provided for @radioSloganGB.
+  ///
+  /// In ko, this message translates to:
+  /// **'전통과 현재가 만나는 곳'**
+  String get radioSloganGB;
+
+  /// No description provided for @radioSloganVN.
+  ///
+  /// In ko, this message translates to:
+  /// **'메콩강의 선율'**
+  String get radioSloganVN;
 
   /// No description provided for @selectSong.
   ///

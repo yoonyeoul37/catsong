@@ -63,7 +63,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get repeat => '반복';
 
   @override
-  String get nowPlaying => '지금 재생 중';
+  String get nowPlaying => '재생 중';
 
   @override
   String get noSongs => 'MP3 파일이 없습니다';
@@ -855,7 +855,34 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get radioKoreaTitle => '한국 라디오';
+  String get radioKoreaTitle => '\"세상의 소리를 담다\"';
+
+  @override
+  String get radioOnAirTitle => 'ON AIR';
+
+  @override
+  String get radioKoreaSlogan => '세상의 소리를 담다';
+
+  @override
+  String get radioSloganUS => '자유의 목소리를 듣다';
+
+  @override
+  String get radioSloganJP => '일상 속 작은 위로';
+
+  @override
+  String get radioSloganTW => '섬을 흐르는 노래';
+
+  @override
+  String get radioSloganCN => '광활한 대륙의 소리';
+
+  @override
+  String get radioSloganHK => '도시의 리듬을 타다';
+
+  @override
+  String get radioSloganGB => '전통과 현재가 만나는 곳';
+
+  @override
+  String get radioSloganVN => '메콩강의 선율';
 
   @override
   String get selectSong => '곡 선택';

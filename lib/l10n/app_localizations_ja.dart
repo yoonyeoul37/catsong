@@ -859,6 +859,33 @@ class AppLocalizationsJa extends AppLocalizations {
   String get radioKoreaTitle => '韓国ラジオ';
 
   @override
+  String get radioOnAirTitle => 'ON AIR';
+
+  @override
+  String get radioKoreaSlogan => '世界の音を届ける';
+
+  @override
+  String get radioSloganUS => '自由の声を聴く';
+
+  @override
+  String get radioSloganJP => '日常に寄り添う小さな癒し';
+
+  @override
+  String get radioSloganTW => '島を流れる歌';
+
+  @override
+  String get radioSloganCN => '広大な大地の音';
+
+  @override
+  String get radioSloganHK => '都市のリズムに乗る';
+
+  @override
+  String get radioSloganGB => '伝統と現在が出会う場所';
+
+  @override
+  String get radioSloganVN => 'メコン川の調べ';
+
+  @override
   String get selectSong => '曲を選択';
 
   @override

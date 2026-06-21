@@ -336,7 +336,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                       final overlay = Overlay.of(context);
                       final entry = OverlayEntry(
                         builder: (_) => Positioned(
-                          bottom: 120, left: 0, right: 0,
+                          top: 60, left: 0, right: 0,
                           child: Center(
                             child: TweenAnimationBuilder<double>(
                               tween: Tween(begin: 0.0, end: 1.0),
@@ -348,22 +348,28 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                               child: Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF2A2A2A),
+                                  color: Colors.white,
                                   borderRadius: BorderRadius.circular(30),
-                                  border: Border.all(color: primaryColor.withOpacity(0.3)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.15),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Icon(
                                       wasFav ? Icons.favorite_border : Icons.favorite,
-                                      color: wasFav ? Colors.white54 : Colors.redAccent,
+                                      color: wasFav ? Colors.black38 : Colors.redAccent,
                                       size: 18,
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
                                       wasFav ? AppLocalizations.of(context)!.radioRemovedFromFavorites : AppLocalizations.of(context)!.radioAddedToFavoritesToast,
-                                      style: const TextStyle(color: Colors.white, fontSize: 13, decoration: TextDecoration.none),
+                                      style: const TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.w600, decoration: TextDecoration.none),
                                     ),
                                   ],
                                 ),
@@ -377,7 +383,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                     },
                     child: Icon(
                       radioProvider.isFavorite(current.stationUuid) ? Icons.favorite : Icons.favorite_border,
-                      color: radioProvider.isFavorite(current.stationUuid) ? primaryColor : Colors.white,
+                      color: radioProvider.isFavorite(current.stationUuid) ? AppTheme.fixedAccent : Colors.white,
                       size: 22,
                     ),
                   ),
@@ -722,6 +728,8 @@ class _ProgramCard extends StatelessWidget {
   final RadioProvider radioProvider;
   final String freq;
 
+  static const _accent = AppTheme.fixedAccent;
+
   const _ProgramCard({
     required this.program,
     required this.primaryColor,
@@ -762,7 +770,7 @@ class _ProgramCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: primaryColor.withOpacity(0.18)),
+        border: Border.all(color: _accent.withOpacity(0.18)),
       ),
       child: Row(
         children: [
@@ -770,10 +778,10 @@ class _ProgramCard extends StatelessWidget {
             width: 36, height: 36,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: primaryColor.withOpacity(0.12),
-              border: Border.all(color: primaryColor.withOpacity(0.25)),
+              color: _accent.withOpacity(0.12),
+              border: Border.all(color: _accent.withOpacity(0.25)),
             ),
-            child: Icon(Icons.mic, color: primaryColor, size: 18),
+            child: const Icon(Icons.mic, color: _accent, size: 18),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -786,8 +794,8 @@ class _ProgramCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         title.isNotEmpty ? title : '',
-                        style: TextStyle(
-                          color: primaryColor,
+                        style: const TextStyle(
+                          color: Colors.white,
                           fontSize: 13,
                           fontWeight: FontWeight.w700,
                         ),
@@ -833,7 +841,7 @@ class _ProgramCard extends StatelessWidget {
                         child: Text(
                           timeStr,
                           style: TextStyle(
-                            color: primaryColor.withOpacity(0.6),
+                            color: Colors.white.withOpacity(0.7),
                             fontSize: 11,
                           ),
                           overflow: TextOverflow.ellipsis,
@@ -931,6 +939,8 @@ class _Controls extends StatelessWidget {
     required this.onIndexChanged,
   });
 
+  static const _accent = AppTheme.fixedAccent;
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -951,7 +961,7 @@ class _Controls extends StatelessWidget {
           child: const Icon(Icons.skip_previous, color: Colors.white70, size: 26),
         ),
         const SizedBox(width: 28),
-        // 재생/정지 (골드 링)
+        // 재생/정지
         GestureDetector(
           onTap: isLoading
               ? null
@@ -968,16 +978,16 @@ class _Controls extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.white.withOpacity(0.06),
-              border: Border.all(color: primaryColor, width: 2.5),
+              border: Border.all(color: _accent, width: 2.5),
             ),
             child: isLoading
-                ? Padding(
-              padding: const EdgeInsets.all(22),
-              child: CircularProgressIndicator(strokeWidth: 2.5, color: primaryColor),
+                ? const Padding(
+              padding: EdgeInsets.all(22),
+              child: CircularProgressIndicator(strokeWidth: 2.5, color: _accent),
             )
                 : Icon(
               isError ? Icons.refresh : (isPlaying ? Icons.pause : Icons.play_arrow),
-              color: primaryColor,
+              color: _accent,
               size: 38,
             ),
           ),
@@ -1075,8 +1085,8 @@ class _BottomBarItem extends StatelessWidget {
                 right: -4, top: -2,
                 child: Container(
                   width: 6, height: 6,
-                  decoration: BoxDecoration(
-                    color: primaryColor,
+                  decoration: const BoxDecoration(
+                    color: AppTheme.fixedAccent,
                     shape: BoxShape.circle,
                   ),
                 ),

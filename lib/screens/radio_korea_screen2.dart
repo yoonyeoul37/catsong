@@ -167,10 +167,10 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
               TabBar(
                 controller: _tabController,
                 isScrollable: true,
-                indicatorColor: AppTheme.fixedAccent,
+                indicatorColor: Colors.white,
                 indicatorWeight: 2,
-                labelColor: AppTheme.fixedAccent,
-                unselectedLabelColor: Colors.white.withOpacity(0.6),
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.white.withOpacity(0.5),
                 labelStyle: const TextStyle(
                     fontSize: 13.5, fontWeight: FontWeight.w700),
                 unselectedLabelStyle: const TextStyle(fontSize: 13.5),
@@ -377,9 +377,9 @@ class _StationTile extends StatelessWidget {
                   Text(
                     station.name,
                     style: TextStyle(
-                      color: isPlaying ? AppTheme.fixedAccent : Colors.white,
+                      color: isPlaying ? Colors.white : Colors.white60,
+                      fontWeight: isPlaying ? FontWeight.w700 : FontWeight.w500,
                       fontSize: 15.5,
-                      fontWeight: FontWeight.w600,
                       letterSpacing: -0.2,
                     ),
                     maxLines: 1,
@@ -627,7 +627,6 @@ class _PlayingBarsState extends State<_PlayingBars>
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
     return SizedBox(
       width: 22,
       height: 22,
@@ -641,7 +640,7 @@ class _PlayingBarsState extends State<_PlayingBars>
               width: 4,
               height: 6 + _ctrls[i].value * 14,
               decoration: BoxDecoration(
-                color: primaryColor,
+                color: Colors.white70,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),

@@ -144,14 +144,14 @@ class _FmDialPainter extends CustomPainter {
     if (isPlaying) {
       final glowOpacity = 0.15 + 0.10 * pulseValue;
       final glowPaint = Paint()
-        ..color = primaryColor.withOpacity(glowOpacity)
+        ..color = Colors.white.withOpacity(glowOpacity)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 30);
       canvas.drawCircle(center, outerR, glowPaint);
     }
 
     // 바깥 원형 트랙 (네온 글로우 효과)
     final trackPaint = Paint()
-      ..color = primaryColor.withOpacity(0.25)
+      ..color = Colors.white.withOpacity(0.25)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.5
       ..strokeCap = StrokeCap.round
@@ -162,7 +162,7 @@ class _FmDialPainter extends CustomPainter {
     );
 
     final trackPaint2 = Paint()
-      ..color = primaryColor.withOpacity(0.7)
+      ..color = Colors.white.withOpacity(0.7)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5
       ..strokeCap = StrokeCap.round;
@@ -223,7 +223,7 @@ class _FmDialPainter extends CustomPainter {
     // 포인터 (바늘)
     final pointerAngle = _freqToAngle(currentFreq);
     final pointerOpacity = hasFreq ? 1.0 : 0.35;
-    final pointerColor = primaryColor.withOpacity(pointerOpacity);
+    final pointerColor = Colors.white.withOpacity(pointerOpacity);
 
     final pointerOuter = Offset(
       center.dx + (tickR + 8) * cos(pointerAngle),
@@ -261,12 +261,9 @@ class _FmDialPainter extends CustomPainter {
         text: TextSpan(
           text: '${currentFreq.toStringAsFixed(1)} MHz',
           style: const TextStyle(
-            color: Colors.white,
+            color: Colors.transparent,
             fontSize: 14,
             fontWeight: FontWeight.w800,
-            shadows: [
-              Shadow(color: Colors.black87, blurRadius: 4, offset: Offset(0, 1)),
-            ],
           ),
         ),
         textDirection: TextDirection.ltr,
@@ -281,9 +278,19 @@ class _FmDialPainter extends CustomPainter {
         ),
         const Radius.circular(10),
       );
-      canvas.drawRRect(bgRect, Paint()..color = primaryColor.withOpacity(0.9));
-
-      freqTp.paint(canvas, freqLabelPos - Offset(freqTp.width / 2, freqTp.height / 2));
+      canvas.drawRRect(bgRect, Paint()..color = Colors.white.withOpacity(0.9));
+      final freqTextPainter = TextPainter(
+        text: TextSpan(
+          text: '${currentFreq.toStringAsFixed(1)} MHz',
+          style: const TextStyle(
+            color: Colors.black87,
+            fontSize: 14,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      freqTextPainter.paint(canvas, freqLabelPos - Offset(freqTextPainter.width / 2, freqTextPainter.height / 2));
     }
   }
 

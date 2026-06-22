@@ -77,7 +77,7 @@ class SongListTile extends StatelessWidget {
                   Text(
                     song.titleDisplay,
                     style: TextStyle(
-                      color: isCurrentSong ? AppTheme.fixedAccent : Colors.white,
+                      color: Colors.white,
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -88,9 +88,7 @@ class SongListTile extends StatelessWidget {
                   Text(
                     song.artistDisplay,
                     style: TextStyle(
-                      color: isCurrentSong
-                          ? Color.lerp(AppTheme.fixedAccent, Colors.white, 0.3)
-                          : Colors.white38,
+                      color: isCurrentSong ? Colors.white70 : Colors.white38,
                       fontSize: 13,
                     ),
                     maxLines: 1,
@@ -103,13 +101,13 @@ class SongListTile extends StatelessWidget {
             Text(
               song.durationFormatted,
               style: TextStyle(
-                color: isCurrentSong ? AppTheme.fixedAccent : Colors.white30,
+                color: isCurrentSong ? Colors.white70 : Colors.white30,
                 fontSize: 12,
               ),
             ),
             PopupMenuButton<String>(
               icon: Icon(Icons.more_vert,
-                  color: isCurrentSong ? AppTheme.fixedAccent : Colors.white30,
+                  color: isCurrentSong ? Colors.white70 : Colors.white30,
                   size: 20),
               color: Colors.white,
               shape: RoundedRectangleBorder(
@@ -158,7 +156,7 @@ class SongListTile extends StatelessWidget {
             width: 52,
             height: 52,
             decoration: BoxDecoration(
-              color: primaryColor.withOpacity(0.15),
+              color: Colors.white.withOpacity(0.15),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Center(
@@ -179,9 +177,15 @@ class SongListTile extends StatelessWidget {
               color: Colors.black54,
               borderRadius: BorderRadius.circular(4),
             ),
-            child: playerProvider.isPlaying
-                ? EqualizerAnimation(color: primaryColor)
-                : Icon(Icons.pause, color: primaryColor, size: 22),
+            child: Center(
+              child: playerProvider.isPlaying
+                  ? const SizedBox(
+                      width: 24,
+                      height: 20,
+                      child: EqualizerAnimation(color: Colors.white70),
+                    )
+                  : const Icon(Icons.pause, color: Colors.white70, size: 22),
+            ),
           ),
       ],
     );

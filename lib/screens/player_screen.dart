@@ -817,7 +817,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     width: 3,
                     height: height,
                     decoration: BoxDecoration(
-                      color: primaryColor,
+                      color: Colors.white70,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -847,7 +847,7 @@ class _PlayerScreenState extends State<PlayerScreen>
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            color: primaryColor,
+            color: Colors.white70,
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -988,23 +988,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                   width: 68,
                   height: 68,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Color.lerp(primaryColor, Colors.white, 0.2)!,
-                        primaryColor,
-                        Color.lerp(primaryColor, Colors.black, 0.2)!,
-                      ],
-                    ),
+                    color: Colors.white.withOpacity(0.15),
                     shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: primaryColor.withOpacity(0.4),
-                        blurRadius: 20,
-                        spreadRadius: 2,
-                      ),
-                    ],
                   ),
                   child: playerProvider.isLoading
                       ? const Padding(
@@ -1016,7 +1001,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     playerProvider.isPlaying
                         ? Icons.pause
                         : Icons.play_arrow,
-                    color: Colors.black,
+                    color: Colors.white,
                     size: 36,
                   ),
                 ),
@@ -1037,7 +1022,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 onPressed: () => playerProvider.toggleShuffle(),
                 icon: Icon(Icons.shuffle,
                     color: playerProvider.isShuffled
-                        ? primaryColor
+                        ? Colors.white
                         : Colors.white60),
                 iconSize: 22,
               ),
@@ -1087,7 +1072,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                                       mode == LoopMode.one ? Icons.repeat_one : Icons.repeat,
                                       color: mode == LoopMode.off
                                           ? Colors.white54
-                                          : Color.lerp(primaryColor, Colors.white, 0.3),
+                                          : Colors.white,
                                       size: 14,
                                     ),
                                     const SizedBox(width: 6),
@@ -1115,7 +1100,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                         ? Icons.repeat_one
                         : Icons.repeat,
                     color: playerProvider.loopMode != LoopMode.off
-                        ? primaryColor
+                        ? Colors.white
                         : Colors.white60),
                 iconSize: 27,
               ),
@@ -1123,7 +1108,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 onPressed: () => _showSleepTimerDialog(context, playerProvider, primaryColor),
                 icon: Icon(Icons.bedtime,
                     color: playerProvider.isSleepTimerActive
-                        ? primaryColor
+                        ? Colors.white
                         : Colors.white60),
                 iconSize: 22,
               ),
@@ -1131,7 +1116,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 onPressed: () => _showSpeedDialog(context, playerProvider, primaryColor),
                 icon: Icon(Icons.speed,
                     color: playerProvider.playbackSpeed != 1.0
-                        ? primaryColor
+                        ? Colors.white
                         : Colors.white60),
                 iconSize: 22,
               ),

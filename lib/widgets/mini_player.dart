@@ -78,7 +78,7 @@ class MiniPlayer extends StatelessWidget {
                   value: playerProvider.progress,
                   backgroundColor: Colors.white12,
                   valueColor:
-                  const AlwaysStoppedAnimation<Color>(AppTheme.fixedAccent),
+                  AlwaysStoppedAnimation<Color>(Colors.white.withOpacity(0.4)),
                 ),
               ),
             ),
@@ -131,7 +131,7 @@ class MiniPlayer extends StatelessWidget {
                               child: SizedBox(
                                 width: 20,
                                 height: 16,
-                                child: EqualizerAnimation(color: AppTheme.fixedAccent),
+                                child: EqualizerAnimation(color: Colors.white70),
                               ),
                             ),
                           ),
@@ -194,8 +194,8 @@ class MiniPlayer extends StatelessWidget {
                       child: Container(
                         width: 40,
                         height: 40,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF4A6B8A),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.15),
                           shape: BoxShape.circle,
                         ),
                         child: playerProvider.isLoading
@@ -203,13 +203,13 @@ class MiniPlayer extends StatelessWidget {
                           padding: EdgeInsets.all(10),
                           child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: Colors.white),
+                              color: Colors.white70),
                         )
                             : Icon(
                           playerProvider.isPlaying
                               ? Icons.pause
                               : Icons.play_arrow,
-                          color: Colors.white,
+                          color: Colors.white70,
                           size: 22,
                         ),
                       ),

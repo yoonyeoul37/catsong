@@ -90,7 +90,7 @@ class AppTheme {
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Color(0xFF0A0A0A),
-        selectedItemColor: primaryColor,
+        selectedItemColor: Colors.white,
         unselectedItemColor: textHint,
         type: BottomNavigationBarType.fixed,
         elevation: 0,

@@ -240,11 +240,12 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
       body: Stack(
         children: [
           SingleChildScrollView(
+            physics: const NeverScrollableScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Column(
                 children: [
-                  const SizedBox(height: 90),
+                  const SizedBox(height: 40),
 
                   // ── 다이얼 ──
                   current.countryCode == 'KR'
@@ -745,7 +746,7 @@ class _ProgramCard extends StatelessWidget {
   final RadioProvider radioProvider;
   final String freq;
 
-  static const _accent = AppTheme.fixedAccent;
+  static const _accent = Colors.white38;
 
   const _ProgramCard({
     required this.program,
@@ -903,7 +904,7 @@ class _StatusBadge extends StatelessWidget {
         return const SizedBox.shrink(); // 편성표 카드 안에 LIVE 표시
       case RadioPlayerState.loading:
         label = AppLocalizations.of(context)!.radioStatusConnecting;
-        color = AppTheme.fixedAccent;
+        color = Colors.white60;
         break;
       case RadioPlayerState.error:
         label = AppLocalizations.of(context)!.radioStatusFailed;
@@ -911,7 +912,7 @@ class _StatusBadge extends StatelessWidget {
         break;
       case RadioPlayerState.paused:
         label = AppLocalizations.of(context)!.radioStatusPaused;
-        color = AppTheme.textHint;
+        color = Colors.white60;
         break;
       default:
         return const SizedBox(height: 28);
@@ -955,7 +956,7 @@ class _Controls extends StatelessWidget {
     required this.onIndexChanged,
   });
 
-  static const _accent = AppTheme.fixedAccent;
+  static const _accent = Color(0xB3FFFFFF); // Colors.white70과 동일
 
   @override
   Widget build(BuildContext context) {
@@ -993,8 +994,8 @@ class _Controls extends StatelessWidget {
             height: 82,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.white.withOpacity(0.06),
-              border: Border.all(color: _accent, width: 2.5),
+              color: Colors.white.withOpacity(0.05),
+              border: Border.all(color: Colors.white.withOpacity(0.08)),
             ),
             child: isLoading
                 ? const Padding(

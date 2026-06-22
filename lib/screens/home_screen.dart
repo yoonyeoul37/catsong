@@ -432,7 +432,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 children: [
                   Text('${musicProvider.songCount} ${AppLocalizations.of(context)!.songCount}',
-                      style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+                      style: const TextStyle(color: Colors.white60, fontSize: 12)),
                   if (_showThemeHint)
                     Expanded(
                       child: Padding(
@@ -466,7 +466,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                     },
                     icon: const Icon(Icons.play_arrow,
-                        color: AppTheme.fixedAccent, size: 26),
+                        color: Colors.white60, size: 26),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
@@ -477,7 +477,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         context.read<PlayerProvider>().playFromList(songs, 0);
                       }
                     },
-                    icon: const Icon(Icons.shuffle, color: AppTheme.textSecondary, size: 20),
+                    icon: const Icon(Icons.shuffle, color: Colors.white60, size: 20),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
@@ -583,7 +583,7 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: isSelected ? AppTheme.fixedAccent : Colors.transparent,
+              color: isSelected ? Colors.white : Colors.transparent,
               width: 2,
             ),
           ),
@@ -591,7 +591,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? AppTheme.fixedAccent : Colors.white70,
+            color: isSelected ? Colors.white : Colors.white54,
             fontSize: 14,
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
           ),
@@ -687,7 +687,7 @@ class _HomeScreenState extends State<HomeScreen> {
       currentIndex: _currentTabIndex,
       onTap: (index) => setState(() => _currentTabIndex = index),
       backgroundColor: const Color(0xFF0A0A0A),
-      selectedItemColor: AppTheme.fixedAccent,
+      selectedItemColor: Colors.white,
       unselectedItemColor: AppTheme.textSecondary,
       type: BottomNavigationBarType.fixed,
       selectedFontSize: 10,

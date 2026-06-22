@@ -87,7 +87,13 @@ class _PlayerScreenState extends State<PlayerScreen>
 
   Future<void> _extractColor(Song song) async {
     if (song.albumArt == null) {
-      setState(() => _dominantColor = const Color(0xFF1A1A1A));
+      final primaryColor = Theme.of(context).colorScheme.primary;
+      setState(() => _dominantColor = Color.fromRGBO(
+        (primaryColor.red * 0.4).toInt(),
+        (primaryColor.green * 0.4).toInt(),
+        (primaryColor.blue * 0.4).toInt(),
+        1,
+      ));
       return;
     }
     try {
@@ -127,7 +133,13 @@ class _PlayerScreenState extends State<PlayerScreen>
         }
       }
     } catch (e) {
-      setState(() => _dominantColor = const Color(0xFF1A1A1A));
+      final primaryColor = Theme.of(context).colorScheme.primary;
+      setState(() => _dominantColor = Color.fromRGBO(
+        (primaryColor.red * 0.4).toInt(),
+        (primaryColor.green * 0.4).toInt(),
+        (primaryColor.blue * 0.4).toInt(),
+        1,
+      ));
     }
   }
 

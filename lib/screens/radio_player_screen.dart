@@ -401,7 +401,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                     },
                     child: Icon(
                       radioProvider.isFavorite(current.stationUuid) ? Icons.favorite : Icons.favorite_border,
-                      color: radioProvider.isFavorite(current.stationUuid) ? AppTheme.fixedAccent : Colors.white,
+                      color: radioProvider.isFavorite(current.stationUuid) ? Colors.white : Colors.white60,
                       size: 22,
                     ),
                   ),

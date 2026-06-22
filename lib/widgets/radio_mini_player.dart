@@ -80,12 +80,12 @@ class RadioMiniPlayer extends StatelessWidget {
                           height: 44,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: const Color(0xFF4A6B8A).withOpacity(0.15),
+                            color: Colors.white.withOpacity(0.08),
                             border: Border.all(
-                                color: const Color(0xFF4A6B8A).withOpacity(0.4)),
+                                color: Colors.white.withOpacity(0.15)),
                           ),
                           child: const Icon(Icons.radio,
-                              color: Color(0xFF4A6B8A), size: 22),
+                              color: Colors.white60, size: 22),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -115,7 +115,7 @@ class RadioMiniPlayer extends StatelessWidget {
                                     style: TextStyle(
                                       color: isPlaying
                                           ? Colors.redAccent
-                                          : AppTheme.textHint,
+                                          : Colors.white60,
                                       fontSize: 12,
                                     ),
                                   ),
@@ -181,8 +181,8 @@ class RadioMiniPlayer extends StatelessWidget {
                           child: Container(
                             width: 40,
                             height: 40,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFF4A6B8A),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.15),
                               shape: BoxShape.circle,
                             ),
                             child: isLoading

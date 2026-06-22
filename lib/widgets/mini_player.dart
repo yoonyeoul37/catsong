@@ -195,7 +195,7 @@ class MiniPlayer extends StatelessWidget {
                         width: 40,
                         height: 40,
                         decoration: const BoxDecoration(
-                          color: AppTheme.fixedAccent,
+                          color: Color(0xFF4A6B8A),
                           shape: BoxShape.circle,
                         ),
                         child: playerProvider.isLoading

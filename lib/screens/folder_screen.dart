@@ -89,10 +89,10 @@ class FolderScreen extends StatelessWidget {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: const Color(0xFF282828),
+                color: AppTheme.fixedAccent.withOpacity(0.28),
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: Icon(Icons.folder, color: primaryColor, size: 28),
+              child: const Icon(Icons.folder, color: AppTheme.fixedAccent, size: 28),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -168,11 +168,11 @@ class FolderDetailScreen extends StatelessWidget {
                           width: 72,
                           height: 72,
                           decoration: BoxDecoration(
-                            color: primaryColor.withOpacity(0.3),
+                            color: AppTheme.fixedAccent.withOpacity(0.28),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Icon(Icons.folder,
-                              color: primaryColor, size: 40),
+                          child: const Icon(Icons.folder,
+                              color: AppTheme.fixedAccent, size: 40),
                         ),
                         const SizedBox(height: 12),
                         Text(folder.name,

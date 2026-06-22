@@ -186,12 +186,15 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(AppLocalizations.of(context)!.appName,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: -0.5)),
+                Transform(
+                  transform: Matrix4.skewX(-0.15),
+                  child: Text(AppLocalizations.of(context)!.appName,
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -0.5)),
+                ),
                 if (Localizations.localeOf(context).languageCode == 'ko')
                   Padding(
                     padding: const EdgeInsets.only(left: 4),

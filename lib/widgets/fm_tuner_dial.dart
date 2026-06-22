@@ -250,9 +250,12 @@ class _FmDialPainter extends CustomPainter {
 
     // 현재 주파수 텍스트 (포인터 끝 근처)
     if (hasFreq) {
+      final rawX = center.dx + (tickR + 30) * cos(pointerAngle);
+      final rawY = center.dy + (tickR + 30) * sin(pointerAngle);
+      // 캡슐이 화면 밖으로 안 나가도록 x 위치 제한
       final freqLabelPos = Offset(
-        center.dx + (tickR + 30) * cos(pointerAngle),
-        center.dy + (tickR + 30) * sin(pointerAngle),
+        rawX.clamp(50.0, size.width - 50.0),
+        rawY.clamp(16.0, size.height - 16.0),
       );
       final freqTp = TextPainter(
         text: TextSpan(

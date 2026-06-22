@@ -107,9 +107,9 @@ class AlbumScreen extends StatelessWidget {
                 gaplessPlayback: true,
               )
                   : Container(
-                color: const Color(0xFF282828),
+                color: const Color(0xFF2A2A2A),
                 child: const Center(
-                  child: Icon(Icons.album, color: Colors.white24, size: 56),
+                  child: Icon(Icons.album, color: AppTheme.fixedAccent, size: 56),
                 ),
               ),
             ),

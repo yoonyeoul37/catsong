@@ -223,6 +223,78 @@ class _PlayerScreenState extends State<PlayerScreen>
       },
       child: Scaffold(
         backgroundColor: AppTheme.background,
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(
+              (primaryColor.red * 0.28).toInt().clamp(0, 255),
+              (primaryColor.green * 0.28).toInt().clamp(0, 255),
+              (primaryColor.blue * 0.28).toInt().clamp(0, 255),
+              1.0,
+            ),
+            border: Border(
+              top: BorderSide(color: Colors.white.withOpacity(0.08)),
+            ),
+          ),
+          child: SafeArea(
+            top: false,
+            child: SizedBox(
+              height: 62,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildBottomBarItem(
+                    context,
+                    icon: Icons.shuffle,
+                    label: AppLocalizations.of(context)!.shuffle,
+                    isActive: playerProvider.isShuffled,
+                    onTap: () => playerProvider.toggleShuffle(),
+                  ),
+                  _buildBottomBarItem(
+                    context,
+                    icon: playerProvider.loopMode == LoopMode.one
+                        ? Icons.repeat_one
+                        : Icons.repeat,
+                    label: playerProvider.loopMode == LoopMode.one
+                        ? AppLocalizations.of(context)!.repeatOne
+                        : playerProvider.loopMode == LoopMode.all
+                            ? AppLocalizations.of(context)!.repeatAll
+                            : AppLocalizations.of(context)!.noRepeat,
+                    isActive: playerProvider.loopMode != LoopMode.off,
+                    onTap: () => playerProvider.toggleLoopMode(),
+                  ),
+                  _buildBottomBarItem(
+                    context,
+                    icon: Icons.bedtime,
+                    label: AppLocalizations.of(context)!.timerCancel.replaceAll('취소', '').trim().isEmpty
+                        ? '타이머'
+                        : '타이머',
+                    isActive: playerProvider.isSleepTimerActive,
+                    onTap: () => _showSleepTimerDialog(context, playerProvider, primaryColor),
+                  ),
+                  _buildBottomBarItem(
+                    context,
+                    icon: Icons.speed,
+                    label: '재생속도',
+                    isActive: playerProvider.playbackSpeed != 1.0,
+                    onTap: () => _showSpeedDialog(context, playerProvider, primaryColor),
+                  ),
+                  _buildBottomBarItem(
+                    context,
+                    icon: Icons.lyrics_outlined,
+                    label: AppLocalizations.of(context)!.lyrics,
+                    isActive: false,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LyricsScreen(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
         body: Stack(
           children: [
             const SizedBox.shrink(),
@@ -1034,126 +1106,6 @@ class _PlayerScreenState extends State<PlayerScreen>
             ],
           ),
           const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                onPressed: () => playerProvider.toggleShuffle(),
-                icon: Icon(Icons.shuffle,
-                    color: playerProvider.isShuffled
-                        ? Colors.white
-                        : Colors.white60),
-                iconSize: 22,
-              ),
-              IconButton(
-                onPressed: () {
-                  playerProvider.toggleLoopMode();
-                  final mode = playerProvider.loopMode;
-                  final label = mode == LoopMode.one
-                      ? AppLocalizations.of(context)!.repeatOne
-                      : mode == LoopMode.all
-                          ? AppLocalizations.of(context)!.repeatAll
-                          : AppLocalizations.of(context)!.noRepeat;
-                  final overlay = Overlay.of(context);
-                  final entry = OverlayEntry(
-                    builder: (context) => Positioned(
-                      bottom: 140,
-                      left: 0,
-                      right: 0,
-                      child: Center(
-                        child: TweenAnimationBuilder<double>(
-                          tween: Tween(begin: 0.0, end: 1.0),
-                          duration: const Duration(milliseconds: 200),
-                          builder: (context, value, child) {
-                            return Opacity(
-                              opacity: value,
-                              child: Transform.scale(
-                                scale: 0.85 + (0.15 * value),
-                                child: child,
-                              ),
-                            );
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.12),
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Colors.white.withOpacity(0.15)),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      mode == LoopMode.one ? Icons.repeat_one : Icons.repeat,
-                                      color: mode == LoopMode.off
-                                          ? Colors.white54
-                                          : Colors.white,
-                                      size: 14,
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      label,
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          decoration: TextDecoration.none),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                  overlay.insert(entry);
-                  Future.delayed(const Duration(milliseconds: 1200), () => entry.remove());
-                },
-                icon: Icon(
-                    playerProvider.loopMode == LoopMode.one
-                        ? Icons.repeat_one
-                        : Icons.repeat,
-                    color: playerProvider.loopMode != LoopMode.off
-                        ? Colors.white
-                        : Colors.white60),
-                iconSize: 27,
-              ),
-              IconButton(
-                onPressed: () => _showSleepTimerDialog(context, playerProvider, primaryColor),
-                icon: Icon(Icons.bedtime,
-                    color: playerProvider.isSleepTimerActive
-                        ? Colors.white
-                        : Colors.white60),
-                iconSize: 22,
-              ),
-              IconButton(
-                onPressed: () => _showSpeedDialog(context, playerProvider, primaryColor),
-                icon: Icon(Icons.speed,
-                    color: playerProvider.playbackSpeed != 1.0
-                        ? Colors.white
-                        : Colors.white60),
-                iconSize: 22,
-              ),
-              IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LyricsScreen(),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.lyrics_outlined, color: Colors.white60),
-                iconSize: 22,
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
         ],
       ),
     );
@@ -1228,6 +1180,41 @@ class _PlayerScreenState extends State<PlayerScreen>
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) => _SpeedDialog(playerProvider: playerProvider, primaryColor: AppTheme.fixedAccent),
+    );
+  }
+
+  Widget _buildBottomBarItem(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required bool isActive,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: isActive ? Colors.white : Colors.white60,
+              size: 22,
+            ),
+            const SizedBox(height: 3),
+            Text(
+              label,
+              style: TextStyle(
+                color: isActive ? Colors.white : Colors.white60,
+                fontSize: 10,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

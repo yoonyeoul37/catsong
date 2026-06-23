@@ -271,7 +271,7 @@ class _StationTile extends StatelessWidget {
                   Text(
                     station.name,
                     style: TextStyle(
-                      color: isPlaying ? AppTheme.fixedAccent : Colors.white,
+                      color: isPlaying ? Colors.white : Colors.white60,
                       fontSize: 15.5,
                       fontWeight: FontWeight.w600,
                       letterSpacing: -0.2,
@@ -308,7 +308,7 @@ class _StationTile extends StatelessWidget {
                   color: context
                       .watch<RadioProvider>()
                       .isFavorite(station.stationUuid)
-                      ? AppTheme.fixedAccent
+                      ? Colors.white
                       : Colors.white.withOpacity(0.25),
                   size: 21,
                 ),
@@ -367,7 +367,7 @@ class _PlayingBarsState extends State<_PlayingBars>
               width: 4,
               height: 6 + _ctrls[i].value * 14,
               decoration: const BoxDecoration(
-                color: AppTheme.fixedAccent,
+                color: Colors.white70,
                 borderRadius: BorderRadius.all(Radius.circular(2)),
               ),
             ),

@@ -253,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
               context.read<MusicProvider>().clearSearch();
             },
             child: Text(AppLocalizations.of(context)!.cancel,
-                style: TextStyle(color: primaryColor)),
+                style: const TextStyle(color: Colors.white70)),
           ),
       ],
     );

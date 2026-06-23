@@ -89,7 +89,12 @@ class AppTheme {
         ),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: Color(0xFF0A0A0A),
+        backgroundColor: Color.fromRGBO(
+          (primaryColor.red * 0.28).toInt().clamp(0, 255),
+          (primaryColor.green * 0.28).toInt().clamp(0, 255),
+          (primaryColor.blue * 0.28).toInt().clamp(0, 255),
+          1.0,
+        ),
         selectedItemColor: Colors.white,
         unselectedItemColor: textHint,
         type: BottomNavigationBarType.fixed,

@@ -33,7 +33,6 @@ class _VideoScreenState extends State<VideoScreen> {
   @override
   Widget build(BuildContext context) {
     final videoProvider = context.watch<VideoProvider>();
-    final primaryColor = Theme.of(context).colorScheme.primary;
 
     if (videoProvider.permissionDenied) {
       return Scaffold(
@@ -45,7 +44,7 @@ class _VideoScreenState extends State<VideoScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.video_library_outlined,
-                    size: 72, color: primaryColor.withOpacity(0.5)),
+                    size: 72, color: Colors.white.withOpacity(0.5)),
                 const SizedBox(height: 24),
                 Text(AppLocalizations.of(context)!.videoPermissionRequired,
                     style: const TextStyle(
@@ -61,8 +60,8 @@ class _VideoScreenState extends State<VideoScreen> {
                 ElevatedButton(
                   onPressed: () => openAppSettings(),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryColor,
-                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.white.withOpacity(0.15),
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                   ),
@@ -77,10 +76,10 @@ class _VideoScreenState extends State<VideoScreen> {
     }
 
     if (videoProvider.isLoading) {
-      return Scaffold(
+      return const Scaffold(
         backgroundColor: AppTheme.background,
         body: Center(
-          child: CircularProgressIndicator(color: primaryColor),
+          child: CircularProgressIndicator(color: Colors.white60),
         ),
       );
     }
@@ -93,7 +92,7 @@ class _VideoScreenState extends State<VideoScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.video_library_outlined,
-                  size: 72, color: primaryColor.withOpacity(0.4)),
+                  size: 72, color: Colors.white.withOpacity(0.4)),
               const SizedBox(height: 16),
               Text(AppLocalizations.of(context)!.noVideosFound,
                   style: const TextStyle(
@@ -144,10 +143,8 @@ class _VideoScreenState extends State<VideoScreen> {
                 mainAxisSpacing: 8,
               ),
               delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return _VideoTile(
-                      video: videoProvider.videos[index],
-                      primaryColor: primaryColor);
+                    (context, index) {
+                  return _VideoTile(video: videoProvider.videos[index]);
                 },
                 childCount: videoProvider.videos.length,
               ),
@@ -162,9 +159,8 @@ class _VideoScreenState extends State<VideoScreen> {
 
 class _VideoTile extends StatefulWidget {
   final Video video;
-  final Color primaryColor;
 
-  const _VideoTile({required this.video, required this.primaryColor});
+  const _VideoTile({required this.video});
 
   @override
   State<_VideoTile> createState() => _VideoTileState();
@@ -196,7 +192,6 @@ class _VideoTileState extends State<_VideoTile> {
   }
 
   Future<void> _showOptions(BuildContext context) async {
-    final primaryColor = Theme.of(context).colorScheme.primary;
     showModalBottomSheet(
       context: context,
       backgroundColor: AppTheme.surfaceVariant,
@@ -207,7 +202,7 @@ class _VideoTileState extends State<_VideoTile> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: Icon(Icons.edit, color: primaryColor),
+              leading: const Icon(Icons.edit, color: Colors.white70),
               title: Text(AppLocalizations.of(context)!.rename,
                   style: const TextStyle(color: AppTheme.textPrimary)),
               onTap: () {
@@ -231,7 +226,6 @@ class _VideoTileState extends State<_VideoTile> {
   }
 
   Future<void> _renameVideo(BuildContext context) async {
-    final primaryColor = Theme.of(context).colorScheme.primary;
     final controller = TextEditingController(text: widget.video.titleDisplay);
     final newName = await showDialog<String>(
       context: context,
@@ -243,11 +237,11 @@ class _VideoTileState extends State<_VideoTile> {
           controller: controller,
           autofocus: true,
           style: const TextStyle(color: AppTheme.textPrimary),
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: primaryColor)),
+                borderSide: BorderSide(color: Colors.white60)),
             focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: primaryColor)),
+                borderSide: BorderSide(color: Colors.white)),
           ),
         ),
         actions: [
@@ -258,7 +252,8 @@ class _VideoTileState extends State<_VideoTile> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, controller.text),
-            child: Text(AppLocalizations.of(context)!.save, style: TextStyle(color: primaryColor)),
+            child: Text(AppLocalizations.of(context)!.save,
+                style: const TextStyle(color: Colors.white70)),
           ),
         ],
       ),
@@ -267,9 +262,9 @@ class _VideoTileState extends State<_VideoTile> {
     if (newName != null && newName.isNotEmpty) {
       try {
         await _channel.invokeMethod('renameVideo', {
-                  'uri': widget.video.uri,
-                  'newName': newName,
-                });
+          'uri': widget.video.uri,
+          'newName': newName,
+        });
         context.read<VideoProvider>().loadVideos();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -355,32 +350,32 @@ class _VideoTileState extends State<_VideoTile> {
             Expanded(
               child: ClipRRect(
                 borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(12)),
+                const BorderRadius.vertical(top: Radius.circular(12)),
                 child: _thumbnail != null
                     ? Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          Image.memory(
-                            _thumbnail!,
-                            fit: BoxFit.cover,
-                          ),
-                          Center(
-                            child: Icon(
-                              Icons.play_circle_outline,
-                              color: Colors.white.withOpacity(0.8),
-                              size: 36,
-                            ),
-                          ),
-                        ],
-                      )
-                    : Container(
-                        color: AppTheme.surfaceVariant,
-                        child: Center(
-                          child: Icon(Icons.play_circle_outline,
-                              color: widget.primaryColor.withOpacity(0.7),
-                              size: 40),
-                        ),
+                  fit: StackFit.expand,
+                  children: [
+                    Image.memory(
+                      _thumbnail!,
+                      fit: BoxFit.cover,
+                    ),
+                    Center(
+                      child: Icon(
+                        Icons.play_circle_outline,
+                        color: Colors.white.withOpacity(0.8),
+                        size: 36,
                       ),
+                    ),
+                  ],
+                )
+                    : Container(
+                  color: AppTheme.surfaceVariant,
+                  child: const Center(
+                    child: Icon(Icons.play_circle_outline,
+                        color: Colors.white60,
+                        size: 40),
+                  ),
+                ),
               ),
             ),
             Padding(
@@ -446,6 +441,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       allowMuting: true,
       showControls: true,
       showOptions: false,
+      materialProgressColors: ChewieProgressColors(
+        playedColor: Colors.white,
+        handleColor: Colors.white,
+        backgroundColor: Colors.white24,
+        bufferedColor: Colors.white38,
+      ),
     );
 
     setState(() {});
@@ -477,79 +478,81 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12)),
             itemBuilder: (context) => [
-                          PopupMenuItem(
-                            value: 'rename',
-                            child: Row(
-                              children: [
-                                const Icon(Icons.edit, color: Colors.white, size: 18),
-                                const SizedBox(width: 10),
-                                Text(AppLocalizations.of(context)!.rename, style: const TextStyle(color: Colors.white)),
-                              ],
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: 'delete',
+              PopupMenuItem(
+                value: 'rename',
+                child: Row(
+                  children: [
+                    const Icon(Icons.edit, color: Colors.white, size: 18),
+                    const SizedBox(width: 10),
+                    Text(AppLocalizations.of(context)!.rename,
+                        style: const TextStyle(color: Colors.white)),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'delete',
                 child: Row(
                   children: [
                     const Icon(Icons.delete, color: Colors.redAccent, size: 18),
                     const SizedBox(width: 10),
-                    Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.white)),
+                    Text(AppLocalizations.of(context)!.delete,
+                        style: const TextStyle(color: Colors.white)),
                   ],
                 ),
               ),
             ],
             onSelected: (value) async {
-                          if (value == 'rename') {
-                            final controller = TextEditingController(text: widget.video.titleDisplay);
-                            final newName = await showDialog<String>(
-                              context: context,
-                              builder: (ctx) => AlertDialog(
-                                backgroundColor: AppTheme.surfaceVariant,
-                                title: Text(AppLocalizations.of(context)!.rename,
-                                    style: const TextStyle(color: AppTheme.textPrimary)),
-                                content: TextField(
-                                  controller: controller,
-                                  autofocus: true,
-                                  style: const TextStyle(color: AppTheme.textPrimary),
-                                  decoration: const InputDecoration(
-                                    enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.white)),
-                                    focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.white)),
-                                  ),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(ctx),
-                                    child: Text(AppLocalizations.of(context)!.cancel,
-                                        style: const TextStyle(color: AppTheme.textHint)),
-                                  ),
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(ctx, controller.text),
-                                    child: Text(AppLocalizations.of(context)!.save,
-                                        style: const TextStyle(color: Colors.white)),
-                                  ),
-                                ],
-                              ),
-                            );
-                            if (newName != null && newName.isNotEmpty) {
-                              await const MethodChannel('kr.ssing.catsong/media')
-                                  .invokeMethod('renameVideo', {
-                                'uri': widget.video.uri,
-                                'newName': newName,
-                              });
-                              Navigator.pop(context);
-                            }
-                          } else if (value == 'delete') {
+              if (value == 'rename') {
+                final controller = TextEditingController(text: widget.video.titleDisplay);
+                final newName = await showDialog<String>(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    backgroundColor: AppTheme.surfaceVariant,
+                    title: Text(AppLocalizations.of(context)!.rename,
+                        style: const TextStyle(color: AppTheme.textPrimary)),
+                    content: TextField(
+                      controller: controller,
+                      autofocus: true,
+                      style: const TextStyle(color: AppTheme.textPrimary),
+                      decoration: const InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white60)),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white)),
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(ctx),
+                        child: Text(AppLocalizations.of(context)!.cancel,
+                            style: const TextStyle(color: AppTheme.textHint)),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(ctx, controller.text),
+                        child: Text(AppLocalizations.of(context)!.save,
+                            style: const TextStyle(color: Colors.white70)),
+                      ),
+                    ],
+                  ),
+                );
+                if (newName != null && newName.isNotEmpty) {
+                  await const MethodChannel('kr.ssing.catsong/media')
+                      .invokeMethod('renameVideo', {
+                    'uri': widget.video.uri,
+                    'newName': newName,
+                  });
+                  Navigator.pop(context);
+                }
+              } else if (value == 'delete') {
                 final confirm = await showDialog<bool>(
                   context: context,
                   builder: (ctx) => AlertDialog(
                     backgroundColor: AppTheme.surfaceVariant,
                     title: Text(AppLocalizations.of(context)!.deleteVideoTitle,
                         style: const TextStyle(color: AppTheme.textPrimary)),
-                    content: Text(AppLocalizations.of(context)!.deleteVideoConfirm(widget.video.titleDisplay),
-                        style:
-                            const TextStyle(color: AppTheme.textSecondary)),
+                    content: Text(
+                        AppLocalizations.of(context)!.deleteVideoConfirm(widget.video.titleDisplay),
+                        style: const TextStyle(color: AppTheme.textSecondary)),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(ctx, false),
@@ -566,8 +569,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 );
                 if (confirm == true) {
                   await const MethodChannel('kr.ssing.catsong/media')
-                      .invokeMethod(
-                          'deleteVideo', {'uri': widget.video.uri});
+                      .invokeMethod('deleteVideo', {'uri': widget.video.uri});
                   Navigator.pop(context);
                 }
               }

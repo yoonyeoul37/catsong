@@ -60,7 +60,7 @@ class _RadioSearchScreenState extends State<RadioSearchScreen> {
           children: [
             Icon(Icons.search,
                 size: 64,
-                color: primaryColor.withOpacity(0.3)),
+                color: Colors.white.withOpacity(0.3)),
             const SizedBox(height: 16),
             const Text('방송국 이름을 입력해 주세요',
                 style: TextStyle(
@@ -71,8 +71,8 @@ class _RadioSearchScreenState extends State<RadioSearchScreen> {
       )
           : radioProvider.isSearching
           ? Center(
-          child: CircularProgressIndicator(
-              color: primaryColor))
+          child: const CircularProgressIndicator(
+              color: Colors.white60))
           : radioProvider.searchResults.isEmpty
           ? Center(
         child: Text(

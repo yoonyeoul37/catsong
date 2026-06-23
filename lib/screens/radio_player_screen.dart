@@ -850,19 +850,19 @@ class _ProgramCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                         decoration: BoxDecoration(
                           color: isRerun
-                              ? Colors.blueGrey.withOpacity(0.15)
+                              ? Colors.white.withOpacity(0.08)
                               : Colors.redAccent.withOpacity(0.12),
                           borderRadius: BorderRadius.circular(4),
                           border: Border.all(
                             color: isRerun
-                                ? Colors.blueGrey.withOpacity(0.4)
+                                ? Colors.white.withOpacity(0.25)
                                 : Colors.redAccent.withOpacity(0.3),
                           ),
                         ),
                         child: Text(
                           isRerun ? AppLocalizations.of(context)!.radioRerun : AppLocalizations.of(context)!.radioLive,
                           style: TextStyle(
-                            color: isRerun ? Colors.blueGrey : Colors.redAccent,
+                            color: isRerun ? Colors.white60 : Colors.redAccent,
                             fontSize: 12,
                             fontWeight: FontWeight.w800,
                             letterSpacing: 0.6,

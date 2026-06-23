@@ -236,7 +236,9 @@ class _StationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return Container(
+      color: isPlaying ? Colors.white.withOpacity(0.08) : Colors.transparent,
+      child: InkWell(
       onTap: () {
         Navigator.push(
           context,
@@ -272,7 +274,7 @@ class _StationTile extends StatelessWidget {
                   Text(
                     station.name,
                     style: TextStyle(
-                      color: isPlaying ? Colors.white : Colors.white60,
+                      color: Colors.white,
                       fontSize: 15.5,
                       fontWeight: FontWeight.w600,
                       letterSpacing: -0.2,
@@ -291,7 +293,7 @@ class _StationTile extends StatelessWidget {
                         station.country!,
                     ].join('  ·  '),
                     style: TextStyle(
-                        color: Colors.white.withOpacity(0.32), fontSize: 11.5),
+                        color: Colors.white.withOpacity(0.55), fontSize: 11.5),
                   ),
                 ],
               ),
@@ -319,6 +321,7 @@ class _StationTile extends StatelessWidget {
               ),
           ],
         ),
+      ),
       ),
     );
   }

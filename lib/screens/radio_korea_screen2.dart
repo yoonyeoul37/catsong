@@ -316,7 +316,9 @@ class _StationTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
 
-    return InkWell(
+    return Container(
+      color: isPlaying ? Colors.white.withOpacity(0.08) : Colors.transparent,
+      child: InkWell(
       onTap: () {
         Navigator.push(
           context,
@@ -377,7 +379,7 @@ class _StationTile extends StatelessWidget {
                   Text(
                     station.name,
                     style: TextStyle(
-                      color: isPlaying ? Colors.white : Colors.white60,
+                      color: isPlaying ? Colors.white : Colors.white,
                       fontWeight: isPlaying ? FontWeight.w700 : FontWeight.w500,
                       fontSize: 15.5,
                       letterSpacing: -0.2,
@@ -472,7 +474,7 @@ class _StationTile extends StatelessWidget {
                             Text(
                               displayNowPlaying,
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.65),
+                                color: Colors.white.withOpacity(0.85),
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -485,7 +487,7 @@ class _StationTile extends StatelessWidget {
                               if (timeStr.isNotEmpty) timeStr,
                             ].join(' · '),
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.32),
+                              color: Colors.white.withOpacity(0.55),
                               fontSize: 11,
                             ),
                           ),
@@ -503,6 +505,7 @@ class _StationTile extends StatelessWidget {
                   color: Colors.white.withOpacity(0.25), size: 23),
           ],
         ),
+      ),
       ),
     );
   }

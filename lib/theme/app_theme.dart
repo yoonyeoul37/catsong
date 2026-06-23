@@ -29,34 +29,49 @@ class AppTheme {
   );
 
   static LinearGradient dynamicBackgroundGradient(Color primaryColor) {
-    // 밝은 버전 (왼쪽 상단)
-    final bright = Color.fromRGBO(
-      (primaryColor.red * 0.90).toInt().clamp(0, 255),
-      (primaryColor.green * 0.90).toInt().clamp(0, 255),
-      (primaryColor.blue * 0.90).toInt().clamp(0, 255),
-      1.0,
-    );
-    // 중간
-    final mid = Color.fromRGBO(
+    // 상단 왼쪽: 테마색 자연스럽게
+    final top = Color.fromRGBO(
       (primaryColor.red * 0.55).toInt().clamp(0, 255),
       (primaryColor.green * 0.55).toInt().clamp(0, 255),
       (primaryColor.blue * 0.55).toInt().clamp(0, 255),
       1.0,
     );
-    // 어두운 버전 (오른쪽 하단)
-    final dark = Color.fromRGBO(
-      (primaryColor.red * 0.28).toInt().clamp(0, 255),
-      (primaryColor.green * 0.28).toInt().clamp(0, 255),
-      (primaryColor.blue * 0.28).toInt().clamp(0, 255),
+    // 중간: 테마색 살짝 보이기 시작
+    final mid = Color.fromRGBO(
+      (primaryColor.red * 0.45).toInt().clamp(0, 255),
+      (primaryColor.green * 0.45).toInt().clamp(0, 255),
+      (primaryColor.blue * 0.45).toInt().clamp(0, 255),
+      1.0,
+    );
+    // 하단: 테마색 밝게
+    final bottom = Color.fromRGBO(
+      (primaryColor.red * 0.80).toInt().clamp(0, 255),
+      (primaryColor.green * 0.80).toInt().clamp(0, 255),
+      (primaryColor.blue * 0.80).toInt().clamp(0, 255),
       1.0,
     );
     return LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
       colors: [
-        bright,
-        mid,
-        dark,
+        Color.fromRGBO(
+          (primaryColor.red * 0.55).toInt().clamp(0, 255),
+          (primaryColor.green * 0.55).toInt().clamp(0, 255),
+          (primaryColor.blue * 0.55).toInt().clamp(0, 255),
+          1.0,
+        ),
+        Color.fromRGBO(
+          (primaryColor.red * 0.65).toInt().clamp(0, 255),
+          (primaryColor.green * 0.65).toInt().clamp(0, 255),
+          (primaryColor.blue * 0.65).toInt().clamp(0, 255),
+          1.0,
+        ),
+        Color.fromRGBO(
+          (primaryColor.red * 0.85).toInt().clamp(0, 255),
+          (primaryColor.green * 0.85).toInt().clamp(0, 255),
+          (primaryColor.blue * 0.85).toInt().clamp(0, 255),
+          1.0,
+        ),
       ],
       stops: const [0.0, 0.5, 1.0],
     );
@@ -90,9 +105,9 @@ class AppTheme {
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Color.fromRGBO(
-          (primaryColor.red * 0.28).toInt().clamp(0, 255),
-          (primaryColor.green * 0.28).toInt().clamp(0, 255),
-          (primaryColor.blue * 0.28).toInt().clamp(0, 255),
+          (primaryColor.red * 0.95).toInt().clamp(0, 255),
+          (primaryColor.green * 0.95).toInt().clamp(0, 255),
+          (primaryColor.blue * 0.95).toInt().clamp(0, 255),
           1.0,
         ),
         selectedItemColor: Colors.white,

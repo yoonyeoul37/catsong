@@ -710,6 +710,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final l = AppLocalizations.of(context)!;
     final items = [
       {'icon': Icons.music_note, 'label': l.songs},
+      {'icon': Icons.music_note, 'label': l.songs},
       {'icon': Icons.album, 'label': l.albums},
       {'icon': Icons.person, 'label': l.artists},
       {'icon': Icons.playlist_play, 'label': l.playlists},

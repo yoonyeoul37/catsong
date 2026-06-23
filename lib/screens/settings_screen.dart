@@ -11,7 +11,6 @@ import '../theme/app_theme.dart';
 import 'ringtone_screen.dart';
 import '../l10n/app_localizations.dart';
 
-// 설정 화면 전용 색상 상수
 const _sBg = Color(0xFFF7F5F0);
 const _sCard = Color(0xFFFFFFFF);
 const _sText = Color(0xFF111111);
@@ -385,16 +384,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final hexController = TextEditingController(
       text: '#${pickerColor.value.toRadixString(16).substring(2).toUpperCase()}',
     );
-    showDialog(
+    showModalBottomSheet(
       context: context,
+      backgroundColor: _sBg,
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (ctx) => StatefulBuilder(
-        builder: (context, setDialogState) => Dialog(
-          backgroundColor: _sBg,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: SingleChildScrollView(
+        builder: (context, setDialogState) => Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).viewPadding.bottom,
+          ),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
               child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.circular(2))),
+                const SizedBox(height: 16),
                 Row(children: [
                   Icon(Icons.palette, color: primaryColor, size: 20), const SizedBox(width: 8),
                   Text(AppLocalizations.of(context)!.themeColor, style: const TextStyle(color: _sText, fontSize: 16, fontWeight: FontWeight.bold)),
@@ -417,29 +425,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 GestureDetector(
                   onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
                   child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(color: _sInputBg, borderRadius: BorderRadius.circular(10)),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Container(width: 20, height: 20, decoration: BoxDecoration(color: pickerColor, shape: BoxShape.circle, border: Border.all(color: Colors.black12))),
-                    const SizedBox(width: 8),
-                    SizedBox(width: 110,
-                      child: TextField(
-                        controller: hexController,
-                        style: const TextStyle(color: _sText, fontSize: 14, fontWeight: FontWeight.bold, letterSpacing: 2),
-                        cursorColor: _sText,
-                        decoration: const InputDecoration(border: InputBorder.none, isDense: true, contentPadding: EdgeInsets.zero),
-                        onSubmitted: (value) {
-                          try {
-                            final hex = value.replaceAll('#', '').trim();
-                            if (hex.length == 6) {
-                              final color = Color(int.parse('FF$hex', radix: 16));
-                              setDialogState(() { pickerColor = color; hexController.text = '#${color.value.toRadixString(16).substring(2).toUpperCase()}'; });
-                            }
-                          } catch (e) {}
-                        },
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(color: _sInputBg, borderRadius: BorderRadius.circular(10)),
+                    child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Container(width: 20, height: 20, decoration: BoxDecoration(color: pickerColor, shape: BoxShape.circle, border: Border.all(color: Colors.black12))),
+                      const SizedBox(width: 8),
+                      SizedBox(width: 110,
+                        child: TextField(
+                          controller: hexController,
+                          style: const TextStyle(color: _sText, fontSize: 14, fontWeight: FontWeight.bold, letterSpacing: 2),
+                          cursorColor: _sText,
+                          decoration: const InputDecoration(border: InputBorder.none, isDense: true, contentPadding: EdgeInsets.zero),
+                          onSubmitted: (value) {
+                            try {
+                              final hex = value.replaceAll('#', '').trim();
+                              if (hex.length == 6) {
+                                final color = Color(int.parse('FF$hex', radix: 16));
+                                setDialogState(() { pickerColor = color; hexController.text = '#${color.value.toRadixString(16).substring(2).toUpperCase()}'; });
+                              }
+                            } catch (e) {}
+                          },
+                        ),
                       ),
-                    ),
-                  ]),
+                    ]),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -476,7 +484,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(width: 8),
                   Expanded(child: ElevatedButton(
                     onPressed: () {
-                      // hex 코드 입력값도 반영
                       try {
                         final hex = hexController.text.replaceAll('#', '').trim();
                         if (hex.length == 6) {
@@ -494,6 +501,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: Text(AppLocalizations.of(context)!.apply, style: const TextStyle(fontWeight: FontWeight.bold)),
                   )),
                 ]),
+                const SizedBox(height: 8),
               ]),
             ),
           ),

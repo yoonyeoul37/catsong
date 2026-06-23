@@ -33,7 +33,7 @@ class PlaylistScreen extends StatelessWidget {
                 const Spacer(),
                 IconButton(
                   onPressed: () => _showCreateDialog(context),
-                  icon: Icon(Icons.add_circle, color: primaryColor, size: 28),
+                  icon: const Icon(Icons.add_circle, color: Colors.white70, size: 28),
                 ),
               ],
             ),
@@ -46,7 +46,7 @@ class PlaylistScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.playlist_add,
-                      size: 72, color: primaryColor.withOpacity(0.4)),
+                      size: 72, color: Colors.white.withOpacity(0.4)),
                   const SizedBox(height: 16),
                   Text(AppLocalizations.of(context)!.playlists,
                       style: const TextStyle(
@@ -93,10 +93,10 @@ class PlaylistScreen extends StatelessWidget {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: const Color(0xFF282828),
+                color: Colors.white.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: Icon(Icons.playlist_play, color: primaryColor, size: 28),
+              child: const Icon(Icons.playlist_play, color: Colors.white70, size: 28),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -308,11 +308,11 @@ class PlaylistDetailScreen extends StatelessWidget {
                           width: 80,
                           height: 80,
                           decoration: BoxDecoration(
-                            color: primaryColor.withOpacity(0.3),
+                            color: Colors.white.withOpacity(0.15),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Icon(Icons.playlist_play,
-                              color: primaryColor, size: 44),
+                          child: const Icon(Icons.playlist_play,
+                              color: Colors.white70, size: 44),
                         ),
                         const SizedBox(height: 12),
                         Text(playlist.name,
@@ -345,7 +345,7 @@ class PlaylistDetailScreen extends StatelessWidget {
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.lerp(primaryColor, Colors.black, 0.15),
+                        backgroundColor: Colors.white.withOpacity(0.15),
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(

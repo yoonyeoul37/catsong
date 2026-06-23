@@ -89,9 +89,9 @@ class _PlayerScreenState extends State<PlayerScreen>
     if (song.albumArt == null) {
       final primaryColor = Theme.of(context).colorScheme.primary;
       setState(() => _dominantColor = Color.fromRGBO(
-        (primaryColor.red * 0.4).toInt(),
-        (primaryColor.green * 0.4).toInt(),
-        (primaryColor.blue * 0.4).toInt(),
+        (primaryColor.red * 0.7).toInt().clamp(60, 255),
+        (primaryColor.green * 0.7).toInt().clamp(60, 255),
+        (primaryColor.blue * 0.7).toInt().clamp(60, 255),
         1,
       ));
       return;
@@ -119,7 +119,7 @@ class _PlayerScreenState extends State<PlayerScreen>
           final b = (totalB / pixelCount).toInt();
           final brightness = (r * 0.299 + g * 0.587 + b * 0.114);
           if (brightness < 30) {
-            setState(() => _dominantColor = const Color(0xFF2A2A2A));
+            setState(() => _dominantColor = const Color(0xFF3D3D5C));
           } else {
             setState(() {
               _dominantColor = Color.fromRGBO(
@@ -381,87 +381,64 @@ class _PlayerScreenState extends State<PlayerScreen>
                 child: child,
               );
             },
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // 바이닐 배경
-                Container(
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: _dominantColor.withOpacity(0.6),
+                    blurRadius: 40,
+                    spreadRadius: 8,
+                  ),
+                ],
+              ),
+              child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+              ClipOval(
+              child: song.albumArt != null
+                  ? Image.memory(
+                  Uint8List.fromList(song.albumArt!),
+              fit: BoxFit.cover,
+              gaplessPlayback: true,
+            )
+                : Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: const Color(0xFF111111),
-                    boxShadow: [
-                      BoxShadow(
-                        color: primaryColor.withOpacity(0.3),
-                        blurRadius: 30,
-                        spreadRadius: 5,
-                      ),
-                    ],
-                  ),
-                ),
-                // 홈(groove) 라인들
-                ...List.generate(6, (i) {
-                  final factor = 0.95 - (i * 0.08);
-                  return FractionallySizedBox(
-                    widthFactor: factor,
-                    heightFactor: factor,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.white.withOpacity(0.04),
-                          width: 1,
-                        ),
-                      ),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        _dominantColor,
+                        _dominantColor.withOpacity(0.5),
+                      ],
                     ),
-                  );
-                }),
-                // 앨범 아트 중앙
-                FractionallySizedBox(
-                  widthFactor: 0.45,
-                  heightFactor: 0.45,
-                  child: ClipOval(
-                    child: song.albumArt != null
-                        ? Image.memory(
-                      Uint8List.fromList(song.albumArt!),
-                      fit: BoxFit.cover,
-                      gaplessPlayback: true,
-                    )
-                        : Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            primaryColor.withOpacity(0.6),
-                            primaryColor.withOpacity(0.2),
-                          ],
-                        ),
-                      ),
-                      child: Center(
-                        child: SvgPicture.asset(
-                          'assets/no_album.svg',
-                          width: 60,
-                          height: 60,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
+                  ),
+                  child: Center(
+                    child: SvgPicture.asset(
+                      'assets/no_album.svg',
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),
-                // 중앙 구멍
-                Container(
-                  width: 14,
-                  height: 14,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: const Color(0xFF0A0A0A),
-                    border: Border.all(
-                      color: primaryColor.withOpacity(0.4),
-                      width: 1,
+              ),
+                  // 중앙 구멍
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _dominantColor.withOpacity(0.9),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.2),
+                        width: 1.5,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

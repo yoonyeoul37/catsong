@@ -238,7 +238,7 @@ class _RecentSection extends StatelessWidget {
               final station = recent[index];
               final time = station.lastListened;
               final timeStr = time != null
-                  ? '${time.month}/${time.day} ${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}'
+                  ? '${time.month}/${time.day}, ${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}'
                   : '';
 
               return GestureDetector(

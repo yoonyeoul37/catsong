@@ -63,7 +63,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                     song.titleDisplay, song.artistDisplay);
               }
             },
-            icon: Icon(Icons.refresh, color: primaryColor),
+            icon: const Icon(Icons.refresh, color: Colors.white70),
           ),
         ],
       ),
@@ -77,7 +77,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(color: primaryColor),
+            const CircularProgressIndicator(color: Colors.white70),
             const SizedBox(height: 16),
             Text(AppLocalizations.of(context)!.lyricsLoading,
                 style: const TextStyle(color: AppTheme.textSecondary)),
@@ -92,7 +92,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.lyrics_outlined,
-                size: 72, color: primaryColor.withOpacity(0.4)),
+                size: 72, color: Colors.white.withOpacity(0.4)),
             const SizedBox(height: 16),
             Text(
               lyricsProvider.errorMessage.isEmpty
@@ -111,8 +111,8 @@ class _LyricsScreenState extends State<LyricsScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: primaryColor,
-                foregroundColor: Colors.black,
+                backgroundColor: Colors.white.withOpacity(0.15),
+                foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30)),
               ),
@@ -142,7 +142,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                 lyricsProvider.lyrics[index].text,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: isCurrentLine ? primaryColor : AppTheme.textSecondary,
+                  color: isCurrentLine ? Colors.white : AppTheme.textSecondary,
                   fontSize: isCurrentLine ? 18 : 15,
                   fontWeight: isCurrentLine
                       ? FontWeight.bold

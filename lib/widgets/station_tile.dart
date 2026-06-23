@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../models/radio_station.dart';
 import '../providers/radio_provider.dart';
@@ -73,7 +74,7 @@ class StationTile extends StatelessWidget {
             else
               IconButton(
                 icon: Icon(
-                  isFav ? Icons.favorite : Icons.favorite_border,
+                  isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
                   color: isFav ? accent : Colors.white.withOpacity(0.25),
                   size: 21,
                 ),

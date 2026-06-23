@@ -1,5 +1,6 @@
 import 'dart:ui' show PlatformDispatcher, ImageFilter;
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../models/radio_country.dart';
 import '../providers/radio_provider.dart';
@@ -90,7 +91,7 @@ class RadioHomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RadioFavoritesScreen())),
-            icon: const Icon(Icons.favorite, color: Colors.white60, size: 21),
+            icon: Icon(CupertinoIcons.heart, color: Colors.white60, size: 21),
           ),
           const SizedBox(width: 6),
         ],

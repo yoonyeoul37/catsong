@@ -4,6 +4,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -954,7 +955,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   Future.delayed(const Duration(seconds: 2), () => entry.remove());
                 },
                 icon: Icon(
-                  isFav ? Icons.favorite : Icons.favorite_border,
+                  isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
                   color: isFav ? Colors.redAccent : Colors.white60,
                 ),
               ),

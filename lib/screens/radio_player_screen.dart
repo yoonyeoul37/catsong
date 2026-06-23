@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../models/radio_station.dart';
 import '../providers/radio_provider.dart';
@@ -221,7 +222,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                   ),
                 ),
                 _BottomBarItem(
-                  icon: Icons.favorite_border,
+                  icon: CupertinoIcons.heart,
                   label: AppLocalizations.of(context)!.favorites,
                   hasIndicator: false,
                   primaryColor: primaryColor,
@@ -422,7 +423,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                       Future.delayed(const Duration(seconds: 2), () => entry.remove());
                     },
                     child: Icon(
-                      radioProvider.isFavorite(current.stationUuid) ? Icons.favorite : Icons.favorite_border,
+                      radioProvider.isFavorite(current.stationUuid) ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
                       color: radioProvider.isFavorite(current.stationUuid) ? Colors.white : Colors.white60,
                       size: 22,
                     ),
@@ -1203,7 +1204,7 @@ class _FavoritesSheet extends StatelessWidget {
           const SizedBox(height: 16),
           Row(
             children: [
-              Icon(Icons.favorite, color: accent, size: 20),
+              Icon(CupertinoIcons.heart_fill, color: accent, size: 20),
               const SizedBox(width: 8),
               Text(
                 '${AppLocalizations.of(context)!.favorites} (${favorites.length})',
@@ -1221,7 +1222,7 @@ class _FavoritesSheet extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 32),
               child: Column(
                 children: [
-                  Icon(Icons.favorite_border,
+                  Icon(CupertinoIcons.heart,
                       size: 48, color: accent.withOpacity(0.3)),
                   const SizedBox(height: 12),
                   Text(

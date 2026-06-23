@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
@@ -39,7 +40,7 @@ class RadioFavoritesScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.favorite_border,
+            Icon(CupertinoIcons.heart,
                 size: 72,
                 color: accent.withOpacity(0.4)),
             const SizedBox(height: 18),

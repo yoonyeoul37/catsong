@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -117,7 +118,7 @@ class SongListTile extends StatelessWidget {
                 _buildPopupItem(Icons.skip_next, AppLocalizations.of(context)!.playNext, 'play_next', AppTheme.fixedAccent),
                 _buildPopupItem(Icons.playlist_add, AppLocalizations.of(context)!.addToPlaylist, 'playlist', AppTheme.fixedAccent),
                 _buildPopupItem(
-                  isFav ? Icons.favorite : Icons.favorite_border,
+                  isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
                   isFav ? AppLocalizations.of(context)!.removeFromFavorites : AppLocalizations.of(context)!.addToFavorites,
                   'favorite',
                   isFav ? Colors.redAccent : AppTheme.fixedAccent,

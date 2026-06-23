@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../models/radio_station.dart';
 import '../models/radio_country.dart';
@@ -284,7 +285,7 @@ class _FavoriteBtn extends StatelessWidget {
 
     return IconButton(
       icon: Icon(
-        isFav ? Icons.favorite : Icons.favorite_border,
+        isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
         color: isFav ? primaryColor : AppTheme.iconColor,
         size: 22,
       ),

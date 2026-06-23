@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../models/song.dart';
 import '../providers/music_provider.dart';
@@ -90,8 +91,8 @@ class FavoritesScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.favorite_border,
-                      size: 72, color: primaryColor.withOpacity(0.4)),
+                  const Icon(CupertinoIcons.heart,
+                      size: 72, color: Colors.white24),
                   const SizedBox(height: 16),
                   Text(AppLocalizations.of(context)!.favorites,
                       style: const TextStyle(

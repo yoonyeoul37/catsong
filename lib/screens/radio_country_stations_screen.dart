@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../models/radio_station.dart';
 import '../models/radio_country.dart';
@@ -303,8 +304,8 @@ class _StationTile extends StatelessWidget {
                   context
                       .watch<RadioProvider>()
                       .isFavorite(station.stationUuid)
-                      ? Icons.favorite
-                      : Icons.favorite_border,
+                      ? CupertinoIcons.heart_fill
+                      : CupertinoIcons.heart,
                   color: context
                       .watch<RadioProvider>()
                       .isFavorite(station.stationUuid)

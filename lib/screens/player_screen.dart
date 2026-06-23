@@ -224,22 +224,7 @@ class _PlayerScreenState extends State<PlayerScreen>
         backgroundColor: AppTheme.background,
         body: Stack(
           children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 800),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    _dominantColor.withOpacity(0.8),
-                    _dominantColor.withOpacity(0.4),
-                    AppTheme.background,
-                    AppTheme.background,
-                  ],
-                  stops: const [0.0, 0.3, 0.6, 1.0],
-                ),
-              ),
-            ),
+            const SizedBox.shrink(),
             SafeArea(
               bottom: false,
               child: LayoutBuilder(

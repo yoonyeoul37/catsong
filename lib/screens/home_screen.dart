@@ -246,14 +246,22 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(width: 4),
         ] else
-          TextButton(
-            onPressed: () {
-              setState(() => _isSearching = false);
-              _searchController.clear();
-              context.read<MusicProvider>().clearSearch();
-            },
-            child: Text(AppLocalizations.of(context)!.cancel,
-                style: const TextStyle(color: Colors.white70)),
+          Transform.translate(
+            offset: const Offset(-12, 0),
+            child: TextButton(
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: const Size(50, 40),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              onPressed: () {
+                setState(() => _isSearching = false);
+                _searchController.clear();
+                context.read<MusicProvider>().clearSearch();
+              },
+              child: Text(AppLocalizations.of(context)!.cancel,
+                  style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w600)),
+            ),
           ),
       ],
     );

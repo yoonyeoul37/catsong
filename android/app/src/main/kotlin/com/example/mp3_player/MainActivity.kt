@@ -6,6 +6,9 @@ import android.media.MediaMetadataRetriever
 import android.media.audiofx.Equalizer
 import android.provider.MediaStore
 import android.provider.Settings
+import android.media.AudioManager
+import android.media.AudioFocusRequest
+import android.os.Build
 import com.ryanheise.audioservice.AudioServiceActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -15,6 +18,39 @@ import java.io.File
 class MainActivity : AudioServiceActivity() {
     private val CHANNEL = "kr.ssing.catsong/media"
     private var equalizer: Equalizer? = null
+    private var audioFocusRequest: AudioFocusRequest? = null
+    private var flutterMethodChannel: MethodChannel? = null
+
+    private val audioFocusChangeListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
+        when (focusChange) {
+            AudioManager.AUDIOFOCUS_LOSS,
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                flutterMethodChannel?.invokeMethod("onAudioFocusLost", null)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requestAudioFocus()
+    }
+
+    private fun requestAudioFocus() {
+        val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                .setOnAudioFocusChangeListener(audioFocusChangeListener)
+                .build()
+            audioManager.requestAudioFocus(audioFocusRequest!!)
+        } else {
+            @Suppress("DEPRECATION")
+            audioManager.requestAudioFocus(
+                audioFocusChangeListener,
+                AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN
+            )
+        }
+    }
     private var bassBoost: android.media.audiofx.BassBoost? = null
     private var virtualizer: android.media.audiofx.Virtualizer? = null
     private var deleteResult: MethodChannel.Result? = null
@@ -57,7 +93,9 @@ class MainActivity : AudioServiceActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+        val channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
+        flutterMethodChannel = channel
+        channel.setMethodCallHandler { call, result ->
             when (call.method) {
                 "getAlbumArt" -> {
                     val path = call.argument<String>("path")

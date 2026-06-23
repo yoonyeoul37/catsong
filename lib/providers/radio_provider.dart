@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:audio_session/audio_session.dart';
 import 'package:flutter/material.dart' show TimeOfDay, DayPeriod;
 import 'package:http/http.dart' as http;
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -118,7 +119,10 @@ class RadioProvider extends ChangeNotifier {
       ),
     );
     _configurePlayer();
+    _listenAudioFocus();
+    _listenNativeAudioFocus();
     _initPlayerStreams();
+    _initAudioSession();
     _loadFromPrefs();
     _startScheduleRefreshTimer();
     _scheduleService.loadSchedule().then((_) {
@@ -126,6 +130,45 @@ class RadioProvider extends ChangeNotifier {
       fetchJsonSchedule('CBS 표준FM');
       notifyListeners();
     });
+  }
+
+  Future<void> _initAudioSession() async {
+    try {
+      final session = await AudioSession.instance;
+      await session.configure(const AudioSessionConfiguration.music());
+      session.interruptionEventStream.listen((event) {
+        if (event.begin) {
+          debugPrint('오디오 인터럽트 발생 - 라디오 정지');
+          stopRadio();
+        }
+      });
+      session.becomingNoisyEventStream.listen((_) {
+        debugPrint('이어폰 제거 - 라디오 정지');
+        stopRadio();
+      });
+    } catch (e) {
+      debugPrint('AudioSession 초기화 오류: $e');
+    }
+  }
+
+  void _listenNativeAudioFocus() {
+    const platform = MethodChannel('kr.ssing.catsong/media');
+    platform.setMethodCallHandler((call) async {
+      if (call.method == 'onAudioFocusLost') {
+        debugPrint('오디오 포커스 손실 - 라디오 정지');
+        await stopRadio();
+      }
+    });
+  }
+
+  Future<void> _listenAudioFocus() async {
+    try {
+      final nativePlayer = _player.platform as NativePlayer;
+      await nativePlayer.setProperty('audio-stream-exclusive', 'no');
+      await nativePlayer.setProperty('audio-exclusive', 'no');
+    } catch (e) {
+      debugPrint('오디오 포커스 설정 오류: $e');
+    }
   }
 
   Future<void> _configurePlayer() async {

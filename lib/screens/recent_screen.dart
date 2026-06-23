@@ -46,64 +46,74 @@ class RecentScreen extends StatelessWidget {
                     style: const TextStyle(
                         color: Colors.white38, fontSize: 16)),
                 const Spacer(),
-                if (recentSongs.isNotEmpty)
+                if (recentSongs.isNotEmpty) ...[
+                  IconButton(
+                    onPressed: () {
+                      context.read<PlayerProvider>().playFromList(recentSongs, 0);
+                      final overlay = Overlay.of(context);
+                      final entry = OverlayEntry(
+                        builder: (_) => Positioned(
+                          top: 60, left: 0, right: 0,
+                          child: Center(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.7),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(AppLocalizations.of(context)!.playAll,
+                                  style: const TextStyle(color: Colors.white, fontSize: 13, decoration: TextDecoration.none)),
+                            ),
+                          ),
+                        ),
+                      );
+                      overlay.insert(entry);
+                      Future.delayed(const Duration(milliseconds: 800), () => entry.remove());
+                    },
+                    icon: const Icon(Icons.play_arrow, color: Colors.white60, size: 24),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      final songs = List<Song>.from(recentSongs)..shuffle();
+                      context.read<PlayerProvider>().playFromList(songs, 0);
+                      final overlay = Overlay.of(context);
+                      final entry = OverlayEntry(
+                        builder: (_) => Positioned(
+                          top: 60, left: 0, right: 0,
+                          child: Center(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.7),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(AppLocalizations.of(context)!.shuffle,
+                                  style: const TextStyle(color: Colors.white, fontSize: 13, decoration: TextDecoration.none)),
+                            ),
+                          ),
+                        ),
+                      );
+                      overlay.insert(entry);
+                      Future.delayed(const Duration(milliseconds: 800), () => entry.remove());
+                    },
+                    icon: const Icon(Icons.shuffle, color: Colors.white60, size: 20),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  ),
                   IconButton(
                     onPressed: () => _showClearAllDialog(context),
-                    icon: const Icon(Icons.delete_sweep,
-                        color: Colors.white38, size: 24),
-                    tooltip: AppLocalizations.of(context)!.deleteAllTooltip,
+                    icon: const Icon(Icons.delete_sweep, color: Colors.white38, size: 24),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
+                ],
               ],
             ),
           ),
         ),
-        if (recentSongs.isNotEmpty)
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        context.read<PlayerProvider>()
-                            .playFromList(recentSongs, 0);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.lerp(primaryColor, Colors.black, 0.15),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                      ),
-                      icon: const Icon(Icons.play_arrow, size: 20),
-                      label: Text(AppLocalizations.of(context)!.playAll,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        final songs = List<Song>.from(recentSongs)..shuffle();
-                        context.read<PlayerProvider>().playFromList(songs, 0);
-                      },
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.white24),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                      ),
-                      icon: const Icon(Icons.shuffle, size: 20),
-                      label: Text(AppLocalizations.of(context)!.shuffle,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+        
         if (recentSongs.isEmpty)
           SliverFillRemaining(
             child: Center(
@@ -111,7 +121,7 @@ class RecentScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.history,
-                      size: 72, color: primaryColor.withOpacity(0.4)),
+                      size: 72, color: Colors.white.withOpacity(0.4)),
                   const SizedBox(height: 16),
                   Text(AppLocalizations.of(context)!.noRecentSongs,
                       style: const TextStyle(

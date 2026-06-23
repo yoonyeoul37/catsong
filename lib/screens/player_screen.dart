@@ -461,89 +461,109 @@ class _PlayerScreenState extends State<PlayerScreen>
       child: Center(
         child: AspectRatio(
           aspectRatio: 1.6,
-          child: AnimatedBuilder(
-            animation: _rotationController,
-            builder: (context, child) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1A1A1A),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: primaryColor.withOpacity(0.5), width: 2),
-                  boxShadow: [
-                    BoxShadow(color: primaryColor.withOpacity(0.3), blurRadius: 20, spreadRadius: 2),
-                  ],
-                ),
-                child: Stack(
-                  alignment: Alignment.center,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: Colors.white.withOpacity(0.12)),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // 릴 2개
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Positioned(
-                      top: 20, left: 20, right: 20, bottom: 25,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: song.albumArt != null
-                            ? Image.memory(
-                          Uint8List.fromList(song.albumArt!),
-                          fit: BoxFit.cover,
-                          gaplessPlayback: true,
-                        )
-                            : Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                AppTheme.surfaceVariant,
-                                primaryColor.withOpacity(0.3),
-                              ],
-                            ),
-                          ),
-                          child: Center(
-                            child: Icon(Icons.music_note,
-                                color: primaryColor, size: 30),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 8, left: 8, right: 8,
-                      child: Container(
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: primaryColor.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                    ),
-                    Positioned(left: 30, child: _buildReel(primaryColor, song)),
-                    Positioned(right: 30, child: _buildReel(primaryColor, song)),
-                    Container(
-                      width: 80,
-                      height: 20,
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.7),
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: primaryColor.withOpacity(0.5)),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 6,
-                      child: Text(
-                        song.titleDisplay,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                    _buildGlassReel(song: song),
+                    const SizedBox(width: 48),
+                    _buildGlassReel(song: song),
                   ],
                 ),
-              );
-            },
+                const SizedBox(height: 12),
+                // 테이프 라인
+                Container(
+                  width: 100,
+                  height: 1,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.transparent,
+                        Colors.white.withOpacity(0.2),
+                        Colors.transparent,
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                // 곡명
+                Text(
+                  song.titleDisplay,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.5),
+                    fontSize: 11,
+                    letterSpacing: 1,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildGlassReel({Song? song}) {
+    return AnimatedBuilder(
+      animation: _rotationController,
+      builder: (context, child) {
+        return Transform.rotate(
+          angle: _rotationController.value * 2 * 3.14159,
+          child: Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white.withOpacity(0.2)),
+            ),
+            child: ClipOval(
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // 앨범아트 배경
+                  if (song?.albumArt != null)
+                    Image.memory(
+                      Uint8List.fromList(song!.albumArt!),
+                      width: 52,
+                      height: 52,
+                      fit: BoxFit.cover,
+                      gaplessPlayback: true,
+                    )
+                  else
+                    Container(
+                      color: Colors.white.withOpacity(0.04),
+                    ),
+                  // 어둡게 오버레이
+                  Container(
+                    color: Colors.black.withOpacity(0.35),
+                  ),
+                  // 중앙 구멍
+                  Container(
+                    width: 14,
+                    height: 14,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: const Color(0xFF141414),
+                      border: Border.all(color: Colors.white.withOpacity(0.25)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -651,49 +671,41 @@ class _PlayerScreenState extends State<PlayerScreen>
       child: Center(
         child: AspectRatio(
           aspectRatio: 1,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              AnimatedBuilder(
-                animation: _equalizerController,
-                builder: (context, child) {
-                  return CustomPaint(
-                    painter: _VisualizerPainter(
-                      progress: _equalizerController.value,
-                      color: primaryColor,
-                      isPlaying: _rotationController.isAnimating,
-                    ),
-                    size: Size.infinite,
-                  );
-                },
-              ),
-              ClipOval(
-                child: SizedBox(
-                  width: 180,
-                  height: 180,
-                  child: song.albumArt != null
-                      ? Image.memory(
-                    Uint8List.fromList(song.albumArt!),
-                    fit: BoxFit.cover,
-                    gaplessPlayback: true,
-                  )
-                      : Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          AppTheme.surfaceVariant,
-                          primaryColor.withOpacity(0.3),
-                        ],
-                      ),
-                    ),
-                    child: Center(
-                      child: Icon(Icons.music_note,
-                          color: primaryColor.withOpacity(0.7), size: 60),
-                    ),
-                  ),
+          child: AnimatedBuilder(
+            animation: _equalizerController,
+            builder: (context, child) {
+              return CustomPaint(
+                painter: _RadialVisualizerPainter(
+                  progress: _equalizerController.value,
+                  isPlaying: _rotationController.isAnimating,
                 ),
+                child: child,
+              );
+            },
+            child: Center(
+              child: Container(
+                width: 90,
+                height: 90,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: const Color(0xFF1a1a1a),
+                  border: Border.all(color: Colors.white.withOpacity(0.12)),
+                ),
+                child: song.albumArt != null
+                    ? ClipOval(
+                        child: Image.memory(
+                          Uint8List.fromList(song.albumArt!),
+                          fit: BoxFit.cover,
+                          gaplessPlayback: true,
+                        ),
+                      )
+                    : const Center(
+                        child: Text('♪',
+                            style: TextStyle(
+                                color: Colors.white54, fontSize: 28)),
+                      ),
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -1881,52 +1893,62 @@ class _SpeedDialogState extends State<_SpeedDialog> {
   }
 }
 
-class _VisualizerPainter extends CustomPainter {
+class _RadialVisualizerPainter extends CustomPainter {
   final double progress;
-  final Color color;
   final bool isPlaying;
 
-  _VisualizerPainter({
+  static final List<double> _heights = List.filled(48, 0.5);
+  static final List<double> _speeds = List.generate(
+      48, (i) => 0.003 + (i * 0.0007) % 0.005);
+  static final List<double> _dirs = List.filled(48, 1.0);
+  static bool _initialized = false;
+
+  _RadialVisualizerPainter({
     required this.progress,
-    required this.color,
     required this.isPlaying,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color.withOpacity(0.6)
-      ..strokeWidth = 3
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke;
-
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width / 2 - 10;
-    const barCount = 40;
-
-    for (int i = 0; i < barCount; i++) {
-      final angle = (i / barCount) * 2 * 3.14159;
-      final barHeight = isPlaying
-          ? 10 + 20 * (0.5 + 0.5 * (i % 3 == 0 ? progress : (i % 3 == 1 ? (1 - progress) : 0.5)))
-          : 5.0;
-
-      final innerRadius = radius - barHeight;
-      final outerRadius = radius;
-
-      final start = Offset(
-        center.dx + innerRadius * cos(angle),
-        center.dy + innerRadius * sin(angle),
-      );
-      final end = Offset(
-        center.dx + outerRadius * cos(angle),
-        center.dy + outerRadius * sin(angle),
-      );
-
-      canvas.drawLine(start, end, paint);
+  }) {
+    if (!_initialized) {
+      for (int i = 0; i < 48; i++) {
+        _heights[i] = 0.1 + (i * 0.019) % 0.9;
+        _dirs[i] = i % 2 == 0 ? 1.0 : -1.0;
+      }
+      _initialized = true;
     }
   }
 
   @override
-  bool shouldRepaint(_VisualizerPainter oldDelegate) =>
-      oldDelegate.progress != progress || oldDelegate.isPlaying != isPlaying;
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    const innerR = 52.0;
+    const maxBar = 55.0;
+    const barCount = 48;
+
+    for (int i = 0; i < barCount; i++) {
+      if (isPlaying) {
+        _heights[i] += _speeds[i] * _dirs[i];
+        if (_heights[i] > 1.0 || _heights[i] < 0.1) _dirs[i] *= -1;
+      }
+
+      final angle = (i / barCount) * 2 * pi - pi / 2;
+      final barH = isPlaying ? 8 + _heights[i] * maxBar : 6.0;
+      final alpha = isPlaying ? 0.12 + _heights[i] * 0.5 : 0.1;
+
+      final x1 = center.dx + innerR * cos(angle);
+      final y1 = center.dy + innerR * sin(angle);
+      final x2 = center.dx + (innerR + barH) * cos(angle);
+      final y2 = center.dy + (innerR + barH) * sin(angle);
+
+      canvas.drawLine(
+        Offset(x1, y1),
+        Offset(x2, y2),
+        Paint()
+          ..color = Colors.white.withOpacity(alpha)
+          ..strokeWidth = 2
+          ..strokeCap = StrokeCap.round,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_RadialVisualizerPainter old) => true;
 }

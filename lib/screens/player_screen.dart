@@ -389,27 +389,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                         gaplessPlayback: true,
                       ),
                     )
-                : Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        _dominantColor,
-                        _dominantColor.withOpacity(0.5),
-                      ],
-                    ),
-                  ),
-                  child: Center(
-                    child: SvgPicture.asset(
-                      'assets/no_album.svg',
-                      width: 80,
-                      height: 80,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
+                  : _buildNoAlbumGradient(song),
               ),
                   // 중앙 구멍
                   Container(
@@ -428,6 +408,48 @@ class _PlayerScreenState extends State<PlayerScreen>
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNoAlbumGradient(Song song) {
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    final hash = (song.title + song.artist).codeUnits.fold(0, (a, b) => a + b);
+    // 곡마다 조금씩 다른 각도와 밝기
+    final angles = [
+      [Alignment.topLeft, Alignment.bottomRight],
+      [Alignment.topRight, Alignment.bottomLeft],
+      [Alignment.topCenter, Alignment.bottomCenter],
+      [Alignment.centerLeft, Alignment.centerRight],
+    ];
+    final brightFactors = [0.9, 0.75, 0.6, 0.8, 0.7];
+    final darkFactors = [0.3, 0.2, 0.4, 0.25, 0.35];
+    final ai = hash % angles.length;
+    final bi = hash % brightFactors.length;
+    final di = (hash ~/ 3) % darkFactors.length;
+
+    final bright = Color.fromRGBO(
+      (primaryColor.red + (255 - primaryColor.red) * brightFactors[bi]).toInt().clamp(0, 255),
+      (primaryColor.green + (255 - primaryColor.green) * brightFactors[bi]).toInt().clamp(0, 255),
+      (primaryColor.blue + (255 - primaryColor.blue) * brightFactors[bi]).toInt().clamp(0, 255),
+      1,
+    );
+    final dark = Color.fromRGBO(
+      (primaryColor.red * darkFactors[di]).toInt().clamp(0, 255),
+      (primaryColor.green * darkFactors[di]).toInt().clamp(0, 255),
+      (primaryColor.blue * darkFactors[di]).toInt().clamp(0, 255),
+      1,
+    );
+
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: angles[ai][0],
+          end: angles[ai][1],
+          colors: [bright, primaryColor, dark],
+          stops: const [0.0, 0.5, 1.0],
         ),
       ),
     );

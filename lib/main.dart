@@ -337,7 +337,17 @@ class _AppInitializerState extends State<AppInitializer> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) {},
+      onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop) {
+          // 앱을 백그라운드로 보내기
+          const platform = MethodChannel('kr.ssing.catsong/media');
+          try {
+            await platform.invokeMethod('moveToBackground');
+          } catch (e) {
+            // 채널 없으면 그냥 무시
+          }
+        }
+      },
       child: const HomeScreen(),
     );
   }

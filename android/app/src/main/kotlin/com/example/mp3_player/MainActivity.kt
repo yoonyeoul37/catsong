@@ -297,6 +297,10 @@ class MainActivity : AudioServiceActivity() {
                         }
                     } else result.success(false)
                 }
+                "moveToBackground" -> {
+                    moveTaskToBack(true)
+                    result.success(true)
+                }
                 "widgetPlayPause" -> { result.success(true) }
                 "widgetNext" -> { result.success(true) }
                 "widgetPrev" -> { result.success(true) }

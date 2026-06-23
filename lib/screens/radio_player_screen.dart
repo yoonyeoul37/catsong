@@ -150,9 +150,10 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     final primaryColor = Theme.of(context).colorScheme.primary;
     final radioProvider = context.watch<RadioProvider>();
     final state = radioProvider.playerState;
-    final current = (widget.stationList != null && _currentIdx < widget.stationList!.length)
-        ? widget.stationList![_currentIdx]
-        : (radioProvider.currentStation ?? widget.station);
+    final current = radioProvider.currentStation ??
+        (widget.stationList != null && _currentIdx < widget.stationList!.length
+            ? widget.stationList![_currentIdx]
+            : widget.station);
     final isPlaying = state == RadioPlayerState.playing;
     final isLoading = state == RadioPlayerState.loading;
     final isError = state == RadioPlayerState.error;

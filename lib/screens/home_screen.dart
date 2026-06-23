@@ -148,9 +148,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
-    return Scaffold(
-      backgroundColor: AppTheme.background,
-      appBar: _buildAppBar(primaryColor),
+    return PopScope(
+      canPop: !_isSearching,
+      onPopInvokedWithResult: (didPop, result) {
+        if (_isSearching) {
+          setState(() => _isSearching = false);
+          _searchController.clear();
+          context.read<MusicProvider>().clearSearch();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppTheme.background,
+        appBar: _buildAppBar(primaryColor),
       body: Column(
         children: [
           Expanded(child: _buildBody()),
@@ -172,7 +181,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       bottomNavigationBar: _buildBottomNavBar(primaryColor),
-    );
+    ),
+  );
   }
 
   PreferredSizeWidget _buildAppBar(Color primaryColor) {
@@ -678,13 +688,13 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.music_off, size: 72, color: AppTheme.textHint.withOpacity(0.5)),
+          const Icon(Icons.music_off, size: 72, color: Colors.white38),
           const SizedBox(height: 16),
           Text(AppLocalizations.of(context)!.noSongs,
-              style: const TextStyle(color: AppTheme.textSecondary, fontSize: 16)),
+              style: const TextStyle(color: Colors.white70, fontSize: 16)),
           const SizedBox(height: 8),
           Text(AppLocalizations.of(context)!.addMusic,
-              style: const TextStyle(color: AppTheme.textHint, fontSize: 13)),
+              style: const TextStyle(color: Colors.white54, fontSize: 13)),
         ],
       ),
     );

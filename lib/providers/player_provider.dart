@@ -162,6 +162,8 @@ class PlayerProvider extends ChangeNotifier {
       default:
         if (hasNext) {
           playNext();
+        } else if (_queue.isNotEmpty) {
+          _playAtIndex(0);
         }
         break;
     }

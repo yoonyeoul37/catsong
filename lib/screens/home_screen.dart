@@ -691,41 +691,59 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBottomNavBar(Color primaryColor) {
-    return BottomNavigationBar(
-      currentIndex: _currentTabIndex,
-      onTap: (index) => setState(() => _currentTabIndex = index),
-      backgroundColor: Color.fromRGBO(
-        (primaryColor.red * 0.28).toInt().clamp(0, 255),
-        (primaryColor.green * 0.28).toInt().clamp(0, 255),
-        (primaryColor.blue * 0.28).toInt().clamp(0, 255),
-        1.0,
+    final bgColor = Color.fromRGBO(
+      (primaryColor.red * 0.28).toInt().clamp(0, 255),
+      (primaryColor.green * 0.28).toInt().clamp(0, 255),
+      (primaryColor.blue * 0.28).toInt().clamp(0, 255),
+      1.0,
+    );
+    final l = AppLocalizations.of(context)!;
+    final items = [
+      {'icon': Icons.music_note, 'label': l.songs},
+      {'icon': Icons.album, 'label': l.albums},
+      {'icon': Icons.person, 'label': l.artists},
+      {'icon': Icons.playlist_play, 'label': l.playlists},
+      {'icon': Icons.folder, 'label': l.folders},
+      {'icon': Icons.video_library, 'label': l.videos},
+    ];
+    return Container(
+      color: bgColor,
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 62,
+          child: Row(
+            children: List.generate(items.length, (index) {
+              final isSelected = _currentTabIndex == index;
+              return Expanded(
+                child: GestureDetector(
+                  onTap: () => setState(() => _currentTabIndex = index),
+                  behavior: HitTestBehavior.opaque,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        items[index]['icon'] as IconData,
+                        color: isSelected ? Colors.white : AppTheme.textSecondary,
+                        size: 24,
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        items[index]['label'] as String,
+                        style: TextStyle(
+                          color: isSelected ? Colors.white : AppTheme.textSecondary,
+                          fontSize: 10,
+                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
       ),
-      selectedItemColor: Colors.white,
-      unselectedItemColor: AppTheme.textSecondary,
-      type: BottomNavigationBarType.fixed,
-      selectedFontSize: 10,
-      unselectedFontSize: 10,
-      elevation: 0,
-      items: [
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.music_note),
-            label: AppLocalizations.of(context)!.songs),
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.album),
-            label: AppLocalizations.of(context)!.albums),
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.person),
-            label: AppLocalizations.of(context)!.artists),
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.playlist_play),
-            label: AppLocalizations.of(context)!.playlists),
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.folder),
-            label: AppLocalizations.of(context)!.folders),
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.video_library),
-            label: AppLocalizations.of(context)!.videos),
-      ],
     );
   }
 }

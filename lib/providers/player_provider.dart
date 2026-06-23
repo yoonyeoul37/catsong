@@ -259,7 +259,11 @@ class PlayerProvider extends ChangeNotifier {
   Future<void> playNext() async {
     if (_isChangingSong) return;
     _isChangingSong = true;
-    if (hasNext) await _playAtIndex(_currentIndex + 1);
+    if (hasNext) {
+      await _playAtIndex(_currentIndex + 1);
+    } else if (_queue.isNotEmpty) {
+      await _playAtIndex(0);
+    }
     _isChangingSong = false;
   }
 
@@ -270,8 +274,8 @@ class PlayerProvider extends ChangeNotifier {
       await _player.seek(Duration.zero);
     } else if (hasPrevious) {
       await _playAtIndex(_currentIndex - 1);
-    } else {
-      await _player.seek(Duration.zero);
+    } else if (_queue.isNotEmpty) {
+      await _playAtIndex(_queue.length - 1);
     }
     _isChangingSong = false;
   }

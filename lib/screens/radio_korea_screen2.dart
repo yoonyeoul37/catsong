@@ -394,7 +394,7 @@ class _StationTile extends StatelessWidget {
                       final isMbc = mbcNames.contains(station.name);
                       final isSbs = sbsNames.contains(station.name);
                       final radio = ctx.watch<RadioProvider>();
-                      final hasJsonSchedule = radio.nowPlayingFor(station.name) != null;
+                      final hasJsonSchedule = radio.nowPlayingFor(station.name) != null && !isKbs && !isMbc && !isSbs;
                       if (!isKbs && !isMbc && !isSbs && !hasJsonSchedule) {
                         return Text(
                           station.frequency.isNotEmpty
@@ -414,6 +414,14 @@ class _StationTile extends StatelessWidget {
                       final displayNowPlaying = nowPlaying ?? sbsTitle;
                       String _fmt(String t) {
                         final cleaned = t.replaceAll(':', '');
+                        // KBS: 20231015160000 형식 (14자리)
+                        if (cleaned.length >= 12) {
+                          final hhmm = cleaned.substring(8, 12);
+                          int h = int.tryParse(hhmm.substring(0, 2)) ?? 0;
+                          final m = hhmm.substring(2, 4);
+                          if (h >= 24) h -= 24;
+                          return '${h.toString().padLeft(2, '0')}:$m';
+                        }
                         if (cleaned.length < 4) return t;
                         int h = int.tryParse(cleaned.substring(0, 2)) ?? 0;
                         final m = cleaned.substring(2, 4);

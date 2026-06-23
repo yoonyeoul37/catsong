@@ -334,6 +334,28 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
             ),
           ),
 
+          // ── 스와이프 제스처 ──
+          Positioned.fill(
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onHorizontalDragEnd: (details) {
+                final list = widget.stationList;
+                if (list == null) return;
+                if (details.primaryVelocity! < -300) {
+                  final newIdx = _currentIdx < list.length - 1 ? _currentIdx + 1 : 0;
+                  setState(() => _currentIdx = newIdx);
+                  context.read<RadioProvider>().setQueue(list, newIdx);
+                  context.read<RadioProvider>().playStation(list[newIdx]);
+                } else if (details.primaryVelocity! > 300) {
+                  final newIdx = _currentIdx > 0 ? _currentIdx - 1 : list.length - 1;
+                  setState(() => _currentIdx = newIdx);
+                  context.read<RadioProvider>().setQueue(list, newIdx);
+                  context.read<RadioProvider>().playStation(list[newIdx]);
+                }
+              },
+            ),
+          ),
+
           // ── 플로팅 상단: 뒤로가기 + 즐겨찾기 ──
           SafeArea(
             child: Padding(

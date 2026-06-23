@@ -12,7 +12,7 @@ class RadioFavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const accent = AppTheme.fixedAccent;
+    const accent = Colors.white;
     final radioProvider = context.watch<RadioProvider>();
     final favorites     = radioProvider.favorites;
 

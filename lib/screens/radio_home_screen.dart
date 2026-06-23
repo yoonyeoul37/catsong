@@ -90,7 +90,7 @@ class RadioHomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RadioFavoritesScreen())),
-            icon: Icon(Icons.favorite, color: Color.lerp(AppTheme.fixedAccent, Colors.white, 0.35), size: 21),
+            icon: const Icon(Icons.favorite, color: Colors.white60, size: 21),
           ),
           const SizedBox(width: 6),
         ],
@@ -262,7 +262,7 @@ class _RecentSection extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.radio, color: Color.lerp(AppTheme.fixedAccent, Colors.white, 0.35), size: 13),
+                              Icon(Icons.radio, color: Colors.white60, size: 13),
                               const SizedBox(width: 6),
                               Expanded(
                                 child: Text(

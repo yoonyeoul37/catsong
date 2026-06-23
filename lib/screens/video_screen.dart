@@ -427,6 +427,13 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   }
 
   Future<void> _initPlayer() async {
+    // 라디오/음악 정지
+    try {
+      context.read<VideoProvider>().stopOtherPlayers();
+    } catch (e) {
+      debugPrint('stopOtherPlayers 오류: $e');
+    }
+
     _videoPlayerController = VideoPlayerController.file(
       File(widget.video.uri),
     );

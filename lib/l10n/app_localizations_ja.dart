@@ -904,4 +904,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get deselectAll => '選択解除';
+
+  @override
+  String get timerLabel => 'タイマー';
+
+  @override
+  String get playbackSpeedLabel => '再生速度';
 }

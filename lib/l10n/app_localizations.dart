@@ -1793,6 +1793,18 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'선택 해제'**
   String get deselectAll;
+
+  /// No description provided for @timerLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'타이머'**
+  String get timerLabel;
+
+  /// No description provided for @playbackSpeedLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'재생속도'**
+  String get playbackSpeedLabel;
 }
 
 class _AppLocalizationsDelegate

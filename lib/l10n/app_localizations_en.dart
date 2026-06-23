@@ -910,4 +910,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deselectAll => 'Deselect All';
+
+  @override
+  String get timerLabel => 'Timer';
+
+  @override
+  String get playbackSpeedLabel => 'Speed';
 }

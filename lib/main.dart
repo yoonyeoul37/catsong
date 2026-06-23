@@ -105,10 +105,15 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  final videoProvider = VideoProvider()
+    ..setOnStopRadio(() async => await radioProvider.stopRadio())
+    ..setOnStopMusic(() async => await playerProvider.player.stop());
+
   runApp(MyApp(
     playerProvider: playerProvider,
     musicProvider: musicProvider,
     radioProvider: radioProvider,
+    videoProvider: videoProvider,
   ));
 }
 
@@ -116,11 +121,13 @@ class MyApp extends StatelessWidget {
   final PlayerProvider playerProvider;
   final MusicProvider musicProvider;
   final RadioProvider radioProvider;
+  final VideoProvider videoProvider;
   const MyApp({
     super.key,
     required this.playerProvider,
     required this.musicProvider,
     required this.radioProvider,
+    required this.videoProvider,
   });
 
   @override
@@ -131,7 +138,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: playerProvider),
         ChangeNotifierProvider(create: (_) => PlaylistProvider()),
         ChangeNotifierProvider(create: (_) => LyricsProvider()),
-        ChangeNotifierProvider(create: (_) => VideoProvider()),
+        ChangeNotifierProvider.value(value: videoProvider),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider.value(value: radioProvider),
       ],

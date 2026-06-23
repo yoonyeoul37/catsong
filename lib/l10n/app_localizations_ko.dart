@@ -903,4 +903,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get deselectAll => '선택 해제';
+
+  @override
+  String get timerLabel => '타이머';
+
+  @override
+  String get playbackSpeedLabel => '재생속도';
 }

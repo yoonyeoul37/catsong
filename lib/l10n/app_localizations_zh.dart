@@ -904,4 +904,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get deselectAll => '取消全選';
+
+  @override
+  String get timerLabel => '定時器';
+
+  @override
+  String get playbackSpeedLabel => '播放速度';
 }

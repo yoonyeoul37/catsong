@@ -9,6 +9,16 @@ class VideoProvider extends ChangeNotifier {
   String _errorMessage = '';
   bool _hasPermission = false;
   bool _permissionDenied = false;
+  VoidCallback? _onStopRadio;
+  VoidCallback? _onStopMusic;
+
+  void setOnStopRadio(VoidCallback cb) => _onStopRadio = cb;
+  void setOnStopMusic(VoidCallback cb) => _onStopMusic = cb;
+
+  void stopOtherPlayers() {
+    _onStopRadio?.call();
+    _onStopMusic?.call();
+  }
 
   static const _channel = MethodChannel('kr.ssing.catsong/media');
 

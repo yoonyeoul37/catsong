@@ -265,16 +265,14 @@ class _PlayerScreenState extends State<PlayerScreen>
                   _buildBottomBarItem(
                     context,
                     icon: Icons.bedtime,
-                    label: AppLocalizations.of(context)!.timerCancel.replaceAll('취소', '').trim().isEmpty
-                        ? '타이머'
-                        : '타이머',
+                    label: AppLocalizations.of(context)!.timerLabel,
                     isActive: playerProvider.isSleepTimerActive,
                     onTap: () => _showSleepTimerDialog(context, playerProvider, primaryColor),
                   ),
                   _buildBottomBarItem(
                     context,
                     icon: Icons.speed,
-                    label: '재생속도',
+                    label: AppLocalizations.of(context)!.playbackSpeedLabel,
                     isActive: playerProvider.playbackSpeed != 1.0,
                     onTap: () => _showSpeedDialog(context, playerProvider, primaryColor),
                   ),

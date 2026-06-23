@@ -397,11 +397,13 @@ class _PlayerScreenState extends State<PlayerScreen>
                   children: [
               ClipOval(
               child: song.albumArt != null
-                  ? Image.memory(
-                  Uint8List.fromList(song.albumArt!),
-              fit: BoxFit.cover,
-              gaplessPlayback: true,
-            )
+                  ? SizedBox.expand(
+                      child: Image.memory(
+                        Uint8List.fromList(song.albumArt!),
+                        fit: BoxFit.cover,
+                        gaplessPlayback: true,
+                      ),
+                    )
                 : Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,

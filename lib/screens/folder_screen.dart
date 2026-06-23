@@ -45,7 +45,7 @@ class FolderScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.folder_open,
-                      size: 72, color: primaryColor.withOpacity(0.4)),
+                      size: 72, color: Colors.white.withOpacity(0.4)),
                   const SizedBox(height: 16),
                   Text(AppLocalizations.of(context)!.folders,
                       style: const TextStyle(
@@ -89,10 +89,10 @@ class FolderScreen extends StatelessWidget {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: AppTheme.fixedAccent.withOpacity(0.28),
+                color: Colors.white.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: const Icon(Icons.folder, color: AppTheme.fixedAccent, size: 28),
+              child: const Icon(Icons.folder, color: Colors.white70, size: 28),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -168,11 +168,11 @@ class FolderDetailScreen extends StatelessWidget {
                           width: 72,
                           height: 72,
                           decoration: BoxDecoration(
-                            color: AppTheme.fixedAccent.withOpacity(0.28),
+                            color: Colors.white.withOpacity(0.15),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Icon(Icons.folder,
-                              color: AppTheme.fixedAccent, size: 40),
+                              color: Colors.white70, size: 40),
                         ),
                         const SizedBox(height: 12),
                         Text(folder.name,
@@ -205,7 +205,7 @@ class FolderDetailScreen extends StatelessWidget {
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.lerp(primaryColor, Colors.black, 0.15),
+                        backgroundColor: Colors.white.withOpacity(0.15),
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(

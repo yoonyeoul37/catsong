@@ -784,8 +784,8 @@ class _ProgramCard extends StatelessWidget {
         program['title'] as String? ?? '';
     final kbsStart = program['program_planned_start_time'] as String? ?? '';
     final kbsEnd = program['program_planned_end_time'] as String? ?? '';
-    final mbcStart = program['StartTime'] as String? ?? '';
-    final mbcEnd = program['EndTime'] as String? ?? '';
+    final mbcStart = (program['StartTime'] ?? '').toString();
+    final mbcEnd = (program['EndTime'] ?? '').toString();
     final sbsStart = program['start_time'] as String? ?? '';
     final sbsEnd = program['end_time'] as String? ?? '';
 
@@ -794,10 +794,16 @@ class _ProgramCard extends StatelessWidget {
       timeStr = '${radioProvider.formatScheduleTime(kbsStart)} ~ ${radioProvider.formatScheduleTime(kbsEnd)}';
     } else if (mbcStart.isNotEmpty && mbcEnd.isNotEmpty) {
       String fmt(String t) {
+        if (t.contains(':')) {
+          final parts = t.split(':');
+          int h = int.tryParse(parts[0]) ?? 0;
+          if (h >= 24) h -= 24;
+          return '${h.toString().padLeft(2, '0')}:${parts[1]}';
+        }
         if (t.length < 4) return t;
         int h = int.tryParse(t.substring(0, 2)) ?? 0;
         if (h >= 24) h -= 24;
-        return '$h:${t.substring(2, 4)}';
+        return '${h.toString().padLeft(2, '0')}:${t.substring(2, 4)}';
       }
       timeStr = '${fmt(mbcStart)} ~ ${fmt(mbcEnd)}';
     } else if (sbsStart.isNotEmpty && sbsEnd.isNotEmpty) {
@@ -1419,9 +1425,9 @@ class _ScheduleListSheet extends StatelessWidget {
                   String title = s['program_title'] as String? ?? '';
                   String start = s['program_planned_start_time'] as String? ?? '';
                   String end = s['program_planned_end_time'] as String? ?? '';
-                  if (title.isEmpty) title = s['Title'] as String? ?? '';
-                  if (start.isEmpty) start = s['StartTime'] as String? ?? '';
-                  if (end.isEmpty) end = s['EndTime'] as String? ?? '';
+                  if (title.isEmpty) title = (s['Title'] ?? '').toString();
+                  if (start.isEmpty) start = (s['StartTime'] ?? '').toString();
+                  if (end.isEmpty) end = (s['EndTime'] ?? '').toString();
                   if (title.isEmpty) title = s['title'] as String? ?? '';
                   if (start.isEmpty) {
                     start = s['start_time'] as String? ?? '';
@@ -1429,17 +1435,21 @@ class _ScheduleListSheet extends StatelessWidget {
                   }
 
                   String fmt(String t) {
+                    if (t.length >= 8) {
+                      // KBS: 20231015160000 형식 → 8~12번째 자리가 HHMM
+                      return radioProvider.formatScheduleTime(t);
+                    }
                     if (t.contains(':')) {
                       final parts = t.split(':');
                       int h = int.tryParse(parts[0]) ?? 0;
                       if (h >= 24) h -= 24;
-                      return '$h:${parts[1]}';
+                      return '${h.toString().padLeft(2, '0')}:${parts[1]}';
                     }
                     if (t.length < 4) return t;
                     int h = int.tryParse(t.substring(0, 2)) ?? 0;
                     final m = t.substring(2, 4);
                     if (h >= 24) h -= 24;
-                    return '$h:$m';
+                    return '${h.toString().padLeft(2, '0')}:$m';
                   }
 
                   final isCurrent = currentProgram != null &&

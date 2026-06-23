@@ -942,15 +942,23 @@ class _PlayerScreenState extends State<PlayerScreen>
             ],
           ),
           const SizedBox(height: 8),
-          Slider(
-            value: playerProvider.progress,
-            onChanged: (value) {
-              final position = Duration(
-                milliseconds:
-                (value * playerProvider.duration.inMilliseconds).toInt(),
-              );
-              playerProvider.seekTo(position);
-            },
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              activeTrackColor: Colors.white70,
+              inactiveTrackColor: Colors.white24,
+              thumbColor: Colors.white,
+              overlayColor: Colors.white.withOpacity(0.1),
+            ),
+            child: Slider(
+              value: playerProvider.progress,
+              onChanged: (value) {
+                final position = Duration(
+                  milliseconds:
+                  (value * playerProvider.duration.inMilliseconds).toInt(),
+                );
+                playerProvider.seekTo(position);
+              },
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

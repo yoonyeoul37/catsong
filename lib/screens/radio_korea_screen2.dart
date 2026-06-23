@@ -413,19 +413,23 @@ class _StationTile extends StatelessWidget {
                       final sbsTitle = program?['title'] as String?;
                       final displayNowPlaying = nowPlaying ?? sbsTitle;
                       String _fmt(String t) {
-                        if (t.length < 4) return t;
-                        int h = int.tryParse(t.substring(0, 2)) ?? 0;
-                        final m = t.substring(2, 4);
+                        final cleaned = t.replaceAll(':', '');
+                        if (cleaned.length < 4) return t;
+                        int h = int.tryParse(cleaned.substring(0, 2)) ?? 0;
+                        final m = cleaned.substring(2, 4);
                         if (h >= 24) h -= 24;
-                        return '$h:$m';
+                        return '${h.toString().padLeft(2, '0')}:$m';
                       }
                       final isMbcStation = mbcNames.contains(station.name);
                       final isSbsStation = sbsNames.contains(station.name);
                       String? rawStart;
                       String? rawEnd;
                       if (isMbcStation) {
-                        rawStart = program?['StartTime'] as String?;
-                        rawEnd = program?['EndTime'] as String?;
+                        final mbcS = program?['StartTime'];
+                        final mbcE = program?['EndTime'];
+                        debugPrint('=== MBC rawStart type: ${mbcS.runtimeType}, value: $mbcS ===');
+                        rawStart = mbcS?.toString();
+                        rawEnd = mbcE?.toString();
                       } else if (isSbsStation) {
                         rawStart = program?['start_time'] as String?;
                         rawEnd = program?['end_time'] as String?;
@@ -447,6 +451,8 @@ class _StationTile extends StatelessWidget {
                       final timeStr = rawStart != null && rawEnd != null
                           ? isSbsStation
                           ? '${_fmtSbs(rawStart)}~${_fmtSbs(rawEnd)}'
+                          : isMbcStation
+                          ? '${_fmt(rawStart)}~${_fmt(rawEnd)}'
                           : hasJsonSchedule
                           ? '$rawStart~$rawEnd'
                           : '${_fmt(rawStart)}~${_fmt(rawEnd)}'

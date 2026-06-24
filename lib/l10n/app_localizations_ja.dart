@@ -906,6 +906,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get deselectAll => '選択解除';
 
   @override
+  String get exit => '終了';
+
+  @override
   String get timerLabel => 'タイマー';
 
   @override

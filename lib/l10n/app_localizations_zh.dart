@@ -906,6 +906,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deselectAll => '取消全選';
 
   @override
+  String get exit => '退出';
+
+  @override
   String get timerLabel => '定時器';
 
   @override

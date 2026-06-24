@@ -285,6 +285,7 @@
   "end": "結束",
   "rangeFormat": "範圍: {start} ~ {end} ({seconds}秒)",
   "deselectAll": "取消全選",
+  "exit": "退出",
   "timerLabel": "定時器",
   "playbackSpeedLabel": "播放速度"
 }

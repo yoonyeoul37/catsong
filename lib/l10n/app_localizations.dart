@@ -1794,6 +1794,12 @@ abstract class AppLocalizations {
   /// **'선택 해제'**
   String get deselectAll;
 
+  /// No description provided for @exit.
+  ///
+  /// In ko, this message translates to:
+  /// **'종료'**
+  String get exit;
+
   /// No description provided for @timerLabel.
   ///
   /// In ko, this message translates to:

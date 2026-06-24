@@ -282,6 +282,7 @@
   "end": "End",
   "rangeFormat": "Range: {start} ~ {end} ({seconds} sec)",
   "deselectAll": "Deselect All",
+  "exit": "Exit",
   "timerLabel": "Timer",
   "playbackSpeedLabel": "Speed"
 }

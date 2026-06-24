@@ -282,6 +282,7 @@
   "end": "終了",
   "rangeFormat": "範囲: {start} ~ {end} ({seconds}秒)",
   "deselectAll": "選択解除",
+  "exit": "終了",
   "timerLabel": "タイマー",
   "playbackSpeedLabel": "再生速度"
 }

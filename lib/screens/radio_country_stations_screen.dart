@@ -242,6 +242,7 @@ class _StationTile extends StatelessWidget {
       color: isPlaying ? Colors.white.withOpacity(0.08) : Colors.transparent,
       child: InkWell(
       onTap: () {
+        context.read<RadioProvider>().setQueue(stationList, stationIndex);
         Navigator.push(
           context,
           PageRouteBuilder(

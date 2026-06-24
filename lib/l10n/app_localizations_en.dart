@@ -912,6 +912,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deselectAll => 'Deselect All';
 
   @override
+  String get exit => 'Exit';
+
+  @override
   String get timerLabel => 'Timer';
 
   @override

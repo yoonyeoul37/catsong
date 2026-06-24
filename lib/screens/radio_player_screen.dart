@@ -172,7 +172,11 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      bottomNavigationBar: Container(
+      bottomNavigationBar: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            
+            Container(
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.03),
           border: Border(top: BorderSide(color: Colors.white.withOpacity(0.06))),
@@ -247,10 +251,24 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                     );
                   },
                 ),
+                _BottomBarItem(
+                  icon: Icons.power_settings_new,
+                  label: AppLocalizations.of(context)!.exit,
+                  hasIndicator: false,
+                  primaryColor: primaryColor,
+                  onTap: () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    context.read<RadioProvider>().stopRadio();
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    SystemNavigator.pop();
+                  },
+                ),
               ],
             ),
           ),
         ),
+      ),
+        ],
       ),
       body: Stack(
         children: [

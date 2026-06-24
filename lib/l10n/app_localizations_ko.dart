@@ -905,6 +905,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get deselectAll => '선택 해제';
 
   @override
+  String get exit => '종료';
+
+  @override
   String get timerLabel => '타이머';
 
   @override

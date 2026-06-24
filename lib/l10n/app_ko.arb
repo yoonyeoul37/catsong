@@ -282,6 +282,7 @@
   "end": "끝",
   "rangeFormat": "구간: {start} ~ {end} ({seconds}초)",
   "deselectAll": "선택 해제",
+  "exit": "종료",
   "timerLabel": "타이머",
   "playbackSpeedLabel": "재생속도"
 }

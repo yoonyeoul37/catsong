@@ -71,6 +71,7 @@ flutter:
     - assets/no_album.png
     - assets/cat_icon.png
     - assets/no_album.svg
+    - assets/no_album2.jpg
 
 flutter_native_splash:
   color: "#1E88E5"

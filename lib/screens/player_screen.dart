@@ -223,7 +223,7 @@ class _PlayerScreenState extends State<PlayerScreen>
         }
       },
       child: Scaffold(
-        backgroundColor: AppTheme.background,
+        backgroundColor: Colors.transparent,
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             color: Color.fromRGBO(
@@ -312,17 +312,21 @@ class _PlayerScreenState extends State<PlayerScreen>
         body: Stack(
           children: [
             // 앨범아트 블러 배경
-            if (song.albumArt != null)
-              SizedBox.expand(
-                child: ImageFiltered(
-                  imageFilter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                  child: Image.memory(
-                    Uint8List.fromList(song.albumArt!),
-                    fit: BoxFit.cover,
-                    gaplessPlayback: true,
-                  ),
-                ),
+            SizedBox.expand(
+              child: ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                child: song.albumArt != null
+                    ? Image.memory(
+                        Uint8List.fromList(song.albumArt!),
+                        fit: BoxFit.cover,
+                        gaplessPlayback: true,
+                      )
+                    : Image.asset(
+                        'assets/no_album2.jpg',
+                        fit: BoxFit.cover,
+                      ),
               ),
+            ),
             SizedBox.expand(
               child: Container(
                 color: Colors.black.withOpacity(0.4),
@@ -559,7 +563,12 @@ class _PlayerScreenState extends State<PlayerScreen>
                         gaplessPlayback: true,
                       ),
                     )
-                  : _buildNoAlbumGradient(song),
+                  : SizedBox.expand(
+                      child: Image.asset(
+                        'assets/no_album2.jpg',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
               ),
                   // 중앙 구멍
                   Container(
@@ -567,7 +576,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     height: 40,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: _dominantColor.withOpacity(0.9),
+                      color: Colors.black.withOpacity(0.4),
                       border: Border.all(
                         color: Colors.white.withOpacity(0.2),
                         width: 1.5,

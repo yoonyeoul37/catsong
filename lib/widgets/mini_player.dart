@@ -119,11 +119,11 @@ class MiniPlayer extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Center(
-                                  child: SvgPicture.asset(
-                                    'assets/no_album.svg',
-                                    width: 30,
-                                    height: 30,
-                                    fit: BoxFit.contain,
+                                  child: Image.asset(
+                                    'assets/no_album2.jpg',
+                                    width: 44,
+                                    height: 44,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),

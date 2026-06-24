@@ -301,6 +301,21 @@ class MainActivity : AudioServiceActivity() {
                     moveTaskToBack(true)
                     result.success(true)
                 }
+                "vibrate" -> {
+                    try {
+                        @Suppress("DEPRECATION")
+                        val vibrator = getSystemService(android.content.Context.VIBRATOR_SERVICE) as android.os.Vibrator
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            vibrator.vibrate(android.os.VibrationEffect.createOneShot(50, android.os.VibrationEffect.DEFAULT_AMPLITUDE))
+                        } else {
+                            @Suppress("DEPRECATION")
+                            vibrator.vibrate(50)
+                        }
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.success(false)
+                    }
+                }
                 "widgetPlayPause" -> { result.success(true) }
                 "widgetNext" -> { result.success(true) }
                 "widgetPrev" -> { result.success(true) }

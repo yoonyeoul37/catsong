@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+
 import 'package:provider/provider.dart';
 import '../models/radio_station.dart';
 import '../providers/radio_provider.dart';
@@ -503,7 +505,10 @@ class _StationTile extends StatelessWidget {
               _PlayingBars()
             else
               GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () {
+                  debugPrint('하트 탭됨!');
+                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                   final wasFav = context.read<RadioProvider>().isFavorite(radioStation.stationUuid);
                   context.read<RadioProvider>().toggleFavorite(radioStation);
                   final overlay = Overlay.of(context);

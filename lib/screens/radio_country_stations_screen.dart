@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+
 import 'package:provider/provider.dart';
 import '../models/radio_station.dart';
 import '../models/radio_country.dart';
@@ -316,6 +318,7 @@ class _StationTile extends StatelessWidget {
                   size: 21,
                 ),
                 onPressed: () {
+                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate').catchError((_) {});
                   final wasFav = context.read<RadioProvider>().isFavorite(station.stationUuid);
                   context.read<RadioProvider>().toggleFavorite(station);
                   final overlay = Overlay.of(context);

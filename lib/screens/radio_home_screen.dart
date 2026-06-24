@@ -1,6 +1,7 @@
 import 'dart:ui' show PlatformDispatcher, ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../models/radio_country.dart';
 import '../providers/radio_provider.dart';
@@ -31,6 +32,7 @@ class RadioHomeScreen extends StatelessWidget {
   }
 
   void _onCountryTap(BuildContext context, RadioCountry country) {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
     context.read<RadioProvider>().selectCountry(country);
     final screen = country.code == 'KR'
         ? RadioKoreaScreen()
@@ -90,7 +92,10 @@ class RadioHomeScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RadioFavoritesScreen())),
+            onPressed: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const RadioFavoritesScreen()));
+            },
             icon: Icon(CupertinoIcons.heart, color: Colors.white60, size: 21),
           ),
           const SizedBox(width: 6),
@@ -243,7 +248,10 @@ class _RecentSection extends StatelessWidget {
                   : '';
 
               return GestureDetector(
-                onTap: () => context.read<RadioProvider>().playStation(station),
+                onTap: () {
+                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                  context.read<RadioProvider>().playStation(station);
+                },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(18),
                   child: BackdropFilter(

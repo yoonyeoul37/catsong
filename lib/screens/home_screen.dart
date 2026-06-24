@@ -149,12 +149,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
     return PopScope(
-      canPop: !_isSearching,
+      canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (_isSearching) {
           setState(() => _isSearching = false);
           _searchController.clear();
           context.read<MusicProvider>().clearSearch();
+        } else {
+          const platform = MethodChannel('kr.ssing.catsong/media');
+          platform.invokeMethod('moveToBackground');
         }
       },
       child: Scaffold(

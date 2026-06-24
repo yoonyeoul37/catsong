@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../models/playlist.dart';
 import '../models/song.dart';
@@ -78,10 +79,15 @@ class PlaylistScreen extends StatelessWidget {
   Widget _buildPlaylistTile(BuildContext context, Playlist playlist, Color primaryColor) {
     return InkWell(
       onTap: () {
+        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => PlaylistDetailScreen(playlist: playlist),
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => PlaylistDetailScreen(playlist: playlist),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            transitionDuration: const Duration(milliseconds: 250),
           ),
         );
       },
@@ -337,45 +343,26 @@ class PlaylistDetailScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
               child: Row(
                 children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: playlist.songs.isEmpty ? null : () {
-                        context.read<PlayerProvider>()
-                            .playFromList(playlist.songs, 0);
-                        Navigator.pop(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.15),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                      ),
-                      icon: const Icon(Icons.play_arrow, size: 20),
-                      label: Text(AppLocalizations.of(context)!.playAll,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ),
+                  IconButton(
+                    onPressed: playlist.songs.isEmpty ? null : () {
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                      context.read<PlayerProvider>().playFromList(playlist.songs, 0);
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.play_arrow, color: Colors.white60, size: 26),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: playlist.songs.isEmpty ? null : () {
-                        final songs = List<Song>.from(playlist.songs)..shuffle();
-                        context.read<PlayerProvider>()
-                            .playFromList(songs, 0);
-                        Navigator.pop(context);
-                      },
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.white24),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                      ),
-                      icon: const Icon(Icons.shuffle, size: 20),
-                      label: Text(AppLocalizations.of(context)!.shuffle,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ),
+                  IconButton(
+                    onPressed: playlist.songs.isEmpty ? null : () {
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                      final songs = List<Song>.from(playlist.songs)..shuffle();
+                      context.read<PlayerProvider>().playFromList(songs, 0);
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.shuffle, color: Colors.white60, size: 20),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
                 ],
               ),

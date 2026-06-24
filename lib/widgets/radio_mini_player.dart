@@ -85,8 +85,8 @@ class RadioMiniPlayer extends StatelessWidget {
                   height: 2,
                   decoration: BoxDecoration(
                     color: isPlaying
-                        ? Colors.redAccent
-                        : AppTheme.fixedAccent.withOpacity(0.3),
+                        ? Colors.white.withOpacity(0.6)
+                        : Colors.white.withOpacity(0.15),
                   ),
                 ),
                 Expanded(

@@ -333,10 +333,15 @@ class _VideoTileState extends State<_VideoTile> {
     return GestureDetector(
       onLongPress: () => _showOptions(context),
       onTap: () {
+        _channel.invokeMethod('vibrate');
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => VideoPlayerScreen(video: widget.video),
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => VideoPlayerScreen(video: widget.video),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            transitionDuration: const Duration(milliseconds: 250),
           ),
         );
       },

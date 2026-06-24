@@ -605,7 +605,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildFilterTab(String label, bool isSelected, VoidCallback onTap, Color primaryColor) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+        onTap();
+      },
       child: Container(
         margin: const EdgeInsets.only(right: 20),
         padding: const EdgeInsets.only(bottom: 10),

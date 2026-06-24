@@ -40,6 +40,7 @@ class SongListTile extends StatelessWidget {
 
     return InkWell(
       onTap: () {
+        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         FocusManager.instance.primaryFocus?.unfocus();
         context.read<PlayerProvider>().playFromList(songList, index);
         Navigator.push(

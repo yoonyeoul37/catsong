@@ -353,7 +353,10 @@ class _PlayerScreenState extends State<PlayerScreen>
       child: Row(
         children: [
           IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              Navigator.pop(context);
+            },
             icon: const Icon(Icons.keyboard_arrow_down,
                 color: AppTheme.textPrimary, size: 30),
           ),

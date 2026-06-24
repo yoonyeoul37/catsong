@@ -155,7 +155,10 @@ class AlbumDetailScreen extends StatelessWidget {
             pinned: true,
             backgroundColor: AppTheme.background,
             leading: IconButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                Navigator.pop(context);
+              },
               icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
             ),
             flexibleSpace: FlexibleSpaceBar(

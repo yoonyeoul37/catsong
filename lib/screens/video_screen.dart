@@ -480,7 +480,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         title: Text(widget.video.titleDisplay,
             style: const TextStyle(color: Colors.white)),
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+            Navigator.pop(context);
+          },
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
         actions: [

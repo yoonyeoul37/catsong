@@ -175,7 +175,10 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
       bottomNavigationBar: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            
+            Container(
+              height: 2.5,
+              color: Colors.white.withOpacity(0.15),
+            ),
             Container(
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.03),
@@ -398,7 +401,10 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                 children: [
                   // 뒤로가기
                   _FloatButton(
-                    onTap: () => Navigator.pop(context),
+                    onTap: () {
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                      Navigator.pop(context);
+                    },
                     child: const Icon(Icons.expand_more, color: Colors.white, size: 24),
                   ),
                   // 즐겨찾기

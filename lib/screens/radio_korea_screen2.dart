@@ -41,6 +41,11 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
     super.initState();
     _tabController =
         TabController(length: _regions.length, vsync: this);
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+      }
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debugPrint('한국 라디오 initState 실행됨');
       final radio = context.read<RadioProvider>();
@@ -127,7 +132,10 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+            Navigator.pop(context);
+          },
           icon: const Icon(Icons.arrow_back_ios,
               color: Colors.white, size: 20),
         ),
@@ -169,6 +177,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
             children: [
               TabBar(
                 controller: _tabController,
+                onTap: (_) => const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate'),
                 isScrollable: true,
                 indicatorColor: Colors.white,
                 indicatorWeight: 2,
@@ -323,6 +332,7 @@ class _StationTile extends StatelessWidget {
       color: isPlaying ? Colors.white.withOpacity(0.08) : Colors.transparent,
       child: InkWell(
       onTap: () {
+        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         Navigator.push(
           context,
           PageRouteBuilder(

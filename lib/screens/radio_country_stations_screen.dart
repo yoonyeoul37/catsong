@@ -73,7 +73,10 @@ class _RadioCountryStationsScreenState
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+            Navigator.pop(context);
+          },
           icon: const Icon(Icons.arrow_back_ios,
               color: Colors.white, size: 20),
         ),
@@ -242,6 +245,7 @@ class _StationTile extends StatelessWidget {
       color: isPlaying ? Colors.white.withOpacity(0.08) : Colors.transparent,
       child: InkWell(
       onTap: () {
+        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         context.read<RadioProvider>().setQueue(stationList, stationIndex);
         Navigator.push(
           context,

@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../providers/radio_provider.dart';
@@ -24,7 +25,10 @@ class RadioFavoritesScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: AppTheme.textPrimary, size: 20),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+            Navigator.pop(context);
+          },
         ),
         title: Text(
           AppLocalizations.of(context)!.favorites,

@@ -184,7 +184,7 @@ class _PlayerScreenState extends State<PlayerScreen>
 
     if (song == null) {
       return const Scaffold(
-        backgroundColor: AppTheme.background,
+        backgroundColor: Colors.transparent,
         body: Center(
           child: Text('No song is playing',
               style: TextStyle(color: AppTheme.textSecondary)),
@@ -311,7 +311,87 @@ class _PlayerScreenState extends State<PlayerScreen>
         ),
         body: Stack(
           children: [
-            const SizedBox.shrink(),
+            // 앨범아트 블러 배경
+            if (song.albumArt != null)
+              SizedBox.expand(
+                child: ImageFiltered(
+                  imageFilter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                  child: Image.memory(
+                    Uint8List.fromList(song.albumArt!),
+                    fit: BoxFit.cover,
+                    gaplessPlayback: true,
+                  ),
+                ),
+              ),
+            SizedBox.expand(
+              child: Container(
+                color: Colors.black.withOpacity(0.4),
+              ),
+            ),
+            // 상단 페이드
+            Positioned(
+              top: 0, left: 0, right: 0, height: 120,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withOpacity(0.5),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // 하단 페이드
+            Positioned(
+              bottom: 0, left: 0, right: 0, height: 120,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.6),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // 왼쪽 페이드
+            Positioned(
+              top: 0, bottom: 0, left: 0, width: 30,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      Colors.black.withOpacity(0.4),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // 오른쪽 페이드
+            Positioned(
+              top: 0, bottom: 0, right: 0, width: 30,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerRight,
+                    end: Alignment.centerLeft,
+                    colors: [
+                      Colors.black.withOpacity(0.4),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+              ),
+            ),
             SafeArea(
               bottom: false,
               child: LayoutBuilder(

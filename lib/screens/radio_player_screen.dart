@@ -1149,14 +1149,14 @@ class _BottomBarItem extends StatelessWidget {
               children: [
                 Icon(
                   icon,
-                  color: AppTheme.textSecondary,
+                  color: Colors.white70,
                   size: 22,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   label,
                   style: const TextStyle(
-                    color: AppTheme.textSecondary,
+                    color: Colors.white70,
                     fontSize: 10,
                   ),
                 ),
@@ -1168,7 +1168,7 @@ class _BottomBarItem extends StatelessWidget {
                 child: Container(
                   width: 6, height: 6,
                   decoration: const BoxDecoration(
-                    color: AppTheme.fixedAccent,
+                    color: Colors.white,
                     shape: BoxShape.circle,
                   ),
                 ),

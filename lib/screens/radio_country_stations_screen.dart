@@ -311,13 +311,68 @@ class _StationTile extends StatelessWidget {
                   color: context
                       .watch<RadioProvider>()
                       .isFavorite(station.stationUuid)
-                      ? Colors.white
+                      ? Colors.redAccent
                       : Colors.white.withOpacity(0.25),
                   size: 21,
                 ),
-                onPressed: () => context
-                    .read<RadioProvider>()
-                    .toggleFavorite(station),
+                onPressed: () {
+                  final wasFav = context.read<RadioProvider>().isFavorite(station.stationUuid);
+                  context.read<RadioProvider>().toggleFavorite(station);
+                  final overlay = Overlay.of(context);
+                  final entry = OverlayEntry(
+                    builder: (_) => Positioned(
+                      bottom: 500, left: 0, right: 0,
+                      child: Center(
+                        child: TweenAnimationBuilder<double>(
+                          tween: Tween(begin: 0.0, end: 1.0),
+                          duration: const Duration(milliseconds: 300),
+                          builder: (_, value, child) => Opacity(
+                            opacity: value,
+                            child: Transform.scale(scale: 0.85 + 0.15 * value, child: child),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(30),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.15),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  wasFav ? CupertinoIcons.heart : CupertinoIcons.heart_fill,
+                                  color: wasFav ? Colors.black38 : Colors.redAccent,
+                                  size: 18,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  wasFav
+                                      ? AppLocalizations.of(context)!.radioRemovedFromFavorites
+                                      : AppLocalizations.of(context)!.radioAddedToFavoritesToast,
+                                  style: const TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    decoration: TextDecoration.none,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                  overlay.insert(entry);
+                  Future.delayed(const Duration(seconds: 2), () => entry.remove());
+                },
               ),
           ],
         ),

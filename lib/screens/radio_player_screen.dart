@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../models/radio_station.dart';
@@ -189,50 +190,62 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                     label: AppLocalizations.of(context)!.radioBroadcastSchedule,
                     hasIndicator: radioProvider.scheduleList.isNotEmpty,
                     primaryColor: primaryColor,
-                    onTap: () => showModalBottomSheet(
+                    onTap: () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    showModalBottomSheet(
                       context: context,
                       backgroundColor: Colors.transparent,
                       isScrollControlled: true,
                       builder: (_) => _ScheduleListSheet(stationName: current.name),
-                    ),
+                    );
+                  },
                   ),
                 _BottomBarItem(
                   icon: Icons.bedtime_outlined,
                   label: AppLocalizations.of(context)!.radioSleep,
                   hasIndicator: radioProvider.isSleepTimerActive,
                   primaryColor: primaryColor,
-                  onTap: () => showModalBottomSheet(
-                    context: context,
-                    backgroundColor: Colors.transparent,
-                    barrierColor: Colors.black.withOpacity(0.7),
-                    isScrollControlled: true,
-                    useSafeArea: true,
-                    builder: (_) => const SleepTimerSheet(),
-                  ),
+                  onTap: () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      barrierColor: Colors.black.withOpacity(0.7),
+                      isScrollControlled: true,
+                      useSafeArea: true,
+                      builder: (_) => const SleepTimerSheet(),
+                    );
+                  },
                 ),
                 _BottomBarItem(
                   icon: Icons.schedule,
                   label: AppLocalizations.of(context)!.radioSchedule,
                   hasIndicator: radioProvider.schedules.isNotEmpty,
                   primaryColor: primaryColor,
-                  onTap: () => showModalBottomSheet(
-                    context: context,
-                    backgroundColor: Colors.transparent,
-                    isScrollControlled: true,
-                    builder: (_) => const ScheduleSheet(),
-                  ),
+                  onTap: () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
+                      builder: (_) => const ScheduleSheet(),
+                    );
+                  },
                 ),
                 _BottomBarItem(
                   icon: CupertinoIcons.heart,
                   label: AppLocalizations.of(context)!.favorites,
                   hasIndicator: false,
                   primaryColor: primaryColor,
-                  onTap: () => showModalBottomSheet(
-                    context: context,
-                    backgroundColor: Colors.transparent,
-                    isScrollControlled: true,
-                    builder: (_) => _FavoritesSheet(primaryColor: primaryColor),
-                  ),
+                  onTap: () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
+                      builder: (_) => _FavoritesSheet(primaryColor: primaryColor),
+                    );
+                  },
                 ),
               ],
             ),
@@ -373,6 +386,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                   // 즐겨찾기
                   _FloatButton(
                     onTap: () {
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                       final wasFav = radioProvider.isFavorite(current.stationUuid);
                       radioProvider.toggleFavorite(current);
                       final overlay = Overlay.of(context);
@@ -997,6 +1011,7 @@ class _Controls extends StatelessWidget {
         _NeuButton(
           size: 56,
           onTap: () {
+            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
             final list = stationList;
             if (list != null) {
               final newIdx = currentIdx > 0 ? currentIdx - 1 : list.length - 1;
@@ -1013,6 +1028,7 @@ class _Controls extends StatelessWidget {
           onTap: isLoading
               ? null
               : () {
+            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
             if (isError) {
               radioProvider.playStation(current);
             } else {
@@ -1044,6 +1060,7 @@ class _Controls extends StatelessWidget {
         _NeuButton(
           size: 56,
           onTap: () {
+            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
             final list = stationList;
             if (list != null) {
               final newIdx = currentIdx < list.length - 1 ? currentIdx + 1 : 0;

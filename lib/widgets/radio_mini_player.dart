@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
@@ -19,6 +20,24 @@ class RadioMiniPlayer extends StatelessWidget {
     final isLoading = radioProvider.isLoading;
 
     return GestureDetector(
+      onHorizontalDragEnd: (details) {
+        final queue = radioProvider.currentQueue;
+        if (queue.isEmpty) return;
+        final idx = radioProvider.currentQueueIndex;
+        if (details.primaryVelocity! < -300) {
+          // 왼쪽 스와이프 → 다음
+          final newIdx = idx < queue.length - 1 ? idx + 1 : 0;
+          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+          radioProvider.setQueue(queue, newIdx);
+          radioProvider.playStation(queue[newIdx]);
+        } else if (details.primaryVelocity! > 300) {
+          // 오른쪽 스와이프 → 이전
+          final newIdx = idx > 0 ? idx - 1 : queue.length - 1;
+          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+          radioProvider.setQueue(queue, newIdx);
+          radioProvider.playStation(queue[newIdx]);
+        }
+      },
       onTap: () => Navigator.push(
         context,
         PageRouteBuilder(
@@ -177,7 +196,10 @@ class RadioMiniPlayer extends StatelessWidget {
                         GestureDetector(
                           onTap: isLoading
                               ? null
-                              : radioProvider.togglePlayPause,
+                              : () {
+                                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                  radioProvider.togglePlayPause();
+                                },
                           child: Container(
                             width: 40,
                             height: 40,

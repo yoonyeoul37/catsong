@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_native_splash: ^2.4.0
   just_audio: ^0.9.46
   audio_service: ^0.18.15
   permission_handler: ^11.3.0
@@ -70,3 +71,10 @@ flutter:
     - assets/no_album.png
     - assets/cat_icon.png
     - assets/no_album.svg
+
+flutter_native_splash:
+  color: "#1E88E5"
+  color_dark: "#1565C0"
+  android_12:
+    color: "#1E88E5"
+    color_dark: "#1565C0"

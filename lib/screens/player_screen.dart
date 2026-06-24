@@ -17,6 +17,7 @@ import '../theme/app_theme.dart';
 import 'edit_song_screen.dart';
 import 'lyrics_screen.dart';
 import '../l10n/app_localizations.dart';
+import 'package:flutter/services.dart';
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({super.key});
@@ -247,7 +248,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                     icon: Icons.shuffle,
                     label: AppLocalizations.of(context)!.shuffle,
                     isActive: playerProvider.isShuffled,
-                    onTap: () => playerProvider.toggleShuffle(),
+                    onTap: () {
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                      playerProvider.toggleShuffle();
+                    },
                   ),
                   _buildBottomBarItem(
                     context,
@@ -260,33 +264,45 @@ class _PlayerScreenState extends State<PlayerScreen>
                             ? AppLocalizations.of(context)!.repeatAll
                             : AppLocalizations.of(context)!.noRepeat,
                     isActive: playerProvider.loopMode != LoopMode.off,
-                    onTap: () => playerProvider.toggleLoopMode(),
+                    onTap: () {
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                      playerProvider.toggleLoopMode();
+                    },
                   ),
                   _buildBottomBarItem(
                     context,
                     icon: Icons.bedtime,
                     label: AppLocalizations.of(context)!.timerLabel,
                     isActive: playerProvider.isSleepTimerActive,
-                    onTap: () => _showSleepTimerDialog(context, playerProvider, primaryColor),
+                    onTap: () {
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                      _showSleepTimerDialog(context, playerProvider, primaryColor);
+                    },
                   ),
                   _buildBottomBarItem(
                     context,
                     icon: Icons.speed,
                     label: AppLocalizations.of(context)!.playbackSpeedLabel,
                     isActive: playerProvider.playbackSpeed != 1.0,
-                    onTap: () => _showSpeedDialog(context, playerProvider, primaryColor),
+                    onTap: () {
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                      _showSpeedDialog(context, playerProvider, primaryColor);
+                    },
                   ),
                   _buildBottomBarItem(
                     context,
                     icon: Icons.lyrics_outlined,
                     label: AppLocalizations.of(context)!.lyrics,
                     isActive: false,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LyricsScreen(),
-                      ),
-                    ),
+                    onTap: () {
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LyricsScreen(),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -969,6 +985,7 @@ class _PlayerScreenState extends State<PlayerScreen>
               ),
               IconButton(
                 onPressed: () {
+                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                   musicProvider.toggleFavorite(song);
                   final isFavNow = musicProvider.isFavorite(song.id);
                   final overlay = Overlay.of(context);
@@ -1066,13 +1083,19 @@ class _PlayerScreenState extends State<PlayerScreen>
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconButton(
-                onPressed: () => playerProvider.playPrevious(),
+                onPressed: () {
+                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                  playerProvider.playPrevious();
+                },
                 icon: const Icon(Icons.skip_previous),
                 color: AppTheme.textPrimary,
                 iconSize: 36,
               ),
               GestureDetector(
-                onTap: playerProvider.togglePlayPause,
+                onTap: () {
+                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                  playerProvider.togglePlayPause();
+                },
                 child: Container(
                   width: 68,
                   height: 68,
@@ -1096,7 +1119,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                 ),
               ),
               IconButton(
-                onPressed: () => playerProvider.playNext(),
+                onPressed: () {
+                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                  playerProvider.playNext();
+                },
                 icon: const Icon(Icons.skip_next),
                 color: AppTheme.textPrimary,
                 iconSize: 36,

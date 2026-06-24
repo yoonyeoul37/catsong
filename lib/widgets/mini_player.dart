@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../providers/player_provider.dart';
@@ -22,6 +23,15 @@ class MiniPlayer extends StatelessWidget {
     if (song == null) return const SizedBox.shrink();
 
     return GestureDetector(
+      onHorizontalDragEnd: (details) {
+        if (details.primaryVelocity! < -300) {
+          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+          playerProvider.playNext();
+        } else if (details.primaryVelocity! > 300) {
+          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+          playerProvider.playPrevious();
+        }
+      },
       onTap: () {
         Navigator.push(
           context,
@@ -178,7 +188,10 @@ class MiniPlayer extends StatelessWidget {
                         ),
                         // 이전 버튼
                         IconButton(
-                          onPressed: () => playerProvider.playPrevious(),
+                          onPressed: () {
+                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                            playerProvider.playPrevious();
+                          },
                           icon: const Icon(Icons.skip_previous,
                               color: Colors.white70),
                           iconSize: 26,
@@ -188,7 +201,10 @@ class MiniPlayer extends StatelessWidget {
                         ),
                         // 재생/정지 버튼
                         GestureDetector(
-                          onTap: playerProvider.togglePlayPause,
+                          onTap: () {
+                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                            playerProvider.togglePlayPause();
+                          },
                           child: Container(
                             width: 40,
                             height: 40,
@@ -214,7 +230,10 @@ class MiniPlayer extends StatelessWidget {
                         ),
                         // 다음 버튼
                         IconButton(
-                          onPressed: () => playerProvider.playNext(),
+                          onPressed: () {
+                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                            playerProvider.playNext();
+                          },
                           icon: const Icon(Icons.skip_next,
                               color: Colors.white70),
                           iconSize: 26,

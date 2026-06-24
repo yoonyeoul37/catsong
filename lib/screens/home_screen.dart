@@ -21,8 +21,8 @@ import 'radio_home_screen.dart';
 import '../widgets/radio_mini_player.dart';
 import '../providers/radio_provider.dart';
 import '../l10n/app_localizations.dart';
-import 'package:flutter/services.dart';
 import 'package:marquee/marquee.dart';
+import 'package:flutter/services.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -220,38 +220,47 @@ class _HomeScreenState extends State<HomeScreen> {
       actions: [
         if (!_isSearching) ...[
           IconButton(
-            onPressed: () => setState(() => _isSearching = true),
+            onPressed: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              setState(() => _isSearching = true);
+            },
             icon: const Icon(Icons.search, color: AppTheme.textPrimary, size: 23),
           ),
           IconButton(
-            onPressed: () => Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(
-                  data: MediaQuery.of(context).copyWith(
-                    textScaler: const TextScaler.linear(1.25),
+            onPressed: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(
+                    data: MediaQuery.of(context).copyWith(
+                      textScaler: const TextScaler.linear(1.25),
+                    ),
+                    child: const RadioHomeScreen(),
                   ),
-                  child: const RadioHomeScreen(),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    return FadeTransition(opacity: animation, child: child);
+                  },
+                  transitionDuration: const Duration(milliseconds: 250),
                 ),
-                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-                transitionDuration: const Duration(milliseconds: 250),
-              ),
-            ),
+              );
+            },
             icon: const Icon(Icons.radio_outlined, color: AppTheme.textPrimary, size: 23),
           ),
           IconButton(
-            onPressed: () => Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) => const SettingsScreen(),
-                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-                transitionDuration: const Duration(milliseconds: 250),
-              ),
-            ),
+            onPressed: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => const SettingsScreen(),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    return FadeTransition(opacity: animation, child: child);
+                  },
+                  transitionDuration: const Duration(milliseconds: 250),
+                ),
+              );
+            },
             icon: const Icon(Icons.settings_outlined, color: AppTheme.textPrimary, size: 23),
           ),
           const SizedBox(width: 4),
@@ -479,6 +488,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const Spacer(),
                   IconButton(
                     onPressed: () {
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                       if (musicProvider.songs.isNotEmpty) {
                         context.read<PlayerProvider>().playFromList(musicProvider.songs, 0);
                       }
@@ -490,6 +500,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   IconButton(
                     onPressed: () {
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                       if (musicProvider.songs.isNotEmpty) {
                         final songs = List<Song>.from(musicProvider.songs)..shuffle();
                         context.read<PlayerProvider>().playFromList(songs, 0);
@@ -727,7 +738,10 @@ class _HomeScreenState extends State<HomeScreen> {
               final isSelected = _currentTabIndex == index;
               return Expanded(
                 child: GestureDetector(
-                  onTap: () => setState(() => _currentTabIndex = index),
+                  onTap: () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    setState(() => _currentTabIndex = index);
+                  },
                   behavior: HitTestBehavior.opaque,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -147,8 +148,29 @@ class AlbumDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: CustomScrollView(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          // 앨범아트 블러 배경
+          SizedBox.expand(
+            child: ImageFiltered(
+              imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+              child: album.songs.first.albumArt != null
+                  ? Image.memory(
+                      Uint8List.fromList(album.songs.first.albumArt!),
+                      fit: BoxFit.cover,
+                      gaplessPlayback: true,
+                    )
+                  : Image.asset(
+                      'assets/no_album2.jpg',
+                      fit: BoxFit.cover,
+                    ),
+            ),
+          ),
+          SizedBox.expand(
+            child: Container(color: Colors.black.withOpacity(0.5)),
+          ),
+          CustomScrollView(
         slivers: [
           SliverAppBar(
             expandedHeight: 280,
@@ -261,6 +283,8 @@ class AlbumDetailScreen extends StatelessWidget {
             ),
           ),
           const SliverPadding(padding: EdgeInsets.only(bottom: 80)),
+        ],
+      ),
         ],
       ),
     );

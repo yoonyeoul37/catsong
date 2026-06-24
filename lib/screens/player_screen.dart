@@ -195,8 +195,8 @@ class _PlayerScreenState extends State<PlayerScreen>
     final lyricsProvider = context.read<LyricsProvider>();
     final currentKey = '${song.titleDisplay}-${song.artistDisplay}';
     if (lyricsProvider.currentSongKey != currentKey) {
+      lyricsProvider.clearLyrics();
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        lyricsProvider.clearLyrics();
         lyricsProvider.fetchLyrics(
           song.titleDisplay,
           song.artistDisplay,

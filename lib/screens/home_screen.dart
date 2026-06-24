@@ -718,12 +718,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBottomNavBar(Color primaryColor) {
-    final bgColor = Color.fromRGBO(
-      (primaryColor.red * 0.28).toInt().clamp(0, 255),
-      (primaryColor.green * 0.28).toInt().clamp(0, 255),
-      (primaryColor.blue * 0.28).toInt().clamp(0, 255),
-      1.0,
-    );
+    final bgColor = Colors.black.withOpacity(0.3);
     final l = AppLocalizations.of(context)!;
     final items = [
       {'icon': Icons.music_note, 'label': l.songs},

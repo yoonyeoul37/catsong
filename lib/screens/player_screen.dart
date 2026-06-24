@@ -226,15 +226,7 @@ class _PlayerScreenState extends State<PlayerScreen>
         backgroundColor: Colors.transparent,
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
-            color: Color.fromRGBO(
-              (primaryColor.red * 0.28).toInt().clamp(0, 255),
-              (primaryColor.green * 0.28).toInt().clamp(0, 255),
-              (primaryColor.blue * 0.28).toInt().clamp(0, 255),
-              1.0,
-            ),
-            border: Border(
-              top: BorderSide(color: Colors.white.withOpacity(0.08)),
-            ),
+            color: Colors.black.withOpacity(0.8),
           ),
           child: SafeArea(
             top: false,
@@ -307,7 +299,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 ],
               ),
             ),
-          ),
+              ),
         ),
         body: Stack(
           children: [

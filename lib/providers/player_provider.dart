@@ -462,7 +462,9 @@ class SimpleAudioHandler extends BaseAudioHandler {
     if (_radioMode && onRadioPlay != null) {
       onRadioPlay!();
     } else {
-      await _player.play();
+      if (_player.processingState != ProcessingState.idle) {
+        await _player.play();
+      }
     }
   }
 

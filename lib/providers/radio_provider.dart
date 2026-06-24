@@ -139,7 +139,14 @@ class RadioProvider extends ChangeNotifier {
       session.interruptionEventStream.listen((event) {
         if (event.begin) {
           debugPrint('오디오 인터럽트 발생 - 라디오 정지');
-          stopRadio();
+          _player.pause();
+          _setPlayerState(RadioPlayerState.paused);
+          _updateForeground(false);
+        } else {
+          debugPrint('오디오 인터럽트 종료 - 라디오 재개');
+          if (_currentStation != null && _playerState == RadioPlayerState.paused) {
+            playStation(_currentStation!);
+          }
         }
       });
       session.becomingNoisyEventStream.listen((_) {
@@ -839,7 +846,7 @@ class RadioProvider extends ChangeNotifier {
       ).timeout(const Duration(seconds: 10));
 
       debugPrint('=== MBC API statusCode: ${response.statusCode} ===');
-      debugPrint('=== MBC API body 앞부분: ${response.body.substring(0, response.body.length > 200 ? 200 : response.body.length)} ===');
+      debugPrint('=== MBC API body 앞부분: ${response.body.substring(0, response.body.length > 500 ? 500 : response.body.length)} ===');
 
       final List<dynamic> data = [];
       if (response.statusCode == 200) {
@@ -869,17 +876,18 @@ class RadioProvider extends ChangeNotifier {
         });
         _scheduleListMap[stationName] = filtered.cast<Map<String, dynamic>>();
         final now = DateTime.now();
-        // 새벽이면 분을 2400 이후로 변환해서 비교
         final nowH = now.hour;
         final nowM = now.minute;
         final nowHHMM = nowH < 6
             ? '${(nowH + 24).toString().padLeft(2, '0')}${nowM.toString().padLeft(2, '0')}'
             : '${nowH.toString().padLeft(2, '0')}${nowM.toString().padLeft(2, '0')}';
         for (final s in data) {
-          String start = s['StartTime'] as String? ?? '';
-          String end = s['EndTime'] as String? ?? '';
+          String start = s['StartTime']?.toString() ?? '';
+          String end = s['EndTime']?.toString() ?? '';
+          if (start.isEmpty || end.isEmpty) continue;
           // 새벽 방송 시간 보정
-          if (start.compareTo('0600') < 0) start = '${int.parse(start) + 2400}';
+          final startInt = int.tryParse(start) ?? 0;
+          if (startInt < 600) start = '${startInt + 2400}';
           final endInt = int.tryParse(end) ?? 0;
           final endAdj = endInt >= 2400 ? '$endInt' : (endInt < 600 ? '${endInt + 2400}' : end);
           if (nowHHMM.compareTo(start) >= 0 && nowHHMM.compareTo(endAdj) < 0) {

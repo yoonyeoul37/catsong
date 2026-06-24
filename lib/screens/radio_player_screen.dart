@@ -177,7 +177,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
           children: [
             Container(
               height: 2.5,
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withOpacity(0.20),
             ),
             Container(
         decoration: BoxDecoration(

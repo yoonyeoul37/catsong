@@ -33,6 +33,7 @@ class MiniPlayer extends StatelessWidget {
         }
       },
       onTap: () {
+        final isPlaying = context.read<PlayerProvider>().isPlaying;
         Navigator.push(
           context,
           PageRouteBuilder(

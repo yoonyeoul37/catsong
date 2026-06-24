@@ -41,6 +41,10 @@ void main() async {
       androidNotificationOngoing: true,
       androidStopForegroundOnPause: true,
       androidNotificationIcon: 'mipmap/ic_launcher',
+      notificationColor: null,
+      androidNotificationClickStartsActivity: true,
+      
+      preloadArtwork: false,
     ),
   );
   playerProvider.setAudioHandler(globalAudioHandler);
@@ -204,7 +208,7 @@ class _AppInitializerState extends State<AppInitializer> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final musicProvider = context.read<MusicProvider>();
-      if (musicProvider.songs.isEmpty && !musicProvider.isLoading) {
+      if (musicProvider.songs.isEmpty && !musicProvider.isLoading && !musicProvider.hasPermission == false) {
         await musicProvider.initialize();
         context
             .read<PlaylistProvider>()

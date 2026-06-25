@@ -187,7 +187,7 @@ class ArtistDetailScreen extends StatelessWidget {
                       gaplessPlayback: true,
                     )
                   else
-                    Container(color: const Color(0xFF282828)),
+                    Image.asset('assets/no_album2.jpg', fit: BoxFit.cover),
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(

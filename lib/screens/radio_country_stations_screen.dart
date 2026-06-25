@@ -68,6 +68,7 @@ class _RadioCountryStationsScreenState
 
     return Scaffold(
       backgroundColor: Colors.transparent,
+      extendBody: false,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -105,7 +106,9 @@ class _RadioCountryStationsScreenState
           ),
         ),
       ),
-      body: Column(
+      body: SafeArea(
+        top: false,
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
@@ -193,7 +196,7 @@ class _RadioCountryStationsScreenState
                 Expanded(
                   child: ListView.separated(
                     padding:
-                    EdgeInsets.fromLTRB(24, 0, 24, 80 + MediaQuery.of(context).viewPadding.bottom),
+                    EdgeInsets.fromLTRB(24, 0, 24, 80 + MediaQuery.of(context).padding.bottom),
                     itemCount: stations.length,
                     separatorBuilder: (_, __) =>
                         Divider(height: 1, color: Colors.white.withOpacity(0.16)),
@@ -214,6 +217,7 @@ class _RadioCountryStationsScreenState
             ),
           ),
         ],
+        ),
       ),
       bottomNavigationBar: current != null
           ? Padding(
@@ -221,7 +225,7 @@ class _RadioCountryStationsScreenState
             bottom: MediaQuery.of(context).viewPadding.bottom),
         child: const RadioMiniPlayer(),
       )
-          : null,
+          : SizedBox(height: MediaQuery.of(context).viewPadding.bottom),
     );
   }
 }

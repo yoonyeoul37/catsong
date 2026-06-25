@@ -230,7 +230,9 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
           ),
         ),
       ),
-      body: TabBarView(
+      body: SafeArea(
+        top: false,
+        child: TabBarView(
         controller: _tabController,
         children: _regions.map((region) {
           final stations = _filtered(region);
@@ -244,7 +246,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
           final radioStations =
           stations.map((ks) => _toRadioStation(ks)).toList();
           return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(24, 0, 24, 90),
+            padding: EdgeInsets.fromLTRB(24, 0, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
             itemCount: stations.length + 1,
             separatorBuilder: (_, __) =>
                 Divider(height: 1, color: Colors.white.withOpacity(0.16), indent: 0),
@@ -279,6 +281,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
             },
           );
         }).toList(),
+        ),
       ),
       bottomNavigationBar: radioProvider.currentStation != null
           ? Padding(

@@ -374,6 +374,7 @@ class _StationTile extends StatelessWidget {
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
                     ),
+                    textScaler: TextScaler.noScaling,
                   ),
                   if (station.subLabel.isNotEmpty)
                     Text(
@@ -382,6 +383,7 @@ class _StationTile extends StatelessWidget {
                         color: Colors.white70,
                         fontSize: 8.5,
                       ),
+                      textScaler: TextScaler.noScaling,
                     ),
                 ],
               ),

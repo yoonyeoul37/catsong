@@ -306,7 +306,7 @@ class MainActivity : AudioServiceActivity() {
                         @Suppress("DEPRECATION")
                         val vibrator = getSystemService(android.content.Context.VIBRATOR_SERVICE) as android.os.Vibrator
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                            vibrator.vibrate(android.os.VibrationEffect.createOneShot(50, android.os.VibrationEffect.DEFAULT_AMPLITUDE))
+                            vibrator.vibrate(android.os.VibrationEffect.createOneShot(50, 255))
                         } else {
                             @Suppress("DEPRECATION")
                             vibrator.vibrate(50)

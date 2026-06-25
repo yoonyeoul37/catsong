@@ -911,9 +911,13 @@ class RadioProvider extends ChangeNotifier {
   };
 
   void _listenConnectivity() {
-    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((result) async {
-      if (result != ConnectivityResult.none && _currentStation != null) {
-        debugPrint('네트워크 변경 감지 - 라디오 재연결 시도');
+    bool _lastWasNone = true;
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((results) async {
+      final isNone = results.isEmpty || results.contains(ConnectivityResult.none) && results.length == 1;
+      final wasNone = _lastWasNone;
+      _lastWasNone = isNone;
+      if (!isNone && wasNone && _currentStation != null && _playerState == RadioPlayerState.playing) {
+        debugPrint('네트워크 복구 감지 - 라디오 재연결 시도');
         await Future.delayed(const Duration(seconds: 2));
         if (_currentStation != null) {
           await playStation(_currentStation!);

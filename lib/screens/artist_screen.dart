@@ -103,9 +103,9 @@ class ArtistScreen extends StatelessWidget {
                   gaplessPlayback: true,
                 )
                     : Container(
-                  color: const Color(0xFF2A2A2A),
+                  color: Colors.white.withOpacity(0.15),
                   child: const Icon(Icons.person,
-                      color: AppTheme.fixedAccent, size: 28),
+                      color: Colors.white60, size: 28),
                 ),
               ),
             ),

@@ -114,9 +114,9 @@ class AlbumScreen extends StatelessWidget {
                 gaplessPlayback: true,
               )
                   : Container(
-                color: const Color(0xFF2A2A2A),
+                color: Colors.white.withOpacity(0.15),
                 child: const Center(
-                  child: Icon(Icons.album, color: AppTheme.fixedAccent, size: 56),
+                  child: Icon(Icons.album, color: Colors.white60, size: 56),
                 ),
               ),
             ),
@@ -194,7 +194,7 @@ class AlbumDetailScreen extends StatelessWidget {
                       gaplessPlayback: true,
                     )
                   else
-                    Container(color: const Color(0xFF282828)),
+                    Image.asset('assets/no_album2.jpg', fit: BoxFit.cover),
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(

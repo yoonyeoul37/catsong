@@ -162,8 +162,11 @@ class RadioProvider extends ChangeNotifier {
     const platform = MethodChannel('kr.ssing.catsong/media');
     platform.setMethodCallHandler((call) async {
       if (call.method == 'onAudioFocusLost') {
-        debugPrint('오디오 포커스 손실 - 라디오 정지');
-        await stopRadio();
+        debugPrint('오디오 포커스 손실 - 라디오 일시정지');
+        await _player.pause();
+        _isActuallyPlaying = false;
+        _setPlayerState(RadioPlayerState.paused);
+        _updateForeground(false);
       }
     });
   }
@@ -173,6 +176,7 @@ class RadioProvider extends ChangeNotifier {
       final nativePlayer = _player.platform as NativePlayer;
       await nativePlayer.setProperty('audio-stream-exclusive', 'no');
       await nativePlayer.setProperty('audio-exclusive', 'no');
+      await nativePlayer.setProperty('android-audio-focus', 'no');
     } catch (e) {
       debugPrint('오디오 포커스 설정 오류: $e');
     }
@@ -370,6 +374,9 @@ class RadioProvider extends ChangeNotifier {
 
       _onStopMusic?.call();
       await Future.delayed(const Duration(milliseconds: 200));
+      try {
+        const MethodChannel('kr.ssing.catsong/media').invokeMethod('requestAudioFocus');
+      } catch (e) {}
 
       debugPrint('=== 라디오 재생 시작 ===');
       debugPrint('방송국: ${station.name}');

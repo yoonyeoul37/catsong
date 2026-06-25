@@ -32,6 +32,7 @@ class MainActivity : AudioServiceActivity() {
 
     override fun onResume() {
         super.onResume()
+        requestAudioFocus()
     }
 
     private fun requestAudioFocus() {
@@ -331,6 +332,10 @@ class MainActivity : AudioServiceActivity() {
                     } else {
                         result.success(false)
                     }
+                }
+                "requestAudioFocus" -> {
+                    requestAudioFocus()
+                    result.success(true)
                 }
                 "updateWidget" -> {
                     val title = call.argument<String>("title") ?: "캣송"

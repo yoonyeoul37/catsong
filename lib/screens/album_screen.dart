@@ -115,8 +115,9 @@ class AlbumScreen extends StatelessWidget {
               )
                   : Container(
                 color: Colors.white.withOpacity(0.15),
-                child: const Center(
-                  child: Icon(Icons.album, color: Colors.white60, size: 56),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: Image.asset('assets/no_album2.jpg', fit: BoxFit.cover),
                 ),
               ),
             ),

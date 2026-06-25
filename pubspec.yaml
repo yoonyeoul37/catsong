@@ -74,8 +74,8 @@ flutter:
     - assets/no_album2.jpg
 
 flutter_native_splash:
-  color: "#1E88E5"
-  color_dark: "#1565C0"
+  color: "#06858b"
+  color_dark: "#06858b"
   android_12:
-    color: "#1E88E5"
-    color_dark: "#1565C0"
+    color: "#06858b"
+    color_dark: "#06858b"

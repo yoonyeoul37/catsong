@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -342,3 +343,48 @@ class _AppInitializerState extends State<AppInitializer> {
     return const HomeScreen();
   }
 }
+
+class _WavePainter extends CustomPainter {
+  final Color color;
+  _WavePainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+  final paint = Paint()
+  ..color = color.withOpacity(0.20)
+  ..style = PaintingStyle.fill;
+
+  final path = Path();
+  path.moveTo(0, size.height * 0.6);
+  for (double x = 0; x <= size.width; x++) {
+  final y = size.height * 0.6 +
+  20 * sin((x / size.width) * 3.14159 * 3) +
+  10 * sin((x / size.width) * 3.14159 * 6);
+  path.lineTo(x, y);
+  }
+  path.lineTo(size.width, size.height);
+  path.lineTo(0, size.height);
+  path.close();
+  canvas.drawPath(path, paint);
+
+  final paint2 = Paint()
+  ..color = color.withOpacity(0.12)
+  ..style = PaintingStyle.fill;
+
+  final path2 = Path();
+  path2.moveTo(0, size.height * 0.4);
+  for (double x = 0; x <= size.width; x++) {
+  final y = size.height * 0.4 +
+  15 * sin((x / size.width) * 3.14159 * 4 + 1) +
+  8 * sin((x / size.width) * 3.14159 * 7 + 2);
+  path2.lineTo(x, y);
+  }
+  path2.lineTo(size.width, size.height);
+  path2.lineTo(0, size.height);
+  path2.close();
+  canvas.drawPath(path2, paint2);
+  }
+
+  @override
+  bool shouldRepaint(_WavePainter old) => old.color != color;
+  }

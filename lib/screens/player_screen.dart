@@ -568,10 +568,49 @@ class _PlayerScreenState extends State<PlayerScreen>
                     height: 40,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.black.withOpacity(0.4),
+                      gradient: RadialGradient(
+                        center: const Alignment(-0.2, -0.2),
+                        colors: [
+                          Colors.grey.shade400.withOpacity(0.5),
+                          Colors.grey.shade600.withOpacity(0.4),
+                          Colors.grey.shade800.withOpacity(0.6),
+                        ],
+                        stops: const [0.0, 0.5, 1.0],
+                      ),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.2),
-                        width: 1.5,
+                        color: Colors.white.withOpacity(0.15),
+                        width: 1,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 4,
+                          offset: const Offset(0, 1),
+                        ),
+                        BoxShadow(
+                          color: Colors.white.withOpacity(0.05),
+                          blurRadius: 2,
+                          offset: const Offset(0, -1),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Container(
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: RadialGradient(
+                            colors: [
+                              Colors.white.withOpacity(0.08),
+                              Colors.grey.shade500.withOpacity(0.15),
+                            ],
+                          ),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.12),
+                            width: 0.5,
+                          ),
+                        ),
                       ),
                     ),
                   ),

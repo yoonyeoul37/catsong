@@ -230,7 +230,9 @@ class RadioProvider extends ChangeNotifier {
 
   void _updateForeground(bool playing) {
     try {
-      _simpleHandler?.setRadioPlaybackState(playing: playing);
+      if (_playerState != RadioPlayerState.idle) {
+        _simpleHandler?.setRadioPlaybackState(playing: playing);
+      }
     } catch (e) {
       debugPrint('포그라운드 업데이트 오류: $e');
     }
@@ -920,14 +922,27 @@ class RadioProvider extends ChangeNotifier {
   };
 
   void _listenConnectivity() {
-    bool _lastWasNone = true;
+    List<ConnectivityResult> _lastResults = [];
     _connectivitySubscription = Connectivity().onConnectivityChanged.listen((results) async {
-      final isNone = results.isEmpty || results.contains(ConnectivityResult.none) && results.length == 1;
-      final wasNone = _lastWasNone;
-      _lastWasNone = isNone;
-      if (!isNone && wasNone && _currentStation != null && !_isActuallyPlaying) {
+      final isNone = results.isEmpty || (results.contains(ConnectivityResult.none) && results.length == 1);
+      final wasNone = _lastResults.isEmpty || (_lastResults.contains(ConnectivityResult.none) && _lastResults.length == 1);
+      final networkChanged = !isNone && _lastResults.isNotEmpty && !wasNone && results.toString() != _lastResults.toString();
+      _lastResults = List.from(results);
+
+      if (_currentStation == null) return;
+
+      // 네트워크 없음→있음 복구 시
+      if (!isNone && wasNone && !_isActuallyPlaying) {
         debugPrint('네트워크 복구 감지 - 라디오 재연결 시도');
         await Future.delayed(const Duration(seconds: 2));
+        if (_currentStation != null && !_isActuallyPlaying) {
+          await playStation(_currentStation!);
+        }
+      }
+      // WiFi↔LTE 전환 시 (스트림 끊김 대비)
+      else if (networkChanged && _playerState != RadioPlayerState.idle) {
+        debugPrint('네트워크 전환 감지 - 라디오 재연결 시도');
+        await Future.delayed(const Duration(seconds: 3));
         if (_currentStation != null && !_isActuallyPlaying) {
           await playStation(_currentStation!);
         }

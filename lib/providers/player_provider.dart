@@ -241,6 +241,10 @@ class PlayerProvider extends ChangeNotifier {
 
   Future<void> playFromList(List<Song> songs, int index) async {
     _queue = List.from(songs);
+    final handler = _audioHandler;
+    if (handler is SimpleAudioHandler) {
+      handler.setRadioMode(false);
+    }
     await _playAtIndex(index);
   }
 
@@ -253,6 +257,16 @@ class PlayerProvider extends ChangeNotifier {
       final handler = _audioHandler;
       if (handler is SimpleAudioHandler) {
         handler.setRadioMode(false);
+        final song = currentSong;
+        if (song != null) {
+          handler.updateMediaItem(MediaItem(
+            id: song.uri ?? '',
+            title: song.titleDisplay,
+            artist: song.artistDisplay,
+            album: song.albumDisplay,
+            duration: Duration(milliseconds: song.duration),
+          ));
+        }
       }
       await Future.delayed(const Duration(milliseconds: 100));
       await _player.play();
@@ -403,7 +417,7 @@ class SimpleAudioHandler extends BaseAudioHandler {
   }
 
   void setRadioPlaybackState({required bool playing}) {
-    _radioMode = true;
+    _radioMode = playing;
     playbackState.add(PlaybackState(
       controls: [
         MediaControl.skipToPrevious,
@@ -421,7 +435,9 @@ class SimpleAudioHandler extends BaseAudioHandler {
     required String artist,
     String? url,
   }) {
-    _radioMode = true;
+    if (_player.processingState == ProcessingState.idle) {
+      _radioMode = true;
+    }
     mediaItem.add(MediaItem(
       id: url ?? '',
       title: title,
@@ -463,10 +479,11 @@ class SimpleAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> play() async {
-    if (_radioMode && onRadioPlay != null) {
+    if (_radioMode && onRadioPlay != null && _player.processingState == ProcessingState.idle) {
       onRadioPlay!();
     } else {
       if (_player.processingState != ProcessingState.idle) {
+        _radioMode = false;
         await _player.play();
       }
     }

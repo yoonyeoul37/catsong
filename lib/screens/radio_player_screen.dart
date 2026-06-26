@@ -11,6 +11,7 @@ import '../widgets/schedule_sheet.dart';
 import '../widgets/fm_tuner_dial.dart';
 import '../widgets/global_radio_dial.dart';
 import '../l10n/app_localizations.dart';
+import '../main.dart' show globalAudioHandler;
 
 double? _parseFrequency(String? freq) {
   if (freq == null || freq.isEmpty) return null;
@@ -276,9 +277,10 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                   label: AppLocalizations.of(context)!.exit,
                   hasIndicator: false,
                   primaryColor: primaryColor,
-                  onTap: () {
+                  onTap: () async {
                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                    context.read<RadioProvider>().stopRadio();
+                    await context.read<RadioProvider>().stopRadio();
+                    await globalAudioHandler.stop();
                     Navigator.of(context).popUntil((route) => route.isFirst);
                     SystemNavigator.pop();
                   },

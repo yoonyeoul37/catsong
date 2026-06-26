@@ -11,7 +11,9 @@ import '../widgets/schedule_sheet.dart';
 import '../widgets/fm_tuner_dial.dart';
 import '../widgets/global_radio_dial.dart';
 import '../l10n/app_localizations.dart';
+import 'package:audio_service/audio_service.dart';
 import '../main.dart' show globalAudioHandler;
+import '../providers/player_provider.dart' show SimpleAudioHandler;
 
 double? _parseFrequency(String? freq) {
   if (freq == null || freq.isEmpty) return null;
@@ -280,9 +282,14 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                   onTap: () async {
                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                     await context.read<RadioProvider>().stopRadio();
-                    await globalAudioHandler.stop();
+                    final handler = globalAudioHandler;
+                    if (handler is SimpleAudioHandler) {
+                      handler.setRadioMode(false);
+                      handler.playbackState.add(PlaybackState());
+                      handler.mediaItem.add(null);
+                    }
                     Navigator.of(context).popUntil((route) => route.isFirst);
-                    SystemNavigator.pop();
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('moveToBackground');
                   },
                 ),
               ],

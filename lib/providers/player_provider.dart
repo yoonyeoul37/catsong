@@ -250,6 +250,10 @@ class PlayerProvider extends ChangeNotifier {
       await WakelockPlus.disable();
     } else {
       _onStopRadio?.call();
+      final handler = _audioHandler;
+      if (handler is SimpleAudioHandler) {
+        handler.setRadioMode(false);
+      }
       await Future.delayed(const Duration(milliseconds: 100));
       await _player.play();
       await WakelockPlus.enable();

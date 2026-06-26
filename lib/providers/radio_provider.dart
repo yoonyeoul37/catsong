@@ -139,9 +139,11 @@ class RadioProvider extends ChangeNotifier {
       session.interruptionEventStream.listen((event) {
         if (event.begin) {
           debugPrint('오디오 인터럽트 발생 - 라디오 정지');
+          if (_playerState == RadioPlayerState.playing) {
           _player.pause();
           _setPlayerState(RadioPlayerState.paused);
           _updateForeground(false);
+          }
         } else {
           debugPrint('오디오 인터럽트 종료 - 라디오 재개');
           if (_currentStation != null && _playerState == RadioPlayerState.paused) {
@@ -923,10 +925,10 @@ class RadioProvider extends ChangeNotifier {
       final isNone = results.isEmpty || results.contains(ConnectivityResult.none) && results.length == 1;
       final wasNone = _lastWasNone;
       _lastWasNone = isNone;
-      if (!isNone && wasNone && _currentStation != null && _playerState == RadioPlayerState.playing) {
+      if (!isNone && wasNone && _currentStation != null && !_isActuallyPlaying) {
         debugPrint('네트워크 복구 감지 - 라디오 재연결 시도');
         await Future.delayed(const Duration(seconds: 2));
-        if (_currentStation != null) {
+        if (_currentStation != null && !_isActuallyPlaying) {
           await playStation(_currentStation!);
         }
       }

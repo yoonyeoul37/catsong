@@ -7,7 +7,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import '../models/song.dart';
 
 class PlayerProvider extends ChangeNotifier {
-  final AudioPlayer _player = AudioPlayer();
+  final AudioPlayer _player = AudioPlayer(handleInterruptions: false);
   AudioHandler? _audioHandler;
   Function(Song)? onSongPlayed;
   Function(Song)? onSongChanged;
@@ -473,7 +473,11 @@ class SimpleAudioHandler extends BaseAudioHandler {
     if (_radioMode && onRadioPause != null) {
       onRadioPause!();
     } else {
-      await _player.pause();
+      // 알림바 클릭 등 외부 이벤트로 인한 자동 pause 방지
+      // 실제 재생 중일 때만 pause 허용
+      if (_player.playing) {
+        await _player.pause();
+      }
     }
   }
 

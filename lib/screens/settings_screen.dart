@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter/services.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import 'ringtone_screen.dart';
@@ -35,6 +36,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _isSosOn = false;
     TorchLight.disableTorch();
     super.dispose();
+  }
+
+  Future<String> _getAppVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    return 'v${info.version}';
   }
 
   String _getFontName(BuildContext context, String key) {
@@ -101,8 +107,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             try { await platform.invokeMethod('requestWidgetAdd'); } catch (e) {}
           }, primaryColor: primaryColor, isFirst: true, isLast: true),
           _buildSection(l.version),
-          _buildTile(context, icon: Icons.verified_outlined, title: l.version, onTap: () {}, primaryColor: primaryColor, isFirst: true,
-              trailing: const Text('v1.0.0', style: TextStyle(color: AppTheme.fixedAccent, fontSize: 12, fontWeight: FontWeight.w600))),
+          FutureBuilder<String>(
+            future: _getAppVersion(),
+            builder: (context, snapshot) {
+              final version = snapshot.data ?? '';
+              return _buildTile(context, icon: Icons.verified_outlined, title: l.version, onTap: () {}, primaryColor: primaryColor, isFirst: true,
+                  trailing: Text(version, style: const TextStyle(color: AppTheme.fixedAccent, fontSize: 12, fontWeight: FontWeight.w600)));
+            },
+          ),
           _buildTile(context, icon: Icons.card_giftcard_outlined, title: l.promoCode, onTap: () => _showPromoCodeDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.privacy_tip_outlined, title: l.privacyPolicy, onTap: () => _launchUrl(l.privacyPolicyUrl), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.description_outlined, title: l.termsOfService, onTap: () => _launchUrl(l.termsOfServiceUrl), primaryColor: primaryColor, isLast: true),
@@ -213,12 +225,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 20),
             if (isUnlocked) ...[
               Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(color: Colors.green.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(color: accent.withOpacity(0.08), borderRadius: BorderRadius.circular(14)),
                 child: Column(children: [
-                  const Icon(Icons.check_circle, color: Colors.green, size: 40),
-                  const SizedBox(height: 8),
-                  Text(AppLocalizations.of(context)!.promoUnlocked, style: const TextStyle(color: _sText, fontWeight: FontWeight.w600)),
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: accent.withOpacity(0.15),
+                    ),
+                    child: const Icon(Icons.verified, color: accent, size: 28),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(AppLocalizations.of(context)!.promoUnlocked, style: const TextStyle(color: _sText, fontSize: 15, fontWeight: FontWeight.w600)),
                 ]),
               ),
               const SizedBox(height: 16),
@@ -250,7 +270,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     if (controller.text == '37258') {
                       await prefs.setBool('promo_unlocked', true);
                       Navigator.pop(ctx);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.promoUnlocked), backgroundColor: Colors.green, duration: const Duration(seconds: 3)));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.promoUnlocked), backgroundColor: accent, duration: const Duration(seconds: 3)));
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.promoInvalid), backgroundColor: Colors.redAccent, duration: const Duration(seconds: 2)));
                     }

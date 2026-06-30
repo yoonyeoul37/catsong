@@ -171,7 +171,7 @@ class MyApp extends StatelessWidget {
                       .apply(fontFamily: 'SpoqaHanSansNeo')
                   : AppTheme.buildTheme(themeProvider.primaryColor)
                       .textTheme
-                      .merge(themeProvider.getTextTheme()),
+                      .apply(fontFamily: themeProvider.getTextTheme().bodyLarge?.fontFamily),
             ),
             builder: (context, child) {
               AppLocale.current = AppLocalizations.of(context);
@@ -216,7 +216,24 @@ class _AppInitializerState extends State<AppInitializer> {
             .restorePlaylistSongs(musicProvider.allSongs);
       }
       await _checkAndRequestReview();
+      await _checkBatteryOptimization();
     });
+  }
+
+  Future<void> _checkBatteryOptimization() async {
+    final prefs = await SharedPreferences.getInstance();
+    final asked = prefs.getBool('battery_opt_asked') ?? false;
+    if (asked) return;
+    try {
+      const platform = MethodChannel('kr.ssing.catsong/media');
+      final isOptimized = await platform.invokeMethod('isBatteryOptimized');
+      if (isOptimized == true && mounted) {
+        await platform.invokeMethod('requestBatteryOptimization');
+        await prefs.setBool('battery_opt_asked', true);
+      }
+    } catch (e) {
+      debugPrint('배터리 최적화 확인 오류: $e');
+    }
   }
 
   Future<void> _checkAndRequestReview() async {

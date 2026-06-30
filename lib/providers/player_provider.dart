@@ -417,7 +417,7 @@ class SimpleAudioHandler extends BaseAudioHandler {
   }
 
   void setRadioPlaybackState({required bool playing}) {
-    _radioMode = playing;
+    if (playing) _radioMode = true;
     playbackState.add(PlaybackState(
       controls: [
         MediaControl.skipToPrevious,
@@ -479,7 +479,7 @@ class SimpleAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> play() async {
-    if (_radioMode && onRadioPlay != null && _player.processingState == ProcessingState.idle) {
+    if (_radioMode && onRadioPlay != null) {
       onRadioPlay!();
     } else {
       if (_player.processingState != ProcessingState.idle) {

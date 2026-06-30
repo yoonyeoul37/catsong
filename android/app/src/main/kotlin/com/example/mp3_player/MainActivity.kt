@@ -220,6 +220,47 @@ class MainActivity : AudioServiceActivity() {
                     )
                     result.success(true)
                 }
+                "deleteSongs" -> {
+                    val paths = call.argument<List<String>>("paths")
+                    if (paths != null && paths.isNotEmpty()) {
+                        try {
+                            val uris = mutableListOf<android.net.Uri>()
+                            for (path in paths) {
+                                val cursor = contentResolver.query(
+                                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                                    arrayOf(MediaStore.Audio.Media._ID),
+                                    "${MediaStore.Audio.Media.DATA}=?",
+                                    arrayOf(path), null
+                                )
+                                cursor?.use {
+                                    if (it.moveToFirst()) {
+                                        val id = it.getLong(it.getColumnIndexOrThrow(MediaStore.Audio.Media._ID))
+                                        uris.add(android.net.Uri.withAppendedPath(
+                                            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id.toString()
+                                        ))
+                                    }
+                                }
+                            }
+                            if (uris.isNotEmpty()) {
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                                    deleteResult = result
+                                    val pendingIntent = MediaStore.createDeleteRequest(contentResolver, uris)
+                                    startIntentSenderForResult(pendingIntent.intentSender, 102, null, 0, 0, 0)
+                                } else {
+                                    var count = 0
+                                    for (uri in uris) {
+                                        count += contentResolver.delete(uri, null, null)
+                                    }
+                                    result.success(count > 0)
+                                }
+                            } else {
+                                result.success(false)
+                            }
+                        } catch (e: Exception) {
+                            result.success(false)
+                        }
+                    } else result.success(false)
+                }
                 "deleteSong" -> {
                     val uri = call.argument<String>("uri")
                     if (uri != null) {
@@ -331,6 +372,21 @@ class MainActivity : AudioServiceActivity() {
                     } else {
                         result.success(false)
                     }
+                }
+                "requestBatteryOptimization" -> {
+                    val pm = getSystemService(POWER_SERVICE) as android.os.PowerManager
+                    if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                        val intent = android.content.Intent(android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                        intent.data = android.net.Uri.parse("package:$packageName")
+                        startActivity(intent)
+                        result.success(true)
+                    } else {
+                        result.success(false)
+                    }
+                }
+                "isBatteryOptimized" -> {
+                    val pm = getSystemService(POWER_SERVICE) as android.os.PowerManager
+                    result.success(!pm.isIgnoringBatteryOptimizations(packageName))
                 }
                 "requestAudioFocus" -> {
                     requestAudioFocus()

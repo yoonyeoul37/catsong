@@ -109,19 +109,19 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () async {
               Navigator.pop(ctx);
               const platform = MethodChannel('kr.ssing.catsong/media');
-              int successCount = 0;
               final selectedSongs = musicProvider.songs
                   .where((s) => _selectedSongIds.contains(s.id))
                   .toList();
-              for (final song in selectedSongs) {
-                try {
-                  if (song.uri != null) {
-                    final result = await platform.invokeMethod('deleteSong', {'uri': song.uri});
-                    if (result == true) successCount++;
-                  }
-                } catch (e) {
-                  debugPrint('삭제 실패: $e');
-                }
+              final paths = selectedSongs
+                  .where((s) => s.uri != null)
+                  .map((s) => s.uri!)
+                  .toList();
+              int successCount = 0;
+              try {
+                final result = await platform.invokeMethod('deleteSongs', {'paths': paths});
+                if (result == true) successCount = paths.length;
+              } catch (e) {
+                debugPrint('일괄 삭제 실패: $e');
               }
               setState(() {
                 _isSelectionMode = false;

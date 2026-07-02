@@ -27,6 +27,9 @@ class MainActivity : AudioServiceActivity() {
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
                 flutterMethodChannel?.invokeMethod("onAudioFocusLost", null)
             }
+            AudioManager.AUDIOFOCUS_GAIN -> {
+                flutterMethodChannel?.invokeMethod("onAudioFocusGain", null)
+            }
         }
     }
 

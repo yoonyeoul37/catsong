@@ -169,6 +169,11 @@ class RadioProvider extends ChangeNotifier {
         _isActuallyPlaying = false;
         _setPlayerState(RadioPlayerState.paused);
         _updateForeground(false);
+      } else if (call.method == 'onAudioFocusGain') {
+        debugPrint('오디오 포커스 복구 - 라디오 재개');
+        if (_currentStation != null && _playerState == RadioPlayerState.paused) {
+          await playStation(_currentStation!);
+        }
       }
     });
   }

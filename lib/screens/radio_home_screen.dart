@@ -31,6 +31,103 @@ class RadioHomeScreen extends StatelessWidget {
     return list;
   }
 
+  List<Widget> _buildCountryListByContinent(BuildContext context, List<RadioCountry> countries) {
+    final deviceCountryCode = PlatformDispatcher.instance.locale.countryCode;
+    const continentOrder = ['ASIA', 'EUROPE', 'NORTH_AMERICA', 'SOUTH_AMERICA', 'MIDDLE_EAST', 'AFRICA', 'OCEANIA'];
+    const continentLabels = {
+      'ASIA': 'Asia',
+      'EUROPE': 'Europe',
+      'NORTH_AMERICA': 'North America',
+      'SOUTH_AMERICA': 'South America',
+      'MIDDLE_EAST': 'Middle East',
+      'AFRICA': 'Africa',
+      'OCEANIA': 'Oceania',
+    };
+
+    // 유저 대륙을 맨 위로
+    String? userContinent;
+    if (deviceCountryCode != null) {
+      final userCountry = countries.firstWhere(
+        (c) => c.code == deviceCountryCode,
+        orElse: () => countries.first,
+      );
+      userContinent = userCountry.continent;
+    }
+
+    final sorted = List<String>.from(continentOrder);
+    if (userContinent != null && sorted.contains(userContinent)) {
+      sorted.remove(userContinent);
+      sorted.insert(0, userContinent);
+    }
+
+    final widgets = <Widget>[];
+    for (final continent in sorted) {
+      final group = countries.where((c) => c.continent == continent).toList();
+      if (group.isEmpty) continue;
+
+      // 유저 나라를 해당 대륙 맨 위로
+      if (deviceCountryCode != null) {
+        final idx = group.indexWhere((c) => c.code == deviceCountryCode);
+        if (idx > 0) {
+          final my = group.removeAt(idx);
+          group.insert(0, my);
+        }
+      }
+
+      // 대륙 헤더
+      widgets.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 24, bottom: 8),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  continentLabels[continent] ?? continent,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.5),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Container(
+                  height: 0.5,
+                  color: Colors.white.withOpacity(0.1),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      // 나라 목록
+      for (int i = 0; i < group.length; i++) {
+        final country = group[i];
+        widgets.add(
+          Column(
+            children: [
+              _CountryListTile(
+                country: country,
+                onTap: () => _onCountryTap(context, country),
+              ),
+              if (i != group.length - 1)
+                Divider(height: 1, color: Colors.white.withOpacity(0.16), indent: 48),
+            ],
+          ),
+        );
+      }
+    }
+    return widgets;
+  }
+
   void _onCountryTap(BuildContext context, RadioCountry country) {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
     context.read<RadioProvider>().selectCountry(country);
@@ -124,19 +221,7 @@ class RadioHomeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            ...List.generate(countries.length, (index) {
-              final country = countries[index];
-              return Column(
-                children: [
-                  _CountryListTile(
-                    country: country,
-                    onTap: () => _onCountryTap(context, country),
-                  ),
-                  if (index != countries.length - 1)
-                    Divider(height: 1, color: Colors.white.withOpacity(0.16), indent: 48),
-                ],
-              );
-            }),
+            ..._buildCountryListByContinent(context, countries),
             const SizedBox(height: 80),
           ],
         ),

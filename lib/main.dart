@@ -215,8 +215,20 @@ class _AppInitializerState extends State<AppInitializer> {
             .read<PlaylistProvider>()
             .restorePlaylistSongs(musicProvider.allSongs);
       }
+      // 권한 허용 후 배터리 최적화 요청
+      if (musicProvider.hasPermission) {
+        await Future.delayed(const Duration(seconds: 1));
+        await _checkBatteryOptimization();
+      } else {
+        // 권한 변경 감지 후 배터리 최적화 요청
+        musicProvider.addListener(() async {
+          if (musicProvider.hasPermission) {
+            await Future.delayed(const Duration(seconds: 1));
+            await _checkBatteryOptimization();
+          }
+        });
+      }
       await _checkAndRequestReview();
-      await _checkBatteryOptimization();
     });
   }
 

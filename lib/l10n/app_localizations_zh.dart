@@ -681,6 +681,327 @@ class AppLocalizationsZh extends AppLocalizations {
   String get countryVN => '越南';
 
   @override
+  String get countryPH => '菲律賓';
+
+  @override
+  String get countryDE => '德國';
+
+  @override
+  String get countryFR => '法國';
+
+  @override
+  String get countryTH => '泰國';
+
+  @override
+  String get countryID => '印尼';
+
+  @override
+  String get countryIN => '印度';
+
+  @override
+  String get countryES => '西班牙';
+
+  @override
+  String get countryIT => '義大利';
+
+  @override
+  String get countryBR => '巴西';
+
+  @override
+  String get countryCA => '加拿大';
+
+  @override
+  String get countryAU => '澳洲';
+
+  @override
+  String get countryMX => '墨西哥';
+
+  @override
+  String get countryTR => '土耳其';
+
+  @override
+  String get countryNL => '荷蘭';
+
+  @override
+  String get countrySE => '瑞典';
+
+  @override
+  String get countryPL => '波蘭';
+
+  @override
+  String get countryAR => '阿根廷';
+
+  @override
+  String get countryCO => '哥倫比亞';
+
+  @override
+  String get countryNZ => '紐西蘭';
+
+  @override
+  String get countryMY => '馬來西亞';
+
+  @override
+  String get countrySG => '新加坡';
+
+  @override
+  String get countryRU => '俄羅斯';
+
+  @override
+  String get countryZA => '南非';
+
+  @override
+  String get countryPK => '巴基斯坦';
+
+  @override
+  String get countryBD => '孟加拉';
+
+  @override
+  String get countryLK => '斯里蘭卡';
+
+  @override
+  String get countryNP => '尼泊爾';
+
+  @override
+  String get countryMM => '緬甸';
+
+  @override
+  String get countryKH => '柬埔寨';
+
+  @override
+  String get countryAT => '奧地利';
+
+  @override
+  String get countryCH => '瑞士';
+
+  @override
+  String get countryBE => '比利時';
+
+  @override
+  String get countryPT => '葡萄牙';
+
+  @override
+  String get countryGR => '希臘';
+
+  @override
+  String get countryIE => '愛爾蘭';
+
+  @override
+  String get countryNO => '挪威';
+
+  @override
+  String get countryDK => '丹麥';
+
+  @override
+  String get countryFI => '芬蘭';
+
+  @override
+  String get countryCZ => '捷克';
+
+  @override
+  String get countryRO => '羅馬尼亞';
+
+  @override
+  String get countryUA => '烏克蘭';
+
+  @override
+  String get countryEG => '埃及';
+
+  @override
+  String get countrySA => '沙烏地阿拉伯';
+
+  @override
+  String get countryAE => '阿聯酋';
+
+  @override
+  String get countryNG => '奈及利亞';
+
+  @override
+  String get countryKE => '肯亞';
+
+  @override
+  String get countryCL => '智利';
+
+  @override
+  String get countryPE => '秘魯';
+
+  @override
+  String get countryVE => '委內瑞拉';
+
+  @override
+  String get countryCU => '古巴';
+
+  @override
+  String get countryJM => '牙買加';
+
+  @override
+  String get countryIQ => '伊拉克';
+
+  @override
+  String get countryIR => '伊朗';
+
+  @override
+  String get countryIL => '以色列';
+
+  @override
+  String get countryMN => '蒙古';
+
+  @override
+  String get countryUZ => '烏茲別克';
+
+  @override
+  String get countryKZ => '哈薩克';
+
+  @override
+  String get countryLA => '寮國';
+
+  @override
+  String get countryHU => '匈牙利';
+
+  @override
+  String get countryHR => '克羅埃西亞';
+
+  @override
+  String get countryRS => '塞爾維亞';
+
+  @override
+  String get countryBG => '保加利亞';
+
+  @override
+  String get countrySK => '斯洛伐克';
+
+  @override
+  String get countryLT => '立陶宛';
+
+  @override
+  String get countryLV => '拉脫維亞';
+
+  @override
+  String get countryEE => '愛沙尼亞';
+
+  @override
+  String get countryIS => '冰島';
+
+  @override
+  String get countryGH => '迦納';
+
+  @override
+  String get countryTZ => '坦尚尼亞';
+
+  @override
+  String get countryMA => '摩洛哥';
+
+  @override
+  String get countryTN => '突尼西亞';
+
+  @override
+  String get countryET => '衣索比亞';
+
+  @override
+  String get countryUG => '烏干達';
+
+  @override
+  String get countryEC => '厄瓜多';
+
+  @override
+  String get countryBO => '玻利維亞';
+
+  @override
+  String get countryPY => '巴拉圭';
+
+  @override
+  String get countryUY => '烏拉圭';
+
+  @override
+  String get countryPA => '巴拿馬';
+
+  @override
+  String get countryCR => '哥斯大黎加';
+
+  @override
+  String get countryDO => '多明尼加共和國';
+
+  @override
+  String get countryTT => '千里達及托巴哥';
+
+  @override
+  String get countryHT => '海地';
+
+  @override
+  String get countryFJ => '斐濟';
+
+  @override
+  String get countryPG => '巴布亞紐幾內亞';
+
+  @override
+  String get countryJO => '約旦';
+
+  @override
+  String get countryLB => '黎巴嫩';
+
+  @override
+  String get countryGE => '喬治亞';
+
+  @override
+  String get countryAM => '亞美尼亞';
+
+  @override
+  String get countryAZ => '亞塞拜然';
+
+  @override
+  String get countrySI => '斯洛維尼亞';
+
+  @override
+  String get countryAL => '阿爾巴尼亞';
+
+  @override
+  String get countryMK => '北馬其頓';
+
+  @override
+  String get countryME => '蒙特內哥羅';
+
+  @override
+  String get countryBA => '波士尼亞';
+
+  @override
+  String get countryMT => '馬爾他';
+
+  @override
+  String get countryLU => '盧森堡';
+
+  @override
+  String get countryCY => '賽普勒斯';
+
+  @override
+  String get countryCM => '喀麥隆';
+
+  @override
+  String get countrySN => '塞內加爾';
+
+  @override
+  String get countryZW => '辛巴威';
+
+  @override
+  String get countryMZ => '莫三比克';
+
+  @override
+  String get countryMG => '馬達加斯加';
+
+  @override
+  String get countryGT => '瓜地馬拉';
+
+  @override
+  String get countryHN => '宏都拉斯';
+
+  @override
+  String get countryNI => '尼加拉瓜';
+
+  @override
+  String get countrySV => '薩爾瓦多';
+
+  @override
+  String get countryPR => '波多黎各';
+
+  @override
   String get categoryNational => '全國';
 
   @override
@@ -884,6 +1205,252 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get radioSloganVN => '湄公河的旋律';
+
+  @override
+  String get radioSloganPH => '群島的迴響';
+
+  @override
+  String get radioSloganDE => '歐洲心臟的聲音';
+
+  @override
+  String get radioSloganFR => '生活的旋律';
+
+  @override
+  String get radioSloganTH => '暹羅之聲';
+
+  @override
+  String get radioSloganID => '群島的節奏';
+
+  @override
+  String get radioSloganIN => '印度的旋律';
+
+  @override
+  String get radioSloganES => '靈魂的節奏';
+
+  @override
+  String get radioSloganIT => '生命的樂章';
+
+  @override
+  String get radioSloganBR => '巴西之聲';
+
+  @override
+  String get radioSloganCA => '穿越北方的聲音';
+
+  @override
+  String get radioSloganAU => '南半球的聲音';
+
+  @override
+  String get radioSloganMX => '墨西哥的節奏';
+
+  @override
+  String get radioSloganTR => '安納托利亞之聲';
+
+  @override
+  String get radioSloganNL => '低地之聲';
+
+  @override
+  String get radioSloganSE => '北歐之聲';
+
+  @override
+  String get radioSloganPL => '維斯瓦河的旋律';
+
+  @override
+  String get radioSloganAR => '靈魂的探戈';
+
+  @override
+  String get radioSloganCO => '哥倫比亞的節奏';
+
+  @override
+  String get radioSloganNZ => '奧特亞羅瓦的迴響';
+
+  @override
+  String get radioSloganMY => '馬來西亞的節奏';
+
+  @override
+  String get radioSloganSG => '獅城的律動';
+
+  @override
+  String get radioSloganRU => '俄羅斯之聲';
+
+  @override
+  String get radioSloganZA => '彩虹國度之聲';
+
+  @override
+  String get radioSloganPK => '巴基斯坦的旋律';
+
+  @override
+  String get radioSloganBD => '孟加拉之聲';
+
+  @override
+  String get radioSloganLK => '斯里蘭卡之聲';
+
+  @override
+  String get radioSloganNP => '喜馬拉雅的旋律';
+
+  @override
+  String get radioSloganMM => '緬甸之聲';
+
+  @override
+  String get radioSloganKH => '吳哥之聲';
+
+  @override
+  String get radioSloganAT => '阿爾卑斯的迴響';
+
+  @override
+  String get radioSloganCH => '瑞士之聲';
+
+  @override
+  String get radioSloganBE => '比利時的迴響';
+
+  @override
+  String get radioSloganPT => '葡萄牙之聲';
+
+  @override
+  String get radioSloganGR => '希臘之聲';
+
+  @override
+  String get radioSloganIE => '翡翠島之聲';
+
+  @override
+  String get radioSloganNO => '峽灣之聲';
+
+  @override
+  String get radioSloganDK => '丹麥之聲';
+
+  @override
+  String get radioSloganFI => '芬蘭之聲';
+
+  @override
+  String get radioSloganCZ => '波希米亞之聲';
+
+  @override
+  String get radioSloganRO => '羅馬尼亞之聲';
+
+  @override
+  String get radioSloganUA => '烏克蘭之聲';
+
+  @override
+  String get radioSloganEG => '尼羅河之聲';
+
+  @override
+  String get radioSloganSA => '阿拉伯之聲';
+
+  @override
+  String get radioSloganAE => '海灣之聲';
+
+  @override
+  String get radioSloganNG => '奈及利亞之聲';
+
+  @override
+  String get radioSloganKE => '肯亞之聲';
+
+  @override
+  String get radioSloganCL => '智利之聲';
+
+  @override
+  String get radioSloganPE => '秘魯之聲';
+
+  @override
+  String get radioSloganVE => '委內瑞拉的節奏';
+
+  @override
+  String get radioSloganCU => '古巴的節奏';
+
+  @override
+  String get radioSloganJM => '牙買加的節奏';
+
+  @override
+  String get radioSloganIQ => '美索不達米亞之聲';
+
+  @override
+  String get radioSloganIR => '伊朗的旋律';
+
+  @override
+  String get radioSloganIL => '以色列之聲';
+
+  @override
+  String get radioSloganMN => '草原的旋律';
+
+  @override
+  String get radioSloganUZ => '烏茲別克之聲';
+
+  @override
+  String get radioSloganKZ => '哈薩克之聲';
+
+  @override
+  String get radioSloganLA => '寮國之聲';
+
+  @override
+  String get radioSloganHU => '多瑙河之聲';
+
+  @override
+  String get radioSloganHR => '亞得里亞海之聲';
+
+  @override
+  String get radioSloganRS => '塞爾維亞之聲';
+
+  @override
+  String get radioSloganBG => '保加利亞之聲';
+
+  @override
+  String get radioSloganSK => '斯洛伐克之聲';
+
+  @override
+  String get radioSloganLT => '立陶宛之聲';
+
+  @override
+  String get radioSloganLV => '拉脫維亞之聲';
+
+  @override
+  String get radioSloganEE => '愛沙尼亞之聲';
+
+  @override
+  String get radioSloganIS => '冰島之聲';
+
+  @override
+  String get radioSloganGH => '迦納之聲';
+
+  @override
+  String get radioSloganTZ => '坦尚尼亞之聲';
+
+  @override
+  String get radioSloganMA => '摩洛哥之聲';
+
+  @override
+  String get radioSloganTN => '突尼西亞之聲';
+
+  @override
+  String get radioSloganET => '衣索比亞之聲';
+
+  @override
+  String get radioSloganUG => '烏干達之聲';
+
+  @override
+  String get radioSloganEC => '厄瓜多之聲';
+
+  @override
+  String get radioSloganBO => '玻利維亞之聲';
+
+  @override
+  String get radioSloganPY => '巴拉圭之聲';
+
+  @override
+  String get radioSloganUY => '烏拉圭之聲';
+
+  @override
+  String get radioSloganPA => '巴拿馬之聲';
+
+  @override
+  String get radioSloganCR => '哥斯大黎加之聲';
+
+  @override
+  String get radioSloganDO => '多明尼加的節奏';
+
+  @override
+  String get radioSloganTT => '千里達之聲';
+
+  @override
+  String get radioSloganHT => '海地之聲';
 
   @override
   String get selectSong => '選擇歌曲';

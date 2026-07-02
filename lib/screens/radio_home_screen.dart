@@ -55,6 +55,10 @@ class RadioHomeScreen extends StatelessWidget {
     final radioProvider = context.watch<RadioProvider>();
     final countries = _sortedCountries;
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      radioProvider.fetchAllCountryCounts();
+    });
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: false,
@@ -176,12 +180,21 @@ class _CountryListTile extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 3),
-                  Text(
-                    country.code == 'KR'
-                        ? '${koreanStations.length}${AppLocalizations.of(context)!.radioChannelCount}'
-                        : AppLocalizations.of(context)!.radioPopular200,
-                    style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12.5),
-                  ),
+                  Builder(builder: (ctx) {
+                    if (country.code == 'KR') {
+                      return Text(
+                        '${koreanStations.length}${AppLocalizations.of(context)!.radioChannelCount}',
+                        style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12.5),
+                      );
+                    }
+                    final count = ctx.watch<RadioProvider>().getCountryStationCount(country.code);
+                    return Text(
+                      count != null
+                          ? '$count${AppLocalizations.of(context)!.radioChannelCount}'
+                          : AppLocalizations.of(context)!.radioPopular200,
+                      style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12.5),
+                    );
+                  }),
                 ],
               ),
             ),

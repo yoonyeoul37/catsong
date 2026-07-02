@@ -551,6 +551,32 @@ class RadioProvider extends ChangeNotifier {
   bool _isLoadingCountryStations = false;
   List<RadioStation> get countryStations => _countryStations;
   bool get isLoadingCountryStations => _isLoadingCountryStations;
+  final Map<String, int> _countryStationCounts = {};
+  int? getCountryStationCount(String countryCode) => _countryStationCounts[countryCode];
+
+  Future<void> fetchAllCountryCounts() async {
+    if (_countryStationCounts.isNotEmpty) return;
+    try {
+      final servers = await _getApiServers();
+      final uri = Uri.https(servers.first, '/json/countrycodes', {
+        'hidebroken': 'true',
+      });
+      final response = await http.get(uri, headers: _apiHeaders).timeout(const Duration(seconds: 10));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        for (final item in data) {
+          final code = item['name'] as String? ?? '';
+          final count = item['stationcount'] as int? ?? 0;
+          if (code.isNotEmpty && count > 0) {
+            _countryStationCounts[code] = count > 200 ? 200 : count;
+          }
+        }
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('국가별 채널 수 로드 실패: $e');
+    }
+  }
 
   Future<void> fetchTopStations(String countryCode, {int limit = 200, int retryCount = 0}) async {
     if (retryCount == 0) {
@@ -579,6 +605,7 @@ class RadioProvider extends ChangeNotifier {
               .where((s) => s.streamUrl.isNotEmpty)
               .toList();
           _mergeFavoriteFlags(_countryStations);
+          _countryStationCounts[countryCode] = _countryStations.length;
           break;
         }
       }

@@ -25,6 +25,113 @@ class RadioCountry {
       case 'HK': return l.countryHK;
       case 'GB': return l.countryGB;
       case 'VN': return l.countryVN;
+      case 'PH': return l.countryPH;
+      case 'DE': return l.countryDE;
+      case 'FR': return l.countryFR;
+      case 'TH': return l.countryTH;
+      case 'ID': return l.countryID;
+      case 'IN': return l.countryIN;
+      case 'ES': return l.countryES;
+      case 'IT': return l.countryIT;
+      case 'BR': return l.countryBR;
+      case 'CA': return l.countryCA;
+      case 'AU': return l.countryAU;
+      case 'MX': return l.countryMX;
+      case 'TR': return l.countryTR;
+      case 'NL': return l.countryNL;
+      case 'SE': return l.countrySE;
+      case 'PL': return l.countryPL;
+      case 'AR': return l.countryAR;
+      case 'CO': return l.countryCO;
+      case 'NZ': return l.countryNZ;
+      case 'MY': return l.countryMY;
+      case 'SG': return l.countrySG;
+      case 'RU': return l.countryRU;
+      case 'ZA': return l.countryZA;
+      case 'PK': return l.countryPK;
+      case 'BD': return l.countryBD;
+      case 'LK': return l.countryLK;
+      case 'NP': return l.countryNP;
+      case 'MM': return l.countryMM;
+      case 'KH': return l.countryKH;
+      case 'AT': return l.countryAT;
+      case 'CH': return l.countryCH;
+      case 'BE': return l.countryBE;
+      case 'PT': return l.countryPT;
+      case 'GR': return l.countryGR;
+      case 'IE': return l.countryIE;
+      case 'NO': return l.countryNO;
+      case 'DK': return l.countryDK;
+      case 'FI': return l.countryFI;
+      case 'CZ': return l.countryCZ;
+      case 'RO': return l.countryRO;
+      case 'UA': return l.countryUA;
+      case 'EG': return l.countryEG;
+      case 'SA': return l.countrySA;
+      case 'AE': return l.countryAE;
+      case 'NG': return l.countryNG;
+      case 'KE': return l.countryKE;
+      case 'CL': return l.countryCL;
+      case 'PE': return l.countryPE;
+      case 'VE': return l.countryVE;
+      case 'CU': return l.countryCU;
+      case 'JM': return l.countryJM;
+      case 'IQ': return l.countryIQ;
+      case 'IR': return l.countryIR;
+      case 'IL': return l.countryIL;
+      case 'MN': return l.countryMN;
+      case 'UZ': return l.countryUZ;
+      case 'KZ': return l.countryKZ;
+      case 'LA': return l.countryLA;
+      case 'HU': return l.countryHU;
+      case 'HR': return l.countryHR;
+      case 'RS': return l.countryRS;
+      case 'BG': return l.countryBG;
+      case 'SK': return l.countrySK;
+      case 'LT': return l.countryLT;
+      case 'LV': return l.countryLV;
+      case 'EE': return l.countryEE;
+      case 'IS': return l.countryIS;
+      case 'GH': return l.countryGH;
+      case 'TZ': return l.countryTZ;
+      case 'MA': return l.countryMA;
+      case 'TN': return l.countryTN;
+      case 'ET': return l.countryET;
+      case 'UG': return l.countryUG;
+      case 'EC': return l.countryEC;
+      case 'BO': return l.countryBO;
+      case 'PY': return l.countryPY;
+      case 'UY': return l.countryUY;
+      case 'PA': return l.countryPA;
+      case 'CR': return l.countryCR;
+      case 'DO': return l.countryDO;
+      case 'TT': return l.countryTT;
+      case 'HT': return l.countryHT;
+      case 'FJ': return l.countryFJ;
+      case 'PG': return l.countryPG;
+      case 'JO': return l.countryJO;
+      case 'LB': return l.countryLB;
+      case 'GE': return l.countryGE;
+      case 'AM': return l.countryAM;
+      case 'AZ': return l.countryAZ;
+      case 'SI': return l.countrySI;
+      case 'AL': return l.countryAL;
+      case 'MK': return l.countryMK;
+      case 'ME': return l.countryME;
+      case 'BA': return l.countryBA;
+      case 'MT': return l.countryMT;
+      case 'LU': return l.countryLU;
+      case 'CY': return l.countryCY;
+      case 'CM': return l.countryCM;
+      case 'SN': return l.countrySN;
+      case 'ZW': return l.countryZW;
+      case 'MZ': return l.countryMZ;
+      case 'MG': return l.countryMG;
+      case 'GT': return l.countryGT;
+      case 'HN': return l.countryHN;
+      case 'NI': return l.countryNI;
+      case 'SV': return l.countrySV;
+      case 'PR': return l.countryPR;
       default: return name;
     }
   }
@@ -132,6 +239,228 @@ class RadioCountry {
       flag: '🇻🇳',
       broadcasters: [],
     ),
+    RadioCountry(
+      code: 'PH',
+      name: '필리핀',
+      flag: '🇵🇭',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'DE',
+      name: '독일',
+      flag: '🇩🇪',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'FR',
+      name: '프랑스',
+      flag: '🇫🇷',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'TH',
+      name: '태국',
+      flag: '🇹🇭',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'ID',
+      name: '인도네시아',
+      flag: '🇮🇩',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'IN',
+      name: '인도',
+      flag: '🇮🇳',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'ES',
+      name: '스페인',
+      flag: '🇪🇸',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'IT',
+      name: '이탈리아',
+      flag: '🇮🇹',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'BR',
+      name: '브라질',
+      flag: '🇧🇷',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'CA',
+      name: '캐나다',
+      flag: '🇨🇦',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'AU',
+      name: '호주',
+      flag: '🇦🇺',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'MX',
+      name: '멕시코',
+      flag: '🇲🇽',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'TR',
+      name: '터키',
+      flag: '🇹🇷',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'NL',
+      name: '네덜란드',
+      flag: '🇳🇱',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'SE',
+      name: '스웨덴',
+      flag: '🇸🇪',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'PL',
+      name: '폴란드',
+      flag: '🇵🇱',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'AR',
+      name: '아르헨티나',
+      flag: '🇦🇷',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'CO',
+      name: '콜롬비아',
+      flag: '🇨🇴',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'NZ',
+      name: '뉴질랜드',
+      flag: '🇳🇿',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'MY',
+      name: '말레이시아',
+      flag: '🇲🇾',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'SG',
+      name: '싱가포르',
+      flag: '🇸🇬',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'RU',
+      name: '러시아',
+      flag: '🇷🇺',
+      broadcasters: [],
+    ),
+    RadioCountry(
+      code: 'ZA',
+      name: '남아프리카',
+      flag: '🇿🇦',
+      broadcasters: [],
+    ),
+    RadioCountry(code: 'PK', name: '파키스탄', flag: '🇵🇰', broadcasters: []),
+    RadioCountry(code: 'BD', name: '방글라데시', flag: '🇧🇩', broadcasters: []),
+    RadioCountry(code: 'LK', name: '스리랑카', flag: '🇱🇰', broadcasters: []),
+    RadioCountry(code: 'NP', name: '네팔', flag: '🇳🇵', broadcasters: []),
+    RadioCountry(code: 'MM', name: '미얀마', flag: '🇲🇲', broadcasters: []),
+    RadioCountry(code: 'KH', name: '캄보디아', flag: '🇰🇭', broadcasters: []),
+    RadioCountry(code: 'AT', name: '오스트리아', flag: '🇦🇹', broadcasters: []),
+    RadioCountry(code: 'CH', name: '스위스', flag: '🇨🇭', broadcasters: []),
+    RadioCountry(code: 'BE', name: '벨기에', flag: '🇧🇪', broadcasters: []),
+    RadioCountry(code: 'PT', name: '포르투갈', flag: '🇵🇹', broadcasters: []),
+    RadioCountry(code: 'GR', name: '그리스', flag: '🇬🇷', broadcasters: []),
+    RadioCountry(code: 'IE', name: '아일랜드', flag: '🇮🇪', broadcasters: []),
+    RadioCountry(code: 'NO', name: '노르웨이', flag: '🇳🇴', broadcasters: []),
+    RadioCountry(code: 'DK', name: '덴마크', flag: '🇩🇰', broadcasters: []),
+    RadioCountry(code: 'FI', name: '핀란드', flag: '🇫🇮', broadcasters: []),
+    RadioCountry(code: 'CZ', name: '체코', flag: '🇨🇿', broadcasters: []),
+    RadioCountry(code: 'RO', name: '루마니아', flag: '🇷🇴', broadcasters: []),
+    RadioCountry(code: 'UA', name: '우크라이나', flag: '🇺🇦', broadcasters: []),
+    RadioCountry(code: 'EG', name: '이집트', flag: '🇪🇬', broadcasters: []),
+    RadioCountry(code: 'SA', name: '사우디아라비아', flag: '🇸🇦', broadcasters: []),
+    RadioCountry(code: 'AE', name: 'UAE', flag: '🇦🇪', broadcasters: []),
+    RadioCountry(code: 'NG', name: '나이지리아', flag: '🇳🇬', broadcasters: []),
+    RadioCountry(code: 'KE', name: '케냐', flag: '🇰🇪', broadcasters: []),
+    RadioCountry(code: 'CL', name: '칠레', flag: '🇨🇱', broadcasters: []),
+    RadioCountry(code: 'PE', name: '페루', flag: '🇵🇪', broadcasters: []),
+    RadioCountry(code: 'VE', name: '베네수엘라', flag: '🇻🇪', broadcasters: []),
+    RadioCountry(code: 'CU', name: '쿠바', flag: '🇨🇺', broadcasters: []),
+    RadioCountry(code: 'JM', name: '자메이카', flag: '🇯🇲', broadcasters: []),
+    RadioCountry(code: 'IQ', name: '이라크', flag: '🇮🇶', broadcasters: []),
+    RadioCountry(code: 'IR', name: '이란', flag: '🇮🇷', broadcasters: []),
+    RadioCountry(code: 'IL', name: '이스라엘', flag: '🇮🇱', broadcasters: []),
+    RadioCountry(code: 'MN', name: '몽골', flag: '🇲🇳', broadcasters: []),
+    RadioCountry(code: 'UZ', name: '우즈베키스탄', flag: '🇺🇿', broadcasters: []),
+    RadioCountry(code: 'KZ', name: '카자흐스탄', flag: '🇰🇿', broadcasters: []),
+    RadioCountry(code: 'LA', name: '라오스', flag: '🇱🇦', broadcasters: []),
+    RadioCountry(code: 'HU', name: '헝가리', flag: '🇭🇺', broadcasters: []),
+    RadioCountry(code: 'HR', name: '크로아티아', flag: '🇭🇷', broadcasters: []),
+    RadioCountry(code: 'RS', name: '세르비아', flag: '🇷🇸', broadcasters: []),
+    RadioCountry(code: 'BG', name: '불가리아', flag: '🇧🇬', broadcasters: []),
+    RadioCountry(code: 'SK', name: '슬로바키아', flag: '🇸🇰', broadcasters: []),
+    RadioCountry(code: 'LT', name: '리투아니아', flag: '🇱🇹', broadcasters: []),
+    RadioCountry(code: 'LV', name: '라트비아', flag: '🇱🇻', broadcasters: []),
+    RadioCountry(code: 'EE', name: '에스토니아', flag: '🇪🇪', broadcasters: []),
+    RadioCountry(code: 'IS', name: '아이슬란드', flag: '🇮🇸', broadcasters: []),
+    RadioCountry(code: 'GH', name: '가나', flag: '🇬🇭', broadcasters: []),
+    RadioCountry(code: 'TZ', name: '탄자니아', flag: '🇹🇿', broadcasters: []),
+    RadioCountry(code: 'MA', name: '모로코', flag: '🇲🇦', broadcasters: []),
+    RadioCountry(code: 'TN', name: '튀니지', flag: '🇹🇳', broadcasters: []),
+    RadioCountry(code: 'ET', name: '에티오피아', flag: '🇪🇹', broadcasters: []),
+    RadioCountry(code: 'UG', name: '우간다', flag: '🇺🇬', broadcasters: []),
+    RadioCountry(code: 'EC', name: '에콰도르', flag: '🇪🇨', broadcasters: []),
+    RadioCountry(code: 'BO', name: '볼리비아', flag: '🇧🇴', broadcasters: []),
+    RadioCountry(code: 'PY', name: '파라과이', flag: '🇵🇾', broadcasters: []),
+    RadioCountry(code: 'UY', name: '우루과이', flag: '🇺🇾', broadcasters: []),
+    RadioCountry(code: 'PA', name: '파나마', flag: '🇵🇦', broadcasters: []),
+    RadioCountry(code: 'CR', name: '코스타리카', flag: '🇨🇷', broadcasters: []),
+    RadioCountry(code: 'DO', name: '도미니카공화국', flag: '🇩🇴', broadcasters: []),
+    RadioCountry(code: 'TT', name: '트리니다드토바고', flag: '🇹🇹', broadcasters: []),
+    RadioCountry(code: 'HT', name: '아이티', flag: '🇭🇹', broadcasters: []),
+    RadioCountry(code: 'FJ', name: '피지', flag: '🇫🇯', broadcasters: []),
+    RadioCountry(code: 'PG', name: '파푸아뉴기니', flag: '🇵🇬', broadcasters: []),
+    RadioCountry(code: 'JO', name: '요르단', flag: '🇯🇴', broadcasters: []),
+    RadioCountry(code: 'LB', name: '레바논', flag: '🇱🇧', broadcasters: []),
+    RadioCountry(code: 'GE', name: '조지아', flag: '🇬🇪', broadcasters: []),
+    RadioCountry(code: 'AM', name: '아르메니아', flag: '🇦🇲', broadcasters: []),
+    RadioCountry(code: 'AZ', name: '아제르바이잔', flag: '🇦🇿', broadcasters: []),
+    RadioCountry(code: 'SI', name: '슬로베니아', flag: '🇸🇮', broadcasters: []),
+    RadioCountry(code: 'AL', name: '알바니아', flag: '🇦🇱', broadcasters: []),
+    RadioCountry(code: 'MK', name: '북마케도니아', flag: '🇲🇰', broadcasters: []),
+    RadioCountry(code: 'ME', name: '몬테네그로', flag: '🇲🇪', broadcasters: []),
+    RadioCountry(code: 'BA', name: '보스니아', flag: '🇧🇦', broadcasters: []),
+    RadioCountry(code: 'MT', name: '몰타', flag: '🇲🇹', broadcasters: []),
+    RadioCountry(code: 'LU', name: '룩셈부르크', flag: '🇱🇺', broadcasters: []),
+    RadioCountry(code: 'CY', name: '키프로스', flag: '🇨🇾', broadcasters: []),
+    RadioCountry(code: 'CM', name: '카메룬', flag: '🇨🇲', broadcasters: []),
+    RadioCountry(code: 'SN', name: '세네갈', flag: '🇸🇳', broadcasters: []),
+    RadioCountry(code: 'ZW', name: '짐바브웨', flag: '🇿🇼', broadcasters: []),
+    RadioCountry(code: 'MZ', name: '모잠비크', flag: '🇲🇿', broadcasters: []),
+    RadioCountry(code: 'MG', name: '마다가스카르', flag: '🇲🇬', broadcasters: []),
+    RadioCountry(code: 'GT', name: '과테말라', flag: '🇬🇹', broadcasters: []),
+    RadioCountry(code: 'HN', name: '온두라스', flag: '🇭🇳', broadcasters: []),
+    RadioCountry(code: 'NI', name: '니카라과', flag: '🇳🇮', broadcasters: []),
+    RadioCountry(code: 'SV', name: '엘살바도르', flag: '🇸🇻', broadcasters: []),
+    RadioCountry(code: 'PR', name: '푸에르토리코', flag: '🇵🇷', broadcasters: []),
   ];
 }
 

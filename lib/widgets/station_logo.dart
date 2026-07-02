@@ -28,6 +28,7 @@ class StationLogo extends StatelessWidget {
           logoUrl!,
           width: size, height: size,
           fit: BoxFit.cover,
+          gaplessPlayback: true,
           errorBuilder: (_, __, ___) =>
               _Fallback(initials: initials, color: color,
                   size: size, fSize: fSize),
@@ -35,6 +36,13 @@ class StationLogo extends StatelessWidget {
             if (progress == null) return child;
             return _Fallback(initials: initials, color: color,
                 size: size, fSize: fSize);
+          },
+          frameBuilder: (ctx, child, frame, wasSynchronouslyLoaded) {
+            if (frame == null) {
+              return _Fallback(initials: initials, color: color,
+                  size: size, fSize: fSize);
+            }
+            return child;
           },
         ),
       );
@@ -44,13 +52,15 @@ class StationLogo extends StatelessWidget {
   }
 
   String _initials(String s) {
-    final w = s.trim().split(' ');
+    final t = s.trim();
+    if (t.isEmpty) return '?';
+    final w = t.split(' ').where((e) => e.isNotEmpty).toList();
     if (w.length >= 2) {
       return '${w[0][0]}${w[1][0]}'.toUpperCase();
     }
-    return s.length >= 2
-        ? s.substring(0, 2).toUpperCase()
-        : s.toUpperCase();
+    return t.length >= 2
+        ? t.substring(0, 2).toUpperCase()
+        : t.toUpperCase();
   }
 
   Color _colorFor(String s) {

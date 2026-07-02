@@ -687,6 +687,327 @@ class AppLocalizationsEn extends AppLocalizations {
   String get countryVN => 'Vietnam';
 
   @override
+  String get countryPH => 'Philippines';
+
+  @override
+  String get countryDE => 'Germany';
+
+  @override
+  String get countryFR => 'France';
+
+  @override
+  String get countryTH => 'Thailand';
+
+  @override
+  String get countryID => 'Indonesia';
+
+  @override
+  String get countryIN => 'India';
+
+  @override
+  String get countryES => 'Spain';
+
+  @override
+  String get countryIT => 'Italy';
+
+  @override
+  String get countryBR => 'Brazil';
+
+  @override
+  String get countryCA => 'Canada';
+
+  @override
+  String get countryAU => 'Australia';
+
+  @override
+  String get countryMX => 'Mexico';
+
+  @override
+  String get countryTR => 'Turkey';
+
+  @override
+  String get countryNL => 'Netherlands';
+
+  @override
+  String get countrySE => 'Sweden';
+
+  @override
+  String get countryPL => 'Poland';
+
+  @override
+  String get countryAR => 'Argentina';
+
+  @override
+  String get countryCO => 'Colombia';
+
+  @override
+  String get countryNZ => 'New Zealand';
+
+  @override
+  String get countryMY => 'Malaysia';
+
+  @override
+  String get countrySG => 'Singapore';
+
+  @override
+  String get countryRU => 'Russia';
+
+  @override
+  String get countryZA => 'South Africa';
+
+  @override
+  String get countryPK => 'Pakistan';
+
+  @override
+  String get countryBD => 'Bangladesh';
+
+  @override
+  String get countryLK => 'Sri Lanka';
+
+  @override
+  String get countryNP => 'Nepal';
+
+  @override
+  String get countryMM => 'Myanmar';
+
+  @override
+  String get countryKH => 'Cambodia';
+
+  @override
+  String get countryAT => 'Austria';
+
+  @override
+  String get countryCH => 'Switzerland';
+
+  @override
+  String get countryBE => 'Belgium';
+
+  @override
+  String get countryPT => 'Portugal';
+
+  @override
+  String get countryGR => 'Greece';
+
+  @override
+  String get countryIE => 'Ireland';
+
+  @override
+  String get countryNO => 'Norway';
+
+  @override
+  String get countryDK => 'Denmark';
+
+  @override
+  String get countryFI => 'Finland';
+
+  @override
+  String get countryCZ => 'Czech Republic';
+
+  @override
+  String get countryRO => 'Romania';
+
+  @override
+  String get countryUA => 'Ukraine';
+
+  @override
+  String get countryEG => 'Egypt';
+
+  @override
+  String get countrySA => 'Saudi Arabia';
+
+  @override
+  String get countryAE => 'UAE';
+
+  @override
+  String get countryNG => 'Nigeria';
+
+  @override
+  String get countryKE => 'Kenya';
+
+  @override
+  String get countryCL => 'Chile';
+
+  @override
+  String get countryPE => 'Peru';
+
+  @override
+  String get countryVE => 'Venezuela';
+
+  @override
+  String get countryCU => 'Cuba';
+
+  @override
+  String get countryJM => 'Jamaica';
+
+  @override
+  String get countryIQ => 'Iraq';
+
+  @override
+  String get countryIR => 'Iran';
+
+  @override
+  String get countryIL => 'Israel';
+
+  @override
+  String get countryMN => 'Mongolia';
+
+  @override
+  String get countryUZ => 'Uzbekistan';
+
+  @override
+  String get countryKZ => 'Kazakhstan';
+
+  @override
+  String get countryLA => 'Laos';
+
+  @override
+  String get countryHU => 'Hungary';
+
+  @override
+  String get countryHR => 'Croatia';
+
+  @override
+  String get countryRS => 'Serbia';
+
+  @override
+  String get countryBG => 'Bulgaria';
+
+  @override
+  String get countrySK => 'Slovakia';
+
+  @override
+  String get countryLT => 'Lithuania';
+
+  @override
+  String get countryLV => 'Latvia';
+
+  @override
+  String get countryEE => 'Estonia';
+
+  @override
+  String get countryIS => 'Iceland';
+
+  @override
+  String get countryGH => 'Ghana';
+
+  @override
+  String get countryTZ => 'Tanzania';
+
+  @override
+  String get countryMA => 'Morocco';
+
+  @override
+  String get countryTN => 'Tunisia';
+
+  @override
+  String get countryET => 'Ethiopia';
+
+  @override
+  String get countryUG => 'Uganda';
+
+  @override
+  String get countryEC => 'Ecuador';
+
+  @override
+  String get countryBO => 'Bolivia';
+
+  @override
+  String get countryPY => 'Paraguay';
+
+  @override
+  String get countryUY => 'Uruguay';
+
+  @override
+  String get countryPA => 'Panama';
+
+  @override
+  String get countryCR => 'Costa Rica';
+
+  @override
+  String get countryDO => 'Dominican Republic';
+
+  @override
+  String get countryTT => 'Trinidad and Tobago';
+
+  @override
+  String get countryHT => 'Haiti';
+
+  @override
+  String get countryFJ => 'Fiji';
+
+  @override
+  String get countryPG => 'Papua New Guinea';
+
+  @override
+  String get countryJO => 'Jordan';
+
+  @override
+  String get countryLB => 'Lebanon';
+
+  @override
+  String get countryGE => 'Georgia';
+
+  @override
+  String get countryAM => 'Armenia';
+
+  @override
+  String get countryAZ => 'Azerbaijan';
+
+  @override
+  String get countrySI => 'Slovenia';
+
+  @override
+  String get countryAL => 'Albania';
+
+  @override
+  String get countryMK => 'North Macedonia';
+
+  @override
+  String get countryME => 'Montenegro';
+
+  @override
+  String get countryBA => 'Bosnia';
+
+  @override
+  String get countryMT => 'Malta';
+
+  @override
+  String get countryLU => 'Luxembourg';
+
+  @override
+  String get countryCY => 'Cyprus';
+
+  @override
+  String get countryCM => 'Cameroon';
+
+  @override
+  String get countrySN => 'Senegal';
+
+  @override
+  String get countryZW => 'Zimbabwe';
+
+  @override
+  String get countryMZ => 'Mozambique';
+
+  @override
+  String get countryMG => 'Madagascar';
+
+  @override
+  String get countryGT => 'Guatemala';
+
+  @override
+  String get countryHN => 'Honduras';
+
+  @override
+  String get countryNI => 'Nicaragua';
+
+  @override
+  String get countrySV => 'El Salvador';
+
+  @override
+  String get countryPR => 'Puerto Rico';
+
+  @override
   String get categoryNational => 'National';
 
   @override
@@ -890,6 +1211,252 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get radioSloganVN => 'Melodies of the Mekong';
+
+  @override
+  String get radioSloganPH => 'Sounds of the Islands';
+
+  @override
+  String get radioSloganDE => 'Sounds from the Heart of Europe';
+
+  @override
+  String get radioSloganFR => 'Melodies of Life';
+
+  @override
+  String get radioSloganTH => 'Sounds of Siam';
+
+  @override
+  String get radioSloganID => 'Rhythms of the Archipelago';
+
+  @override
+  String get radioSloganIN => 'Tunes of India';
+
+  @override
+  String get radioSloganES => 'Rhythms of the Soul';
+
+  @override
+  String get radioSloganIT => 'The Music of Life';
+
+  @override
+  String get radioSloganBR => 'The Sound of Brazil';
+
+  @override
+  String get radioSloganCA => 'Voices Across the North';
+
+  @override
+  String get radioSloganAU => 'Sounds Down Under';
+
+  @override
+  String get radioSloganMX => 'The Rhythm of Mexico';
+
+  @override
+  String get radioSloganTR => 'Voice of Anatolia';
+
+  @override
+  String get radioSloganNL => 'Sounds of the Lowlands';
+
+  @override
+  String get radioSloganSE => 'Sounds from the North';
+
+  @override
+  String get radioSloganPL => 'Melodies of the Vistula';
+
+  @override
+  String get radioSloganAR => 'Tango of the Soul';
+
+  @override
+  String get radioSloganCO => 'Rhythms of Colombia';
+
+  @override
+  String get radioSloganNZ => 'Echoes of Aotearoa';
+
+  @override
+  String get radioSloganMY => 'Rhythms of Malaysia';
+
+  @override
+  String get radioSloganSG => 'The Lion City Vibes';
+
+  @override
+  String get radioSloganRU => 'Sounds of Russia';
+
+  @override
+  String get radioSloganZA => 'Sounds of the Rainbow Nation';
+
+  @override
+  String get radioSloganPK => 'Melodies of Pakistan';
+
+  @override
+  String get radioSloganBD => 'Sounds of Bengal';
+
+  @override
+  String get radioSloganLK => 'Sounds of Sri Lanka';
+
+  @override
+  String get radioSloganNP => 'Tunes of the Himalayas';
+
+  @override
+  String get radioSloganMM => 'Sounds of Myanmar';
+
+  @override
+  String get radioSloganKH => 'Sounds of Angkor';
+
+  @override
+  String get radioSloganAT => 'Echoes of the Alps';
+
+  @override
+  String get radioSloganCH => 'Voices of Switzerland';
+
+  @override
+  String get radioSloganBE => 'Sounds of Belgium';
+
+  @override
+  String get radioSloganPT => 'Sounds of Portugal';
+
+  @override
+  String get radioSloganGR => 'Sounds of Greece';
+
+  @override
+  String get radioSloganIE => 'Sounds of the Emerald Isle';
+
+  @override
+  String get radioSloganNO => 'Sounds of the Fjords';
+
+  @override
+  String get radioSloganDK => 'Sounds of Denmark';
+
+  @override
+  String get radioSloganFI => 'Sounds of Finland';
+
+  @override
+  String get radioSloganCZ => 'Sounds of Bohemia';
+
+  @override
+  String get radioSloganRO => 'Sounds of Romania';
+
+  @override
+  String get radioSloganUA => 'Sounds of Ukraine';
+
+  @override
+  String get radioSloganEG => 'Sounds of the Nile';
+
+  @override
+  String get radioSloganSA => 'Sounds of Arabia';
+
+  @override
+  String get radioSloganAE => 'Sounds of the Gulf';
+
+  @override
+  String get radioSloganNG => 'Sounds of Naija';
+
+  @override
+  String get radioSloganKE => 'Sounds of Kenya';
+
+  @override
+  String get radioSloganCL => 'Sounds of Chile';
+
+  @override
+  String get radioSloganPE => 'Sounds of Peru';
+
+  @override
+  String get radioSloganVE => 'Rhythms of Venezuela';
+
+  @override
+  String get radioSloganCU => 'Rhythms of Cuba';
+
+  @override
+  String get radioSloganJM => 'Riddims of Jamaica';
+
+  @override
+  String get radioSloganIQ => 'Sounds of Mesopotamia';
+
+  @override
+  String get radioSloganIR => 'Melodies of Iran';
+
+  @override
+  String get radioSloganIL => 'Sounds of Israel';
+
+  @override
+  String get radioSloganMN => 'Melodies of the Steppe';
+
+  @override
+  String get radioSloganUZ => 'Sounds of Uzbekistan';
+
+  @override
+  String get radioSloganKZ => 'Sounds of Kazakhstan';
+
+  @override
+  String get radioSloganLA => 'Sounds of Laos';
+
+  @override
+  String get radioSloganHU => 'Sounds of the Danube';
+
+  @override
+  String get radioSloganHR => 'Sounds of the Adriatic';
+
+  @override
+  String get radioSloganRS => 'Sounds of Serbia';
+
+  @override
+  String get radioSloganBG => 'Sounds of Bulgaria';
+
+  @override
+  String get radioSloganSK => 'Sounds of Slovakia';
+
+  @override
+  String get radioSloganLT => 'Sounds of Lithuania';
+
+  @override
+  String get radioSloganLV => 'Sounds of Latvia';
+
+  @override
+  String get radioSloganEE => 'Sounds of Estonia';
+
+  @override
+  String get radioSloganIS => 'Sounds of Iceland';
+
+  @override
+  String get radioSloganGH => 'Sounds of Ghana';
+
+  @override
+  String get radioSloganTZ => 'Sounds of Tanzania';
+
+  @override
+  String get radioSloganMA => 'Sounds of Morocco';
+
+  @override
+  String get radioSloganTN => 'Sounds of Tunisia';
+
+  @override
+  String get radioSloganET => 'Sounds of Ethiopia';
+
+  @override
+  String get radioSloganUG => 'Sounds of Uganda';
+
+  @override
+  String get radioSloganEC => 'Sounds of Ecuador';
+
+  @override
+  String get radioSloganBO => 'Sounds of Bolivia';
+
+  @override
+  String get radioSloganPY => 'Sounds of Paraguay';
+
+  @override
+  String get radioSloganUY => 'Sounds of Uruguay';
+
+  @override
+  String get radioSloganPA => 'Sounds of Panama';
+
+  @override
+  String get radioSloganCR => 'Sounds of Costa Rica';
+
+  @override
+  String get radioSloganDO => 'Dominican Rhythms';
+
+  @override
+  String get radioSloganTT => 'Sounds of Trinidad';
+
+  @override
+  String get radioSloganHT => 'Sounds of Haiti';
 
   @override
   String get selectSong => 'Select Song';

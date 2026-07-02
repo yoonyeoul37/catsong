@@ -681,6 +681,327 @@ class AppLocalizationsJa extends AppLocalizations {
   String get countryVN => 'ベトナム';
 
   @override
+  String get countryPH => 'フィリピン';
+
+  @override
+  String get countryDE => 'ドイツ';
+
+  @override
+  String get countryFR => 'フランス';
+
+  @override
+  String get countryTH => 'タイ';
+
+  @override
+  String get countryID => 'インドネシア';
+
+  @override
+  String get countryIN => 'インド';
+
+  @override
+  String get countryES => 'スペイン';
+
+  @override
+  String get countryIT => 'イタリア';
+
+  @override
+  String get countryBR => 'ブラジル';
+
+  @override
+  String get countryCA => 'カナダ';
+
+  @override
+  String get countryAU => 'オーストラリア';
+
+  @override
+  String get countryMX => 'メキシコ';
+
+  @override
+  String get countryTR => 'トルコ';
+
+  @override
+  String get countryNL => 'オランダ';
+
+  @override
+  String get countrySE => 'スウェーデン';
+
+  @override
+  String get countryPL => 'ポーランド';
+
+  @override
+  String get countryAR => 'アルゼンチン';
+
+  @override
+  String get countryCO => 'コロンビア';
+
+  @override
+  String get countryNZ => 'ニュージーランド';
+
+  @override
+  String get countryMY => 'マレーシア';
+
+  @override
+  String get countrySG => 'シンガポール';
+
+  @override
+  String get countryRU => 'ロシア';
+
+  @override
+  String get countryZA => '南アフリカ';
+
+  @override
+  String get countryPK => 'パキスタン';
+
+  @override
+  String get countryBD => 'バングラデシュ';
+
+  @override
+  String get countryLK => 'スリランカ';
+
+  @override
+  String get countryNP => 'ネパール';
+
+  @override
+  String get countryMM => 'ミャンマー';
+
+  @override
+  String get countryKH => 'カンボジア';
+
+  @override
+  String get countryAT => 'オーストリア';
+
+  @override
+  String get countryCH => 'スイス';
+
+  @override
+  String get countryBE => 'ベルギー';
+
+  @override
+  String get countryPT => 'ポルトガル';
+
+  @override
+  String get countryGR => 'ギリシャ';
+
+  @override
+  String get countryIE => 'アイルランド';
+
+  @override
+  String get countryNO => 'ノルウェー';
+
+  @override
+  String get countryDK => 'デンマーク';
+
+  @override
+  String get countryFI => 'フィンランド';
+
+  @override
+  String get countryCZ => 'チェコ';
+
+  @override
+  String get countryRO => 'ルーマニア';
+
+  @override
+  String get countryUA => 'ウクライナ';
+
+  @override
+  String get countryEG => 'エジプト';
+
+  @override
+  String get countrySA => 'サウジアラビア';
+
+  @override
+  String get countryAE => 'UAE';
+
+  @override
+  String get countryNG => 'ナイジェリア';
+
+  @override
+  String get countryKE => 'ケニア';
+
+  @override
+  String get countryCL => 'チリ';
+
+  @override
+  String get countryPE => 'ペルー';
+
+  @override
+  String get countryVE => 'ベネズエラ';
+
+  @override
+  String get countryCU => 'キューバ';
+
+  @override
+  String get countryJM => 'ジャマイカ';
+
+  @override
+  String get countryIQ => 'イラク';
+
+  @override
+  String get countryIR => 'イラン';
+
+  @override
+  String get countryIL => 'イスラエル';
+
+  @override
+  String get countryMN => 'モンゴル';
+
+  @override
+  String get countryUZ => 'ウズベキスタン';
+
+  @override
+  String get countryKZ => 'カザフスタン';
+
+  @override
+  String get countryLA => 'ラオス';
+
+  @override
+  String get countryHU => 'ハンガリー';
+
+  @override
+  String get countryHR => 'クロアチア';
+
+  @override
+  String get countryRS => 'セルビア';
+
+  @override
+  String get countryBG => 'ブルガリア';
+
+  @override
+  String get countrySK => 'スロバキア';
+
+  @override
+  String get countryLT => 'リトアニア';
+
+  @override
+  String get countryLV => 'ラトビア';
+
+  @override
+  String get countryEE => 'エストニア';
+
+  @override
+  String get countryIS => 'アイスランド';
+
+  @override
+  String get countryGH => 'ガーナ';
+
+  @override
+  String get countryTZ => 'タンザニア';
+
+  @override
+  String get countryMA => 'モロッコ';
+
+  @override
+  String get countryTN => 'チュニジア';
+
+  @override
+  String get countryET => 'エチオピア';
+
+  @override
+  String get countryUG => 'ウガンダ';
+
+  @override
+  String get countryEC => 'エクアドル';
+
+  @override
+  String get countryBO => 'ボリビア';
+
+  @override
+  String get countryPY => 'パラグアイ';
+
+  @override
+  String get countryUY => 'ウルグアイ';
+
+  @override
+  String get countryPA => 'パナマ';
+
+  @override
+  String get countryCR => 'コスタリカ';
+
+  @override
+  String get countryDO => 'ドミニカ共和国';
+
+  @override
+  String get countryTT => 'トリニダード・トバゴ';
+
+  @override
+  String get countryHT => 'ハイチ';
+
+  @override
+  String get countryFJ => 'フィジー';
+
+  @override
+  String get countryPG => 'パプアニューギニア';
+
+  @override
+  String get countryJO => 'ヨルダン';
+
+  @override
+  String get countryLB => 'レバノン';
+
+  @override
+  String get countryGE => 'ジョージア';
+
+  @override
+  String get countryAM => 'アルメニア';
+
+  @override
+  String get countryAZ => 'アゼルバイジャン';
+
+  @override
+  String get countrySI => 'スロベニア';
+
+  @override
+  String get countryAL => 'アルバニア';
+
+  @override
+  String get countryMK => '北マケドニア';
+
+  @override
+  String get countryME => 'モンテネグロ';
+
+  @override
+  String get countryBA => 'ボスニア';
+
+  @override
+  String get countryMT => 'マルタ';
+
+  @override
+  String get countryLU => 'ルクセンブルク';
+
+  @override
+  String get countryCY => 'キプロス';
+
+  @override
+  String get countryCM => 'カメルーン';
+
+  @override
+  String get countrySN => 'セネガル';
+
+  @override
+  String get countryZW => 'ジンバブエ';
+
+  @override
+  String get countryMZ => 'モザンビーク';
+
+  @override
+  String get countryMG => 'マダガスカル';
+
+  @override
+  String get countryGT => 'グアテマラ';
+
+  @override
+  String get countryHN => 'ホンジュラス';
+
+  @override
+  String get countryNI => 'ニカラグア';
+
+  @override
+  String get countrySV => 'エルサルバドル';
+
+  @override
+  String get countryPR => 'プエルトリコ';
+
+  @override
   String get categoryNational => '全国';
 
   @override
@@ -884,6 +1205,252 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get radioSloganVN => 'メコン川の調べ';
+
+  @override
+  String get radioSloganPH => '島々の響き';
+
+  @override
+  String get radioSloganDE => 'ヨーロッパの心臓からの音';
+
+  @override
+  String get radioSloganFR => '人生のメロディー';
+
+  @override
+  String get radioSloganTH => 'シャムの響き';
+
+  @override
+  String get radioSloganID => '群島のリズム';
+
+  @override
+  String get radioSloganIN => 'インドの調べ';
+
+  @override
+  String get radioSloganES => '魂のリズム';
+
+  @override
+  String get radioSloganIT => '人生の音楽';
+
+  @override
+  String get radioSloganBR => 'ブラジルの音';
+
+  @override
+  String get radioSloganCA => '北の大地を渡る声';
+
+  @override
+  String get radioSloganAU => '南半球の響き';
+
+  @override
+  String get radioSloganMX => 'メキシコのリズム';
+
+  @override
+  String get radioSloganTR => 'アナトリアの声';
+
+  @override
+  String get radioSloganNL => '低地の響き';
+
+  @override
+  String get radioSloganSE => '北欧の音';
+
+  @override
+  String get radioSloganPL => 'ヴィスワ川の調べ';
+
+  @override
+  String get radioSloganAR => '魂のタンゴ';
+
+  @override
+  String get radioSloganCO => 'コロンビアのリズム';
+
+  @override
+  String get radioSloganNZ => 'アオテアロアの響き';
+
+  @override
+  String get radioSloganMY => 'マレーシアのリズム';
+
+  @override
+  String get radioSloganSG => 'ライオンシティの響き';
+
+  @override
+  String get radioSloganRU => 'ロシアの音';
+
+  @override
+  String get radioSloganZA => '虹の国の響き';
+
+  @override
+  String get radioSloganPK => 'パキスタンの旋律';
+
+  @override
+  String get radioSloganBD => 'ベンガルの音';
+
+  @override
+  String get radioSloganLK => 'スリランカの音';
+
+  @override
+  String get radioSloganNP => 'ヒマラヤの調べ';
+
+  @override
+  String get radioSloganMM => 'ミャンマーの音';
+
+  @override
+  String get radioSloganKH => 'アンコールの音';
+
+  @override
+  String get radioSloganAT => 'アルプスの響き';
+
+  @override
+  String get radioSloganCH => 'スイスの声';
+
+  @override
+  String get radioSloganBE => 'ベルギーの響き';
+
+  @override
+  String get radioSloganPT => 'ポルトガルの音';
+
+  @override
+  String get radioSloganGR => 'ギリシャの音';
+
+  @override
+  String get radioSloganIE => 'エメラルドの島の音';
+
+  @override
+  String get radioSloganNO => 'フィヨルドの音';
+
+  @override
+  String get radioSloganDK => 'デンマークの音';
+
+  @override
+  String get radioSloganFI => 'フィンランドの音';
+
+  @override
+  String get radioSloganCZ => 'ボヘミアの音';
+
+  @override
+  String get radioSloganRO => 'ルーマニアの音';
+
+  @override
+  String get radioSloganUA => 'ウクライナの音';
+
+  @override
+  String get radioSloganEG => 'ナイルの音';
+
+  @override
+  String get radioSloganSA => 'アラビアの音';
+
+  @override
+  String get radioSloganAE => '湾岸の音';
+
+  @override
+  String get radioSloganNG => 'ナイジェリアの音';
+
+  @override
+  String get radioSloganKE => 'ケニアの音';
+
+  @override
+  String get radioSloganCL => 'チリの音';
+
+  @override
+  String get radioSloganPE => 'ペルーの音';
+
+  @override
+  String get radioSloganVE => 'ベネズエラのリズム';
+
+  @override
+  String get radioSloganCU => 'キューバのリズム';
+
+  @override
+  String get radioSloganJM => 'ジャマイカのリズム';
+
+  @override
+  String get radioSloganIQ => 'メソポタミアの音';
+
+  @override
+  String get radioSloganIR => 'イランの旋律';
+
+  @override
+  String get radioSloganIL => 'イスラエルの音';
+
+  @override
+  String get radioSloganMN => '草原の調べ';
+
+  @override
+  String get radioSloganUZ => 'ウズベキスタンの音';
+
+  @override
+  String get radioSloganKZ => 'カザフスタンの音';
+
+  @override
+  String get radioSloganLA => 'ラオスの音';
+
+  @override
+  String get radioSloganHU => 'ドナウの音';
+
+  @override
+  String get radioSloganHR => 'アドリア海の音';
+
+  @override
+  String get radioSloganRS => 'セルビアの音';
+
+  @override
+  String get radioSloganBG => 'ブルガリアの音';
+
+  @override
+  String get radioSloganSK => 'スロバキアの音';
+
+  @override
+  String get radioSloganLT => 'リトアニアの音';
+
+  @override
+  String get radioSloganLV => 'ラトビアの音';
+
+  @override
+  String get radioSloganEE => 'エストニアの音';
+
+  @override
+  String get radioSloganIS => 'アイスランドの音';
+
+  @override
+  String get radioSloganGH => 'ガーナの音';
+
+  @override
+  String get radioSloganTZ => 'タンザニアの音';
+
+  @override
+  String get radioSloganMA => 'モロッコの音';
+
+  @override
+  String get radioSloganTN => 'チュニジアの音';
+
+  @override
+  String get radioSloganET => 'エチオピアの音';
+
+  @override
+  String get radioSloganUG => 'ウガンダの音';
+
+  @override
+  String get radioSloganEC => 'エクアドルの音';
+
+  @override
+  String get radioSloganBO => 'ボリビアの音';
+
+  @override
+  String get radioSloganPY => 'パラグアイの音';
+
+  @override
+  String get radioSloganUY => 'ウルグアイの音';
+
+  @override
+  String get radioSloganPA => 'パナマの音';
+
+  @override
+  String get radioSloganCR => 'コスタリカの音';
+
+  @override
+  String get radioSloganDO => 'ドミニカのリズム';
+
+  @override
+  String get radioSloganTT => 'トリニダードの音';
+
+  @override
+  String get radioSloganHT => 'ハイチの音';
 
   @override
   String get selectSong => '曲を選択';

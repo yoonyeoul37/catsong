@@ -1392,6 +1392,648 @@ abstract class AppLocalizations {
   /// **'베트남'**
   String get countryVN;
 
+  /// No description provided for @countryPH.
+  ///
+  /// In ko, this message translates to:
+  /// **'필리핀'**
+  String get countryPH;
+
+  /// No description provided for @countryDE.
+  ///
+  /// In ko, this message translates to:
+  /// **'독일'**
+  String get countryDE;
+
+  /// No description provided for @countryFR.
+  ///
+  /// In ko, this message translates to:
+  /// **'프랑스'**
+  String get countryFR;
+
+  /// No description provided for @countryTH.
+  ///
+  /// In ko, this message translates to:
+  /// **'태국'**
+  String get countryTH;
+
+  /// No description provided for @countryID.
+  ///
+  /// In ko, this message translates to:
+  /// **'인도네시아'**
+  String get countryID;
+
+  /// No description provided for @countryIN.
+  ///
+  /// In ko, this message translates to:
+  /// **'인도'**
+  String get countryIN;
+
+  /// No description provided for @countryES.
+  ///
+  /// In ko, this message translates to:
+  /// **'스페인'**
+  String get countryES;
+
+  /// No description provided for @countryIT.
+  ///
+  /// In ko, this message translates to:
+  /// **'이탈리아'**
+  String get countryIT;
+
+  /// No description provided for @countryBR.
+  ///
+  /// In ko, this message translates to:
+  /// **'브라질'**
+  String get countryBR;
+
+  /// No description provided for @countryCA.
+  ///
+  /// In ko, this message translates to:
+  /// **'캐나다'**
+  String get countryCA;
+
+  /// No description provided for @countryAU.
+  ///
+  /// In ko, this message translates to:
+  /// **'호주'**
+  String get countryAU;
+
+  /// No description provided for @countryMX.
+  ///
+  /// In ko, this message translates to:
+  /// **'멕시코'**
+  String get countryMX;
+
+  /// No description provided for @countryTR.
+  ///
+  /// In ko, this message translates to:
+  /// **'터키'**
+  String get countryTR;
+
+  /// No description provided for @countryNL.
+  ///
+  /// In ko, this message translates to:
+  /// **'네덜란드'**
+  String get countryNL;
+
+  /// No description provided for @countrySE.
+  ///
+  /// In ko, this message translates to:
+  /// **'스웨덴'**
+  String get countrySE;
+
+  /// No description provided for @countryPL.
+  ///
+  /// In ko, this message translates to:
+  /// **'폴란드'**
+  String get countryPL;
+
+  /// No description provided for @countryAR.
+  ///
+  /// In ko, this message translates to:
+  /// **'아르헨티나'**
+  String get countryAR;
+
+  /// No description provided for @countryCO.
+  ///
+  /// In ko, this message translates to:
+  /// **'콜롬비아'**
+  String get countryCO;
+
+  /// No description provided for @countryNZ.
+  ///
+  /// In ko, this message translates to:
+  /// **'뉴질랜드'**
+  String get countryNZ;
+
+  /// No description provided for @countryMY.
+  ///
+  /// In ko, this message translates to:
+  /// **'말레이시아'**
+  String get countryMY;
+
+  /// No description provided for @countrySG.
+  ///
+  /// In ko, this message translates to:
+  /// **'싱가포르'**
+  String get countrySG;
+
+  /// No description provided for @countryRU.
+  ///
+  /// In ko, this message translates to:
+  /// **'러시아'**
+  String get countryRU;
+
+  /// No description provided for @countryZA.
+  ///
+  /// In ko, this message translates to:
+  /// **'남아프리카'**
+  String get countryZA;
+
+  /// No description provided for @countryPK.
+  ///
+  /// In ko, this message translates to:
+  /// **'파키스탄'**
+  String get countryPK;
+
+  /// No description provided for @countryBD.
+  ///
+  /// In ko, this message translates to:
+  /// **'방글라데시'**
+  String get countryBD;
+
+  /// No description provided for @countryLK.
+  ///
+  /// In ko, this message translates to:
+  /// **'스리랑카'**
+  String get countryLK;
+
+  /// No description provided for @countryNP.
+  ///
+  /// In ko, this message translates to:
+  /// **'네팔'**
+  String get countryNP;
+
+  /// No description provided for @countryMM.
+  ///
+  /// In ko, this message translates to:
+  /// **'미얀마'**
+  String get countryMM;
+
+  /// No description provided for @countryKH.
+  ///
+  /// In ko, this message translates to:
+  /// **'캄보디아'**
+  String get countryKH;
+
+  /// No description provided for @countryAT.
+  ///
+  /// In ko, this message translates to:
+  /// **'오스트리아'**
+  String get countryAT;
+
+  /// No description provided for @countryCH.
+  ///
+  /// In ko, this message translates to:
+  /// **'스위스'**
+  String get countryCH;
+
+  /// No description provided for @countryBE.
+  ///
+  /// In ko, this message translates to:
+  /// **'벨기에'**
+  String get countryBE;
+
+  /// No description provided for @countryPT.
+  ///
+  /// In ko, this message translates to:
+  /// **'포르투갈'**
+  String get countryPT;
+
+  /// No description provided for @countryGR.
+  ///
+  /// In ko, this message translates to:
+  /// **'그리스'**
+  String get countryGR;
+
+  /// No description provided for @countryIE.
+  ///
+  /// In ko, this message translates to:
+  /// **'아일랜드'**
+  String get countryIE;
+
+  /// No description provided for @countryNO.
+  ///
+  /// In ko, this message translates to:
+  /// **'노르웨이'**
+  String get countryNO;
+
+  /// No description provided for @countryDK.
+  ///
+  /// In ko, this message translates to:
+  /// **'덴마크'**
+  String get countryDK;
+
+  /// No description provided for @countryFI.
+  ///
+  /// In ko, this message translates to:
+  /// **'핀란드'**
+  String get countryFI;
+
+  /// No description provided for @countryCZ.
+  ///
+  /// In ko, this message translates to:
+  /// **'체코'**
+  String get countryCZ;
+
+  /// No description provided for @countryRO.
+  ///
+  /// In ko, this message translates to:
+  /// **'루마니아'**
+  String get countryRO;
+
+  /// No description provided for @countryUA.
+  ///
+  /// In ko, this message translates to:
+  /// **'우크라이나'**
+  String get countryUA;
+
+  /// No description provided for @countryEG.
+  ///
+  /// In ko, this message translates to:
+  /// **'이집트'**
+  String get countryEG;
+
+  /// No description provided for @countrySA.
+  ///
+  /// In ko, this message translates to:
+  /// **'사우디아라비아'**
+  String get countrySA;
+
+  /// No description provided for @countryAE.
+  ///
+  /// In ko, this message translates to:
+  /// **'UAE'**
+  String get countryAE;
+
+  /// No description provided for @countryNG.
+  ///
+  /// In ko, this message translates to:
+  /// **'나이지리아'**
+  String get countryNG;
+
+  /// No description provided for @countryKE.
+  ///
+  /// In ko, this message translates to:
+  /// **'케냐'**
+  String get countryKE;
+
+  /// No description provided for @countryCL.
+  ///
+  /// In ko, this message translates to:
+  /// **'칠레'**
+  String get countryCL;
+
+  /// No description provided for @countryPE.
+  ///
+  /// In ko, this message translates to:
+  /// **'페루'**
+  String get countryPE;
+
+  /// No description provided for @countryVE.
+  ///
+  /// In ko, this message translates to:
+  /// **'베네수엘라'**
+  String get countryVE;
+
+  /// No description provided for @countryCU.
+  ///
+  /// In ko, this message translates to:
+  /// **'쿠바'**
+  String get countryCU;
+
+  /// No description provided for @countryJM.
+  ///
+  /// In ko, this message translates to:
+  /// **'자메이카'**
+  String get countryJM;
+
+  /// No description provided for @countryIQ.
+  ///
+  /// In ko, this message translates to:
+  /// **'이라크'**
+  String get countryIQ;
+
+  /// No description provided for @countryIR.
+  ///
+  /// In ko, this message translates to:
+  /// **'이란'**
+  String get countryIR;
+
+  /// No description provided for @countryIL.
+  ///
+  /// In ko, this message translates to:
+  /// **'이스라엘'**
+  String get countryIL;
+
+  /// No description provided for @countryMN.
+  ///
+  /// In ko, this message translates to:
+  /// **'몽골'**
+  String get countryMN;
+
+  /// No description provided for @countryUZ.
+  ///
+  /// In ko, this message translates to:
+  /// **'우즈베키스탄'**
+  String get countryUZ;
+
+  /// No description provided for @countryKZ.
+  ///
+  /// In ko, this message translates to:
+  /// **'카자흐스탄'**
+  String get countryKZ;
+
+  /// No description provided for @countryLA.
+  ///
+  /// In ko, this message translates to:
+  /// **'라오스'**
+  String get countryLA;
+
+  /// No description provided for @countryHU.
+  ///
+  /// In ko, this message translates to:
+  /// **'헝가리'**
+  String get countryHU;
+
+  /// No description provided for @countryHR.
+  ///
+  /// In ko, this message translates to:
+  /// **'크로아티아'**
+  String get countryHR;
+
+  /// No description provided for @countryRS.
+  ///
+  /// In ko, this message translates to:
+  /// **'세르비아'**
+  String get countryRS;
+
+  /// No description provided for @countryBG.
+  ///
+  /// In ko, this message translates to:
+  /// **'불가리아'**
+  String get countryBG;
+
+  /// No description provided for @countrySK.
+  ///
+  /// In ko, this message translates to:
+  /// **'슬로바키아'**
+  String get countrySK;
+
+  /// No description provided for @countryLT.
+  ///
+  /// In ko, this message translates to:
+  /// **'리투아니아'**
+  String get countryLT;
+
+  /// No description provided for @countryLV.
+  ///
+  /// In ko, this message translates to:
+  /// **'라트비아'**
+  String get countryLV;
+
+  /// No description provided for @countryEE.
+  ///
+  /// In ko, this message translates to:
+  /// **'에스토니아'**
+  String get countryEE;
+
+  /// No description provided for @countryIS.
+  ///
+  /// In ko, this message translates to:
+  /// **'아이슬란드'**
+  String get countryIS;
+
+  /// No description provided for @countryGH.
+  ///
+  /// In ko, this message translates to:
+  /// **'가나'**
+  String get countryGH;
+
+  /// No description provided for @countryTZ.
+  ///
+  /// In ko, this message translates to:
+  /// **'탄자니아'**
+  String get countryTZ;
+
+  /// No description provided for @countryMA.
+  ///
+  /// In ko, this message translates to:
+  /// **'모로코'**
+  String get countryMA;
+
+  /// No description provided for @countryTN.
+  ///
+  /// In ko, this message translates to:
+  /// **'튀니지'**
+  String get countryTN;
+
+  /// No description provided for @countryET.
+  ///
+  /// In ko, this message translates to:
+  /// **'에티오피아'**
+  String get countryET;
+
+  /// No description provided for @countryUG.
+  ///
+  /// In ko, this message translates to:
+  /// **'우간다'**
+  String get countryUG;
+
+  /// No description provided for @countryEC.
+  ///
+  /// In ko, this message translates to:
+  /// **'에콰도르'**
+  String get countryEC;
+
+  /// No description provided for @countryBO.
+  ///
+  /// In ko, this message translates to:
+  /// **'볼리비아'**
+  String get countryBO;
+
+  /// No description provided for @countryPY.
+  ///
+  /// In ko, this message translates to:
+  /// **'파라과이'**
+  String get countryPY;
+
+  /// No description provided for @countryUY.
+  ///
+  /// In ko, this message translates to:
+  /// **'우루과이'**
+  String get countryUY;
+
+  /// No description provided for @countryPA.
+  ///
+  /// In ko, this message translates to:
+  /// **'파나마'**
+  String get countryPA;
+
+  /// No description provided for @countryCR.
+  ///
+  /// In ko, this message translates to:
+  /// **'코스타리카'**
+  String get countryCR;
+
+  /// No description provided for @countryDO.
+  ///
+  /// In ko, this message translates to:
+  /// **'도미니카공화국'**
+  String get countryDO;
+
+  /// No description provided for @countryTT.
+  ///
+  /// In ko, this message translates to:
+  /// **'트리니다드토바고'**
+  String get countryTT;
+
+  /// No description provided for @countryHT.
+  ///
+  /// In ko, this message translates to:
+  /// **'아이티'**
+  String get countryHT;
+
+  /// No description provided for @countryFJ.
+  ///
+  /// In ko, this message translates to:
+  /// **'피지'**
+  String get countryFJ;
+
+  /// No description provided for @countryPG.
+  ///
+  /// In ko, this message translates to:
+  /// **'파푸아뉴기니'**
+  String get countryPG;
+
+  /// No description provided for @countryJO.
+  ///
+  /// In ko, this message translates to:
+  /// **'요르단'**
+  String get countryJO;
+
+  /// No description provided for @countryLB.
+  ///
+  /// In ko, this message translates to:
+  /// **'레바논'**
+  String get countryLB;
+
+  /// No description provided for @countryGE.
+  ///
+  /// In ko, this message translates to:
+  /// **'조지아'**
+  String get countryGE;
+
+  /// No description provided for @countryAM.
+  ///
+  /// In ko, this message translates to:
+  /// **'아르메니아'**
+  String get countryAM;
+
+  /// No description provided for @countryAZ.
+  ///
+  /// In ko, this message translates to:
+  /// **'아제르바이잔'**
+  String get countryAZ;
+
+  /// No description provided for @countrySI.
+  ///
+  /// In ko, this message translates to:
+  /// **'슬로베니아'**
+  String get countrySI;
+
+  /// No description provided for @countryAL.
+  ///
+  /// In ko, this message translates to:
+  /// **'알바니아'**
+  String get countryAL;
+
+  /// No description provided for @countryMK.
+  ///
+  /// In ko, this message translates to:
+  /// **'북마케도니아'**
+  String get countryMK;
+
+  /// No description provided for @countryME.
+  ///
+  /// In ko, this message translates to:
+  /// **'몬테네그로'**
+  String get countryME;
+
+  /// No description provided for @countryBA.
+  ///
+  /// In ko, this message translates to:
+  /// **'보스니아'**
+  String get countryBA;
+
+  /// No description provided for @countryMT.
+  ///
+  /// In ko, this message translates to:
+  /// **'몰타'**
+  String get countryMT;
+
+  /// No description provided for @countryLU.
+  ///
+  /// In ko, this message translates to:
+  /// **'룩셈부르크'**
+  String get countryLU;
+
+  /// No description provided for @countryCY.
+  ///
+  /// In ko, this message translates to:
+  /// **'키프로스'**
+  String get countryCY;
+
+  /// No description provided for @countryCM.
+  ///
+  /// In ko, this message translates to:
+  /// **'카메룬'**
+  String get countryCM;
+
+  /// No description provided for @countrySN.
+  ///
+  /// In ko, this message translates to:
+  /// **'세네갈'**
+  String get countrySN;
+
+  /// No description provided for @countryZW.
+  ///
+  /// In ko, this message translates to:
+  /// **'짐바브웨'**
+  String get countryZW;
+
+  /// No description provided for @countryMZ.
+  ///
+  /// In ko, this message translates to:
+  /// **'모잠비크'**
+  String get countryMZ;
+
+  /// No description provided for @countryMG.
+  ///
+  /// In ko, this message translates to:
+  /// **'마다가스카르'**
+  String get countryMG;
+
+  /// No description provided for @countryGT.
+  ///
+  /// In ko, this message translates to:
+  /// **'과테말라'**
+  String get countryGT;
+
+  /// No description provided for @countryHN.
+  ///
+  /// In ko, this message translates to:
+  /// **'온두라스'**
+  String get countryHN;
+
+  /// No description provided for @countryNI.
+  ///
+  /// In ko, this message translates to:
+  /// **'니카라과'**
+  String get countryNI;
+
+  /// No description provided for @countrySV.
+  ///
+  /// In ko, this message translates to:
+  /// **'엘살바도르'**
+  String get countrySV;
+
+  /// No description provided for @countryPR.
+  ///
+  /// In ko, this message translates to:
+  /// **'푸에르토리코'**
+  String get countryPR;
+
   /// No description provided for @categoryNational.
   ///
   /// In ko, this message translates to:
@@ -1757,6 +2399,498 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'메콩강의 선율'**
   String get radioSloganVN;
+
+  /// No description provided for @radioSloganPH.
+  ///
+  /// In ko, this message translates to:
+  /// **'섬들의 울림'**
+  String get radioSloganPH;
+
+  /// No description provided for @radioSloganDE.
+  ///
+  /// In ko, this message translates to:
+  /// **'유럽 심장부의 소리'**
+  String get radioSloganDE;
+
+  /// No description provided for @radioSloganFR.
+  ///
+  /// In ko, this message translates to:
+  /// **'삶의 멜로디'**
+  String get radioSloganFR;
+
+  /// No description provided for @radioSloganTH.
+  ///
+  /// In ko, this message translates to:
+  /// **'시암의 소리'**
+  String get radioSloganTH;
+
+  /// No description provided for @radioSloganID.
+  ///
+  /// In ko, this message translates to:
+  /// **'군도의 리듬'**
+  String get radioSloganID;
+
+  /// No description provided for @radioSloganIN.
+  ///
+  /// In ko, this message translates to:
+  /// **'인도의 선율'**
+  String get radioSloganIN;
+
+  /// No description provided for @radioSloganES.
+  ///
+  /// In ko, this message translates to:
+  /// **'영혼의 리듬'**
+  String get radioSloganES;
+
+  /// No description provided for @radioSloganIT.
+  ///
+  /// In ko, this message translates to:
+  /// **'삶의 음악'**
+  String get radioSloganIT;
+
+  /// No description provided for @radioSloganBR.
+  ///
+  /// In ko, this message translates to:
+  /// **'브라질의 소리'**
+  String get radioSloganBR;
+
+  /// No description provided for @radioSloganCA.
+  ///
+  /// In ko, this message translates to:
+  /// **'북쪽을 가로지르는 목소리'**
+  String get radioSloganCA;
+
+  /// No description provided for @radioSloganAU.
+  ///
+  /// In ko, this message translates to:
+  /// **'남반구의 소리'**
+  String get radioSloganAU;
+
+  /// No description provided for @radioSloganMX.
+  ///
+  /// In ko, this message translates to:
+  /// **'멕시코의 리듬'**
+  String get radioSloganMX;
+
+  /// No description provided for @radioSloganTR.
+  ///
+  /// In ko, this message translates to:
+  /// **'아나톨리아의 소리'**
+  String get radioSloganTR;
+
+  /// No description provided for @radioSloganNL.
+  ///
+  /// In ko, this message translates to:
+  /// **'저지대의 울림'**
+  String get radioSloganNL;
+
+  /// No description provided for @radioSloganSE.
+  ///
+  /// In ko, this message translates to:
+  /// **'북유럽의 소리'**
+  String get radioSloganSE;
+
+  /// No description provided for @radioSloganPL.
+  ///
+  /// In ko, this message translates to:
+  /// **'비스와강의 선율'**
+  String get radioSloganPL;
+
+  /// No description provided for @radioSloganAR.
+  ///
+  /// In ko, this message translates to:
+  /// **'영혼의 탱고'**
+  String get radioSloganAR;
+
+  /// No description provided for @radioSloganCO.
+  ///
+  /// In ko, this message translates to:
+  /// **'콜롬비아의 리듬'**
+  String get radioSloganCO;
+
+  /// No description provided for @radioSloganNZ.
+  ///
+  /// In ko, this message translates to:
+  /// **'아오테아로아의 메아리'**
+  String get radioSloganNZ;
+
+  /// No description provided for @radioSloganMY.
+  ///
+  /// In ko, this message translates to:
+  /// **'말레이시아의 리듬'**
+  String get radioSloganMY;
+
+  /// No description provided for @radioSloganSG.
+  ///
+  /// In ko, this message translates to:
+  /// **'사자의 도시 바이브'**
+  String get radioSloganSG;
+
+  /// No description provided for @radioSloganRU.
+  ///
+  /// In ko, this message translates to:
+  /// **'러시아의 소리'**
+  String get radioSloganRU;
+
+  /// No description provided for @radioSloganZA.
+  ///
+  /// In ko, this message translates to:
+  /// **'무지개 나라의 소리'**
+  String get radioSloganZA;
+
+  /// No description provided for @radioSloganPK.
+  ///
+  /// In ko, this message translates to:
+  /// **'파키스탄의 선율'**
+  String get radioSloganPK;
+
+  /// No description provided for @radioSloganBD.
+  ///
+  /// In ko, this message translates to:
+  /// **'벵골의 소리'**
+  String get radioSloganBD;
+
+  /// No description provided for @radioSloganLK.
+  ///
+  /// In ko, this message translates to:
+  /// **'스리랑카의 소리'**
+  String get radioSloganLK;
+
+  /// No description provided for @radioSloganNP.
+  ///
+  /// In ko, this message translates to:
+  /// **'히말라야의 선율'**
+  String get radioSloganNP;
+
+  /// No description provided for @radioSloganMM.
+  ///
+  /// In ko, this message translates to:
+  /// **'미얀마의 소리'**
+  String get radioSloganMM;
+
+  /// No description provided for @radioSloganKH.
+  ///
+  /// In ko, this message translates to:
+  /// **'앙코르의 소리'**
+  String get radioSloganKH;
+
+  /// No description provided for @radioSloganAT.
+  ///
+  /// In ko, this message translates to:
+  /// **'알프스의 울림'**
+  String get radioSloganAT;
+
+  /// No description provided for @radioSloganCH.
+  ///
+  /// In ko, this message translates to:
+  /// **'스위스의 목소리'**
+  String get radioSloganCH;
+
+  /// No description provided for @radioSloganBE.
+  ///
+  /// In ko, this message translates to:
+  /// **'벨기에의 울림'**
+  String get radioSloganBE;
+
+  /// No description provided for @radioSloganPT.
+  ///
+  /// In ko, this message translates to:
+  /// **'포르투갈의 소리'**
+  String get radioSloganPT;
+
+  /// No description provided for @radioSloganGR.
+  ///
+  /// In ko, this message translates to:
+  /// **'그리스의 소리'**
+  String get radioSloganGR;
+
+  /// No description provided for @radioSloganIE.
+  ///
+  /// In ko, this message translates to:
+  /// **'에메랄드 섬의 소리'**
+  String get radioSloganIE;
+
+  /// No description provided for @radioSloganNO.
+  ///
+  /// In ko, this message translates to:
+  /// **'피오르의 소리'**
+  String get radioSloganNO;
+
+  /// No description provided for @radioSloganDK.
+  ///
+  /// In ko, this message translates to:
+  /// **'덴마크의 소리'**
+  String get radioSloganDK;
+
+  /// No description provided for @radioSloganFI.
+  ///
+  /// In ko, this message translates to:
+  /// **'핀란드의 소리'**
+  String get radioSloganFI;
+
+  /// No description provided for @radioSloganCZ.
+  ///
+  /// In ko, this message translates to:
+  /// **'체코의 소리'**
+  String get radioSloganCZ;
+
+  /// No description provided for @radioSloganRO.
+  ///
+  /// In ko, this message translates to:
+  /// **'루마니아의 소리'**
+  String get radioSloganRO;
+
+  /// No description provided for @radioSloganUA.
+  ///
+  /// In ko, this message translates to:
+  /// **'우크라이나의 소리'**
+  String get radioSloganUA;
+
+  /// No description provided for @radioSloganEG.
+  ///
+  /// In ko, this message translates to:
+  /// **'나일강의 소리'**
+  String get radioSloganEG;
+
+  /// No description provided for @radioSloganSA.
+  ///
+  /// In ko, this message translates to:
+  /// **'아라비아의 소리'**
+  String get radioSloganSA;
+
+  /// No description provided for @radioSloganAE.
+  ///
+  /// In ko, this message translates to:
+  /// **'걸프의 소리'**
+  String get radioSloganAE;
+
+  /// No description provided for @radioSloganNG.
+  ///
+  /// In ko, this message translates to:
+  /// **'나이지리아의 소리'**
+  String get radioSloganNG;
+
+  /// No description provided for @radioSloganKE.
+  ///
+  /// In ko, this message translates to:
+  /// **'케냐의 소리'**
+  String get radioSloganKE;
+
+  /// No description provided for @radioSloganCL.
+  ///
+  /// In ko, this message translates to:
+  /// **'칠레의 소리'**
+  String get radioSloganCL;
+
+  /// No description provided for @radioSloganPE.
+  ///
+  /// In ko, this message translates to:
+  /// **'페루의 소리'**
+  String get radioSloganPE;
+
+  /// No description provided for @radioSloganVE.
+  ///
+  /// In ko, this message translates to:
+  /// **'베네수엘라의 리듬'**
+  String get radioSloganVE;
+
+  /// No description provided for @radioSloganCU.
+  ///
+  /// In ko, this message translates to:
+  /// **'쿠바의 리듬'**
+  String get radioSloganCU;
+
+  /// No description provided for @radioSloganJM.
+  ///
+  /// In ko, this message translates to:
+  /// **'자메이카의 리듬'**
+  String get radioSloganJM;
+
+  /// No description provided for @radioSloganIQ.
+  ///
+  /// In ko, this message translates to:
+  /// **'메소포타미아의 소리'**
+  String get radioSloganIQ;
+
+  /// No description provided for @radioSloganIR.
+  ///
+  /// In ko, this message translates to:
+  /// **'이란의 선율'**
+  String get radioSloganIR;
+
+  /// No description provided for @radioSloganIL.
+  ///
+  /// In ko, this message translates to:
+  /// **'이스라엘의 소리'**
+  String get radioSloganIL;
+
+  /// No description provided for @radioSloganMN.
+  ///
+  /// In ko, this message translates to:
+  /// **'몽골 초원의 선율'**
+  String get radioSloganMN;
+
+  /// No description provided for @radioSloganUZ.
+  ///
+  /// In ko, this message translates to:
+  /// **'우즈베키스탄의 소리'**
+  String get radioSloganUZ;
+
+  /// No description provided for @radioSloganKZ.
+  ///
+  /// In ko, this message translates to:
+  /// **'카자흐스탄의 소리'**
+  String get radioSloganKZ;
+
+  /// No description provided for @radioSloganLA.
+  ///
+  /// In ko, this message translates to:
+  /// **'라오스의 소리'**
+  String get radioSloganLA;
+
+  /// No description provided for @radioSloganHU.
+  ///
+  /// In ko, this message translates to:
+  /// **'도나우의 소리'**
+  String get radioSloganHU;
+
+  /// No description provided for @radioSloganHR.
+  ///
+  /// In ko, this message translates to:
+  /// **'아드리아해의 소리'**
+  String get radioSloganHR;
+
+  /// No description provided for @radioSloganRS.
+  ///
+  /// In ko, this message translates to:
+  /// **'세르비아의 소리'**
+  String get radioSloganRS;
+
+  /// No description provided for @radioSloganBG.
+  ///
+  /// In ko, this message translates to:
+  /// **'불가리아의 소리'**
+  String get radioSloganBG;
+
+  /// No description provided for @radioSloganSK.
+  ///
+  /// In ko, this message translates to:
+  /// **'슬로바키아의 소리'**
+  String get radioSloganSK;
+
+  /// No description provided for @radioSloganLT.
+  ///
+  /// In ko, this message translates to:
+  /// **'리투아니아의 소리'**
+  String get radioSloganLT;
+
+  /// No description provided for @radioSloganLV.
+  ///
+  /// In ko, this message translates to:
+  /// **'라트비아의 소리'**
+  String get radioSloganLV;
+
+  /// No description provided for @radioSloganEE.
+  ///
+  /// In ko, this message translates to:
+  /// **'에스토니아의 소리'**
+  String get radioSloganEE;
+
+  /// No description provided for @radioSloganIS.
+  ///
+  /// In ko, this message translates to:
+  /// **'아이슬란드의 소리'**
+  String get radioSloganIS;
+
+  /// No description provided for @radioSloganGH.
+  ///
+  /// In ko, this message translates to:
+  /// **'가나의 소리'**
+  String get radioSloganGH;
+
+  /// No description provided for @radioSloganTZ.
+  ///
+  /// In ko, this message translates to:
+  /// **'탄자니아의 소리'**
+  String get radioSloganTZ;
+
+  /// No description provided for @radioSloganMA.
+  ///
+  /// In ko, this message translates to:
+  /// **'모로코의 소리'**
+  String get radioSloganMA;
+
+  /// No description provided for @radioSloganTN.
+  ///
+  /// In ko, this message translates to:
+  /// **'튀니지의 소리'**
+  String get radioSloganTN;
+
+  /// No description provided for @radioSloganET.
+  ///
+  /// In ko, this message translates to:
+  /// **'에티오피아의 소리'**
+  String get radioSloganET;
+
+  /// No description provided for @radioSloganUG.
+  ///
+  /// In ko, this message translates to:
+  /// **'우간다의 소리'**
+  String get radioSloganUG;
+
+  /// No description provided for @radioSloganEC.
+  ///
+  /// In ko, this message translates to:
+  /// **'에콰도르의 소리'**
+  String get radioSloganEC;
+
+  /// No description provided for @radioSloganBO.
+  ///
+  /// In ko, this message translates to:
+  /// **'볼리비아의 소리'**
+  String get radioSloganBO;
+
+  /// No description provided for @radioSloganPY.
+  ///
+  /// In ko, this message translates to:
+  /// **'파라과이의 소리'**
+  String get radioSloganPY;
+
+  /// No description provided for @radioSloganUY.
+  ///
+  /// In ko, this message translates to:
+  /// **'우루과이의 소리'**
+  String get radioSloganUY;
+
+  /// No description provided for @radioSloganPA.
+  ///
+  /// In ko, this message translates to:
+  /// **'파나마의 소리'**
+  String get radioSloganPA;
+
+  /// No description provided for @radioSloganCR.
+  ///
+  /// In ko, this message translates to:
+  /// **'코스타리카의 소리'**
+  String get radioSloganCR;
+
+  /// No description provided for @radioSloganDO.
+  ///
+  /// In ko, this message translates to:
+  /// **'도미니카의 리듬'**
+  String get radioSloganDO;
+
+  /// No description provided for @radioSloganTT.
+  ///
+  /// In ko, this message translates to:
+  /// **'트리니다드의 소리'**
+  String get radioSloganTT;
+
+  /// No description provided for @radioSloganHT.
+  ///
+  /// In ko, this message translates to:
+  /// **'아이티의 소리'**
+  String get radioSloganHT;
 
   /// No description provided for @selectSong.
   ///

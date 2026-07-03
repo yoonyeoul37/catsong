@@ -302,17 +302,23 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
       ),
       body: Stack(
         children: [
-          SingleChildScrollView(
-            physics: const NeverScrollableScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Column(
-                children: [
-                  const SizedBox(height: 40),
+          LayoutBuilder(builder: (context, constraints) {
+            final h = constraints.maxHeight;
+            return SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: Column(
+                  children: [
+                    SizedBox(height: h * 0.11),
 
-                  // ── 다이얼 ──
-                  current.countryCode == 'KR'
-                      ? FmTunerDial(
+                    // ── 다이얼 ──
+                    SizedBox(
+                      height: h * 0.45,
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: current.countryCode == 'KR'
+                            ? FmTunerDial(
                           broadcaster: broadcaster.isNotEmpty
                               ? broadcaster
                               : current.name.substring(0, current.name.length.clamp(0, 4)).toUpperCase(),
@@ -322,81 +328,82 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                           primaryColor: primaryColor,
                           pulseCtrl: _pulseCtrl,
                         )
-                      : GlobalRadioDial(
+                            : GlobalRadioDial(
                           stationName: current.name,
                           logoUrl: current.logoUrl,
                           isPlaying: isPlaying,
                           primaryColor: primaryColor,
                           pulseCtrl: _pulseCtrl,
                         ),
-
-                  const SizedBox(height: 12),
-
-                  // ── 채널명 ──
-                  Text(
-                    current.name,
-                    style: const TextStyle(
-                      color: AppTheme.textPrimary,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-
-
-                  const SizedBox(height: 16),
-
-                  // ── 편성표 ──
-                  if (radioProvider.currentProgram != null)
-                    _ProgramCard(
-                      program: radioProvider.currentProgram!,
-                      primaryColor: primaryColor,
-                      radioProvider: radioProvider,
-                      freq: freq,
-                    ),
-
-                  const SizedBox(height: 12),
-
-                  // ── 상태 뱃지 ──
-                  _StatusBadge(state: state),
-
-                  if (isError)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Text(
-                        radioProvider.errorMessage ?? AppLocalizations.of(context)!.radioPlaybackFailed,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(color: Colors.redAccent, fontSize: 13),
                       ),
                     ),
 
-                  const SizedBox(height: 24),
+                    SizedBox(height: h * 0.01),
 
-                  // ── 컨트롤 ──
-                  _Controls(
-                    isLoading: isLoading,
-                    isError: isError,
-                    isPlaying: isPlaying,
-                    primaryColor: primaryColor,
-                    currentIdx: _currentIdx,
-                    stationList: widget.stationList,
-                    radioProvider: radioProvider,
-                    current: current,
-                    onIndexChanged: (idx) => setState(() => _currentIdx = idx),
-                  ),
+                    // ── 채널명 ──
+                    Text(
+                      current.name,
+                      style: const TextStyle(
+                        color: AppTheme.textPrimary,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
 
-                  const SizedBox(height: 16),
+                    SizedBox(height: h * 0.01),
 
-                  if (sleep != null) _SleepTimerBadge(remaining: sleep),
+                    // ── 편성표 ──
+                    if (radioProvider.currentProgram != null)
+                      _ProgramCard(
+                        program: radioProvider.currentProgram!,
+                        primaryColor: primaryColor,
+                        radioProvider: radioProvider,
+                        freq: freq,
+                      ),
 
-                  const SizedBox(height: 32),
-                ],
+                    SizedBox(height: h * 0.01),
+
+                    // ── 상태 뱃지 ──
+                    _StatusBadge(state: state),
+
+                    if (isError)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(
+                          radioProvider.errorMessage ?? AppLocalizations.of(context)!.radioPlaybackFailed,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(color: Colors.redAccent, fontSize: 13),
+                        ),
+                      ),
+
+                    SizedBox(height: h * 0.02),
+
+                    // ── 컨트롤 ──
+                    _Controls(
+                      isLoading: isLoading,
+                      isError: isError,
+                      isPlaying: isPlaying,
+                      primaryColor: primaryColor,
+                      currentIdx: _currentIdx,
+                      stationList: widget.stationList,
+                      radioProvider: radioProvider,
+                      current: current,
+                      onIndexChanged: (idx) => setState(() => _currentIdx = idx),
+                    ),
+
+                    SizedBox(height: h * 0.01),
+
+                    if (sleep != null) _SleepTimerBadge(remaining: sleep),
+
+                    SizedBox(height: h * 0.02),
+                  ],
+                ),
               ),
-            ),
-          ),
-
+            );
+          }),
           // ── 스와이프 제스처 ──
           Positioned.fill(
             child: GestureDetector(

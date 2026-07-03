@@ -393,21 +393,34 @@ class _PlayerScreenState extends State<PlayerScreen>
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   return SingleChildScrollView(
-                    physics: const ClampingScrollPhysics(),
+                    physics: constraints.maxHeight < 600
+                        ? const ClampingScrollPhysics()
+                        : const NeverScrollableScrollPhysics(),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(minHeight: constraints.maxHeight),
                       child: IntrinsicHeight(
                         child: Column(
                           children: [
                             _buildTopBar(context, playerProvider, primaryColor),
-                            SizedBox(
-                              height: constraints.maxHeight * 0.35,
-                              child: _buildAlbumArt(song, primaryColor),
-                            ),
+                            constraints.maxHeight < 600
+                                ? SizedBox(
+                                    height: constraints.maxHeight * 0.35,
+                                    child: _buildAlbumArt(song, primaryColor),
+                                  )
+                                : Expanded(
+                                    flex: 5,
+                                    child: _buildAlbumArt(song, primaryColor),
+                                  ),
                             _buildEqualizer(playerProvider, primaryColor),
                             _buildCurrentLyrics(playerProvider, primaryColor),
-                            _buildControls(
-                                context, playerProvider, musicProvider, song, primaryColor),
+                            constraints.maxHeight < 600
+                                ? _buildControls(
+                                    context, playerProvider, musicProvider, song, primaryColor)
+                                : Expanded(
+                                    flex: 4,
+                                    child: _buildControls(
+                                        context, playerProvider, musicProvider, song, primaryColor),
+                                  ),
                           ],
                         ),
                       ),

@@ -249,6 +249,7 @@ Future<void> updateSongInfo(Song song, {String? title, String? artist, String? a
         _buildAlbums();
         _buildArtists();
         _buildFolders();
+        await _loadRecentSongs();
         _isLoading = false;
         notifyListeners();
 

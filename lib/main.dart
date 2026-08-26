@@ -237,14 +237,19 @@ class _AppInitializerState extends State<AppInitializer> {
   Future<void> _checkForUpdate() async {
     try {
       final info = await InAppUpdate.checkForUpdate();
+      // 이미 다운로드가 끝나있는데 설치(재시작)만 안 된 경우 - 바로 안내
+      if (info.installStatus == InstallStatus.downloaded) {
+        _showUpdateReadySnackbar();
+        return;
+      }
       if (info.updateAvailability == UpdateAvailability.updateAvailable &&
           info.flexibleUpdateAllowed) {
-        await InAppUpdate.startFlexibleUpdate();
         InAppUpdate.installUpdateListener.listen((status) {
           if (status == InstallStatus.downloaded && mounted) {
             _showUpdateReadySnackbar();
           }
         });
+        await InAppUpdate.startFlexibleUpdate();
       }
     } catch (e) {
       debugPrint('업데이트 확인 오류: $e');

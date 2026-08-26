@@ -555,10 +555,10 @@ class RadioProvider extends ChangeNotifier {
   }
 
   Future<void> stopRadio() async {
+    _setPlayerState(RadioPlayerState.idle);
     await _player.stop();
     _isActuallyPlaying = false;
     _stopForeground();
-    _setPlayerState(RadioPlayerState.idle);
     await WakelockPlus.disable();
     cancelSleepTimer();
   }
@@ -987,7 +987,9 @@ class RadioProvider extends ChangeNotifier {
       if (_currentStation == null) return;
 
       // 네트워크 없음→있음 복구 시
-      if (!isNone && wasNone && !_isActuallyPlaying && _playerState != RadioPlayerState.idle) {
+      if (!isNone && wasNone && !_isActuallyPlaying &&
+          _playerState != RadioPlayerState.idle &&
+          _playerState != RadioPlayerState.error) {
         debugPrint('네트워크 복구 감지 - 라디오 재연결 시도');
         await Future.delayed(const Duration(seconds: 2));
         if (_currentStation != null && !_isActuallyPlaying) {
@@ -995,7 +997,9 @@ class RadioProvider extends ChangeNotifier {
         }
       }
       // WiFi↔LTE 전환 시 (스트림 끊김 대비)
-      else if (networkChanged && _playerState != RadioPlayerState.idle) {
+      else if (networkChanged &&
+          _playerState != RadioPlayerState.idle &&
+          _playerState != RadioPlayerState.error) {
         debugPrint('네트워크 전환 감지 - 라디오 재연결 시도');
         await Future.delayed(const Duration(seconds: 3));
         if (_currentStation != null && !_isActuallyPlaying) {

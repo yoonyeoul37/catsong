@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/song.dart';
 
 class PlayerProvider extends ChangeNotifier {
@@ -55,6 +56,19 @@ class PlayerProvider extends ChangeNotifier {
   PlayerProvider() {
     _initStreams();
     _initWidgetChannel();
+    _loadLoopMode();
+  }
+
+  Future<void> _loadLoopMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getInt('loop_mode') ?? 0;
+    _loopMode = LoopMode.values[saved];
+    notifyListeners();
+  }
+
+  Future<void> _saveLoopMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('loop_mode', _loopMode.index);
   }
 
   void _initWidgetChannel() {
@@ -340,11 +354,13 @@ class PlayerProvider extends ChangeNotifier {
         break;
     }
     notifyListeners();
+    _saveLoopMode();
   }
 
   void setLoopMode(LoopMode mode) {
     _loopMode = mode;
     notifyListeners();
+    _saveLoopMode();
   }
 
   String formatDuration(Duration d) {

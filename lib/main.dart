@@ -19,6 +19,7 @@ import 'screens/home_screen.dart';
 import 'theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
 import 'l10n/locale_holder.dart';
+import 'package:in_app_update/in_app_update.dart';
 
 late AudioHandler globalAudioHandler;
 late BaseAudioHandler radioAudioHandler;
@@ -229,7 +230,38 @@ class _AppInitializerState extends State<AppInitializer> {
         });
       }
       await _checkAndRequestReview();
+      await _checkForUpdate();
     });
+  }
+
+  Future<void> _checkForUpdate() async {
+    try {
+      final info = await InAppUpdate.checkForUpdate();
+      if (info.updateAvailability == UpdateAvailability.updateAvailable &&
+          info.flexibleUpdateAllowed) {
+        await InAppUpdate.startFlexibleUpdate();
+        InAppUpdate.installUpdateListener.listen((status) {
+          if (status == InstallStatus.downloaded && mounted) {
+            _showUpdateReadySnackbar();
+          }
+        });
+      }
+    } catch (e) {
+      debugPrint('업데이트 확인 오류: $e');
+    }
+  }
+
+  void _showUpdateReadySnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('새 버전이 준비됐어요. 재시작할까요?'),
+        duration: const Duration(days: 1),
+        action: SnackBarAction(
+          label: '재시작',
+          onPressed: () => InAppUpdate.completeFlexibleUpdate(),
+        ),
+      ),
+    );
   }
 
   Future<void> _checkBatteryOptimization() async {

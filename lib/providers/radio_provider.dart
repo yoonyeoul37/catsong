@@ -314,6 +314,29 @@ class RadioProvider extends ChangeNotifier {
         return null;
       }
 
+      // MBC 표준FM/FM4U/올댓뮤직: 개인 중계 서버(serpent0) 대신 iMBC 공식 토큰 API 직접 호출
+      if (url.contains('mbcsfm.pls') || url.contains('mbcfm.pls') || url.contains('mbcatm.pls')) {
+        final channel = url.contains('mbcsfm.pls')
+            ? 'sfm'
+            : url.contains('mbcatm.pls')
+                ? 'chm'
+                : 'mfm';
+        try {
+          final tokenUri = Uri.parse('https://sminiplay.imbc.com/aacplay.ashx?agent=webapp&channel=$channel');
+          final response = await http.get(tokenUri).timeout(const Duration(seconds: 10));
+          if (response.statusCode == 200) {
+            final fresh = response.body.trim();
+            if (fresh.startsWith('http')) {
+              debugPrint('MBC 토큰 URL 추출: $fresh');
+              return fresh;
+            }
+          }
+        } catch (e) {
+          debugPrint('MBC 토큰 발급 오류: $e');
+        }
+        return null;
+      }
+
       final client = http.Client();
       final request = http.Request('GET', Uri.parse(url));
       request.headers['User-Agent'] = 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36';
@@ -535,7 +558,7 @@ class RadioProvider extends ChangeNotifier {
     await _player.stop();
     _isActuallyPlaying = false;
     _stopForeground();
-    _setPlayerState(RadioPlayerState.paused);
+    _setPlayerState(RadioPlayerState.idle);
     await WakelockPlus.disable();
     cancelSleepTimer();
   }
@@ -1545,10 +1568,10 @@ class RadioProvider extends ChangeNotifier {
     cancelSleepTimer();
     _sleepRemaining = duration;
     _sleepTimer = Timer(duration, () async {
-      await _player.pause();
+      await _player.stop();
       await WakelockPlus.disable();
       _isActuallyPlaying = false;
-      _setPlayerState(RadioPlayerState.paused);
+      _setPlayerState(RadioPlayerState.idle);
       _updateForeground(false);
       cancelSleepTimer();
     });

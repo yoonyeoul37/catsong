@@ -987,7 +987,7 @@ class RadioProvider extends ChangeNotifier {
       if (_currentStation == null) return;
 
       // 네트워크 없음→있음 복구 시
-      if (!isNone && wasNone && !_isActuallyPlaying) {
+      if (!isNone && wasNone && !_isActuallyPlaying && _playerState != RadioPlayerState.idle) {
         debugPrint('네트워크 복구 감지 - 라디오 재연결 시도');
         await Future.delayed(const Duration(seconds: 2));
         if (_currentStation != null && !_isActuallyPlaying) {

@@ -1486,4 +1486,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playbackSpeedLabel => 'Speed';
+
+  @override
+  String get updateReadyTitle => 'Update Ready';
+
+  @override
+  String get updateReadyMessage =>
+      'New features have been downloaded.\nRestarting now is recommended.';
+
+  @override
+  String get updateReadyButton => 'Restart Now';
+
+  @override
+  String get updateReadyLater => 'Later';
 }

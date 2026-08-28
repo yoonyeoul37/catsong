@@ -1479,4 +1479,16 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get playbackSpeedLabel => '재생속도';
+
+  @override
+  String get updateReadyTitle => '업데이트 준비 완료';
+
+  @override
+  String get updateReadyMessage => '새로운 기능이 다운로드됐어요.\n지금 재시작을 권장합니다.';
+
+  @override
+  String get updateReadyButton => '지금 재시작';
+
+  @override
+  String get updateReadyLater => '나중에';
 }

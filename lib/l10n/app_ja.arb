@@ -498,5 +498,9 @@
   "deselectAll": "選択解除",
   "exit": "終了",
   "timerLabel": "タイマー",
-  "playbackSpeedLabel": "再生速度"
+  "playbackSpeedLabel": "再生速度",
+  "updateReadyTitle": "アップデート準備完了",
+  "updateReadyMessage": "新機能がダウンロードされました。\n今すぐ再起動することをお勧めします。",
+  "updateReadyButton": "今すぐ再起動",
+  "updateReadyLater": "後で"
 }

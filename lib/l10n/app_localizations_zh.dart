@@ -1480,4 +1480,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get playbackSpeedLabel => '播放速度';
+
+  @override
+  String get updateReadyTitle => '更新已就緒';
+
+  @override
+  String get updateReadyMessage => '新功能已下載完成。\n建議立即重新啟動。';
+
+  @override
+  String get updateReadyButton => '立即重新啟動';
+
+  @override
+  String get updateReadyLater => '稍後';
 }

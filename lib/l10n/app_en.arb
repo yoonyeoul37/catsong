@@ -498,5 +498,9 @@
   "deselectAll": "Deselect All",
   "exit": "Exit",
   "timerLabel": "Timer",
-  "playbackSpeedLabel": "Speed"
+  "playbackSpeedLabel": "Speed",
+  "updateReadyTitle": "Update Ready",
+  "updateReadyMessage": "New features have been downloaded.\nRestarting now is recommended.",
+  "updateReadyButton": "Restart Now",
+  "updateReadyLater": "Later"
 }

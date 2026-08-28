@@ -280,9 +280,9 @@ class _AppInitializerState extends State<AppInitializer> {
                 child: const Icon(Icons.system_update, color: accent, size: 34),
               ),
               const SizedBox(height: 20),
-              const Text(
-                '업데이트 준비 완료',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(ctx)!.updateReadyTitle,
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -290,9 +290,9 @@ class _AppInitializerState extends State<AppInitializer> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
-              const Text(
-                '새로운 기능이 다운로드됐어요.\n지금 재시작을 권장합니다.',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(ctx)!.updateReadyMessage,
+                style: const TextStyle(
                   color: Colors.black54,
                   fontSize: 15,
                   height: 1.5,
@@ -313,9 +313,9 @@ class _AppInitializerState extends State<AppInitializer> {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                   ),
-                  child: const Text(
-                    '지금 재시작',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                  child: Text(
+                    AppLocalizations.of(ctx)!.updateReadyButton,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                   ),
                 ),
               ),
@@ -328,7 +328,7 @@ class _AppInitializerState extends State<AppInitializer> {
                     foregroundColor: Colors.black38,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
-                  child: const Text('나중에', style: TextStyle(fontSize: 14)),
+                  child: Text(AppLocalizations.of(ctx)!.updateReadyLater, style: const TextStyle(fontSize: 14)),
                 ),
               ),
             ],

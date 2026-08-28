@@ -501,5 +501,9 @@
   "deselectAll": "取消全選",
   "exit": "退出",
   "timerLabel": "定時器",
-  "playbackSpeedLabel": "播放速度"
+  "playbackSpeedLabel": "播放速度",
+  "updateReadyTitle": "更新已就緒",
+  "updateReadyMessage": "新功能已下載完成。\n建議立即重新啟動。",
+  "updateReadyButton": "立即重新啟動",
+  "updateReadyLater": "稍後"
 }

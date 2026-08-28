@@ -2945,6 +2945,30 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'재생속도'**
   String get playbackSpeedLabel;
+
+  /// No description provided for @updateReadyTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'업데이트 준비 완료'**
+  String get updateReadyTitle;
+
+  /// No description provided for @updateReadyMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'새로운 기능이 다운로드됐어요.\n지금 재시작을 권장합니다.'**
+  String get updateReadyMessage;
+
+  /// No description provided for @updateReadyButton.
+  ///
+  /// In ko, this message translates to:
+  /// **'지금 재시작'**
+  String get updateReadyButton;
+
+  /// No description provided for @updateReadyLater.
+  ///
+  /// In ko, this message translates to:
+  /// **'나중에'**
+  String get updateReadyLater;
 }
 
 class _AppLocalizationsDelegate

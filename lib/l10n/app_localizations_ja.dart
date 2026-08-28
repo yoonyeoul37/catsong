@@ -1480,4 +1480,16 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get playbackSpeedLabel => '再生速度';
+
+  @override
+  String get updateReadyTitle => 'アップデート準備完了';
+
+  @override
+  String get updateReadyMessage => '新機能がダウンロードされました。\n今すぐ再起動することをお勧めします。';
+
+  @override
+  String get updateReadyButton => '今すぐ再起動';
+
+  @override
+  String get updateReadyLater => '後で';
 }

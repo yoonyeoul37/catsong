@@ -473,5 +473,9 @@
   "deselectAll": "선택 해제",
   "exit": "종료",
   "timerLabel": "타이머",
-  "playbackSpeedLabel": "재생속도"
+  "playbackSpeedLabel": "재생속도",
+  "updateReadyTitle": "업데이트 준비 완료",
+  "updateReadyMessage": "새로운 기능이 다운로드됐어요.\n지금 재시작을 권장합니다.",
+  "updateReadyButton": "지금 재시작",
+  "updateReadyLater": "나중에"
 }

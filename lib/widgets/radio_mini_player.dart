@@ -133,7 +133,7 @@ class RadioMiniPlayer extends StatelessWidget {
                                         : '일시정지',
                                     style: TextStyle(
                                       color: isPlaying
-                                          ? Colors.redAccent
+                                          ? const Color(0xFFE8877E)
                                           : Colors.white60,
                                       fontSize: 12,
                                     ),

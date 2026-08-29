@@ -379,7 +379,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: Column(
                   children: [
-                    SizedBox(height: h * 0.11),
+                    SizedBox(height: (h * 0.11).clamp(30.0, 70.0)),
 
                     // ── 다이얼 ──
                     SizedBox(
@@ -396,7 +396,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                       ),
                     ),
 
-                    SizedBox(height: h * 0.05),
+                    SizedBox(height: (h * 0.05).clamp(16.0, 32.0)),
 
                     // ── 편성표 ──
                     SizedBox(
@@ -454,7 +454,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                         ),
                       ),
 
-                    SizedBox(height: h * 0.02),
+                    SizedBox(height: (h * 0.02).clamp(8.0, 20.0)),
 
                     // ── 컨트롤 ──
                     _Controls(

@@ -126,7 +126,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
     final radioProvider = context.watch<RadioProvider>();
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFF0D2E2C),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -249,7 +249,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
             padding: EdgeInsets.fromLTRB(24, 0, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
             itemCount: stations.length + 1,
             separatorBuilder: (_, __) =>
-                Divider(height: 1, color: Colors.white.withOpacity(0.16), indent: 0),
+                Divider(height: 1, color: Colors.white.withOpacity(0.1), indent: 0),
             itemBuilder: (context, index) {
               if (index == 0) {
                 return Padding(
@@ -332,7 +332,7 @@ class _StationTile extends StatelessWidget {
     final primaryColor = Theme.of(context).colorScheme.primary;
 
     return Container(
-      color: isPlaying ? Colors.white.withOpacity(0.08) : Colors.transparent,
+      color: isPlaying ? primaryColor.withOpacity(0.08) : Colors.transparent,
       child: InkWell(
       onTap: () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -358,34 +358,11 @@ class _StationTile extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 44,
-              height: 44,
+              width: 6,
+              height: 40,
               decoration: BoxDecoration(
-                color: _brandColor(station.broadcaster).withOpacity(0.85),
-                borderRadius: BorderRadius.circular(11),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    station.broadcaster,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textScaler: TextScaler.noScaling,
-                  ),
-                  if (station.subLabel.isNotEmpty)
-                    Text(
-                      station.subLabel,
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 8.5,
-                      ),
-                      textScaler: TextScaler.noScaling,
-                    ),
-                ],
+                color: isPlaying ? primaryColor : Colors.white.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(3),
               ),
             ),
             const SizedBox(width: 16),
@@ -397,7 +374,7 @@ class _StationTile extends StatelessWidget {
                   Text(
                     station.name,
                     style: TextStyle(
-                      color: isPlaying ? Colors.white : Colors.white,
+                      color: isPlaying ? primaryColor : Colors.white,
                       fontWeight: isPlaying ? FontWeight.w700 : FontWeight.w500,
                       fontSize: 15.5,
                       letterSpacing: -0.2,
@@ -517,7 +494,7 @@ class _StationTile extends StatelessWidget {
               ),
             ),
             if (isPlaying)
-              _PlayingBars()
+              _PlayingBars(color: primaryColor)
             else
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
@@ -704,6 +681,9 @@ const koreanStations = <_KStation>[
 ];
 
 class _PlayingBars extends StatefulWidget {
+  final Color color;
+  const _PlayingBars({required this.color});
+
   @override
   State<_PlayingBars> createState() => _PlayingBarsState();
 }
@@ -747,7 +727,7 @@ class _PlayingBarsState extends State<_PlayingBars>
               width: 4,
               height: 6 + _ctrls[i].value * 14,
               decoration: BoxDecoration(
-                color: Colors.white70,
+                color: widget.color,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),

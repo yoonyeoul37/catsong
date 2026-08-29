@@ -506,5 +506,9 @@
   "updateReadyMessage": "新功能已下載完成。\n建議立即重新啟動。",
   "updateReadyButton": "立即重新啟動",
   "updateReadyLater": "稍後",
-  "radioNextProgram": "下一節目"
+  "radioNextProgram": "下一節目",
+  "radioExitConfirmTitle": "要結束收音機嗎？",
+  "radioExitConfirmMessage": "現在離開將停止播放。",
+  "radioExitKeepListening": "繼續收聽",
+  "radioExitConfirmButton": "結束"
 }

@@ -1494,4 +1494,16 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get radioNextProgram => '다음 방송';
+
+  @override
+  String get radioExitConfirmTitle => '라디오를 종료하시겠어요?';
+
+  @override
+  String get radioExitConfirmMessage => '지금 나가면 재생이 멈춰요.';
+
+  @override
+  String get radioExitKeepListening => '계속 듣기';
+
+  @override
+  String get radioExitConfirmButton => '종료';
 }

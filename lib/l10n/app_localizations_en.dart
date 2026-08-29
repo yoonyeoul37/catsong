@@ -1502,4 +1502,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get radioNextProgram => 'Next';
+
+  @override
+  String get radioExitConfirmTitle => 'Exit the radio?';
+
+  @override
+  String get radioExitConfirmMessage => 'Leaving now will stop playback.';
+
+  @override
+  String get radioExitKeepListening => 'Keep listening';
+
+  @override
+  String get radioExitConfirmButton => 'Exit';
 }

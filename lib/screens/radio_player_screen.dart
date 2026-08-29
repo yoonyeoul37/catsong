@@ -286,15 +286,79 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                   primaryColor: primaryColor,
                   onTap: () async {
                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    final confirmed = await showDialog<bool>(
+                      context: context,
+                      builder: (ctx) => Dialog(
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                AppLocalizations.of(ctx)!.radioExitConfirmTitle,
+                                style: const TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                AppLocalizations.of(ctx)!.radioExitConfirmMessage,
+                                style: const TextStyle(color: Colors.black54, fontSize: 13),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 24),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      onPressed: () {
+                                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                        Navigator.pop(ctx, false);
+                                      },
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: Colors.black54,
+                                        side: const BorderSide(color: Color(0xFFE5E5E5)),
+                                        padding: const EdgeInsets.symmetric(vertical: 13),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                      ),
+                                      child: Text(AppLocalizations.of(ctx)!.radioExitKeepListening),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                        Navigator.pop(ctx, true);
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppTheme.fixedAccent,
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(vertical: 13),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                      ),
+                                      child: Text(AppLocalizations.of(ctx)!.radioExitConfirmButton),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                    if (confirmed != true) return;
                     await context.read<RadioProvider>().stopRadio();
                     final handler = globalAudioHandler;
                     if (handler is SimpleAudioHandler) {
                       handler.setRadioMode(false);
                       handler.playbackState.add(PlaybackState());
                       handler.mediaItem.add(null);
+                      await handler.stop();
                     }
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('moveToBackground');
+                    await Future.delayed(const Duration(milliseconds: 300));
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('closeApp');
                   },
                 ),
               ],
@@ -335,21 +399,27 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                     SizedBox(height: h * 0.05),
 
                     // ── 편성표 ──
-                    if (radioProvider.currentProgram != null)
-                      _ProgramCard(
-                        program: radioProvider.currentProgram!,
-                        primaryColor: primaryColor,
-                        radioProvider: radioProvider,
-                        freq: freq,
-                      )
-                    else if (freq.isNotEmpty)
-                      Text(
-                        freq,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.5),
-                          fontSize: 13,
-                        ),
+                    SizedBox(
+                      height: 68,
+                      child: Center(
+                        child: radioProvider.currentProgram != null
+                            ? _ProgramCard(
+                                program: radioProvider.currentProgram!,
+                                primaryColor: primaryColor,
+                                radioProvider: radioProvider,
+                                freq: freq,
+                              )
+                            : (freq.isNotEmpty
+                                ? Text(
+                                    freq,
+                                    style: TextStyle(
+                                      color: Colors.white.withOpacity(0.5),
+                                      fontSize: 13,
+                                    ),
+                                  )
+                                : const SizedBox.shrink()),
                       ),
+                    ),
 
                     if (radioProvider.currentProgram != null &&
                         radioProvider.scheduleList.isNotEmpty) ...[

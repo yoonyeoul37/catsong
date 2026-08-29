@@ -503,5 +503,9 @@
   "updateReadyMessage": "新機能がダウンロードされました。\n今すぐ再起動することをお勧めします。",
   "updateReadyButton": "今すぐ再起動",
   "updateReadyLater": "後で",
-  "radioNextProgram": "次の番組"
+  "radioNextProgram": "次の番組",
+  "radioExitConfirmTitle": "ラジオを終了しますか？",
+  "radioExitConfirmMessage": "今終了すると再生が止まります。",
+  "radioExitKeepListening": "聴き続ける",
+  "radioExitConfirmButton": "終了"
 }

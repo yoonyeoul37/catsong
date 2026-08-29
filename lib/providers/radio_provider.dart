@@ -288,7 +288,8 @@ class RadioProvider extends ChangeNotifier {
 
     _player.stream.error.listen((error) {
       debugPrint('media_kit 오류: $error');
-      if (error.isNotEmpty) {
+      // 실제로 소리가 계속 나오고 있으면(mpv 자체 재연결 성공) 무시 - 순간적인 네트워크 흔들림
+      if (error.isNotEmpty && !_player.state.playing) {
         _errorMessage = '방송을 불러올 수 없습니다.\n다른 채널을 선택해 주세요.';
         _isActuallyPlaying = false;
         _setPlayerState(RadioPlayerState.error);

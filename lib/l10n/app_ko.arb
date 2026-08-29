@@ -478,5 +478,9 @@
   "updateReadyMessage": "새로운 기능이 다운로드됐어요.\n지금 재시작을 권장합니다.",
   "updateReadyButton": "지금 재시작",
   "updateReadyLater": "나중에",
-  "radioNextProgram": "다음 방송"
+  "radioNextProgram": "다음 방송",
+  "radioExitConfirmTitle": "라디오를 종료하시겠어요?",
+  "radioExitConfirmMessage": "지금 나가면 재생이 멈춰요.",
+  "radioExitKeepListening": "계속 듣기",
+  "radioExitConfirmButton": "종료"
 }

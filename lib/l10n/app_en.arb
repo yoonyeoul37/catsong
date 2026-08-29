@@ -503,5 +503,9 @@
   "updateReadyMessage": "New features have been downloaded.\nRestarting now is recommended.",
   "updateReadyButton": "Restart Now",
   "updateReadyLater": "Later",
-   "radioNextProgram": "Next"
+  "radioNextProgram": "Next",
+  "radioExitConfirmTitle": "Exit the radio?",
+  "radioExitConfirmMessage": "Leaving now will stop playback.",
+  "radioExitKeepListening": "Keep listening",
+  "radioExitConfirmButton": "Exit"
 }

@@ -1495,4 +1495,16 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get radioNextProgram => '次の番組';
+
+  @override
+  String get radioExitConfirmTitle => 'ラジオを終了しますか？';
+
+  @override
+  String get radioExitConfirmMessage => '今終了すると再生が止まります。';
+
+  @override
+  String get radioExitKeepListening => '聴き続ける';
+
+  @override
+  String get radioExitConfirmButton => '終了';
 }

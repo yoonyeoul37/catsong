@@ -1495,4 +1495,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get radioNextProgram => '下一節目';
+
+  @override
+  String get radioExitConfirmTitle => '要結束收音機嗎？';
+
+  @override
+  String get radioExitConfirmMessage => '現在離開將停止播放。';
+
+  @override
+  String get radioExitKeepListening => '繼續收聽';
+
+  @override
+  String get radioExitConfirmButton => '結束';
 }

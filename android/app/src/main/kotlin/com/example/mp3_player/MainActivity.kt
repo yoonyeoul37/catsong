@@ -344,6 +344,11 @@ class MainActivity : AudioServiceActivity() {
                     moveTaskToBack(true)
                     result.success(true)
                 }
+                "closeApp" -> {
+                    result.success(true)
+                    finishAffinity()
+                    android.os.Process.killProcess(android.os.Process.myPid())
+                }
                 "vibrate" -> {
                     try {
                         @Suppress("DEPRECATION")

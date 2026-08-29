@@ -2975,6 +2975,30 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'다음 방송'**
   String get radioNextProgram;
+
+  /// No description provided for @radioExitConfirmTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'라디오를 종료하시겠어요?'**
+  String get radioExitConfirmTitle;
+
+  /// No description provided for @radioExitConfirmMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'지금 나가면 재생이 멈춰요.'**
+  String get radioExitConfirmMessage;
+
+  /// No description provided for @radioExitKeepListening.
+  ///
+  /// In ko, this message translates to:
+  /// **'계속 듣기'**
+  String get radioExitKeepListening;
+
+  /// No description provided for @radioExitConfirmButton.
+  ///
+  /// In ko, this message translates to:
+  /// **'종료'**
+  String get radioExitConfirmButton;
 }
 
 class _AppLocalizationsDelegate

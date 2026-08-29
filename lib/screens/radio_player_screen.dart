@@ -10,6 +10,8 @@ import '../widgets/sleep_timer_sheet.dart';
 import '../widgets/schedule_sheet.dart';
 import '../widgets/fm_tuner_dial.dart';
 import '../widgets/global_radio_dial.dart';
+import '../widgets/simple_radio_dial.dart';
+import '../widgets/equalizer_animation.dart';
 import '../l10n/app_localizations.dart';
 import 'package:audio_service/audio_service.dart';
 import '../main.dart' show globalAudioHandler;
@@ -84,6 +86,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         radio.fetchMbcSchedule(stationName);
       } else if (stationName == 'SBS 파워FM' || stationName == 'SBS 러브FM') {
         radio.fetchSbsSchedule(stationName);
+      } else if (stationName == 'BBS 불교방송') {
+        radio.fetchBbsSchedule();
       } else if (stationName.contains('KBS')) {
         radio.fetchSchedule(stationName);
       }
@@ -108,7 +112,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         name.contains('CBS') ||
         name == '국방FM' ||
         name == 'EBS 반디' ||
-        name == 'EBS FM';
+        name == 'EBS FM' ||
+        name == 'BBS 불교방송';
   }
 
   String _getBroadcaster(String name) {
@@ -174,7 +179,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     final freq = current.frequency ?? '';
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFF0A0A0A),
       bottomNavigationBar: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onHorizontalDragEnd: (details) {
@@ -317,18 +322,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                       height: h * 0.45,
                       child: FittedBox(
                         fit: BoxFit.contain,
-                        child: current.countryCode == 'KR'
-                            ? FmTunerDial(
-                          broadcaster: broadcaster.isNotEmpty
-                              ? broadcaster
-                              : current.name.substring(0, current.name.length.clamp(0, 4)).toUpperCase(),
-                          frequency: _parseFrequency(freq),
-                          isPlaying: isPlaying,
-                          bcColor: bcColor,
-                          primaryColor: primaryColor,
-                          pulseCtrl: _pulseCtrl,
-                        )
-                            : GlobalRadioDial(
+                        child: SimpleRadioDial(
                           stationName: current.name,
                           logoUrl: current.logoUrl,
                           isPlaying: isPlaying,
@@ -338,22 +332,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                       ),
                     ),
 
-                    SizedBox(height: h * 0.01),
-
-                    // ── 채널명 ──
-                    Text(
-                      current.name,
-                      style: const TextStyle(
-                        color: AppTheme.textPrimary,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-
-                    SizedBox(height: h * 0.01),
+                    SizedBox(height: h * 0.05),
 
                     // ── 편성표 ──
                     if (radioProvider.currentProgram != null)
@@ -362,9 +341,35 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                         primaryColor: primaryColor,
                         radioProvider: radioProvider,
                         freq: freq,
+                      )
+                    else if (freq.isNotEmpty)
+                      Text(
+                        freq,
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.5),
+                          fontSize: 13,
+                        ),
                       ),
 
+                    if (radioProvider.currentProgram != null &&
+                        radioProvider.scheduleList.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      _NextProgramLine(
+                        scheduleList: radioProvider.scheduleList,
+                        currentProgram: radioProvider.currentProgram!,
+                        radioProvider: radioProvider,
+                      ),
+                    ],
+
                     SizedBox(height: h * 0.01),
+
+                    if (isPlaying) ...[
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        height: 20,
+                        child: EqualizerAnimation(color: primaryColor),
+                      ),
+                    ],
 
                     // ── 상태 뱃지 ──
                     _StatusBadge(state: state),
@@ -884,106 +889,171 @@ class _ProgramCard extends StatelessWidget {
       timeStr = '$sbsStart ~ $sbsEnd';
     }
 
+    return Column(
+      children: [
+        // 타이틀 + LIVE
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
+                title.isNotEmpty ? title : '',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Builder(builder: (ctx) {
+              final isRerun = program['is_rerun'] as bool? ?? false;
+              final badgeColor = isRerun ? Colors.white60 : const Color(0xFFE8877E);
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+                decoration: BoxDecoration(
+                  color: badgeColor.withOpacity(0.14),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (!isRerun) ...[
+                      Container(
+                        width: 5,
+                        height: 5,
+                        decoration: BoxDecoration(
+                          color: badgeColor,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                    ],
+                    Text(
+                      isRerun ? AppLocalizations.of(context)!.radioRerun : AppLocalizations.of(context)!.radioLive,
+                      style: TextStyle(
+                        color: badgeColor,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.4,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
+        const SizedBox(height: 6),
+        // 시간 · MHz 한 줄
+        Text(
+          [
+            if (timeStr.isNotEmpty) timeStr,
+            if (freq.isNotEmpty) freq,
+          ].join('   ·   '),
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.5),
+            fontSize: 13,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+}
+
+// ══════════════════════════════════════════
+// 다음 방송 한 줄 표시
+// ══════════════════════════════════════════
+class _NextProgramLine extends StatelessWidget {
+  final List<Map<String, dynamic>> scheduleList;
+  final Map<String, dynamic> currentProgram;
+  final RadioProvider radioProvider;
+
+  const _NextProgramLine({
+    required this.scheduleList,
+    required this.currentProgram,
+    required this.radioProvider,
+  });
+
+  String _titleOf(Map<String, dynamic> p) {
+    return p['program_title'] as String? ??
+        p['Title'] as String? ??
+        p['title'] as String? ??
+        '';
+  }
+
+  String _startOf(Map<String, dynamic> p) {
+    final a = p['program_planned_start_time'] as String? ?? '';
+    if (a.isNotEmpty) return a;
+    final b = p['StartTime']?.toString() ?? '';
+    if (b.isNotEmpty) return b;
+    return p['start_time'] as String? ?? '';
+  }
+
+  String _formatStart(String raw) {
+    if (raw.isEmpty) return '';
+    if (raw.contains(':')) return raw;
+    if (raw.length >= 8) {
+      // KBS 형식: 20260827200000
+      return radioProvider.formatScheduleTime(raw.substring(8));
+    }
+    if (raw.length == 4) {
+      int h = int.tryParse(raw.substring(0, 2)) ?? 0;
+      if (h >= 24) h -= 24;
+      return '${h.toString().padLeft(2, '0')}:${raw.substring(2, 4)}';
+    }
+    return raw;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final currentTitle = _titleOf(currentProgram);
+    final idx = scheduleList.indexWhere((p) => _titleOf(p) == currentTitle);
+    if (idx < 0 || idx + 1 >= scheduleList.length) return const SizedBox.shrink();
+    final next = scheduleList[idx + 1];
+    final nextTitle = _titleOf(next);
+    if (nextTitle.isEmpty) return const SizedBox.shrink();
+    final nextStart = _formatStart(_startOf(next));
+
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _accent.withOpacity(0.18)),
       ),
       child: Row(
         children: [
-          Container(
-            width: 36, height: 36,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: _accent.withOpacity(0.12),
-              border: Border.all(color: _accent.withOpacity(0.25)),
-            ),
-            child: const Icon(Icons.mic, color: _accent, size: 18),
-          ),
-          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 타이틀 + LIVE 한 줄
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        title.isNotEmpty ? title : '',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Builder(builder: (ctx) {
-                      final isRerun = program['is_rerun'] as bool? ?? false;
-                      return Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: isRerun
-                              ? Colors.white.withOpacity(0.08)
-                              : Colors.redAccent.withOpacity(0.12),
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                            color: isRerun
-                                ? Colors.white.withOpacity(0.25)
-                                : Colors.redAccent.withOpacity(0.3),
-                          ),
-                        ),
-                        child: Text(
-                          isRerun ? AppLocalizations.of(context)!.radioRerun : AppLocalizations.of(context)!.radioLive,
-                          style: TextStyle(
-                            color: isRerun ? Colors.white60 : Colors.redAccent,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 0.6,
-                          ),
-                        ),
-                      );
-                    }),
-                  ],
+                Text(
+                  nextStart.isNotEmpty
+                      ? '${AppLocalizations.of(context)!.radioNextProgram}  $nextStart'
+                      : AppLocalizations.of(context)!.radioNextProgram,
+                  style: const TextStyle(color: Colors.white38, fontSize: 11),
                 ),
-                const SizedBox(height: 3),
-                // 시간 + MHz 한 줄
-                Row(
-                  children: [
-                    if (timeStr.isNotEmpty)
-                      Expanded(
-                        child: Text(
-                          timeStr,
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
-                            fontSize: 11,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ),
-                    if (freq.isNotEmpty)
-                      Text(
-                        freq,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.65),
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                  ],
+                const SizedBox(height: 4),
+                Text(
+                  nextTitle,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-
+          const SizedBox(width: 8),
+          const Icon(Icons.schedule, color: Colors.white24, size: 20),
         ],
       ),
     );
@@ -1066,8 +1136,7 @@ class _Controls extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // 이전
-        _NeuButton(
-          size: 56,
+        GestureDetector(
           onTap: () {
             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
             final list = stationList;
@@ -1078,9 +1147,12 @@ class _Controls extends StatelessWidget {
               radioProvider.playStation(list[newIdx]);
             }
           },
-          child: const Icon(Icons.skip_previous, color: Colors.white70, size: 26),
+          child: const Padding(
+            padding: EdgeInsets.all(10),
+            child: Icon(Icons.skip_previous, color: Color(0xFFC7C7C7), size: 24),
+          ),
         ),
-        const SizedBox(width: 28),
+        const SizedBox(width: 30),
         // 재생/정지
         GestureDetector(
           onTap: isLoading
@@ -1094,29 +1166,27 @@ class _Controls extends StatelessWidget {
             }
           },
           child: Container(
-            width: 82,
-            height: 82,
+            width: 68,
+            height: 68,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.white.withOpacity(0.05),
-              border: Border.all(color: Colors.white.withOpacity(0.08)),
+              color: primaryColor,
             ),
             child: isLoading
                 ? const Padding(
-              padding: EdgeInsets.all(22),
-              child: CircularProgressIndicator(strokeWidth: 2.5, color: _accent),
+              padding: EdgeInsets.all(20),
+              child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.black),
             )
                 : Icon(
               isError ? Icons.refresh : (isPlaying ? Icons.pause : Icons.play_arrow),
-              color: _accent,
-              size: 38,
+              color: Colors.black,
+              size: 30,
             ),
           ),
         ),
-        const SizedBox(width: 28),
+        const SizedBox(width: 30),
         // 다음
-        _NeuButton(
-          size: 56,
+        GestureDetector(
           onTap: () {
             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
             final list = stationList;
@@ -1127,7 +1197,10 @@ class _Controls extends StatelessWidget {
               radioProvider.playStation(list[newIdx]);
             }
           },
-          child: const Icon(Icons.skip_next, color: Colors.white70, size: 26),
+          child: const Padding(
+            padding: EdgeInsets.all(10),
+            child: Icon(Icons.skip_next, color: Color(0xFFC7C7C7), size: 24),
+          ),
         ),
       ],
     );

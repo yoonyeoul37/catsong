@@ -1499,4 +1499,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateReadyLater => 'Later';
+
+  @override
+  String get radioNextProgram => 'Next';
 }

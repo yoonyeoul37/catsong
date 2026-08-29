@@ -1492,4 +1492,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get updateReadyLater => '稍後';
+
+  @override
+  String get radioNextProgram => '下一節目';
 }

@@ -1491,4 +1491,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get updateReadyLater => '나중에';
+
+  @override
+  String get radioNextProgram => '다음 방송';
 }

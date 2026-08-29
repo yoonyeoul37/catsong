@@ -502,5 +502,6 @@
   "updateReadyTitle": "アップデート準備完了",
   "updateReadyMessage": "新機能がダウンロードされました。\n今すぐ再起動することをお勧めします。",
   "updateReadyButton": "今すぐ再起動",
-  "updateReadyLater": "後で"
+  "updateReadyLater": "後で",
+  "radioNextProgram": "次の番組"
 }

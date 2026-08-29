@@ -1492,4 +1492,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get updateReadyLater => '後で';
+
+  @override
+  String get radioNextProgram => '次の番組';
 }

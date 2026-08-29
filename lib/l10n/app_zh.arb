@@ -505,5 +505,6 @@
   "updateReadyTitle": "更新已就緒",
   "updateReadyMessage": "新功能已下載完成。\n建議立即重新啟動。",
   "updateReadyButton": "立即重新啟動",
-  "updateReadyLater": "稍後"
+  "updateReadyLater": "稍後",
+  "radioNextProgram": "下一節目"
 }

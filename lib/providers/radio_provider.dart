@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/material.dart' show TimeOfDay, DayPeriod;
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -977,6 +979,73 @@ class RadioProvider extends ChangeNotifier {
     'SBS 파워FM': 'Power',
     'SBS 러브FM': 'Love',
   };
+
+  Future<void> fetchBbsSchedule() async {
+    const stationName = 'BBS 불교방송';
+    _scheduleListMap.remove(stationName);
+    _currentProgramMap.remove(stationName);
+    _nowPlayingMap.remove(stationName);
+    try {
+      final today = DateTime.now();
+      final dateStr = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+      final httpClient = HttpClient()
+        ..badCertificateCallback = (cert, host, port) => host == 'm.bbsi.co.kr';
+      final ioClient = IOClient(httpClient);
+      final response = await ioClient.get(
+        Uri.parse('https://m.bbsi.co.kr/M/ajaxSchedule.html?CODE=WWW&SchGubun=RADIO&SchDate=$dateStr'),
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36',
+          'Referer': 'https://m.bbsi.co.kr/M/?ACT=RADIO_FM',
+        },
+      ).timeout(const Duration(seconds: 10));
+      ioClient.close();
+
+      debugPrint('BBS statusCode: ${response.statusCode}, body length: ${response.body.length}');
+      if (response.statusCode == 200) {
+        final body = response.body;
+        debugPrint('BBS body 앞부분: ${body.substring(0, body.length > 300 ? 300 : body.length)}');
+        final blockRegex = RegExp(
+          r'<div class="program( onairbox)?">(.*?)<!-- UNIT E -->|<div class="program( onairbox)?">(.*?)<!-- ONAIR E -->',
+          dotAll: true,
+        );
+        final timeRegex = RegExp(r'<p>(\d{2}:\d{2})</p>');
+        final titleRegex = RegExp(r'<strong>(.*?)</strong>');
+        final onAirRegex = RegExp(r'ON AIR');
+
+        final matches = blockRegex.allMatches(body).toList();
+        debugPrint('BBS 매칭된 방송 개수: ${matches.length}');
+        final schedules = <Map<String, dynamic>>[];
+        int? currentIdx;
+        for (final m in matches) {
+          final block = (m.group(2) ?? m.group(4) ?? '');
+          final time = timeRegex.firstMatch(block)?.group(1) ?? '';
+          final title = titleRegex.firstMatch(block)?.group(1)?.trim() ?? '';
+          final isOnAir = onAirRegex.hasMatch(block);
+          if (time.isEmpty || title.isEmpty) continue;
+          schedules.add({'start_time': time, 'title': title});
+          if (isOnAir) currentIdx = schedules.length - 1;
+        }
+        _scheduleListMap[stationName] = schedules;
+        if (currentIdx != null) {
+          final cur = schedules[currentIdx];
+          final end = currentIdx + 1 < schedules.length
+              ? schedules[currentIdx + 1]['start_time'] as String
+              : '';
+          _currentProgramMap[stationName] = {
+            'program_title': cur['title'],
+            'start_time': cur['start_time'],
+            'end_time': end,
+            'is_rerun': false,
+          };
+          _nowPlayingMap[stationName] = cur['title'] as String? ?? '';
+        }
+      }
+    } catch (e) {
+      debugPrint('BBS 편성표 로드 오류: $e');
+    }
+    _updateNotification(stationName);
+    notifyListeners();
+  }
 
   void _listenConnectivity() {
     List<ConnectivityResult> _lastResults = [];

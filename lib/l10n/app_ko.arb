@@ -477,5 +477,6 @@
   "updateReadyTitle": "업데이트 준비 완료",
   "updateReadyMessage": "새로운 기능이 다운로드됐어요.\n지금 재시작을 권장합니다.",
   "updateReadyButton": "지금 재시작",
-  "updateReadyLater": "나중에"
+  "updateReadyLater": "나중에",
+  "radioNextProgram": "다음 방송"
 }

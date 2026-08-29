@@ -2969,6 +2969,12 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'나중에'**
   String get updateReadyLater;
+
+  /// No description provided for @radioNextProgram.
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 방송'**
+  String get radioNextProgram;
 }
 
 class _AppLocalizationsDelegate

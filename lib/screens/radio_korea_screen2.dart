@@ -10,6 +10,8 @@ import '../widgets/radio_mini_player.dart';
 import 'radio_player_screen.dart';
 import '../l10n/app_localizations.dart';
 
+enum _ViewMode { all, broadcaster, region }
+
 class RadioKoreaScreen extends StatefulWidget {
   const RadioKoreaScreen({super.key});
 
@@ -17,37 +19,25 @@ class RadioKoreaScreen extends StatefulWidget {
   State<RadioKoreaScreen> createState() => _RadioKoreaScreenState();
 }
 
-class _RadioKoreaScreenState extends State<RadioKoreaScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  final TextEditingController _searchController = TextEditingController();
-  String _query = '';
+class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
+  _ViewMode _mode = _ViewMode.all;
 
-  static const _regions = [
-    '전체',
-    '수도권',
-    '부산/경남',
-    '대구/경북',
-    '광주/전남',
-    '전북',
-    '대전/충남',
-    '충북',
-    '강원',
-    '제주',
-  ];
+  static const Map<String, Color> _regionColors = {
+    '수도권': Color(0xFF14356B),
+    '부산/경남': Color(0xFF0D4C6E),
+    '대구/경북': Color(0xFF7A1F1F),
+    '광주/전남': Color(0xFF1E4A2E),
+    '전북': Color(0xFF4A1E5C),
+    '대전/충남': Color(0xFF6B4A1E),
+    '충북': Color(0xFF2E5C5C),
+    '강원': Color(0xFF3A2E5C),
+    '제주': Color(0xFF1E5C4A),
+  };
 
   @override
   void initState() {
     super.initState();
-    _tabController =
-        TabController(length: _regions.length, vsync: this);
-    _tabController.addListener(() {
-      if (!_tabController.indexIsChanging) {
-        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-      }
-    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      debugPrint('한국 라디오 initState 실행됨');
       final radio = context.read<RadioProvider>();
       for (final station in koreanStations) {
         if (station.broadcaster == 'KBS' &&
@@ -64,40 +54,6 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
       radio.fetchKfnSchedule();
       radio.fetchEbsBandiSchedule();
     });
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  String _regionLabel(BuildContext context, String region) {
-    final l = AppLocalizations.of(context)!;
-    switch (region) {
-      case '전체': return l.regionAll;
-      case '수도권': return l.regionCapital;
-      case '부산/경남': return l.regionBusanGyeongnam;
-      case '대구/경북': return l.regionDaeguGyeongbuk;
-      case '광주/전남': return l.regionGwangjuJeonnam;
-      case '전북': return l.regionJeonbuk;
-      case '대전/충남': return l.regionDaejeonChungnam;
-      case '충북': return l.regionChungbuk;
-      case '강원': return l.regionGangwon;
-      case '제주': return l.regionJeju;
-      default: return region;
-    }
-  }
-
-  List<_KStation> _filtered(String region) {
-    Iterable<_KStation> list = region == '전체'
-        ? koreanStations
-        : koreanStations.where((s) => s.region == region);
-    if (_query.isNotEmpty) {
-      list = list.where((s) => s.name.toLowerCase().contains(_query.toLowerCase()));
-    }
-    return list.toList();
   }
 
   static RadioStation _toRadioStation(_KStation ks) {
@@ -120,9 +76,115 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
     });
   }
 
+  Widget _toggleButton(String label, _ViewMode mode) {
+    final selected = _mode == mode;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+          setState(() => _mode = mode);
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            color: selected ? Colors.white : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: selected ? const Color(0xFF0D2E2C) : Colors.white70,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAllList(BuildContext context, RadioProvider radioProvider) {
+    final radioStations = koreanStations.map((ks) => _toRadioStation(ks)).toList();
+    return ListView.separated(
+      padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
+      itemCount: koreanStations.length,
+      separatorBuilder: (_, __) => Divider(height: 1, color: Colors.white.withOpacity(0.1)),
+      itemBuilder: (context, i) {
+        final ks = koreanStations[i];
+        final current = radioProvider.currentStation;
+        final isPlaying = current?.name == ks.name && radioProvider.isPlaying;
+        return _StationTile(
+          station: ks,
+          isPlaying: isPlaying,
+          radioStation: radioStations[i],
+          stationList: radioStations,
+          stationIndex: i,
+        );
+      },
+    );
+  }
+
+  Widget _buildBroadcasterGrid(BuildContext context, RadioProvider radioProvider) {
+    return _BroadcasterGridScreen(radioProvider: radioProvider);
+  }
+
+  Widget _buildRegionGrid(BuildContext context) {
+    const regionList = [
+      '수도권', '부산/경남', '대구/경북', '광주/전남',
+      '전북', '대전/충남', '충북', '강원', '제주',
+    ];
+    return GridView.builder(
+      padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        childAspectRatio: 1.5,
+      ),
+      itemCount: regionList.length,
+      itemBuilder: (context, index) {
+        final region = regionList[index];
+        final count = koreanStations.where((s) => s.region == region).length;
+        return GestureDetector(
+          onTap: () {
+            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+            final stations = koreanStations.where((s) => s.region == region).toList();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => _BroadcasterStationList(broadcaster: region, stations: stations),
+              ),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: _regionColors[region] ?? Colors.white.withOpacity(0.06),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  region,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 4),
+                Text('$count개 채널',
+                    style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 11)),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
     final radioProvider = context.watch<RadioProvider>();
 
     return Scaffold(
@@ -172,116 +234,33 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen>
           ),
         ),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(96),
-          child: Column(
-            children: [
-              TabBar(
-                controller: _tabController,
-                onTap: (_) => const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate'),
-                isScrollable: true,
-                indicatorColor: Colors.white,
-                indicatorWeight: 2,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.white.withOpacity(0.5),
-                labelStyle: const TextStyle(
-                    fontSize: 13.5, fontWeight: FontWeight.w700),
-                unselectedLabelStyle: const TextStyle(fontSize: 13.5),
-                tabAlignment: TabAlignment.start,
-                dividerColor: Colors.transparent,
-                tabs: _regions.map((r) => Tab(text: _regionLabel(context, r))).toList(),
+          preferredSize: const Size.fromHeight(56),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 4, 24, 12),
+            child: Container(
+              height: 38,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(10),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
-                child: Container(
-                  height: 46,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.06),
-                    borderRadius: BorderRadius.circular(11),
-                    border: Border.all(color: Colors.white.withOpacity(0.08)),
-                  ),
-                  child: Center(
-                    child: TextField(
-                      controller: _searchController,
-                      onChanged: (v) => setState(() => _query = v),
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: InputDecoration(
-                        hintText: AppLocalizations.of(context)!.search,
-                        hintStyle: TextStyle(color: Colors.white.withOpacity(0.35), fontSize: 14),
-                        prefixIcon: Icon(Icons.search, color: Colors.white.withOpacity(0.4), size: 19),
-                        suffixIcon: _query.isNotEmpty
-                            ? IconButton(
-                          icon: Icon(Icons.close, color: Colors.white.withOpacity(0.4), size: 17),
-                          onPressed: () {
-                            _searchController.clear();
-                            setState(() => _query = '');
-                          },
-                        )
-                            : null,
-                        border: InputBorder.none,
-                        isDense: true,
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                    ),
-                  ),
-                ),
+              child: Row(
+                children: [
+                  _toggleButton('전체', _ViewMode.all),
+                  _toggleButton('방송사별', _ViewMode.broadcaster),
+                  _toggleButton('지역별', _ViewMode.region),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
       body: SafeArea(
         top: false,
-        child: TabBarView(
-        controller: _tabController,
-        children: _regions.map((region) {
-          final stations = _filtered(region);
-          if (stations.isEmpty) {
-            return Center(
-              child: Text(AppLocalizations.of(context)!.radioNoStationsFound,
-                  style: TextStyle(
-                      color: Colors.white.withOpacity(0.35), fontSize: 14)),
-            );
-          }
-          final radioStations =
-          stations.map((ks) => _toRadioStation(ks)).toList();
-          return ListView.separated(
-            padding: EdgeInsets.fromLTRB(24, 0, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
-            itemCount: stations.length + 1,
-            separatorBuilder: (_, __) =>
-                Divider(height: 1, color: Colors.white.withOpacity(0.1), indent: 0),
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 14, 0, 6),
-                  child: Row(
-                    children: [
-                      const Text('🇰🇷', style: TextStyle(fontSize: 13)),
-                      const SizedBox(width: 6),
-                      Text(
-                        AppLocalizations.of(context)!.radioPopularCount(stations.length),
-                        style: TextStyle(color: Colors.white.withOpacity(0.35), fontSize: 12.5),
-                      ),
-                    ],
-                  ),
-                );
-              }
-              final i = index - 1;
-              final ks = stations[i];
-              final current = radioProvider.currentStation;
-              final isPlaying =
-                  current?.name == ks.name && radioProvider.isPlaying;
-              return _StationTile(
-                station: ks,
-                isPlaying: isPlaying,
-                radioStation: radioStations[i],
-                stationList: radioStations,
-                stationIndex: i,
-              );
-            },
-          );
-        }).toList(),
-        ),
+        child: switch (_mode) {
+          _ViewMode.all => _buildAllList(context, radioProvider),
+          _ViewMode.broadcaster => _buildBroadcasterGrid(context, radioProvider),
+          _ViewMode.region => _buildRegionGrid(context),
+        },
       ),
       bottomNavigationBar: radioProvider.currentStation != null
           ? Padding(
@@ -309,24 +288,6 @@ class _StationTile extends StatelessWidget {
     required this.stationIndex,
   });
 
-  static const Map<String, Color> _colors = {
-    'KBS': Color(0xFF1565C0),
-    'MBC': Color(0xFF6A1B9A),
-    'SBS': Color(0xFFB71C1C),
-    'CBS': Color(0xFF1B5E20),
-    'EBS': Color(0xFF0277BD),
-    'YTN': Color(0xFF880E4F),
-    'TBS': Color(0xFF004D40),
-    'TBN': Color(0xFF2E7D32),
-    'OBS': Color(0xFF0D47A1),
-    'CPBC': Color(0xFF6D4C41),
-    'BeFM': Color(0xFFE65100),
-    'JTV': Color(0xFF00695C),
-  };
-
-  Color _brandColor(String bc) =>
-      _colors[bc] ?? const Color(0xFF37474F);
-
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
@@ -334,243 +295,240 @@ class _StationTile extends StatelessWidget {
     return Container(
       color: isPlaying ? primaryColor.withOpacity(0.08) : Colors.transparent,
       child: InkWell(
-      onTap: () {
-        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => RadioPlayerScreen(
-              station: radioStation,
-              stationList: stationList,
-              currentIndex: stationIndex,
-            ),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-            transitionDuration: const Duration(milliseconds: 250),
-          ),
-        );
-      },
-      splashColor: Colors.white.withOpacity(0.04),
-      highlightColor: Colors.transparent,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        child: Row(
-          children: [
-            Container(
-              width: 6,
-              height: 40,
-              decoration: BoxDecoration(
-                color: isPlaying ? primaryColor : Colors.white.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(3),
+        onTap: () {
+          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) => RadioPlayerScreen(
+                station: radioStation,
+                stationList: stationList,
+                currentIndex: stationIndex,
               ),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+              transitionDuration: const Duration(milliseconds: 250),
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    station.name,
-                    style: TextStyle(
-                      color: isPlaying ? primaryColor : Colors.white,
-                      fontWeight: isPlaying ? FontWeight.w700 : FontWeight.w500,
-                      fontSize: 15.5,
-                      letterSpacing: -0.2,
+          );
+        },
+        splashColor: Colors.white.withOpacity(0.04),
+        highlightColor: Colors.transparent,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          child: Row(
+            children: [
+              Container(
+                width: 6,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: isPlaying ? primaryColor : Colors.white.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      station.name,
+                      style: TextStyle(
+                        color: isPlaying ? primaryColor : Colors.white,
+                        fontWeight: isPlaying ? FontWeight.w700 : FontWeight.w500,
+                        fontSize: 15.5,
+                        letterSpacing: -0.2,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 2),
-                  Builder(
-                    builder: (ctx) {
-                      final isKbs = station.broadcaster == 'KBS';
-                      const mbcNames = ['MBC 표준FM', 'MBC FM4U'];
-                      const sbsNames = ['SBS 파워FM', 'SBS 러브FM'];
-                      final isMbc = mbcNames.contains(station.name);
-                      final isSbs = sbsNames.contains(station.name);
-                      final radio = ctx.watch<RadioProvider>();
-                      final hasJsonSchedule = radio.nowPlayingFor(station.name) != null && !isKbs && !isMbc && !isSbs;
-                      if (!isKbs && !isMbc && !isSbs && !hasJsonSchedule) {
-                        return Text(
-                          station.frequency.isNotEmpty
-                              ? station.frequency
-                              : '',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.4),
-                            fontSize: 12,
-                          ),
-                        );
-                      }
-                      final nowPlaying = radio.nowPlayingFor(station.name);
-                      final program = radio.currentProgramFor(station.name);
-                      final start = program?['program_planned_start_time'] as String? ?? '';
-                      final end = program?['program_planned_end_time'] as String? ?? '';
-                      final sbsTitle = program?['title'] as String?;
-                      final displayNowPlaying = nowPlaying ?? sbsTitle;
-                      String _fmt(String t) {
-                        final cleaned = t.replaceAll(':', '');
-                        // KBS: 20231015160000 형식 (14자리)
-                        if (cleaned.length >= 12) {
-                          final hhmm = cleaned.substring(8, 12);
-                          int h = int.tryParse(hhmm.substring(0, 2)) ?? 0;
-                          final m = hhmm.substring(2, 4);
+                    const SizedBox(height: 2),
+                    Builder(
+                      builder: (ctx) {
+                        final isKbs = station.broadcaster == 'KBS';
+                        const mbcNames = ['MBC 표준FM', 'MBC FM4U'];
+                        const sbsNames = ['SBS 파워FM', 'SBS 러브FM'];
+                        final isMbc = mbcNames.contains(station.name);
+                        final isSbs = sbsNames.contains(station.name);
+                        final radio = ctx.watch<RadioProvider>();
+                        final hasJsonSchedule = radio.nowPlayingFor(station.name) != null && !isKbs && !isMbc && !isSbs;
+                        if (!isKbs && !isMbc && !isSbs && !hasJsonSchedule) {
+                          return Text(
+                            station.frequency.isNotEmpty
+                                ? station.frequency
+                                : '',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.4),
+                              fontSize: 12,
+                            ),
+                          );
+                        }
+                        final nowPlaying = radio.nowPlayingFor(station.name);
+                        final program = radio.currentProgramFor(station.name);
+                        final start = program?['program_planned_start_time'] as String? ?? '';
+                        final end = program?['program_planned_end_time'] as String? ?? '';
+                        final sbsTitle = program?['title'] as String?;
+                        final displayNowPlaying = nowPlaying ?? sbsTitle;
+                        String _fmt(String t) {
+                          final cleaned = t.replaceAll(':', '');
+                          if (cleaned.length >= 12) {
+                            final hhmm = cleaned.substring(8, 12);
+                            int h = int.tryParse(hhmm.substring(0, 2)) ?? 0;
+                            final m = hhmm.substring(2, 4);
+                            if (h >= 24) h -= 24;
+                            return '${h.toString().padLeft(2, '0')}:$m';
+                          }
+                          if (cleaned.length < 4) return t;
+                          int h = int.tryParse(cleaned.substring(0, 2)) ?? 0;
+                          final m = cleaned.substring(2, 4);
                           if (h >= 24) h -= 24;
                           return '${h.toString().padLeft(2, '0')}:$m';
                         }
-                        if (cleaned.length < 4) return t;
-                        int h = int.tryParse(cleaned.substring(0, 2)) ?? 0;
-                        final m = cleaned.substring(2, 4);
-                        if (h >= 24) h -= 24;
-                        return '${h.toString().padLeft(2, '0')}:$m';
-                      }
-                      final isMbcStation = mbcNames.contains(station.name);
-                      final isSbsStation = sbsNames.contains(station.name);
-                      String? rawStart;
-                      String? rawEnd;
-                      if (isMbcStation) {
-                        final mbcS = program?['StartTime'];
-                        final mbcE = program?['EndTime'];
-                        debugPrint('=== MBC rawStart type: ${mbcS.runtimeType}, value: $mbcS ===');
-                        rawStart = mbcS?.toString();
-                        rawEnd = mbcE?.toString();
-                      } else if (isSbsStation) {
-                        rawStart = program?['start_time'] as String?;
-                        rawEnd = program?['end_time'] as String?;
-                      } else if (hasJsonSchedule) {
-                        rawStart = program?['start_time'] as String?;
-                        rawEnd = program?['end_time'] as String?;
-                      } else {
-                        rawStart = start.isEmpty ? null : start;
-                        rawEnd = end.isEmpty ? null : end;
-                      }
-                      String _fmtSbs(String t) {
-                        if (t.length >= 5) {
-                          final h = int.tryParse(t.split(':')[0]) ?? 0;
-                          final m = t.split(':')[1];
-                          return '${h >= 24 ? h - 24 : h}:$m';
+                        final isMbcStation = mbcNames.contains(station.name);
+                        final isSbsStation = sbsNames.contains(station.name);
+                        String? rawStart;
+                        String? rawEnd;
+                        if (isMbcStation) {
+                          final mbcS = program?['StartTime'];
+                          final mbcE = program?['EndTime'];
+                          rawStart = mbcS?.toString();
+                          rawEnd = mbcE?.toString();
+                        } else if (isSbsStation) {
+                          rawStart = program?['start_time'] as String?;
+                          rawEnd = program?['end_time'] as String?;
+                        } else if (hasJsonSchedule) {
+                          rawStart = program?['start_time'] as String?;
+                          rawEnd = program?['end_time'] as String?;
+                        } else {
+                          rawStart = start.isEmpty ? null : start;
+                          rawEnd = end.isEmpty ? null : end;
                         }
-                        return t;
-                      }
-                      final timeStr = rawStart != null && rawEnd != null
-                          ? isSbsStation
-                          ? '${_fmtSbs(rawStart)}~${_fmtSbs(rawEnd)}'
-                          : isMbcStation
-                          ? '${_fmt(rawStart)}~${_fmt(rawEnd)}'
-                          : hasJsonSchedule
-                          ? '$rawStart~$rawEnd'
-                          : '${_fmt(rawStart)}~${_fmt(rawEnd)}'
-                          : '';
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (displayNowPlaying != null && displayNowPlaying.isNotEmpty)
-                            Text(
-                              displayNowPlaying,
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.85),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
+                        String _fmtSbs(String t) {
+                          if (t.length >= 5) {
+                            final h = int.tryParse(t.split(':')[0]) ?? 0;
+                            final m = t.split(':')[1];
+                            return '${h >= 24 ? h - 24 : h}:$m';
+                          }
+                          return t;
+                        }
+                        final timeStr = rawStart != null && rawEnd != null
+                            ? isSbsStation
+                            ? '${_fmtSbs(rawStart)}~${_fmtSbs(rawEnd)}'
+                            : isMbcStation
+                            ? '${_fmt(rawStart)}~${_fmt(rawEnd)}'
+                            : hasJsonSchedule
+                            ? '$rawStart~$rawEnd'
+                            : '${_fmt(rawStart)}~${_fmt(rawEnd)}'
+                            : '';
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (displayNowPlaying != null && displayNowPlaying.isNotEmpty)
+                              Text(
+                                displayNowPlaying,
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.85),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                            Text(
+                              [
+                                if (station.frequency.isNotEmpty) station.frequency,
+                                if (timeStr.isNotEmpty) timeStr,
+                              ].join(' · '),
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.55),
+                                fontSize: 11,
+                              ),
                             ),
-                          Text(
-                            [
-                              if (station.frequency.isNotEmpty) station.frequency,
-                              if (timeStr.isNotEmpty) timeStr,
-                            ].join(' · '),
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.55),
-                              fontSize: 11,
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-            if (isPlaying)
-              _PlayingBars(color: primaryColor)
-            else
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  debugPrint('하트 탭됨!');
-                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                  final wasFav = context.read<RadioProvider>().isFavorite(radioStation.stationUuid);
-                  context.read<RadioProvider>().toggleFavorite(radioStation);
-                  final overlay = Overlay.of(context);
-                  final entry = OverlayEntry(
-                    builder: (_) => Positioned(
-                      bottom: 500, left: 0, right: 0,
-                      child: Center(
-                        child: TweenAnimationBuilder<double>(
-                          tween: Tween(begin: 0.0, end: 1.0),
-                          duration: const Duration(milliseconds: 300),
-                          builder: (_, value, child) => Opacity(
-                            opacity: value,
-                            child: Transform.scale(scale: 0.85 + 0.15 * value, child: child),
-                          ),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(30),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.15),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
+              if (isPlaying)
+                _PlayingBars(color: primaryColor)
+              else
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    final wasFav = context.read<RadioProvider>().isFavorite(radioStation.stationUuid);
+                    context.read<RadioProvider>().toggleFavorite(radioStation);
+                    final overlay = Overlay.of(context);
+                    final entry = OverlayEntry(
+                      builder: (_) => Positioned(
+                        bottom: 500, left: 0, right: 0,
+                        child: Center(
+                          child: TweenAnimationBuilder<double>(
+                            tween: Tween(begin: 0.0, end: 1.0),
+                            duration: const Duration(milliseconds: 300),
+                            builder: (_, value, child) => Opacity(
+                              opacity: value,
+                              child: Transform.scale(scale: 0.85 + 0.15 * value, child: child),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  wasFav ? CupertinoIcons.heart : CupertinoIcons.heart_fill,
-                                  color: wasFav ? Colors.black38 : Colors.redAccent,
-                                  size: 18,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  wasFav
-                                      ? AppLocalizations.of(context)!.radioRemovedFromFavorites
-                                      : AppLocalizations.of(context)!.radioAddedToFavoritesToast,
-                                  style: const TextStyle(
-                                    color: Colors.black87,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    decoration: TextDecoration.none,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(30),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.15),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    wasFav ? CupertinoIcons.heart : CupertinoIcons.heart_fill,
+                                    color: wasFav ? Colors.black38 : Colors.redAccent,
+                                    size: 18,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    wasFav
+                                        ? AppLocalizations.of(context)!.radioRemovedFromFavorites
+                                        : AppLocalizations.of(context)!.radioAddedToFavoritesToast,
+                                    style: const TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      decoration: TextDecoration.none,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                  overlay.insert(entry);
-                  Future.delayed(const Duration(seconds: 2), () => entry.remove());
-                },
-                child: Icon(
-                  context.watch<RadioProvider>().isFavorite(radioStation.stationUuid)
-                      ? CupertinoIcons.heart_fill
-                      : CupertinoIcons.heart,
-                  color: context.watch<RadioProvider>().isFavorite(radioStation.stationUuid)
-                      ? Colors.redAccent
-                      : Colors.white.withOpacity(0.35),
-                  size: 22,
+                    );
+                    overlay.insert(entry);
+                    Future.delayed(const Duration(seconds: 2), () => entry.remove());
+                  },
+                  child: Icon(
+                    context.watch<RadioProvider>().isFavorite(radioStation.stationUuid)
+                        ? CupertinoIcons.heart_fill
+                        : CupertinoIcons.heart,
+                    color: context.watch<RadioProvider>().isFavorite(radioStation.stationUuid)
+                        ? Colors.redAccent
+                        : Colors.white.withOpacity(0.35),
+                    size: 22,
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
@@ -617,8 +575,8 @@ const koreanStations = <_KStation>[
   _KStation(name: 'CPBC 가톨릭', region: '수도권', broadcaster: 'CPBC', subLabel: '서울', frequency: '101.7 MHz', streamUrl: 'http://serpent0.duckdns.org:8088/cpbc.pls'),
   _KStation(name: 'FEBC 극동방송', region: '수도권', broadcaster: 'FEBC', subLabel: '서울', frequency: '106.9 MHz', streamUrl: 'http://mlive2.febc.net:1935/live/seoulfm/playlist.m3u8'),
   _KStation(name: 'BBS 불교방송', region: '수도권', broadcaster: 'BBS', subLabel: '서울', frequency: '101.9 MHz', streamUrl: 'https://bbslive.clouducs.com/bbsradio-mlive/radio.stream/playlist.m3u8'),
-  _KStation(name: '국악FM', region: '수도권', broadcaster: 'KBS', subLabel: '서울', frequency: '99.1 MHz', streamUrl: 'http://mgugaklive.nowcdn.co.kr/gugakradio/gugakradio.stream/playlist.m3u8'),
-  _KStation(name: '국방FM', region: '수도권', broadcaster: 'KBS', subLabel: '서울', frequency: '100.5 MHz', streamUrl: 'http://serpent0.duckdns.org:8088/gbfm.pls'),
+  _KStation(name: '국악FM', region: '수도권', broadcaster: '국악방송', subLabel: '서울', frequency: '99.1 MHz', streamUrl: 'http://mgugaklive.nowcdn.co.kr/gugakradio/gugakradio.stream/playlist.m3u8'),
+  _KStation(name: '국방FM', region: '수도권', broadcaster: '국방FM', subLabel: '서울', frequency: '100.5 MHz', streamUrl: 'http://serpent0.duckdns.org:8088/gbfm.pls'),
   _KStation(name: 'TBN 경인교통', region: '수도권', broadcaster: 'TBN', subLabel: '경기', frequency: '99.9 MHz', streamUrl: 'http://radio2.tbn.or.kr:1935/gyeongin/myStream/playlist.m3u8'),
   _KStation(name: '부산MBC 표준FM', region: '부산/경남', broadcaster: 'MBC', subLabel: '부산', frequency: '95.9 MHz', streamUrl: 'https://stream.bsmbc.com/live/BusanMBC_AM_onairstream.sbhhqc/playlist.m3u8'),
   _KStation(name: '부산MBC FM4U', region: '부산/경남', broadcaster: 'MBC', subLabel: '부산', frequency: '88.9 MHz', streamUrl: 'https://stream.bsmbc.com/live/mp4:BusanMBC.Live-FM-0415/playlist.m3u8'),
@@ -734,6 +692,173 @@ class _PlayingBarsState extends State<_PlayingBars>
           );
         }),
       ),
+    );
+  }
+}
+
+// ══════════════════════════════════════════
+// 방송사별 카드 격자 화면
+// ══════════════════════════════════════════
+class _BroadcasterGridScreen extends StatelessWidget {
+  final RadioProvider radioProvider;
+  const _BroadcasterGridScreen({required this.radioProvider});
+
+  static const _order = ['KBS', 'MBC', 'SBS', 'EBS', 'CBS', '기타'];
+
+  static const Map<String, Color> _cardColors = {
+    'KBS': Color(0xFF14356B),
+    'MBC': Color(0xFF4A1E5C),
+    'SBS': Color(0xFF7A1F1F),
+    'EBS': Color(0xFF0D4C6E),
+    'CBS': Color(0xFF1E4A2E),
+  };
+
+  Map<String, List<_KStation>> _grouped() {
+    final Map<String, List<_KStation>> map = {};
+    for (final s in koreanStations) {
+      final key = ['KBS', 'MBC', 'SBS', 'EBS', 'CBS'].contains(s.broadcaster)
+          ? s.broadcaster
+          : '기타';
+      map.putIfAbsent(key, () => []).add(s);
+    }
+    return map;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final grouped = _grouped();
+    final keys = _order.where((k) => grouped.containsKey(k)).toList();
+
+    return GridView.builder(
+      padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        childAspectRatio: 1.5,
+      ),
+      itemCount: keys.length,
+      itemBuilder: (context, index) {
+        final key = keys[index];
+        final stations = grouped[key]!;
+        return GestureDetector(
+          onTap: () {
+            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => _BroadcasterStationList(broadcaster: key, stations: stations),
+              ),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: _cardColors[key] ?? Colors.white.withOpacity(0.06),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  key,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${stations.length}개 채널',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(_cardColors.containsKey(key) ? 0.7 : 0.45),
+                    fontSize: 11,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+// ══════════════════════════════════════════
+// 방송사 하나의 전국 채널 리스트 화면
+// ══════════════════════════════════════════
+class _BroadcasterStationList extends StatelessWidget {
+  final String broadcaster;
+  final List<_KStation> stations;
+  const _BroadcasterStationList({required this.broadcaster, required this.stations});
+
+  static RadioStation _toRadioStation(_KStation ks) {
+    return RadioStation.fromJson({
+      'stationuuid': 'kr_${ks.name.hashCode.abs()}',
+      'name': ks.name,
+      'url': ks.streamUrl,
+      'url_resolved': '',
+      'homepage': '',
+      'favicon': '',
+      'tags': '',
+      'frequency': ks.frequency,
+      'country': 'South Korea',
+      'countrycode': 'KR',
+      'codec': '',
+      'bitrate': 0,
+      'hls': 1,
+      'votes': 0,
+      'lastcheckok': 1,
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final radioStations = stations.map((ks) => _toRadioStation(ks)).toList();
+    final radioProvider = context.watch<RadioProvider>();
+
+    return Scaffold(
+      backgroundColor: const Color(0xFF0D2E2C),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+        ),
+        title: Text(broadcaster,
+            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+      ),
+      body: SafeArea(
+        top: false,
+        child: ListView.separated(
+          padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
+          itemCount: stations.length,
+          separatorBuilder: (_, __) => Divider(height: 1, color: Colors.white.withOpacity(0.1)),
+          itemBuilder: (context, i) {
+            final ks = stations[i];
+            final current = radioProvider.currentStation;
+            final isPlaying = current?.name == ks.name && radioProvider.isPlaying;
+            return _StationTile(
+              station: ks,
+              isPlaying: isPlaying,
+              radioStation: radioStations[i],
+              stationList: radioStations,
+              stationIndex: i,
+            );
+          },
+        ),
+      ),
+      bottomNavigationBar: radioProvider.currentStation != null
+          ? Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom),
+        child: const RadioMiniPlayer(),
+      )
+          : null,
     );
   }
 }

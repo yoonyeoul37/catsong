@@ -278,11 +278,20 @@ class RadioProvider extends ChangeNotifier {
       }
     });
 
-    _player.stream.completed.listen((completed) {
+    _player.stream.completed.listen((completed) async {
       if (completed) {
+        debugPrint('재생 완료 신호 감지 - 자동 재연결 시도');
         _isActuallyPlaying = false;
-        _setPlayerState(RadioPlayerState.idle);
-        _stopForeground();
+        final station = _currentStation;
+        if (station != null) {
+          await Future.delayed(const Duration(seconds: 2));
+          if (_currentStation?.stationUuid == station.stationUuid && !_isActuallyPlaying) {
+            await playStation(station);
+          }
+        } else {
+          _setPlayerState(RadioPlayerState.idle);
+          _stopForeground();
+        }
       }
     });
 
@@ -761,6 +770,7 @@ class RadioProvider extends ChangeNotifier {
               }
               final merged = Map<String, dynamic>.from(s);
               merged['program_planned_end_time'] = finalEnd;
+              merged['image'] = s['image_w'];
               _currentProgramMap[stationName] = merged;
               _nowPlayingMap[stationName] = s['program_title'] as String? ?? '';
               break;
@@ -810,6 +820,9 @@ class RadioProvider extends ChangeNotifier {
           }
           // program_code 기준으로 연속된 항목 병합
           final merged = _mergeKbsSchedules(allSchedules.cast<Map<String, dynamic>>());
+          for (final s in merged) {
+            s['image'] = s['image_w'];
+          }
           _scheduleListMap[stationName] = merged;
           final nowHour = now.hour;
           final nowMin = now.minute;
@@ -962,7 +975,9 @@ class RadioProvider extends ChangeNotifier {
           final endInt = int.tryParse(end) ?? 0;
           final endAdj = endInt >= 2400 ? '$endInt' : (endInt < 600 ? '${endInt + 2400}' : end);
           if (nowHHMM.compareTo(start) >= 0 && nowHHMM.compareTo(endAdj) < 0) {
-            _currentProgramMap[stationName] = Map<String, dynamic>.from(s);
+            final merged = Map<String, dynamic>.from(s);
+            merged['image'] = s['Photo'];
+            _currentProgramMap[stationName] = merged;
             _nowPlayingMap[stationName] = s['Title'] as String? ?? '';
             break;
           }
@@ -1012,6 +1027,7 @@ class RadioProvider extends ChangeNotifier {
         final timeRegex = RegExp(r'<p>(\d{2}:\d{2})</p>');
         final titleRegex = RegExp(r'<strong>(.*?)</strong>');
         final onAirRegex = RegExp(r'ON AIR');
+        final imgRegex = RegExp(r'<img src="(.*?)">');
 
         final matches = blockRegex.allMatches(body).toList();
         debugPrint('BBS 매칭된 방송 개수: ${matches.length}');
@@ -1021,9 +1037,10 @@ class RadioProvider extends ChangeNotifier {
           final block = (m.group(2) ?? m.group(4) ?? '');
           final time = timeRegex.firstMatch(block)?.group(1) ?? '';
           final title = titleRegex.firstMatch(block)?.group(1)?.trim() ?? '';
+          final image = imgRegex.firstMatch(block)?.group(1);
           final isOnAir = onAirRegex.hasMatch(block);
           if (time.isEmpty || title.isEmpty) continue;
-          schedules.add({'start_time': time, 'title': title});
+          schedules.add({'start_time': time, 'title': title, 'image': image});
           if (isOnAir) currentIdx = schedules.length - 1;
         }
         _scheduleListMap[stationName] = schedules;
@@ -1037,6 +1054,7 @@ class RadioProvider extends ChangeNotifier {
             'start_time': cur['start_time'],
             'end_time': end,
             'is_rerun': false,
+            'image': cur['image'],
           };
           _nowPlayingMap[stationName] = cur['title'] as String? ?? '';
         }

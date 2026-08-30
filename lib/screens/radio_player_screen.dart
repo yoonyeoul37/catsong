@@ -11,6 +11,7 @@ import '../widgets/schedule_sheet.dart';
 import '../widgets/fm_tuner_dial.dart';
 import '../widgets/global_radio_dial.dart';
 import '../widgets/simple_radio_dial.dart';
+import '../widgets/frequency_ruler.dart';
 import '../widgets/equalizer_animation.dart';
 import '../l10n/app_localizations.dart';
 import 'package:audio_service/audio_service.dart';
@@ -381,22 +382,56 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                   children: [
                     SizedBox(height: (h * 0.11).clamp(30.0, 70.0)),
 
-                    // ── 다이얼 ──
-                    SizedBox(
-                      height: h * 0.45,
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: SimpleRadioDial(
-                          stationName: current.name,
-                          logoUrl: current.logoUrl,
-                          isPlaying: isPlaying,
-                          primaryColor: primaryColor,
-                          pulseCtrl: _pulseCtrl,
-                        ),
-                      ),
-                    ),
+                    // ── 이미지(있으면) 또는 방송국명 박스 ──
+                    Builder(builder: (ctx) {
+                      final programImage = radioProvider.currentProgram?['image'] as String?;
+                      final hasImage = programImage != null && programImage.isNotEmpty;
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: hasImage
+                            ? Image.network(
+                                programImage,
+                                width: double.infinity,
+                                height: h * 0.28,
+                                fit: BoxFit.cover,
+                                errorBuilder: (errCtx, err, stack) => Container(
+                                  width: double.infinity,
+                                  height: h * 0.28,
+                                  color: primaryColor.withOpacity(0.15),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    current.name,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                width: double.infinity,
+                                height: h * 0.28,
+                                color: primaryColor.withOpacity(0.15),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  current.name,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                      );
+                    }),
 
                     SizedBox(height: (h * 0.05).clamp(16.0, 32.0)),
+
+                    SizedBox(height: (h * 0.02).clamp(8.0, 16.0)),
+
+                    if (_parseFrequency(freq) != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: FrequencyRuler(
+                          frequency: _parseFrequency(freq),
+                          primaryColor: primaryColor,
+                        ),
+                      ),
 
                     // ── 편성표 ──
                     SizedBox(
@@ -1088,16 +1123,40 @@ class _NextProgramLine extends StatelessWidget {
     final nextTitle = _titleOf(next);
     if (nextTitle.isEmpty) return const SizedBox.shrink();
     final nextStart = _formatStart(_startOf(next));
+    final nextImage = next['image'] as String?;
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
       ),
       child: Row(
         children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: (nextImage != null && nextImage.isNotEmpty)
+                ? Image.network(
+                    nextImage,
+                    width: 76,
+                    height: 76,
+                    fit: BoxFit.cover,
+                    errorBuilder: (errCtx, err, stack) => Container(
+                      width: 76,
+                      height: 76,
+                      color: Colors.white.withOpacity(0.08),
+                      child: const Icon(Icons.radio, color: Colors.white38, size: 28),
+                    ),
+                  )
+                : Container(
+                    width: 76,
+                    height: 76,
+                    color: Colors.white.withOpacity(0.08),
+                    child: const Icon(Icons.radio, color: Colors.white38, size: 28),
+                  ),
+          ),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

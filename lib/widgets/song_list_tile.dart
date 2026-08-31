@@ -66,8 +66,12 @@ class SongListTile extends StatelessWidget {
         );
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        color: Colors.transparent,
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: isCurrentSong ? primaryColor.withOpacity(0.1) : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Row(
           children: [
             _buildAlbumArt(isCurrentSong, playerProvider, primaryColor),
@@ -79,9 +83,9 @@ class SongListTile extends StatelessWidget {
                   Text(
                     song.titleDisplay,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: isCurrentSong ? const Color(0xFFFFD700) : Colors.white,
                       fontSize: 15,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: isCurrentSong ? FontWeight.w600 : FontWeight.w500,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -176,7 +180,7 @@ class SongListTile extends StatelessWidget {
             width: 52,
             height: 52,
             decoration: BoxDecoration(
-              color: Colors.black54,
+              color: primaryColor.withOpacity(0.55),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Center(

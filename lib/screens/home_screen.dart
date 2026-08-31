@@ -161,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppTheme.background,
+        backgroundColor: const Color(0xFF17140F),
         appBar: _buildAppBar(primaryColor),
       body: Column(
         children: [
@@ -190,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   PreferredSizeWidget _buildAppBar(Color primaryColor) {
     return AppBar(
-      backgroundColor: AppTheme.background,
+      backgroundColor: const Color(0xFF17140F),
       elevation: 0,
       titleSpacing: 20,
       title: _isSearching

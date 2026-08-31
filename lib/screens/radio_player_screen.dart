@@ -14,6 +14,7 @@ import '../widgets/fm_tuner_dial.dart';
 import '../widgets/global_radio_dial.dart';
 import '../widgets/simple_radio_dial.dart';
 import '../widgets/frequency_ruler.dart';
+import '../widgets/radio_mood_placeholder.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -53,10 +54,14 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
   late AnimationController _pulseCtrl;  // ON AIR 펄스
   late AnimationController _rotCtrl;   // 안쪽 원 회전
   late int _currentIdx;
+  bool _scheduleTimedOut = false;
 
   @override
   void initState() {
     super.initState();
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) setState(() => _scheduleTimedOut = true);
+    });
     _dialCtrl = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -391,6 +396,9 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                     Builder(builder: (ctx) {
                       final programImage = radioProvider.currentProgram?['image'] as String?;
                       final hasImage = programImage != null && programImage.isNotEmpty;
+                      final scheduleLoading = !_scheduleTimedOut &&
+                          radioProvider.scheduleList.isEmpty &&
+                          radioProvider.currentProgram == null;
                       final timeStr = radioProvider.currentProgram != null
                           ? _ProgramCard.getTimeStr(radioProvider.currentProgram!, radioProvider)
                           : '';
@@ -398,23 +406,28 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                         borderRadius: BorderRadius.circular(20),
                         child: Stack(
                           children: [
-                            hasImage
-                                ? Image.network(
-                                    programImage,
+                            scheduleLoading
+                                ? Container(
                                     width: double.infinity,
                                     height: h * 0.28,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (errCtx, err, stack) => Container(
-                                      width: double.infinity,
-                                      height: h * 0.28,
-                                      color: primaryColor.withOpacity(0.15),
+                                    color: const Color(0xFF17140F),
+                                    alignment: Alignment.center,
+                                    child: const SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white24),
                                     ),
                                   )
-                                : Container(
-                                    width: double.infinity,
-                                    height: h * 0.28,
-                                    color: primaryColor.withOpacity(0.15),
-                                  ),
+                                : hasImage
+                                    ? Image.network(
+                                        programImage,
+                                        width: double.infinity,
+                                        height: h * 0.28,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (errCtx, err, stack) =>
+                                            RadioMoodPlaceholder(height: h * 0.28),
+                                      )
+                                    : RadioMoodPlaceholder(height: h * 0.28),
                             Positioned(
                               left: 0,
                               right: 0,

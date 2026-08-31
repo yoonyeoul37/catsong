@@ -83,6 +83,16 @@ class PlayerProvider extends ChangeNotifier {
         case 'widgetPrev':
           await playPrevious();
           break;
+        case 'onAudioFocusLost':
+          if (_isPlaying) {
+            await _player.pause();
+          }
+          break;
+        case 'onAudioFocusGain':
+          if (!_isPlaying && _currentIndex >= 0) {
+            await _player.play();
+          }
+          break;
       }
       return null;
     });

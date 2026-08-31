@@ -10,7 +10,7 @@ import '../widgets/radio_mini_player.dart';
 import 'radio_player_screen.dart';
 import '../l10n/app_localizations.dart';
 
-enum _ViewMode { all, broadcaster, region }
+enum _ViewMode { all, broadcaster, region, recent }
 
 class RadioKoreaScreen extends StatefulWidget {
   const RadioKoreaScreen({super.key});
@@ -130,6 +130,81 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
     return _BroadcasterGridScreen(radioProvider: radioProvider);
   }
 
+  Widget _buildRecentList(BuildContext context, RadioProvider radioProvider) {
+    final recent = radioProvider.recentlyListened;
+    if (recent.isEmpty) {
+      return Center(
+        child: Text(
+          '최근 들은 방송이 없어요',
+          style: TextStyle(color: Colors.white.withOpacity(0.35), fontSize: 14),
+        ),
+      );
+    }
+    return ListView.separated(
+      padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
+      itemCount: recent.length,
+      separatorBuilder: (_, __) => Divider(height: 1, color: Colors.white.withOpacity(0.1)),
+      itemBuilder: (context, i) {
+        final station = recent[i];
+        final lastListened = station.lastListened;
+        final timeStr = lastListened != null
+            ? '${lastListened.month}/${lastListened.day} ${lastListened.hour.toString().padLeft(2, '0')}:${lastListened.minute.toString().padLeft(2, '0')}'
+            : '';
+        final isPlaying = radioProvider.currentStation?.stationUuid == station.stationUuid && radioProvider.isPlaying;
+        return InkWell(
+          onTap: () {
+            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) => RadioPlayerScreen(station: station),
+                transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                    FadeTransition(opacity: animation, child: child),
+                transitionDuration: const Duration(milliseconds: 250),
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            child: Row(
+              children: [
+                Container(
+                  width: 6,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: isPlaying ? primaryColorOf(context) : Colors.white.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        station.name,
+                        style: const TextStyle(color: Colors.white, fontSize: 15.5, fontWeight: FontWeight.w500),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        timeStr,
+                        style: TextStyle(color: Colors.white.withOpacity(0.45), fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Color primaryColorOf(BuildContext context) => Theme.of(context).colorScheme.primary;
+
   Widget _buildRegionGrid(BuildContext context) {
     const regionList = [
       '수도권', '부산/경남', '대구/경북', '광주/전남',
@@ -248,6 +323,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                   _toggleButton('전체', _ViewMode.all),
                   _toggleButton('방송사별', _ViewMode.broadcaster),
                   _toggleButton('지역별', _ViewMode.region),
+                  _toggleButton('최근청취', _ViewMode.recent),
                 ],
               ),
             ),
@@ -260,6 +336,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           _ViewMode.all => _buildAllList(context, radioProvider),
           _ViewMode.broadcaster => _buildBroadcasterGrid(context, radioProvider),
           _ViewMode.region => _buildRegionGrid(context),
+          _ViewMode.recent => _buildRecentList(context, radioProvider),
         },
       ),
       bottomNavigationBar: radioProvider.currentStation != null
@@ -319,11 +396,23 @@ class _StationTile extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: 6,
+                width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: isPlaying ? primaryColor : Colors.white.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(3),
+                  color: isPlaying ? primaryColor : Colors.white.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  station.broadcaster,
+                  style: TextStyle(
+                    color: isPlaying ? Colors.black : Colors.white.withOpacity(0.6),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               const SizedBox(width: 16),
@@ -556,7 +645,7 @@ const koreanStations = <_KStation>[
   _KStation(name: 'KBS Classic FM', region: '수도권', broadcaster: 'KBS', subLabel: '서울', frequency: '93.1 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/24'),
   _KStation(name: 'KBS Cool FM', region: '수도권', broadcaster: 'KBS', subLabel: '서울', frequency: '89.1 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/25'),
   _KStation(name: 'KBS 제1라디오', region: '수도권', broadcaster: 'KBS', subLabel: '서울', frequency: '97.3 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/21'),
-  _KStation(name: 'KBS 해피FM', region: '수도권', broadcaster: 'KBS', subLabel: '서울', frequency: '104.9 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/22'),
+  _KStation(name: 'KBS 해피FM', region: '수도권', broadcaster: 'KBS', subLabel: '서울', frequency: '106.1 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/22'),
   _KStation(name: 'KBS 3라디오', region: '수도권', broadcaster: 'KBS', subLabel: '서울', frequency: '104.9 MHz', streamUrl: 'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/23'),
   _KStation(name: 'MBC 표준FM', region: '수도권', broadcaster: 'MBC', subLabel: '서울', frequency: '95.9 MHz', streamUrl: 'http://serpent0.duckdns.org:8088/mbcsfm.pls'),
   _KStation(name: 'MBC FM4U', region: '수도권', broadcaster: 'MBC', subLabel: '서울', frequency: '91.9 MHz', streamUrl: 'http://serpent0.duckdns.org:8088/mbcfm.pls'),

@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'dart:async';
+import 'dart:ui' show FontFeature;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
@@ -1122,7 +1124,7 @@ class _ProgramCard extends StatelessWidget {
 // ══════════════════════════════════════════
 // 다음 방송 한 줄 표시
 // ══════════════════════════════════════════
-class _NextProgramLine extends StatelessWidget {
+class _NextProgramLine extends StatefulWidget {
   final List<Map<String, dynamic>> scheduleList;
   final Map<String, dynamic> currentProgram;
   final RadioProvider radioProvider;
@@ -1132,6 +1134,27 @@ class _NextProgramLine extends StatelessWidget {
     required this.currentProgram,
     required this.radioProvider,
   });
+
+  @override
+  State<_NextProgramLine> createState() => _NextProgramLineState();
+}
+
+class _NextProgramLineState extends State<_NextProgramLine> {
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   String _titleOf(Map<String, dynamic> p) {
     return p['program_title'] as String? ??
@@ -1152,8 +1175,8 @@ class _NextProgramLine extends StatelessWidget {
     if (raw.isEmpty) return '';
     if (raw.contains(':')) return raw;
     if (raw.length >= 8) {
-      // KBS 형식: 20260827200000
-      return radioProvider.formatScheduleTime(raw.substring(8));
+      // KBS 형식
+      return widget.radioProvider.formatScheduleTime(raw);
     }
     if (raw.length == 4) {
       int h = int.tryParse(raw.substring(0, 2)) ?? 0;
@@ -1163,16 +1186,34 @@ class _NextProgramLine extends StatelessWidget {
     return raw;
   }
 
+  String _countdownStr(String startHHmm) {
+    if (!startHHmm.contains(':')) return '';
+    final parts = startHHmm.split(':');
+    final h = int.tryParse(parts[0]) ?? 0;
+    final m = int.tryParse(parts[1]) ?? 0;
+    final now = DateTime.now();
+    var target = DateTime(now.year, now.month, now.day, h, m);
+    if (target.isBefore(now)) target = target.add(const Duration(days: 1));
+    final diff = target.difference(now);
+    if (diff.isNegative) return '';
+    final hh = diff.inHours.toString().padLeft(2, '0');
+    final mm = (diff.inMinutes % 60).toString().padLeft(2, '0');
+    final ss = (diff.inSeconds % 60).toString().padLeft(2, '0');
+    return '$hh:$mm:$ss';
+  }
+
   @override
   Widget build(BuildContext context) {
-    final currentTitle = _titleOf(currentProgram);
-    final idx = scheduleList.indexWhere((p) => _titleOf(p) == currentTitle);
-    if (idx < 0 || idx + 1 >= scheduleList.length) return const SizedBox.shrink();
-    final next = scheduleList[idx + 1];
+    final currentTitle = _titleOf(widget.currentProgram);
+    final idx = widget.scheduleList.indexWhere((p) => _titleOf(p) == currentTitle);
+    if (idx < 0 || idx + 1 >= widget.scheduleList.length) return const SizedBox.shrink();
+    final next = widget.scheduleList[idx + 1];
     final nextTitle = _titleOf(next);
     if (nextTitle.isEmpty) return const SizedBox.shrink();
     final nextStart = _formatStart(_startOf(next));
     final nextImage = next['image'] as String?;
+    final countdown = _countdownStr(nextStart);
+    debugPrint('다음방송 카운트다운 - nextStart: "$nextStart", countdown: "$countdown"');
 
     return Container(
       width: double.infinity,
@@ -1231,7 +1272,25 @@ class _NextProgramLine extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          const Icon(Icons.schedule, color: Colors.white24, size: 20),
+          if (countdown.isNotEmpty)
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.schedule, color: Colors.white24, size: 16),
+                const SizedBox(height: 3),
+                Text(
+                  countdown,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.6),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    fontFeatures: const [FontFeature.tabularFigures()],
+                  ),
+                ),
+              ],
+            )
+          else
+            const Icon(Icons.schedule, color: Colors.white24, size: 20),
         ],
       ),
     );

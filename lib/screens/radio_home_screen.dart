@@ -209,8 +209,7 @@ class RadioHomeScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
           children: [
-            const _RecentSection(),
-            const SizedBox(height: 36),
+
             Text(
               AppLocalizations.of(context)!.radioSelectCountry,
               style: TextStyle(

@@ -22,15 +22,6 @@ class FrequencyRuler extends StatelessWidget {
 
     return Column(
       children: [
-        Text(
-          freq.toStringAsFixed(1),
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        const SizedBox(height: 6),
         SizedBox(
           height: 34,
           child: LayoutBuilder(builder: (context, constraints) {

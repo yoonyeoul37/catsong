@@ -380,47 +380,80 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: Column(
                   children: [
-                    SizedBox(height: (h * 0.11).clamp(30.0, 70.0)),
+                    SizedBox(height: (h * 0.14).clamp(50.0, 90.0)),
 
-                    // ── 이미지(있으면) 또는 방송국명 박스 ──
+                    // ── 이미지(있으면) 또는 방송국명 박스, 채널명·시간 오버레이 ──
                     Builder(builder: (ctx) {
                       final programImage = radioProvider.currentProgram?['image'] as String?;
                       final hasImage = programImage != null && programImage.isNotEmpty;
+                      final timeStr = radioProvider.currentProgram != null
+                          ? _ProgramCard.getTimeStr(radioProvider.currentProgram!, radioProvider)
+                          : '';
                       return ClipRRect(
                         borderRadius: BorderRadius.circular(20),
-                        child: hasImage
-                            ? Image.network(
-                                programImage,
-                                width: double.infinity,
-                                height: h * 0.28,
-                                fit: BoxFit.cover,
-                                errorBuilder: (errCtx, err, stack) => Container(
-                                  width: double.infinity,
-                                  height: h * 0.28,
-                                  color: primaryColor.withOpacity(0.15),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    current.name,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+                        child: Stack(
+                          children: [
+                            hasImage
+                                ? Image.network(
+                                    programImage,
+                                    width: double.infinity,
+                                    height: h * 0.28,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (errCtx, err, stack) => Container(
+                                      width: double.infinity,
+                                      height: h * 0.28,
+                                      color: primaryColor.withOpacity(0.15),
+                                    ),
+                                  )
+                                : Container(
+                                    width: double.infinity,
+                                    height: h * 0.28,
+                                    color: primaryColor.withOpacity(0.15),
+                                  ),
+                            Positioned(
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              child: Container(
+                                padding: const EdgeInsets.fromLTRB(16, 28, 16, 14),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.black.withOpacity(0.75),
+                                    ],
                                   ),
                                 ),
-                              )
-                            : Container(
-                                width: double.infinity,
-                                height: h * 0.28,
-                                color: primaryColor.withOpacity(0.15),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  current.name,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      current.name,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    if (timeStr.isNotEmpty) ...[
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        timeStr,
+                                        style: TextStyle(color: Colors.white.withOpacity(0.75), fontSize: 12),
+                                      ),
+                                    ],
+                                  ],
                                 ),
                               ),
+                            ),
+                          ],
+                        ),
                       );
                     }),
-
-                    SizedBox(height: (h * 0.05).clamp(16.0, 32.0)),
 
                     SizedBox(height: (h * 0.02).clamp(8.0, 16.0)),
 
@@ -961,11 +994,7 @@ class _ProgramCard extends StatelessWidget {
     required this.freq,
   });
 
-  @override
-  Widget build(BuildContext context) {
-    final title = program['program_title'] as String? ??
-        program['Title'] as String? ??
-        program['title'] as String? ?? '';
+  static String getTimeStr(Map<String, dynamic> program, RadioProvider radioProvider) {
     final kbsStart = program['program_planned_start_time'] as String? ?? '';
     final kbsEnd = program['program_planned_end_time'] as String? ?? '';
     final mbcStart = (program['StartTime'] ?? '').toString();
@@ -973,9 +1002,8 @@ class _ProgramCard extends StatelessWidget {
     final sbsStart = program['start_time'] as String? ?? '';
     final sbsEnd = program['end_time'] as String? ?? '';
 
-    String timeStr = '';
     if (kbsStart.isNotEmpty && kbsEnd.isNotEmpty) {
-      timeStr = '${radioProvider.formatScheduleTime(kbsStart)} ~ ${radioProvider.formatScheduleTime(kbsEnd)}';
+      return '${radioProvider.formatScheduleTime(kbsStart)} ~ ${radioProvider.formatScheduleTime(kbsEnd)}';
     } else if (mbcStart.isNotEmpty && mbcEnd.isNotEmpty) {
       String fmt(String t) {
         if (t.contains(':')) {
@@ -989,10 +1017,18 @@ class _ProgramCard extends StatelessWidget {
         if (h >= 24) h -= 24;
         return '${h.toString().padLeft(2, '0')}:${t.substring(2, 4)}';
       }
-      timeStr = '${fmt(mbcStart)} ~ ${fmt(mbcEnd)}';
+      return '${fmt(mbcStart)} ~ ${fmt(mbcEnd)}';
     } else if (sbsStart.isNotEmpty && sbsEnd.isNotEmpty) {
-      timeStr = '$sbsStart ~ $sbsEnd';
+      return '$sbsStart ~ $sbsEnd';
     }
+    return '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final title = program['program_title'] as String? ??
+        program['Title'] as String? ??
+        program['title'] as String? ?? '';
 
     return Column(
       children: [
@@ -1051,19 +1087,6 @@ class _ProgramCard extends StatelessWidget {
               );
             }),
           ],
-        ),
-        const SizedBox(height: 6),
-        // 시간 · MHz 한 줄
-        Text(
-          [
-            if (timeStr.isNotEmpty) timeStr,
-            if (freq.isNotEmpty) freq,
-          ].join('   ·   '),
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.5),
-            fontSize: 13,
-          ),
-          textAlign: TextAlign.center,
         ),
       ],
     );

@@ -743,6 +743,9 @@ class RadioProvider extends ChangeNotifier {
           }
           // program_code 기준으로 연속된 항목 병합
           final merged = _mergeKbsSchedules(allSchedules.cast<Map<String, dynamic>>());
+          for (final s in merged) {
+            s['image'] = s['image_w'];
+          }
           _scheduleListMap[stationName] = merged;
           final nowHour = now.hour;
           final nowMin = now.minute;
@@ -1535,9 +1538,9 @@ class RadioProvider extends ChangeNotifier {
     _scheduleRefreshTimer = Timer.periodic(
       const Duration(minutes: 10),
           (_) {
-        for (final name in _kbsChannelCodes.keys) {
-          if (_scheduleListMap.containsKey(name)) fetchSchedule(name);
-        }
+            for (final name in _kbsChannelCodes.keys) {
+              if (_scheduleListMap.containsKey(name)) fetchSchedule(name);
+            }
         for (final name in _mbcChannelTypes.keys) {
           if (_scheduleListMap.containsKey(name)) fetchMbcSchedule(name);
         }

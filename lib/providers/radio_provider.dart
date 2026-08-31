@@ -52,7 +52,7 @@ class RadioProvider extends ChangeNotifier {
   static const _keyFavorites = 'radio_favorites';
   static const _keyRecent = 'radio_recent';
   static const _keySchedules = 'radio_schedules';
-  static const _maxRecent = 20;
+  static const _maxRecent = 50;
 
   static const _apiServers = [
     'de1.api.radio-browser.info',

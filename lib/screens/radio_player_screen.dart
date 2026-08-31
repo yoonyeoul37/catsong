@@ -15,6 +15,7 @@ import '../widgets/global_radio_dial.dart';
 import '../widgets/simple_radio_dial.dart';
 import '../widgets/frequency_ruler.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/equalizer_animation.dart';
 import '../l10n/app_localizations.dart';
@@ -612,6 +613,16 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                     },
                     child: const Icon(Icons.expand_more, color: Colors.white, size: 24),
                   ),
+                  Row(
+                    children: [
+                      _FloatButton(
+                        onTap: () {
+                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                          Share.share('지금 ${current.name} 듣고 있어요! 뮤직웨이브에서 같이 들어요 🎧\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                        },
+                        child: const Icon(Icons.share_outlined, color: Colors.white, size: 20),
+                      ),
+                      const SizedBox(width: 10),
                   // 즐겨찾기
                   _FloatButton(
                     onTap: () {
@@ -671,6 +682,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                       color: radioProvider.isFavorite(current.stationUuid) ? Colors.white : Colors.white60,
                       size: 22,
                     ),
+                  ),
+                    ],
                   ),
                 ],
               ),

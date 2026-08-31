@@ -147,8 +147,9 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
       itemBuilder: (context, i) {
         final station = recent[i];
         final lastListened = station.lastListened;
+        const weekdays = ['월', '화', '수', '목', '금', '토', '일'];
         final timeStr = lastListened != null
-            ? '${lastListened.month}/${lastListened.day} ${lastListened.hour.toString().padLeft(2, '0')}:${lastListened.minute.toString().padLeft(2, '0')}'
+            ? '${lastListened.year}.${lastListened.month.toString().padLeft(2, '0')}.${lastListened.day.toString().padLeft(2, '0')}(${weekdays[lastListened.weekday - 1]}) ${lastListened.hour.toString().padLeft(2, '0')}:${lastListened.minute.toString().padLeft(2, '0')}'
             : '';
         final isPlaying = radioProvider.currentStation?.stationUuid == station.stationUuid && radioProvider.isPlaying;
         return InkWell(

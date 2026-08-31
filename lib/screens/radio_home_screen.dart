@@ -157,7 +157,7 @@ class RadioHomeScreen extends StatelessWidget {
     });
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFF17140F),
       extendBodyBehindAppBar: false,
       appBar: AppBar(
         backgroundColor: Colors.transparent,

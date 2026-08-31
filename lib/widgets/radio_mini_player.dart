@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
 import '../screens/radio_player_screen.dart';
+import 'dart:math' as math;
 
 class RadioMiniPlayer extends StatelessWidget {
   const RadioMiniPlayer({super.key});
@@ -103,8 +104,10 @@ class RadioMiniPlayer extends StatelessWidget {
                             border: Border.all(
                                 color: Colors.white.withOpacity(0.15)),
                           ),
-                          child: const Icon(Icons.radio,
-                              color: Colors.white60, size: 22),
+                          alignment: Alignment.center,
+                          child: isPlaying
+                              ? const _MiniEqualizerBars(color: Color(0xFFE8877E))
+                              : const Icon(Icons.radio, color: Colors.white60, size: 22),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -232,6 +235,63 @@ class RadioMiniPlayer extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+class _MiniEqualizerBars extends StatefulWidget {
+  final Color color;
+  const _MiniEqualizerBars({required this.color});
+
+  @override
+  State<_MiniEqualizerBars> createState() => _MiniEqualizerBarsState();
+}
+
+class _MiniEqualizerBarsState extends State<_MiniEqualizerBars>
+    with TickerProviderStateMixin {
+  late final List<AnimationController> _ctrls;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrls = List.generate(
+      3,
+          (i) => AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 900 + i * 300),
+      )..repeat(reverse: true),
+    );
+  }
+
+  @override
+  void dispose() {
+    for (final c in _ctrls) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 20,
+      height: 18,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: List.generate(3, (i) {
+          return AnimatedBuilder(
+            animation: _ctrls[i],
+            builder: (_, __) => Container(
+              width: 3,
+              height: 4 + _ctrls[i].value * 12,
+              decoration: BoxDecoration(
+                color: widget.color,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          );
+        }),
       ),
     );
   }

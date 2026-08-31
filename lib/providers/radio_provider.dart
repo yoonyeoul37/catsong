@@ -1509,9 +1509,12 @@ class RadioProvider extends ChangeNotifier {
         final endAdj = end == '2400' ? '0000' : end;
         if (nowHHMMno.compareTo(start) >= 0 &&
             (end == '2400' || nowHHMMno.compareTo(endAdj) < 0)) {
-          _currentProgramMap[stationName] = Map<String, dynamic>.from(s);
-          _nowPlayingMap[stationName] = s['Title'] as String? ?? '';
-          changed = true;
+          final newTitle = s['Title'] as String? ?? '';
+          if (_nowPlayingMap[stationName] != newTitle) {
+            _currentProgramMap[stationName] = Map<String, dynamic>.from(s);
+            _nowPlayingMap[stationName] = newTitle;
+            changed = true;
+          }
           break;
         }
       }
@@ -1526,9 +1529,12 @@ class RadioProvider extends ChangeNotifier {
         var end = s['end_time'] as String? ?? '';
         if (end.isNotEmpty && int.parse(end.split(':')[0]) >= 24) end = '23:59';
         if (nowHHMM.compareTo(start) >= 0 && nowHHMM.compareTo(end) < 0) {
-          _currentProgramMap[stationName] = Map<String, dynamic>.from(s);
-          _nowPlayingMap[stationName] = s['title'] as String? ?? '';
-          changed = true;
+          final newTitle = s['title'] as String? ?? '';
+          if (_nowPlayingMap[stationName] != newTitle) {
+            _currentProgramMap[stationName] = Map<String, dynamic>.from(s);
+            _nowPlayingMap[stationName] = newTitle;
+            changed = true;
+          }
           break;
         }
       }
@@ -1551,21 +1557,24 @@ class RadioProvider extends ChangeNotifier {
         final startInt = int.tryParse(start) ?? 0;
         final endInt = int.tryParse(end) ?? 0;
         if (nowTimeInt2 >= startInt && nowTimeInt2 < endInt) {
-          final programCode = s['program_code'] as String? ?? '';
-          String finalEnd = end;
-          for (int j = i + 1; j < currentSchedules.length; j++) {
-            final next = currentSchedules[j];
-            if (next['program_code'] == programCode) {
-              finalEnd = next['program_planned_end_time'] as String? ?? finalEnd;
-            } else {
-              break;
+          final newTitle = s['program_title'] as String? ?? '';
+          if (_nowPlayingMap[stationName] != newTitle) {
+            final programCode = s['program_code'] as String? ?? '';
+            String finalEnd = end;
+            for (int j = i + 1; j < currentSchedules.length; j++) {
+              final next = currentSchedules[j];
+              if (next['program_code'] == programCode) {
+                finalEnd = next['program_planned_end_time'] as String? ?? finalEnd;
+              } else {
+                break;
+              }
             }
+            final merged = Map<String, dynamic>.from(s);
+            merged['program_planned_end_time'] = finalEnd;
+            _currentProgramMap[stationName] = merged;
+            _nowPlayingMap[stationName] = newTitle;
+            changed = true;
           }
-          final merged = Map<String, dynamic>.from(s);
-          merged['program_planned_end_time'] = finalEnd;
-          _currentProgramMap[stationName] = merged;
-          _nowPlayingMap[stationName] = s['program_title'] as String? ?? '';
-          changed = true;
           break;
         }
       }

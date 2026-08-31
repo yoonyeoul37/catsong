@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class FrequencyRuler extends StatelessWidget {
+class FrequencyRuler extends StatefulWidget {
   final double? frequency; // 예: 89.1
   final Color primaryColor;
   final double minFreq;
@@ -15,10 +15,33 @@ class FrequencyRuler extends StatelessWidget {
   });
 
   @override
+  State<FrequencyRuler> createState() => _FrequencyRulerState();
+}
+
+class _FrequencyRulerState extends State<FrequencyRuler>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1600),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (frequency == null) return const SizedBox.shrink();
-    final freq = frequency!.clamp(minFreq, maxFreq);
-    final fraction = (freq - minFreq) / (maxFreq - minFreq);
+    if (widget.frequency == null) return const SizedBox.shrink();
+    final freq = widget.frequency!.clamp(widget.minFreq, widget.maxFreq);
+    final fraction = (freq - widget.minFreq) / (widget.maxFreq - widget.minFreq);
 
     return Column(
       children: [
@@ -26,41 +49,44 @@ class FrequencyRuler extends StatelessWidget {
           height: 34,
           child: LayoutBuilder(builder: (context, constraints) {
             final width = constraints.maxWidth;
-            final handleX = (width * fraction).clamp(6.0, width - 6.0);
-            return Stack(
-              alignment: Alignment.centerLeft,
-              children: [
-                // 배경 트랙
-                Container(
-                  height: 3,
-                  width: width,
-                  color: Colors.white.withOpacity(0.15),
-                ),
-                // 진행된 부분
-                Container(
-                  height: 3,
-                  width: handleX,
-                  color: primaryColor,
-                ),
-                // 눈금
-                CustomPaint(
-                  size: Size(width, 20),
-                  painter: _TickPainter(color: Colors.white.withOpacity(0.25)),
-                ),
-                // 손잡이
-                Positioned(
-                  left: handleX - 8,
-                  child: Container(
-                    width: 16,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      color: primaryColor,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 2),
+            final baseX = width * fraction;
+            return AnimatedBuilder(
+              animation: _ctrl,
+              builder: (context, child) {
+                final wobble = (_ctrl.value - 0.5) * 24;
+                final handleX = (baseX + wobble).clamp(6.0, width - 6.0);
+                return Stack(
+                  alignment: Alignment.centerLeft,
+                  children: [
+                    Container(
+                      height: 3,
+                      width: width,
+                      color: Colors.white.withOpacity(0.15),
                     ),
-                  ),
-                ),
-              ],
+                    Container(
+                      height: 3,
+                      width: handleX,
+                      color: widget.primaryColor,
+                    ),
+                    CustomPaint(
+                      size: Size(width, 20),
+                      painter: _TickPainter(color: Colors.white.withOpacity(0.25)),
+                    ),
+                    Positioned(
+                      left: handleX - 8,
+                      child: Container(
+                        width: 16,
+                        height: 16,
+                        decoration: BoxDecoration(
+                          color: widget.primaryColor,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
             );
           }),
         ),
@@ -68,11 +94,11 @@ class FrequencyRuler extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(minFreq.toStringAsFixed(0),
+            Text(widget.minFreq.toStringAsFixed(0),
                 style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 11)),
             Text('${freq.toStringAsFixed(1)} MHz',
                 style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 11, fontWeight: FontWeight.w600)),
-            Text(maxFreq.toStringAsFixed(0),
+            Text(widget.maxFreq.toStringAsFixed(0),
                 style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 11)),
           ],
         ),

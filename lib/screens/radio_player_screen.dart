@@ -1783,25 +1783,17 @@ class _SleepTimerBadge extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => context.read<RadioProvider>().cancelSleepTimer(),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.08),
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: Colors.white.withOpacity(0.20)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.bedtime, color: accent, size: 16),
-            const SizedBox(width: 8),
-            Text(timeText, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-            const SizedBox(width: 4),
-            Text(AppLocalizations.of(context)!.radioAfterEnd, style: TextStyle(color: Colors.white.withOpacity(0.65), fontSize: 13)),
-            const SizedBox(width: 8),
-            Icon(Icons.close, color: Colors.white.withOpacity(0.5), size: 14),
-          ],
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.bedtime_outlined, color: Colors.white.withOpacity(0.5), size: 13),
+          const SizedBox(width: 6),
+          Text(timeText, style: TextStyle(color: Colors.white.withOpacity(0.75), fontSize: 12, fontWeight: FontWeight.w600)),
+          const SizedBox(width: 3),
+          Text(AppLocalizations.of(context)!.radioAfterEnd, style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 11)),
+          const SizedBox(width: 6),
+          Icon(Icons.close, color: Colors.white.withOpacity(0.35), size: 12),
+        ],
       ),
     );
   }

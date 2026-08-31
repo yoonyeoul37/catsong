@@ -1236,7 +1236,13 @@ class _NextProgramLineState extends State<_NextProgramLine> {
   @override
   Widget build(BuildContext context) {
     final currentTitle = _titleOf(widget.currentProgram);
-    final idx = widget.scheduleList.indexWhere((p) => _titleOf(p) == currentTitle);
+    final currentStart = _startOf(widget.currentProgram);
+    int idx = widget.scheduleList.indexWhere(
+      (p) => _titleOf(p) == currentTitle && _startOf(p) == currentStart,
+    );
+    if (idx < 0) {
+      idx = widget.scheduleList.indexWhere((p) => _titleOf(p) == currentTitle);
+    }
     if (idx < 0 || idx + 1 >= widget.scheduleList.length) return const SizedBox.shrink();
     final next = widget.scheduleList[idx + 1];
     final nextTitle = _titleOf(next);

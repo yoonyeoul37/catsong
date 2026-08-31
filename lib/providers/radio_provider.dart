@@ -684,6 +684,14 @@ class RadioProvider extends ChangeNotifier {
   bool hasAttemptedSchedule(String stationName) => _scheduleAttempted.contains(stationName);
   void markScheduleAttempted(String stationName) => _scheduleAttempted.add(stationName);
 
+  // 문자 참여 번호
+  static const _smsNumbers = {
+    'MBC 표준FM': '8001',
+    'MBC FM4U': '8000',
+  };
+
+  String? smsNumberFor(String stationName) => _smsNumbers[stationName];
+
   // KBS
   static const _kbsChannelCodes = {
     'KBS 제1라디오': '21',
@@ -961,6 +969,9 @@ class RadioProvider extends ChangeNotifier {
           final wb = sb < 600 ? sb + 2400 : sb;
           return wa.compareTo(wb);
         });
+        for (final s in filtered) {
+          s['image'] = s['Photo'];
+        }
         _scheduleListMap[stationName] = filtered.cast<Map<String, dynamic>>();
         final now = DateTime.now();
         final nowH = now.hour;
@@ -1010,11 +1021,33 @@ class RadioProvider extends ChangeNotifier {
       final httpClient = HttpClient()
         ..badCertificateCallback = (cert, host, port) => host == 'm.bbsi.co.kr';
       final ioClient = IOClient(httpClient);
+
+      const commonUA = 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36';
+
+      // 1단계: 메인 페이지 먼저 방문해서 쿠키 받기
+      String cookieHeader = '';
+      try {
+        final mainResponse = await ioClient.get(
+          Uri.parse('https://m.bbsi.co.kr/M/?ACT=RADIO_FM'),
+          headers: {'User-Agent': commonUA},
+        ).timeout(const Duration(seconds: 10));
+        final setCookie = mainResponse.headers['set-cookie'];
+        if (setCookie != null) {
+          cookieHeader = setCookie.split(',').map((c) => c.split(';').first.trim()).join('; ');
+        }
+        debugPrint('BBS 쿠키 획득: $cookieHeader');
+      } catch (e) {
+        debugPrint('BBS 메인페이지 접속 오류: $e');
+      }
+
+      // 2단계: 쿠키 들고 편성표 요청
       final response = await ioClient.get(
         Uri.parse('https://m.bbsi.co.kr/M/ajaxSchedule.html?CODE=WWW&SchGubun=RADIO&SchDate=$dateStr'),
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36',
+          'User-Agent': commonUA,
           'Referer': 'https://m.bbsi.co.kr/M/?ACT=RADIO_FM',
+          'X-Requested-With': 'XMLHttpRequest',
+          if (cookieHeader.isNotEmpty) 'Cookie': cookieHeader,
         },
       ).timeout(const Duration(seconds: 10));
       ioClient.close();
@@ -1043,6 +1076,10 @@ class RadioProvider extends ChangeNotifier {
           final image = imgRegex.firstMatch(block)?.group(1);
           final isOnAir = onAirRegex.hasMatch(block);
           if (time.isEmpty || title.isEmpty) continue;
+          if (schedules.isEmpty) {
+            debugPrint('BBS 블록 예시(이미지 태그 확인용): ${block.substring(0, block.length > 400 ? 400 : block.length)}');
+            debugPrint('BBS 추출된 image 값: $image');
+          }
           schedules.add({'start_time': time, 'title': title, 'image': image});
           if (isOnAir) currentIdx = schedules.length - 1;
         }
@@ -1205,7 +1242,7 @@ class RadioProvider extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        // debugPrint('=== KFN API 응답: ${response.body} ===');
+        debugPrint('=== KFN API 응답: ${response.body} ===');
         final map = data['map'];
         if (map == null) {
           debugPrint('=== KFN map null ===');
@@ -1420,6 +1457,11 @@ class RadioProvider extends ChangeNotifier {
         data.addAll(json.decode(response.body) as List<dynamic>);
       }
       if (data.isNotEmpty) {
+        for (final s in data) {
+          if (s is Map<String, dynamic>) {
+            s['image'] = s['program_image'];
+          }
+        }
         _scheduleListMap[stationName] = data.cast<Map<String, dynamic>>();
         // 현재 방송 찾기 (25:00 형식 처리)
         final nowH = now.hour;
@@ -1435,7 +1477,9 @@ class RadioProvider extends ChangeNotifier {
           final startTotal = int.parse(startParts[0]) * 60 + int.parse(startParts[1]);
           final endTotal = int.parse(endParts[0]) * 60 + int.parse(endParts[1]);
           if (nowTotal >= startTotal && nowTotal < endTotal) {
-            _currentProgramMap[stationName] = Map<String, dynamic>.from(s);
+            final merged = Map<String, dynamic>.from(s);
+            merged['image'] = s['program_image'];
+            _currentProgramMap[stationName] = merged;
             _nowPlayingMap[stationName] = s['title'] as String? ?? '';
             break;
           }

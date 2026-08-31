@@ -12,6 +12,8 @@ import '../widgets/fm_tuner_dial.dart';
 import '../widgets/global_radio_dial.dart';
 import '../widgets/simple_radio_dial.dart';
 import '../widgets/frequency_ruler.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../widgets/equalizer_animation.dart';
 import '../l10n/app_localizations.dart';
 import 'package:audio_service/audio_service.dart';
@@ -435,17 +437,39 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                         color: Colors.white,
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
+                                        height: 1.0,
                                       ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    if (timeStr.isNotEmpty) ...[
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        timeStr,
-                                        style: TextStyle(color: Colors.white.withOpacity(0.75), fontSize: 12),
+                                    if (timeStr.isNotEmpty)
+                                      Transform.translate(
+                                        offset: const Offset(0, 0),
+                                        child: Text(
+                                          timeStr,
+                                          style: TextStyle(color: Colors.white.withOpacity(0.75), fontSize: 12, height: 1.0),
+                                        ),
                                       ),
-                                    ],
+                                    Builder(builder: (ctx) {
+                                      final smsNumber = radioProvider.smsNumberFor(current.name);
+                                      if (smsNumber == null) return const SizedBox.shrink();
+                                      return Padding(
+                                        padding: const EdgeInsets.only(top: 4),
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                            final uri = Uri(scheme: 'sms', path: smsNumber);
+                                            if (await canLaunchUrl(uri)) {
+                                              await launchUrl(uri);
+                                            }
+                                          },
+                                          child: Text(
+                                            '문자 참여 #$smsNumber',
+                                            style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 11),
+                                          ),
+                                        ),
+                                      );
+                                    }),
                                   ],
                                 ),
                               ),
@@ -465,6 +489,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                           primaryColor: primaryColor,
                         ),
                       ),
+
+
 
                     // ── 편성표 ──
                     SizedBox(
@@ -1188,7 +1214,7 @@ class _NextProgramLine extends StatelessWidget {
                   nextStart.isNotEmpty
                       ? '${AppLocalizations.of(context)!.radioNextProgram}  $nextStart'
                       : AppLocalizations.of(context)!.radioNextProgram,
-                  style: const TextStyle(color: Colors.white38, fontSize: 11),
+                  style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 11),
                 ),
                 const SizedBox(height: 4),
                 Text(

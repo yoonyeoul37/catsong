@@ -264,7 +264,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
     final radioProvider = context.watch<RadioProvider>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0D2E2C),
+      backgroundColor: const Color(0xFF17140F),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,

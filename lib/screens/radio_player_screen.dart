@@ -185,7 +185,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     final freq = current.frequency ?? '';
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0A),
+      backgroundColor: const Color(0xFF17140F),
       bottomNavigationBar: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onHorizontalDragEnd: (details) {
@@ -1201,9 +1201,14 @@ class _NextProgramLineState extends State<_NextProgramLine> {
 
   String _countdownStr(String startHHmm) {
     if (!startHHmm.contains(':')) return '';
-    final parts = startHHmm.split(':');
-    final h = int.tryParse(parts[0]) ?? 0;
-    final m = int.tryParse(parts[1]) ?? 0;
+    final isPM = startHHmm.contains('오후');
+    final isAM = startHHmm.contains('오전');
+    final cleaned = startHHmm.replaceAll('오전', '').replaceAll('오후', '').trim();
+    final parts = cleaned.split(':');
+    int h = int.tryParse(parts[0].trim()) ?? 0;
+    final m = int.tryParse(parts[1].trim()) ?? 0;
+    if (isPM && h != 12) h += 12;
+    if (isAM && h == 12) h = 0;
     final now = DateTime.now();
     var target = DateTime(now.year, now.month, now.day, h, m);
     if (target.isBefore(now)) target = target.add(const Duration(days: 1));

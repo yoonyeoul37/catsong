@@ -17,6 +17,7 @@ import '../screens/equalizer_screen.dart';
 import 'equalizer_animation.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:io';
+import '../providers/theme_provider.dart';
 
 class SongListTile extends StatelessWidget {
   final Song song;
@@ -37,6 +38,8 @@ class SongListTile extends StatelessWidget {
     final isCurrentSong = playerProvider.currentSong?.id == song.id;
     final primaryColor = Theme.of(context).colorScheme.primary;
     final isFav = musicProvider.isFavorite(song.id);
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
 
     return InkWell(
       onTap: () {
@@ -74,7 +77,7 @@ class SongListTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            _buildAlbumArt(isCurrentSong, playerProvider, primaryColor),
+            _buildAlbumArt(isCurrentSong, playerProvider, primaryColor, baseColor),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
@@ -83,7 +86,7 @@ class SongListTile extends StatelessWidget {
                   Text(
                     song.titleDisplay,
                     style: TextStyle(
-                      color: isCurrentSong ? const Color(0xFFFFD700) : Colors.white,
+                      color: isCurrentSong ? const Color(0xFFFFD700) : baseColor,
                       fontSize: 15,
                       fontWeight: isCurrentSong ? FontWeight.w600 : FontWeight.w500,
                     ),
@@ -94,7 +97,7 @@ class SongListTile extends StatelessWidget {
                   Text(
                     song.artistDisplay,
                     style: TextStyle(
-                      color: isCurrentSong ? Colors.white70 : Colors.white38,
+                      color: isCurrentSong ? baseColor.withOpacity(0.7) : baseColor.withOpacity(0.38),
                       fontSize: 13,
                     ),
                     maxLines: 1,
@@ -107,13 +110,13 @@ class SongListTile extends StatelessWidget {
             Text(
               song.durationFormatted,
               style: TextStyle(
-                color: isCurrentSong ? Colors.white70 : Colors.white30,
+                color: isCurrentSong ? baseColor.withOpacity(0.7) : baseColor.withOpacity(0.3),
                 fontSize: 12,
               ),
             ),
             PopupMenuButton<String>(
               icon: Icon(Icons.more_vert,
-                  color: isCurrentSong ? Colors.white70 : Colors.white30,
+                  color: isCurrentSong ? baseColor.withOpacity(0.7) : baseColor.withOpacity(0.3),
                   size: 20),
               color: Colors.white,
               shape: RoundedRectangleBorder(
@@ -142,7 +145,7 @@ class SongListTile extends StatelessWidget {
     );
   }
 
-  Widget _buildAlbumArt(bool isCurrentSong, PlayerProvider playerProvider, Color primaryColor) {
+  Widget _buildAlbumArt(bool isCurrentSong, PlayerProvider playerProvider, Color primaryColor, Color baseColor) {
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -162,7 +165,7 @@ class SongListTile extends StatelessWidget {
             width: 52,
             height: 52,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
+              color: baseColor.withOpacity(0.15),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Center(
@@ -186,10 +189,10 @@ class SongListTile extends StatelessWidget {
             child: Center(
               child: playerProvider.isPlaying
                   ? const SizedBox(
-                      width: 24,
-                      height: 20,
-                      child: EqualizerAnimation(color: Colors.white70),
-                    )
+                width: 24,
+                height: 20,
+                child: EqualizerAnimation(color: Colors.white70),
+              )
                   : const Icon(Icons.pause, color: Colors.white70, size: 22),
             ),
           ),

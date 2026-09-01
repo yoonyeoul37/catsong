@@ -23,6 +23,7 @@ import '../providers/radio_provider.dart';
 import '../l10n/app_localizations.dart';
 import 'package:marquee/marquee.dart';
 import 'package:flutter/services.dart';
+import '../providers/theme_provider.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -148,6 +149,26 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChrome.setSystemUIOverlayStyle(
+        isDarkMode
+            ? const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: Color(0xFF17140F),
+          systemNavigationBarIconBrightness: Brightness.light,
+        )
+            : const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+          systemNavigationBarColor: Color(0xFFEDE7DA),
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
+      );
+    });
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -161,65 +182,67 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFF17140F),
+        backgroundColor: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA),
         appBar: _buildAppBar(primaryColor),
-      body: Column(
-        children: [
-          Expanded(child: _buildBody()),
-          MediaQuery(
-            data: MediaQuery.of(context).copyWith(
+        body: Column(
+          children: [
+            Expanded(child: _buildBody()),
+            MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+              ),
+              child: Consumer2<RadioProvider, PlayerProvider>(
+                builder: (context, radioProvider, playerProvider, _) {
+                  if (playerProvider.currentSong != null) {
+                    return const MiniPlayer();
+                  }
+                  if (radioProvider.currentStation != null) {
+                    return const RadioMiniPlayer();
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
-            child: Consumer2<RadioProvider, PlayerProvider>(
-              builder: (context, radioProvider, playerProvider, _) {
-                if (playerProvider.currentSong != null) {
-                  return const MiniPlayer();
-                }
-                if (radioProvider.currentStation != null) {
-                  return const RadioMiniPlayer();
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-          ),
-        ],
+          ],
+        ),
+        bottomNavigationBar: _buildBottomNavBar(primaryColor),
       ),
-      bottomNavigationBar: _buildBottomNavBar(primaryColor),
-    ),
-  );
+    );
   }
 
   PreferredSizeWidget _buildAppBar(Color primaryColor) {
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
     return AppBar(
-      backgroundColor: const Color(0xFF17140F),
+      backgroundColor: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA),
       elevation: 0,
       titleSpacing: 20,
       title: _isSearching
           ? _buildSearchField()
           : Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Transform(
-                  transform: Matrix4.skewX(-0.15),
-                  child: Text(AppLocalizations.of(context)!.appName,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: -0.5)),
-                ),
-                if (Localizations.localeOf(context).languageCode == 'ko')
-                  Padding(
-                    padding: const EdgeInsets.only(left: 4),
-                    child: Text('MusicWave',
-                        style: TextStyle(
-                            color: Colors.white.withOpacity(0.55),
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 0.5)),
-                  ),
-              ],
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Transform(
+            transform: Matrix4.skewX(-0.15),
+            child: Text(AppLocalizations.of(context)!.appName,
+                style: TextStyle(
+                    color: baseColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5)),
+          ),
+          if (Localizations.localeOf(context).languageCode == 'ko')
+            Padding(
+              padding: const EdgeInsets.only(left: 4),
+              child: Text('MusicWave',
+                  style: TextStyle(
+                      color: baseColor.withOpacity(0.55),
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.5)),
             ),
+        ],
+      ),
       actions: [
         if (!_isSearching) ...[
           IconButton(
@@ -227,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
               setState(() => _isSearching = true);
             },
-            icon: const Icon(Icons.search, color: AppTheme.textPrimary, size: 23),
+            icon: Icon(Icons.search, color: baseColor, size: 23),
           ),
           IconButton(
             onPressed: () {
@@ -248,7 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             },
-            icon: const Icon(Icons.radio_outlined, color: AppTheme.textPrimary, size: 23),
+            icon: Icon(Icons.radio_outlined, color: baseColor, size: 23),
           ),
           IconButton(
             onPressed: () {
@@ -264,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             },
-            icon: const Icon(Icons.settings_outlined, color: AppTheme.textPrimary, size: 23),
+            icon: Icon(Icons.settings_outlined, color: baseColor, size: 23),
           ),
           const SizedBox(width: 4),
         ] else
@@ -282,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 context.read<MusicProvider>().clearSearch();
               },
               child: Text(AppLocalizations.of(context)!.cancel,
-                  style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w600)),
+                  style: TextStyle(color: baseColor.withOpacity(0.7), fontWeight: FontWeight.w600)),
             ),
           ),
       ],
@@ -352,6 +375,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildSongsTab() {
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
     return Consumer<MusicProvider>(
       builder: (context, musicProvider, _) {
         if (musicProvider.isLoading) {
@@ -362,7 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 CircularProgressIndicator(color: Theme.of(context).colorScheme.primary),
                 const SizedBox(height: 16),
                 Text(AppLocalizations.of(context)!.scanningMusic,
-                    style: const TextStyle(color: AppTheme.textSecondary)),
+                    style: TextStyle(color: baseColor.withOpacity(0.7))),
               ],
             ),
           );
@@ -376,12 +401,12 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             if (_isSelectionMode)
               Container(
-                color: AppTheme.surfaceVariant,
+                color: baseColor.withOpacity(0.08),
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white),
+                      icon: Icon(Icons.close, color: baseColor),
                       onPressed: () => setState(() {
                         _isSelectionMode = false;
                         _selectedSongIds.clear();
@@ -389,7 +414,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Text(
                       AppLocalizations.of(context)!.selectedCount(_selectedSongIds.length),
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      style: TextStyle(color: baseColor, fontWeight: FontWeight.bold),
                     ),
                     const Spacer(),
                     TextButton(
@@ -455,14 +480,14 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               margin: const EdgeInsets.only(top: 0),
               height: 1,
-              color: Colors.white.withOpacity(0.06),
+              color: baseColor.withOpacity(0.06),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 12, 8),
               child: Row(
                 children: [
                   Text('${musicProvider.songCount} ${AppLocalizations.of(context)!.songCount}',
-                      style: const TextStyle(color: Colors.white60, fontSize: 12)),
+                      style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 12)),
                   if (_showThemeHint)
                     Expanded(
                       child: Padding(
@@ -476,7 +501,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 18,
                             child: Marquee(
                               text: '· ${AppLocalizations.of(context)!.themeColorHint}',
-                              style: const TextStyle(color: Colors.white60, fontSize: 11),
+                              style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 11),
                               scrollAxis: Axis.horizontal,
                               blankSpace: 40,
                               velocity: 30,
@@ -496,8 +521,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         context.read<PlayerProvider>().playFromList(musicProvider.songs, 0);
                       }
                     },
-                    icon: const Icon(Icons.play_arrow,
-                        color: Colors.white60, size: 26),
+                    icon: Icon(Icons.play_arrow,
+                        color: baseColor.withOpacity(0.6), size: 26),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
@@ -509,7 +534,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         context.read<PlayerProvider>().playFromList(songs, 0);
                       }
                     },
-                    icon: const Icon(Icons.shuffle, color: Colors.white60, size: 20),
+                    icon: Icon(Icons.shuffle, color: baseColor.withOpacity(0.6), size: 20),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
@@ -580,7 +605,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         : Icons.radio_button_unchecked,
                                     color: isSelected
                                         ? Theme.of(context).colorScheme.primary
-                                        : Colors.white38,
+                                        : baseColor.withOpacity(0.38),
                                     size: 22,
                                   ),
                                 ),
@@ -607,6 +632,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildFilterTab(String label, bool isSelected, VoidCallback onTap, Color primaryColor) {
+    final baseColor = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
     return GestureDetector(
       onTap: () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -618,7 +644,7 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: isSelected ? Colors.white : Colors.transparent,
+              color: isSelected ? baseColor : Colors.transparent,
               width: 2,
             ),
           ),
@@ -626,7 +652,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? Colors.white : Colors.white54,
+            color: isSelected ? baseColor : baseColor.withOpacity(0.54),
             fontSize: 14,
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
           ),
@@ -637,6 +663,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildPermissionDeniedView(MusicProvider musicProvider) {
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final baseColor = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -646,15 +673,15 @@ class _HomeScreenState extends State<HomeScreen> {
             Icon(Icons.folder_off, size: 72, color: primaryColor.withOpacity(0.5)),
             const SizedBox(height: 24),
             Text(AppLocalizations.of(context)!.permissionRequired,
-                style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                style: TextStyle(
+                    color: baseColor,
                     fontSize: 20,
                     fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
             Text(AppLocalizations.of(context)!.permissionMessage,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                    color: AppTheme.textSecondary, fontSize: 14, height: 1.6)),
+                style: TextStyle(
+                    color: baseColor.withOpacity(0.7), fontSize: 14, height: 1.6)),
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () => musicProvider.initialize(),
@@ -674,6 +701,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildErrorView(MusicProvider musicProvider) {
+    final baseColor = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -684,7 +712,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 16),
             Text(musicProvider.errorMessage,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: AppTheme.textSecondary, fontSize: 14)),
+                style: TextStyle(color: baseColor.withOpacity(0.7), fontSize: 14)),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () => musicProvider.initialize(),
@@ -701,24 +729,27 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildEmptySongsView() {
+    final baseColor = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.music_off, size: 72, color: Colors.white38),
+          Icon(Icons.music_off, size: 72, color: baseColor.withOpacity(0.38)),
           const SizedBox(height: 16),
           Text(AppLocalizations.of(context)!.noSongs,
-              style: const TextStyle(color: Colors.white70, fontSize: 16)),
+              style: TextStyle(color: baseColor.withOpacity(0.7), fontSize: 16)),
           const SizedBox(height: 8),
           Text(AppLocalizations.of(context)!.addMusic,
-              style: const TextStyle(color: Colors.white54, fontSize: 13)),
+              style: TextStyle(color: baseColor.withOpacity(0.54), fontSize: 13)),
         ],
       ),
     );
   }
 
   Widget _buildBottomNavBar(Color primaryColor) {
-    final bgColor = Colors.black.withOpacity(0.3);
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final bgColor = isDarkMode ? Colors.black.withOpacity(0.3) : Colors.white.withOpacity(0.5);
     final l = AppLocalizations.of(context)!;
     final items = [
       {'icon': Icons.music_note, 'label': l.songs},
@@ -749,14 +780,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Icon(
                         items[index]['icon'] as IconData,
-                        color: isSelected ? Colors.white : AppTheme.textSecondary,
+                        color: isSelected ? baseColor : baseColor.withOpacity(0.6),
                         size: 24,
                       ),
                       const SizedBox(height: 3),
                       Text(
                         items[index]['label'] as String,
                         style: TextStyle(
-                          color: isSelected ? Colors.white : AppTheme.textSecondary,
+                          color: isSelected ? baseColor : baseColor.withOpacity(0.6),
                           fontSize: 10,
                           fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                         ),

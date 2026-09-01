@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../providers/radio_provider.dart';
+import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
 import '../widgets/station_tile.dart';
@@ -14,17 +15,39 @@ class RadioFavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const accent = Colors.white;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final accent = isDarkMode ? Colors.white : Colors.black;
+    final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
     final radioProvider = context.watch<RadioProvider>();
     final favorites     = radioProvider.favorites;
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChrome.setSystemUIOverlayStyle(
+        isDarkMode
+            ? const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: Color(0xFF17140F),
+          systemNavigationBarIconBrightness: Brightness.light,
+        )
+            : const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+          systemNavigationBarColor: Color(0xFFEDE7DA),
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
+      );
+    });
+
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor: AppTheme.background,
+        backgroundColor: bgColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppTheme.textPrimary, size: 20),
+          icon: Icon(Icons.arrow_back_ios, color: accent, size: 20),
           onPressed: () {
             MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
             Navigator.pop(context);
@@ -32,8 +55,8 @@ class RadioFavoritesScreen extends StatelessWidget {
         ),
         title: Text(
           AppLocalizations.of(context)!.favorites,
-          style: const TextStyle(
-            color: AppTheme.textPrimary,
+          style: TextStyle(
+            color: accent,
             fontSize: 17,
             fontWeight: FontWeight.w600,
           ),
@@ -49,13 +72,13 @@ class RadioFavoritesScreen extends StatelessWidget {
                 color: accent.withOpacity(0.4)),
             const SizedBox(height: 18),
             Text(AppLocalizations.of(context)!.radioNoFavorites,
-                style: const TextStyle(
-                    color: AppTheme.textSecondary,
+                style: TextStyle(
+                    color: accent.withOpacity(0.7),
                     fontSize: 17)),
             const SizedBox(height: 8),
             Text(AppLocalizations.of(context)!.radioNoFavoritesDesc,
                 style: TextStyle(
-                    color: Colors.white.withOpacity(0.45),
+                    color: accent.withOpacity(0.45),
                     fontSize: 13)),
           ],
         ),
@@ -65,7 +88,7 @@ class RadioFavoritesScreen extends StatelessWidget {
         EdgeInsets.fromLTRB(24, 12, 24, 80 + MediaQuery.of(context).viewPadding.bottom),
         itemCount: favorites.length,
         separatorBuilder: (_, __) =>
-            Divider(height: 1, color: Colors.white.withOpacity(0.16)),
+            Divider(height: 1, color: accent.withOpacity(0.16)),
         itemBuilder: (context, index) {
           final station = favorites[index];
           return Dismissible(
@@ -91,7 +114,7 @@ class RadioFavoritesScreen extends StatelessWidget {
               children: [
                 Expanded(child: StationTile(station: station)),
                 IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white38, size: 20),
+                  icon: Icon(Icons.close, color: accent.withOpacity(0.38), size: 20),
                   onPressed: () {
                     radioProvider.toggleFavorite(station);
                     final overlay = Overlay.of(context);

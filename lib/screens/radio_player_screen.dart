@@ -23,6 +23,7 @@ import '../l10n/app_localizations.dart';
 import 'package:audio_service/audio_service.dart';
 import '../main.dart' show globalAudioHandler;
 import '../providers/player_provider.dart' show SimpleAudioHandler;
+import '../providers/theme_provider.dart';
 
 double? _parseFrequency(String? freq) {
   if (freq == null || freq.isEmpty) return null;
@@ -169,6 +170,27 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final radioProvider = context.watch<RadioProvider>();
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChrome.setSystemUIOverlayStyle(
+        isDarkMode
+            ? const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: Color(0xFF17140F),
+          systemNavigationBarIconBrightness: Brightness.light,
+        )
+            : const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+          systemNavigationBarColor: Color(0xFFEDE7DA),
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
+      );
+    });
     final state = radioProvider.playerState;
     final current = radioProvider.currentStation ??
         (widget.stationList != null && _currentIdx < widget.stationList!.length
@@ -190,7 +212,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     final freq = current.frequency ?? '';
 
     return Scaffold(
-      backgroundColor: const Color(0xFF17140F),
+      backgroundColor: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA),
       bottomNavigationBar: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onHorizontalDragEnd: (details) {
@@ -213,12 +235,12 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
           children: [
             Container(
               height: 2.5,
-              color: Colors.white.withOpacity(0.20),
+              color: baseColor.withOpacity(0.20),
             ),
             Container(
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.03),
-                border: Border(top: BorderSide(color: Colors.white.withOpacity(0.06))),
+                color: baseColor.withOpacity(0.03),
+                border: Border(top: BorderSide(color: baseColor.withOpacity(0.06))),
               ),
               child: SafeArea(
                 top: false,
@@ -402,7 +424,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                 const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                                 Navigator.pop(context);
                               },
-                              child: const Icon(Icons.expand_more, color: Colors.white, size: 24),
+                              child: Icon(Icons.expand_more, color: baseColor, size: 24),
                             ),
                             Row(
                               children: [
@@ -411,7 +433,19 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                                     Share.share('지금 ${current.name} 듣고 있어요! 뮤직웨이브에서 같이 들어요 🎧\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
                                   },
-                                  child: const Icon(Icons.share_outlined, color: Colors.white, size: 20),
+                                  child: Icon(Icons.share_outlined, color: baseColor, size: 20),
+                                ),
+                                const SizedBox(width: 10),
+                                _FloatButton(
+                                  onTap: () {
+                                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                    context.read<ThemeProvider>().setDarkMode(!isDarkMode);
+                                  },
+                                  child: Icon(
+                                    isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+                                    color: baseColor,
+                                    size: 20,
+                                  ),
                                 ),
                                 const SizedBox(width: 10),
                                 _FloatButton(
@@ -469,7 +503,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                   },
                                   child: Icon(
                                     radioProvider.isFavorite(current.stationUuid) ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                                    color: radioProvider.isFavorite(current.stationUuid) ? Colors.white : Colors.white60,
+                                    color: radioProvider.isFavorite(current.stationUuid) ? baseColor : baseColor.withOpacity(0.6),
                                     size: 22,
                                   ),
                                 ),
@@ -499,12 +533,12 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                   ? Container(
                                 width: double.infinity,
                                 height: h * 0.28,
-                                color: const Color(0xFF17140F),
+                                color: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA),
                                 alignment: Alignment.center,
-                                child: const SizedBox(
+                                child: SizedBox(
                                   width: 24,
                                   height: 24,
-                                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white24),
+                                  child: CircularProgressIndicator(strokeWidth: 2, color: baseColor.withOpacity(0.24)),
                                 ),
                               )
                                   : hasImage
@@ -612,7 +646,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                               ? Text(
                             freq,
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.5),
+                              color: baseColor.withOpacity(0.5),
                               fontSize: 13,
                             ),
                           )
@@ -1077,6 +1111,8 @@ class _ProgramCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
     final title = program['program_title'] as String? ??
         program['Title'] as String? ??
         program['title'] as String? ?? '';
@@ -1090,8 +1126,8 @@ class _ProgramCard extends StatelessWidget {
             Flexible(
               child: Text(
                 title.isNotEmpty ? title : '',
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: baseColor,
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                 ),
@@ -1103,7 +1139,7 @@ class _ProgramCard extends StatelessWidget {
             const SizedBox(width: 8),
             Builder(builder: (ctx) {
               final isRerun = program['is_rerun'] as bool? ?? false;
-              final badgeColor = isRerun ? Colors.white60 : const Color(0xFFE8877E);
+              final badgeColor = isRerun ? baseColor.withOpacity(0.6) : const Color(0xFFE8877E);
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
                 decoration: BoxDecoration(
@@ -1247,13 +1283,15 @@ class _NextProgramLineState extends State<_NextProgramLine> {
     final nextStart = _formatStart(_startOf(next));
     final nextImage = next['image'] as String?;
     final countdown = _countdownStr(nextStart);
-    debugPrint('다음방송 카운트다운 - nextStart: "$nextStart", countdown: "$countdown"');
+
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: baseColor.withOpacity(0.05),
         borderRadius: BorderRadius.circular(18),
       ),
       child: Row(
@@ -1269,15 +1307,15 @@ class _NextProgramLineState extends State<_NextProgramLine> {
               errorBuilder: (errCtx, err, stack) => Container(
                 width: 76,
                 height: 76,
-                color: Colors.white.withOpacity(0.08),
-                child: const Icon(Icons.radio, color: Colors.white38, size: 28),
+                color: baseColor.withOpacity(0.08),
+                child: Icon(Icons.radio, color: baseColor.withOpacity(0.38), size: 28),
               ),
             )
                 : Container(
               width: 76,
               height: 76,
-              color: Colors.white.withOpacity(0.08),
-              child: const Icon(Icons.radio, color: Colors.white38, size: 28),
+              color: baseColor.withOpacity(0.08),
+              child: Icon(Icons.radio, color: baseColor.withOpacity(0.38), size: 28),
             ),
           ),
           const SizedBox(width: 12),
@@ -1289,13 +1327,13 @@ class _NextProgramLineState extends State<_NextProgramLine> {
                   nextStart.isNotEmpty
                       ? '${AppLocalizations.of(context)!.radioNextProgram}  $nextStart'
                       : AppLocalizations.of(context)!.radioNextProgram,
-                  style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 11),
+                  style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 11),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   nextTitle,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: baseColor,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -1310,12 +1348,12 @@ class _NextProgramLineState extends State<_NextProgramLine> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.schedule, color: Colors.white24, size: 16),
+                Icon(Icons.schedule, color: baseColor.withOpacity(0.24), size: 16),
                 const SizedBox(height: 3),
                 Text(
                   countdown,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.6),
+                    color: baseColor.withOpacity(0.6),
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     fontFeatures: const [FontFeature.tabularFigures()],
@@ -1324,7 +1362,7 @@ class _NextProgramLineState extends State<_NextProgramLine> {
               ],
             )
           else
-            const Icon(Icons.schedule, color: Colors.white24, size: 20),
+            Icon(Icons.schedule, color: baseColor.withOpacity(0.24), size: 20),
         ],
       ),
     );
@@ -1340,6 +1378,8 @@ class _StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final mutedColor = (isDarkMode ? Colors.white : Colors.black).withOpacity(0.6);
     String label;
     Color color;
     switch (state) {
@@ -1347,7 +1387,7 @@ class _StatusBadge extends StatelessWidget {
         return const SizedBox.shrink(); // 편성표 카드 안에 LIVE 표시
       case RadioPlayerState.loading:
         label = AppLocalizations.of(context)!.radioStatusConnecting;
-        color = Colors.white60;
+        color = mutedColor;
         break;
       case RadioPlayerState.error:
         label = AppLocalizations.of(context)!.radioStatusFailed;
@@ -1355,7 +1395,7 @@ class _StatusBadge extends StatelessWidget {
         break;
       case RadioPlayerState.paused:
         label = AppLocalizations.of(context)!.radioStatusPaused;
-        color = Colors.white60;
+        color = mutedColor;
         break;
       default:
         return const SizedBox(height: 28);
@@ -1418,9 +1458,9 @@ class _Controls extends StatelessWidget {
               radioProvider.playStation(list[newIdx]);
             }
           },
-          child: const Padding(
-            padding: EdgeInsets.all(10),
-            child: Icon(Icons.skip_previous, color: Color(0xFFC7C7C7), size: 24),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Icon(Icons.skip_previous, color: context.watch<ThemeProvider>().isDarkMode ? const Color(0xFFC7C7C7) : Colors.black54, size: 24),
           ),
         ),
         const SizedBox(width: 30),
@@ -1468,9 +1508,9 @@ class _Controls extends StatelessWidget {
               radioProvider.playStation(list[newIdx]);
             }
           },
-          child: const Padding(
-            padding: EdgeInsets.all(10),
-            child: Icon(Icons.skip_next, color: Color(0xFFC7C7C7), size: 24),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Icon(Icons.skip_next, color: context.watch<ThemeProvider>().isDarkMode ? const Color(0xFFC7C7C7) : Colors.black54, size: 24),
           ),
         ),
       ],
@@ -1487,14 +1527,15 @@ class _FloatButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final baseColor = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: 40, height: 40,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.white.withOpacity(0.07),
-          border: Border.all(color: Colors.white.withOpacity(0.08)),
+          color: baseColor.withOpacity(0.07),
+          border: Border.all(color: baseColor.withOpacity(0.08)),
         ),
         child: Center(child: child),
       ),
@@ -1520,6 +1561,7 @@ class _BottomBarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final baseColor = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -1533,14 +1575,14 @@ class _BottomBarItem extends StatelessWidget {
               children: [
                 Icon(
                   icon,
-                  color: Colors.white70,
+                  color: baseColor.withOpacity(0.7),
                   size: 22,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   label,
-                  style: const TextStyle(
-                    color: Colors.white70,
+                  style: TextStyle(
+                    color: baseColor.withOpacity(0.7),
                     fontSize: 10,
                   ),
                 ),
@@ -1551,8 +1593,8 @@ class _BottomBarItem extends StatelessWidget {
                 right: -4, top: -2,
                 child: Container(
                   width: 6, height: 6,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  decoration: BoxDecoration(
+                    color: baseColor,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -1802,18 +1844,19 @@ class _SleepTimerBadge extends StatelessWidget {
         ? l.sleepCountdownMS(m, s)
         : l.sleepCountdownS(s);
 
+    final baseColor = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
     return GestureDetector(
       onTap: () => context.read<RadioProvider>().cancelSleepTimer(),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.bedtime_outlined, color: Colors.white.withOpacity(0.5), size: 13),
+          Icon(Icons.bedtime_outlined, color: baseColor.withOpacity(0.5), size: 13),
           const SizedBox(width: 6),
-          Text(timeText, style: TextStyle(color: Colors.white.withOpacity(0.75), fontSize: 12, fontWeight: FontWeight.w600)),
+          Text(timeText, style: TextStyle(color: baseColor.withOpacity(0.75), fontSize: 12, fontWeight: FontWeight.w600)),
           const SizedBox(width: 3),
-          Text(AppLocalizations.of(context)!.radioAfterEnd, style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 11)),
+          Text(AppLocalizations.of(context)!.radioAfterEnd, style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 11)),
           const SizedBox(width: 6),
-          Icon(Icons.close, color: Colors.white.withOpacity(0.35), size: 12),
+          Icon(Icons.close, color: baseColor.withOpacity(0.35), size: 12),
         ],
       ),
     );

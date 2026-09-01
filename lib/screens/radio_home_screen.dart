@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../models/radio_country.dart';
 import '../providers/radio_provider.dart';
+import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
 import 'radio_broadcaster_screen.dart';
@@ -31,7 +32,7 @@ class RadioHomeScreen extends StatelessWidget {
     return list;
   }
 
-  List<Widget> _buildCountryListByContinent(BuildContext context, List<RadioCountry> countries) {
+  List<Widget> _buildCountryListByContinent(BuildContext context, List<RadioCountry> countries, bool isDarkMode) {
     final deviceCountryCode = PlatformDispatcher.instance.locale.countryCode;
     const continentOrder = ['ASIA', 'EUROPE', 'NORTH_AMERICA', 'SOUTH_AMERICA', 'MIDDLE_EAST', 'AFRICA', 'OCEANIA'];
     const continentLabels = {
@@ -48,7 +49,7 @@ class RadioHomeScreen extends StatelessWidget {
     String? userContinent;
     if (deviceCountryCode != null) {
       final userCountry = countries.firstWhere(
-        (c) => c.code == deviceCountryCode,
+            (c) => c.code == deviceCountryCode,
         orElse: () => countries.first,
       );
       userContinent = userCountry.continent;
@@ -83,13 +84,13 @@ class RadioHomeScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.08),
+                  color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.08),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
                   continentLabels[continent] ?? continent,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.5),
+                    color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.5),
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 1.5,
@@ -100,7 +101,7 @@ class RadioHomeScreen extends StatelessWidget {
               Expanded(
                 child: Container(
                   height: 0.5,
-                  color: Colors.white.withOpacity(0.1),
+                  color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.1),
                 ),
               ),
             ],
@@ -119,7 +120,7 @@ class RadioHomeScreen extends StatelessWidget {
                 onTap: () => _onCountryTap(context, country),
               ),
               if (i != group.length - 1)
-                Divider(height: 1, color: Colors.white.withOpacity(0.16), indent: 48),
+                Divider(height: 1, color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.16), indent: 48),
             ],
           ),
         );
@@ -150,14 +151,35 @@ class RadioHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final radioProvider = context.watch<RadioProvider>();
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final countries = _sortedCountries;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       radioProvider.fetchAllCountryCounts();
     });
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChrome.setSystemUIOverlayStyle(
+        isDarkMode
+            ? const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.light,
+                statusBarBrightness: Brightness.dark,
+                systemNavigationBarColor: Color(0xFF17140F),
+                systemNavigationBarIconBrightness: Brightness.light,
+              )
+            : const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.dark,
+                statusBarBrightness: Brightness.light,
+                systemNavigationBarColor: Color(0xFFF7F5F0),
+                systemNavigationBarIconBrightness: Brightness.dark,
+              ),
+      );
+    });
+
     return Scaffold(
-      backgroundColor: const Color(0xFF17140F),
+      backgroundColor: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA),
       extendBodyBehindAppBar: false,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -168,28 +190,28 @@ class RadioHomeScreen extends StatelessWidget {
             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+          icon: Icon(Icons.arrow_back_ios, color: isDarkMode ? Colors.white : Colors.black, size: 20),
         ),
         title: RichText(
           text: TextSpan(
             children: [
-              const TextSpan(
+              TextSpan(
                 text: '\u201C',
-                style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w700),
+                style: TextStyle(color: isDarkMode ? Colors.white : Colors.black, fontSize: 22, fontWeight: FontWeight.w700),
               ),
               TextSpan(
                 text: AppLocalizations.of(context)!.radioOnAirTitle,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: isDarkMode ? Colors.white : Colors.black,
                   fontSize: 17,
                   fontWeight: FontWeight.w700,
                   fontStyle: FontStyle.italic,
                   letterSpacing: 1.5,
                 ),
               ),
-              const TextSpan(
+              TextSpan(
                 text: ' \u201D',
-                style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w700),
+                style: TextStyle(color: isDarkMode ? Colors.white : Colors.black, fontSize: 22, fontWeight: FontWeight.w700),
               ),
             ],
           ),
@@ -200,7 +222,7 @@ class RadioHomeScreen extends StatelessWidget {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
               Navigator.push(context, MaterialPageRoute(builder: (_) => const RadioFavoritesScreen()));
             },
-            icon: Icon(CupertinoIcons.heart, color: Colors.white60, size: 21),
+            icon: Icon(CupertinoIcons.heart, color: isDarkMode ? Colors.white60 : Colors.black45, size: 21),
           ),
           const SizedBox(width: 6),
         ],
@@ -213,14 +235,14 @@ class RadioHomeScreen extends StatelessWidget {
             Text(
               AppLocalizations.of(context)!.radioSelectCountry,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.65),
+                color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.65),
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 2,
               ),
             ),
             const SizedBox(height: 4),
-            ..._buildCountryListByContinent(context, countries),
+            ..._buildCountryListByContinent(context, countries, isDarkMode),
             const SizedBox(height: 80),
           ],
         ),
@@ -239,9 +261,11 @@ class _CountryListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
     return InkWell(
       onTap: onTap,
-      splashColor: Colors.white.withOpacity(0.04),
+      splashColor: baseColor.withOpacity(0.04),
       highlightColor: Colors.transparent,
       borderRadius: BorderRadius.circular(14),
       child: Padding(
@@ -256,8 +280,8 @@ class _CountryListTile extends StatelessWidget {
                 children: [
                   Text(
                     country.displayName,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: baseColor,
                       fontSize: 16.5,
                       fontWeight: FontWeight.w600,
                       letterSpacing: -0.2,
@@ -268,7 +292,7 @@ class _CountryListTile extends StatelessWidget {
                     if (country.code == 'KR') {
                       return Text(
                         '${koreanStations.length}${AppLocalizations.of(context)!.radioChannelCount}',
-                        style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12.5),
+                        style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 12.5),
                       );
                     }
                     final count = ctx.watch<RadioProvider>().getCountryStationCount(country.code);
@@ -276,13 +300,13 @@ class _CountryListTile extends StatelessWidget {
                       count != null
                           ? '$count${AppLocalizations.of(context)!.radioChannelCount}'
                           : AppLocalizations.of(context)!.radioPopular200,
-                      style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12.5),
+                      style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 12.5),
                     );
                   }),
                 ],
               ),
             ),
-            Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.25), size: 20),
+            Icon(Icons.chevron_right, color: baseColor.withOpacity(0.25), size: 20),
           ],
         ),
       ),
@@ -298,6 +322,8 @@ class _RecentSection extends StatelessWidget {
     final radioProvider = context.watch<RadioProvider>();
     final recent = radioProvider.recentlyListened;
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
 
     if (recent.isEmpty) return const SizedBox.shrink();
 
@@ -326,7 +352,7 @@ class _RecentSection extends StatelessWidget {
         Text(
           AppLocalizations.of(context)!.radioRecentListening,
           style: TextStyle(
-            color: Colors.white.withOpacity(0.65),
+            color: baseColor.withOpacity(0.65),
             fontSize: 12,
             fontWeight: FontWeight.w700,
             letterSpacing: 2,
@@ -360,9 +386,9 @@ class _RecentSection extends StatelessWidget {
                       width: 200,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.06),
+                        color: baseColor.withOpacity(0.06),
                         borderRadius: BorderRadius.circular(18),
-                        border: Border.all(color: Colors.white.withOpacity(0.10)),
+                        border: Border.all(color: baseColor.withOpacity(0.10)),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -371,12 +397,12 @@ class _RecentSection extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.radio, color: Colors.white60, size: 13),
+                              Icon(Icons.radio, color: baseColor.withOpacity(0.6), size: 13),
                               const SizedBox(width: 6),
                               Expanded(
                                 child: Text(
                                   station.name,
-                                  style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+                                  style: TextStyle(color: baseColor, fontSize: 13, fontWeight: FontWeight.w600),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -393,14 +419,14 @@ class _RecentSection extends StatelessWidget {
                                 if (nowPlaying != null && nowPlaying.isNotEmpty)
                                   Text(
                                     nowPlaying,
-                                    style: TextStyle(color: Colors.white.withOpacity(0.55), fontSize: 10.5),
+                                    style: TextStyle(color: baseColor.withOpacity(0.55), fontSize: 10.5),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 if (timeStr.isNotEmpty)
                                   Text(
                                     timeStr,
-                                    style: TextStyle(color: Colors.white.withOpacity(0.35), fontSize: 10.5),
+                                    style: TextStyle(color: baseColor.withOpacity(0.35), fontSize: 10.5),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),

@@ -90,7 +90,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 32),
         children: [
           _buildSection(l.themeColor),
-          _buildTile(context, icon: Icons.palette_outlined, title: l.themeColor, onTap: () => _showColorPicker(context), primaryColor: primaryColor, isFirst: true),
+          Consumer<ThemeProvider>(
+            builder: (context, themeProvider, _) => _buildTile(
+              context,
+              icon: themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode,
+              title: l.darkMode,
+              subtitle: themeProvider.isDarkMode ? l.darkModeOn : l.darkModeOff,
+              onTap: () => themeProvider.setDarkMode(!themeProvider.isDarkMode),
+              primaryColor: primaryColor,
+              isFirst: true,
+              trailing: Switch(
+                value: themeProvider.isDarkMode,
+                onChanged: (v) => themeProvider.setDarkMode(v),
+                activeColor: primaryColor,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+            ),
+          ),
+          _buildTile(context, icon: Icons.palette_outlined, title: l.themeColor, onTap: () => _showColorPicker(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.text_fields, title: l.textSize, onTap: () => _showTextSizeDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.font_download_outlined, title: l.fontChange, onTap: () => _showFontDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.style, title: l.playerStyle, onTap: () => _showPlayerStyleDialog(context), primaryColor: primaryColor, isLast: true),

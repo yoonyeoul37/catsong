@@ -507,5 +507,8 @@
   "radioExitConfirmTitle": "Exit the radio?",
   "radioExitConfirmMessage": "Leaving now will stop playback.",
   "radioExitKeepListening": "Keep listening",
-  "radioExitConfirmButton": "Exit"
+  "radioExitConfirmButton": "Exit",
+  "darkMode": "Dark Mode",
+  "darkModeOn": "On",
+  "darkModeOff": "Off"
 }

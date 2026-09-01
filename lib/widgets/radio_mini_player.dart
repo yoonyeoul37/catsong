@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/radio_provider.dart';
+import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import '../screens/radio_player_screen.dart';
 import 'dart:math' as math;
@@ -19,6 +20,8 @@ class RadioMiniPlayer extends StatelessWidget {
 
     final isPlaying = radioProvider.isPlaying;
     final isLoading = radioProvider.isLoading;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
 
     return GestureDetector(
       onHorizontalDragEnd: (details) {
@@ -75,9 +78,9 @@ class RadioMiniPlayer extends StatelessWidget {
           child: Container(
             height: 80,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.08),
+              color: isDarkMode ? Colors.white.withOpacity(0.08) : const Color(0xFFEDE7DA).withOpacity(0.92),
               border: Border(
-                top: BorderSide(color: Colors.white.withOpacity(0.10)),
+                top: BorderSide(color: baseColor.withOpacity(0.10)),
               ),
             ),
             child: Column(
@@ -86,8 +89,8 @@ class RadioMiniPlayer extends StatelessWidget {
                   height: 2,
                   decoration: BoxDecoration(
                     color: isPlaying
-                        ? Colors.white.withOpacity(0.6)
-                        : Colors.white.withOpacity(0.15),
+                        ? baseColor.withOpacity(0.6)
+                        : baseColor.withOpacity(0.15),
                   ),
                 ),
                 Expanded(
@@ -100,14 +103,14 @@ class RadioMiniPlayer extends StatelessWidget {
                           height: 44,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.white.withOpacity(0.08),
+                            color: baseColor.withOpacity(0.08),
                             border: Border.all(
-                                color: Colors.white.withOpacity(0.15)),
+                                color: baseColor.withOpacity(0.15)),
                           ),
                           alignment: Alignment.center,
                           child: isPlaying
                               ? const _MiniEqualizerBars(color: Color(0xFFE8877E))
-                              : const Icon(Icons.radio, color: Colors.white60, size: 22),
+                              : Icon(Icons.radio, color: baseColor.withOpacity(0.6), size: 22),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -117,8 +120,8 @@ class RadioMiniPlayer extends StatelessWidget {
                             children: [
                               Text(
                                 station.name,
-                                style: const TextStyle(
-                                  color: AppTheme.textPrimary,
+                                style: TextStyle(
+                                  color: baseColor,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -137,7 +140,7 @@ class RadioMiniPlayer extends StatelessWidget {
                                     style: TextStyle(
                                       color: isPlaying
                                           ? const Color(0xFFE8877E)
-                                          : Colors.white60,
+                                          : baseColor.withOpacity(0.6),
                                       fontSize: 12,
                                     ),
                                   ),
@@ -181,8 +184,8 @@ class RadioMiniPlayer extends StatelessWidget {
                                         }
                                         return Text(
                                           timeStr.isNotEmpty ? '$nowPlaying  $timeStr' : nowPlaying,
-                                          style: const TextStyle(
-                                            color: AppTheme.textSecondary,
+                                          style: TextStyle(
+                                            color: baseColor.withOpacity(0.6),
                                             fontSize: 10,
                                           ),
                                           maxLines: 1,
@@ -200,28 +203,28 @@ class RadioMiniPlayer extends StatelessWidget {
                           onTap: isLoading
                               ? null
                               : () {
-                                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                                  radioProvider.togglePlayPause();
-                                },
+                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                            radioProvider.togglePlayPause();
+                          },
                           child: Container(
                             width: 40,
                             height: 40,
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.15),
+                              color: baseColor.withOpacity(0.15),
                               shape: BoxShape.circle,
                             ),
                             child: isLoading
-                                ? const Padding(
-                              padding: EdgeInsets.all(10),
+                                ? Padding(
+                              padding: const EdgeInsets.all(10),
                               child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: Colors.white),
+                                  color: baseColor),
                             )
                                 : Icon(
                               isPlaying
                                   ? Icons.pause
                                   : Icons.play_arrow,
-                              color: Colors.white,
+                              color: baseColor,
                               size: 22,
                             ),
                           ),

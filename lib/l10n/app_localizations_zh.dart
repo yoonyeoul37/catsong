@@ -1507,4 +1507,13 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get radioExitConfirmButton => '結束';
+
+  @override
+  String get darkMode => '深色模式';
+
+  @override
+  String get darkModeOn => '開啟';
+
+  @override
+  String get darkModeOff => '關閉';
 }

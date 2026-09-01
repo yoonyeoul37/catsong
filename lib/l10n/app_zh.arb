@@ -510,5 +510,8 @@
   "radioExitConfirmTitle": "要結束收音機嗎？",
   "radioExitConfirmMessage": "現在離開將停止播放。",
   "radioExitKeepListening": "繼續收聽",
-  "radioExitConfirmButton": "結束"
+  "radioExitConfirmButton": "結束",
+  "darkMode": "深色模式",
+  "darkModeOn": "開啟",
+  "darkModeOff": "關閉"
 }

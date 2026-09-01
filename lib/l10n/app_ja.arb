@@ -507,5 +507,8 @@
   "radioExitConfirmTitle": "ラジオを終了しますか？",
   "radioExitConfirmMessage": "今終了すると再生が止まります。",
   "radioExitKeepListening": "聴き続ける",
-  "radioExitConfirmButton": "終了"
+  "radioExitConfirmButton": "終了",
+    "darkMode": "ダークモード",
+    "darkModeOn": "オン",
+    "darkModeOff": "オフ"
 }

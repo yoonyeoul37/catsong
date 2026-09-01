@@ -9,6 +9,7 @@ import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
 import 'radio_player_screen.dart';
 import '../l10n/app_localizations.dart';
+import '../providers/theme_provider.dart';
 
 enum _ViewMode { all, broadcaster, region, recent }
 
@@ -76,8 +77,9 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
     });
   }
 
-  Widget _toggleButton(String label, _ViewMode mode) {
+  Widget _toggleButton(String label, _ViewMode mode, bool isDarkMode) {
     final selected = _mode == mode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
     return Expanded(
       child: GestureDetector(
         onTap: () {
@@ -87,7 +89,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
-            color: selected ? Colors.white : Colors.transparent,
+            color: selected ? (isDarkMode ? Colors.white : const Color(0xFF17140F)) : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
           ),
           alignment: Alignment.center,
@@ -95,7 +97,9 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           child: Text(
             label,
             style: TextStyle(
-              color: selected ? const Color(0xFF17140F) : Colors.white70,
+              color: selected
+                  ? (isDarkMode ? const Color(0xFF17140F) : Colors.white)
+                  : baseColor.withOpacity(0.7),
               fontSize: 13,
               fontWeight: FontWeight.w600,
             ),
@@ -106,11 +110,12 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
   }
 
   Widget _buildAllList(BuildContext context, RadioProvider radioProvider) {
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final radioStations = koreanStations.map((ks) => _toRadioStation(ks)).toList();
     return ListView.separated(
       padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
       itemCount: koreanStations.length,
-      separatorBuilder: (_, __) => Divider(height: 1, color: Colors.white.withOpacity(0.1)),
+      separatorBuilder: (_, __) => Divider(height: 1, color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.1)),
       itemBuilder: (context, i) {
         final ks = koreanStations[i];
         final current = radioProvider.currentStation;
@@ -131,19 +136,21 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
   }
 
   Widget _buildRecentList(BuildContext context, RadioProvider radioProvider) {
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
     final recent = radioProvider.recentlyListened;
     if (recent.isEmpty) {
       return Center(
         child: Text(
           '최근 들은 방송이 없어요',
-          style: TextStyle(color: Colors.white.withOpacity(0.35), fontSize: 14),
+          style: TextStyle(color: baseColor.withOpacity(0.35), fontSize: 14),
         ),
       );
     }
     return ListView.separated(
       padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
       itemCount: recent.length,
-      separatorBuilder: (_, __) => Divider(height: 1, color: Colors.white.withOpacity(0.1)),
+      separatorBuilder: (_, __) => Divider(height: 1, color: baseColor.withOpacity(0.1)),
       itemBuilder: (context, i) {
         final station = recent[i];
         final lastListened = station.lastListened;
@@ -173,7 +180,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                   width: 6,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: isPlaying ? primaryColorOf(context) : Colors.white.withOpacity(0.15),
+                    color: isPlaying ? primaryColorOf(context) : baseColor.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(3),
                   ),
                 ),
@@ -184,14 +191,14 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                     children: [
                       Text(
                         station.name,
-                        style: const TextStyle(color: Colors.white, fontSize: 15.5, fontWeight: FontWeight.w500),
+                        style: TextStyle(color: baseColor, fontSize: 15.5, fontWeight: FontWeight.w500),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 2),
                       Text(
                         timeStr,
-                        style: TextStyle(color: Colors.white.withOpacity(0.45), fontSize: 12),
+                        style: TextStyle(color: baseColor.withOpacity(0.45), fontSize: 12),
                       ),
                     ],
                   ),
@@ -207,6 +214,8 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
   Color primaryColorOf(BuildContext context) => Theme.of(context).colorScheme.primary;
 
   Widget _buildRegionGrid(BuildContext context) {
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
     const regionList = [
       '수도권', '부산/경남', '대구/경북', '광주/전남',
       '전북', '대전/충남', '충북', '강원', '제주',
@@ -236,7 +245,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           },
           child: Container(
             decoration: BoxDecoration(
-              color: _regionColors[region] ?? Colors.white.withOpacity(0.06),
+              color: _regionColors[region] ?? baseColor.withOpacity(0.06),
               borderRadius: BorderRadius.circular(16),
             ),
             alignment: Alignment.center,
@@ -250,7 +259,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text('$count개 채널',
-                    style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 11)),
+                    style: const TextStyle(color: Colors.white70, fontSize: 11)),
               ],
             ),
           ),
@@ -262,9 +271,31 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
   @override
   Widget build(BuildContext context) {
     final radioProvider = context.watch<RadioProvider>();
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChrome.setSystemUIOverlayStyle(
+        isDarkMode
+            ? const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: Color(0xFF17140F),
+          systemNavigationBarIconBrightness: Brightness.light,
+        )
+            : const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+          systemNavigationBarColor: Color(0xFFEDE7DA),
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
+      );
+    });
 
     return Scaffold(
-      backgroundColor: const Color(0xFF17140F),
+      backgroundColor: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -274,34 +305,34 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_ios,
-              color: Colors.white, size: 20),
+          icon: Icon(Icons.arrow_back_ios,
+              color: baseColor, size: 20),
         ),
         title: RichText(
           text: TextSpan(
             children: [
-              const TextSpan(
+              TextSpan(
                 text: '\u201C',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: baseColor,
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               TextSpan(
                 text: AppLocalizations.of(context)!.radioKoreaSlogan,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: baseColor,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                   fontStyle: FontStyle.italic,
                   letterSpacing: -0.2,
                 ),
               ),
-              const TextSpan(
+              TextSpan(
                 text: ' \u201D',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: baseColor,
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
                 ),
@@ -316,15 +347,15 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
             child: Container(
               height: 38,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.08),
+                color: baseColor.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
                 children: [
-                  _toggleButton('전체', _ViewMode.all),
-                  _toggleButton('방송사별', _ViewMode.broadcaster),
-                  _toggleButton('지역별', _ViewMode.region),
-                  _toggleButton('최근청취', _ViewMode.recent),
+                  _toggleButton('전체', _ViewMode.all, isDarkMode),
+                  _toggleButton('방송사별', _ViewMode.broadcaster, isDarkMode),
+                  _toggleButton('지역별', _ViewMode.region, isDarkMode),
+                  _toggleButton('최근청취', _ViewMode.recent, isDarkMode),
                 ],
               ),
             ),
@@ -369,6 +400,8 @@ class _StationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
 
     return Container(
       color: isPlaying ? primaryColor.withOpacity(0.08) : Colors.transparent,
@@ -390,7 +423,7 @@ class _StationTile extends StatelessWidget {
             ),
           );
         },
-        splashColor: Colors.white.withOpacity(0.04),
+        splashColor: baseColor.withOpacity(0.04),
         highlightColor: Colors.transparent,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 14),
@@ -400,14 +433,14 @@ class _StationTile extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: isPlaying ? primaryColor : Colors.white.withOpacity(0.08),
+                  color: isPlaying ? primaryColor : baseColor.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 alignment: Alignment.center,
                 child: Text(
                   station.broadcaster,
                   style: TextStyle(
-                    color: isPlaying ? Colors.black : Colors.white.withOpacity(0.6),
+                    color: isPlaying ? Colors.black : baseColor.withOpacity(0.6),
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                   ),
@@ -425,7 +458,7 @@ class _StationTile extends StatelessWidget {
                     Text(
                       station.name,
                       style: TextStyle(
-                        color: isPlaying ? primaryColor : Colors.white,
+                        color: isPlaying ? primaryColor : baseColor,
                         fontWeight: isPlaying ? FontWeight.w700 : FontWeight.w500,
                         fontSize: 15.5,
                         letterSpacing: -0.2,
@@ -449,7 +482,7 @@ class _StationTile extends StatelessWidget {
                                 ? station.frequency
                                 : '',
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.4),
+                              color: baseColor.withOpacity(0.4),
                               fontSize: 12,
                             ),
                           );
@@ -518,7 +551,7 @@ class _StationTile extends StatelessWidget {
                               Text(
                                 displayNowPlaying,
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.85),
+                                  color: baseColor.withOpacity(0.85),
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -531,7 +564,7 @@ class _StationTile extends StatelessWidget {
                                 if (timeStr.isNotEmpty) timeStr,
                               ].join(' · '),
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.55),
+                                color: baseColor.withOpacity(0.55),
                                 fontSize: 11,
                               ),
                             ),
@@ -612,7 +645,7 @@ class _StationTile extends StatelessWidget {
                         : CupertinoIcons.heart,
                     color: context.watch<RadioProvider>().isFavorite(radioStation.stationUuid)
                         ? Colors.redAccent
-                        : Colors.white.withOpacity(0.35),
+                        : baseColor.withOpacity(0.35),
                     size: 22,
                   ),
                 ),
@@ -816,6 +849,7 @@ class _BroadcasterGridScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final grouped = _grouped();
     final keys = _order.where((k) => grouped.containsKey(k)).toList();
 
@@ -843,7 +877,7 @@ class _BroadcasterGridScreen extends StatelessWidget {
           },
           child: Container(
             decoration: BoxDecoration(
-              color: _cardColors[key] ?? Colors.white.withOpacity(0.06),
+              color: _cardColors[key] ?? const Color(0xFF3A342A),
               borderRadius: BorderRadius.circular(16),
             ),
             alignment: Alignment.center,
@@ -862,7 +896,7 @@ class _BroadcasterGridScreen extends StatelessWidget {
                 Text(
                   '${stations.length}개 채널',
                   style: TextStyle(
-                    color: Colors.white.withOpacity(_cardColors.containsKey(key) ? 0.7 : 0.45),
+                    color: Colors.white.withOpacity(_cardColors.containsKey(key) ? 0.7 : 0.6),
                     fontSize: 11,
                   ),
                 ),
@@ -907,9 +941,11 @@ class _BroadcasterStationList extends StatelessWidget {
   Widget build(BuildContext context) {
     final radioStations = stations.map((ks) => _toRadioStation(ks)).toList();
     final radioProvider = context.watch<RadioProvider>();
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF17140F),
+      backgroundColor: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -918,17 +954,17 @@ class _BroadcasterStationList extends StatelessWidget {
             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+          icon: Icon(Icons.arrow_back_ios, color: baseColor, size: 20),
         ),
         title: Text(broadcaster,
-            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+            style: TextStyle(color: baseColor, fontSize: 18, fontWeight: FontWeight.bold)),
       ),
       body: SafeArea(
         top: false,
         child: ListView.separated(
           padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
           itemCount: stations.length,
-          separatorBuilder: (_, __) => Divider(height: 1, color: Colors.white.withOpacity(0.1)),
+          separatorBuilder: (_, __) => Divider(height: 1, color: baseColor.withOpacity(0.1)),
           itemBuilder: (context, i) {
             final ks = stations[i];
             final current = radioProvider.currentStation;

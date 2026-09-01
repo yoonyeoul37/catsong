@@ -6,10 +6,19 @@ class ThemeProvider extends ChangeNotifier {
   Color _primaryColor = const Color(0xFF06858B);
   double _textScale = 1.12;
   String _fontFamily = 'default';
+  bool _isDarkMode = true;
 
   Color get primaryColor => _primaryColor;
   double get textScale => _textScale;
   String get fontFamily => _fontFamily;
+  bool get isDarkMode => _isDarkMode;
+
+  Future<void> setDarkMode(bool value) async {
+    _isDarkMode = value;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isDarkMode', value);
+    notifyListeners();
+  }
 
   static const List<Map<String, String>> availableFonts = [
     {'key': 'default', 'name': 'Default Font'},
@@ -42,6 +51,7 @@ class ThemeProvider extends ChangeNotifier {
     final colorValue = prefs.getInt('primaryColor');
     final textScale = prefs.getDouble('textScale');
     final fontFamily = prefs.getString('fontFamily');
+    final isDarkMode = prefs.getBool('isDarkMode');
     if (colorValue != null) {
       _primaryColor = Color(colorValue);
     }
@@ -50,6 +60,9 @@ class ThemeProvider extends ChangeNotifier {
     }
     if (fontFamily != null) {
       _fontFamily = fontFamily;
+    }
+    if (isDarkMode != null) {
+      _isDarkMode = isDarkMode;
     }
     notifyListeners();
   }

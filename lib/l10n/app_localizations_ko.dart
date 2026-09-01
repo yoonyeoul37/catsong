@@ -1506,4 +1506,13 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get radioExitConfirmButton => '종료';
+
+  @override
+  String get darkMode => '다크 모드';
+
+  @override
+  String get darkModeOn => '켜짐';
+
+  @override
+  String get darkModeOff => '꺼짐';
 }

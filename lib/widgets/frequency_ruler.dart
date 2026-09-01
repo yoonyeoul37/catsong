@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/theme_provider.dart';
 
 class FrequencyRuler extends StatefulWidget {
   final double? frequency; // 예: 89.1
@@ -42,6 +44,8 @@ class _FrequencyRulerState extends State<FrequencyRuler>
     if (widget.frequency == null) return const SizedBox.shrink();
     final freq = widget.frequency!.clamp(widget.minFreq, widget.maxFreq);
     final fraction = (freq - widget.minFreq) / (widget.maxFreq - widget.minFreq);
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
 
     return Column(
       children: [
@@ -61,7 +65,7 @@ class _FrequencyRulerState extends State<FrequencyRuler>
                     Container(
                       height: 3,
                       width: width,
-                      color: Colors.white.withOpacity(0.15),
+                      color: baseColor.withOpacity(0.15),
                     ),
                     Container(
                       height: 3,
@@ -70,7 +74,7 @@ class _FrequencyRulerState extends State<FrequencyRuler>
                     ),
                     CustomPaint(
                       size: Size(width, 20),
-                      painter: _TickPainter(color: Colors.white.withOpacity(0.25)),
+                      painter: _TickPainter(color: baseColor.withOpacity(0.25)),
                     ),
                     Positioned(
                       left: handleX - 8,
@@ -80,7 +84,10 @@ class _FrequencyRulerState extends State<FrequencyRuler>
                         decoration: BoxDecoration(
                           color: widget.primaryColor,
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 2),
+                          border: Border.all(
+                            color: isDarkMode ? Colors.white : const Color(0xFFEDE7DA),
+                            width: 2,
+                          ),
                         ),
                       ),
                     ),
@@ -95,11 +102,11 @@ class _FrequencyRulerState extends State<FrequencyRuler>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(widget.minFreq.toStringAsFixed(0),
-                style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 11)),
+                style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 11)),
             Text('${freq.toStringAsFixed(1)} MHz',
-                style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 11, fontWeight: FontWeight.w600)),
+                style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 11, fontWeight: FontWeight.w600)),
             Text(widget.maxFreq.toStringAsFixed(0),
-                style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 11)),
+                style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 11)),
           ],
         ),
       ],

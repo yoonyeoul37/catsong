@@ -2999,6 +2999,24 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'종료'**
   String get radioExitConfirmButton;
+
+  /// No description provided for @darkMode.
+  ///
+  /// In ko, this message translates to:
+  /// **'다크 모드'**
+  String get darkMode;
+
+  /// No description provided for @darkModeOn.
+  ///
+  /// In ko, this message translates to:
+  /// **'켜짐'**
+  String get darkModeOn;
+
+  /// No description provided for @darkModeOff.
+  ///
+  /// In ko, this message translates to:
+  /// **'꺼짐'**
+  String get darkModeOff;
 }
 
 class _AppLocalizationsDelegate

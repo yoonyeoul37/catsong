@@ -1514,4 +1514,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get radioExitConfirmButton => 'Exit';
+
+  @override
+  String get darkMode => 'Dark Mode';
+
+  @override
+  String get darkModeOn => 'On';
+
+  @override
+  String get darkModeOff => 'Off';
 }

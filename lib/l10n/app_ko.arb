@@ -482,5 +482,8 @@
   "radioExitConfirmTitle": "라디오를 종료하시겠어요?",
   "radioExitConfirmMessage": "지금 나가면 재생이 멈춰요.",
   "radioExitKeepListening": "계속 듣기",
-  "radioExitConfirmButton": "종료"
+  "radioExitConfirmButton": "종료",
+  "darkMode": "다크 모드",
+  "darkModeOn": "켜짐",
+  "darkModeOff": "꺼짐"
 }

@@ -223,7 +223,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         child: SafeArea(
           top: false,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 2),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [

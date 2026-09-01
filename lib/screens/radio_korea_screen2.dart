@@ -95,7 +95,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           child: Text(
             label,
             style: TextStyle(
-              color: selected ? const Color(0xFF0D2E2C) : Colors.white70,
+              color: selected ? const Color(0xFF17140F) : Colors.white70,
               fontSize: 13,
               fontWeight: FontWeight.w600,
             ),
@@ -909,7 +909,7 @@ class _BroadcasterStationList extends StatelessWidget {
     final radioProvider = context.watch<RadioProvider>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0D2E2C),
+      backgroundColor: const Color(0xFF17140F),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,

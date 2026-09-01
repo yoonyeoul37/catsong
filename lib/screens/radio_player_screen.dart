@@ -216,168 +216,168 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
               color: Colors.white.withOpacity(0.20),
             ),
             Container(
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.03),
-          border: Border(top: BorderSide(color: Colors.white.withOpacity(0.06))),
-        ),
-        child: SafeArea(
-          top: false,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                if (_isKoreanBroadcast(current.name))
-                  _BottomBarItem(
-                    icon: Icons.format_list_bulleted,
-                    label: AppLocalizations.of(context)!.radioBroadcastSchedule,
-                    hasIndicator: radioProvider.scheduleList.isNotEmpty,
-                    primaryColor: primaryColor,
-                    onTap: () {
-                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                    showModalBottomSheet(
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
-                      builder: (_) => _ScheduleListSheet(stationName: current.name),
-                    );
-                  },
-                  ),
-                _BottomBarItem(
-                  icon: Icons.bedtime_outlined,
-                  label: AppLocalizations.of(context)!.radioSleep,
-                  hasIndicator: radioProvider.isSleepTimerActive,
-                  primaryColor: primaryColor,
-                  onTap: () {
-                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                    showModalBottomSheet(
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      barrierColor: Colors.black.withOpacity(0.7),
-                      isScrollControlled: true,
-                      useSafeArea: true,
-                      builder: (_) => const SleepTimerSheet(),
-                    );
-                  },
-                ),
-                _BottomBarItem(
-                  icon: Icons.schedule,
-                  label: AppLocalizations.of(context)!.radioSchedule,
-                  hasIndicator: radioProvider.schedules.isNotEmpty,
-                  primaryColor: primaryColor,
-                  onTap: () {
-                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                    showModalBottomSheet(
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
-                      builder: (_) => const ScheduleSheet(),
-                    );
-                  },
-                ),
-                _BottomBarItem(
-                  icon: CupertinoIcons.heart,
-                  label: AppLocalizations.of(context)!.favorites,
-                  hasIndicator: false,
-                  primaryColor: primaryColor,
-                  onTap: () {
-                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                    showModalBottomSheet(
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
-                      builder: (_) => _FavoritesSheet(primaryColor: primaryColor),
-                    );
-                  },
-                ),
-                _BottomBarItem(
-                  icon: Icons.power_settings_new,
-                  label: AppLocalizations.of(context)!.exit,
-                  hasIndicator: false,
-                  primaryColor: primaryColor,
-                  onTap: () async {
-                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                    final confirmed = await showDialog<bool>(
-                      context: context,
-                      builder: (ctx) => Dialog(
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                AppLocalizations.of(ctx)!.radioExitConfirmTitle,
-                                style: const TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                AppLocalizations.of(ctx)!.radioExitConfirmMessage,
-                                style: const TextStyle(color: Colors.black54, fontSize: 13),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 24),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: OutlinedButton(
-                                      onPressed: () {
-                                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                                        Navigator.pop(ctx, false);
-                                      },
-                                      style: OutlinedButton.styleFrom(
-                                        foregroundColor: Colors.black54,
-                                        side: const BorderSide(color: Color(0xFFE5E5E5)),
-                                        padding: const EdgeInsets.symmetric(vertical: 13),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                      ),
-                                      child: Text(AppLocalizations.of(ctx)!.radioExitKeepListening),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                                        Navigator.pop(ctx, true);
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: AppTheme.fixedAccent,
-                                        foregroundColor: Colors.white,
-                                        padding: const EdgeInsets.symmetric(vertical: 13),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                      ),
-                                      child: Text(AppLocalizations.of(ctx)!.radioExitConfirmButton),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.03),
+                border: Border(top: BorderSide(color: Colors.white.withOpacity(0.06))),
+              ),
+              child: SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      if (_isKoreanBroadcast(current.name))
+                        _BottomBarItem(
+                          icon: Icons.format_list_bulleted,
+                          label: AppLocalizations.of(context)!.radioBroadcastSchedule,
+                          hasIndicator: radioProvider.scheduleList.isNotEmpty,
+                          primaryColor: primaryColor,
+                          onTap: () {
+                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                            showModalBottomSheet(
+                              context: context,
+                              backgroundColor: Colors.transparent,
+                              isScrollControlled: true,
+                              builder: (_) => _ScheduleListSheet(stationName: current.name),
+                            );
+                          },
                         ),
+                      _BottomBarItem(
+                        icon: Icons.bedtime_outlined,
+                        label: AppLocalizations.of(context)!.radioSleep,
+                        hasIndicator: radioProvider.isSleepTimerActive,
+                        primaryColor: primaryColor,
+                        onTap: () {
+                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                          showModalBottomSheet(
+                            context: context,
+                            backgroundColor: Colors.transparent,
+                            barrierColor: Colors.black.withOpacity(0.7),
+                            isScrollControlled: true,
+                            useSafeArea: true,
+                            builder: (_) => const SleepTimerSheet(),
+                          );
+                        },
                       ),
-                    );
-                    if (confirmed != true) return;
-                    await context.read<RadioProvider>().stopRadio();
-                    final handler = globalAudioHandler;
-                    if (handler is SimpleAudioHandler) {
-                      handler.setRadioMode(false);
-                      handler.playbackState.add(PlaybackState());
-                      handler.mediaItem.add(null);
-                      await handler.stop();
-                    }
-                    await Future.delayed(const Duration(milliseconds: 300));
-                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('closeApp');
-                  },
+                      _BottomBarItem(
+                        icon: Icons.schedule,
+                        label: AppLocalizations.of(context)!.radioSchedule,
+                        hasIndicator: radioProvider.schedules.isNotEmpty,
+                        primaryColor: primaryColor,
+                        onTap: () {
+                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                          showModalBottomSheet(
+                            context: context,
+                            backgroundColor: Colors.transparent,
+                            isScrollControlled: true,
+                            builder: (_) => const ScheduleSheet(),
+                          );
+                        },
+                      ),
+                      _BottomBarItem(
+                        icon: CupertinoIcons.heart,
+                        label: AppLocalizations.of(context)!.favorites,
+                        hasIndicator: false,
+                        primaryColor: primaryColor,
+                        onTap: () {
+                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                          showModalBottomSheet(
+                            context: context,
+                            backgroundColor: Colors.transparent,
+                            isScrollControlled: true,
+                            builder: (_) => _FavoritesSheet(primaryColor: primaryColor),
+                          );
+                        },
+                      ),
+                      _BottomBarItem(
+                        icon: Icons.power_settings_new,
+                        label: AppLocalizations.of(context)!.exit,
+                        hasIndicator: false,
+                        primaryColor: primaryColor,
+                        onTap: () async {
+                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                          final confirmed = await showDialog<bool>(
+                            context: context,
+                            builder: (ctx) => Dialog(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(ctx)!.radioExitConfirmTitle,
+                                      style: const TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      AppLocalizations.of(ctx)!.radioExitConfirmMessage,
+                                      style: const TextStyle(color: Colors.black54, fontSize: 13),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 24),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: OutlinedButton(
+                                            onPressed: () {
+                                              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                              Navigator.pop(ctx, false);
+                                            },
+                                            style: OutlinedButton.styleFrom(
+                                              foregroundColor: Colors.black54,
+                                              side: const BorderSide(color: Color(0xFFE5E5E5)),
+                                              padding: const EdgeInsets.symmetric(vertical: 13),
+                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                            ),
+                                            child: Text(AppLocalizations.of(ctx)!.radioExitKeepListening),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Expanded(
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                              Navigator.pop(ctx, true);
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: AppTheme.fixedAccent,
+                                              foregroundColor: Colors.white,
+                                              padding: const EdgeInsets.symmetric(vertical: 13),
+                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                            ),
+                                            child: Text(AppLocalizations.of(ctx)!.radioExitConfirmButton),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                          if (confirmed != true) return;
+                          await context.read<RadioProvider>().stopRadio();
+                          final handler = globalAudioHandler;
+                          if (handler is SimpleAudioHandler) {
+                            handler.setRadioMode(false);
+                            handler.playbackState.add(PlaybackState());
+                            handler.mediaItem.add(null);
+                            await handler.stop();
+                          }
+                          await Future.delayed(const Duration(milliseconds: 300));
+                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('closeApp');
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
-        ],
+          ],
         ),
       ),
       body: Stack(
@@ -386,205 +386,295 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
             final h = constraints.maxHeight;
             return SingleChildScrollView(
               physics: const ClampingScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
-                child: Column(
-                  children: [
-                    SizedBox(height: (h * 0.14).clamp(50.0, 90.0)),
-
-                    // ── 이미지(있으면) 또는 방송국명 박스, 채널명·시간 오버레이 ──
-                    Builder(builder: (ctx) {
-                      final programImage = radioProvider.currentProgram?['image'] as String?;
-                      final hasImage = programImage != null && programImage.isNotEmpty;
-                      final scheduleLoading = !_scheduleTimedOut &&
-                          radioProvider.scheduleList.isEmpty &&
-                          radioProvider.currentProgram == null;
-                      final timeStr = radioProvider.currentProgram != null
-                          ? _ProgramCard.getTimeStr(radioProvider.currentProgram!, radioProvider)
-                          : '';
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Stack(
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Column(
+                    children: [
+                      // ── 상단 버튼: 뒤로가기 + 공유 + 즐겨찾기 ──
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            scheduleLoading
-                                ? Container(
-                                    width: double.infinity,
-                                    height: h * 0.28,
-                                    color: const Color(0xFF17140F),
-                                    alignment: Alignment.center,
-                                    child: const SizedBox(
-                                      width: 24,
-                                      height: 24,
-                                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white24),
-                                    ),
-                                  )
-                                : hasImage
-                                    ? Image.network(
-                                        programImage,
-                                        width: double.infinity,
-                                        height: h * 0.28,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (errCtx, err, stack) =>
-                                            RadioMoodPlaceholder(height: h * 0.28),
-                                      )
-                                    : RadioMoodPlaceholder(height: h * 0.28),
-                            Positioned(
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              child: Container(
-                                padding: const EdgeInsets.fromLTRB(16, 28, 16, 14),
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.black.withOpacity(0.75),
-                                    ],
-                                  ),
+                            _FloatButton(
+                              onTap: () {
+                                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                Navigator.pop(context);
+                              },
+                              child: const Icon(Icons.expand_more, color: Colors.white, size: 24),
+                            ),
+                            Row(
+                              children: [
+                                _FloatButton(
+                                  onTap: () {
+                                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                    Share.share('지금 ${current.name} 듣고 있어요! 뮤직웨이브에서 같이 들어요 🎧\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                                  },
+                                  child: const Icon(Icons.share_outlined, color: Colors.white, size: 20),
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      current.name,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        height: 1.0,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    if (timeStr.isNotEmpty)
-                                      Transform.translate(
-                                        offset: const Offset(0, 0),
-                                        child: Text(
-                                          timeStr,
-                                          style: TextStyle(color: Colors.white.withOpacity(0.75), fontSize: 12, height: 1.0),
-                                        ),
-                                      ),
-                                    Builder(builder: (ctx) {
-                                      final smsNumber = radioProvider.smsNumberFor(current.name);
-                                      if (smsNumber == null) return const SizedBox.shrink();
-                                      return Padding(
-                                        padding: const EdgeInsets.only(top: 4),
-                                        child: GestureDetector(
-                                          onTap: () async {
-                                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                                            final uri = Uri(scheme: 'sms', path: smsNumber);
-                                            if (await canLaunchUrl(uri)) {
-                                              await launchUrl(uri);
-                                            }
-                                          },
-                                          child: Text(
-                                            '문자 참여 #$smsNumber',
-                                            style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 11),
+                                const SizedBox(width: 10),
+                                _FloatButton(
+                                  onTap: () {
+                                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                    final wasFav = radioProvider.isFavorite(current.stationUuid);
+                                    radioProvider.toggleFavorite(current);
+                                    final overlay = Overlay.of(context);
+                                    final entry = OverlayEntry(
+                                      builder: (_) => Positioned(
+                                        top: 60, left: 0, right: 0,
+                                        child: Center(
+                                          child: TweenAnimationBuilder<double>(
+                                            tween: Tween(begin: 0.0, end: 1.0),
+                                            duration: const Duration(milliseconds: 300),
+                                            builder: (_, value, child) => Opacity(
+                                              opacity: value,
+                                              child: Transform.scale(scale: 0.8 + 0.2 * value, child: child),
+                                            ),
+                                            child: Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(30),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black.withOpacity(0.15),
+                                                    blurRadius: 12,
+                                                    offset: const Offset(0, 4),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(
+                                                    wasFav ? Icons.favorite_border : Icons.favorite,
+                                                    color: wasFav ? Colors.black38 : Colors.redAccent,
+                                                    size: 18,
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  Text(
+                                                    wasFav ? AppLocalizations.of(context)!.radioRemovedFromFavorites : AppLocalizations.of(context)!.radioAddedToFavoritesToast,
+                                                    style: const TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.w600, decoration: TextDecoration.none),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      );
-                                    }),
-                                  ],
+                                      ),
+                                    );
+                                    overlay.insert(entry);
+                                    Future.delayed(const Duration(seconds: 2), () => entry.remove());
+                                  },
+                                  child: Icon(
+                                    radioProvider.isFavorite(current.stationUuid) ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                                    color: radioProvider.isFavorite(current.stationUuid) ? Colors.white : Colors.white60,
+                                    size: 22,
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
                           ],
                         ),
-                      );
-                    }),
-
-                    SizedBox(height: (h * 0.02).clamp(8.0, 16.0)),
-
-                    if (_parseFrequency(freq) != null)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: FrequencyRuler(
-                          frequency: _parseFrequency(freq),
-                          primaryColor: primaryColor,
-                        ),
                       ),
 
+                      SizedBox(height: (h * 0.02).clamp(10.0, 24.0)),
 
-
-                    // ── 편성표 ──
-                    SizedBox(
-                      height: 68,
-                      child: Center(
-                        child: radioProvider.currentProgram != null
-                            ? _ProgramCard(
-                                program: radioProvider.currentProgram!,
-                                primaryColor: primaryColor,
-                                radioProvider: radioProvider,
-                                freq: freq,
+                      // ── 이미지(있으면) 또는 방송국명 박스, 채널명·시간 오버레이 ──
+                      Builder(builder: (ctx) {
+                        final programImage = radioProvider.currentProgram?['image'] as String?;
+                        final hasImage = programImage != null && programImage.isNotEmpty;
+                        final scheduleLoading = !_scheduleTimedOut &&
+                            radioProvider.scheduleList.isEmpty &&
+                            radioProvider.currentProgram == null;
+                        final timeStr = radioProvider.currentProgram != null
+                            ? _ProgramCard.getTimeStr(radioProvider.currentProgram!, radioProvider)
+                            : '';
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Stack(
+                            children: [
+                              scheduleLoading
+                                  ? Container(
+                                width: double.infinity,
+                                height: h * 0.28,
+                                color: const Color(0xFF17140F),
+                                alignment: Alignment.center,
+                                child: const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white24),
+                                ),
                               )
-                            : (freq.isNotEmpty
-                                ? Text(
-                                    freq,
-                                    style: TextStyle(
-                                      color: Colors.white.withOpacity(0.5),
-                                      fontSize: 13,
+                                  : hasImage
+                                  ? Image.network(
+                                programImage,
+                                width: double.infinity,
+                                height: h * 0.28,
+                                fit: BoxFit.cover,
+                                errorBuilder: (errCtx, err, stack) =>
+                                    RadioMoodPlaceholder(height: h * 0.28),
+                              )
+                                  : RadioMoodPlaceholder(height: h * 0.28),
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                child: Container(
+                                  padding: const EdgeInsets.fromLTRB(16, 28, 16, 14),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Colors.transparent,
+                                        Colors.black.withOpacity(0.75),
+                                      ],
                                     ),
-                                  )
-                                : const SizedBox.shrink()),
-                      ),
-                    ),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        current.name,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          height: 1.0,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      if (timeStr.isNotEmpty)
+                                        Transform.translate(
+                                          offset: const Offset(0, 0),
+                                          child: Text(
+                                            timeStr,
+                                            style: TextStyle(color: Colors.white.withOpacity(0.75), fontSize: 12, height: 1.0),
+                                          ),
+                                        ),
+                                      Builder(builder: (ctx) {
+                                        final smsNumber = radioProvider.smsNumberFor(current.name);
+                                        if (smsNumber == null) return const SizedBox.shrink();
+                                        return Padding(
+                                          padding: const EdgeInsets.only(top: 4),
+                                          child: GestureDetector(
+                                            onTap: () async {
+                                              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                              final uri = Uri(scheme: 'sms', path: smsNumber);
+                                              if (await canLaunchUrl(uri)) {
+                                                await launchUrl(uri);
+                                              }
+                                            },
+                                            child: Text(
+                                              '문자 참여 #$smsNumber',
+                                              style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 11),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
 
-                    if (radioProvider.currentProgram != null &&
-                        radioProvider.scheduleList.isNotEmpty) ...[
-                      const SizedBox(height: 4),
-                      _NextProgramLine(
-                        scheduleList: radioProvider.scheduleList,
-                        currentProgram: radioProvider.currentProgram!,
-                        radioProvider: radioProvider,
-                      ),
-                    ],
+                      SizedBox(height: (h * 0.02).clamp(8.0, 16.0)),
 
-                    SizedBox(height: h * 0.01),
+                      if (_parseFrequency(freq) != null)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: FrequencyRuler(
+                            frequency: _parseFrequency(freq),
+                            primaryColor: primaryColor,
+                          ),
+                        ),
 
-                    if (isPlaying) ...[
-                      const SizedBox(height: 10),
+
+
+                      // ── 편성표 ──
                       SizedBox(
-                        height: 20,
-                        child: EqualizerAnimation(color: primaryColor),
-                      ),
-                    ],
-
-                    // ── 상태 뱃지 ──
-                    _StatusBadge(state: state),
-
-                    if (isError)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(
-                          radioProvider.errorMessage ?? AppLocalizations.of(context)!.radioPlaybackFailed,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(color: Colors.redAccent, fontSize: 13),
+                        height: 68,
+                        child: Center(
+                          child: radioProvider.currentProgram != null
+                              ? _ProgramCard(
+                            program: radioProvider.currentProgram!,
+                            primaryColor: primaryColor,
+                            radioProvider: radioProvider,
+                            freq: freq,
+                          )
+                              : (freq.isNotEmpty
+                              ? Text(
+                            freq,
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.5),
+                              fontSize: 13,
+                            ),
+                          )
+                              : const SizedBox.shrink()),
                         ),
                       ),
 
-                    SizedBox(height: (h * 0.02).clamp(8.0, 20.0)),
+                      if (radioProvider.currentProgram != null &&
+                          radioProvider.scheduleList.isNotEmpty) ...[
+                        const SizedBox(height: 4),
+                        _NextProgramLine(
+                          scheduleList: radioProvider.scheduleList,
+                          currentProgram: radioProvider.currentProgram!,
+                          radioProvider: radioProvider,
+                        ),
+                      ],
 
-                    // ── 컨트롤 ──
-                    _Controls(
-                      isLoading: isLoading,
-                      isError: isError,
-                      isPlaying: isPlaying,
-                      primaryColor: primaryColor,
-                      currentIdx: _currentIdx,
-                      stationList: widget.stationList,
-                      radioProvider: radioProvider,
-                      current: current,
-                      onIndexChanged: (idx) => setState(() => _currentIdx = idx),
-                    ),
+                      SizedBox(height: h * 0.01),
 
-                    SizedBox(height: h * 0.01),
+                      if (isPlaying) ...[
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          height: 20,
+                          child: EqualizerAnimation(color: primaryColor),
+                        ),
+                      ],
 
-                    if (sleep != null) _SleepTimerBadge(remaining: sleep),
+                      // ── 상태 뱃지 ──
+                      _StatusBadge(state: state),
 
-                    SizedBox(height: h * 0.02),
-                  ],
+                      if (isError)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            radioProvider.errorMessage ?? AppLocalizations.of(context)!.radioPlaybackFailed,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(color: Colors.redAccent, fontSize: 13),
+                          ),
+                        ),
+
+                      SizedBox(height: (h * 0.02).clamp(8.0, 20.0)),
+
+                      // ── 컨트롤 ──
+                      _Controls(
+                        isLoading: isLoading,
+                        isError: isError,
+                        isPlaying: isPlaying,
+                        primaryColor: primaryColor,
+                        currentIdx: _currentIdx,
+                        stationList: widget.stationList,
+                        radioProvider: radioProvider,
+                        current: current,
+                        onIndexChanged: (idx) => setState(() => _currentIdx = idx),
+                      ),
+
+                      SizedBox(height: h * 0.01),
+
+                      if (sleep != null) _SleepTimerBadge(remaining: sleep),
+
+                      SizedBox(height: h * 0.02),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -610,99 +700,6 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
               },
             ),
           ),
-
-          // ── 플로팅 상단: 뒤로가기 + 즐겨찾기 ──
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // 뒤로가기
-                  _FloatButton(
-                    onTap: () {
-                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      Navigator.pop(context);
-                    },
-                    child: const Icon(Icons.expand_more, color: Colors.white, size: 24),
-                  ),
-                  Row(
-                    children: [
-                      _FloatButton(
-                        onTap: () {
-                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                          Share.share('지금 ${current.name} 듣고 있어요! 뮤직웨이브에서 같이 들어요 🎧\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
-                        },
-                        child: const Icon(Icons.share_outlined, color: Colors.white, size: 20),
-                      ),
-                      const SizedBox(width: 10),
-                  // 즐겨찾기
-                  _FloatButton(
-                    onTap: () {
-                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      final wasFav = radioProvider.isFavorite(current.stationUuid);
-                      radioProvider.toggleFavorite(current);
-                      final overlay = Overlay.of(context);
-                      final entry = OverlayEntry(
-                        builder: (_) => Positioned(
-                          top: 60, left: 0, right: 0,
-                          child: Center(
-                            child: TweenAnimationBuilder<double>(
-                              tween: Tween(begin: 0.0, end: 1.0),
-                              duration: const Duration(milliseconds: 300),
-                              builder: (_, value, child) => Opacity(
-                                opacity: value,
-                                child: Transform.scale(scale: 0.8 + 0.2 * value, child: child),
-                              ),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(30),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.15),
-                                      blurRadius: 12,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ],
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      wasFav ? Icons.favorite_border : Icons.favorite,
-                                      color: wasFav ? Colors.black38 : Colors.redAccent,
-                                      size: 18,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      wasFav ? AppLocalizations.of(context)!.radioRemovedFromFavorites : AppLocalizations.of(context)!.radioAddedToFavoritesToast,
-                                      style: const TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.w600, decoration: TextDecoration.none),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                      overlay.insert(entry);
-                      Future.delayed(const Duration(seconds: 2), () => entry.remove());
-                    },
-                    child: Icon(
-                      radioProvider.isFavorite(current.stationUuid) ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                      color: radioProvider.isFavorite(current.stationUuid) ? Colors.white : Colors.white60,
-                      size: 22,
-                    ),
-                  ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-
 
         ],
       ),
@@ -1238,7 +1235,7 @@ class _NextProgramLineState extends State<_NextProgramLine> {
     final currentTitle = _titleOf(widget.currentProgram);
     final currentStart = _startOf(widget.currentProgram);
     int idx = widget.scheduleList.indexWhere(
-      (p) => _titleOf(p) == currentTitle && _startOf(p) == currentStart,
+          (p) => _titleOf(p) == currentTitle && _startOf(p) == currentStart,
     );
     if (idx < 0) {
       idx = widget.scheduleList.indexWhere((p) => _titleOf(p) == currentTitle);
@@ -1265,23 +1262,23 @@ class _NextProgramLineState extends State<_NextProgramLine> {
             borderRadius: BorderRadius.circular(14),
             child: (nextImage != null && nextImage.isNotEmpty)
                 ? Image.network(
-                    nextImage,
-                    width: 76,
-                    height: 76,
-                    fit: BoxFit.cover,
-                    errorBuilder: (errCtx, err, stack) => Container(
-                      width: 76,
-                      height: 76,
-                      color: Colors.white.withOpacity(0.08),
-                      child: const Icon(Icons.radio, color: Colors.white38, size: 28),
-                    ),
-                  )
+              nextImage,
+              width: 76,
+              height: 76,
+              fit: BoxFit.cover,
+              errorBuilder: (errCtx, err, stack) => Container(
+                width: 76,
+                height: 76,
+                color: Colors.white.withOpacity(0.08),
+                child: const Icon(Icons.radio, color: Colors.white38, size: 28),
+              ),
+            )
                 : Container(
-                    width: 76,
-                    height: 76,
-                    color: Colors.white.withOpacity(0.08),
-                    child: const Icon(Icons.radio, color: Colors.white38, size: 28),
-                  ),
+              width: 76,
+              height: 76,
+              color: Colors.white.withOpacity(0.08),
+              child: const Icon(Icons.radio, color: Colors.white38, size: 28),
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -1721,59 +1718,59 @@ class _FavoritesSheet extends StatelessWidget {
                     trailing: isCurrent
                         ? Icon(Icons.graphic_eq, color: accent, size: 20)
                         : IconButton(
-                            icon: const Icon(Icons.close, color: Colors.black38, size: 20),
-                            onPressed: () {
-                              radioProvider.toggleFavorite(station);
-                              final overlay = Overlay.of(context);
-                              final entry = OverlayEntry(
-                                builder: (_) => Positioned(
-                                  bottom: 180, left: 0, right: 0,
-                                  child: Center(
-                                    child: TweenAnimationBuilder<double>(
-                                      tween: Tween(begin: 0.0, end: 1.0),
-                                      duration: const Duration(milliseconds: 300),
-                                      builder: (_, value, child) => Opacity(
-                                        opacity: value,
-                                        child: Transform.scale(scale: 0.85 + 0.15 * value, child: child),
+                      icon: const Icon(Icons.close, color: Colors.black38, size: 20),
+                      onPressed: () {
+                        radioProvider.toggleFavorite(station);
+                        final overlay = Overlay.of(context);
+                        final entry = OverlayEntry(
+                          builder: (_) => Positioned(
+                            bottom: 180, left: 0, right: 0,
+                            child: Center(
+                              child: TweenAnimationBuilder<double>(
+                                tween: Tween(begin: 0.0, end: 1.0),
+                                duration: const Duration(milliseconds: 300),
+                                builder: (_, value, child) => Opacity(
+                                  opacity: value,
+                                  child: Transform.scale(scale: 0.85 + 0.15 * value, child: child),
+                                ),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(30),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.15),
+                                        blurRadius: 12,
+                                        offset: const Offset(0, 4),
                                       ),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(30),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.15),
-                                              blurRadius: 12,
-                                              offset: const Offset(0, 4),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Icon(CupertinoIcons.heart, color: Colors.black38, size: 18),
-                                            const SizedBox(width: 8),
-                                            Text(
-                                              AppLocalizations.of(context)!.radioRemovedFromFavorites,
-                                              style: const TextStyle(
-                                                color: Colors.black87,
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w600,
-                                                decoration: TextDecoration.none,
-                                              ),
-                                            ),
-                                          ],
+                                    ],
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(CupertinoIcons.heart, color: Colors.black38, size: 18),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        AppLocalizations.of(context)!.radioRemovedFromFavorites,
+                                        style: const TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          decoration: TextDecoration.none,
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
                                 ),
-                              );
-                              overlay.insert(entry);
-                              Future.delayed(const Duration(seconds: 2), () => entry.remove());
-                            },
+                              ),
+                            ),
                           ),
+                        );
+                        overlay.insert(entry);
+                        Future.delayed(const Duration(seconds: 2), () => entry.remove());
+                      },
+                    ),
                     onTap: () {
                       Navigator.pop(context);
                       radioProvider.playStation(station);
@@ -1802,8 +1799,8 @@ class _SleepTimerBadge extends StatelessWidget {
     final timeText = h > 0
         ? l.sleepCountdownHMS(h, m, s)
         : m > 0
-            ? l.sleepCountdownMS(m, s)
-            : l.sleepCountdownS(s);
+        ? l.sleepCountdownMS(m, s)
+        : l.sleepCountdownS(s);
 
     return GestureDetector(
       onTap: () => context.read<RadioProvider>().cancelSleepTimer(),

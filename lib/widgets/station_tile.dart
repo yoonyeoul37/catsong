@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../models/radio_station.dart';
 import '../providers/radio_provider.dart';
+import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import 'station_logo.dart';
 import '../screens/radio_player_screen.dart';
@@ -14,6 +15,8 @@ class StationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const accent = AppTheme.fixedAccent;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
     final radioProvider = context.watch<RadioProvider>();
     final isPlaying =
         radioProvider.currentStation?.stationUuid == station.stationUuid;
@@ -29,7 +32,7 @@ class StationTile extends StatelessWidget {
           ),
         );
       },
-      splashColor: Colors.white.withOpacity(0.04),
+      splashColor: baseColor.withOpacity(0.04),
       highlightColor: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 13),
@@ -48,7 +51,7 @@ class StationTile extends StatelessWidget {
                   Text(
                     station.name,
                     style: TextStyle(
-                      color: isPlaying ? accent : Colors.white,
+                      color: isPlaying ? accent : baseColor,
                       fontSize: 15.5,
                       fontWeight: FontWeight.w600,
                       letterSpacing: -0.2,
@@ -64,7 +67,7 @@ class StationTile extends StatelessWidget {
                         '${station.bitrate} kbps',
                     ].join(' · '),
                     style: TextStyle(
-                        color: Colors.white.withOpacity(0.32), fontSize: 11.5),
+                        color: baseColor.withOpacity(0.45), fontSize: 11.5),
                   ),
                 ],
               ),
@@ -75,7 +78,7 @@ class StationTile extends StatelessWidget {
               IconButton(
                 icon: Icon(
                   isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                  color: isFav ? accent : Colors.white.withOpacity(0.25),
+                  color: isFav ? accent : baseColor.withOpacity(0.3),
                   size: 21,
                 ),
                 onPressed: () =>

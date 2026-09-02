@@ -439,6 +439,14 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                 _FloatButton(
                                   onTap: () {
                                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                    Navigator.pop(context);
+                                  },
+                                  child: Icon(Icons.queue_music, color: baseColor, size: 20),
+                                ),
+                                const SizedBox(width: 10),
+                                _FloatButton(
+                                  onTap: () {
+                                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                                     context.read<ThemeProvider>().setDarkMode(!isDarkMode);
                                   },
                                   child: Icon(

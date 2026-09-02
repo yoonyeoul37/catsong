@@ -23,12 +23,14 @@ class SongListTile extends StatelessWidget {
   final Song song;
   final int index;
   final List<Song> songList;
+  final bool forceWhiteText;
 
   const SongListTile({
     super.key,
     required this.song,
     required this.index,
     required this.songList,
+    this.forceWhiteText = false,
   });
 
   @override
@@ -38,7 +40,7 @@ class SongListTile extends StatelessWidget {
     final isCurrentSong = playerProvider.currentSong?.id == song.id;
     final primaryColor = Theme.of(context).colorScheme.primary;
     final isFav = musicProvider.isFavorite(song.id);
-    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final isDarkMode = forceWhiteText ? true : context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
 
     return InkWell(
@@ -73,7 +75,7 @@ class SongListTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
           color: isCurrentSong ? primaryColor.withOpacity(0.1) : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.zero,
         ),
         child: Row(
           children: [

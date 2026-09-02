@@ -277,6 +277,7 @@ class AlbumDetailScreen extends StatelessWidget {
                   delegate: SliverChildBuilderDelegate(
                         (context, index) {
                       return SongListTile(
+                        forceWhiteText: true,
                         song: album.songs[index],
                         index: index,
                         songList: album.songs,

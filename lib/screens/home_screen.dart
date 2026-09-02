@@ -43,6 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isSearching = false;
   bool _showBanner = false;
   bool _isSelectionMode = false;
+  final Map<int, GlobalKey> _songItemKeys = {};
+  int? _lastScrolledSongId;
   Set<int> _selectedSongIds = {};
   bool _showThemeHint = false;
 
@@ -149,6 +151,38 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final currentSong = context.read<PlayerProvider>().currentSong;
+      if (currentSong != null && currentSong.id != _lastScrolledSongId) {
+        _lastScrolledSongId = currentSong.id;
+        final key = _songItemKeys[currentSong.id];
+        final targetContext = key?.currentContext;
+        if (targetContext != null) {
+          Scrollable.ensureVisible(
+            targetContext,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeOutCubic,
+            alignment: 0.15,
+          );
+        }
+      }
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final currentSong = context.read<PlayerProvider>().currentSong;
+      if (currentSong != null && currentSong.id != _lastScrolledSongId) {
+        _lastScrolledSongId = currentSong.id;
+        final key = _songItemKeys[currentSong.id];
+        final targetContext = key?.currentContext;
+        if (targetContext != null) {
+          Scrollable.ensureVisible(
+            targetContext,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeOutCubic,
+            alignment: 0.15,
+          );
+        }
+      }
+    });
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       SystemChrome.setSystemUIOverlayStyle(
@@ -566,8 +600,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     final songs = musicProvider.songs;
                     final song = songs[index];
                     final isSelected = _selectedSongIds.contains(song.id);
+                    _songItemKeys.putIfAbsent(song.id, () => GlobalKey());
                     return TweenAnimationBuilder<double>(
-                      key: ValueKey('anim_${song.id}'),
+                      key: _songItemKeys[song.id],
                       tween: Tween(begin: 0.0, end: 1.0),
                       duration: const Duration(milliseconds: 320),
                       curve: Curves.easeOutCubic,

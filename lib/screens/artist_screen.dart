@@ -271,6 +271,7 @@ class ArtistDetailScreen extends StatelessWidget {
                         song: artist.songs[index],
                         index: index,
                         songList: artist.songs,
+                        forceWhiteText: true,
                       );
                     },
                     childCount: artist.songs.length,

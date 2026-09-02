@@ -24,6 +24,7 @@ import 'package:audio_service/audio_service.dart';
 import '../main.dart' show globalAudioHandler;
 import '../providers/player_provider.dart' show SimpleAudioHandler;
 import '../providers/theme_provider.dart';
+import '../widgets/seasonal_effect.dart';
 
 double? _parseFrequency(String? freq) {
   if (freq == null || freq.isEmpty) return null;
@@ -439,7 +440,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                 _FloatButton(
                                   onTap: () {
                                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                                    Navigator.pop(context);
+                                    Navigator.of(context).popUntil((route) => route.isFirst);
                                   },
                                   child: Icon(Icons.queue_music, color: baseColor, size: 20),
                                 ),

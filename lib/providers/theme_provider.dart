@@ -3,15 +3,24 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  Color _primaryColor = const Color(0xFF06858B);
+  Color _primaryColor = const Color(0xFF078CF6);
   double _textScale = 1.12;
   String _fontFamily = 'default';
   bool _isDarkMode = true;
+  bool _seasonalEffectEnabled = true;
 
   Color get primaryColor => _primaryColor;
   double get textScale => _textScale;
   String get fontFamily => _fontFamily;
   bool get isDarkMode => _isDarkMode;
+  bool get seasonalEffectEnabled => _seasonalEffectEnabled;
+
+  Future<void> setSeasonalEffectEnabled(bool value) async {
+    _seasonalEffectEnabled = value;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('seasonalEffectEnabled', value);
+    notifyListeners();
+  }
 
   Future<void> setDarkMode(bool value) async {
     _isDarkMode = value;
@@ -52,6 +61,7 @@ class ThemeProvider extends ChangeNotifier {
     final textScale = prefs.getDouble('textScale');
     final fontFamily = prefs.getString('fontFamily');
     final isDarkMode = prefs.getBool('isDarkMode');
+    final seasonalEffectEnabled = prefs.getBool('seasonalEffectEnabled');
     if (colorValue != null) {
       _primaryColor = Color(colorValue);
     }
@@ -63,6 +73,9 @@ class ThemeProvider extends ChangeNotifier {
     }
     if (isDarkMode != null) {
       _isDarkMode = isDarkMode;
+    }
+    if (seasonalEffectEnabled != null) {
+      _seasonalEffectEnabled = seasonalEffectEnabled;
     }
     notifyListeners();
   }

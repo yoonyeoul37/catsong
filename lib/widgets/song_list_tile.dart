@@ -86,7 +86,7 @@ class SongListTile extends StatelessWidget {
                   Text(
                     song.titleDisplay,
                     style: TextStyle(
-                      color: isCurrentSong ? const Color(0xFFFFD700) : baseColor,
+                      color: isCurrentSong ? primaryColor : baseColor,
                       fontSize: 15,
                       fontWeight: isCurrentSong ? FontWeight.w600 : FontWeight.w500,
                     ),

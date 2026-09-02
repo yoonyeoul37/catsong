@@ -9,6 +9,7 @@ import '../providers/music_provider.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/song_list_tile.dart';
+import '../providers/theme_provider.dart';
 
 class ArtistScreen extends StatelessWidget {
   final String searchQuery;
@@ -21,15 +22,18 @@ class ArtistScreen extends StatelessWidget {
         ? musicProvider.artists
         : musicProvider.searchArtists(searchQuery);
 
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+
     if (artists.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.person, size: 72, color: AppTheme.textHint),
+            Icon(Icons.person, size: 72, color: baseColor.withOpacity(0.3)),
             const SizedBox(height: 16),
             Text(AppLocalizations.of(context)!.noArtists,
-                style: const TextStyle(color: AppTheme.textSecondary, fontSize: 16)),
+                style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 16)),
           ],
         ),
       );
@@ -43,15 +47,15 @@ class ArtistScreen extends StatelessWidget {
             child: Row(
               children: [
                 Text(AppLocalizations.of(context)!.artists,
-                    style: const TextStyle(
-                        color: Colors.white,
+                    style: TextStyle(
+                        color: baseColor,
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
                         letterSpacing: -0.5)),
                 const SizedBox(width: 8),
                 Text('${artists.length}',
-                    style: const TextStyle(
-                        color: Colors.white38, fontSize: 16)),
+                    style: TextStyle(
+                        color: baseColor.withOpacity(0.38), fontSize: 16)),
               ],
             ),
           ),
@@ -74,6 +78,8 @@ class ArtistScreen extends StatelessWidget {
 
   Widget _buildArtistTile(BuildContext context, artist) {
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
     return InkWell(
       onTap: () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -103,9 +109,9 @@ class ArtistScreen extends StatelessWidget {
                   gaplessPlayback: true,
                 )
                     : Container(
-                  color: Colors.white.withOpacity(0.15),
-                  child: const Icon(Icons.person,
-                      color: Colors.white60, size: 28),
+                  color: baseColor.withOpacity(0.15),
+                  child: Icon(Icons.person,
+                      color: baseColor.withOpacity(0.6), size: 28),
                 ),
               ),
             ),
@@ -115,18 +121,18 @@ class ArtistScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(artist.displayName,
-                      style: const TextStyle(
-                          color: Colors.white,
+                      style: TextStyle(
+                          color: baseColor,
                           fontSize: 15,
                           fontWeight: FontWeight.w500)),
                   const SizedBox(height: 3),
                   Text('${artist.songCount} ${AppLocalizations.of(context)!.songCount} • ${artist.albumCount} ${AppLocalizations.of(context)!.albums}',
-                      style: const TextStyle(
-                          color: Colors.white38, fontSize: 12)),
+                      style: TextStyle(
+                          color: baseColor.withOpacity(0.38), fontSize: 12)),
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right, color: Colors.white24, size: 20),
+            Icon(Icons.chevron_right, color: baseColor.withOpacity(0.24), size: 20),
           ],
         ),
       ),
@@ -150,130 +156,130 @@ class ArtistDetailScreen extends StatelessWidget {
               imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
               child: artist.songs.first.albumArt != null
                   ? Image.memory(
-                      Uint8List.fromList(artist.songs.first.albumArt!),
-                      fit: BoxFit.cover,
-                      gaplessPlayback: true,
-                    )
+                Uint8List.fromList(artist.songs.first.albumArt!),
+                fit: BoxFit.cover,
+                gaplessPlayback: true,
+              )
                   : Image.asset(
-                      'assets/no_album2.jpg',
-                      fit: BoxFit.cover,
-                    ),
+                'assets/no_album2.jpg',
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           SizedBox.expand(
             child: Container(color: Colors.black.withOpacity(0.5)),
           ),
           CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 260,
-            pinned: true,
-            backgroundColor: AppTheme.background,
-            leading: IconButton(
-              onPressed: () {
-                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-            ),
-            flexibleSpace: FlexibleSpaceBar(
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  if (artist.songs.first.albumArt != null)
-                    Image.memory(
-                      Uint8List.fromList(artist.songs.first.albumArt!),
-                      fit: BoxFit.cover,
-                      gaplessPlayback: true,
-                    )
-                  else
-                    Image.asset('assets/no_album2.jpg', fit: BoxFit.cover),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.2),
-                          Colors.black.withOpacity(0.8),
-                          AppTheme.background,
-                        ],
-                        stops: const [0.0, 0.6, 1.0],
+            slivers: [
+              SliverAppBar(
+                expandedHeight: 260,
+                pinned: true,
+                backgroundColor: AppTheme.background,
+                leading: IconButton(
+                  onPressed: () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+                ),
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      if (artist.songs.first.albumArt != null)
+                        Image.memory(
+                          Uint8List.fromList(artist.songs.first.albumArt!),
+                          fit: BoxFit.cover,
+                          gaplessPlayback: true,
+                        )
+                      else
+                        Image.asset('assets/no_album2.jpg', fit: BoxFit.cover),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.black.withOpacity(0.2),
+                              Colors.black.withOpacity(0.8),
+                              AppTheme.background,
+                            ],
+                            stops: const [0.0, 0.6, 1.0],
+                          ),
+                        ),
                       ),
-                    ),
+                      Positioned(
+                        bottom: 16,
+                        left: 16,
+                        right: 16,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(artist.displayName,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: -0.5)),
+                            const SizedBox(height: 4),
+                            Text('${artist.songCount} ${AppLocalizations.of(context)!.songCount} • ${artist.albumCount} ${AppLocalizations.of(context)!.albums}',
+                                style: const TextStyle(
+                                    color: Colors.white60, fontSize: 14)),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  Positioned(
-                    bottom: 16,
-                    left: 16,
-                    right: 16,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(artist.displayName,
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 28,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: -0.5)),
-                        const SizedBox(height: 4),
-                        Text('${artist.songCount} ${AppLocalizations.of(context)!.songCount} • ${artist.albumCount} ${AppLocalizations.of(context)!.albums}',
-                            style: const TextStyle(
-                                color: Colors.white60, fontSize: 14)),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      context.read<PlayerProvider>().playFromList(artist.songs, 0);
-                      Navigator.pop(context);
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                          context.read<PlayerProvider>().playFromList(artist.songs, 0);
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.play_arrow, color: Colors.white60, size: 26),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                          final songs = List<Song>.from(artist.songs)..shuffle();
+                          context.read<PlayerProvider>().playFromList(songs, 0);
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.shuffle, color: Colors.white60, size: 20),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                      return SongListTile(
+                        song: artist.songs[index],
+                        index: index,
+                        songList: artist.songs,
+                      );
                     },
-                    icon: const Icon(Icons.play_arrow, color: Colors.white60, size: 26),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                    childCount: artist.songs.length,
                   ),
-                  IconButton(
-                    onPressed: () {
-                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      final songs = List<Song>.from(artist.songs)..shuffle();
-                      context.read<PlayerProvider>().playFromList(songs, 0);
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.shuffle, color: Colors.white60, size: 20),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                  ),
-                ],
+                ),
               ),
-            ),
+              const SliverPadding(padding: EdgeInsets.only(bottom: 80)),
+            ],
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                  return SongListTile(
-                    song: artist.songs[index],
-                    index: index,
-                    songList: artist.songs,
-                  );
-                },
-                childCount: artist.songs.length,
-              ),
-            ),
-          ),
-          const SliverPadding(padding: EdgeInsets.only(bottom: 80)),
-        ],
-      ),
         ],
       ),
     );

@@ -8,6 +8,7 @@ import '../providers/player_provider.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/song_list_tile.dart';
+import '../providers/theme_provider.dart';
 
 class FolderScreen extends StatelessWidget {
   const FolderScreen({super.key});
@@ -17,6 +18,8 @@ class FolderScreen extends StatelessWidget {
     final musicProvider = context.watch<MusicProvider>();
     final folders = musicProvider.folders;
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
 
     return CustomScrollView(
       slivers: [
@@ -26,15 +29,15 @@ class FolderScreen extends StatelessWidget {
             child: Row(
               children: [
                 Text(AppLocalizations.of(context)!.folders,
-                    style: const TextStyle(
-                        color: Colors.white,
+                    style: TextStyle(
+                        color: baseColor,
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
                         letterSpacing: -0.5)),
                 const SizedBox(width: 8),
                 Text('${folders.length}',
-                    style: const TextStyle(
-                        color: Colors.white38, fontSize: 16)),
+                    style: TextStyle(
+                        color: baseColor.withOpacity(0.38), fontSize: 16)),
               ],
             ),
           ),
@@ -46,11 +49,11 @@ class FolderScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.folder_open,
-                      size: 72, color: Colors.white.withOpacity(0.4)),
+                      size: 72, color: baseColor.withOpacity(0.4)),
                   const SizedBox(height: 16),
                   Text(AppLocalizations.of(context)!.folders,
-                      style: const TextStyle(
-                          color: AppTheme.textSecondary, fontSize: 16)),
+                      style: TextStyle(
+                          color: baseColor.withOpacity(0.6), fontSize: 16)),
                 ],
               ),
             ),
@@ -73,6 +76,7 @@ class FolderScreen extends StatelessWidget {
   }
 
   Widget _buildFolderTile(BuildContext context, MusicFolder folder, Color primaryColor) {
+    final baseColor = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
     return InkWell(
       onTap: () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -95,10 +99,10 @@ class FolderScreen extends StatelessWidget {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: baseColor.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: const Icon(Icons.folder, color: Colors.white70, size: 28),
+              child: Icon(Icons.folder, color: baseColor.withOpacity(0.7), size: 28),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -106,19 +110,19 @@ class FolderScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(folder.name,
-                      style: const TextStyle(
-                          color: Colors.white,
+                      style: TextStyle(
+                          color: baseColor,
                           fontSize: 15,
                           fontWeight: FontWeight.w500)),
                   const SizedBox(height: 3),
                   Text('${folder.songCount} ${AppLocalizations.of(context)!.songCount}',
-                      style: const TextStyle(
-                          color: Colors.white38, fontSize: 12)),
+                      style: TextStyle(
+                          color: baseColor.withOpacity(0.38), fontSize: 12)),
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right,
-                color: Colors.white24, size: 20),
+            Icon(Icons.chevron_right,
+                color: baseColor.withOpacity(0.24), size: 20),
           ],
         ),
       ),
@@ -133,20 +137,23 @@ class FolderDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: bgColor,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             expandedHeight: 220,
             pinned: true,
-            backgroundColor: AppTheme.background,
+            backgroundColor: bgColor,
             leading: IconButton(
               onPressed: () {
                 const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                 Navigator.pop(context);
               },
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+              icon: Icon(Icons.arrow_back_ios, color: baseColor),
             ),
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(
@@ -160,7 +167,7 @@ class FolderDetailScreen extends StatelessWidget {
                         colors: [
                           primaryColor.withOpacity(0.5),
                           primaryColor.withOpacity(0.2),
-                          AppTheme.background,
+                          bgColor,
                         ],
                         stops: const [0.0, 0.5, 1.0],
                       ),
@@ -177,23 +184,23 @@ class FolderDetailScreen extends StatelessWidget {
                           width: 72,
                           height: 72,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
+                            color: baseColor.withOpacity(0.15),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Icon(Icons.folder,
-                              color: Colors.white70, size: 40),
+                          child: Icon(Icons.folder,
+                              color: baseColor.withOpacity(0.7), size: 40),
                         ),
                         const SizedBox(height: 12),
                         Text(folder.name,
-                            style: const TextStyle(
-                                color: Colors.white,
+                            style: TextStyle(
+                                color: baseColor,
                                 fontSize: 24,
                                 fontWeight: FontWeight.w900,
                                 letterSpacing: -0.5)),
                         const SizedBox(height: 4),
                         Text('${folder.songCount} ${AppLocalizations.of(context)!.songCount}',
-                            style: const TextStyle(
-                                color: Colors.white60, fontSize: 13)),
+                            style: TextStyle(
+                                color: baseColor.withOpacity(0.6), fontSize: 13)),
                       ],
                     ),
                   ),
@@ -212,7 +219,7 @@ class FolderDetailScreen extends StatelessWidget {
                       context.read<PlayerProvider>().playFromList(folder.songs, 0);
                       Navigator.pop(context);
                     },
-                    icon: const Icon(Icons.play_arrow, color: Colors.white60, size: 26),
+                    icon: Icon(Icons.play_arrow, color: baseColor.withOpacity(0.6), size: 26),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
@@ -223,7 +230,7 @@ class FolderDetailScreen extends StatelessWidget {
                       context.read<PlayerProvider>().playFromList(songs, 0);
                       Navigator.pop(context);
                     },
-                    icon: const Icon(Icons.shuffle, color: Colors.white60, size: 20),
+                    icon: Icon(Icons.shuffle, color: baseColor.withOpacity(0.6), size: 20),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),

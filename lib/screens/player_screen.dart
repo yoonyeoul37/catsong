@@ -18,6 +18,7 @@ import 'edit_song_screen.dart';
 import 'lyrics_screen.dart';
 import '../l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
+import '../providers/theme_provider.dart';
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({super.key});
@@ -183,11 +184,12 @@ class _PlayerScreenState extends State<PlayerScreen>
     final primaryColor = Theme.of(context).colorScheme.primary;
 
     if (song == null) {
-      return const Scaffold(
+      final baseColorEmpty = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
+      return Scaffold(
         backgroundColor: Colors.transparent,
         body: Center(
           child: Text('No song is playing',
-              style: TextStyle(color: AppTheme.textSecondary)),
+              style: TextStyle(color: baseColorEmpty.withOpacity(0.6))),
         ),
       );
     }
@@ -253,8 +255,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                     label: playerProvider.loopMode == LoopMode.one
                         ? AppLocalizations.of(context)!.repeatOne
                         : playerProvider.loopMode == LoopMode.all
-                            ? AppLocalizations.of(context)!.repeatAll
-                            : AppLocalizations.of(context)!.noRepeat,
+                        ? AppLocalizations.of(context)!.repeatAll
+                        : AppLocalizations.of(context)!.noRepeat,
                     isActive: playerProvider.loopMode != LoopMode.off,
                     onTap: () {
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -299,7 +301,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 ],
               ),
             ),
-              ),
+          ),
         ),
         body: Stack(
           children: [
@@ -309,14 +311,14 @@ class _PlayerScreenState extends State<PlayerScreen>
                 imageFilter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
                 child: song.albumArt != null
                     ? Image.memory(
-                        Uint8List.fromList(song.albumArt!),
-                        fit: BoxFit.cover,
-                        gaplessPlayback: true,
-                      )
+                  Uint8List.fromList(song.albumArt!),
+                  fit: BoxFit.cover,
+                  gaplessPlayback: true,
+                )
                     : Image.asset(
-                        'assets/no_album2.jpg',
-                        fit: BoxFit.cover,
-                      ),
+                  'assets/no_album2.jpg',
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             SizedBox.expand(
@@ -404,23 +406,23 @@ class _PlayerScreenState extends State<PlayerScreen>
                             _buildTopBar(context, playerProvider, primaryColor),
                             constraints.maxHeight < 600
                                 ? SizedBox(
-                                    height: constraints.maxHeight * 0.35,
-                                    child: _buildAlbumArt(song, primaryColor),
-                                  )
+                              height: constraints.maxHeight * 0.35,
+                              child: _buildAlbumArt(song, primaryColor),
+                            )
                                 : Expanded(
-                                    flex: 5,
-                                    child: _buildAlbumArt(song, primaryColor),
-                                  ),
+                              flex: 5,
+                              child: _buildAlbumArt(song, primaryColor),
+                            ),
                             _buildEqualizer(playerProvider, primaryColor),
                             _buildCurrentLyrics(playerProvider, primaryColor),
                             constraints.maxHeight < 600
                                 ? _buildControls(
-                                    context, playerProvider, musicProvider, song, primaryColor)
+                                context, playerProvider, musicProvider, song, primaryColor)
                                 : Expanded(
-                                    flex: 4,
-                                    child: _buildControls(
-                                        context, playerProvider, musicProvider, song, primaryColor),
-                                  ),
+                              flex: 4,
+                              child: _buildControls(
+                                  context, playerProvider, musicProvider, song, primaryColor),
+                            ),
                           ],
                         ),
                       ),
@@ -437,6 +439,7 @@ class _PlayerScreenState extends State<PlayerScreen>
 
   Widget _buildTopBar(BuildContext context, PlayerProvider playerProvider, Color primaryColor) {
     final song = playerProvider.currentSong;
+    const baseColor = Colors.white;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Row(
@@ -446,22 +449,22 @@ class _PlayerScreenState extends State<PlayerScreen>
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
               Navigator.pop(context);
             },
-            icon: const Icon(Icons.keyboard_arrow_down,
-                color: AppTheme.textPrimary, size: 30),
+            icon: Icon(Icons.keyboard_arrow_down,
+                color: baseColor, size: 30),
           ),
           Expanded(
             child: Center(
               child: Text(AppLocalizations.of(context)!.nowPlaying,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      color: AppTheme.textSecondary,
+                  style: TextStyle(
+                      color: baseColor.withOpacity(0.7),
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
                       letterSpacing: 1.2)),
             ),
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: AppTheme.textPrimary),
+            icon: Icon(Icons.more_vert, color: baseColor),
             color: Colors.white,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12)),
@@ -557,24 +560,24 @@ class _PlayerScreenState extends State<PlayerScreen>
                 ],
               ),
               child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-              ClipOval(
-              child: song.albumArt != null
-                  ? SizedBox.expand(
+                alignment: Alignment.center,
+                children: [
+                  ClipOval(
+                    child: song.albumArt != null
+                        ? SizedBox.expand(
                       child: Image.memory(
                         Uint8List.fromList(song.albumArt!),
                         fit: BoxFit.cover,
                         gaplessPlayback: true,
                       ),
                     )
-                  : SizedBox.expand(
+                        : SizedBox.expand(
                       child: Image.asset(
                         'assets/no_album2.jpg',
                         fit: BoxFit.cover,
                       ),
                     ),
-              ),
+                  ),
                   // 중앙 구멍
                   Container(
                     width: 40,
@@ -916,17 +919,17 @@ class _PlayerScreenState extends State<PlayerScreen>
                 ),
                 child: song.albumArt != null
                     ? ClipOval(
-                        child: Image.memory(
-                          Uint8List.fromList(song.albumArt!),
-                          fit: BoxFit.cover,
-                          gaplessPlayback: true,
-                        ),
-                      )
+                  child: Image.memory(
+                    Uint8List.fromList(song.albumArt!),
+                    fit: BoxFit.cover,
+                    gaplessPlayback: true,
+                  ),
+                )
                     : const Center(
-                        child: Text('♪',
-                            style: TextStyle(
-                                color: Colors.white54, fontSize: 28)),
-                      ),
+                  child: Text('♪',
+                      style: TextStyle(
+                          color: Colors.white54, fontSize: 28)),
+                ),
               ),
             ),
           ),
@@ -1092,6 +1095,7 @@ class _PlayerScreenState extends State<PlayerScreen>
   Widget _buildControls(BuildContext context, PlayerProvider playerProvider,
       MusicProvider musicProvider, Song song, Color primaryColor) {
     final isFav = musicProvider.isFavorite(song.id);
+    const baseColor = Colors.white;
     return Padding(
       padding: const EdgeInsets.fromLTRB(28, 4, 28, 0),
       child: Column(
@@ -1103,8 +1107,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(song.titleDisplay,
-                        style: const TextStyle(
-                            color: AppTheme.textPrimary,
+                        style: TextStyle(
+                            color: baseColor,
                             fontSize: 20,
                             fontWeight: FontWeight.w900,
                             letterSpacing: -0.5),
@@ -1112,8 +1116,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                         overflow: TextOverflow.ellipsis),
                     const SizedBox(height: 0),
                     Text(song.artistDisplay,
-                        style: const TextStyle(
-                            color: AppTheme.textSecondary, fontSize: 12),
+                        style: TextStyle(
+                            color: baseColor.withOpacity(0.7), fontSize: 12),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis),
                   ],
@@ -1179,7 +1183,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 },
                 icon: Icon(
                   isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                  color: isFav ? Colors.redAccent : Colors.white60,
+                  color: isFav ? Colors.redAccent : baseColor.withOpacity(0.6),
                 ),
               ),
             ],
@@ -1187,10 +1191,10 @@ class _PlayerScreenState extends State<PlayerScreen>
           const SizedBox(height: 8),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: Colors.white70,
-              inactiveTrackColor: Colors.white24,
-              thumbColor: Colors.white,
-              overlayColor: Colors.white.withOpacity(0.1),
+              activeTrackColor: baseColor.withOpacity(0.7),
+              inactiveTrackColor: baseColor.withOpacity(0.24),
+              thumbColor: baseColor,
+              overlayColor: baseColor.withOpacity(0.1),
             ),
             child: Slider(
               value: playerProvider.progress,
@@ -1207,11 +1211,11 @@ class _PlayerScreenState extends State<PlayerScreen>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(playerProvider.formatDuration(playerProvider.position),
-                  style: const TextStyle(
-                      color: AppTheme.textSecondary, fontSize: 12)),
+                  style: TextStyle(
+                      color: baseColor.withOpacity(0.7), fontSize: 12)),
               Text(playerProvider.formatDuration(playerProvider.duration),
-                  style: const TextStyle(
-                      color: AppTheme.textSecondary, fontSize: 12)),
+                  style: TextStyle(
+                      color: baseColor.withOpacity(0.7), fontSize: 12)),
             ],
           ),
           const SizedBox(height: 8),
@@ -1224,7 +1228,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   playerProvider.playPrevious();
                 },
                 icon: const Icon(Icons.skip_previous),
-                color: AppTheme.textPrimary,
+                color: baseColor,
                 iconSize: 36,
               ),
               GestureDetector(
@@ -1236,20 +1240,20 @@ class _PlayerScreenState extends State<PlayerScreen>
                   width: 68,
                   height: 68,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
+                    color: baseColor.withOpacity(0.15),
                     shape: BoxShape.circle,
                   ),
                   child: playerProvider.isLoading
-                      ? const Padding(
-                    padding: EdgeInsets.all(18),
+                      ? Padding(
+                    padding: const EdgeInsets.all(18),
                     child: CircularProgressIndicator(
-                        strokeWidth: 2.5, color: Colors.black),
+                        strokeWidth: 2.5, color: baseColor),
                   )
                       : Icon(
                     playerProvider.isPlaying
                         ? Icons.pause
                         : Icons.play_arrow,
-                    color: Colors.white,
+                    color: baseColor,
                     size: 36,
                   ),
                 ),
@@ -1260,7 +1264,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   playerProvider.playNext();
                 },
                 icon: const Icon(Icons.skip_next),
-                color: AppTheme.textPrimary,
+                color: baseColor,
                 iconSize: 36,
               ),
             ],
@@ -1344,12 +1348,13 @@ class _PlayerScreenState extends State<PlayerScreen>
   }
 
   Widget _buildBottomBarItem(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required bool isActive,
-    required VoidCallback onTap,
-  }) {
+      BuildContext context, {
+        required IconData icon,
+        required String label,
+        required bool isActive,
+        required VoidCallback onTap,
+      }) {
+    const baseColor = Colors.white;
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -1360,14 +1365,14 @@ class _PlayerScreenState extends State<PlayerScreen>
           children: [
             Icon(
               icon,
-              color: isActive ? Colors.white : Colors.white60,
+              color: isActive ? baseColor : baseColor.withOpacity(0.6),
               size: 22,
             ),
             const SizedBox(height: 3),
             Text(
               label,
               style: TextStyle(
-                color: isActive ? Colors.white : Colors.white60,
+                color: isActive ? baseColor : baseColor.withOpacity(0.6),
                 fontSize: 10,
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
               ),

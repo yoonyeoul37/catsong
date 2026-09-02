@@ -9,6 +9,7 @@ import '../providers/music_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/song_list_tile.dart';
 import '../l10n/app_localizations.dart';
+import '../providers/theme_provider.dart';
 
 class AlbumScreen extends StatelessWidget {
   final String searchQuery;
@@ -21,6 +22,8 @@ class AlbumScreen extends StatelessWidget {
         ? musicProvider.albums
         : musicProvider.searchAlbums(searchQuery);
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
 
     return CustomScrollView(
       slivers: [
@@ -33,15 +36,15 @@ class AlbumScreen extends StatelessWidget {
                 Row(
                   children: [
                     Text(AppLocalizations.of(context)!.albums,
-                        style: const TextStyle(
-                            color: Colors.white,
+                        style: TextStyle(
+                            color: baseColor,
                             fontSize: 24,
                             fontWeight: FontWeight.w900,
                             letterSpacing: -0.5)),
                     const SizedBox(width: 8),
                     Text('${albums.length}',
-                        style: const TextStyle(
-                            color: Colors.white38, fontSize: 16)),
+                        style: TextStyle(
+                            color: baseColor.withOpacity(0.38), fontSize: 16)),
                   ],
                 ),
               ],
@@ -54,10 +57,10 @@ class AlbumScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.search_off, size: 72, color: Colors.white24),
+                  Icon(Icons.search_off, size: 72, color: baseColor.withOpacity(0.24)),
                   const SizedBox(height: 16),
                   Text(AppLocalizations.of(context)!.noAlbums,
-                      style: const TextStyle(color: Colors.white38, fontSize: 16)),
+                      style: TextStyle(color: baseColor.withOpacity(0.38), fontSize: 16)),
                 ],
               ),
             ),
@@ -114,7 +117,7 @@ class AlbumScreen extends StatelessWidget {
                 gaplessPlayback: true,
               )
                   : Container(
-                color: Colors.white.withOpacity(0.15),
+                color: (context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black).withOpacity(0.15),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   child: Image.asset('assets/no_album2.jpg', fit: BoxFit.cover),
@@ -124,15 +127,15 @@ class AlbumScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(album.displayName,
-              style: const TextStyle(
-                  color: Colors.white,
+              style: TextStyle(
+                  color: context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black,
                   fontSize: 13,
                   fontWeight: FontWeight.w600),
               maxLines: 1,
               overflow: TextOverflow.ellipsis),
           const SizedBox(height: 2),
           Text('${album.displayArtist} • ${album.songCount} ${AppLocalizations.of(context)!.songCount}',
-              style: const TextStyle(color: Colors.white38, fontSize: 12),
+              style: TextStyle(color: (context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black).withOpacity(0.38), fontSize: 12),
               maxLines: 1,
               overflow: TextOverflow.ellipsis),
         ],
@@ -158,134 +161,134 @@ class AlbumDetailScreen extends StatelessWidget {
               imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
               child: album.songs.first.albumArt != null
                   ? Image.memory(
-                      Uint8List.fromList(album.songs.first.albumArt!),
-                      fit: BoxFit.cover,
-                      gaplessPlayback: true,
-                    )
+                Uint8List.fromList(album.songs.first.albumArt!),
+                fit: BoxFit.cover,
+                gaplessPlayback: true,
+              )
                   : Image.asset(
-                      'assets/no_album2.jpg',
-                      fit: BoxFit.cover,
-                    ),
+                'assets/no_album2.jpg',
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           SizedBox.expand(
             child: Container(color: Colors.black.withOpacity(0.5)),
           ),
           CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 280,
-            pinned: true,
-            backgroundColor: AppTheme.background,
-            leading: IconButton(
-              onPressed: () {
-                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-            ),
-            flexibleSpace: FlexibleSpaceBar(
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  if (album.songs.first.albumArt != null)
-                    Image.memory(
-                      Uint8List.fromList(album.songs.first.albumArt!),
-                      fit: BoxFit.cover,
-                      gaplessPlayback: true,
-                    )
-                  else
-                    Image.asset('assets/no_album2.jpg', fit: BoxFit.cover),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.3),
-                          Colors.black.withOpacity(0.7),
-                          AppTheme.background,
-                        ],
-                        stops: const [0.0, 0.6, 1.0],
+            slivers: [
+              SliverAppBar(
+                expandedHeight: 280,
+                pinned: true,
+                backgroundColor: AppTheme.background,
+                leading: IconButton(
+                  onPressed: () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+                ),
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      if (album.songs.first.albumArt != null)
+                        Image.memory(
+                          Uint8List.fromList(album.songs.first.albumArt!),
+                          fit: BoxFit.cover,
+                          gaplessPlayback: true,
+                        )
+                      else
+                        Image.asset('assets/no_album2.jpg', fit: BoxFit.cover),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.black.withOpacity(0.3),
+                              Colors.black.withOpacity(0.7),
+                              AppTheme.background,
+                            ],
+                            stops: const [0.0, 0.6, 1.0],
+                          ),
+                        ),
                       ),
-                    ),
+                      Positioned(
+                        bottom: 16,
+                        left: 16,
+                        right: 16,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(album.displayName,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: -0.5)),
+                            const SizedBox(height: 4),
+                            Text(album.displayArtist,
+                                style: const TextStyle(
+                                    color: Colors.white70, fontSize: 14)),
+                            const SizedBox(height: 2),
+                            Text('${album.songCount} ${AppLocalizations.of(context)!.songCount}',
+                                style: const TextStyle(
+                                    color: Colors.white38, fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  Positioned(
-                    bottom: 16,
-                    left: 16,
-                    right: 16,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(album.displayName,
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: -0.5)),
-                        const SizedBox(height: 4),
-                        Text(album.displayArtist,
-                            style: const TextStyle(
-                                color: Colors.white70, fontSize: 14)),
-                        const SizedBox(height: 2),
-                        Text('${album.songCount} ${AppLocalizations.of(context)!.songCount}',
-                            style: const TextStyle(
-                                color: Colors.white38, fontSize: 13)),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      context.read<PlayerProvider>().playFromList(album.songs, 0);
-                      Navigator.pop(context);
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                          context.read<PlayerProvider>().playFromList(album.songs, 0);
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.play_arrow, color: Colors.white60, size: 26),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                          final songs = List<Song>.from(album.songs)..shuffle();
+                          context.read<PlayerProvider>().playFromList(songs, 0);
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.shuffle, color: Colors.white60, size: 20),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                      return SongListTile(
+                        song: album.songs[index],
+                        index: index,
+                        songList: album.songs,
+                      );
                     },
-                    icon: const Icon(Icons.play_arrow, color: Colors.white60, size: 26),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                    childCount: album.songs.length,
                   ),
-                  IconButton(
-                    onPressed: () {
-                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      final songs = List<Song>.from(album.songs)..shuffle();
-                      context.read<PlayerProvider>().playFromList(songs, 0);
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.shuffle, color: Colors.white60, size: 20),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                  ),
-                ],
+                ),
               ),
-            ),
+              const SliverPadding(padding: EdgeInsets.only(bottom: 80)),
+            ],
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                  return SongListTile(
-                    song: album.songs[index],
-                    index: index,
-                    songList: album.songs,
-                  );
-                },
-                childCount: album.songs.length,
-              ),
-            ),
-          ),
-          const SliverPadding(padding: EdgeInsets.only(bottom: 80)),
-        ],
-      ),
         ],
       ),
     );

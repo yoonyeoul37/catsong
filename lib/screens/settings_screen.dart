@@ -12,13 +12,13 @@ import '../theme/app_theme.dart';
 import 'ringtone_screen.dart';
 import '../l10n/app_localizations.dart';
 
-const _sBg = Color(0xFFF7F5F0);
-const _sCard = Color(0xFFFFFFFF);
-const _sText = Color(0xFF111111);
-const _sTextSub = Color(0xFF666666);
-const _sTextHint = Color(0xFF999999);
-const _sBorder = Color(0xFFE8E4DA);
-const _sInputBg = Color(0xFFEEEAE0);
+Color _sBg(bool d) => d ? const Color(0xFF17140F) : const Color(0xFFF7F5F0);
+Color _sCard(bool d) => d ? const Color(0xFF1E1B15) : const Color(0xFFFFFFFF);
+Color _sText(bool d) => d ? Colors.white : const Color(0xFF111111);
+Color _sTextSub(bool d) => d ? Colors.white70 : const Color(0xFF666666);
+Color _sTextHint(bool d) => d ? Colors.white38 : const Color(0xFF999999);
+Color _sBorder(bool d) => d ? Colors.white.withOpacity(0.12) : const Color(0xFFE8E4DA);
+Color _sInputBg(bool d) => d ? Colors.white.withOpacity(0.06) : const Color(0xFFEEEAE0);
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -74,17 +74,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final l = AppLocalizations.of(context)!;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     return Scaffold(
-      backgroundColor: _sBg,
+      backgroundColor: _sBg(isDarkMode),
       appBar: AppBar(
-        backgroundColor: _sBg,
+        backgroundColor: _sBg(isDarkMode),
         elevation: 0,
-        title: Text(l.settings, style: const TextStyle(color: _sText, fontSize: 17, fontWeight: FontWeight.w600, letterSpacing: -0.3)),
+        title: Text(l.settings, style: TextStyle(color: _sText(isDarkMode), fontSize: 17, fontWeight: FontWeight.w600, letterSpacing: -0.3)),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios, color: AppTheme.fixedAccent, size: 20),
         ),
-        bottom: const PreferredSize(preferredSize: Size.fromHeight(1), child: Divider(height: 1, color: _sBorder)),
+        bottom: PreferredSize(preferredSize: Size.fromHeight(1), child: Divider(height: 1, color: _sBorder(isDarkMode))),
       ),
       body: ListView(
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 32),
@@ -155,12 +156,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required VoidCallback onTap, required Color primaryColor,
     Widget? trailing, bool isFirst = false, bool isLast = false,
   }) {
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     return Container(
       decoration: BoxDecoration(
-        color: _sCard,
+        color: _sCard(isDarkMode),
         border: Border(
-          top: isFirst ? const BorderSide(color: _sBorder) : BorderSide.none,
-          bottom: const BorderSide(color: _sBorder),
+          top: isFirst ? BorderSide(color: _sBorder(isDarkMode)) : BorderSide.none,
+          bottom: BorderSide(color: _sBorder(isDarkMode)),
         ),
       ),
       child: InkWell(
@@ -171,10 +173,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Icon(icon, color: const Color(0xFFAAAAAA), size: 20),
             const SizedBox(width: 14),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(title, style: const TextStyle(color: _sText, fontSize: 14)),
+              Text(title, style: TextStyle(color: _sText(isDarkMode), fontSize: 14)),
               if (subtitle != null) ...[
                 const SizedBox(height: 2),
-                Text(subtitle, style: const TextStyle(color: _sTextHint, fontSize: 12)),
+                Text(subtitle, style: TextStyle(color: _sTextHint(isDarkMode), fontSize: 12)),
               ],
             ])),
             trailing ?? const Icon(Icons.chevron_right, color: Color(0xFFCCCCCC), size: 20),
@@ -223,6 +225,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _showPromoCodeDialog(BuildContext context) async {
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     final controller = TextEditingController();
     const accent = AppTheme.fixedAccent;
     final prefs = await SharedPreferences.getInstance();
@@ -230,14 +233,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (ctx) => Dialog(
-        backgroundColor: _sBg,
+        backgroundColor: _sBg(isDarkMode),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             Row(children: [
               const Icon(Icons.card_giftcard, color: accent, size: 20), const SizedBox(width: 8),
-              Text(AppLocalizations.of(context)!.promoCode, style: const TextStyle(color: _sText, fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(AppLocalizations.of(context)!.promoCode, style: TextStyle(color: _sText(isDarkMode), fontSize: 16, fontWeight: FontWeight.bold)),
             ]),
             const SizedBox(height: 20),
             if (isUnlocked) ...[
@@ -255,7 +258,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: const Icon(Icons.verified, color: accent, size: 28),
                   ),
                   const SizedBox(height: 12),
-                  Text(AppLocalizations.of(context)!.promoUnlocked, style: const TextStyle(color: _sText, fontSize: 15, fontWeight: FontWeight.w600)),
+                  Text(AppLocalizations.of(context)!.promoUnlocked, style: TextStyle(color: _sText(isDarkMode), fontSize: 15, fontWeight: FontWeight.w600)),
                 ]),
               ),
               const SizedBox(height: 16),
@@ -266,19 +269,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: Text(AppLocalizations.of(context)!.close),
                   )),
             ] else ...[
-              Text(AppLocalizations.of(context)!.promoEnter, style: const TextStyle(color: _sTextSub, fontSize: 13)),
+              Text(AppLocalizations.of(context)!.promoEnter, style: TextStyle(color: _sTextSub(isDarkMode), fontSize: 13)),
               const SizedBox(height: 12),
               TextField(
                 controller: controller, autofocus: true, textAlign: TextAlign.center,
-                style: const TextStyle(color: _sText, fontSize: 22, letterSpacing: 8, fontWeight: FontWeight.bold),
+                style: TextStyle(color: _sText(isDarkMode), fontSize: 22, letterSpacing: 8, fontWeight: FontWeight.bold),
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(filled: true, fillColor: _sInputBg, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)),
+                decoration: InputDecoration(filled: true, fillColor: _sInputBg(isDarkMode), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)),
               ),
               const SizedBox(height: 16),
               Row(children: [
                 Expanded(child: OutlinedButton(
                   onPressed: () => Navigator.pop(ctx),
-                  style: OutlinedButton.styleFrom(foregroundColor: _sTextHint, side: const BorderSide(color: _sBorder), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  style: OutlinedButton.styleFrom(foregroundColor: _sTextHint(isDarkMode), side: BorderSide(color: _sBorder(isDarkMode)), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                   child: Text(AppLocalizations.of(context)!.cancel),
                 )),
                 const SizedBox(width: 8),
@@ -304,6 +307,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showPlayerStyleDialog(BuildContext context) async {
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     final prefs = await SharedPreferences.getInstance();
     int currentStyle = prefs.getInt('albumArtStyle') ?? 1;
     const accent = AppTheme.fixedAccent;
@@ -319,10 +323,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          backgroundColor: _sBg,
+          backgroundColor: _sBg(isDarkMode),
           title: Row(children: [
             const Icon(Icons.style, color: accent, size: 20), const SizedBox(width: 8),
-            Text(l.playerStyle, style: const TextStyle(color: _sText, fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(l.playerStyle, style: TextStyle(color: _sText(isDarkMode), fontSize: 16, fontWeight: FontWeight.bold)),
           ]),
           content: SizedBox(width: double.maxFinite,
             child: ListView.builder(
@@ -338,16 +342,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     margin: const EdgeInsets.only(bottom: 8),
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                     decoration: BoxDecoration(
-                      color: isSelected ? accent.withOpacity(0.1) : _sInputBg,
+                      color: isSelected ? accent.withOpacity(0.1) : _sInputBg(isDarkMode),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: isSelected ? accent : Colors.transparent),
                     ),
                     child: Row(children: [
-                      Icon(style['icon'] as IconData, color: isSelected ? accent : _sTextHint, size: 24),
+                      Icon(style['icon'] as IconData, color: isSelected ? accent : _sTextHint(isDarkMode), size: 24),
                       const SizedBox(width: 12),
                       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Text(style['name'] as String, style: TextStyle(color: isSelected ? accent : _sText, fontSize: 14, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
-                        Text(style['desc'] as String, style: const TextStyle(color: _sTextSub, fontSize: 11)),
+                        Text(style['name'] as String, style: TextStyle(color: isSelected ? accent : _sText(isDarkMode), fontSize: 14, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+                        Text(style['desc'] as String, style: TextStyle(color: _sTextSub(isDarkMode), fontSize: 11)),
                       ])),
                       if (isSelected) const Icon(Icons.check_circle, color: accent, size: 20),
                     ]),
@@ -363,16 +367,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showFontDialog(BuildContext context) {
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     const accent = AppTheme.fixedAccent;
     final themeProvider = context.read<ThemeProvider>();
     showDialog(
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          backgroundColor: _sBg,
+          backgroundColor: _sBg(isDarkMode),
           title: Row(children: [
             const Icon(Icons.font_download, color: accent, size: 20), const SizedBox(width: 8),
-            Text(AppLocalizations.of(context)!.fontChange, style: const TextStyle(color: _sText, fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.fontChange, style: TextStyle(color: _sText(isDarkMode), fontSize: 16, fontWeight: FontWeight.bold)),
           ]),
           content: SizedBox(width: double.maxFinite,
             child: ListView.builder(
@@ -388,14 +393,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     margin: const EdgeInsets.only(bottom: 8),
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                     decoration: BoxDecoration(
-                      color: isSelected ? accent.withOpacity(0.1) : _sInputBg,
+                      color: isSelected ? accent.withOpacity(0.1) : _sInputBg(isDarkMode),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: isSelected ? accent : Colors.transparent),
                     ),
                     child: Row(children: [
-                      Icon(Icons.font_download, color: isSelected ? accent : _sTextHint, size: 22),
+                      Icon(Icons.font_download, color: isSelected ? accent : _sTextHint(isDarkMode), size: 22),
                       const SizedBox(width: 12),
-                      Expanded(child: Text(_getFontName(context, font['key']!), style: TextStyle(color: isSelected ? accent : _sText, fontSize: 14, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal))),
+                      Expanded(child: Text(_getFontName(context, font['key']!), style: TextStyle(color: isSelected ? accent : _sText(isDarkMode), fontSize: 14, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal))),
                       if (isSelected) const Icon(Icons.check_circle, color: accent, size: 20),
                     ]),
                   ),
@@ -415,6 +420,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showColorPicker(BuildContext context) {
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     final themeProvider = context.read<ThemeProvider>();
     final primaryColor = Theme.of(context).colorScheme.primary;
     Color pickerColor = themeProvider.primaryColor;
@@ -423,7 +429,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
     showModalBottomSheet(
       context: context,
-      backgroundColor: _sBg,
+      backgroundColor: _sBg(isDarkMode),
       isScrollControlled: true,
       useSafeArea: true,
       shape: const RoundedRectangleBorder(
@@ -442,7 +448,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 16),
                 Row(children: [
                   Icon(Icons.palette, color: primaryColor, size: 20), const SizedBox(width: 8),
-                  Text(AppLocalizations.of(context)!.themeColor, style: const TextStyle(color: _sText, fontSize: 16, fontWeight: FontWeight.bold)),
+                  Text(AppLocalizations.of(context)!.themeColor, style: TextStyle(color: _sText(isDarkMode), fontSize: 16, fontWeight: FontWeight.bold)),
                 ]),
                 const SizedBox(height: 16),
                 ColorPicker(
@@ -463,15 +469,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(color: _sInputBg, borderRadius: BorderRadius.circular(10)),
+                    decoration: BoxDecoration(color: _sInputBg(isDarkMode), borderRadius: BorderRadius.circular(10)),
                     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       Container(width: 20, height: 20, decoration: BoxDecoration(color: pickerColor, shape: BoxShape.circle, border: Border.all(color: Colors.black12))),
                       const SizedBox(width: 8),
                       SizedBox(width: 110,
                         child: TextField(
                           controller: hexController,
-                          style: const TextStyle(color: _sText, fontSize: 14, fontWeight: FontWeight.bold, letterSpacing: 2),
-                          cursorColor: _sText,
+                          style: TextStyle(color: _sText(isDarkMode), fontSize: 14, fontWeight: FontWeight.bold, letterSpacing: 2),
+                          cursorColor: _sText(isDarkMode),
                           decoration: const InputDecoration(border: InputBorder.none, isDense: true, contentPadding: EdgeInsets.zero),
                           onSubmitted: (value) {
                             try {
@@ -503,7 +509,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         width: 36, height: 36,
                         decoration: BoxDecoration(
                           color: color, shape: BoxShape.circle,
-                          border: Border.all(color: isSelected ? const Color(0xFF888888) : _sBorder, width: isSelected ? 3 : 1),
+                          border: Border.all(color: isSelected ? const Color(0xFF888888) : _sBorder(isDarkMode), width: isSelected ? 3 : 1),
                           boxShadow: isSelected ? [BoxShadow(color: color.withOpacity(0.4), blurRadius: 6)] : null,
                         ),
                         child: isSelected ? Icon(Icons.check, color: color.computeLuminance() > 0.5 ? Colors.black : Colors.white, size: 16) : null,
@@ -515,7 +521,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Row(children: [
                   Expanded(child: OutlinedButton(
                     onPressed: () => Navigator.pop(ctx),
-                    style: OutlinedButton.styleFrom(foregroundColor: _sTextSub, side: const BorderSide(color: _sBorder), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                    style: OutlinedButton.styleFrom(foregroundColor: _sTextSub(isDarkMode), side: BorderSide(color: _sBorder(isDarkMode)), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                     child: Text(AppLocalizations.of(context)!.cancel),
                   )),
                   const SizedBox(width: 8),
@@ -548,26 +554,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showTextSizeDialog(BuildContext context) {
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     final themeProvider = context.read<ThemeProvider>();
     const accent = AppTheme.fixedAccent;
     showDialog(
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (context, setDialogState) => Dialog(
-          backgroundColor: _sBg,
+          backgroundColor: _sBg(isDarkMode),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               Row(children: [
                 const Icon(Icons.text_fields, color: accent, size: 20), const SizedBox(width: 8),
-                Text(AppLocalizations.of(context)!.textSize, style: const TextStyle(color: _sText, fontSize: 16, fontWeight: FontWeight.bold)),
+                Text(AppLocalizations.of(context)!.textSize, style: TextStyle(color: _sText(isDarkMode), fontSize: 16, fontWeight: FontWeight.bold)),
               ]),
               const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(color: _sInputBg, borderRadius: BorderRadius.circular(12)),
-                child: Text(AppLocalizations.of(context)!.preview, style: TextStyle(color: _sText, fontSize: 16 * themeProvider.textScale)),
+                decoration: BoxDecoration(color: _sInputBg(isDarkMode), borderRadius: BorderRadius.circular(12)),
+                child: Text(AppLocalizations.of(context)!.preview, style: TextStyle(color: _sText(isDarkMode), fontSize: 16 * themeProvider.textScale)),
               ),
               const SizedBox(height: 16),
               SliderTheme(
@@ -583,19 +590,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Text(AppLocalizations.of(context)!.small, style: const TextStyle(color: _sTextSub, fontSize: 12)),
+                Text(AppLocalizations.of(context)!.small, style: TextStyle(color: _sTextSub(isDarkMode), fontSize: 12)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(color: accent.withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
                   child: Text('${(themeProvider.textScale * 100).toInt()}%', style: const TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.bold)),
                 ),
-                Text(AppLocalizations.of(context)!.large, style: const TextStyle(color: _sTextSub, fontSize: 12)),
+                Text(AppLocalizations.of(context)!.large, style: TextStyle(color: _sTextSub(isDarkMode), fontSize: 12)),
               ]),
               const SizedBox(height: 16),
               Row(children: [
                 Expanded(child: OutlinedButton(
                   onPressed: () { themeProvider.setTextScale(1.13); setDialogState(() {}); },
-                  style: OutlinedButton.styleFrom(foregroundColor: _sTextSub, side: const BorderSide(color: _sBorder), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  style: OutlinedButton.styleFrom(foregroundColor: _sTextSub(isDarkMode), side: BorderSide(color: _sBorder(isDarkMode)), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                   child: Text(AppLocalizations.of(context)!.defaultValue),
                 )),
                 const SizedBox(width: 8),

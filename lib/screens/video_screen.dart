@@ -10,6 +10,7 @@ import '../providers/video_provider.dart';
 import '../models/video.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
+import '../providers/theme_provider.dart';
 
 class VideoScreen extends StatefulWidget {
   const VideoScreen({super.key});
@@ -33,10 +34,13 @@ class _VideoScreenState extends State<VideoScreen> {
   @override
   Widget build(BuildContext context) {
     final videoProvider = context.watch<VideoProvider>();
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
 
     if (videoProvider.permissionDenied) {
       return Scaffold(
-        backgroundColor: AppTheme.background,
+        backgroundColor: bgColor,
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(32),
@@ -44,24 +48,24 @@ class _VideoScreenState extends State<VideoScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.video_library_outlined,
-                    size: 72, color: Colors.white.withOpacity(0.5)),
+                    size: 72, color: baseColor.withOpacity(0.5)),
                 const SizedBox(height: 24),
                 Text(AppLocalizations.of(context)!.videoPermissionRequired,
-                    style: const TextStyle(
-                        color: AppTheme.textPrimary,
+                    style: TextStyle(
+                        color: baseColor,
                         fontSize: 20,
                         fontWeight: FontWeight.bold)),
                 const SizedBox(height: 12),
                 Text(AppLocalizations.of(context)!.videoPermissionMessage,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        color: AppTheme.textSecondary, fontSize: 14, height: 1.6)),
+                    style: TextStyle(
+                        color: baseColor.withOpacity(0.7), fontSize: 14, height: 1.6)),
                 const SizedBox(height: 32),
                 ElevatedButton(
                   onPressed: () => openAppSettings(),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white.withOpacity(0.15),
-                    foregroundColor: Colors.white,
+                    backgroundColor: baseColor.withOpacity(0.15),
+                    foregroundColor: baseColor,
                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                   ),
@@ -76,27 +80,27 @@ class _VideoScreenState extends State<VideoScreen> {
     }
 
     if (videoProvider.isLoading) {
-      return const Scaffold(
-        backgroundColor: AppTheme.background,
+      return Scaffold(
+        backgroundColor: bgColor,
         body: Center(
-          child: CircularProgressIndicator(color: Colors.white60),
+          child: CircularProgressIndicator(color: baseColor.withOpacity(0.6)),
         ),
       );
     }
 
     if (videoProvider.videos.isEmpty) {
       return Scaffold(
-        backgroundColor: AppTheme.background,
+        backgroundColor: bgColor,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.video_library_outlined,
-                  size: 72, color: Colors.white.withOpacity(0.4)),
+                  size: 72, color: baseColor.withOpacity(0.4)),
               const SizedBox(height: 16),
               Text(AppLocalizations.of(context)!.noVideosFound,
-                  style: const TextStyle(
-                      color: AppTheme.textSecondary, fontSize: 16)),
+                  style: TextStyle(
+                      color: baseColor.withOpacity(0.7), fontSize: 16)),
             ],
           ),
         ),
@@ -104,13 +108,13 @@ class _VideoScreenState extends State<VideoScreen> {
     }
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: bgColor,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             floating: true,
             snap: true,
-            backgroundColor: AppTheme.background,
+            backgroundColor: bgColor,
             expandedHeight: 80 * MediaQuery.of(context).textScaler.scale(1.0),
             flexibleSpace: FlexibleSpaceBar(
               background: SafeArea(
@@ -120,13 +124,13 @@ class _VideoScreenState extends State<VideoScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(AppLocalizations.of(context)!.videos,
-                          style: const TextStyle(
-                              color: AppTheme.textPrimary,
+                          style: TextStyle(
+                              color: baseColor,
                               fontSize: 18,
                               fontWeight: FontWeight.bold)),
                       Text(AppLocalizations.of(context)!.videoCount(videoProvider.videos.length),
-                          style: const TextStyle(
-                              color: AppTheme.textSecondary, fontSize: 13)),
+                          style: TextStyle(
+                              color: baseColor.withOpacity(0.7), fontSize: 13)),
                     ],
                   ),
                 ),
@@ -192,9 +196,11 @@ class _VideoTileState extends State<_VideoTile> {
   }
 
   Future<void> _showOptions(BuildContext context) async {
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.surfaceVariant,
+      backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
       builder: (ctx) => SafeArea(
@@ -202,9 +208,9 @@ class _VideoTileState extends State<_VideoTile> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: const Icon(Icons.edit, color: Colors.white70),
+              leading: Icon(Icons.edit, color: baseColor.withOpacity(0.7)),
               title: Text(AppLocalizations.of(context)!.rename,
-                  style: const TextStyle(color: AppTheme.textPrimary)),
+                  style: TextStyle(color: baseColor)),
               onTap: () {
                 Navigator.pop(ctx);
                 _renameVideo(context);
@@ -213,7 +219,7 @@ class _VideoTileState extends State<_VideoTile> {
             ListTile(
               leading: const Icon(Icons.delete, color: Colors.redAccent),
               title: Text(AppLocalizations.of(context)!.delete,
-                  style: const TextStyle(color: AppTheme.textPrimary)),
+                  style: TextStyle(color: baseColor)),
               onTap: () {
                 Navigator.pop(ctx);
                 _deleteVideo(context);
@@ -226,34 +232,37 @@ class _VideoTileState extends State<_VideoTile> {
   }
 
   Future<void> _renameVideo(BuildContext context) async {
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final dialogBg = isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0);
     final controller = TextEditingController(text: widget.video.titleDisplay);
     final newName = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.surfaceVariant,
+        backgroundColor: dialogBg,
         title: Text(AppLocalizations.of(context)!.rename,
-            style: const TextStyle(color: AppTheme.textPrimary)),
+            style: TextStyle(color: baseColor)),
         content: TextField(
           controller: controller,
           autofocus: true,
-          style: const TextStyle(color: AppTheme.textPrimary),
-          decoration: const InputDecoration(
+          style: TextStyle(color: baseColor),
+          decoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.white60)),
+                borderSide: BorderSide(color: baseColor.withOpacity(0.6))),
             focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.white)),
+                borderSide: BorderSide(color: baseColor)),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(AppLocalizations.of(context)!.cancel,
-                style: const TextStyle(color: AppTheme.textHint)),
+                style: TextStyle(color: baseColor.withOpacity(0.4))),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, controller.text),
             child: Text(AppLocalizations.of(context)!.save,
-                style: const TextStyle(color: Colors.white70)),
+                style: TextStyle(color: baseColor.withOpacity(0.7))),
           ),
         ],
       ),
@@ -270,7 +279,7 @@ class _VideoTileState extends State<_VideoTile> {
           SnackBar(
             content: Text(AppLocalizations.of(context)!.nameChanged,
                 style: const TextStyle(color: Colors.white)),
-            backgroundColor: AppTheme.surfaceVariant,
+            backgroundColor: dialogBg,
             duration: const Duration(seconds: 2),
           ),
         );
@@ -286,19 +295,22 @@ class _VideoTileState extends State<_VideoTile> {
   }
 
   Future<void> _deleteVideo(BuildContext context) async {
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final dialogBg = isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0);
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.surfaceVariant,
+        backgroundColor: dialogBg,
         title: Text(AppLocalizations.of(context)!.deleteVideoTitle,
-            style: const TextStyle(color: AppTheme.textPrimary)),
+            style: TextStyle(color: baseColor)),
         content: Text(AppLocalizations.of(context)!.deleteVideoConfirm(widget.video.titleDisplay),
-            style: const TextStyle(color: AppTheme.textSecondary)),
+            style: TextStyle(color: baseColor.withOpacity(0.7))),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
             child: Text(AppLocalizations.of(context)!.cancel,
-                style: const TextStyle(color: AppTheme.textHint)),
+                style: TextStyle(color: baseColor.withOpacity(0.4))),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
@@ -345,70 +357,74 @@ class _VideoTileState extends State<_VideoTile> {
           ),
         );
       },
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppTheme.cardColor,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius:
-                const BorderRadius.vertical(top: Radius.circular(12)),
-                child: _thumbnail != null
-                    ? Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.memory(
-                      _thumbnail!,
-                      fit: BoxFit.cover,
-                    ),
-                    Center(
-                      child: Icon(
-                        Icons.play_circle_outline,
-                        color: Colors.white.withOpacity(0.8),
-                        size: 36,
+      child: Builder(builder: (ctx) {
+        final isDarkMode = ctx.watch<ThemeProvider>().isDarkMode;
+        final baseColor = isDarkMode ? Colors.white : Colors.black;
+        return Container(
+          decoration: BoxDecoration(
+            color: baseColor.withOpacity(0.06),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(12)),
+                  child: _thumbnail != null
+                      ? Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.memory(
+                        _thumbnail!,
+                        fit: BoxFit.cover,
                       ),
+                      Center(
+                        child: Icon(
+                          Icons.play_circle_outline,
+                          color: Colors.white.withOpacity(0.8),
+                          size: 36,
+                        ),
+                      ),
+                    ],
+                  )
+                      : Container(
+                    color: baseColor.withOpacity(0.1),
+                    child: Center(
+                      child: Icon(Icons.play_circle_outline,
+                          color: baseColor.withOpacity(0.6),
+                          size: 40),
                     ),
-                  ],
-                )
-                    : Container(
-                  color: AppTheme.surfaceVariant,
-                  child: const Center(
-                    child: Icon(Icons.play_circle_outline,
-                        color: Colors.white60,
-                        size: 40),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      widget.video.titleDisplay,
-                      style: const TextStyle(
-                          color: AppTheme.textPrimary,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.video.titleDisplay,
+                        style: TextStyle(
+                            color: baseColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
-                  Text(
-                    widget.video.durationFormatted,
-                    style: const TextStyle(
-                        color: AppTheme.textHint, fontSize: 10),
-                  ),
-                ],
+                    Text(
+                      widget.video.durationFormatted,
+                      style: TextStyle(
+                          color: baseColor.withOpacity(0.35), fontSize: 10),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }

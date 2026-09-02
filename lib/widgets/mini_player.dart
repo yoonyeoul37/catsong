@@ -9,6 +9,7 @@ import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../screens/player_screen.dart';
 import 'equalizer_animation.dart';
+import '../providers/theme_provider.dart';
 
 class MiniPlayer extends StatelessWidget {
   const MiniPlayer({super.key});
@@ -19,6 +20,8 @@ class MiniPlayer extends StatelessWidget {
     final song = playerProvider.currentSong;
     final primaryColor = Theme.of(context).colorScheme.primary;
     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
 
     if (song == null) return const SizedBox.shrink();
 
@@ -69,9 +72,9 @@ class MiniPlayer extends StatelessWidget {
           child: Container(
             height: 72,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.08),
+              color: isDarkMode ? Colors.white.withOpacity(0.08) : const Color(0xFFEDE7DA).withOpacity(0.92),
               border: Border(
-                top: BorderSide(color: Colors.white.withOpacity(0.10)),
+                top: BorderSide(color: baseColor.withOpacity(0.10)),
               ),
             ),
             child: Column(
@@ -86,9 +89,9 @@ class MiniPlayer extends StatelessWidget {
                     height: 2,
                     child: LinearProgressIndicator(
                       value: playerProvider.progress,
-                      backgroundColor: Colors.white12,
+                      backgroundColor: baseColor.withOpacity(0.12),
                       valueColor: AlwaysStoppedAnimation<Color>(
-                          Colors.white.withOpacity(0.4)),
+                          baseColor.withOpacity(0.4)),
                     ),
                   ),
                 ),
@@ -140,7 +143,7 @@ class MiniPlayer extends StatelessWidget {
                                   child: SizedBox(
                                     width: 20,
                                     height: 16,
-                                    child: EqualizerAnimation(color: Colors.white70),
+                                    child: EqualizerAnimation(color: Colors.white),
                                   ),
                                 ),
                               ),
@@ -155,8 +158,8 @@ class MiniPlayer extends StatelessWidget {
                             children: [
                               Text(
                                 song.titleDisplay,
-                                style: const TextStyle(
-                                    color: Colors.white,
+                                style: TextStyle(
+                                    color: baseColor,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600),
                                 maxLines: 1,
@@ -168,8 +171,8 @@ class MiniPlayer extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       song.artistDisplay,
-                                      style: const TextStyle(
-                                          color: Colors.white60,
+                                      style: TextStyle(
+                                          color: baseColor.withOpacity(0.6),
                                           fontSize: 12),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -178,8 +181,8 @@ class MiniPlayer extends StatelessWidget {
                                   const SizedBox(width: 8),
                                   Text(
                                     '${playerProvider.formatDuration(playerProvider.position)} / ${playerProvider.formatDuration(playerProvider.duration)}',
-                                    style: const TextStyle(
-                                        color: Colors.white38,
+                                    style: TextStyle(
+                                        color: baseColor.withOpacity(0.38),
                                         fontSize: 11),
                                   ),
                                 ],
@@ -193,8 +196,8 @@ class MiniPlayer extends StatelessWidget {
                             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                             playerProvider.playPrevious();
                           },
-                          icon: const Icon(Icons.skip_previous,
-                              color: Colors.white70),
+                          icon: Icon(Icons.skip_previous,
+                              color: baseColor.withOpacity(0.7)),
                           iconSize: 26,
                           padding: const EdgeInsets.all(4),
                           constraints: const BoxConstraints(
@@ -210,21 +213,21 @@ class MiniPlayer extends StatelessWidget {
                             width: 40,
                             height: 40,
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.15),
+                              color: baseColor.withOpacity(0.15),
                               shape: BoxShape.circle,
                             ),
                             child: playerProvider.isLoading
-                                ? const Padding(
-                              padding: EdgeInsets.all(10),
+                                ? Padding(
+                              padding: const EdgeInsets.all(10),
                               child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: Colors.white70),
+                                  color: baseColor.withOpacity(0.7)),
                             )
                                 : Icon(
                               playerProvider.isPlaying
                                   ? Icons.pause
                                   : Icons.play_arrow,
-                              color: Colors.white70,
+                              color: baseColor.withOpacity(0.7),
                               size: 22,
                             ),
                           ),
@@ -235,8 +238,8 @@ class MiniPlayer extends StatelessWidget {
                             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                             playerProvider.playNext();
                           },
-                          icon: const Icon(Icons.skip_next,
-                              color: Colors.white70),
+                          icon: Icon(Icons.skip_next,
+                              color: baseColor.withOpacity(0.7)),
                           iconSize: 26,
                           padding: const EdgeInsets.all(4),
                           constraints: const BoxConstraints(

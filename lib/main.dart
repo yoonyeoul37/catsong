@@ -205,10 +205,11 @@ class AppInitializer extends StatefulWidget {
   State<AppInitializer> createState() => _AppInitializerState();
 }
 
-class _AppInitializerState extends State<AppInitializer> {
+class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final musicProvider = context.read<MusicProvider>();
       if (musicProvider.songs.isEmpty && !musicProvider.isLoading && !musicProvider.hasPermission == false) {
@@ -233,6 +234,19 @@ class _AppInitializerState extends State<AppInitializer> {
       await _checkAndRequestReview();
       await _checkForUpdate();
     });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _checkForUpdate();
+    }
   }
 
   Future<void> _checkForUpdate() async {

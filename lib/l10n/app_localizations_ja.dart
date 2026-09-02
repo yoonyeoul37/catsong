@@ -1516,4 +1516,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get darkModeOff => 'オフ';
+
+  @override
+  String get rateApp => 'アプリを評価する';
 }

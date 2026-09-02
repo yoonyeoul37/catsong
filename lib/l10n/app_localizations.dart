@@ -3017,6 +3017,12 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'꺼짐'**
   String get darkModeOff;
+
+  /// No description provided for @rateApp.
+  ///
+  /// In ko, this message translates to:
+  /// **'앱 평가하기'**
+  String get rateApp;
 }
 
 class _AppLocalizationsDelegate

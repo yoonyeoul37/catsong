@@ -24,6 +24,7 @@ import 'package:audio_service/audio_service.dart';
 import '../main.dart' show globalAudioHandler;
 import '../providers/player_provider.dart' show SimpleAudioHandler;
 import '../providers/theme_provider.dart';
+import 'settings_screen.dart';
 import '../widgets/seasonal_effect.dart';
 
 double? _parseFrequency(String? freq) {
@@ -432,7 +433,38 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                 _FloatButton(
                                   onTap: () {
                                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                                    Share.share('지금 ${current.name} 듣고 있어요! 뮤직웨이브에서 같이 들어요 🎧\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                                    showModalBottomSheet(
+                                      context: context,
+                                      backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
+                                      shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+                                      builder: (ctx) => SafeArea(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            ListTile(
+                                              leading: Icon(Icons.share_outlined, color: baseColor),
+                                              title: Text('친구에게 공유하기', style: TextStyle(color: baseColor)),
+                                              onTap: () {
+                                                Navigator.pop(ctx);
+                                                Share.share('지금 ${current.name} 듣고 있어요! 뮤직웨이브에서 같이 들어요 🎧\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                                              },
+                                            ),
+                                            ListTile(
+                                              leading: Icon(Icons.mood, color: baseColor),
+                                              title: Text('앱 평가하기', style: TextStyle(color: baseColor)),
+                                              onTap: () async {
+                                                Navigator.pop(ctx);
+                                                final uri = Uri.parse('https://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                                                if (await canLaunchUrl(uri)) {
+                                                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Icon(Icons.share_outlined, color: baseColor, size: 20),
                                 ),
@@ -445,6 +477,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                   child: Icon(Icons.queue_music, color: baseColor, size: 20),
                                 ),
                                 const SizedBox(width: 10),
+
                                 _FloatButton(
                                   onTap: () {
                                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -513,8 +546,19 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                   child: Icon(
                                     radioProvider.isFavorite(current.stationUuid) ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
                                     color: radioProvider.isFavorite(current.stationUuid) ? baseColor : baseColor.withOpacity(0.6),
-                                    size: 22,
+                                    size: 18,
                                   ),
+                                ),
+                                const SizedBox(width: 10),
+                                _FloatButton(
+                                  onTap: () {
+                                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                                    );
+                                  },
+                                  child: Icon(Icons.settings_outlined, color: baseColor, size: 18),
                                 ),
                               ],
                             ),
@@ -1540,7 +1584,7 @@ class _FloatButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 40, height: 40,
+        width: 36, height: 36,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: baseColor.withOpacity(0.07),

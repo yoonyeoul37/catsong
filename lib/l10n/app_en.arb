@@ -510,5 +510,6 @@
   "radioExitConfirmButton": "Exit",
   "darkMode": "Dark Mode",
   "darkModeOn": "On",
-  "darkModeOff": "Off"
+  "darkModeOff": "Off",
+   "rateApp": "Rate App"
 }

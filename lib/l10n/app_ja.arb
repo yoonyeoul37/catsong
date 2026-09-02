@@ -510,5 +510,6 @@
   "radioExitConfirmButton": "終了",
     "darkMode": "ダークモード",
     "darkModeOn": "オン",
-    "darkModeOff": "オフ"
+    "darkModeOff": "オフ",
+    "rateApp": "アプリを評価する"
 }

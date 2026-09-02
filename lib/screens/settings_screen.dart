@@ -134,6 +134,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           _buildTile(context, icon: Icons.card_giftcard_outlined, title: l.promoCode, onTap: () => _showPromoCodeDialog(context), primaryColor: primaryColor),
+          _buildTile(context, icon: Icons.star_outline, title: l.rateApp, onTap: () => _launchUrl('https://play.google.com/store/apps/details?id=kr.ssing.catsong'), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.privacy_tip_outlined, title: l.privacyPolicy, onTap: () => _launchUrl(l.privacyPolicyUrl), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.description_outlined, title: l.termsOfService, onTap: () => _launchUrl(l.termsOfServiceUrl), primaryColor: primaryColor, isLast: true),
           const SizedBox(height: 24),

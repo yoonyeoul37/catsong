@@ -485,5 +485,6 @@
   "radioExitConfirmButton": "종료",
   "darkMode": "다크 모드",
   "darkModeOn": "켜짐",
-  "darkModeOff": "꺼짐"
+  "darkModeOff": "꺼짐",
+    "rateApp": "앱 평가하기"
 }

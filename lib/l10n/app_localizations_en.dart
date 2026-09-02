@@ -1523,4 +1523,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get darkModeOff => 'Off';
+
+  @override
+  String get rateApp => 'Rate App';
 }

@@ -513,5 +513,6 @@
   "radioExitConfirmButton": "結束",
   "darkMode": "深色模式",
   "darkModeOn": "開啟",
-  "darkModeOff": "關閉"
+  "darkModeOff": "關閉",
+   "rateApp": "評分應用程式"
 }

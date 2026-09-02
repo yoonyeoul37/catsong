@@ -1516,4 +1516,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get darkModeOff => '關閉';
+
+  @override
+  String get rateApp => '評分應用程式';
 }

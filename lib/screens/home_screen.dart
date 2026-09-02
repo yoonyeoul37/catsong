@@ -24,6 +24,8 @@ import '../l10n/app_localizations.dart';
 import 'package:marquee/marquee.dart';
 import 'package:flutter/services.dart';
 import '../providers/theme_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -308,6 +310,46 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
             icon: Icons.radio_outlined,
+            baseColor: baseColor,
+          ),
+          const SizedBox(width: 8),
+          _AppBarCircleButton(
+            onTap: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+                builder: (ctx) => SafeArea(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.share_outlined, color: baseColor),
+                        title: Text('친구에게 공유하기', style: TextStyle(color: baseColor)),
+                        onTap: () {
+                          Navigator.pop(ctx);
+                          Share.share('뮤직웨이브 앱으로 음악 들어요! 🎧\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                        },
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.mood, color: baseColor),
+                        title: Text('앱 평가하기', style: TextStyle(color: baseColor)),
+                        onTap: () async {
+                          Navigator.pop(ctx);
+                          final uri = Uri.parse('https://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                          if (await canLaunchUrl(uri)) {
+                            await launchUrl(uri, mode: LaunchMode.externalApplication);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+            icon: Icons.share_outlined,
             baseColor: baseColor,
           ),
           const SizedBox(width: 8),

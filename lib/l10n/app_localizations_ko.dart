@@ -1515,4 +1515,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get darkModeOff => '꺼짐';
+
+  @override
+  String get rateApp => '앱 평가하기';
 }

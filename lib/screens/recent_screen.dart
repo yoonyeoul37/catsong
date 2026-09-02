@@ -3,10 +3,9 @@ import 'package:provider/provider.dart';
 import '../models/song.dart';
 import '../providers/music_provider.dart';
 import '../providers/player_provider.dart';
+import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/song_list_tile.dart';
-import '../l10n/app_localizations.dart';
-import '../l10n/app_localizations.dart';
 import '../l10n/app_localizations.dart';
 
 String _formatPlayedAt(BuildContext context, DateTime dt) {
@@ -27,6 +26,8 @@ class RecentScreen extends StatelessWidget {
     final musicProvider = context.watch<MusicProvider>();
     final recentSongs = musicProvider.recentSongs;
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
 
     return CustomScrollView(
       slivers: [
@@ -36,15 +37,15 @@ class RecentScreen extends StatelessWidget {
             child: Row(
               children: [
                 Text(AppLocalizations.of(context)!.recent,
-                    style: const TextStyle(
-                        color: Colors.white,
+                    style: TextStyle(
+                        color: baseColor,
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
                         letterSpacing: -0.5)),
                 const SizedBox(width: 8),
                 Text('${recentSongs.length}',
-                    style: const TextStyle(
-                        color: Colors.white38, fontSize: 16)),
+                    style: TextStyle(
+                        color: baseColor.withOpacity(0.38), fontSize: 16)),
                 const Spacer(),
                 if (recentSongs.isNotEmpty) ...[
                   IconButton(
@@ -70,7 +71,7 @@ class RecentScreen extends StatelessWidget {
                       overlay.insert(entry);
                       Future.delayed(const Duration(milliseconds: 800), () => entry.remove());
                     },
-                    icon: const Icon(Icons.play_arrow, color: Colors.white60, size: 24),
+                    icon: Icon(Icons.play_arrow, color: baseColor.withOpacity(0.6), size: 24),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
@@ -98,13 +99,13 @@ class RecentScreen extends StatelessWidget {
                       overlay.insert(entry);
                       Future.delayed(const Duration(milliseconds: 800), () => entry.remove());
                     },
-                    icon: const Icon(Icons.shuffle, color: Colors.white60, size: 20),
+                    icon: Icon(Icons.shuffle, color: baseColor.withOpacity(0.6), size: 20),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
                   IconButton(
                     onPressed: () => _showClearAllDialog(context),
-                    icon: const Icon(Icons.delete_sweep, color: Colors.white38, size: 24),
+                    icon: Icon(Icons.delete_sweep, color: baseColor.withOpacity(0.38), size: 24),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
@@ -113,7 +114,7 @@ class RecentScreen extends StatelessWidget {
             ),
           ),
         ),
-        
+
         if (recentSongs.isEmpty)
           SliverFillRemaining(
             child: Center(
@@ -121,14 +122,14 @@ class RecentScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.history,
-                      size: 72, color: Colors.white.withOpacity(0.4)),
+                      size: 72, color: baseColor.withOpacity(0.4)),
                   const SizedBox(height: 16),
                   Text(AppLocalizations.of(context)!.noRecentSongs,
-                      style: const TextStyle(
-                          color: Colors.white38, fontSize: 16)),
+                      style: TextStyle(
+                          color: baseColor.withOpacity(0.38), fontSize: 16)),
                   const SizedBox(height: 8),
                   Text(AppLocalizations.of(context)!.playMusic,
-                      style: const TextStyle(color: Colors.white24, fontSize: 13)),
+                      style: TextStyle(color: baseColor.withOpacity(0.24), fontSize: 13)),
                 ],
               ),
             ),
@@ -160,8 +161,8 @@ class RecentScreen extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                             child: Text(
                               _formatPlayedAt(context, song.lastPlayedAt!),
-                              style: const TextStyle(
-                                  color: Colors.white24, fontSize: 11),
+                              style: TextStyle(
+                                  color: baseColor.withOpacity(0.24), fontSize: 11),
                             ),
                           ),
                         SongListTile(
@@ -184,23 +185,26 @@ class RecentScreen extends StatelessWidget {
 
   void _showClearAllDialog(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final dialogBg = isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0);
     showDialog(
       context: context,
       builder: (ctx) => Dialog(
-        backgroundColor: const Color(0xFF1A1A1A),
+        backgroundColor: dialogBg,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.delete_sweep, color: Colors.redAccent, size: 48),
+              const Icon(Icons.delete_sweep, color: Colors.redAccent, size: 48),
               const SizedBox(height: 16),
               Text(AppLocalizations.of(context)!.clearRecent,
-                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                  style: TextStyle(color: baseColor, fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               Text(AppLocalizations.of(context)!.clearRecentConfirm,
-                  style: const TextStyle(color: Colors.white54, fontSize: 13),
+                  style: TextStyle(color: baseColor.withOpacity(0.54), fontSize: 13),
                   textAlign: TextAlign.center),
               const SizedBox(height: 24),
               Row(
@@ -209,8 +213,8 @@ class RecentScreen extends StatelessWidget {
                     child: OutlinedButton(
                       onPressed: () => Navigator.pop(ctx),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white54,
-                        side: const BorderSide(color: Colors.white24),
+                        foregroundColor: baseColor.withOpacity(0.54),
+                        side: BorderSide(color: baseColor.withOpacity(0.24)),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
                       ),

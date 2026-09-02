@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/song.dart';
 import '../providers/music_provider.dart';
 import '../providers/player_provider.dart';
+import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/song_list_tile.dart';
@@ -16,6 +17,8 @@ class FavoritesScreen extends StatelessWidget {
     final musicProvider = context.watch<MusicProvider>();
     final favorites = musicProvider.favorites;
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
 
     return CustomScrollView(
       slivers: [
@@ -25,15 +28,15 @@ class FavoritesScreen extends StatelessWidget {
             child: Row(
               children: [
                 Text(AppLocalizations.of(context)!.favorites,
-                    style: const TextStyle(
-                        color: Colors.white,
+                    style: TextStyle(
+                        color: baseColor,
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
                         letterSpacing: -0.5)),
                 const SizedBox(width: 8),
                 Text('${favorites.length}',
-                    style: const TextStyle(
-                        color: Colors.white38, fontSize: 16)),
+                    style: TextStyle(
+                        color: baseColor.withOpacity(0.38), fontSize: 16)),
               ],
             ),
           ),
@@ -70,8 +73,8 @@ class FavoritesScreen extends StatelessWidget {
                         context.read<PlayerProvider>().playFromList(songs, 0);
                       },
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.white24),
+                        foregroundColor: baseColor,
+                        side: BorderSide(color: baseColor.withOpacity(0.24)),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
@@ -91,15 +94,15 @@ class FavoritesScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(CupertinoIcons.heart,
-                      size: 72, color: Colors.white24),
+                  Icon(CupertinoIcons.heart,
+                      size: 72, color: baseColor.withOpacity(0.24)),
                   const SizedBox(height: 16),
                   Text(AppLocalizations.of(context)!.favorites,
-                      style: const TextStyle(
-                          color: Colors.white38, fontSize: 16)),
+                      style: TextStyle(
+                          color: baseColor.withOpacity(0.38), fontSize: 16)),
                   const SizedBox(height: 8),
                   Text(AppLocalizations.of(context)!.playMusic,
-                      style: const TextStyle(color: Colors.white24, fontSize: 13)),
+                      style: TextStyle(color: baseColor.withOpacity(0.24), fontSize: 13)),
                 ],
               ),
             ),

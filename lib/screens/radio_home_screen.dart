@@ -231,7 +231,7 @@ class RadioHomeScreen extends StatelessWidget {
           IconButton(
             onPressed: () {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const RadioFavoritesScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => RadioFavoritesScreen()));
             },
             icon: Icon(CupertinoIcons.heart, color: isDarkMode ? Colors.white60 : Colors.black45, size: 21),
           ),

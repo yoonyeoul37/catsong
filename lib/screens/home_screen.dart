@@ -169,22 +169,6 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
     });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final currentSong = context.read<PlayerProvider>().currentSong;
-      if (currentSong != null && currentSong.id != _lastScrolledSongId) {
-        _lastScrolledSongId = currentSong.id;
-        final key = _songItemKeys[currentSong.id];
-        final targetContext = key?.currentContext;
-        if (targetContext != null) {
-          Scrollable.ensureVisible(
-            targetContext,
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.easeOutCubic,
-            alignment: 0.15,
-          );
-        }
-      }
-    });
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       SystemChrome.setSystemUIOverlayStyle(

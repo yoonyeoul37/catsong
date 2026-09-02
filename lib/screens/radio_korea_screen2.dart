@@ -275,6 +275,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
     final baseColor = isDarkMode ? Colors.white : Colors.black;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!(ModalRoute.of(context)?.isCurrent ?? true)) return;
       SystemChrome.setSystemUIOverlayStyle(
         isDarkMode
             ? const SystemUiOverlayStyle(
@@ -299,6 +300,17 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        systemOverlayStyle: isDarkMode
+            ? const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.light,
+                statusBarBrightness: Brightness.dark,
+              )
+            : const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.dark,
+                statusBarBrightness: Brightness.light,
+              ),
         centerTitle: true,
         leading: IconButton(
           onPressed: () {

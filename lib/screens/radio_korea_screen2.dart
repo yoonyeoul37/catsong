@@ -21,6 +21,8 @@ class RadioKoreaScreen extends StatefulWidget {
 }
 
 class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
+  final Map<String, GlobalKey> _stationItemKeys = {};
+  String? _lastScrolledStationName;
   _ViewMode _mode = _ViewMode.all;
 
   static const Map<String, Color> _regionColors = {
@@ -112,6 +114,24 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
   Widget _buildAllList(BuildContext context, RadioProvider radioProvider) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final radioStations = koreanStations.map((ks) => _toRadioStation(ks)).toList();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final currentName = radioProvider.currentStation?.name;
+      if (currentName != null && currentName != _lastScrolledStationName) {
+        _lastScrolledStationName = currentName;
+        final key = _stationItemKeys[currentName];
+        final targetContext = key?.currentContext;
+        if (targetContext != null) {
+          Scrollable.ensureVisible(
+            targetContext,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeOutCubic,
+            alignment: 0.15,
+          );
+        }
+      }
+    });
+
     return ListView.separated(
       padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
       itemCount: koreanStations.length,
@@ -120,12 +140,16 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         final ks = koreanStations[i];
         final current = radioProvider.currentStation;
         final isPlaying = current?.name == ks.name && radioProvider.isPlaying;
-        return _StationTile(
-          station: ks,
-          isPlaying: isPlaying,
-          radioStation: radioStations[i],
-          stationList: radioStations,
-          stationIndex: i,
+        _stationItemKeys.putIfAbsent(ks.name, () => GlobalKey());
+        return Container(
+          key: _stationItemKeys[ks.name],
+          child: _StationTile(
+            station: ks,
+            isPlaying: isPlaying,
+            radioStation: radioStations[i],
+            stationList: radioStations,
+            stationIndex: i,
+          ),
         );
       },
     );

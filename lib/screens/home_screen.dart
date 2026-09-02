@@ -245,15 +245,17 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       actions: [
         if (!_isSearching) ...[
-          IconButton(
-            onPressed: () {
+          _AppBarCircleButton(
+            onTap: () {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
               setState(() => _isSearching = true);
             },
-            icon: Icon(Icons.search, color: baseColor, size: 23),
+            icon: Icons.search,
+            baseColor: baseColor,
           ),
-          IconButton(
-            onPressed: () {
+          const SizedBox(width: 8),
+          _AppBarCircleButton(
+            onTap: () {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
               Navigator.push(
                 context,
@@ -271,10 +273,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             },
-            icon: Icon(Icons.radio_outlined, color: baseColor, size: 23),
+            icon: Icons.radio_outlined,
+            baseColor: baseColor,
           ),
-          IconButton(
-            onPressed: () {
+          const SizedBox(width: 8),
+          _AppBarCircleButton(
+            onTap: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              context.read<ThemeProvider>().setDarkMode(!isDarkMode);
+            },
+            icon: isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+            baseColor: baseColor,
+          ),
+          const SizedBox(width: 8),
+          _AppBarCircleButton(
+            onTap: () {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
               Navigator.push(
                 context,
@@ -287,9 +300,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             },
-            icon: Icon(Icons.settings_outlined, color: baseColor, size: 23),
+            icon: Icons.settings_outlined,
+            baseColor: baseColor,
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 12),
         ] else
           Transform.translate(
             offset: const Offset(-12, 0),
@@ -799,6 +813,33 @@ class _HomeScreenState extends State<HomeScreen> {
             }),
           ),
         ),
+      ),
+    );
+  }
+}
+class _AppBarCircleButton extends StatelessWidget {
+  final VoidCallback onTap;
+  final IconData icon;
+  final Color baseColor;
+  const _AppBarCircleButton({
+    required this.onTap,
+    required this.icon,
+    required this.baseColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: baseColor.withOpacity(0.07),
+          border: Border.all(color: baseColor.withOpacity(0.08)),
+        ),
+        child: Icon(icon, color: baseColor, size: 18),
       ),
     );
   }

@@ -11,6 +11,7 @@ import '../widgets/radio_mini_player.dart';
 import '../widgets/station_logo.dart';
 import 'radio_player_screen.dart';
 import '../l10n/app_localizations.dart';
+import '../providers/theme_provider.dart';
 
 class RadioCountryStationsScreen extends StatefulWidget {
   final RadioCountry country;
@@ -172,42 +173,76 @@ class _RadioCountryStationsScreenState
         .toList();
     final isLoading = radioProvider.isLoadingCountryStations;
     final current = radioProvider.currentStation;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChrome.setSystemUIOverlayStyle(
+        isDarkMode
+            ? const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: Color(0xFF17140F),
+          systemNavigationBarIconBrightness: Brightness.light,
+        )
+            : const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+          systemNavigationBarColor: Color(0xFFEDE7DA),
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
+      );
+    });
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: bgColor,
       extendBody: false,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: bgColor,
         elevation: 0,
+        systemOverlayStyle: isDarkMode
+            ? const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+        )
+            : const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+        ),
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_ios,
-              color: Colors.white, size: 20),
+          icon: Icon(Icons.arrow_back_ios,
+              color: baseColor, size: 20),
         ),
         title: RichText(
           text: TextSpan(
             children: [
-              const TextSpan(
+              TextSpan(
                 text: '\u201C',
-                style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w700),
+                style: TextStyle(color: baseColor, fontSize: 22, fontWeight: FontWeight.w700),
               ),
               TextSpan(
                 text: _sloganFor(context, widget.country.code),
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: baseColor,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                   fontStyle: FontStyle.italic,
                   letterSpacing: -0.2,
                 ),
               ),
-              const TextSpan(
+              TextSpan(
                 text: ' \u201D',
-                style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w700),
+                style: TextStyle(color: baseColor, fontSize: 22, fontWeight: FontWeight.w700),
               ),
             ],
           ),
@@ -216,114 +251,114 @@ class _RadioCountryStationsScreenState
       body: SafeArea(
         top: false,
         child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 4, 24, 4),
-            child: Container(
-              height: 48,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.06),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white.withOpacity(0.08)),
-              ),
-              child: Center(
-                child: TextField(
-                  controller: _searchController,
-                  onChanged: (v) => setState(() => _query = v),
-                  style: const TextStyle(color: Colors.white, fontSize: 14.5),
-                  textAlignVertical: TextAlignVertical.center,
-                  decoration: InputDecoration(
-                    hintText: AppLocalizations.of(context)!.search,
-                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.35), fontSize: 14.5),
-                    prefixIcon: Icon(Icons.search, color: Colors.white.withOpacity(0.4), size: 20),
-                    suffixIcon: _query.isNotEmpty
-                        ? IconButton(
-                      icon: Icon(Icons.close, color: Colors.white.withOpacity(0.4), size: 18),
-                      onPressed: () {
-                        _searchController.clear();
-                        setState(() => _query = '');
-                      },
-                    )
-                        : null,
-                    border: InputBorder.none,
-                    isDense: true,
-                    contentPadding: EdgeInsets.zero,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 4, 24, 4),
+              child: Container(
+                height: 48,
+                decoration: BoxDecoration(
+                  color: baseColor.withOpacity(0.06),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: baseColor.withOpacity(0.08)),
+                ),
+                child: Center(
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: (v) => setState(() => _query = v),
+                    style: TextStyle(color: baseColor, fontSize: 14.5),
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)!.search,
+                      hintStyle: TextStyle(color: baseColor.withOpacity(0.35), fontSize: 14.5),
+                      prefixIcon: Icon(Icons.search, color: baseColor.withOpacity(0.4), size: 20),
+                      suffixIcon: _query.isNotEmpty
+                          ? IconButton(
+                        icon: Icon(Icons.close, color: baseColor.withOpacity(0.4), size: 18),
+                        onPressed: () {
+                          _searchController.clear();
+                          setState(() => _query = '');
+                        },
+                      )
+                          : null,
+                      border: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-            child: isLoading
-                ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(color: primaryColor),
-                  const SizedBox(height: 18),
-                  Text(AppLocalizations.of(context)!.radioLoadingPopular,
-                      style: TextStyle(
-                          color: Colors.white.withOpacity(0.4), fontSize: 14)),
-                ],
-              ),
-            )
-                : stations.isEmpty
-                ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.search_off,
-                      color: Colors.white.withOpacity(0.25), size: 44),
-                  const SizedBox(height: 16),
-                  Text(AppLocalizations.of(context)!.radioNoStationsFound,
-                      style: TextStyle(
-                          color: Colors.white.withOpacity(0.4),
-                          fontSize: 15)),
-                ],
-              ),
-            )
-                : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 10, 24, 6),
-                  child: Row(
-                    children: [
-                      Text(widget.country.flag, style: const TextStyle(fontSize: 13)),
-                      const SizedBox(width: 6),
-                      Text(
-                        AppLocalizations.of(context)!.radioPopularCount(stations.length),
+            Expanded(
+              child: isLoading
+                  ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(color: primaryColor),
+                    const SizedBox(height: 18),
+                    Text(AppLocalizations.of(context)!.radioLoadingPopular,
                         style: TextStyle(
-                            color: Colors.white.withOpacity(0.35), fontSize: 12.5),
-                      ),
-                    ],
-                  ),
+                            color: baseColor.withOpacity(0.4), fontSize: 14)),
+                  ],
                 ),
-                Expanded(
-                  child: ListView.separated(
-                    padding:
-                    EdgeInsets.fromLTRB(24, 0, 24, 80 + MediaQuery.of(context).padding.bottom),
-                    itemCount: stations.length,
-                    separatorBuilder: (_, __) =>
-                        Divider(height: 1, color: Colors.white.withOpacity(0.16)),
-                    itemBuilder: (context, index) {
-                      final station = stations[index];
-                      final isPlaying = current?.stationUuid ==
-                          station.stationUuid;
-                      return _StationTile(
-                        station: station,
-                        isPlaying: isPlaying,
-                        stationList: stations,
-                        stationIndex: index,
-                      );
-                    },
-                  ),
+              )
+                  : stations.isEmpty
+                  ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.search_off,
+                        color: baseColor.withOpacity(0.25), size: 44),
+                    const SizedBox(height: 16),
+                    Text(AppLocalizations.of(context)!.radioNoStationsFound,
+                        style: TextStyle(
+                            color: baseColor.withOpacity(0.4),
+                            fontSize: 15)),
+                  ],
                 ),
-              ],
+              )
+                  : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 10, 24, 6),
+                    child: Row(
+                      children: [
+                        Text(widget.country.flag, style: const TextStyle(fontSize: 13)),
+                        const SizedBox(width: 6),
+                        Text(
+                          AppLocalizations.of(context)!.radioPopularCount(stations.length),
+                          style: TextStyle(
+                              color: baseColor.withOpacity(0.35), fontSize: 12.5),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.separated(
+                      padding:
+                      EdgeInsets.fromLTRB(24, 0, 24, 80 + MediaQuery.of(context).padding.bottom),
+                      itemCount: stations.length,
+                      separatorBuilder: (_, __) =>
+                          Divider(height: 1, color: baseColor.withOpacity(0.16)),
+                      itemBuilder: (context, index) {
+                        final station = stations[index];
+                        final isPlaying = current?.stationUuid ==
+                            station.stationUuid;
+                        return _StationTile(
+                          station: station,
+                          isPlaying: isPlaying,
+                          stationList: stations,
+                          stationIndex: index,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
         ),
       ),
       bottomNavigationBar: current != null
@@ -352,150 +387,151 @@ class _StationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final baseColor = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
     return Container(
-      color: isPlaying ? Colors.white.withOpacity(0.08) : Colors.transparent,
+      color: isPlaying ? baseColor.withOpacity(0.08) : Colors.transparent,
       child: InkWell(
-      onTap: () {
-        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-        context.read<RadioProvider>().setQueue(stationList, stationIndex);
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => RadioPlayerScreen(
-              station: station,
-              stationList: stationList,
-              currentIndex: stationIndex,
-            ),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-            transitionDuration: const Duration(milliseconds: 250),
-          ),
-        );
-      },
-      splashColor: Colors.white.withOpacity(0.04),
-      highlightColor: Colors.transparent,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 13),
-        child: Row(
-          children: [
-            StationLogo(
-                logoUrl: station.logoUrl,
-                name: station.name,
-                size: 46),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    station.name,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15.5,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: -0.2,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    [
-                      if (station.bitrate != null &&
-                          station.bitrate! > 0)
-                        '${station.bitrate} kbps',
-                      if (station.country != null &&
-                          station.country!.isNotEmpty)
-                        station.country!,
-                    ].join('  ·  '),
-                    style: TextStyle(
-                        color: Colors.white.withOpacity(0.55), fontSize: 11.5),
-                  ),
-                ],
+        onTap: () {
+          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+          context.read<RadioProvider>().setQueue(stationList, stationIndex);
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) => RadioPlayerScreen(
+                station: station,
+                stationList: stationList,
+                currentIndex: stationIndex,
               ),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+              transitionDuration: const Duration(milliseconds: 250),
             ),
-            if (isPlaying)
-              _PlayingBars()
-            else
-              IconButton(
-                icon: Icon(
-                  context
-                      .watch<RadioProvider>()
-                      .isFavorite(station.stationUuid)
-                      ? CupertinoIcons.heart_fill
-                      : CupertinoIcons.heart,
-                  color: context
-                      .watch<RadioProvider>()
-                      .isFavorite(station.stationUuid)
-                      ? Colors.redAccent
-                      : Colors.white.withOpacity(0.25),
-                  size: 21,
+          );
+        },
+        splashColor: baseColor.withOpacity(0.04),
+        highlightColor: Colors.transparent,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 13),
+          child: Row(
+            children: [
+              StationLogo(
+                  logoUrl: station.logoUrl,
+                  name: station.name,
+                  size: 46),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      station.name,
+                      style: TextStyle(
+                        color: baseColor,
+                        fontSize: 15.5,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: -0.2,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      [
+                        if (station.bitrate != null &&
+                            station.bitrate! > 0)
+                          '${station.bitrate} kbps',
+                        if (station.country != null &&
+                            station.country!.isNotEmpty)
+                          station.country!,
+                      ].join('  ·  '),
+                      style: TextStyle(
+                          color: baseColor.withOpacity(0.55), fontSize: 11.5),
+                    ),
+                  ],
                 ),
-                onPressed: () {
-                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate').catchError((_) {});
-                  final wasFav = context.read<RadioProvider>().isFavorite(station.stationUuid);
-                  context.read<RadioProvider>().toggleFavorite(station);
-                  final overlay = Overlay.of(context);
-                  final entry = OverlayEntry(
-                    builder: (_) => Positioned(
-                      bottom: 500, left: 0, right: 0,
-                      child: Center(
-                        child: TweenAnimationBuilder<double>(
-                          tween: Tween(begin: 0.0, end: 1.0),
-                          duration: const Duration(milliseconds: 300),
-                          builder: (_, value, child) => Opacity(
-                            opacity: value,
-                            child: Transform.scale(scale: 0.85 + 0.15 * value, child: child),
-                          ),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(30),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.15),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
+              ),
+              if (isPlaying)
+                _PlayingBars()
+              else
+                IconButton(
+                  icon: Icon(
+                    context
+                        .watch<RadioProvider>()
+                        .isFavorite(station.stationUuid)
+                        ? CupertinoIcons.heart_fill
+                        : CupertinoIcons.heart,
+                    color: context
+                        .watch<RadioProvider>()
+                        .isFavorite(station.stationUuid)
+                        ? Colors.redAccent
+                        : baseColor.withOpacity(0.25),
+                    size: 21,
+                  ),
+                  onPressed: () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate').catchError((_) {});
+                    final wasFav = context.read<RadioProvider>().isFavorite(station.stationUuid);
+                    context.read<RadioProvider>().toggleFavorite(station);
+                    final overlay = Overlay.of(context);
+                    final entry = OverlayEntry(
+                      builder: (_) => Positioned(
+                        bottom: 500, left: 0, right: 0,
+                        child: Center(
+                          child: TweenAnimationBuilder<double>(
+                            tween: Tween(begin: 0.0, end: 1.0),
+                            duration: const Duration(milliseconds: 300),
+                            builder: (_, value, child) => Opacity(
+                              opacity: value,
+                              child: Transform.scale(scale: 0.85 + 0.15 * value, child: child),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  wasFav ? CupertinoIcons.heart : CupertinoIcons.heart_fill,
-                                  color: wasFav ? Colors.black38 : Colors.redAccent,
-                                  size: 18,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  wasFav
-                                      ? AppLocalizations.of(context)!.radioRemovedFromFavorites
-                                      : AppLocalizations.of(context)!.radioAddedToFavoritesToast,
-                                  style: const TextStyle(
-                                    color: Colors.black87,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    decoration: TextDecoration.none,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(30),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.15),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    wasFav ? CupertinoIcons.heart : CupertinoIcons.heart_fill,
+                                    color: wasFav ? Colors.black38 : Colors.redAccent,
+                                    size: 18,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    wasFav
+                                        ? AppLocalizations.of(context)!.radioRemovedFromFavorites
+                                        : AppLocalizations.of(context)!.radioAddedToFavoritesToast,
+                                    style: const TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      decoration: TextDecoration.none,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                  overlay.insert(entry);
-                  Future.delayed(const Duration(seconds: 2), () => entry.remove());
-                },
-              ),
-          ],
+                    );
+                    overlay.insert(entry);
+                    Future.delayed(const Duration(seconds: 2), () => entry.remove());
+                  },
+                ),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
@@ -544,9 +580,9 @@ class _PlayingBarsState extends State<_PlayingBars>
             builder: (_, __) => Container(
               width: 4,
               height: 6 + _ctrls[i].value * 14,
-              decoration: const BoxDecoration(
-                color: Colors.white70,
-                borderRadius: BorderRadius.all(Radius.circular(2)),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                borderRadius: const BorderRadius.all(Radius.circular(2)),
               ),
             ),
           );

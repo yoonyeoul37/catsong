@@ -1519,4 +1519,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get rateApp => '評分應用程式';
+
+  @override
+  String get musicExitConfirmTitle => '要結束音樂嗎？';
+
+  @override
+  String get musicExitConfirmMessage => '現在離開將停止播放。';
 }

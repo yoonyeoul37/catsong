@@ -6,6 +6,8 @@ import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
 import 'radio_channel_screen.dart';
 import '../l10n/app_localizations.dart';
+import 'package:flutter/services.dart';
+import '../providers/theme_provider.dart';
 
 class RadioBroadcasterScreen extends StatelessWidget {
   final RadioCountry country;
@@ -56,6 +58,29 @@ class RadioBroadcasterScreen extends StatelessWidget {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final radioProvider = context.watch<RadioProvider>();
     final broadcasters = country.broadcasters;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChrome.setSystemUIOverlayStyle(
+        isDarkMode
+            ? const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: Color(0xFF17140F),
+          systemNavigationBarIconBrightness: Brightness.light,
+        )
+            : const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+          systemNavigationBarColor: Color(0xFFEDE7DA),
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
+      );
+    });
 
     // 카테고리별 그룹화
     final categories = <String, List<RadioBroadcaster>>{};
@@ -94,8 +119,8 @@ class RadioBroadcasterScreen extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 '${entry.value.length}',
-                style: const TextStyle(
-                  color: AppTheme.textHint,
+                style: TextStyle(
+                  color: baseColor.withOpacity(0.38),
                   fontSize: 12,
                 ),
               ),
@@ -121,13 +146,24 @@ class RadioBroadcasterScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0A),
+      backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor: AppTheme.background,
+        backgroundColor: bgColor,
+        systemOverlayStyle: isDarkMode
+            ? const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+        )
+            : const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+        ),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios,
-              color: AppTheme.textPrimary, size: 22),
+          icon: Icon(Icons.arrow_back_ios,
+              color: baseColor, size: 22),
         ),
         title: Row(
           children: [
@@ -136,8 +172,8 @@ class RadioBroadcasterScreen extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               country.displayName,
-              style: const TextStyle(
-                color: AppTheme.textPrimary,
+              style: TextStyle(
+                color: baseColor,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
@@ -181,9 +217,12 @@ class _BroadcasterTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final cardColor = isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0);
 
     return Material(
-      color: AppTheme.cardColor,
+      color: cardColor,
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
@@ -204,7 +243,7 @@ class _BroadcasterTile extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: primaryColor.withOpacity(0.08),
+              color: baseColor.withOpacity(0.08),
               width: 1,
             ),
           ),
@@ -230,8 +269,8 @@ class _BroadcasterTile extends StatelessWidget {
               Expanded(
                 child: Text(
                   broadcaster.name,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: baseColor,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),

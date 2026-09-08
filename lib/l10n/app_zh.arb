@@ -514,5 +514,7 @@
   "darkMode": "深色模式",
   "darkModeOn": "開啟",
   "darkModeOff": "關閉",
-   "rateApp": "評分應用程式"
+   "rateApp": "評分應用程式",
+   "musicExitConfirmTitle": "要結束音樂嗎？",
+   "musicExitConfirmMessage": "現在離開將停止播放。"
 }

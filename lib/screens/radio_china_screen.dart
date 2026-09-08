@@ -5,6 +5,8 @@ import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
 import 'radio_player_screen.dart';
+import 'package:flutter/services.dart';
+import '../providers/theme_provider.dart';
 
 class RadioChinaScreen extends StatelessWidget {
   const RadioChinaScreen({super.key});
@@ -13,20 +15,54 @@ class RadioChinaScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final radioProvider = context.watch<RadioProvider>();
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChrome.setSystemUIOverlayStyle(
+        isDarkMode
+            ? const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: Color(0xFF17140F),
+          systemNavigationBarIconBrightness: Brightness.light,
+        )
+            : const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+          systemNavigationBarColor: Color(0xFFEDE7DA),
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
+      );
+    });
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0A),
+      backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor: AppTheme.background,
+        backgroundColor: bgColor,
+        systemOverlayStyle: isDarkMode
+            ? const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+        )
+            : const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+        ),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios,
-              color: AppTheme.textPrimary, size: 22),
+          icon: Icon(Icons.arrow_back_ios,
+              color: baseColor, size: 22),
         ),
-        title: const Text(
+        title: Text(
           '🇨🇳 중국 라디오',
           style: TextStyle(
-            color: AppTheme.textPrimary,
+            color: baseColor,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -99,9 +135,12 @@ class _StationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final cardColor = isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0);
 
     return Material(
-      color: isPlaying ? primaryColor.withOpacity(0.12) : AppTheme.cardColor,
+      color: isPlaying ? primaryColor.withOpacity(0.12) : cardColor,
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
@@ -122,7 +161,7 @@ class _StationTile extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: isPlaying ? primaryColor : primaryColor.withOpacity(0.08),
+              color: isPlaying ? primaryColor : baseColor.withOpacity(0.08),
               width: isPlaying ? 1.5 : 1,
             ),
           ),
@@ -147,7 +186,7 @@ class _StationTile extends StatelessWidget {
                     Text(
                       station.name,
                       style: TextStyle(
-                        color: isPlaying ? primaryColor : AppTheme.textPrimary,
+                        color: isPlaying ? primaryColor : baseColor,
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                       ),
@@ -156,8 +195,8 @@ class _StationTile extends StatelessWidget {
                     ),
                     Text(
                       station.nameKr,
-                      style: const TextStyle(
-                        color: AppTheme.textHint,
+                      style: TextStyle(
+                        color: baseColor.withOpacity(0.38),
                         fontSize: 12,
                       ),
                     ),
@@ -167,7 +206,7 @@ class _StationTile extends StatelessWidget {
               if (isPlaying)
                 const Icon(Icons.graphic_eq, color: Colors.redAccent, size: 24)
               else
-                Icon(Icons.play_circle_outline, color: AppTheme.textHint, size: 24),
+                Icon(Icons.play_circle_outline, color: baseColor.withOpacity(0.38), size: 24),
             ],
           ),
         ),

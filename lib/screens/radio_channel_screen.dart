@@ -8,6 +8,8 @@ import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
 import '../widgets/station_logo.dart';
 import 'radio_player_screen.dart';
+import 'package:flutter/services.dart';
+import '../providers/theme_provider.dart';
 
 class RadioChannelScreen extends StatefulWidget {
   final RadioBroadcaster broadcaster;
@@ -44,20 +46,54 @@ class _RadioChannelScreenState extends State<RadioChannelScreen> {
     final radioProvider = context.watch<RadioProvider>();
     final stations = radioProvider.broadcasterStations;
     final current = radioProvider.currentStation;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChrome.setSystemUIOverlayStyle(
+        isDarkMode
+            ? const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: Color(0xFF17140F),
+          systemNavigationBarIconBrightness: Brightness.light,
+        )
+            : const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+          systemNavigationBarColor: Color(0xFFEDE7DA),
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
+      );
+    });
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0A),
+      backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0A0A0A),
+        backgroundColor: bgColor,
+        systemOverlayStyle: isDarkMode
+            ? const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+        )
+            : const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+        ),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios,
-              color: AppTheme.textPrimary, size: 22),
+          icon: Icon(Icons.arrow_back_ios,
+              color: baseColor, size: 22),
         ),
         title: Text(
           widget.broadcaster.name,
-          style: const TextStyle(
-              color: AppTheme.textPrimary,
+          style: TextStyle(
+              color: baseColor,
               fontSize: 20,
               fontWeight: FontWeight.bold),
         ),
@@ -65,23 +101,23 @@ class _RadioChannelScreenState extends State<RadioChannelScreen> {
       body: stations.isEmpty
           ? Center(
         child: _timedOut
-            ? const Column(
+            ? Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.search_off,
-                color: AppTheme.textHint, size: 48),
-            SizedBox(height: 16),
+                color: baseColor.withOpacity(0.38), size: 48),
+            const SizedBox(height: 16),
             Text(
               '채널을 찾을 수 없습니다',
               style: TextStyle(
-                  color: AppTheme.textSecondary,
+                  color: baseColor.withOpacity(0.7),
                   fontSize: 16),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               '다른 방송사를 선택해 주세요',
               style: TextStyle(
-                  color: AppTheme.textHint, fontSize: 13),
+                  color: baseColor.withOpacity(0.38), fontSize: 13),
             ),
           ],
         )
@@ -90,9 +126,9 @@ class _RadioChannelScreenState extends State<RadioChannelScreen> {
           children: [
             CircularProgressIndicator(color: primaryColor),
             const SizedBox(height: 18),
-            const Text('채널 목록을 불러오는 중...',
+            Text('채널 목록을 불러오는 중...',
                 style: TextStyle(
-                    color: AppTheme.textSecondary,
+                    color: baseColor.withOpacity(0.7),
                     fontSize: 15)),
           ],
         ),
@@ -104,8 +140,8 @@ class _RadioChannelScreenState extends State<RadioChannelScreen> {
             padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
             child: Text(
               '${stations.length}개 채널',
-              style: const TextStyle(
-                  color: AppTheme.textHint, fontSize: 14),
+              style: TextStyle(
+                  color: baseColor.withOpacity(0.38), fontSize: 14),
             ),
           ),
           Expanded(
@@ -156,9 +192,12 @@ class _ChannelTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final cardColor = isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0);
 
     return Material(
-      color: AppTheme.cardColor,
+      color: cardColor,
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
@@ -192,7 +231,7 @@ class _ChannelTile extends StatelessWidget {
             border: Border.all(
               color: isPlaying
                   ? primaryColor.withOpacity(0.15)
-                  : primaryColor.withOpacity(0.08),
+                  : baseColor.withOpacity(0.08),
               width: 1,
             ),
           ),
@@ -224,7 +263,7 @@ class _ChannelTile extends StatelessWidget {
                       style: TextStyle(
                         color: isPlaying
                             ? primaryColor
-                            : AppTheme.textPrimary,
+                            : baseColor,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -234,8 +273,8 @@ class _ChannelTile extends StatelessWidget {
                     if (station.bitrate != null && station.bitrate! > 0)
                       Text(
                         '${station.bitrate} kbps',
-                        style: const TextStyle(
-                            color: AppTheme.textHint, fontSize: 12),
+                        style: TextStyle(
+                            color: baseColor.withOpacity(0.38), fontSize: 12),
                       ),
                     Builder(
                       builder: (context) {
@@ -283,10 +322,11 @@ class _FavoriteBtn extends StatelessWidget {
         .watch<RadioProvider>()
         .isFavorite(station.stationUuid);
 
+    final baseColor = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
     return IconButton(
       icon: Icon(
         isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-        color: isFav ? primaryColor : AppTheme.iconColor,
+        color: isFav ? primaryColor : baseColor.withOpacity(0.4),
         size: 22,
       ),
       onPressed: () =>

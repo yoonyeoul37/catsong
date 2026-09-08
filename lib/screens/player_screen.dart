@@ -305,6 +305,13 @@ class _PlayerScreenState extends State<PlayerScreen>
                       );
                     },
                   ),
+                  _buildBottomBarItem(
+                    context,
+                    icon: Icons.power_settings_new,
+                    label: AppLocalizations.of(context)!.radioExitConfirmButton,
+                    isActive: false,
+                    onTap: () => _showExitConfirmDialog(context),
+                  ),
                 ],
               ),
             ),
@@ -1351,6 +1358,68 @@ class _PlayerScreenState extends State<PlayerScreen>
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) => _SpeedDialog(playerProvider: playerProvider, primaryColor: AppTheme.fixedAccent),
+    );
+  }
+
+  void _showExitConfirmDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => Dialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                AppLocalizations.of(context)!.musicExitConfirmTitle,
+                style: const TextStyle(color: Colors.black87, fontSize: 17, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                AppLocalizations.of(context)!.musicExitConfirmMessage,
+                style: const TextStyle(color: Colors.black54, fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        Navigator.pop(ctx);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.black54,
+                        side: const BorderSide(color: Colors.black26),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: Text(AppLocalizations.of(context)!.radioExitKeepListening),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('closeApp');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.redAccent,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: Text(AppLocalizations.of(context)!.radioExitConfirmButton, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

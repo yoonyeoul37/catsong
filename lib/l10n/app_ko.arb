@@ -486,5 +486,7 @@
   "darkMode": "다크 모드",
   "darkModeOn": "켜짐",
   "darkModeOff": "꺼짐",
-    "rateApp": "앱 평가하기"
+"rateApp": "앱 평가하기",
+"musicExitConfirmTitle": "음악을 종료하시겠어요?",
+"musicExitConfirmMessage": "지금 나가면 재생이 멈춰요."
 }

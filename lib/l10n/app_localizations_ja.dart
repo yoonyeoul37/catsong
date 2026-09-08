@@ -1519,4 +1519,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get rateApp => 'アプリを評価する';
+
+  @override
+  String get musicExitConfirmTitle => '音楽を終了しますか？';
+
+  @override
+  String get musicExitConfirmMessage => '今出ると再生が止まります。';
 }

@@ -1518,4 +1518,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get rateApp => '앱 평가하기';
+
+  @override
+  String get musicExitConfirmTitle => '음악을 종료하시겠어요?';
+
+  @override
+  String get musicExitConfirmMessage => '지금 나가면 재생이 멈춰요.';
 }

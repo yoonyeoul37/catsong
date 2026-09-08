@@ -1526,4 +1526,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rateApp => 'Rate App';
+
+  @override
+  String get musicExitConfirmTitle => 'Stop playing music?';
+
+  @override
+  String get musicExitConfirmMessage => 'Playback will stop if you leave now.';
 }

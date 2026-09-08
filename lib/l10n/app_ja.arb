@@ -511,5 +511,7 @@
     "darkMode": "ダークモード",
     "darkModeOn": "オン",
     "darkModeOff": "オフ",
-    "rateApp": "アプリを評価する"
+    "rateApp": "アプリを評価する",
+    "musicExitConfirmTitle": "音楽を終了しますか？",
+    "musicExitConfirmMessage": "今出ると再生が止まります。"
 }

@@ -3023,6 +3023,18 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'앱 평가하기'**
   String get rateApp;
+
+  /// No description provided for @musicExitConfirmTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'음악을 종료하시겠어요?'**
+  String get musicExitConfirmTitle;
+
+  /// No description provided for @musicExitConfirmMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'지금 나가면 재생이 멈춰요.'**
+  String get musicExitConfirmMessage;
 }
 
 class _AppLocalizationsDelegate

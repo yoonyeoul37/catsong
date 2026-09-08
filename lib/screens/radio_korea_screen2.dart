@@ -271,6 +271,13 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
             decoration: BoxDecoration(
               color: _regionColors[region] ?? baseColor.withOpacity(0.06),
               borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.25),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                ),
+              ],
             ),
             alignment: Alignment.center,
             child: Column(
@@ -915,6 +922,13 @@ class _BroadcasterGridScreen extends StatelessWidget {
             decoration: BoxDecoration(
               color: _cardColors[key] ?? const Color(0xFF3A342A),
               borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.25),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                ),
+              ],
             ),
             alignment: Alignment.center,
             child: Column(

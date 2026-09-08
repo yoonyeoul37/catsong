@@ -1407,7 +1407,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                         const MethodChannel('kr.ssing.catsong/media').invokeMethod('closeApp');
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.redAccent,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),

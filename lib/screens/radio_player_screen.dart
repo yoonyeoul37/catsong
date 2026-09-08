@@ -368,7 +368,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                               Navigator.pop(ctx, true);
                                             },
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: AppTheme.fixedAccent,
+                                              backgroundColor: Theme.of(context).colorScheme.primary,
                                               foregroundColor: Colors.white,
                                               padding: const EdgeInsets.symmetric(vertical: 13),
                                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

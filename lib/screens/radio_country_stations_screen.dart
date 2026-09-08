@@ -22,10 +22,13 @@ class RadioCountryStationsScreen extends StatefulWidget {
       _RadioCountryStationsScreenState();
 }
 
+enum _ViewMode { all, broadcaster, region, recent }
+
 class _RadioCountryStationsScreenState
     extends State<RadioCountryStationsScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _query = '';
+  _ViewMode _mode = _ViewMode.all;
 
   @override
   void initState() {
@@ -39,6 +42,155 @@ class _RadioCountryStationsScreenState
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Widget _toggleButton(String label, _ViewMode mode, Color baseColor, bool isDarkMode) {
+    final selected = _mode == mode;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+          setState(() => _mode = mode);
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            color: selected ? (isDarkMode ? Colors.white : const Color(0xFF17140F)) : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: selected
+                  ? (isDarkMode ? const Color(0xFF17140F) : Colors.white)
+                  : baseColor.withOpacity(0.6),
+              fontSize: 12.5,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModeBody(BuildContext context, RadioProvider radioProvider,
+      List<RadioStation> allStations, Color baseColor, bool isDarkMode, Color primaryColor) {
+    if (_mode == _ViewMode.broadcaster) {
+      final Map<String, List<RadioStation>> grouped = {};
+      for (final s in allStations) {
+        final key = (s.broadcaster != null && s.broadcaster!.isNotEmpty) ? s.broadcaster! : '기타';
+        grouped.putIfAbsent(key, () => []).add(s);
+      }
+      final keys = grouped.keys.toList()..sort((a, b) => a == '기타' ? 1 : (b == '기타' ? -1 : a.compareTo(b)));
+      return _buildGroupGrid(context, keys, grouped, baseColor, isDarkMode);
+    } else if (_mode == _ViewMode.region) {
+      final Map<String, List<RadioStation>> grouped = {};
+      for (final s in allStations) {
+        if (s.state == null || s.state!.trim().isEmpty) continue;
+        grouped.putIfAbsent(s.state!.trim(), () => []).add(s);
+      }
+      final keys = grouped.keys.toList()..sort();
+      if (keys.isEmpty) {
+        return Center(
+          child: Text('지역 정보가 있는 방송국이 없어요',
+              style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 14)),
+        );
+      }
+      return _buildGroupGrid(context, keys, grouped, baseColor, isDarkMode);
+    } else {
+      final recent = radioProvider.recentlyListened
+          .where((s) => s.countryCode == widget.country.code)
+          .toList();
+      if (recent.isEmpty) {
+        return Center(
+          child: Text('최근 들은 방송이 없어요',
+              style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 14)),
+        );
+      }
+      final current = radioProvider.currentStation;
+      return ListView.separated(
+        padding: EdgeInsets.fromLTRB(24, 8, 24, 80 + MediaQuery.of(context).padding.bottom),
+        itemCount: recent.length,
+        separatorBuilder: (_, __) => Divider(height: 1, color: baseColor.withOpacity(0.16)),
+        itemBuilder: (context, index) {
+          final station = recent[index];
+          final isPlaying = current?.stationUuid == station.stationUuid;
+          return _StationTile(
+            station: station,
+            isPlaying: isPlaying,
+            stationList: recent,
+            stationIndex: index,
+          );
+        },
+      );
+    }
+  }
+
+  Widget _buildGroupGrid(BuildContext context, List<String> keys,
+      Map<String, List<RadioStation>> grouped, Color baseColor, bool isDarkMode) {
+    return GridView.builder(
+      padding: EdgeInsets.fromLTRB(24, 8, 24, 80 + MediaQuery.of(context).padding.bottom),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        childAspectRatio: 1.5,
+      ),
+      itemCount: keys.length,
+      itemBuilder: (context, index) {
+        final key = keys[index];
+        final list = grouped[key]!;
+        return GestureDetector(
+          onTap: () {
+            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => _GroupedStationListScreen(title: key, stations: list),
+              ),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: (isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0)),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.5),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '${list.length}개 채널',
+                  style: TextStyle(color: baseColor.withOpacity(0.38), fontSize: 12),
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  key,
+                  style: TextStyle(
+                    color: baseColor,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.3,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   String _sloganFor(BuildContext context, String countryCode) {
@@ -289,8 +441,27 @@ class _RadioCountryStationsScreenState
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 4, 24, 4),
+              child: Container(
+                height: 38,
+                decoration: BoxDecoration(
+                  color: baseColor.withOpacity(0.06),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    _toggleButton('전체', _ViewMode.all, baseColor, isDarkMode),
+                    _toggleButton('지역별', _ViewMode.region, baseColor, isDarkMode),
+                    _toggleButton('최근청취', _ViewMode.recent, baseColor, isDarkMode),
+                  ],
+                ),
+              ),
+            ),
             Expanded(
-              child: isLoading
+              child: _mode != _ViewMode.all
+                  ? _buildModeBody(context, radioProvider, allStations, baseColor, isDarkMode, primaryColor)
+                  : isLoading
                   ? Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -533,6 +704,93 @@ class _StationTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _GroupedStationListScreen extends StatelessWidget {
+  final String title;
+  final List<RadioStation> stations;
+  const _GroupedStationListScreen({required this.title, required this.stations});
+
+  @override
+  Widget build(BuildContext context) {
+    final radioProvider = context.watch<RadioProvider>();
+    final current = radioProvider.currentStation;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChrome.setSystemUIOverlayStyle(
+        isDarkMode
+            ? const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: Color(0xFF17140F),
+          systemNavigationBarIconBrightness: Brightness.light,
+        )
+            : const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+          systemNavigationBarColor: Color(0xFFEDE7DA),
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
+      );
+    });
+
+    return Scaffold(
+      backgroundColor: bgColor,
+      appBar: AppBar(
+        backgroundColor: bgColor,
+        elevation: 0,
+        systemOverlayStyle: isDarkMode
+            ? const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+        )
+            : const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+        ),
+        leading: IconButton(
+          onPressed: () {
+            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios, color: baseColor, size: 20),
+        ),
+        title: Text(title,
+            style: TextStyle(color: baseColor, fontSize: 18, fontWeight: FontWeight.bold)),
+      ),
+      body: SafeArea(
+        top: false,
+        child: ListView.separated(
+          padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
+          itemCount: stations.length,
+          separatorBuilder: (_, __) => Divider(height: 1, color: baseColor.withOpacity(0.16)),
+          itemBuilder: (context, i) {
+            final station = stations[i];
+            final isPlaying = current?.stationUuid == station.stationUuid;
+            return _StationTile(
+              station: station,
+              isPlaying: isPlaying,
+              stationList: stations,
+              stationIndex: i,
+            );
+          },
+        ),
+      ),
+      bottomNavigationBar: current != null
+          ? Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom),
+        child: const RadioMiniPlayer(),
+      )
+          : null,
     );
   }
 }

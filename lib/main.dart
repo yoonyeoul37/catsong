@@ -181,6 +181,7 @@ class MyApp extends StatelessWidget {
               return MediaQuery(
                 data: MediaQuery.of(context).copyWith(
                   textScaler: TextScaler.linear(themeProvider.textScale),
+                  boldText: false,
                 ),
                 child: Container(
                   decoration: BoxDecoration(

@@ -1408,21 +1408,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                   ),
                   child: Icon(Icons.music_note_rounded, color: Theme.of(context).colorScheme.primary.withOpacity(value), size: 26),
                 ),
-                const SizedBox(height: 28),
+                const SizedBox(height: 32),
                 Text(
-                  '오늘 함께한 음악,',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white.withOpacity(value), fontSize: 20, fontWeight: FontWeight.w700, height: 1.4),
-                ),
-                Text(
-                  '내일 또 이어들을게요',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white.withOpacity(value), fontSize: 20, fontWeight: FontWeight.w700, height: 1.4),
-                ),
-                const SizedBox(height: 18),
-                Text(
-                  'BLUESOUND',
-                  style: TextStyle(color: Colors.white.withOpacity(value * 0.4), fontSize: 12, letterSpacing: 3, fontWeight: FontWeight.w600),
+                  'PARANSORI',
+                  style: TextStyle(color: Colors.white.withOpacity(value), fontSize: 28, letterSpacing: 5, fontWeight: FontWeight.w800),
                 ),
               ],
             ),
@@ -1432,11 +1421,31 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
     overlay.insert(entry);
 
-    Future.delayed(const Duration(milliseconds: 2800), () async {
+    Future.delayed(const Duration(milliseconds: 3200), () async {
+      entry.remove();
+      late OverlayEntry fadeOutEntry;
+      fadeOutEntry = OverlayEntry(
+        builder: (_) => TweenAnimationBuilder<double>(
+          tween: Tween(begin: 1.0, end: 0.0),
+          duration: const Duration(milliseconds: 600),
+          builder: (_, value, child) => Opacity(
+            opacity: value,
+            child: Container(
+              color: Colors.black,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+          ),
+        ),
+      );
+      overlay.insert(fadeOutEntry);
+
       final pp = context.read<PlayerProvider>();
       if (pp.isPlaying) {
         await pp.togglePlayPause();
       }
+
+      await Future.delayed(const Duration(milliseconds: 600));
       const MethodChannel('kr.ssing.catsong/media').invokeMethod('closeApp');
     });
   }

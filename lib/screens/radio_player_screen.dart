@@ -59,6 +59,80 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
   late int _currentIdx;
   bool _scheduleTimedOut = false;
 
+  void _showFarewellAndExit(BuildContext context) {
+    final overlay = Overlay.of(context);
+    late OverlayEntry entry;
+    entry = OverlayEntry(
+      builder: (_) => TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0.0, end: 1.0),
+        duration: const Duration(milliseconds: 900),
+        curve: Curves.easeOut,
+        builder: (_, value, child) => Opacity(
+          opacity: value,
+          child: Container(
+            color: Colors.black.withOpacity(0.95 * value),
+            width: double.infinity,
+            height: double.infinity,
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Theme.of(context).colorScheme.primary.withOpacity(0.15 * value),
+                    border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(value), width: 1.5),
+                  ),
+                  child: Icon(Icons.radio_rounded, color: Theme.of(context).colorScheme.primary.withOpacity(value), size: 26),
+                ),
+                const SizedBox(height: 32),
+                Text(
+                  'PARANSORI',
+                  style: TextStyle(color: Colors.white.withOpacity(value), fontSize: 28, letterSpacing: 5, fontWeight: FontWeight.w800),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    overlay.insert(entry);
+
+    Future.delayed(const Duration(milliseconds: 3200), () async {
+      entry.remove();
+      late OverlayEntry fadeOutEntry;
+      fadeOutEntry = OverlayEntry(
+        builder: (_) => TweenAnimationBuilder<double>(
+          tween: Tween(begin: 1.0, end: 0.0),
+          duration: const Duration(milliseconds: 600),
+          builder: (_, value, child) => Opacity(
+            opacity: value,
+            child: Container(
+              color: Colors.black,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+          ),
+        ),
+      );
+      overlay.insert(fadeOutEntry);
+
+      await context.read<RadioProvider>().stopRadio();
+      final handler = globalAudioHandler;
+      if (handler is SimpleAudioHandler) {
+        handler.setRadioMode(false);
+        handler.playbackState.add(PlaybackState());
+        handler.mediaItem.add(null);
+        await handler.stop();
+      }
+
+      await Future.delayed(const Duration(milliseconds: 600));
+      const MethodChannel('kr.ssing.catsong/media').invokeMethod('closeApp');
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -393,16 +467,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                             ),
                           );
                           if (confirmed != true) return;
-                          await context.read<RadioProvider>().stopRadio();
-                          final handler = globalAudioHandler;
-                          if (handler is SimpleAudioHandler) {
-                            handler.setRadioMode(false);
-                            handler.playbackState.add(PlaybackState());
-                            handler.mediaItem.add(null);
-                            await handler.stop();
-                          }
-                          await Future.delayed(const Duration(milliseconds: 300));
-                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('closeApp');
+                          _showFarewellAndExit(context);
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),

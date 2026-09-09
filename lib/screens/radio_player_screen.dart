@@ -249,8 +249,11 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 2),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
                       if (_isKoreanBroadcast(current.name))
                         _BottomBarItem(
                           icon: Icons.format_list_bulleted,
@@ -314,11 +317,17 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                           );
                         },
                       ),
-                      _BottomBarItem(
-                        icon: Icons.power_settings_new,
-                        label: AppLocalizations.of(context)!.exit,
-                        hasIndicator: false,
-                        primaryColor: primaryColor,
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: 1,
+                        height: 28,
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        color: baseColor.withOpacity(0.12),
+                      ),
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
                         onTap: () async {
                           const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                           final confirmed = await showDialog<bool>(
@@ -395,14 +404,28 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                           await Future.delayed(const Duration(milliseconds: 300));
                           const MethodChannel('kr.ssing.catsong/media').invokeMethod('closeApp');
                         },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.power_settings_new, color: Color(0xFFE8877E), size: 22),
+                              const SizedBox(height: 3),
+                              Text(
+                                AppLocalizations.of(context)!.exit,
+                                style: const TextStyle(color: Color(0xFFE8877E), fontSize: 10, fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+              ],
+            ),
       ),
       body: Stack(
         children: [

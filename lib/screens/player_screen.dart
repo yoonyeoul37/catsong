@@ -1380,6 +1380,67 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
   }
 
+  void _showFarewellAndExit(BuildContext context) {
+    final overlay = Overlay.of(context);
+    late OverlayEntry entry;
+    entry = OverlayEntry(
+      builder: (_) => TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0.0, end: 1.0),
+        duration: const Duration(milliseconds: 900),
+        curve: Curves.easeOut,
+        builder: (_, value, child) => Opacity(
+          opacity: value,
+          child: Container(
+            color: Colors.black.withOpacity(0.95 * value),
+            width: double.infinity,
+            height: double.infinity,
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Theme.of(context).colorScheme.primary.withOpacity(0.15 * value),
+                    border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(value), width: 1.5),
+                  ),
+                  child: Icon(Icons.music_note_rounded, color: Theme.of(context).colorScheme.primary.withOpacity(value), size: 26),
+                ),
+                const SizedBox(height: 28),
+                Text(
+                  '오늘 함께한 음악,',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white.withOpacity(value), fontSize: 20, fontWeight: FontWeight.w700, height: 1.4),
+                ),
+                Text(
+                  '내일 또 이어들을게요',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white.withOpacity(value), fontSize: 20, fontWeight: FontWeight.w700, height: 1.4),
+                ),
+                const SizedBox(height: 18),
+                Text(
+                  'BLUESOUND',
+                  style: TextStyle(color: Colors.white.withOpacity(value * 0.4), fontSize: 12, letterSpacing: 3, fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    overlay.insert(entry);
+
+    Future.delayed(const Duration(milliseconds: 2800), () async {
+      final pp = context.read<PlayerProvider>();
+      if (pp.isPlaying) {
+        await pp.togglePlayPause();
+      }
+      const MethodChannel('kr.ssing.catsong/media').invokeMethod('closeApp');
+    });
+  }
+
   void _showExitConfirmDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -1423,7 +1484,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                     child: ElevatedButton(
                       onPressed: () async {
                         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('closeApp');
+                        Navigator.pop(ctx);
+                        _showFarewellAndExit(context);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary,

@@ -177,6 +177,7 @@ class MyApp extends StatelessWidget {
             ),
             builder: (context, child) {
               AppLocale.current = AppLocalizations.of(context);
+              debugPrint('=== 화면 크기: ${MediaQuery.of(context).size} ===');
               return MediaQuery(
                 data: MediaQuery.of(context).copyWith(
                   textScaler: TextScaler.linear(themeProvider.textScale),

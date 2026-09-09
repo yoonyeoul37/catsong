@@ -1131,7 +1131,7 @@ class RadioProvider extends ChangeNotifier {
           _playerState != RadioPlayerState.idle &&
           _playerState != RadioPlayerState.error) {
         debugPrint('네트워크 전환 감지 - 라디오 재연결 시도');
-        await Future.delayed(const Duration(seconds: 3));
+        await Future.delayed(const Duration(milliseconds: 800));
         if (_currentStation != null && !_isActuallyPlaying) {
           await playStation(_currentStation!);
         }

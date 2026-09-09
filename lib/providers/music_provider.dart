@@ -268,7 +268,10 @@ Future<void> updateSongInfo(Song song, {String? title, String? artist, String? a
                       song.album = edited['album'] ?? song.album;
                       song.isEdited = true;
                     } else {
-                      song.title = metadata['title'] ?? song.title;
+                      final metaTitle = metadata['title'] as String?;
+                      if (metaTitle != null && metaTitle.isNotEmpty && !_looksBroken(metaTitle)) {
+                        song.title = metaTitle;
+                      }
                       song.artist = metadata['artist'] ?? song.artist;
                       song.album = metadata['album'] ?? song.album;
                     }
@@ -352,7 +355,16 @@ Future<void> updateSongInfo(Song song, {String? title, String? artist, String? a
         ..sort((a, b) => a.name.compareTo(b.name));
     }
 
-    String _getFileName(String path) {
+    bool _looksBroken(String text) {
+    // 깨진 인코딩(물음표, 대체문자 등)이 많이 섞여있으면 true
+    int badCount = 0;
+    for (final ch in text.runes) {
+      if (ch == 0xFFFD || ch == 0x3F) badCount++; // U+FFFD(대체문자), '?'
+    }
+    return badCount > text.length * 0.3;
+  }
+
+  String _getFileName(String path) {
       final name = path.split('/').last;
       return name.replaceAll(RegExp(r'\.[^.]+$'), '');
     }

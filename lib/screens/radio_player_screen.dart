@@ -87,7 +87,12 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                   ),
                   child: Icon(Icons.radio_rounded, color: Theme.of(context).colorScheme.primary.withOpacity(value), size: 26),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 28),
+                Text(
+                  'GOOD BYE',
+                  style: TextStyle(color: Colors.white.withOpacity(value * 0.6), fontSize: 13, letterSpacing: 3, fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 6),
                 Text(
                   'PARANSORI',
                   style: TextStyle(color: Colors.white.withOpacity(value), fontSize: 28, letterSpacing: 5, fontWeight: FontWeight.w800),

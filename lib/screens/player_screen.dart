@@ -242,8 +242,11 @@ class _PlayerScreenState extends State<PlayerScreen>
             child: SizedBox(
               height: 62,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
                   _buildBottomBarItem(
                     context,
                     icon: Icons.shuffle,
@@ -259,11 +262,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     icon: playerProvider.loopMode == LoopMode.one
                         ? Icons.repeat_one
                         : Icons.repeat,
-                    label: playerProvider.loopMode == LoopMode.one
-                        ? AppLocalizations.of(context)!.repeatOne
-                        : playerProvider.loopMode == LoopMode.all
-                        ? AppLocalizations.of(context)!.repeatAll
-                        : AppLocalizations.of(context)!.noRepeat,
+                    label: '반복',
                     isActive: playerProvider.loopMode != LoopMode.off,
                     onTap: () {
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -272,8 +271,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                   ),
                   _buildBottomBarItem(
                     context,
-                    icon: Icons.bedtime,
-                    label: AppLocalizations.of(context)!.timerLabel,
+                    icon: Icons.nightlight_round,
+                    label: '수면',
                     isActive: playerProvider.isSleepTimerActive,
                     onTap: () {
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -283,7 +282,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   _buildBottomBarItem(
                     context,
                     icon: Icons.speed,
-                    label: AppLocalizations.of(context)!.playbackSpeedLabel,
+                    label: '배속',
                     isActive: playerProvider.playbackSpeed != 1.0,
                     onTap: () {
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -305,12 +304,32 @@ class _PlayerScreenState extends State<PlayerScreen>
                       );
                     },
                   ),
-                  _buildBottomBarItem(
-                    context,
-                    icon: Icons.power_settings_new,
-                    label: AppLocalizations.of(context)!.radioExitConfirmButton,
-                    isActive: false,
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 1,
+                    height: 28,
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    color: Colors.white.withOpacity(0.12),
+                  ),
+                  GestureDetector(
                     onTap: () => _showExitConfirmDialog(context),
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.power_settings_new, color: Color(0xFFE8877E), size: 22),
+                          const SizedBox(height: 3),
+                          Text(
+                            AppLocalizations.of(context)!.radioExitConfirmButton,
+                            style: const TextStyle(color: Color(0xFFE8877E), fontSize: 10, fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),

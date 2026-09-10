@@ -693,6 +693,22 @@ class RadioProvider extends ChangeNotifier {
   void markScheduleAttempted(String stationName) => _scheduleAttempted.add(stationName);
 
   // 문자 참여 번호
+  static const _homepageUrls = {
+    'KBS 제1라디오': 'https://radio.kbs.co.kr/',
+    'KBS 해피FM': 'https://radio.kbs.co.kr/',
+    'KBS 쿨FM': 'https://radio.kbs.co.kr/',
+    'KBS 클래식FM': 'https://radio.kbs.co.kr/',
+    'MBC 표준FM': 'https://www.imbc.com/broad/radio/',
+    'MBC FM4U': 'https://www.imbc.com/broad/radio/',
+    'SBS 파워FM': 'https://www.sbs.co.kr/radio',
+    'SBS 러브FM': 'https://www.sbs.co.kr/radio',
+    'EBS 반디': 'https://www.ebs.co.kr/radio/home',
+    'CBS 표준FM': 'https://www.cbs.co.kr/radio',
+    'CBS 음악FM': 'https://www.cbs.co.kr/radio',
+  };
+
+  String? homepageFor(String stationName) => _homepageUrls[stationName];
+
   static const _smsNumbers = {
     'MBC 표준FM': '8001',
     'MBC FM4U': '8000',

@@ -8,6 +8,7 @@ class RadioStation {
   final String? countryCode;
   final String? broadcaster;
   final String? state;
+  final String? homepage;
   final int? bitrate;
   final String? frequency;
   final int votes;
@@ -24,6 +25,7 @@ class RadioStation {
     this.countryCode,
     this.broadcaster,
     this.state,
+    this.homepage,
     this.bitrate,
     this.frequency,
     this.votes = 0,
@@ -54,6 +56,7 @@ class RadioStation {
       countryCode: json['countrycode']?.toString(),
       broadcaster: _extractBroadcaster(json['name']?.toString() ?? ''),
       state: (json['state']?.toString().isNotEmpty ?? false) ? json['state'].toString() : null,
+      homepage: (json['homepage']?.toString().isNotEmpty ?? false) ? json['homepage'].toString() : null,
       bitrate: json['bitrate'] is int
           ? json['bitrate'] as int
           : int.tryParse(json['bitrate']?.toString() ?? ''),
@@ -94,6 +97,7 @@ class RadioStation {
       countryCode: countryCode,
       broadcaster: broadcaster,
       state: state,
+      homepage: homepage,
       bitrate: bitrate,
       frequency: frequency,
       votes: votes,

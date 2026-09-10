@@ -653,12 +653,26 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                   },
                                   child: Icon(Icons.settings_outlined, color: baseColor, size: 18),
                                 ),
+                                const SizedBox(width: 10),
+                                Builder(builder: (ctx) {
+                                  final homepage = radioProvider.homepageFor(current.name) ?? current.homepage;
+                                  if (homepage == null || homepage.isEmpty) return const SizedBox.shrink();
+                                  return _FloatButton(
+                                    onTap: () async {
+                                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                      final uri = Uri.parse(homepage);
+                                      if (await canLaunchUrl(uri)) {
+                                        await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                      }
+                                    },
+                                    child: Icon(Icons.home_outlined, color: baseColor, size: 18),
+                                  );
+                                }),
                               ],
                             ),
                           ],
                         ),
                       ),
-
                       SizedBox(height: (h * 0.02).clamp(10.0, 24.0)),
 
                       // ── 이미지(있으면) 또는 방송국명 박스, 채널명·시간 오버레이 ──
@@ -774,8 +788,6 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                             primaryColor: primaryColor,
                           ),
                         ),
-
-
 
                       // ── 편성표 ──
                       SizedBox(

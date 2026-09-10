@@ -430,6 +430,14 @@ class RadioProvider extends ChangeNotifier {
       debugPrint('station.url_resolved: ${station.urlResolved}');
 
       String playUrl = station.playableUrl;
+      final isKoreanDomestic = station.streamUrl.contains('cfpwwwapi.kbs.co.kr') ||
+          station.streamUrl.contains('imbc.com') ||
+          station.streamUrl.contains('mbcsfm.pls') ||
+          station.streamUrl.contains('mbcfm.pls') ||
+          station.streamUrl.contains('mbcatm.pls') ||
+          station.streamUrl.contains('sbs.co.kr') ||
+          station.streamUrl.contains('ebs.co.kr');
+
       try {
         final freshUrl = await _resolveStreamUrl(station.streamUrl);
         if (freshUrl != null && freshUrl.isNotEmpty) {
@@ -440,7 +448,7 @@ class RadioProvider extends ChangeNotifier {
         debugPrint('리다이렉트 실패 → url_resolved 사용');
       }
 
-      if (playUrl == station.playableUrl) {
+      if (!isKoreanDomestic && playUrl == station.playableUrl) {
         try {
           for (final server in _apiServers) {
             final uri = Uri.https(server, '/json/url/${station.stationUuid}');

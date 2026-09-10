@@ -800,15 +800,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                             radioProvider: radioProvider,
                             freq: freq,
                           )
-                              : (freq.isNotEmpty
-                              ? Text(
-                            freq,
-                            style: TextStyle(
-                              color: baseColor.withOpacity(0.5),
-                              fontSize: 13,
-                            ),
-                          )
-                              : const SizedBox.shrink()),
+                              : const SizedBox.shrink(),
                         ),
                       ),
 
@@ -819,6 +811,37 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                           scheduleList: radioProvider.scheduleList,
                           currentProgram: radioProvider.currentProgram!,
                           radioProvider: radioProvider,
+                        ),
+                      ] else if (radioProvider.descriptionFor(current.name) != null) ...[
+                        const SizedBox(height: 4),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: baseColor.withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: primaryColor.withOpacity(0.12),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                alignment: Alignment.center,
+                                child: Icon(Icons.podcasts, color: primaryColor, size: 20),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Text(
+                                  radioProvider.descriptionFor(current.name)!,
+                                  style: TextStyle(color: baseColor.withOpacity(0.75), fontSize: 13, height: 1.5),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
 

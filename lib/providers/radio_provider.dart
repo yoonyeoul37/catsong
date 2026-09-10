@@ -709,6 +709,43 @@ class RadioProvider extends ChangeNotifier {
 
   String? homepageFor(String stationName) => _homepageUrls[stationName];
 
+  static const _stationDescriptions = {
+    'YTN 라디오': '대한민국 24시간 뉴스 채널',
+    'CBS 표준FM': '기독교 정신으로 소통하는 방송',
+    'CBS 음악FM': '좋은 음악으로 채우는 하루',
+    'BBS 불교방송': '지혜와 자비를 전하는 불교 방송',
+    'FEBC 극동방송': '복음을 전하는 기독교 방송',
+    '국방FM': '군 장병과 함께하는 방송',
+    '국악FM': '우리 소리를 지키는 국악 전문 방송',
+    'TBS FM': '시민과 함께하는 교통·생활 정보 방송',
+    '경인방송': '인천·경기를 대표하는 라디오 방송',
+    'CPBC 가톨릭': '평화와 나눔을 전하는 가톨릭 방송',
+    'JTV 매직FM': '전북을 사랑하는 라디오 방송',
+    'OBS 라디오': '경인 지역 라디오 방송',
+    'BeFM': '부산을 대표하는 FM 방송',
+    'TBN 경인교통': '경인 지역 교통·생활 정보 방송',
+    'TBN 울산교통': '울산 지역 교통·생활 정보 방송',
+    '부산MBC 표준FM': '부산·경남을 대표하는 MBC 방송',
+    '부산MBC FM4U': '부산·경남을 대표하는 MBC 방송',
+    '광주MBC 표준FM': '광주·전남을 대표하는 MBC 방송',
+    '광주MBC FM4U': '광주·전남을 대표하는 MBC 방송',
+    '안동MBC 표준FM': '경북 북부를 대표하는 MBC 방송',
+    '안동MBC FM4U': '경북 북부를 대표하는 MBC 방송',
+    '울산MBC 표준FM': '울산을 대표하는 MBC 방송',
+    '제주MBC 표준FM': '제주를 대표하는 MBC 방송',
+    '제주MBC FM4U': '제주를 대표하는 MBC 방송',
+    '춘천MBC 표준FM': '강원을 대표하는 MBC 방송',
+    '춘천MBC FM4U': '강원을 대표하는 MBC 방송',
+    '포항MBC 표준FM': '경북 동부를 대표하는 MBC 방송',
+    '대전MBC 표준FM': '대전·충남을 대표하는 MBC 방송',
+    '목포MBC 표준FM': '전남 서부를 대표하는 MBC 방송',
+    'MBC경남 표준FM': '경남을 대표하는 MBC 방송',
+    'MBC충북 표준FM': '충북을 대표하는 MBC 방송',
+    'MBC충북 FM4U': '충북을 대표하는 MBC 방송',
+  };
+
+  String? descriptionFor(String stationName) => _stationDescriptions[stationName];
+
   static const _smsNumbers = {
     'MBC 표준FM': '8001',
     'MBC FM4U': '8000',

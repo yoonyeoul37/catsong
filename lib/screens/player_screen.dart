@@ -1381,6 +1381,10 @@ class _PlayerScreenState extends State<PlayerScreen>
   }
 
   void _showFarewellAndExit(BuildContext context) {
+    final isKorean = Localizations.localeOf(context).languageCode == 'ko';
+    final smallText = isKorean
+        ? '파란소리와 함께해 주셔서 고마워요.\n다음에 또 좋은 소리로 만나요!'
+        : 'good bye';
     final overlay = Overlay.of(context);
     late OverlayEntry entry;
     entry = OverlayEntry(
@@ -1398,25 +1402,21 @@ class _PlayerScreenState extends State<PlayerScreen>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: 56,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Theme.of(context).colorScheme.primary.withOpacity(0.15 * value),
-                    border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(value), width: 1.5),
+                SizedBox(
+                  width: 300,
+                  height: isKorean ? 130 : 90,
+                  child: CustomPaint(
+                    painter: _FarewellTextPainter(opacity: value, smallText: smallText),
                   ),
-                  child: Icon(Icons.music_note_rounded, color: Theme.of(context).colorScheme.primary.withOpacity(value), size: 26),
                 ),
-                const SizedBox(height: 28),
-                Text(
-                  'GOOD BYE',
-                  style: TextStyle(color: Colors.white.withOpacity(value * 0.6), fontSize: 13, letterSpacing: 3, fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'PARANSORI',
-                  style: TextStyle(color: Colors.white.withOpacity(value), fontSize: 28, letterSpacing: 5, fontWeight: FontWeight.w800),
+                const SizedBox(height: 12),
+                Container(
+                  width: 40,
+                  height: 3,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary.withOpacity(value),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ],
             ),
@@ -1426,7 +1426,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
     overlay.insert(entry);
 
-    Future.delayed(const Duration(milliseconds: 3200), () async {
+    Future.delayed(const Duration(milliseconds: 4500), () async {
       entry.remove();
       late OverlayEntry fadeOutEntry;
       fadeOutEntry = OverlayEntry(
@@ -2275,4 +2275,42 @@ class _RadialVisualizerPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_RadialVisualizerPainter old) => true;
+}
+class _FarewellTextPainter extends CustomPainter {
+  final double opacity;
+  final String smallText;
+  _FarewellTextPainter({required this.opacity, required this.smallText});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final isMultiline = smallText.contains('\n');
+    final smallPainter = TextPainter(
+      text: TextSpan(
+        text: smallText,
+        style: TextStyle(
+          color: Colors.white.withOpacity(opacity * 0.85),
+          fontSize: isMultiline ? 17 : 14,
+          letterSpacing: isMultiline ? 0.2 : 5,
+          fontWeight: FontWeight.w500,
+          fontStyle: isMultiline ? FontStyle.normal : FontStyle.italic,
+          height: 1.6,
+        ),
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: size.width);
+    smallPainter.paint(canvas, Offset((size.width - smallPainter.width) / 2, 0));
+
+    final bigPainter = TextPainter(
+      text: TextSpan(
+        text: 'Paransori',
+        style: TextStyle(color: Colors.white.withOpacity(opacity), fontSize: 33, letterSpacing: 3, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    bigPainter.paint(canvas, Offset((size.width - bigPainter.width) / 2, smallPainter.height + 12));
+  }
+
+  @override
+  bool shouldRepaint(covariant _FarewellTextPainter oldDelegate) => oldDelegate.opacity != opacity;
 }

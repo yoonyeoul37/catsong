@@ -696,8 +696,8 @@ class RadioProvider extends ChangeNotifier {
   static const _homepageUrls = {
     'KBS 제1라디오': 'https://radio.kbs.co.kr/',
     'KBS 해피FM': 'https://radio.kbs.co.kr/',
-    'KBS 쿨FM': 'https://radio.kbs.co.kr/',
-    'KBS 클래식FM': 'https://radio.kbs.co.kr/',
+    'KBS Cool FM': 'https://radio.kbs.co.kr/',
+    'KBS Classic FM': 'https://radio.kbs.co.kr/',
     'MBC 표준FM': 'https://www.imbc.com/broad/radio/',
     'MBC FM4U': 'https://www.imbc.com/broad/radio/',
     'SBS 파워FM': 'https://www.sbs.co.kr/radio',

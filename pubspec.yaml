@@ -73,6 +73,11 @@ flutter:
     - assets/no_album.svg
     - assets/no_album2.jpg
     - assets/radio_mood_bg.jpg
+    - assets/wave_sound.mp3
+    - assets/rain_sound.mp3
+    - assets/bird_sound.mp3
+    - assets/campfire_sound.mp3
+    - assets/stream_sound.mp3
 
 flutter_native_splash:
   color: "#F7F5F0"

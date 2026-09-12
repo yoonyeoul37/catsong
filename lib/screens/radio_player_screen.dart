@@ -24,6 +24,7 @@ import 'package:audio_service/audio_service.dart';
 import '../main.dart' show globalAudioHandler;
 import '../providers/player_provider.dart' show SimpleAudioHandler;
 import '../providers/theme_provider.dart';
+import 'nature_sounds_screen.dart';
 import 'settings_screen.dart';
 import '../widgets/seasonal_effect.dart';
 
@@ -526,66 +527,6 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                 _FloatButton(
                                   onTap: () {
                                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                                    showModalBottomSheet(
-                                      context: context,
-                                      backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
-                                      shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
-                                      builder: (ctx) => SafeArea(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            ListTile(
-                                              leading: Icon(Icons.share_outlined, color: baseColor),
-                                              title: Text('친구에게 공유하기', style: TextStyle(color: baseColor)),
-                                              onTap: () {
-                                                Navigator.pop(ctx);
-                                                Share.share('지금 ${current.name} 듣고 있어요! 뮤직웨이브에서 같이 들어요 🎧\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
-                                              },
-                                            ),
-                                            ListTile(
-                                              leading: Icon(Icons.mood, color: baseColor),
-                                              title: Text('앱 평가하기', style: TextStyle(color: baseColor)),
-                                              onTap: () async {
-                                                Navigator.pop(ctx);
-                                                final uri = Uri.parse('https://play.google.com/store/apps/details?id=kr.ssing.catsong');
-                                                if (await canLaunchUrl(uri)) {
-                                                  await launchUrl(uri, mode: LaunchMode.externalApplication);
-                                                }
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: Icon(Icons.share_outlined, color: baseColor, size: 20),
-                                ),
-                                const SizedBox(width: 10),
-                                _FloatButton(
-                                  onTap: () {
-                                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                                    Navigator.of(context).popUntil((route) => route.isFirst);
-                                  },
-                                  child: Icon(Icons.queue_music, color: baseColor, size: 20),
-                                ),
-                                const SizedBox(width: 10),
-
-                                _FloatButton(
-                                  onTap: () {
-                                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                                    context.read<ThemeProvider>().setDarkMode(!isDarkMode);
-                                  },
-                                  child: Icon(
-                                    isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-                                    color: baseColor,
-                                    size: 20,
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                _FloatButton(
-                                  onTap: () {
-                                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                                     final wasFav = radioProvider.isFavorite(current.stationUuid);
                                     radioProvider.toggleFavorite(current);
                                     final overlay = Overlay.of(context);
@@ -646,26 +587,96 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                 _FloatButton(
                                   onTap: () {
                                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                    context.read<ThemeProvider>().setDarkMode(!isDarkMode);
+                                  },
+                                  child: Icon(
+                                    isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+                                    color: baseColor,
+                                    size: 20,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                _FloatButton(
+                                  onTap: () {
+                                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                                      MaterialPageRoute(builder: (_) => const NatureSoundsScreen()),
                                     );
                                   },
-                                  child: Icon(Icons.settings_outlined, color: baseColor, size: 18),
+                                  child: Icon(Icons.spa_outlined, color: baseColor, size: 18),
+                                ),
+                                const SizedBox(width: 10),
+                                _FloatButton(
+                                  onTap: () {
+                                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                    Navigator.of(context).popUntil((route) => route.isFirst);
+                                  },
+                                  child: Icon(Icons.queue_music, color: baseColor, size: 20),
                                 ),
                                 const SizedBox(width: 10),
                                 Builder(builder: (ctx) {
                                   final homepage = radioProvider.homepageFor(current.name) ?? current.homepage;
-                                  if (homepage == null || homepage.isEmpty) return const SizedBox.shrink();
                                   return _FloatButton(
-                                    onTap: () async {
+                                    onTap: () {
                                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                                      final uri = Uri.parse(homepage);
-                                      if (await canLaunchUrl(uri)) {
-                                        await launchUrl(uri, mode: LaunchMode.externalApplication);
-                                      }
+                                      showModalBottomSheet(
+                                        context: context,
+                                        backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+                                        builder: (sheetCtx) => SafeArea(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              ListTile(
+                                                leading: Icon(Icons.share_outlined, color: baseColor),
+                                                title: Text('친구에게 공유하기', style: TextStyle(color: baseColor)),
+                                                onTap: () {
+                                                  Navigator.pop(sheetCtx);
+                                                  Share.share('지금 ${current.name} 듣고 있어요! 뮤직웨이브에서 같이 들어요 🎧\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                                                },
+                                              ),
+                                              ListTile(
+                                                leading: Icon(Icons.mood, color: baseColor),
+                                                title: Text('앱 평가하기', style: TextStyle(color: baseColor)),
+                                                onTap: () async {
+                                                  Navigator.pop(sheetCtx);
+                                                  final uri = Uri.parse('https://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                                                  if (await canLaunchUrl(uri)) {
+                                                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                                  }
+                                                },
+                                              ),
+                                              ListTile(
+                                                leading: Icon(Icons.settings_outlined, color: baseColor),
+                                                title: Text('설정', style: TextStyle(color: baseColor)),
+                                                onTap: () {
+                                                  Navigator.pop(sheetCtx);
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                                                  );
+                                                },
+                                              ),
+                                              if (homepage != null && homepage.isNotEmpty)
+                                                ListTile(
+                                                  leading: Icon(Icons.home_outlined, color: baseColor),
+                                                  title: Text('방송국 바로가기', style: TextStyle(color: baseColor)),
+                                                  onTap: () async {
+                                                    Navigator.pop(sheetCtx);
+                                                    final uri = Uri.parse(homepage);
+                                                    if (await canLaunchUrl(uri)) {
+                                                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                                    }
+                                                  },
+                                                ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
                                     },
-                                    child: Icon(Icons.home_outlined, color: baseColor, size: 18),
+                                    child: Icon(Icons.more_vert, color: baseColor, size: 20),
                                   );
                                 }),
                               ],

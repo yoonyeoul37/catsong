@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../models/radio_country.dart';
 import '../providers/radio_provider.dart';
 import '../providers/theme_provider.dart';
+import 'nature_sounds_screen.dart';
 import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
 import 'radio_broadcaster_screen.dart';
@@ -234,6 +235,13 @@ class RadioHomeScreen extends StatelessWidget {
               Navigator.push(context, MaterialPageRoute(builder: (_) => RadioFavoritesScreen()));
             },
             icon: Icon(CupertinoIcons.heart, color: isDarkMode ? Colors.white60 : Colors.black45, size: 21),
+          ),
+          IconButton(
+            onPressed: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const NatureSoundsScreen()));
+            },
+            icon: Icon(Icons.spa_outlined, color: isDarkMode ? Colors.white60 : Colors.black45, size: 21),
           ),
           const SizedBox(width: 6),
         ],

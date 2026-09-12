@@ -24,6 +24,7 @@ import '../l10n/app_localizations.dart';
 import 'package:marquee/marquee.dart';
 import 'package:flutter/services.dart';
 import '../providers/theme_provider.dart';
+import 'nature_sounds_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -300,6 +301,33 @@ class _HomeScreenState extends State<HomeScreen> {
           _AppBarCircleButton(
             onTap: () {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => NatureSoundsScreen(),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    return FadeTransition(opacity: animation, child: child);
+                  },
+                  transitionDuration: const Duration(milliseconds: 250),
+                ),
+              );
+            },
+            icon: Icons.spa_outlined,
+            baseColor: baseColor,
+          ),
+          const SizedBox(width: 8),
+          _AppBarCircleButton(
+            onTap: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              context.read<ThemeProvider>().setDarkMode(!isDarkMode);
+            },
+            icon: isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+            baseColor: baseColor,
+          ),
+          const SizedBox(width: 8),
+          _AppBarCircleButton(
+            onTap: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
               showModalBottomSheet(
                 context: context,
                 backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
@@ -328,39 +356,29 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                         },
                       ),
+                      ListTile(
+                        leading: Icon(Icons.settings_outlined, color: baseColor),
+                        title: Text('설정', style: TextStyle(color: baseColor)),
+                        onTap: () {
+                          Navigator.pop(ctx);
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => const SettingsScreen(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                return FadeTransition(opacity: animation, child: child);
+                              },
+                              transitionDuration: const Duration(milliseconds: 250),
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
               );
             },
-            icon: Icons.share_outlined,
-            baseColor: baseColor,
-          ),
-          const SizedBox(width: 8),
-          _AppBarCircleButton(
-            onTap: () {
-              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              context.read<ThemeProvider>().setDarkMode(!isDarkMode);
-            },
-            icon: isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-            baseColor: baseColor,
-          ),
-          const SizedBox(width: 8),
-          _AppBarCircleButton(
-            onTap: () {
-              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) => const SettingsScreen(),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    return FadeTransition(opacity: animation, child: child);
-                  },
-                  transitionDuration: const Duration(milliseconds: 250),
-                ),
-              );
-            },
-            icon: Icons.settings_outlined,
+            icon: Icons.more_vert,
             baseColor: baseColor,
           ),
           const SizedBox(width: 12),

@@ -106,13 +106,12 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     );
     overlay.insert(entry);
 
-    Future.delayed(const Duration(milliseconds: 4500), () async {
-      entry.remove();
+    Future.delayed(const Duration(milliseconds: 5500), () async {
       late OverlayEntry fadeOutEntry;
       fadeOutEntry = OverlayEntry(
         builder: (_) => TweenAnimationBuilder<double>(
-          tween: Tween(begin: 1.0, end: 0.0),
-          duration: const Duration(milliseconds: 600),
+          tween: Tween(begin: 0.0, end: 1.0),
+          duration: const Duration(milliseconds: 900),
           builder: (_, value, child) => Opacity(
             opacity: value,
             child: Container(
@@ -134,7 +133,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         await handler.stop();
       }
 
-      await Future.delayed(const Duration(milliseconds: 600));
+      await Future.delayed(const Duration(milliseconds: 900));
+      entry.remove();
       const MethodChannel('kr.ssing.catsong/media').invokeMethod('closeApp');
     });
   }

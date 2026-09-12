@@ -1384,28 +1384,27 @@ class _PlayerScreenState extends State<PlayerScreen>
   void _showFarewellAndExit(BuildContext context) {
     final langCode = Localizations.localeOf(context).languageCode;
     late final String smallText;
-    late final String ttsLang;
+    late final String farewellAsset;
     switch (langCode) {
       case 'ko':
         smallText = '파란소리와 함께해 주셔서 고마워요.\n다음에 또 좋은 소리로 만나요!';
-        ttsLang = 'ko-KR';
+        farewellAsset = 'assets/farewell_ko.mp3';
         break;
       case 'ja':
         smallText = 'Paransoriと一緒にいてくれてありがとう。\nまた素敵な音でお会いしましょう!';
-        ttsLang = 'ja-JP';
+        farewellAsset = 'assets/farewell_ja.mp3';
         break;
       case 'zh':
         smallText = '感谢您与Paransori相伴。\n下次再见，聆听更多美好的声音!';
-        ttsLang = 'zh-CN';
+        farewellAsset = 'assets/farewell_zh.mp3';
         break;
       default:
         smallText = 'Thank you for being with Paransori.\nSee you again with great sounds!';
-        ttsLang = 'en-US';
+        farewellAsset = 'assets/farewell_en.mp3';
     }
-    final tts = FlutterTts();
-    tts.setLanguage(ttsLang);
-    tts.setSpeechRate(0.45);
-    tts.speak(smallText);
+    context.read<PlayerProvider>().player.setVolume(0.12);
+    final farewellPlayer = AudioPlayer();
+    farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
     final overlay = Overlay.of(context);
     late OverlayEntry entry;
     entry = OverlayEntry(

@@ -24,6 +24,7 @@ import 'package:audio_service/audio_service.dart';
 import '../main.dart' show globalAudioHandler;
 import '../providers/player_provider.dart' show SimpleAudioHandler;
 import '../providers/theme_provider.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'nature_sounds_screen.dart';
 import 'settings_screen.dart';
 import '../widgets/seasonal_effect.dart';
@@ -61,10 +62,30 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
   bool _scheduleTimedOut = false;
 
   void _showFarewellAndExit(BuildContext context) {
-    final isKorean = Localizations.localeOf(context).languageCode == 'ko';
-    final smallText = isKorean
-        ? '파란소리와 함께해 주셔서 고마워요.\n다음에 또 좋은 소리로 만나요!'
-        : 'good bye';
+    final langCode = Localizations.localeOf(context).languageCode;
+    late final String smallText;
+    late final String ttsLang;
+    switch (langCode) {
+      case 'ko':
+        smallText = '파란소리와 함께해 주셔서 고마워요.\n다음에 또 좋은 소리로 만나요!';
+        ttsLang = 'ko-KR';
+        break;
+      case 'ja':
+        smallText = 'Paransoriと一緒にいてくれてありがとう。\nまた素敵な音でお会いしましょう!';
+        ttsLang = 'ja-JP';
+        break;
+      case 'zh':
+        smallText = '感谢您与Paransori相伴。\n下次再见，聆听更多美好的声音!';
+        ttsLang = 'zh-CN';
+        break;
+      default:
+        smallText = 'Thank you for being with Paransori.\nSee you again with great sounds!';
+        ttsLang = 'en-US';
+    }
+    final tts = FlutterTts();
+    tts.setLanguage(ttsLang);
+    tts.setSpeechRate(0.45);
+    tts.speak(smallText);
     final overlay = Overlay.of(context);
     late OverlayEntry entry;
     entry = OverlayEntry(
@@ -84,7 +105,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
               children: [
                 SizedBox(
                   width: 300,
-                  height: isKorean ? 130 : 90,
+                  height: 130,
                   child: CustomPaint(
                     painter: _FarewellTextPainter(opacity: value, smallText: smallText),
                   ),

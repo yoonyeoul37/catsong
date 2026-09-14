@@ -272,6 +272,45 @@ class PlayerProvider extends ChangeNotifier {
     await _playAtIndex(index);
   }
 
+  String? _natureSoundName;
+  String? get natureSoundName => _natureSoundName;
+
+  Future<void> playNatureSound(String assetPath, String displayName) async {
+    _onStopRadio?.call();
+    _natureSoundName = displayName;
+    _currentIndex = -1;
+    _isLoading = true;
+    notifyListeners();
+
+    final handler = _audioHandler;
+    if (handler is SimpleAudioHandler) {
+      handler.setRadioMode(false);
+      handler.updateMediaItem(MediaItem(
+        id: assetPath,
+        title: displayName,
+        artist: '자연소리',
+      ));
+    }
+
+    try {
+      await _player.setAudioSource(AudioSource.asset(assetPath));
+      await _player.setLoopMode(LoopMode.one);
+      await _player.play();
+      await WakelockPlus.enable();
+    } catch (e) {
+      debugPrint('자연소리 재생 오류: $e');
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> stopNatureSound() async {
+    _natureSoundName = null;
+    await _player.stop();
+    await WakelockPlus.disable();
+    notifyListeners();
+  }
+
   Future<void> togglePlayPause() async {
     if (_player.playing) {
       await _player.pause();

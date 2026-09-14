@@ -19,6 +19,8 @@ import 'lyrics_screen.dart';
 import '../l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
 import '../providers/theme_provider.dart';
+import '../main.dart' show globalAudioHandler;
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class PlayerScreen extends StatefulWidget {
@@ -1467,6 +1469,12 @@ class _PlayerScreenState extends State<PlayerScreen>
       final pp = context.read<PlayerProvider>();
       if (pp.isPlaying) {
         await pp.togglePlayPause();
+      }
+      final handler = globalAudioHandler;
+      if (handler is SimpleAudioHandler) {
+        handler.playbackState.add(PlaybackState());
+        handler.mediaItem.add(null);
+        await handler.stop();
       }
 
       await Future.delayed(const Duration(milliseconds: 900));

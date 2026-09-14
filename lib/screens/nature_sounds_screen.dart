@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:just_audio/just_audio.dart';
 import '../providers/theme_provider.dart';
+import '../providers/player_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'settings_screen.dart';
@@ -14,34 +14,6 @@ class NatureSoundsScreen extends StatefulWidget {
 
   @override
   State<NatureSoundsScreen> createState() => _NatureSoundsScreenState();
-}
-
-class _CircleIconButton extends StatelessWidget {
-  final VoidCallback onTap;
-  final IconData icon;
-  final Color baseColor;
-  const _CircleIconButton({
-    required this.onTap,
-    required this.icon,
-    required this.baseColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 36,
-        height: 36,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: baseColor.withOpacity(0.07),
-          border: Border.all(color: baseColor.withOpacity(0.08)),
-        ),
-        child: Icon(icon, color: baseColor, size: 18),
-      ),
-    );
-  }
 }
 
 class _NatureSound {
@@ -61,52 +33,9 @@ class _NatureSound {
 }
 
 class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
-  final AudioPlayer _player = AudioPlayer();
-  String? _currentAsset;
   Timer? _sleepTimer;
   int? _sleepMinutes;
   _NatureSound? _selectedSound;
-
-  void _setSleepTimer(int? minutes) {
-    _sleepTimer?.cancel();
-    setState(() => _sleepMinutes = minutes);
-    if (minutes != null) {
-      _sleepTimer = Timer(Duration(minutes: minutes), () {
-        _player.pause();
-        setState(() => _sleepMinutes = null);
-      });
-    }
-  }
-
-  void _showSleepTimerDialog(Color baseColor, bool isDarkMode) {
-    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
-        title: Text('수면 타이머', style: TextStyle(color: baseColor)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [5, 15, 30, 60].map((m) {
-            return ListTile(
-              title: Text('$m분 후 정지', style: TextStyle(color: baseColor)),
-              onTap: () {
-                Navigator.pop(ctx);
-                _setSleepTimer(m);
-              },
-            );
-          }).toList()
-            ..add(ListTile(
-              title: Text('끄기', style: TextStyle(color: baseColor.withOpacity(0.5))),
-              onTap: () {
-                Navigator.pop(ctx);
-                _setSleepTimer(null);
-              },
-            )),
-        ),
-      ),
-    );
-  }
 
   static const _sounds = <_NatureSound>[
     _NatureSound(
@@ -149,23 +78,19 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
   @override
   void dispose() {
     _sleepTimer?.cancel();
-    _player.dispose();
     super.dispose();
   }
 
-  Future<void> _toggleSound(_NatureSound sound, bool isCurrentlyPlaying, bool isThisOne) async {
+  Future<void> _toggleSound(_NatureSound sound, bool isThisOnePlaying) async {
     if (!sound.isReady) return;
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-    setState(() => _selectedSound = sound);
+    final pp = context.read<PlayerProvider>();
     try {
-      if (isThisOne && isCurrentlyPlaying) {
-        await _player.pause();
+      if (isThisOnePlaying) {
+        await pp.togglePlayPause();
       } else {
-        _currentAsset = sound.assetPath;
-        await _player.setAsset(sound.assetPath!);
-        await _player.setLoopMode(LoopMode.one);
-        await _player.play();
-        setState(() {});
+        setState(() => _selectedSound = sound);
+        await pp.playNatureSound(sound.assetPath!, sound.name);
       }
     } catch (e) {
       debugPrint('=== 자연소리 재생 오류: $e ===');
@@ -177,12 +102,54 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
     }
   }
 
+  void _setSleepTimer(int? minutes) {
+    _sleepTimer?.cancel();
+    setState(() => _sleepMinutes = minutes);
+    if (minutes != null) {
+      _sleepTimer = Timer(Duration(minutes: minutes), () {
+        context.read<PlayerProvider>().stopNatureSound();
+        setState(() => _sleepMinutes = null);
+      });
+    }
+  }
+
+  void _showSleepTimerDialog(Color baseColor, bool isDarkMode) {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
+        title: Text('수면 타이머', style: TextStyle(color: baseColor)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [5, 15, 30, 60].map((m) {
+            return ListTile(
+              title: Text('$m분 후 정지', style: TextStyle(color: baseColor)),
+              onTap: () {
+                Navigator.pop(ctx);
+                _setSleepTimer(m);
+              },
+            );
+          }).toList()
+            ..add(ListTile(
+              title: Text('끄기', style: TextStyle(color: baseColor.withOpacity(0.5))),
+              onTap: () {
+                Navigator.pop(ctx);
+                _setSleepTimer(null);
+              },
+            )),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
     final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final playerProvider = context.watch<PlayerProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       SystemChrome.setSystemUIOverlayStyle(
@@ -321,97 +288,138 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
           const SizedBox(width: 12),
         ],
       ),
-      body: StreamBuilder<PlayerState>(
-        stream: _player.playerStateStream,
-        builder: (context, snapshot) {
-          final isPlayingGlobal = snapshot.data?.playing ?? false;
-          return Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (_selectedSound != null) ...[
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                color: baseColor.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.construction_outlined, color: baseColor.withOpacity(0.5), size: 16),
+                  const SizedBox(width: 8),
+                  Text(
+                    '리뉴얼중입니다',
+                    style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            if (_selectedSound != null) ...[
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                decoration: BoxDecoration(
+                  color: primaryColor.withOpacity(0.06),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${_selectedSound!.emoji} ${_selectedSound!.name}',
+                      style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 11),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _selectedSound!.description,
+                      style: TextStyle(color: baseColor.withOpacity(0.85), fontSize: 13, height: 1.5),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _sounds.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 1,
+              ),
+              itemBuilder: (context, index) {
+                final sound = _sounds[index];
+                final isThisOne = playerProvider.natureSoundName == sound.name;
+                final isPlaying = isThisOne && playerProvider.isPlaying;
+                return GestureDetector(
+                  onTap: sound.isReady ? () => _toggleSound(sound, isPlaying) : null,
+                  child: Container(
                     decoration: BoxDecoration(
-                      color: primaryColor.withOpacity(0.06),
+                      color: isPlaying ? primaryColor.withOpacity(0.12) : baseColor.withOpacity(0.04),
                       borderRadius: BorderRadius.circular(14),
+                      border: isPlaying ? Border.all(color: primaryColor, width: 1.5) : null,
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          '${_selectedSound!.emoji} ${_selectedSound!.name}',
-                          style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 11),
+                        Icon(
+                          isPlaying ? Icons.pause : sound.icon,
+                          color: sound.isReady
+                              ? (isPlaying ? primaryColor : baseColor.withOpacity(0.7))
+                              : baseColor.withOpacity(0.25),
+                          size: 22,
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 6),
                         Text(
-                          _selectedSound!.description,
-                          style: TextStyle(color: baseColor.withOpacity(0.85), fontSize: 13, height: 1.5),
+                          sound.name,
+                          style: TextStyle(
+                            color: sound.isReady
+                                ? (isPlaying ? primaryColor : baseColor.withOpacity(0.8))
+                                : baseColor.withOpacity(0.3),
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
+                        if (!sound.isReady) ...[
+                          const SizedBox(height: 2),
+                          Text('준비중', style: TextStyle(color: baseColor.withOpacity(0.25), fontSize: 9)),
+                        ],
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
-                ],
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: _sounds.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 1,
-                  ),
-                  itemBuilder: (context, index) {
-                    final sound = _sounds[index];
-                    final isThisOne = _currentAsset == sound.assetPath;
-                    final isPlaying = isThisOne && isPlayingGlobal;
-                    return GestureDetector(
-                      onTap: sound.isReady ? () => _toggleSound(sound, isPlaying, isThisOne) : null,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: isPlaying ? primaryColor.withOpacity(0.12) : baseColor.withOpacity(0.04),
-                          borderRadius: BorderRadius.circular(14),
-                          border: isPlaying ? Border.all(color: primaryColor, width: 1.5) : null,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              isPlaying ? Icons.pause : sound.icon,
-                              color: sound.isReady
-                                  ? (isPlaying ? primaryColor : baseColor.withOpacity(0.7))
-                                  : baseColor.withOpacity(0.25),
-                              size: 22,
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              sound.name,
-                              style: TextStyle(
-                                color: sound.isReady
-                                    ? (isPlaying ? primaryColor : baseColor.withOpacity(0.8))
-                                    : baseColor.withOpacity(0.3),
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            if (!sound.isReady) ...[
-                              const SizedBox(height: 2),
-                              Text('준비중', style: TextStyle(color: baseColor.withOpacity(0.25), fontSize: 9)),
-                            ],
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
+                );
+              },
             ),
-          );
-        },
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CircleIconButton extends StatelessWidget {
+  final VoidCallback onTap;
+  final IconData icon;
+  final Color baseColor;
+  const _CircleIconButton({
+    required this.onTap,
+    required this.icon,
+    required this.baseColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: baseColor.withOpacity(0.07),
+          border: Border.all(color: baseColor.withOpacity(0.08)),
+        ),
+        child: Icon(icon, color: baseColor, size: 18),
       ),
     );
   }

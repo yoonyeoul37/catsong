@@ -8,6 +8,9 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'settings_screen.dart';
 import 'radio_home_screen.dart';
+import 'package:audio_service/audio_service.dart';
+import 'package:just_audio/just_audio.dart';
+import '../main.dart' show globalAudioHandler;
 
 class NatureSoundsScreen extends StatefulWidget {
   const NatureSoundsScreen({super.key});
@@ -100,6 +103,104 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
         );
       }
     }
+  }
+
+  void _showFarewellAndExit(BuildContext context) {
+    final langCode = Localizations.localeOf(context).languageCode;
+    late final String smallText;
+    late final String farewellAsset;
+    switch (langCode) {
+      case 'ko':
+        smallText = '파란소리와 함께해 주셔서 고마워요.\n다음에 또 좋은 소리로 만나요!';
+        farewellAsset = 'assets/farewell_ko.mp3';
+        break;
+      case 'ja':
+        smallText = 'Paransoriと一緒にいてくれてありがとう。\nまた素敵な音でお会いしましょう!';
+        farewellAsset = 'assets/farewell_ja.mp3';
+        break;
+      case 'zh':
+        smallText = '感谢您与Paransori相伴。\n下次再见，聆听更多美好的声音!';
+        farewellAsset = 'assets/farewell_zh.mp3';
+        break;
+      default:
+        smallText = 'Thank you for being with Paransori.\nSee you again with great sounds!';
+        farewellAsset = 'assets/farewell_en.mp3';
+    }
+    final farewellPlayer = AudioPlayer();
+    farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
+
+    context.read<PlayerProvider>().player.setVolume(0.12);
+    final overlay = Overlay.of(context);
+    late OverlayEntry entry;
+    entry = OverlayEntry(
+      builder: (_) => TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0.0, end: 1.0),
+        duration: const Duration(milliseconds: 900),
+        curve: Curves.easeOut,
+        builder: (_, value, child) => Opacity(
+          opacity: value,
+          child: Container(
+            color: Colors.black.withOpacity(0.95 * value),
+            width: double.infinity,
+            height: double.infinity,
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: 300,
+                  height: 130,
+                  child: CustomPaint(
+                    painter: _FarewellTextPainter(opacity: value, smallText: smallText),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  width: 40,
+                  height: 3,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary.withOpacity(value),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    overlay.insert(entry);
+
+    Future.delayed(const Duration(milliseconds: 5500), () async {
+      late OverlayEntry fadeOutEntry;
+      fadeOutEntry = OverlayEntry(
+        builder: (_) => TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0.0, end: 1.0),
+          duration: const Duration(milliseconds: 900),
+          builder: (_, value, child) => Opacity(
+            opacity: value,
+            child: Container(
+              color: Colors.black,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+          ),
+        ),
+      );
+      overlay.insert(fadeOutEntry);
+
+      await context.read<PlayerProvider>().stopNatureSound();
+      final handler = globalAudioHandler;
+      if (handler is SimpleAudioHandler) {
+        handler.playbackState.add(PlaybackState());
+        handler.mediaItem.add(null);
+        await handler.stop();
+      }
+
+      await Future.delayed(const Duration(milliseconds: 900));
+      entry.remove();
+      const MethodChannel('kr.ssing.catsong/media').invokeMethod('closeApp');
+    });
   }
 
   void _setSleepTimer(int? minutes) {
@@ -393,8 +494,82 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: bgColor,
+          border: Border(top: BorderSide(color: baseColor.withOpacity(0.08))),
+        ),
+        child: SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    playerProvider.natureSoundName != null
+                        ? '${playerProvider.natureSoundName} 재생 중'
+                        : '재생 중인 소리 없음',
+                    style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 12),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => _showFarewellAndExit(context),
+                  behavior: HitTestBehavior.opaque,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.power_settings_new, color: Color(0xFFE8877E), size: 16),
+                      const SizedBox(width: 4),
+                      const Text('종료', style: TextStyle(color: Color(0xFFE8877E), fontSize: 12, fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
+}
+
+class _FarewellTextPainter extends CustomPainter {
+  final double opacity;
+  final String smallText;
+  _FarewellTextPainter({required this.opacity, required this.smallText});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final isMultiline = smallText.contains('\n');
+    final smallPainter = TextPainter(
+      text: TextSpan(
+        text: smallText,
+        style: TextStyle(
+          color: Colors.white.withOpacity(opacity * 0.85),
+          fontSize: isMultiline ? 17 : 14,
+          letterSpacing: isMultiline ? 0.2 : 5,
+          fontWeight: FontWeight.w500,
+          fontStyle: isMultiline ? FontStyle.normal : FontStyle.italic,
+          height: 1.6,
+        ),
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: size.width);
+    smallPainter.paint(canvas, Offset((size.width - smallPainter.width) / 2, 0));
+
+    final bigPainter = TextPainter(
+      text: TextSpan(
+        text: 'Paransori',
+        style: TextStyle(color: Colors.white.withOpacity(opacity), fontSize: 33, letterSpacing: 3, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    bigPainter.paint(canvas, Offset((size.width - bigPainter.width) / 2, smallPainter.height + 12));
+  }
+
+  @override
+  bool shouldRepaint(covariant _FarewellTextPainter oldDelegate) => oldDelegate.opacity != opacity;
 }
 
 class _CircleIconButton extends StatelessWidget {

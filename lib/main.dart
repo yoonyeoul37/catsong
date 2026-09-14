@@ -40,8 +40,8 @@ void main() async {
     config: const AudioServiceConfig(
       androidNotificationChannelId: 'kr.ssing.catsong.audio',
       androidNotificationChannelName: 'MP3 Player',
-      androidNotificationOngoing: true,
-      androidStopForegroundOnPause: true,
+      androidNotificationOngoing: false,
+      androidStopForegroundOnPause: false,
       androidNotificationIcon: 'mipmap/ic_launcher',
       notificationColor: null,
       androidNotificationClickStartsActivity: true,

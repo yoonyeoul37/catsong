@@ -168,8 +168,9 @@ class RadioProvider extends ChangeNotifier {
     const platform = MethodChannel('kr.ssing.catsong/media');
     platform.setMethodCallHandler((call) async {
       if (call.method == 'onAudioFocusLost') {
-        // 이미 완전히 꺼진(idle) 상태라면 건드리지 않음 (음악 전환 등으로 인한 정상적인 포커스 이동)
+        // 이미 완전히 꺼진(idle) 상태거나, 사용자가 이미 직접 정지해둔 상태라면 건드리지 않음
         if (_playerState == RadioPlayerState.idle) return;
+        if (_playerState == RadioPlayerState.paused) return;
         debugPrint('오디오 포커스 손실 - 라디오 일시정지');
         await _player.pause();
         _isActuallyPlaying = false;

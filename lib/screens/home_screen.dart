@@ -239,31 +239,25 @@ class _HomeScreenState extends State<HomeScreen> {
       titleSpacing: 20,
       title: _isSearching
           ? _buildSearchField()
-          : Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Transform(
-            transform: Matrix4.skewX(-0.15),
-            child: Text(AppLocalizations.of(context)!.appName,
-                style: TextStyle(
-                    color: baseColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: -0.5)),
-          ),
-          if (Localizations.localeOf(context).languageCode == 'ko')
-            Padding(
-              padding: const EdgeInsets.only(left: 4),
-              child: Text('MusicWave',
-                  style: TextStyle(
-                      color: baseColor.withOpacity(0.55),
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 0.5)),
-            ),
-        ],
-      ),
+          : Builder(builder: (ctx) {
+        final isKorean = Localizations.localeOf(context).languageCode == 'ko';
+        if (isKorean) {
+          return Image.asset(
+            'assets/home_logo.png',
+            height: 36,
+          );
+        }
+        return Transform(
+          transform: Matrix4.skewX(-0.15),
+          child: Text(
+            'Paransori',
+            style: TextStyle(
+                color: baseColor,
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5)),
+        );
+      }),
       actions: [
         if (!_isSearching) ...[
           _AppBarCircleButton(

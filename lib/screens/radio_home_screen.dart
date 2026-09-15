@@ -209,7 +209,7 @@ class RadioHomeScreen extends StatelessWidget {
           if (isKorean) {
             return Image.asset(
               'assets/paransori_logo.png',
-              height: 48,
+              height: 55,
             );
           }
           return Text(

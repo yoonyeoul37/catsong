@@ -162,6 +162,8 @@ class RadioProvider extends ChangeNotifier {
     }
   }
 
+  bool _pausedByFocusLoss = false;
+
   void _listenNativeAudioFocus() {
     const platform = MethodChannel('kr.ssing.catsong/media');
     platform.setMethodCallHandler((call) async {
@@ -171,11 +173,15 @@ class RadioProvider extends ChangeNotifier {
         debugPrint('오디오 포커스 손실 - 라디오 일시정지');
         await _player.pause();
         _isActuallyPlaying = false;
+        _pausedByFocusLoss = true;
         _setPlayerState(RadioPlayerState.paused);
         _updateForeground(false);
       } else if (call.method == 'onAudioFocusGain') {
         debugPrint('오디오 포커스 복구 - 라디오 재개');
-        if (_currentStation != null && _playerState == RadioPlayerState.paused) {
+        if (_currentStation != null &&
+            _playerState == RadioPlayerState.paused &&
+            _pausedByFocusLoss) {
+          _pausedByFocusLoss = false;
           await playStation(_currentStation!);
         }
       }

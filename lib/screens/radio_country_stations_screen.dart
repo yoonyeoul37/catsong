@@ -375,30 +375,25 @@ class _RadioCountryStationsScreenState
           icon: Icon(Icons.arrow_back_ios,
               color: baseColor, size: 20),
         ),
-        title: RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: '\u201C',
-                style: TextStyle(color: baseColor, fontSize: 22, fontWeight: FontWeight.w700),
-              ),
-              TextSpan(
-                text: _sloganFor(context, widget.country.code),
-                style: TextStyle(
-                  color: baseColor,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  fontStyle: FontStyle.italic,
-                  letterSpacing: -0.2,
-                ),
-              ),
-              TextSpan(
-                text: ' \u201D',
-                style: TextStyle(color: baseColor, fontSize: 22, fontWeight: FontWeight.w700),
-              ),
-            ],
-          ),
-        ),
+        title: Builder(builder: (ctx) {
+          final isKorean = Localizations.localeOf(context).languageCode == 'ko';
+          if (isKorean) {
+            return Image.asset(
+              'assets/paransori_logo.png',
+              height: 48,
+            );
+          }
+          return Text(
+            'Paransori',
+            style: TextStyle(
+              color: baseColor,
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+              fontStyle: FontStyle.italic,
+              letterSpacing: 1.5,
+            ),
+          );
+        }),
       ),
       body: SafeArea(
         top: false,

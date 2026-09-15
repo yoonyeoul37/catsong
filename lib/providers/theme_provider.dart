@@ -8,12 +8,21 @@ class ThemeProvider extends ChangeNotifier {
   String _fontFamily = 'default';
   bool _isDarkMode = true;
   bool _seasonalEffectEnabled = true;
+  bool _voiceGreetingEnabled = true;
 
   Color get primaryColor => _primaryColor;
   double get textScale => _textScale;
   String get fontFamily => _fontFamily;
   bool get isDarkMode => _isDarkMode;
   bool get seasonalEffectEnabled => _seasonalEffectEnabled;
+  bool get voiceGreetingEnabled => _voiceGreetingEnabled;
+
+  Future<void> setVoiceGreetingEnabled(bool value) async {
+    _voiceGreetingEnabled = value;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('voiceGreetingEnabled', value);
+    notifyListeners();
+  }
 
   Future<void> setSeasonalEffectEnabled(bool value) async {
     _seasonalEffectEnabled = value;
@@ -62,6 +71,7 @@ class ThemeProvider extends ChangeNotifier {
     final fontFamily = prefs.getString('fontFamily');
     final isDarkMode = prefs.getBool('isDarkMode');
     final seasonalEffectEnabled = prefs.getBool('seasonalEffectEnabled');
+    final voiceGreetingEnabled = prefs.getBool('voiceGreetingEnabled');
     if (colorValue != null) {
       _primaryColor = Color(colorValue);
     }
@@ -76,6 +86,9 @@ class ThemeProvider extends ChangeNotifier {
     }
     if (seasonalEffectEnabled != null) {
       _seasonalEffectEnabled = seasonalEffectEnabled;
+    }
+    if (voiceGreetingEnabled != null) {
+      _voiceGreetingEnabled = voiceGreetingEnabled;
     }
     notifyListeners();
   }

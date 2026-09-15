@@ -189,8 +189,10 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
         smallText = 'Thank you for being with Paransori.\nSee you again with great sounds!';
         farewellAsset = 'assets/farewell_en.mp3';
     }
-    final farewellPlayer = AudioPlayer();
-    farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
+    if (context.read<ThemeProvider>().voiceGreetingEnabled) {
+      final farewellPlayer = AudioPlayer();
+      farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
+    }
 
     context.read<PlayerProvider>().player.setVolume(0.12);
     final overlay = Overlay.of(context);

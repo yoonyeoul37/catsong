@@ -82,8 +82,10 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         smallText = 'Thank you for being with Paransori.\nSee you again with great sounds!';
         farewellAsset = 'assets/farewell_en.mp3';
     }
-    final farewellPlayer = AudioPlayer();
-    farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
+    if (context.read<ThemeProvider>().voiceGreetingEnabled) {
+      final farewellPlayer = AudioPlayer();
+      farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
+    }
     final overlay = Overlay.of(context);
     late OverlayEntry entry;
     entry = OverlayEntry(

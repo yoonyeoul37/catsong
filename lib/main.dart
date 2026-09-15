@@ -212,6 +212,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
   bool _showWelcome = false;
 
   Future<void> _checkAndShowWelcome() async {
+    if (!context.read<ThemeProvider>().voiceGreetingEnabled) return;
     final langCode = Localizations.localeOf(context).languageCode;
     final welcomeAsset = langCode == 'ko' ? 'assets/welcome_ko.mp3' : null;
     if (welcomeAsset != null) {

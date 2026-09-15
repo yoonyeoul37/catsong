@@ -1405,8 +1405,10 @@ class _PlayerScreenState extends State<PlayerScreen>
         farewellAsset = 'assets/farewell_en.mp3';
     }
     context.read<PlayerProvider>().player.setVolume(0.12);
-    final farewellPlayer = AudioPlayer();
-    farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
+    if (context.read<ThemeProvider>().voiceGreetingEnabled) {
+      final farewellPlayer = AudioPlayer();
+      farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
+    }
     final overlay = Overlay.of(context);
     late OverlayEntry entry;
     entry = OverlayEntry(

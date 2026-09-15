@@ -204,30 +204,25 @@ class RadioHomeScreen extends StatelessWidget {
           },
           icon: Icon(Icons.arrow_back_ios, color: isDarkMode ? Colors.white : Colors.black, size: 20),
         ),
-        title: RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: '\u201C',
-                style: TextStyle(color: isDarkMode ? Colors.white : Colors.black, fontSize: 22, fontWeight: FontWeight.w700),
-              ),
-              TextSpan(
-                text: AppLocalizations.of(context)!.radioOnAirTitle,
-                style: TextStyle(
-                  color: isDarkMode ? Colors.white : Colors.black,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  fontStyle: FontStyle.italic,
-                  letterSpacing: 1.5,
-                ),
-              ),
-              TextSpan(
-                text: ' \u201D',
-                style: TextStyle(color: isDarkMode ? Colors.white : Colors.black, fontSize: 22, fontWeight: FontWeight.w700),
-              ),
-            ],
-          ),
-        ),
+        title: Builder(builder: (ctx) {
+          final isKorean = Localizations.localeOf(context).languageCode == 'ko';
+          if (isKorean) {
+            return Image.asset(
+              'assets/paransori_logo.png',
+              height: 48,
+            );
+          }
+          return Text(
+            'Paransori',
+            style: TextStyle(
+              color: isDarkMode ? Colors.white : Colors.black,
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+              fontStyle: FontStyle.italic,
+              letterSpacing: 1.5,
+            ),
+          );
+        }),
         actions: [
           IconButton(
             onPressed: () {

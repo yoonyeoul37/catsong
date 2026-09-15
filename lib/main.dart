@@ -20,6 +20,7 @@ import 'theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
 import 'l10n/locale_holder.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:just_audio/just_audio.dart';
 
 late AudioHandler globalAudioHandler;
 late BaseAudioHandler radioAudioHandler;
@@ -208,11 +209,23 @@ class AppInitializer extends StatefulWidget {
 }
 
 class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObserver {
+  bool _showWelcome = false;
+
+  Future<void> _checkAndShowWelcome() async {
+    final langCode = Localizations.localeOf(context).languageCode;
+    final welcomeAsset = langCode == 'ko' ? 'assets/welcome_ko.mp3' : null;
+    if (welcomeAsset != null) {
+      final welcomePlayer = AudioPlayer();
+      welcomePlayer.setAsset(welcomeAsset).then((_) => welcomePlayer.play());
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _checkAndShowWelcome();
       final musicProvider = context.read<MusicProvider>();
       if (musicProvider.songs.isEmpty && !musicProvider.isLoading && !musicProvider.hasPermission == false) {
         await musicProvider.initialize();

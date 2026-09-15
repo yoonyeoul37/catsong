@@ -105,6 +105,69 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
     }
   }
 
+  void _showExitConfirmDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => Dialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                '자연소리를 종료하시겠어요?',
+                style: TextStyle(color: Colors.black87, fontSize: 17, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                '지금 나가면 소리가 멈춰요.',
+                style: TextStyle(color: Colors.black54, fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        Navigator.pop(ctx);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.black54,
+                        side: const BorderSide(color: Colors.black26),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: const Text('계속 듣기'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        Navigator.pop(ctx);
+                        _showFarewellAndExit(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: const Text('종료', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   void _showFarewellAndExit(BuildContext context) {
     final langCode = Localizations.localeOf(context).languageCode;
     late final String smallText;
@@ -514,7 +577,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => _showFarewellAndExit(context),
+                  onTap: () => _showExitConfirmDialog(context),
                   behavior: HitTestBehavior.opaque,
                   child: Row(
                     children: [

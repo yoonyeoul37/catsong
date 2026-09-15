@@ -574,32 +574,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text('${musicProvider.songCount} ${AppLocalizations.of(context)!.songCount}',
                       style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 12)),
-                  if (_showThemeHint)
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: GestureDetector(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const SettingsScreen()),
-                          ),
-                          child: SizedBox(
-                            height: 18,
-                            child: Marquee(
-                              text: '· ${AppLocalizations.of(context)!.themeColorHint}',
-                              style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 11),
-                              scrollAxis: Axis.horizontal,
-                              blankSpace: 40,
-                              velocity: 30,
-                              pauseAfterRound: const Duration(seconds: 1),
-                              startPadding: 0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  else
-                    const Spacer(),
+                  const Spacer(),
                   IconButton(
                     onPressed: () {
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');

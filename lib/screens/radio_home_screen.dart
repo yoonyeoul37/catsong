@@ -208,8 +208,10 @@ class RadioHomeScreen extends StatelessWidget {
           final isKorean = Localizations.localeOf(context).languageCode == 'ko';
           if (isKorean) {
             return Image.asset(
-              'assets/paransori_logo.png',
-              height: 55,
+              'assets/home_logo.png',
+              height: 44,
+              width: 88,
+              fit: BoxFit.fill,
             );
           }
           return Text(

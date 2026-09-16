@@ -244,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
         if (isKorean) {
           return Image.asset(
             'assets/home_logo.png',
-            height: 60,
+            height: 40,
             width: 80,
             fit: BoxFit.fill,
           );

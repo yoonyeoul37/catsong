@@ -1389,19 +1389,19 @@ class _PlayerScreenState extends State<PlayerScreen>
     late final String farewellAsset;
     switch (langCode) {
       case 'ko':
-        smallText = '파란소리와 함께한 시간, 즐거우셨나요?\n언제든 다시 찾아오시면, 좋은 소리로 반갑게 맞아드릴게요.\n안녕히 가세요!';
+        smallText = '파란소리와 함께한 시간,\n즐거우셨나요?\n\n언제든 다시 찾아오시면,\n좋은 소리로 맞아드릴게요.\n안녕히 가세요!';
         farewellAsset = 'assets/farewell_ko.mp3';
         break;
       case 'ja':
-        smallText = 'Paransoriと過ごした時間、楽しんでいただけましたか?\nいつでもまた遊びに来てください、素敵な音でお迎えします。\nまた会いましょう!';
+        smallText = 'Paransoriと過ごした時間、\n楽しんでいただけましたか?\n\nいつでもまた遊びに来てください、\n素敵な音でお迎えします。\nまた会いましょう!';
         farewellAsset = 'assets/farewell_ja.mp3';
         break;
       case 'zh':
-        smallText = '与Paransori相伴的时光，您开心吗?\n欢迎随时回来，我们会用美好的声音迎接您。\n再见啦!';
+        smallText = '与Paransori相伴的时光，\n您开心吗?\n\n欢迎随时回来，\n我们会用美好的声音迎接您。\n再见啦!';
         farewellAsset = 'assets/farewell_zh.mp3';
         break;
       default:
-        smallText = 'Did you enjoy your time with Paransori?\nCome back anytime — we\'ll welcome you with great sounds again.\nGoodbye, and see you soon!';
+        smallText = 'Did you enjoy your time\nwith Paransori?\n\nCome back anytime — we\'ll\nwelcome you with great sounds again.\nGoodbye, and see you soon!';
         farewellAsset = 'assets/farewell_en.mp3';
     }
     context.read<PlayerProvider>().player.setVolume(0.12);
@@ -1427,8 +1427,8 @@ class _PlayerScreenState extends State<PlayerScreen>
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
-                  width: 300,
-                  height: 130,
+                  width: 320,
+                  height: 260,
                   child: CustomPaint(
                     painter: _FarewellTextPainter(opacity: value, smallText: smallText),
                   ),
@@ -1450,7 +1450,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
     overlay.insert(entry);
 
-    Future.delayed(const Duration(milliseconds: 5500), () async {
+    Future.delayed(const Duration(milliseconds: 11000), () async {
       late OverlayEntry fadeOutEntry;
       fadeOutEntry = OverlayEntry(
         builder: (_) => TweenAnimationBuilder<double>(

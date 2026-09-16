@@ -210,7 +210,7 @@ class RadioHomeScreen extends StatelessWidget {
             return Image.asset(
               'assets/home_logo.png',
               height: 44,
-              width: 88,
+              width: 120,
               fit: BoxFit.fill,
             );
           }

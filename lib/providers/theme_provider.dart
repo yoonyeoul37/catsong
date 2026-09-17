@@ -6,7 +6,7 @@ class ThemeProvider extends ChangeNotifier {
   Color _primaryColor = const Color(0xFF078CF6);
   double _textScale = 1.12;
   String _fontFamily = 'default';
-  bool _isDarkMode = true;
+  bool _isDarkMode = false;
   bool _seasonalEffectEnabled = true;
   bool _voiceGreetingEnabled = true;
 

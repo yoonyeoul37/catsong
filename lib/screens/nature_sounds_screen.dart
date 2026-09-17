@@ -316,6 +316,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
     final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
     final primaryColor = Theme.of(context).colorScheme.primary;
     final playerProvider = context.watch<PlayerProvider>();
+    final gridSounds = _sounds.where((s) => s.name != '모닥불').toList();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       SystemChrome.setSystemUIOverlayStyle(
@@ -503,18 +504,73 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
               ),
               const SizedBox(height: 16),
             ],
+            // 모닥불 큰 배경카드
+            Builder(builder: (context) {
+              final campfire = _sounds.firstWhere((s) => s.name == '모닥불');
+              final isThisOne = playerProvider.natureSoundName == campfire.name;
+              final isPlaying = isThisOne && playerProvider.isPlaying;
+              return GestureDetector(
+                onTap: campfire.isReady ? () => _toggleSound(campfire, isPlaying) : null,
+                child: Container(
+                  width: double.infinity,
+                  height: 140,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    image: const DecorationImage(
+                      image: AssetImage('assets/campfire_bg.png'),
+                      fit: BoxFit.cover,
+                    ),
+                    border: isPlaying ? Border.all(color: primaryColor, width: 2) : null,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.05),
+                          Colors.black.withOpacity(0.55),
+                        ],
+                      ),
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    alignment: Alignment.bottomLeft,
+                    child: Row(
+                      children: [
+                        Icon(
+                          isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          '${campfire.emoji} ${campfire.name}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }),
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: _sounds.length,
+              itemCount: gridSounds.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
+                crossAxisCount: 4,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 childAspectRatio: 1,
               ),
               itemBuilder: (context, index) {
-                final sound = _sounds[index];
+                final sound = gridSounds[index];
                 final isThisOne = playerProvider.natureSoundName == sound.name;
                 final isPlaying = isThisOne && playerProvider.isPlaying;
                 return GestureDetector(

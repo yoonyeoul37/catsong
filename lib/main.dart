@@ -210,6 +210,7 @@ class AppInitializer extends StatefulWidget {
 
 class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObserver {
   bool _showWelcome = false;
+  bool _showIntro = true;
 
   Future<void> _checkAndShowWelcome() async {
     if (!context.read<ThemeProvider>().voiceGreetingEnabled) return;
@@ -225,10 +226,16 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    Future.delayed(const Duration(seconds: 6), () {
+      if (mounted) setState(() => _showIntro = false);
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _checkAndShowWelcome();
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.delayed(const Duration(seconds: 6));
       final musicProvider = context.read<MusicProvider>();
-      if (musicProvider.songs.isEmpty && !musicProvider.isLoading && !musicProvider.hasPermission == false) {
+      if (musicProvider.songs.isEmpty) {
         await musicProvider.initialize();
         context
             .read<PlaylistProvider>()
@@ -506,6 +513,23 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
 
   @override
   Widget build(BuildContext context) {
+    if (_showIntro) {
+      return GestureDetector(
+        onTap: () => setState(() => _showIntro = false),
+        child: Scaffold(
+          backgroundColor: Colors.black,
+          body: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(
+                'assets/intro_photo.png',
+                fit: BoxFit.cover,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
     return const HomeScreen();
   }
 }

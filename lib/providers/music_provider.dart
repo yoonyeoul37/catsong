@@ -17,7 +17,7 @@ class MusicProvider extends ChangeNotifier {
   List<Song> _recentSongs = [];
   List<MusicFolder> _folders = [];
   static const _channel = MethodChannel('kr.ssing.catsong/media');
-  bool _isLoading = false;
+  bool _isLoading = true;
   bool _hasPermission = false;
   String _errorMessage = '';
 

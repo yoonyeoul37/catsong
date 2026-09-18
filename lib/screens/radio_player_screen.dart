@@ -95,31 +95,25 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         curve: Curves.easeOut,
         builder: (_, value, child) => Opacity(
           opacity: value,
-          child: Container(
-            color: Colors.black.withOpacity(0.95 * value),
-            width: double.infinity,
-            height: double.infinity,
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  width: 320,
-                  height: 260,
-                  child: CustomPaint(
-                    painter: _FarewellTextPainter(opacity: value, smallText: smallText),
+          child: TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.05, end: 0.85),
+            duration: const Duration(milliseconds: 11000),
+            curve: Curves.easeIn,
+            builder: (_, darkValue, __) => Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: const AssetImage('assets/farewell_bg.png'),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(darkValue),
+                    BlendMode.darken,
                   ),
                 ),
-                const SizedBox(height: 12),
-                Container(
-                  width: 40,
-                  height: 3,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withOpacity(value),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ],
+              ),
+              alignment: Alignment.center,
+              child: const SizedBox.shrink(),
             ),
           ),
         ),

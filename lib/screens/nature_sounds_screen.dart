@@ -230,7 +230,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
     );
     overlay.insert(entry);
 
-    Future.delayed(const Duration(milliseconds: 11000), () async {
+    Future.delayed(const Duration(milliseconds: 15000), () async {
       late OverlayEntry fadeOutEntry;
       fadeOutEntry = OverlayEntry(
         builder: (_) => TweenAnimationBuilder<double>(
@@ -311,6 +311,10 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final playerProvider = context.watch<PlayerProvider>();
     final gridSounds = _sounds.where((s) => s.name != '모닥불').toList();
+    final langCode = Localizations.localeOf(context).languageCode;
+    final designChangeText = langCode == 'ko'
+        ? '이 메뉴는 디자인 변경중입니다.\n기다려주시면 새로운 메뉴로 찾아뵙겠습니다.'
+        : 'This menu is currently being redesigned.\nPlease check back soon for the new version.';
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       SystemChrome.setSystemUIOverlayStyle(
@@ -449,7 +453,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
           const SizedBox(width: 12),
         ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -605,6 +609,14 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                   ),
                 );
               },
+            ),
+            const SizedBox(height: 20),
+            Center(
+              child: Text(
+                designChangeText,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: baseColor.withOpacity(0.45), fontSize: 15, height: 1.5),
+              ),
             ),
           ],
         ),

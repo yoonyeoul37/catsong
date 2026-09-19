@@ -1,8 +1,11 @@
 import 'package:just_audio/just_audio.dart';
 import 'package:audio_service/audio_service.dart';
 import '../main.dart' show globalAudioHandler, SimpleAudioHandler;
+import 'package:flutter/cupertino.dart';
+import 'dart:math' as math;
 import 'dart:ui';
 import 'dart:typed_data';
+import '../providers/start_screen_provider.dart';
 import '../providers/video_provider.dart';
 import 'video_screen.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +72,50 @@ class _HomeScreenState extends State<HomeScreen> {
       context.read<VideoProvider>().loadVideos();
       await _checkBanner();
       await _checkThemeHint();
+      await _navigateToSavedStartScreen();
     });
+  }
+
+  Future<void> _navigateToSavedStartScreen() async {
+    if (!mounted) return;
+    final startScreen = context.read<StartScreenProvider>().startScreen;
+    switch (startScreen) {
+      case StartScreenType.music:
+        setState(() => _showMusicLibrary = true);
+        break;
+      case StartScreenType.radio:
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaler: const TextScaler.linear(1.25),
+              ),
+              child: const RadioHomeScreen(),
+            ),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            transitionDuration: const Duration(milliseconds: 250),
+          ),
+        );
+        break;
+      case StartScreenType.nature:
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => NatureSoundsScreen(),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            transitionDuration: const Duration(milliseconds: 250),
+          ),
+        );
+        break;
+      case StartScreenType.sleep:
+      case null:
+        break;
+    }
   }
 
   Future<void> _checkThemeHint() async {
@@ -102,6 +148,84 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _handleStartScreenStarTap(BuildContext context, StartScreenType type, String label) {
+    final provider = context.read<StartScreenProvider>();
+    if (provider.startScreen == type) {
+      provider.setStartScreen(null);
+      return;
+    }
+    _showSetStartScreenDialog(context, type, label);
+  }
+
+  void _showSetStartScreenDialog(BuildContext context, StartScreenType type, String label) {
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    showDialog(
+      context: context,
+      builder: (ctx) => Dialog(
+        backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '앱 시작 화면으로 설정할까요?',
+                style: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black87,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                '파란소리를 실행할 때 이 화면을 가장 먼저 보여드립니다.',
+                style: TextStyle(
+                    color: isDarkMode ? Colors.white60 : Colors.black54, fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        Navigator.pop(ctx);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: isDarkMode ? Colors.white60 : Colors.black54,
+                        side: BorderSide(color: isDarkMode ? Colors.white24 : Colors.black26),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: const Text('취소'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        context.read<StartScreenProvider>().setStartScreen(type);
+                        Navigator.pop(ctx);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF6FA8DC),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: const Text('설정하기', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   void _showExitConfirmDialog(BuildContext context) {
@@ -618,12 +742,14 @@ class _HomeScreenState extends State<HomeScreen> {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final recentSongs = context.watch<MusicProvider>().recentSongs.take(8).toList();
 
+    final startScreen = context.watch<StartScreenProvider>().startScreen;
+
     final categories = [
-      _DashboardCategory('음악', '내 음악 · MP3 플레이어', 'assets/music_bg.png', () {
+      _DashboardCategory('음악', '내 음악 · MP3 플레이어', 'assets/music_bg.png', StartScreenType.music, () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         setState(() => _showMusicLibrary = true);
       }),
-      _DashboardCategory('라디오', '국내외 라디오 · 즐겨찾기', 'assets/radio_bg.png', () {
+      _DashboardCategory('라디오', '국내외 라디오 · 즐겨찾기', 'assets/radio_bg.png', StartScreenType.radio, () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         Navigator.push(
           context,
@@ -641,7 +767,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
       }),
-      _DashboardCategory('자연소리', '비 · 바람 · 숲 · 파도', 'assets/nature_bg.png', () {
+      _DashboardCategory('자연소리', '비 · 바람 · 숲 · 파도', 'assets/nature_bg.png', StartScreenType.nature, () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         Navigator.push(
           context,
@@ -654,7 +780,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
       }),
-      _DashboardCategory('수면 · 집중', '백색소음 · 집중음 (준비중)', 'assets/sleep_bg.png', () {
+      _DashboardCategory('수면 · 집중', '백색소음 · 집중음 (준비중)', 'assets/sleep_bg.png', StartScreenType.sleep, () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -802,6 +928,32 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ])),
                                   ],
                                 ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: GestureDetector(
+                            onTap: () {
+                              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                              _handleStartScreenStarTap(context, c.type, c.title);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.28),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                startScreen == c.type
+                                    ? CupertinoIcons.heart_fill
+                                    : CupertinoIcons.heart,
+                                size: 18,
+                                color: startScreen == c.type
+                                    ? const Color(0xFF6FA8DC)
+                                    : Colors.white.withOpacity(0.85),
                               ),
                             ),
                           ),
@@ -1441,11 +1593,75 @@ class _AppBarCircleButton extends StatelessWidget {
   }
 }
 
+class _RoundedStar extends StatelessWidget {
+  final bool filled;
+  final Color color;
+  final double size;
+  const _RoundedStar({required this.filled, required this.color, this.size = 18});
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: Size(size, size),
+      painter: _RoundedStarPainter(filled: filled, color: color),
+    );
+  }
+}
+
+class _RoundedStarPainter extends CustomPainter {
+  final bool filled;
+  final Color color;
+  _RoundedStarPainter({required this.filled, required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final outerR = size.width / 2;
+    final innerR = outerR * 0.58;
+    final points = <Offset>[];
+    for (int i = 0; i < 10; i++) {
+      final angle = -math.pi / 2 + i * math.pi / 5;
+      final r = i.isEven ? outerR : innerR;
+      points.add(Offset(center.dx + r * math.cos(angle), center.dy + r * math.sin(angle)));
+    }
+    const cornerFactor = 0.38;
+    final path = Path();
+    for (int i = 0; i < points.length; i++) {
+      final curr = points[i];
+      final prev = points[(i - 1 + points.length) % points.length];
+      final next = points[(i + 1) % points.length];
+      final p1 = Offset.lerp(curr, prev, cornerFactor)!;
+      final p2 = Offset.lerp(curr, next, cornerFactor)!;
+      if (i == 0) {
+        path.moveTo(p1.dx, p1.dy);
+      } else {
+        path.lineTo(p1.dx, p1.dy);
+      }
+      path.quadraticBezierTo(curr.dx, curr.dy, p2.dx, p2.dy);
+    }
+    path.close();
+
+    final paint = Paint()
+      ..color = color
+      ..style = filled ? PaintingStyle.fill : PaintingStyle.stroke
+      ..strokeWidth = size.width * 0.12
+      ..strokeJoin = StrokeJoin.round
+      ..strokeCap = StrokeCap.round
+      ..isAntiAlias = true;
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _RoundedStarPainter oldDelegate) =>
+      oldDelegate.filled != filled || oldDelegate.color != color;
+}
+
 class _DashboardCategory {
   final String title;
   final String subtitle;
   final String imageAsset;
+  final StartScreenType type;
   final VoidCallback onTap;
 
-  _DashboardCategory(this.title, this.subtitle, this.imageAsset, this.onTap);
+  _DashboardCategory(this.title, this.subtitle, this.imageAsset, this.type, this.onTap);
 }

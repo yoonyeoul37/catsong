@@ -15,6 +15,7 @@ import 'providers/lyrics_provider.dart';
 import 'providers/video_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/radio_provider.dart';
+import 'providers/start_screen_provider.dart';
 import 'screens/home_screen.dart';
 import 'theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
@@ -149,6 +150,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: videoProvider),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider.value(value: radioProvider),
+        ChangeNotifierProvider(create: (_) => StartScreenProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

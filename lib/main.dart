@@ -16,6 +16,7 @@ import 'providers/video_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/radio_provider.dart';
 import 'providers/start_screen_provider.dart';
+import 'providers/recent_content_provider.dart';
 import 'screens/home_screen.dart';
 import 'theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
@@ -32,8 +33,13 @@ void main() async {
 
   final playerProvider = PlayerProvider();
   final musicProvider = MusicProvider();
+  final recentContentProvider = RecentContentProvider();
   playerProvider.onSongPlayed = (song) {
     musicProvider.addToRecent(song);
+    recentContentProvider.addMusic(song);
+  };
+  playerProvider.onNaturePlayed = (assetPath, displayName) {
+    recentContentProvider.addNature(assetPath, displayName);
   };
 
   final simpleHandler = SimpleAudioHandler(playerProvider);
@@ -56,6 +62,7 @@ void main() async {
 
   // RadioProvider 생성 + 음악/라디오 상호 정지 연결
   final radioProvider = RadioProvider()
+    ..onStationPlayed = ((station) => recentContentProvider.addRadio(station))
     ..setAudioHandler(radioAudioHandler);
 
   radioProvider.setOnStopMusic(() async {
@@ -123,6 +130,7 @@ void main() async {
     musicProvider: musicProvider,
     radioProvider: radioProvider,
     videoProvider: videoProvider,
+    recentContentProvider: recentContentProvider,
   ));
 }
 
@@ -131,12 +139,14 @@ class MyApp extends StatelessWidget {
   final MusicProvider musicProvider;
   final RadioProvider radioProvider;
   final VideoProvider videoProvider;
+  final RecentContentProvider recentContentProvider;
   const MyApp({
     super.key,
     required this.playerProvider,
     required this.musicProvider,
     required this.radioProvider,
     required this.videoProvider,
+    required this.recentContentProvider,
   });
 
   @override
@@ -151,6 +161,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider.value(value: radioProvider),
         ChangeNotifierProvider(create: (_) => StartScreenProvider()),
+        ChangeNotifierProvider.value(value: recentContentProvider),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

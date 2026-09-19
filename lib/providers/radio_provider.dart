@@ -404,11 +404,14 @@ class RadioProvider extends ChangeNotifier {
     }
   }
 
+  void Function(RadioStation station)? onStationPlayed;
+
   Future<void> playStation(RadioStation station) async {
     if (_playerState == RadioPlayerState.loading) {
       debugPrint('이미 로딩 중 - 중복 호출 무시');
       return;
     }
+    onStationPlayed?.call(station);
 
     try {
       _errorMessage = null;

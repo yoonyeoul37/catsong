@@ -274,10 +274,12 @@ class PlayerProvider extends ChangeNotifier {
 
   String? _natureSoundName;
   String? get natureSoundName => _natureSoundName;
+  void Function(String assetPath, String displayName)? onNaturePlayed;
 
   Future<void> playNatureSound(String assetPath, String displayName) async {
     _onStopRadio?.call();
     _natureSoundName = displayName;
+    onNaturePlayed?.call(assetPath, displayName);
     _currentIndex = -1;
     _isLoading = true;
     notifyListeners();

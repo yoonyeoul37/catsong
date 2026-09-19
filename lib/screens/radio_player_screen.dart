@@ -611,23 +611,13 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                   ),
                                 ),
                                 const SizedBox(width: 10),
-                                _FloatButton(
-                                  onTap: () {
-                                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (_) => const NatureSoundsScreen()),
-                                    );
-                                  },
-                                  child: Icon(Icons.spa_outlined, color: baseColor, size: 18),
-                                ),
-                                const SizedBox(width: 10),
+
                                 _FloatButton(
                                   onTap: () {
                                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                                     Navigator.of(context).popUntil((route) => route.isFirst);
                                   },
-                                  child: Icon(Icons.queue_music, color: baseColor, size: 20),
+                                  child: Icon(Icons.home_rounded, color: baseColor, size: 20),
                                 ),
                                 const SizedBox(width: 10),
                                 Builder(builder: (ctx) {

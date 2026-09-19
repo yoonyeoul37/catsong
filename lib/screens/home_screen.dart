@@ -6,6 +6,9 @@ import 'dart:math' as math;
 import 'dart:ui';
 import 'dart:typed_data';
 import '../providers/start_screen_provider.dart';
+import '../providers/recent_content_provider.dart';
+import '../models/recent_content_entry.dart';
+import '../models/radio_station.dart';
 import '../providers/video_provider.dart';
 import 'video_screen.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _showFavorites = false;
   bool _showRecent = false;
   bool _showMusicLibrary = false;
+  bool _pendingStartScreenNav = false;
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
   bool _showBanner = false;
@@ -63,6 +67,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    final savedStart = context.read<StartScreenProvider>().startScreen;
+    if (savedStart == StartScreenType.music) {
+      _showMusicLibrary = true;
+    } else if (savedStart == StartScreenType.radio || savedStart == StartScreenType.nature) {
+      _pendingStartScreenNav = true;
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final musicProvider = context.read<MusicProvider>();
       if (musicProvider.songs.isEmpty && !musicProvider.isLoading) {
@@ -84,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() => _showMusicLibrary = true);
         break;
       case StartScreenType.radio:
-        Navigator.push(
+        await Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(
@@ -93,24 +103,24 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: const RadioHomeScreen(),
             ),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-            transitionDuration: const Duration(milliseconds: 250),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) => child,
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
           ),
         );
+        if (mounted) setState(() => _pendingStartScreenNav = false);
         break;
       case StartScreenType.nature:
-        Navigator.push(
+        await Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => NatureSoundsScreen(),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-            transitionDuration: const Duration(milliseconds: 250),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) => child,
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
           ),
         );
+        if (mounted) setState(() => _pendingStartScreenNav = false);
         break;
       case StartScreenType.sleep:
       case null:
@@ -154,6 +164,55 @@ class _HomeScreenState extends State<HomeScreen> {
     final provider = context.read<StartScreenProvider>();
     if (provider.startScreen == type) {
       provider.setStartScreen(null);
+      final overlay = Overlay.of(context);
+      late OverlayEntry entry;
+      entry = OverlayEntry(
+        builder: (_) => Positioned.fill(
+          child: Center(
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0.0, end: 1.0),
+              duration: const Duration(milliseconds: 300),
+              builder: (_, value, child) => Opacity(
+                opacity: value,
+                child: Transform.scale(scale: 0.85 + 0.15 * value, child: child),
+              ),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(CupertinoIcons.heart_slash, color: Colors.black38, size: 30),
+                    const SizedBox(height: 10),
+                    Text(
+                      '시작 화면이 취소되었습니다.',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      overlay.insert(entry);
+      Future.delayed(const Duration(seconds: 2), () => entry.remove());
       return;
     }
     _showSetStartScreenDialog(context, type, label);
@@ -720,6 +779,9 @@ class _HomeScreenState extends State<HomeScreen> {
             child: _buildSongsTab(),
           );
         }
+        if (_pendingStartScreenNav) {
+          return const SizedBox.shrink();
+        }
         return _buildDashboard();
       case 1:
         return AlbumScreen(searchQuery: _isSearching ? _searchController.text : '');
@@ -740,7 +802,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
     final primaryColor = Theme.of(context).colorScheme.primary;
-    final recentSongs = context.watch<MusicProvider>().recentSongs.take(8).toList();
+    final recentContent = context.watch<RecentContentProvider>().entries.take(8).toList();
 
     final startScreen = context.watch<StartScreenProvider>().startScreen;
 
@@ -1076,13 +1138,13 @@ class _HomeScreenState extends State<HomeScreen> {
               }),
             ),
           ),
-          if (recentSongs.isNotEmpty) ...[
+          if (recentContent.isNotEmpty) ...[
             const SizedBox(height: 20),
             Row(
               children: [
                 Icon(Icons.headphones_rounded, size: 18, color: baseColor.withOpacity(0.7)),
                 const SizedBox(width: 6),
-                Text('최근 들은 음악',
+                Text('최근 들은 콘텐츠',
                     style: TextStyle(
                         color: baseColor, fontSize: 16, fontWeight: FontWeight.w800)),
               ],
@@ -1092,14 +1154,97 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 124,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
-                itemCount: recentSongs.length,
+                itemCount: recentContent.length,
                 separatorBuilder: (_, __) => const SizedBox(width: 14),
                 itemBuilder: (context, index) {
-                  final song = recentSongs[index];
+                  final item = recentContent[index];
+
+                  IconData typeIcon;
+                  Color typeColor;
+                  Widget thumbnail;
+                  VoidCallback onTapAction;
+
+                  switch (item.type) {
+                    case RecentContentType.music:
+                      typeIcon = Icons.music_note_rounded;
+                      typeColor = const Color(0xFF3B82F6);
+                      final musicProvider = context.read<MusicProvider>();
+                      Song? matched;
+                      for (final s in musicProvider.allSongs) {
+                        if (s.uri == item.songUri) {
+                          matched = s;
+                          break;
+                        }
+                      }
+                      thumbnail = matched?.albumArt != null
+                          ? Image.memory(
+                        Uint8List.fromList(matched!.albumArt!),
+                        width: 72,
+                        height: 72,
+                        fit: BoxFit.cover,
+                        gaplessPlayback: true,
+                      )
+                          : Container(
+                        width: 72,
+                        height: 72,
+                        color: primaryColor.withOpacity(0.7),
+                        child: const Icon(Icons.music_note_rounded,
+                            color: Colors.white, size: 26),
+                      );
+                      onTapAction = () {
+                        if (matched != null) {
+                          context.read<PlayerProvider>().playFromList([matched], 0);
+                        }
+                      };
+                      break;
+                    case RecentContentType.radio:
+                      typeIcon = Icons.radio_rounded;
+                      typeColor = const Color(0xFF8B5CF6);
+                      thumbnail = Container(
+                        width: 72,
+                        height: 72,
+                        color: typeColor.withOpacity(0.7),
+                        child: const Icon(Icons.radio_rounded, color: Colors.white, size: 26),
+                      );
+                      onTapAction = () {
+                        if (item.stationData != null) {
+                          final station = RadioStation.fromJson(item.stationData!);
+                          context.read<RadioProvider>().playStation(station);
+                        }
+                      };
+                      break;
+                    case RecentContentType.nature:
+                      typeIcon = Icons.waves_rounded;
+                      typeColor = const Color(0xFF10B981);
+                      thumbnail = Container(
+                        width: 72,
+                        height: 72,
+                        color: typeColor.withOpacity(0.7),
+                        child: const Icon(Icons.waves_rounded, color: Colors.white, size: 26),
+                      );
+                      onTapAction = () {
+                        if (item.natureAssetPath != null) {
+                          context.read<PlayerProvider>().playNatureSound(item.natureAssetPath!, item.title);
+                        }
+                      };
+                      break;
+                    case RecentContentType.sleep:
+                      typeIcon = Icons.bedtime_rounded;
+                      typeColor = const Color(0xFF6366F1);
+                      thumbnail = Container(
+                        width: 72,
+                        height: 72,
+                        color: typeColor.withOpacity(0.7),
+                        child: const Icon(Icons.bedtime_rounded, color: Colors.white, size: 26),
+                      );
+                      onTapAction = () {};
+                      break;
+                  }
+
                   return GestureDetector(
                     onTap: () {
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      context.read<PlayerProvider>().playFromList(recentSongs, index);
+                      onTapAction();
                     },
                     child: SizedBox(
                       width: 78,
@@ -1117,32 +1262,34 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ],
                             ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(14),
-                              child: song.albumArt != null
-                                  ? Image.memory(
-                                Uint8List.fromList(song.albumArt!),
-                                width: 72,
-                                height: 72,
-                                fit: BoxFit.cover,
-                                gaplessPlayback: true,
-                              )
-                                  : Container(
-                                width: 72,
-                                height: 72,
-                                color: primaryColor.withOpacity(0.7),
-                                child: const Icon(Icons.music_note_rounded,
-                                    color: Colors.white, size: 26),
-                              ),
+                            child: Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(14),
+                                  child: thumbnail,
+                                ),
+                                Positioned(
+                                  left: 4,
+                                  top: 4,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(3),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.4),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(typeIcon, size: 10, color: Colors.white),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(height: 6),
-                          Text(song.titleDisplay,
+                          Text(item.title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   color: baseColor, fontSize: 11, fontWeight: FontWeight.w600)),
-                          Text(song.artistDisplay,
+                          Text(item.subtitle,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(

@@ -814,9 +814,15 @@ class _HomeScreenState extends State<HomeScreen> {
             }).toList(),
           ),
           const SizedBox(height: 24),
-          Text('오늘의 추천 소리',
-              style: TextStyle(
-                  color: baseColor, fontSize: 16, fontWeight: FontWeight.w800)),
+          Row(
+            children: [
+              Icon(Icons.volume_up_rounded, size: 18, color: baseColor.withOpacity(0.7)),
+              const SizedBox(width: 6),
+              Text('오늘의 추천 소리',
+                  style: TextStyle(
+                      color: baseColor, fontSize: 16, fontWeight: FontWeight.w800)),
+            ],
+          ),
           const SizedBox(height: 12),
           SizedBox(
             height: 108,
@@ -920,9 +926,15 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           if (recentSongs.isNotEmpty) ...[
             const SizedBox(height: 20),
-            Text('최근 들은 음악',
-                style: TextStyle(
-                    color: baseColor, fontSize: 16, fontWeight: FontWeight.w800)),
+            Row(
+              children: [
+                Icon(Icons.headphones_rounded, size: 18, color: baseColor.withOpacity(0.7)),
+                const SizedBox(width: 6),
+                Text('최근 들은 음악',
+                    style: TextStyle(
+                        color: baseColor, fontSize: 16, fontWeight: FontWeight.w800)),
+              ],
+            ),
             const SizedBox(height: 12),
             SizedBox(
               height: 124,

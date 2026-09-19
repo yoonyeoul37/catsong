@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'dart:typed_data';
 import '../providers/video_provider.dart';
 import 'video_screen.dart';
@@ -534,73 +535,100 @@ class _HomeScreenState extends State<HomeScreen> {
             physics: const NeverScrollableScrollPhysics(),
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
-            childAspectRatio: 1.5,
+            childAspectRatio: 1.15,
             children: categories.map((c) {
               return GestureDetector(
                 onTap: c.onTap,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(18),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.asset(
-                        c.imageAsset,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          color: baseColor.withOpacity(0.08),
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.black.withOpacity(0.0),
-                              Colors.black.withOpacity(0.55),
-                              Colors.black.withOpacity(0.88),
-                            ],
-                            stops: const [0.0, 0.55, 1.0],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(14),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(c.title,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                    shadows: [
-                                      Shadow(
-                                        color: Colors.black.withOpacity(0.6),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 1),
-                                      ),
-                                    ])),
-                            const SizedBox(height: 3),
-                            Text(c.subtitle,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: Colors.white.withOpacity(0.92),
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500,
-                                    shadows: [
-                                      Shadow(
-                                        color: Colors.black.withOpacity(0.6),
-                                        blurRadius: 6,
-                                        offset: const Offset(0, 1),
-                                      ),
-                                    ])),
-                          ],
-                        ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(18),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.16),
+                        blurRadius: 16,
+                        offset: const Offset(0, 6),
                       ),
                     ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(18),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.asset(
+                          c.imageAsset,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Container(
+                            color: baseColor.withOpacity(0.08),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black.withOpacity(0.0),
+                                Colors.black.withOpacity(0.18),
+                              ],
+                              stops: const [0.5, 1.0],
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          child: ClipRRect(
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                              child: Container(
+                                padding: const EdgeInsets.fromLTRB(12, 6, 12, 8),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.08),
+                                  border: Border(
+                                    top: BorderSide(color: Colors.white.withOpacity(0.18)),
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(c.title,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w800,
+                                            shadows: [
+                                              Shadow(
+                                                color: Colors.black.withOpacity(0.7),
+                                                blurRadius: 8,
+                                                offset: const Offset(0, 1),
+                                              ),
+                                            ])),
+                                    const SizedBox(height: 2),
+                                    Text(c.subtitle,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            color: Colors.white.withOpacity(0.9),
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w500,
+                                            shadows: [
+                                              Shadow(
+                                                color: Colors.black.withOpacity(0.7),
+                                                blurRadius: 6,
+                                                offset: const Offset(0, 1),
+                                              ),
+                                            ])),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -632,55 +660,78 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       );
                     },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          Image.asset(
-                            item.$2,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => Container(
-                              color: baseColor.withOpacity(0.08),
-                            ),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.black.withOpacity(0.0),
-                                  Colors.black.withOpacity(0.6),
-                                ],
-                                stops: const [0.4, 1.0],
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(item.$1,
-                                    textAlign: TextAlign.center,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                        shadows: [
-                                          Shadow(
-                                            color: Colors.black.withOpacity(0.6),
-                                            blurRadius: 6,
-                                            offset: const Offset(0, 1),
-                                          ),
-                                        ])),
-                              ],
-                            ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.16),
+                            blurRadius: 16,
+                            offset: const Offset(0, 6),
                           ),
                         ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            Image.asset(
+                              item.$2,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                color: baseColor.withOpacity(0.08),
+                              ),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.black.withOpacity(0.0),
+                                    Colors.black.withOpacity(0.12),
+                                  ],
+                                  stops: const [0.55, 1.0],
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              child: ClipRRect(
+                                child: BackdropFilter(
+                                  filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.08),
+                                      border: Border(
+                                        top: BorderSide(color: Colors.white.withOpacity(0.16)),
+                                      ),
+                                    ),
+                                    child: Text(item.$1,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w700,
+                                            shadows: [
+                                              Shadow(
+                                                color: Colors.black.withOpacity(0.7),
+                                                blurRadius: 6,
+                                                offset: const Offset(0, 1),
+                                              ),
+                                            ])),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -712,22 +763,34 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(14),
-                            child: song.albumArt != null
-                                ? Image.memory(
-                              Uint8List.fromList(song.albumArt!),
-                              width: 72,
-                              height: 72,
-                              fit: BoxFit.cover,
-                              gaplessPlayback: true,
-                            )
-                                : Container(
-                              width: 72,
-                              height: 72,
-                              color: primaryColor.withOpacity(0.7),
-                              child: const Icon(Icons.music_note_rounded,
-                                  color: Colors.white, size: 26),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.16),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(14),
+                              child: song.albumArt != null
+                                  ? Image.memory(
+                                Uint8List.fromList(song.albumArt!),
+                                width: 72,
+                                height: 72,
+                                fit: BoxFit.cover,
+                                gaplessPlayback: true,
+                              )
+                                  : Container(
+                                width: 72,
+                                height: 72,
+                                color: primaryColor.withOpacity(0.7),
+                                child: const Icon(Icons.music_note_rounded,
+                                    color: Colors.white, size: 26),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 6),

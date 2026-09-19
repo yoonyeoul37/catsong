@@ -1,3 +1,6 @@
+import 'package:just_audio/just_audio.dart';
+import 'package:audio_service/audio_service.dart';
+import '../main.dart' show globalAudioHandler, SimpleAudioHandler;
 import 'dart:ui';
 import 'dart:typed_data';
 import '../providers/video_provider.dart';
@@ -99,6 +102,173 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _showExitConfirmDialog(BuildContext context) {
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    showDialog(
+      context: context,
+      builder: (ctx) => Dialog(
+        backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '파란소리를 종료하시겠어요?',
+                style: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black87,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                '재생 중인 소리가 멈춰요.',
+                style: TextStyle(
+                    color: isDarkMode ? Colors.white60 : Colors.black54, fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        Navigator.pop(ctx);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: isDarkMode ? Colors.white60 : Colors.black54,
+                        side: BorderSide(color: isDarkMode ? Colors.white24 : Colors.black26),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: const Text('계속 듣기'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        Navigator.pop(ctx);
+                        _showFarewellAndExit(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: const Text('종료', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showFarewellAndExit(BuildContext context) {
+    final langCode = Localizations.localeOf(context).languageCode;
+    late final String smallText;
+    late final String farewellAsset;
+    switch (langCode) {
+      case 'ko':
+        smallText = '파란소리와 함께한 시간,\n즐거우셨나요?\n\n언제든 다시 찾아오시면,\n좋은 소리로 맞아드릴게요.\n안녕히 가세요!';
+        farewellAsset = 'assets/farewell_ko.mp3';
+        break;
+      case 'ja':
+        smallText = 'Paransoriと過ごした時間、\n楽しんでいただけましたか?\n\nいつでもまた遊びに来てください、\n素敵な音でお迎えします。\nまた会いましょう!';
+        farewellAsset = 'assets/farewell_ja.mp3';
+        break;
+      case 'zh':
+        smallText = '与Paransori相伴的时光，\n您开心吗?\n\n欢迎随时回来，\n我们会用美好的声音迎接您。\n再见啦!';
+        farewellAsset = 'assets/farewell_zh.mp3';
+        break;
+      default:
+        smallText = 'Did you enjoy your time\nwith Paransori?\n\nCome back anytime — we\'ll\nwelcome you with great sounds again.\nGoodbye, and see you soon!';
+        farewellAsset = 'assets/farewell_en.mp3';
+    }
+    if (context.read<ThemeProvider>().voiceGreetingEnabled) {
+      final farewellPlayer = AudioPlayer();
+      farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
+    }
+
+    context.read<PlayerProvider>().player.setVolume(0.12);
+    final overlay = Overlay.of(context);
+    late OverlayEntry entry;
+    entry = OverlayEntry(
+      builder: (_) => TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0.0, end: 1.0),
+        duration: const Duration(milliseconds: 900),
+        curve: Curves.easeOut,
+        builder: (_, value, child) => Opacity(
+          opacity: value,
+          child: TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.05, end: 0.85),
+            duration: const Duration(milliseconds: 11000),
+            curve: Curves.easeIn,
+            builder: (_, darkValue, __) => Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: const AssetImage('assets/farewell_bg.png'),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(darkValue),
+                    BlendMode.darken,
+                  ),
+                ),
+              ),
+              alignment: Alignment.center,
+              child: const SizedBox.shrink(),
+            ),
+          ),
+        ),
+      ),
+    );
+    overlay.insert(entry);
+
+    Future.delayed(const Duration(milliseconds: 15000), () async {
+      late OverlayEntry fadeOutEntry;
+      fadeOutEntry = OverlayEntry(
+        builder: (_) => TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0.0, end: 1.0),
+          duration: const Duration(milliseconds: 900),
+          builder: (_, value, child) => Opacity(
+            opacity: value,
+            child: Container(
+              color: Colors.black,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+          ),
+        ),
+      );
+      overlay.insert(fadeOutEntry);
+
+      try {
+        await context.read<PlayerProvider>().stopNatureSound();
+      } catch (_) {}
+      try {
+        await context.read<RadioProvider>().stopRadio();
+      } catch (_) {}
+      final handler = globalAudioHandler;
+      if (handler is SimpleAudioHandler) {
+        handler.playbackState.add(PlaybackState());
+        handler.mediaItem.add(null);
+        await handler.stop();
+      }
+
+      await Future.delayed(const Duration(milliseconds: 900));
+      entry.remove();
+      const MethodChannel('kr.ssing.catsong/media').invokeMethod('closeApp');
+    });
   }
 
   void _showMultiDeleteDialog(BuildContext context, MusicProvider musicProvider) {
@@ -280,6 +450,15 @@ class _HomeScreenState extends State<HomeScreen> {
               context.read<ThemeProvider>().setDarkMode(!isDarkMode);
             },
             icon: isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+            baseColor: baseColor,
+          ),
+          const SizedBox(width: 8),
+          _AppBarCircleButton(
+            onTap: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              _showExitConfirmDialog(context);
+            },
+            icon: Icons.power_settings_new_rounded,
             baseColor: baseColor,
           ),
           const SizedBox(width: 8),

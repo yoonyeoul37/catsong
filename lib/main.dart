@@ -226,14 +226,14 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    Future.delayed(const Duration(seconds: 11), () {
+    Future.delayed(const Duration(seconds: 8), () {
       if (mounted) setState(() => _showIntro = false);
     });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _checkAndShowWelcome();
     });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await Future.delayed(const Duration(seconds: 11));
+      await Future.delayed(const Duration(seconds: 8));
       final musicProvider = context.read<MusicProvider>();
       if (musicProvider.songs.isEmpty) {
         await musicProvider.initialize();

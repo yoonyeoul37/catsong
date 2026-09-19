@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import '../providers/video_provider.dart';
 import 'video_screen.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentTabIndex = 0;
   bool _showFavorites = false;
   bool _showRecent = false;
+  bool _showMusicLibrary = false;
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
   bool _showBanner = false;
@@ -252,12 +254,12 @@ class _HomeScreenState extends State<HomeScreen> {
         return Transform(
           transform: Matrix4.skewX(-0.15),
           child: Text(
-            'Paransori',
-            style: TextStyle(
-                color: baseColor,
-                fontSize: 18,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.5)),
+              'Paransori',
+              style: TextStyle(
+                  color: baseColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -0.5)),
         );
       }),
       actions: [
@@ -268,47 +270,6 @@ class _HomeScreenState extends State<HomeScreen> {
               setState(() => _isSearching = true);
             },
             icon: Icons.search,
-            baseColor: baseColor,
-          ),
-          const SizedBox(width: 8),
-          _AppBarCircleButton(
-            onTap: () {
-              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(
-                    data: MediaQuery.of(context).copyWith(
-                      textScaler: const TextScaler.linear(1.25),
-                    ),
-                    child: const RadioHomeScreen(),
-                  ),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    return FadeTransition(opacity: animation, child: child);
-                  },
-                  transitionDuration: const Duration(milliseconds: 250),
-                ),
-              );
-            },
-            icon: Icons.radio_outlined,
-            baseColor: baseColor,
-          ),
-          const SizedBox(width: 8),
-          _AppBarCircleButton(
-            onTap: () {
-              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) => NatureSoundsScreen(),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    return FadeTransition(opacity: animation, child: child);
-                  },
-                  transitionDuration: const Duration(milliseconds: 250),
-                ),
-              );
-            },
-            icon: Icons.spa_outlined,
             baseColor: baseColor,
           ),
           const SizedBox(width: 8),
@@ -446,7 +407,16 @@ class _HomeScreenState extends State<HomeScreen> {
             child: const RecentScreen(key: ValueKey('recent')),
           );
         }
-        return _buildSongsTab();
+        if (_showMusicLibrary) {
+          return WillPopScope(
+            onWillPop: () async {
+              setState(() => _showMusicLibrary = false);
+              return false;
+            },
+            child: _buildSongsTab(),
+          );
+        }
+        return _buildDashboard();
       case 1:
         return AlbumScreen(searchQuery: _isSearching ? _searchController.text : '');
       case 2:
@@ -460,6 +430,328 @@ class _HomeScreenState extends State<HomeScreen> {
       default:
         return _buildSongsTab();
     }
+  }
+
+  Widget _buildDashboard() {
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    final recentSongs = context.watch<MusicProvider>().recentSongs.take(8).toList();
+
+    final categories = [
+      _DashboardCategory('음악', '내 음악 · MP3 플레이어', 'assets/music_bg.png', () {
+        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+        setState(() => _showMusicLibrary = true);
+      }),
+      _DashboardCategory('라디오', '국내외 라디오 · 즐겨찾기', 'assets/radio_bg.png', () {
+        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaler: const TextScaler.linear(1.25),
+              ),
+              child: const RadioHomeScreen(),
+            ),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            transitionDuration: const Duration(milliseconds: 250),
+          ),
+        );
+      }),
+      _DashboardCategory('자연소리', '비 · 바람 · 숲 · 파도', 'assets/nature_bg.png', () {
+        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => NatureSoundsScreen(),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            transitionDuration: const Duration(milliseconds: 250),
+          ),
+        );
+      }),
+      _DashboardCategory('수면 · 집중', '백색소음 · 집중음 (준비중)', 'assets/sleep_bg.png', () {
+        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('수면 · 집중 기능은 준비중입니다.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }),
+    ];
+
+    final recommended = [
+      ('비 오는 날', 'assets/sound_rain.png'),
+      ('파도 소리', 'assets/sound_wave.png'),
+      ('장작불 소리', 'assets/sound_fire.png'),
+    ];
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              _buildFilterTab(
+                AppLocalizations.of(context)!.all,
+                !_showFavorites && !_showRecent,
+                    () => setState(() {
+                  _showFavorites = false;
+                  _showRecent = false;
+                }),
+                primaryColor,
+              ),
+              _buildFilterTab(
+                AppLocalizations.of(context)!.favorites,
+                _showFavorites,
+                    () => setState(() {
+                  _showFavorites = true;
+                  _showRecent = false;
+                }),
+                primaryColor,
+              ),
+              _buildFilterTab(
+                AppLocalizations.of(context)!.recent,
+                _showRecent,
+                    () => setState(() {
+                  _showFavorites = false;
+                  _showRecent = true;
+                }),
+                primaryColor,
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 1.5,
+            children: categories.map((c) {
+              return GestureDetector(
+                onTap: c.onTap,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(18),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.asset(
+                        c.imageAsset,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          color: baseColor.withOpacity(0.08),
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.black.withOpacity(0.0),
+                              Colors.black.withOpacity(0.55),
+                              Colors.black.withOpacity(0.88),
+                            ],
+                            stops: const [0.0, 0.55, 1.0],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(14),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(c.title,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                    shadows: [
+                                      Shadow(
+                                        color: Colors.black.withOpacity(0.6),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 1),
+                                      ),
+                                    ])),
+                            const SizedBox(height: 3),
+                            Text(c.subtitle,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: Colors.white.withOpacity(0.92),
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500,
+                                    shadows: [
+                                      Shadow(
+                                        color: Colors.black.withOpacity(0.6),
+                                        blurRadius: 6,
+                                        offset: const Offset(0, 1),
+                                      ),
+                                    ])),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 24),
+          Text('오늘의 추천 소리',
+              style: TextStyle(
+                  color: baseColor, fontSize: 16, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 108,
+            child: Row(
+              children: List.generate(recommended.length * 2 - 1, (i) {
+                if (i.isOdd) return const SizedBox(width: 12);
+                final item = recommended[i ~/ 2];
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) => NatureSoundsScreen(),
+                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            return FadeTransition(opacity: animation, child: child);
+                          },
+                          transitionDuration: const Duration(milliseconds: 250),
+                        ),
+                      );
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Image.asset(
+                            item.$2,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) => Container(
+                              color: baseColor.withOpacity(0.08),
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.black.withOpacity(0.0),
+                                  Colors.black.withOpacity(0.6),
+                                ],
+                                stops: const [0.4, 1.0],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(item.$1,
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                        shadows: [
+                                          Shadow(
+                                            color: Colors.black.withOpacity(0.6),
+                                            blurRadius: 6,
+                                            offset: const Offset(0, 1),
+                                          ),
+                                        ])),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ),
+          if (recentSongs.isNotEmpty) ...[
+            const SizedBox(height: 20),
+            Text('최근 들은 음악',
+                style: TextStyle(
+                    color: baseColor, fontSize: 16, fontWeight: FontWeight.w800)),
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 124,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: recentSongs.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 14),
+                itemBuilder: (context, index) {
+                  final song = recentSongs[index];
+                  return GestureDetector(
+                    onTap: () {
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                      context.read<PlayerProvider>().playFromList(recentSongs, index);
+                    },
+                    child: SizedBox(
+                      width: 78,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(14),
+                            child: song.albumArt != null
+                                ? Image.memory(
+                              Uint8List.fromList(song.albumArt!),
+                              width: 72,
+                              height: 72,
+                              fit: BoxFit.cover,
+                              gaplessPlayback: true,
+                            )
+                                : Container(
+                              width: 72,
+                              height: 72,
+                              color: primaryColor.withOpacity(0.7),
+                              child: const Icon(Icons.music_note_rounded,
+                                  color: Colors.white, size: 26),
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(song.titleDisplay,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: baseColor, fontSize: 11, fontWeight: FontWeight.w600)),
+                          Text(song.artistDisplay,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: baseColor.withOpacity(0.45), fontSize: 10)),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
   }
 
   Widget _buildSongsTab() {
@@ -893,4 +1185,13 @@ class _AppBarCircleButton extends StatelessWidget {
       ),
     );
   }
+}
+
+class _DashboardCategory {
+  final String title;
+  final String subtitle;
+  final String imageAsset;
+  final VoidCallback onTap;
+
+  _DashboardCategory(this.title, this.subtitle, this.imageAsset, this.onTap);
 }

@@ -163,19 +163,19 @@ class RadioHomeScreen extends StatelessWidget {
       SystemChrome.setSystemUIOverlayStyle(
         isDarkMode
             ? const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.light,
-                statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: Color(0xFF17140F),
-                systemNavigationBarIconBrightness: Brightness.light,
-              )
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: Color(0xFF17140F),
+          systemNavigationBarIconBrightness: Brightness.light,
+        )
             : const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.dark,
-                statusBarBrightness: Brightness.light,
-                systemNavigationBarColor: Color(0xFFF7F5F0),
-                systemNavigationBarIconBrightness: Brightness.dark,
-              ),
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+          systemNavigationBarColor: Color(0xFFF7F5F0),
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
       );
     });
 
@@ -187,15 +187,15 @@ class RadioHomeScreen extends StatelessWidget {
         elevation: 0,
         systemOverlayStyle: isDarkMode
             ? const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.light,
-                statusBarBrightness: Brightness.dark,
-              )
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+        )
             : const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.dark,
-                statusBarBrightness: Brightness.light,
-              ),
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+        ),
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
@@ -226,20 +226,6 @@ class RadioHomeScreen extends StatelessWidget {
           );
         }),
         actions: [
-          IconButton(
-            onPressed: () {
-              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              Navigator.push(context, MaterialPageRoute(builder: (_) => RadioFavoritesScreen()));
-            },
-            icon: Icon(CupertinoIcons.heart, color: isDarkMode ? Colors.white60 : Colors.black45, size: 21),
-          ),
-          IconButton(
-            onPressed: () {
-              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const NatureSoundsScreen()));
-            },
-            icon: Icon(Icons.spa_outlined, color: isDarkMode ? Colors.white60 : Colors.black45, size: 21),
-          ),
           const SizedBox(width: 6),
         ],
       ),

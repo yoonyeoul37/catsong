@@ -67,11 +67,13 @@ void main() async {
 
   radioProvider.setOnStopMusic(() async {
     await playerProvider.player.stop();
+    playerProvider.clearNatureSoundState();
+    playerProvider.clearCurrentSong();
     await WakelockPlus.disable();
   });
 
   playerProvider.setOnStopRadio(() async {
-    await radioProvider.stopRadio();
+    await radioProvider.stopRadioAndClear();
   });
 
   simpleHandler.onRadioPlay = () {
@@ -244,6 +246,19 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
     });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _checkAndShowWelcome();
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      for (final path in [
+        'assets/music_bg.png',
+        'assets/radio_bg.png',
+        'assets/nature_bg.png',
+        'assets/sleep_bg.png',
+        'assets/sound_rain.png',
+        'assets/sound_wave.png',
+        'assets/sound_fire.png',
+      ]) {
+        precacheImage(AssetImage(path), context);
+      }
     });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(const Duration(seconds: 8));

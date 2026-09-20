@@ -82,7 +82,7 @@ class StationTile extends StatelessWidget {
                   size: 21,
                 ),
                 onPressed: () =>
-                    radioProvider.toggleFavorite(station),
+                    Future.microtask(() => radioProvider.toggleFavorite(station)),
               ),
           ],
         ),

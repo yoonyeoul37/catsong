@@ -10,7 +10,8 @@ import '../l10n/app_localizations.dart';
 import '../widgets/song_list_tile.dart';
 
 class FavoritesScreen extends StatelessWidget {
-  const FavoritesScreen({super.key});
+  final bool showHeader;
+  const FavoritesScreen({super.key, this.showHeader = true});
 
   @override
   Widget build(BuildContext context) {
@@ -22,29 +23,30 @@ class FavoritesScreen extends StatelessWidget {
 
     return CustomScrollView(
       slivers: [
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Row(
-              children: [
-                Text(AppLocalizations.of(context)!.favorites,
-                    style: TextStyle(
-                        color: baseColor,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: -0.5)),
-                const SizedBox(width: 8),
-                Text('${favorites.length}',
-                    style: TextStyle(
-                        color: baseColor.withOpacity(0.38), fontSize: 16)),
-              ],
+        if (showHeader)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: Row(
+                children: [
+                  Text(AppLocalizations.of(context)!.favorites,
+                      style: TextStyle(
+                          color: baseColor,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -0.5)),
+                  const SizedBox(width: 8),
+                  Text('${favorites.length}',
+                      style: TextStyle(
+                          color: baseColor.withOpacity(0.38), fontSize: 16)),
+                ],
+              ),
             ),
           ),
-        ),
         if (favorites.isNotEmpty)
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              padding: EdgeInsets.fromLTRB(16, showHeader ? 0 : 16, 16, 8),
               child: Row(
                 children: [
                   Expanded(
@@ -56,16 +58,17 @@ class FavoritesScreen extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color.lerp(primaryColor, Colors.black, 0.15),
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(vertical: 10),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
+                            borderRadius: BorderRadius.circular(14)),
                       ),
-                      icon: const Icon(Icons.play_arrow, size: 20),
+                      icon: const Icon(Icons.play_arrow, size: 18),
                       label: Text(AppLocalizations.of(context)!.playAll,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () {
@@ -74,14 +77,14 @@ class FavoritesScreen extends StatelessWidget {
                       },
                       style: OutlinedButton.styleFrom(
                         foregroundColor: baseColor,
-                        side: BorderSide(color: baseColor.withOpacity(0.24)),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        side: BorderSide(color: baseColor.withOpacity(0.16)),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
+                            borderRadius: BorderRadius.circular(14)),
                       ),
-                      icon: const Icon(Icons.shuffle, size: 20),
+                      icon: const Icon(Icons.shuffle, size: 18),
                       label: Text(AppLocalizations.of(context)!.shuffle,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
                     ),
                   ),
                 ],

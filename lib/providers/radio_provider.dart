@@ -595,6 +595,12 @@ class RadioProvider extends ChangeNotifier {
     cancelSleepTimer();
   }
 
+  Future<void> stopRadioAndClear() async {
+    await stopRadio();
+    _currentStation = null;
+    notifyListeners();
+  }
+
   void setQueue(List<RadioStation> stations, int index) {
     _currentQueue = List.from(stations);
     _currentQueueIndex = index;

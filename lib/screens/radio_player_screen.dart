@@ -121,7 +121,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     );
     overlay.insert(entry);
 
-    Future.delayed(const Duration(milliseconds: 15000), () async {
+    Future.delayed(const Duration(milliseconds: 16000), () async {
       late OverlayEntry fadeOutEntry;
       fadeOutEntry = OverlayEntry(
         builder: (_) => TweenAnimationBuilder<double>(
@@ -349,69 +349,69 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                      if (_isKoreanBroadcast(current.name))
-                        _BottomBarItem(
-                          icon: Icons.format_list_bulleted,
-                          label: AppLocalizations.of(context)!.radioBroadcastSchedule,
-                          hasIndicator: radioProvider.scheduleList.isNotEmpty,
-                          primaryColor: primaryColor,
-                          onTap: () {
-                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                            showModalBottomSheet(
-                              context: context,
-                              backgroundColor: Colors.transparent,
-                              isScrollControlled: true,
-                              builder: (_) => _ScheduleListSheet(stationName: current.name),
-                            );
-                          },
-                        ),
-                      _BottomBarItem(
-                        icon: Icons.bedtime_outlined,
-                        label: AppLocalizations.of(context)!.radioSleep,
-                        hasIndicator: radioProvider.isSleepTimerActive,
-                        primaryColor: primaryColor,
-                        onTap: () {
-                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                          showModalBottomSheet(
-                            context: context,
-                            backgroundColor: Colors.transparent,
-                            barrierColor: Colors.black.withOpacity(0.7),
-                            isScrollControlled: true,
-                            useSafeArea: true,
-                            builder: (_) => const SleepTimerSheet(),
-                          );
-                        },
-                      ),
-                      _BottomBarItem(
-                        icon: Icons.schedule,
-                        label: AppLocalizations.of(context)!.radioSchedule,
-                        hasIndicator: radioProvider.schedules.isNotEmpty,
-                        primaryColor: primaryColor,
-                        onTap: () {
-                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                          showModalBottomSheet(
-                            context: context,
-                            backgroundColor: Colors.transparent,
-                            isScrollControlled: true,
-                            builder: (_) => const ScheduleSheet(),
-                          );
-                        },
-                      ),
-                      _BottomBarItem(
-                        icon: CupertinoIcons.heart,
-                        label: AppLocalizations.of(context)!.favorites,
-                        hasIndicator: false,
-                        primaryColor: primaryColor,
-                        onTap: () {
-                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                          showModalBottomSheet(
-                            context: context,
-                            backgroundColor: Colors.transparent,
-                            isScrollControlled: true,
-                            builder: (_) => _FavoritesSheet(primaryColor: primaryColor),
-                          );
-                        },
-                      ),
+                            if (_isKoreanBroadcast(current.name))
+                              _BottomBarItem(
+                                icon: Icons.format_list_bulleted,
+                                label: AppLocalizations.of(context)!.radioBroadcastSchedule,
+                                hasIndicator: radioProvider.scheduleList.isNotEmpty,
+                                primaryColor: primaryColor,
+                                onTap: () {
+                                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                  showModalBottomSheet(
+                                    context: context,
+                                    backgroundColor: Colors.transparent,
+                                    isScrollControlled: true,
+                                    builder: (_) => _ScheduleListSheet(stationName: current.name),
+                                  );
+                                },
+                              ),
+                            _BottomBarItem(
+                              icon: Icons.bedtime_outlined,
+                              label: AppLocalizations.of(context)!.radioSleep,
+                              hasIndicator: radioProvider.isSleepTimerActive,
+                              primaryColor: primaryColor,
+                              onTap: () {
+                                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                showModalBottomSheet(
+                                  context: context,
+                                  backgroundColor: Colors.transparent,
+                                  barrierColor: Colors.black.withOpacity(0.7),
+                                  isScrollControlled: true,
+                                  useSafeArea: true,
+                                  builder: (_) => const SleepTimerSheet(),
+                                );
+                              },
+                            ),
+                            _BottomBarItem(
+                              icon: Icons.schedule,
+                              label: AppLocalizations.of(context)!.radioSchedule,
+                              hasIndicator: radioProvider.schedules.isNotEmpty,
+                              primaryColor: primaryColor,
+                              onTap: () {
+                                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                showModalBottomSheet(
+                                  context: context,
+                                  backgroundColor: Colors.transparent,
+                                  isScrollControlled: true,
+                                  builder: (_) => const ScheduleSheet(),
+                                );
+                              },
+                            ),
+                            _BottomBarItem(
+                              icon: CupertinoIcons.heart,
+                              label: AppLocalizations.of(context)!.favorites,
+                              hasIndicator: false,
+                              primaryColor: primaryColor,
+                              onTap: () {
+                                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                showModalBottomSheet(
+                                  context: context,
+                                  backgroundColor: Colors.transparent,
+                                  isScrollControlled: true,
+                                  builder: (_) => _FavoritesSheet(primaryColor: primaryColor),
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -510,8 +510,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                 ),
               ),
             ),
-              ],
-            ),
+          ],
+        ),
       ),
       body: Stack(
         children: [
@@ -543,9 +543,12 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                   onTap: () {
                                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                                     final wasFav = radioProvider.isFavorite(current.stationUuid);
-                                    radioProvider.toggleFavorite(current);
                                     final overlay = Overlay.of(context);
-                                    final entry = OverlayEntry(
+                                    final toastText = wasFav
+                                        ? AppLocalizations.of(context)!.radioRemovedFromFavorites
+                                        : AppLocalizations.of(context)!.radioAddedToFavoritesToast;
+                                    late final OverlayEntry entry;
+                                    entry = OverlayEntry(
                                       builder: (_) => Positioned(
                                         top: 60, left: 0, right: 0,
                                         child: Center(
@@ -579,7 +582,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                                   ),
                                                   const SizedBox(width: 8),
                                                   Text(
-                                                    wasFav ? AppLocalizations.of(context)!.radioRemovedFromFavorites : AppLocalizations.of(context)!.radioAddedToFavoritesToast,
+                                                    toastText,
                                                     style: const TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.w600, decoration: TextDecoration.none),
                                                   ),
                                                 ],
@@ -591,6 +594,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                     );
                                     overlay.insert(entry);
                                     Future.delayed(const Duration(seconds: 2), () => entry.remove());
+                                    Future.microtask(() => radioProvider.toggleFavorite(current));
                                   },
                                   child: Icon(
                                     radioProvider.isFavorite(current.stationUuid) ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
@@ -611,7 +615,6 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                   ),
                                 ),
                                 const SizedBox(width: 10),
-
                                 _FloatButton(
                                   onTap: () {
                                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -627,58 +630,191 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                                       showModalBottomSheet(
                                         context: context,
-                                        backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
+                                        backgroundColor: Colors.transparent,
+                                        barrierColor: Colors.black.withOpacity(0.45),
                                         shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
-                                        builder: (sheetCtx) => SafeArea(
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              ListTile(
-                                                leading: Icon(Icons.share_outlined, color: baseColor),
-                                                title: Text('친구에게 공유하기', style: TextStyle(color: baseColor)),
-                                                onTap: () {
-                                                  Navigator.pop(sheetCtx);
-                                                  Share.share('지금 ${current.name} 듣고 있어요! 뮤직웨이브에서 같이 들어요 🎧\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
-                                                },
-                                              ),
-                                              ListTile(
-                                                leading: Icon(Icons.mood, color: baseColor),
-                                                title: Text('앱 평가하기', style: TextStyle(color: baseColor)),
-                                                onTap: () async {
-                                                  Navigator.pop(sheetCtx);
-                                                  final uri = Uri.parse('https://play.google.com/store/apps/details?id=kr.ssing.catsong');
-                                                  if (await canLaunchUrl(uri)) {
-                                                    await launchUrl(uri, mode: LaunchMode.externalApplication);
-                                                  }
-                                                },
-                                              ),
-                                              ListTile(
-                                                leading: Icon(Icons.settings_outlined, color: baseColor),
-                                                title: Text('설정', style: TextStyle(color: baseColor)),
-                                                onTap: () {
-                                                  Navigator.pop(sheetCtx);
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(builder: (_) => const SettingsScreen()),
-                                                  );
-                                                },
-                                              ),
-                                              if (homepage != null && homepage.isNotEmpty)
-                                                ListTile(
-                                                  leading: Icon(Icons.home_outlined, color: baseColor),
-                                                  title: Text('방송국 바로가기', style: TextStyle(color: baseColor)),
-                                                  onTap: () async {
-                                                    Navigator.pop(sheetCtx);
-                                                    final uri = Uri.parse(homepage);
-                                                    if (await canLaunchUrl(uri)) {
-                                                      await launchUrl(uri, mode: LaunchMode.externalApplication);
-                                                    }
-                                                  },
+                                            borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+                                        builder: (sheetCtx) {
+                                          final sheetBg = isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFFAFCFE);
+                                          final cardBg = isDarkMode
+                                              ? const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight,
+                                              colors: [Color(0xFF22303F), Color(0xFF1A2632)])
+                                              : const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight,
+                                              colors: [Colors.white, Color(0xFFEAF3FC)]);
+                                          final cardBorder = isDarkMode ? Colors.white12 : const Color(0xFFE1EDF7);
+                                          const navy = Color(0xFF15304D);
+                                          final subColor = isDarkMode ? Colors.white60 : const Color(0xFF7891A8);
+
+                                          Widget menuCard({
+                                            required IconData icon,
+                                            required String title,
+                                            required String subtitle,
+                                            required VoidCallback onTap,
+                                          }) {
+                                            return Expanded(
+                                              child: GestureDetector(
+                                                onTap: onTap,
+                                                child: Container(
+                                                  padding: const EdgeInsets.all(16),
+                                                  decoration: BoxDecoration(
+                                                    gradient: cardBg,
+                                                    border: Border.all(color: cardBorder),
+                                                    borderRadius: BorderRadius.circular(18),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: isDarkMode
+                                                            ? Colors.black.withOpacity(0.35)
+                                                            : const Color(0xFF2C6BB3).withOpacity(0.08),
+                                                        blurRadius: 16,
+                                                        offset: const Offset(0, 6),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Container(
+                                                        width: 44,
+                                                        height: 44,
+                                                        decoration: BoxDecoration(
+                                                          gradient: const LinearGradient(
+                                                            begin: Alignment.topLeft,
+                                                            end: Alignment.bottomRight,
+                                                            colors: [Color(0xFF4A90D9), Color(0xFF2C6BB3)],
+                                                          ),
+                                                          borderRadius: BorderRadius.circular(14),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                              color: const Color(0xFF2C6BB3).withOpacity(0.35),
+                                                              blurRadius: 10,
+                                                              offset: const Offset(0, 4),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        child: Icon(icon, color: Colors.white, size: 21),
+                                                      ),
+                                                      const SizedBox(height: 14),
+                                                      Text(title,
+                                                          style: TextStyle(
+                                                              color: isDarkMode ? Colors.white : navy,
+                                                              fontSize: 14.5,
+                                                              fontWeight: FontWeight.w700)),
+                                                      const SizedBox(height: 4),
+                                                      Text(subtitle,
+                                                          maxLines: 2,
+                                                          style: TextStyle(color: subColor, fontSize: 11, height: 1.4)),
+                                                    ],
+                                                  ),
                                                 ),
-                                            ],
-                                          ),
-                                        ),
+                                              ),
+                                            );
+                                          }
+
+                                          return SafeArea(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: sheetBg,
+                                                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                                              ),
+                                              padding: const EdgeInsets.fromLTRB(16, 10, 16, 20),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Container(
+                                                    width: 40,
+                                                    height: 4,
+                                                    margin: const EdgeInsets.only(bottom: 4),
+                                                    decoration: BoxDecoration(
+                                                      color: isDarkMode ? Colors.white24 : const Color(0xFFCBD9EC),
+                                                      borderRadius: BorderRadius.circular(2),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment: Alignment.centerRight,
+                                                    child: GestureDetector(
+                                                      onTap: () => Navigator.pop(sheetCtx),
+                                                      child: Container(
+                                                        width: 30,
+                                                        height: 30,
+                                                        margin: const EdgeInsets.only(bottom: 8),
+                                                        decoration: BoxDecoration(
+                                                          color: isDarkMode ? Colors.white10 : const Color(0xFFF0F5FA),
+                                                          shape: BoxShape.circle,
+                                                        ),
+                                                        child: Icon(Icons.close,
+                                                            size: 16, color: isDarkMode ? Colors.white70 : subColor),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  IntrinsicHeight(
+                                                    child: Row(
+                                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                      children: [
+                                                        menuCard(
+                                                          icon: Icons.share_outlined,
+                                                          title: '친구에게 공유하기',
+                                                          subtitle: '지금 듣는 방송을\n친구에게 소개해보세요.',
+                                                          onTap: () {
+                                                            Navigator.pop(sheetCtx);
+                                                            Share.share('지금 ${current.name} 듣고 있어요! 파란소리에서 같이 들어요 🎧\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                                                          },
+                                                        ),
+                                                        const SizedBox(width: 12),
+                                                        menuCard(
+                                                          icon: Icons.star_border_rounded,
+                                                          title: '앱 평가하기',
+                                                          subtitle: '좋은 평가가\n큰 힘이 됩니다.',
+                                                          onTap: () async {
+                                                            Navigator.pop(sheetCtx);
+                                                            final uri = Uri.parse('https://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                                                            if (await canLaunchUrl(uri)) {
+                                                              await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                                            }
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 12),
+                                                  IntrinsicHeight(
+                                                    child: Row(
+                                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                      children: [
+                                                        menuCard(
+                                                          icon: Icons.settings_outlined,
+                                                          title: '설정',
+                                                          subtitle: '앱 환경을\n설정할 수 있어요.',
+                                                          onTap: () {
+                                                            Navigator.pop(sheetCtx);
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                                                            );
+                                                          },
+                                                        ),
+                                                        if (homepage != null && homepage.isNotEmpty) ...[
+                                                          const SizedBox(width: 12),
+                                                          menuCard(
+                                                            icon: Icons.home_outlined,
+                                                            title: '방송국 바로가기',
+                                                            subtitle: '방송국 홈페이지로\n이동해요.',
+                                                            onTap: () async {
+                                                              Navigator.pop(sheetCtx);
+                                                              final uri = Uri.parse(homepage);
+                                                              if (await canLaunchUrl(uri)) {
+                                                                await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                                              }
+                                                            },
+                                                          ),
+                                                        ],
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
                                       );
                                     },
                                     child: Icon(Icons.more_vert, color: baseColor, size: 20),
@@ -1959,9 +2095,10 @@ class _FavoritesSheet extends StatelessWidget {
                         : IconButton(
                       icon: const Icon(Icons.close, color: Colors.black38, size: 20),
                       onPressed: () {
-                        radioProvider.toggleFavorite(station);
                         final overlay = Overlay.of(context);
-                        final entry = OverlayEntry(
+                        final removedText = AppLocalizations.of(context)!.radioRemovedFromFavorites;
+                        late final OverlayEntry entry;
+                        entry = OverlayEntry(
                           builder: (_) => Positioned(
                             bottom: 180, left: 0, right: 0,
                             child: Center(
@@ -1991,7 +2128,7 @@ class _FavoritesSheet extends StatelessWidget {
                                       const Icon(CupertinoIcons.heart, color: Colors.black38, size: 18),
                                       const SizedBox(width: 8),
                                       Text(
-                                        AppLocalizations.of(context)!.radioRemovedFromFavorites,
+                                        removedText,
                                         style: const TextStyle(
                                           color: Colors.black87,
                                           fontSize: 13,
@@ -2008,6 +2145,7 @@ class _FavoritesSheet extends StatelessWidget {
                         );
                         overlay.insert(entry);
                         Future.delayed(const Duration(seconds: 2), () => entry.remove());
+                        Future.microtask(() => radioProvider.toggleFavorite(station));
                       },
                     ),
                     onTap: () {

@@ -101,14 +101,16 @@ class RadioFavoritesScreen extends StatelessWidget {
                   color: Colors.redAccent, size: 26),
             ),
             onDismissed: (_) {
-              radioProvider.toggleFavorite(station);
-              ScaffoldMessenger.of(context).showSnackBar(
+              final messenger = ScaffoldMessenger.of(context);
+              final removedText = AppLocalizations.of(context)!.radioRemovedFromFavorites;
+              messenger.showSnackBar(
                 SnackBar(
-                  content: Text(AppLocalizations.of(context)!.radioRemovedFromFavorites),
+                  content: Text(removedText),
                   backgroundColor: AppTheme.surfaceVariant,
                   duration: const Duration(seconds: 2),
                 ),
               );
+              Future.microtask(() => radioProvider.toggleFavorite(station));
             },
             child: Row(
               children: [
@@ -116,9 +118,10 @@ class RadioFavoritesScreen extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.close, color: accent.withOpacity(0.38), size: 20),
                   onPressed: () {
-                    radioProvider.toggleFavorite(station);
                     final overlay = Overlay.of(context);
-                    final entry = OverlayEntry(
+                    final removedText = AppLocalizations.of(context)!.radioRemovedFromFavorites;
+                    late final OverlayEntry entry;
+                    entry = OverlayEntry(
                       builder: (_) => Positioned(
                         bottom: 180, left: 0, right: 0,
                         child: Center(
@@ -148,7 +151,7 @@ class RadioFavoritesScreen extends StatelessWidget {
                                   const Icon(CupertinoIcons.heart, color: Colors.black38, size: 18),
                                   const SizedBox(width: 8),
                                   Text(
-                                    AppLocalizations.of(context)!.radioRemovedFromFavorites,
+                                    removedText,
                                     style: const TextStyle(
                                       color: Colors.black87,
                                       fontSize: 13,
@@ -165,6 +168,7 @@ class RadioFavoritesScreen extends StatelessWidget {
                     );
                     overlay.insert(entry);
                     Future.delayed(const Duration(seconds: 2), () => entry.remove());
+                    Future.microtask(() => radioProvider.toggleFavorite(station));
                   },
                 ),
               ],

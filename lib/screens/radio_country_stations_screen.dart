@@ -639,10 +639,14 @@ class _StationTile extends StatelessWidget {
                   ),
                   onPressed: () {
                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate').catchError((_) {});
-                    final wasFav = context.read<RadioProvider>().isFavorite(station.stationUuid);
-                    context.read<RadioProvider>().toggleFavorite(station);
+                    final radioProvider = context.read<RadioProvider>();
+                    final wasFav = radioProvider.isFavorite(station.stationUuid);
                     final overlay = Overlay.of(context);
-                    final entry = OverlayEntry(
+                    final toastText = wasFav
+                        ? AppLocalizations.of(context)!.radioRemovedFromFavorites
+                        : AppLocalizations.of(context)!.radioAddedToFavoritesToast;
+                    late final OverlayEntry entry;
+                    entry = OverlayEntry(
                       builder: (_) => Positioned(
                         bottom: 500, left: 0, right: 0,
                         child: Center(
@@ -676,9 +680,7 @@ class _StationTile extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    wasFav
-                                        ? AppLocalizations.of(context)!.radioRemovedFromFavorites
-                                        : AppLocalizations.of(context)!.radioAddedToFavoritesToast,
+                                    toastText,
                                     style: const TextStyle(
                                       color: Colors.black87,
                                       fontSize: 13,
@@ -695,6 +697,7 @@ class _StationTile extends StatelessWidget {
                     );
                     overlay.insert(entry);
                     Future.delayed(const Duration(seconds: 2), () => entry.remove());
+                    Future.microtask(() => radioProvider.toggleFavorite(station));
                   },
                 ),
             ],

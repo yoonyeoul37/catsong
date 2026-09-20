@@ -7,9 +7,11 @@ import 'dart:ui';
 import 'dart:typed_data';
 import '../providers/start_screen_provider.dart';
 import '../providers/recent_content_provider.dart';
+import 'all_favorites_screen.dart';
 import '../models/recent_content_entry.dart';
 import '../models/radio_station.dart';
 import '../providers/video_provider.dart';
+import '../widgets/nature_mini_player.dart';
 import 'video_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -575,6 +577,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (radioProvider.currentStation != null) {
                     return const RadioMiniPlayer();
                   }
+                  if (playerProvider.natureSoundName != null) {
+                    return const NatureMiniPlayer();
+                  }
                   return const SizedBox.shrink();
                 },
               ),
@@ -630,6 +635,18 @@ class _HomeScreenState extends State<HomeScreen> {
           _AppBarCircleButton(
             onTap: () {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AllFavoritesScreen()),
+              );
+            },
+            icon: CupertinoIcons.heart,
+            baseColor: baseColor,
+          ),
+          const SizedBox(width: 8),
+          _AppBarCircleButton(
+            onTap: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
               context.read<ThemeProvider>().setDarkMode(!isDarkMode);
             },
             icon: isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
@@ -650,52 +667,206 @@ class _HomeScreenState extends State<HomeScreen> {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
               showModalBottomSheet(
                 context: context,
-                backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
+                backgroundColor: Colors.transparent,
+                barrierColor: Colors.black.withOpacity(0.45),
                 shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
-                builder: (ctx) => SafeArea(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListTile(
-                        leading: Icon(Icons.share_outlined, color: baseColor),
-                        title: Text('친구에게 공유하기', style: TextStyle(color: baseColor)),
-                        onTap: () {
-                          Navigator.pop(ctx);
-                          Share.share('뮤직웨이브 앱으로 음악 들어요! 🎧\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
-                        },
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+                builder: (ctx) {
+                  final sheetBg = isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFFAFCFE);
+                  final cardBg = isDarkMode
+                      ? const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight,
+                      colors: [Color(0xFF22303F), Color(0xFF1A2632)])
+                      : const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight,
+                      colors: [Colors.white, Color(0xFFEAF3FC)]);
+                  final cardBorder = isDarkMode ? Colors.white12 : const Color(0xFFE1EDF7);
+                  const navy = Color(0xFF15304D);
+                  final subColor = isDarkMode ? Colors.white60 : const Color(0xFF7891A8);
+
+                  Widget menuCard({
+                    required IconData icon,
+                    required String title,
+                    required String subtitle,
+                    required VoidCallback onTap,
+                  }) {
+                    return Expanded(
+                      child: GestureDetector(
+                        onTap: onTap,
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            gradient: cardBg,
+                            border: Border.all(color: cardBorder),
+                            borderRadius: BorderRadius.circular(18),
+                            boxShadow: [
+                              BoxShadow(
+                                color: isDarkMode
+                                    ? Colors.black.withOpacity(0.35)
+                                    : const Color(0xFF2C6BB3).withOpacity(0.08),
+                                blurRadius: 16,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [Color(0xFF4A90D9), Color(0xFF2C6BB3)],
+                                  ),
+                                  borderRadius: BorderRadius.circular(14),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(0xFF2C6BB3).withOpacity(0.35),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: Icon(icon, color: Colors.white, size: 21),
+                              ),
+                              const SizedBox(height: 14),
+                              Text(title,
+                                  style: TextStyle(
+                                      color: isDarkMode ? Colors.white : navy,
+                                      fontSize: 14.5,
+                                      fontWeight: FontWeight.w700)),
+                              const SizedBox(height: 4),
+                              Text(subtitle,
+                                  maxLines: 2,
+                                  style: TextStyle(color: subColor, fontSize: 11, height: 1.4)),
+                            ],
+                          ),
+                        ),
                       ),
-                      ListTile(
-                        leading: Icon(Icons.mood, color: baseColor),
-                        title: Text('앱 평가하기', style: TextStyle(color: baseColor)),
-                        onTap: () async {
-                          Navigator.pop(ctx);
-                          final uri = Uri.parse('https://play.google.com/store/apps/details?id=kr.ssing.catsong');
-                          if (await canLaunchUrl(uri)) {
-                            await launchUrl(uri, mode: LaunchMode.externalApplication);
-                          }
-                        },
+                    );
+                  }
+
+                  return SafeArea(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: sheetBg,
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                       ),
-                      ListTile(
-                        leading: Icon(Icons.settings_outlined, color: baseColor),
-                        title: Text('설정', style: TextStyle(color: baseColor)),
-                        onTap: () {
-                          Navigator.pop(ctx);
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => const SettingsScreen(),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                return FadeTransition(opacity: animation, child: child);
-                              },
-                              transitionDuration: const Duration(milliseconds: 250),
+                      padding: const EdgeInsets.fromLTRB(16, 10, 16, 20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 4,
+                            margin: const EdgeInsets.only(bottom: 4),
+                            decoration: BoxDecoration(
+                              color: isDarkMode ? Colors.white24 : const Color(0xFFCBD9EC),
+                              borderRadius: BorderRadius.circular(2),
                             ),
-                          );
-                        },
+                          ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: GestureDetector(
+                              onTap: () => Navigator.pop(ctx),
+                              child: Container(
+                                width: 30,
+                                height: 30,
+                                margin: const EdgeInsets.only(bottom: 8),
+                                decoration: BoxDecoration(
+                                  color: isDarkMode ? Colors.white10 : const Color(0xFFF0F5FA),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(Icons.close,
+                                    size: 16, color: isDarkMode ? Colors.white70 : subColor),
+                              ),
+                            ),
+                          ),
+                          IntrinsicHeight(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                menuCard(
+                                  icon: Icons.share_outlined,
+                                  title: '친구에게 공유하기',
+                                  subtitle: '파란소리를 친구에게\n소개해보세요.',
+                                  onTap: () {
+                                    Navigator.pop(ctx);
+                                    Share.share('파란소리 앱으로 음악 들어요! 🎧\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                                  },
+                                ),
+                                const SizedBox(width: 12),
+                                menuCard(
+                                  icon: Icons.star_border_rounded,
+                                  title: '앱 평가하기',
+                                  subtitle: '좋은 평가가\n큰 힘이 됩니다.',
+                                  onTap: () async {
+                                    Navigator.pop(ctx);
+                                    final uri = Uri.parse('https://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                                    if (await canLaunchUrl(uri)) {
+                                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          IntrinsicHeight(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                menuCard(
+                                  icon: Icons.settings_outlined,
+                                  title: '설정',
+                                  subtitle: '앱 환경을\n설정할 수 있어요.',
+                                  onTap: () {
+                                    Navigator.pop(ctx);
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation, secondaryAnimation) => const SettingsScreen(),
+                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                          return FadeTransition(opacity: animation, child: child);
+                                        },
+                                        transitionDuration: const Duration(milliseconds: 250),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                const SizedBox(width: 12),
+                                menuCard(
+                                  icon: Icons.settings_input_antenna_rounded,
+                                  title: '방송국 바로가기',
+                                  subtitle: '다양한 라디오 방송을\n바로 들어보세요.',
+                                  onTap: () {
+                                    Navigator.pop(ctx);
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(
+                                          data: MediaQuery.of(context).copyWith(
+                                            textScaler: const TextScaler.linear(1.25),
+                                          ),
+                                          child: const RadioHomeScreen(),
+                                        ),
+                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                          return FadeTransition(opacity: animation, child: child);
+                                        },
+                                        transitionDuration: const Duration(milliseconds: 250),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               );
             },
             icon: Icons.more_vert,
@@ -802,7 +973,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
     final primaryColor = Theme.of(context).colorScheme.primary;
-    final recentContent = context.watch<RecentContentProvider>().entries.take(8).toList();
+    final recentContent = context.watch<RecentContentProvider>().entries.take(20).toList();
 
     final startScreen = context.watch<StartScreenProvider>().startScreen;
 
@@ -866,33 +1037,11 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Row(
             children: [
-              _buildFilterTab(
-                AppLocalizations.of(context)!.all,
-                !_showFavorites && !_showRecent,
-                    () => setState(() {
-                  _showFavorites = false;
-                  _showRecent = false;
-                }),
-                primaryColor,
-              ),
-              _buildFilterTab(
-                AppLocalizations.of(context)!.favorites,
-                _showFavorites,
-                    () => setState(() {
-                  _showFavorites = true;
-                  _showRecent = false;
-                }),
-                primaryColor,
-              ),
-              _buildFilterTab(
-                AppLocalizations.of(context)!.recent,
-                _showRecent,
-                    () => setState(() {
-                  _showFavorites = false;
-                  _showRecent = true;
-                }),
-                primaryColor,
-              ),
+              Icon(Icons.tune_rounded, size: 18, color: baseColor.withOpacity(0.7)),
+              const SizedBox(width: 6),
+              Text('무엇을 들으실까요?',
+                  style: TextStyle(
+                      color: baseColor, fontSize: 16, fontWeight: FontWeight.w800)),
             ],
           ),
           const SizedBox(height: 16),
@@ -1032,7 +1181,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Icon(Icons.volume_up_rounded, size: 18, color: baseColor.withOpacity(0.7)),
               const SizedBox(width: 6),
-              Text('오늘의 추천 소리',
+              Text('오늘의 쉼표',
                   style: TextStyle(
                       color: baseColor, fontSize: 16, fontWeight: FontWeight.w800)),
             ],
@@ -1138,169 +1287,213 @@ class _HomeScreenState extends State<HomeScreen> {
               }),
             ),
           ),
-          if (recentContent.isNotEmpty) ...[
+          ...[
             const SizedBox(height: 20),
             Row(
               children: [
                 Icon(Icons.headphones_rounded, size: 18, color: baseColor.withOpacity(0.7)),
                 const SizedBox(width: 6),
-                Text('최근 들은 콘텐츠',
+                Text('최근 재생 기록',
                     style: TextStyle(
                         color: baseColor, fontSize: 16, fontWeight: FontWeight.w800)),
               ],
             ),
             const SizedBox(height: 12),
-            SizedBox(
-              height: 124,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: recentContent.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 14),
-                itemBuilder: (context, index) {
-                  final item = recentContent[index];
-
-                  IconData typeIcon;
-                  Color typeColor;
-                  Widget thumbnail;
-                  VoidCallback onTapAction;
-
-                  switch (item.type) {
-                    case RecentContentType.music:
-                      typeIcon = Icons.music_note_rounded;
-                      typeColor = const Color(0xFF3B82F6);
-                      final musicProvider = context.read<MusicProvider>();
-                      Song? matched;
-                      for (final s in musicProvider.allSongs) {
-                        if (s.uri == item.songUri) {
-                          matched = s;
-                          break;
-                        }
-                      }
-                      thumbnail = matched?.albumArt != null
-                          ? Image.memory(
-                        Uint8List.fromList(matched!.albumArt!),
-                        width: 72,
-                        height: 72,
-                        fit: BoxFit.cover,
-                        gaplessPlayback: true,
-                      )
-                          : Container(
-                        width: 72,
-                        height: 72,
-                        color: primaryColor.withOpacity(0.7),
-                        child: const Icon(Icons.music_note_rounded,
-                            color: Colors.white, size: 26),
-                      );
-                      onTapAction = () {
-                        if (matched != null) {
-                          context.read<PlayerProvider>().playFromList([matched], 0);
-                        }
-                      };
-                      break;
-                    case RecentContentType.radio:
-                      typeIcon = Icons.radio_rounded;
-                      typeColor = const Color(0xFF8B5CF6);
-                      thumbnail = Container(
-                        width: 72,
-                        height: 72,
-                        color: typeColor.withOpacity(0.7),
-                        child: const Icon(Icons.radio_rounded, color: Colors.white, size: 26),
-                      );
-                      onTapAction = () {
-                        if (item.stationData != null) {
-                          final station = RadioStation.fromJson(item.stationData!);
-                          context.read<RadioProvider>().playStation(station);
-                        }
-                      };
-                      break;
-                    case RecentContentType.nature:
-                      typeIcon = Icons.waves_rounded;
-                      typeColor = const Color(0xFF10B981);
-                      thumbnail = Container(
-                        width: 72,
-                        height: 72,
-                        color: typeColor.withOpacity(0.7),
-                        child: const Icon(Icons.waves_rounded, color: Colors.white, size: 26),
-                      );
-                      onTapAction = () {
-                        if (item.natureAssetPath != null) {
-                          context.read<PlayerProvider>().playNatureSound(item.natureAssetPath!, item.title);
-                        }
-                      };
-                      break;
-                    case RecentContentType.sleep:
-                      typeIcon = Icons.bedtime_rounded;
-                      typeColor = const Color(0xFF6366F1);
-                      thumbnail = Container(
-                        width: 72,
-                        height: 72,
-                        color: typeColor.withOpacity(0.7),
-                        child: const Icon(Icons.bedtime_rounded, color: Colors.white, size: 26),
-                      );
-                      onTapAction = () {};
-                      break;
-                  }
-
-                  return GestureDetector(
-                    onTap: () {
-                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      onTapAction();
-                    },
-                    child: SizedBox(
-                      width: 78,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.16),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(14),
-                                  child: thumbnail,
-                                ),
-                                Positioned(
-                                  left: 4,
-                                  top: 4,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(3),
-                                    decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.4),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Icon(typeIcon, size: 10, color: Colors.white),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(item.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  color: baseColor, fontSize: 11, fontWeight: FontWeight.w600)),
-                          Text(item.subtitle,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  color: baseColor.withOpacity(0.45), fontSize: 10)),
-                        ],
+            if (recentContent.isEmpty)
+              Container(
+                width: double.infinity,
+                height: 124,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: isDarkMode
+                        ? [const Color(0xFF1A2632), const Color(0xFF22303F)]
+                        : [const Color(0xFFEAF3FC), const Color(0xFFD9E9F8)],
+                  ),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 38,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color(0xFF2C6BB3).withOpacity(isDarkMode ? 0.22 : 0.12),
                       ),
+                      child: const Icon(Icons.graphic_eq_rounded, color: Color(0xFF2C6BB3), size: 19),
                     ),
-                  );
-                },
+                    const SizedBox(height: 10),
+                    Text('최근 들은 곡이 없어요',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: isDarkMode ? Colors.white : const Color(0xFF15304D),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 3),
+                    Text('음악을 재생하면 여기에 표시됩니다',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: isDarkMode ? Colors.white60 : const Color(0xFF7891A8),
+                            fontSize: 11)),
+                  ],
+                ),
+              )
+            else
+              SizedBox(
+                height: 124,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: recentContent.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 14),
+                  itemBuilder: (context, index) {
+                    final item = recentContent[index];
+
+                    IconData typeIcon;
+                    Color typeColor;
+                    Widget thumbnail;
+                    VoidCallback onTapAction;
+
+                    switch (item.type) {
+                      case RecentContentType.music:
+                        typeIcon = Icons.music_note_rounded;
+                        typeColor = const Color(0xFF3B82F6);
+                        final musicProvider = context.read<MusicProvider>();
+                        Song? matched;
+                        for (final s in musicProvider.allSongs) {
+                          if (s.uri == item.songUri) {
+                            matched = s;
+                            break;
+                          }
+                        }
+                        thumbnail = matched?.albumArt != null
+                            ? Image.memory(
+                          Uint8List.fromList(matched!.albumArt!),
+                          width: 72,
+                          height: 72,
+                          fit: BoxFit.cover,
+                          gaplessPlayback: true,
+                        )
+                            : Container(
+                          width: 72,
+                          height: 72,
+                          color: primaryColor.withOpacity(0.7),
+                          child: const Icon(Icons.music_note_rounded,
+                              color: Colors.white, size: 26),
+                        );
+                        onTapAction = () {
+                          if (matched != null) {
+                            context.read<PlayerProvider>().playFromList([matched], 0);
+                          }
+                        };
+                        break;
+                      case RecentContentType.radio:
+                        typeIcon = Icons.radio_rounded;
+                        typeColor = const Color(0xFF8B5CF6);
+                        thumbnail = Container(
+                          width: 72,
+                          height: 72,
+                          color: typeColor.withOpacity(0.7),
+                          child: const Icon(Icons.radio_rounded, color: Colors.white, size: 26),
+                        );
+                        onTapAction = () {
+                          if (item.stationData != null) {
+                            final station = RadioStation.fromJson(item.stationData!);
+                            context.read<RadioProvider>().playStation(station);
+                          }
+                        };
+                        break;
+                      case RecentContentType.nature:
+                        typeIcon = Icons.waves_rounded;
+                        typeColor = const Color(0xFF10B981);
+                        thumbnail = Container(
+                          width: 72,
+                          height: 72,
+                          color: typeColor.withOpacity(0.7),
+                          child: const Icon(Icons.waves_rounded, color: Colors.white, size: 26),
+                        );
+                        onTapAction = () {
+                          if (item.natureAssetPath != null) {
+                            context.read<PlayerProvider>().playNatureSound(item.natureAssetPath!, item.title);
+                          }
+                        };
+                        break;
+                      case RecentContentType.sleep:
+                        typeIcon = Icons.bedtime_rounded;
+                        typeColor = const Color(0xFF6366F1);
+                        thumbnail = Container(
+                          width: 72,
+                          height: 72,
+                          color: typeColor.withOpacity(0.7),
+                          child: const Icon(Icons.bedtime_rounded, color: Colors.white, size: 26),
+                        );
+                        onTapAction = () {};
+                        break;
+                    }
+
+                    return GestureDetector(
+                      onTap: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        onTapAction();
+                      },
+                      child: SizedBox(
+                        width: 78,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.16),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(14),
+                                    child: thumbnail,
+                                  ),
+                                  Positioned(
+                                    left: 4,
+                                    top: 4,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(0.4),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(typeIcon, size: 10, color: Colors.white),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(item.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: baseColor, fontSize: 11, fontWeight: FontWeight.w600)),
+                            Text(item.subtitle,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: baseColor.withOpacity(0.45), fontSize: 10)),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
           ],
         ],
       ),

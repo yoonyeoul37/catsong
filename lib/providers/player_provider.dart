@@ -276,6 +276,20 @@ class PlayerProvider extends ChangeNotifier {
   String? get natureSoundName => _natureSoundName;
   void Function(String assetPath, String displayName)? onNaturePlayed;
 
+  void clearNatureSoundState() {
+    if (_natureSoundName != null) {
+      _natureSoundName = null;
+      notifyListeners();
+    }
+  }
+
+  void clearCurrentSong() {
+    if (_currentIndex != -1) {
+      _currentIndex = -1;
+      notifyListeners();
+    }
+  }
+
   Future<void> playNatureSound(String assetPath, String displayName) async {
     _onStopRadio?.call();
     _natureSoundName = displayName;
@@ -310,6 +324,18 @@ class PlayerProvider extends ChangeNotifier {
     _natureSoundName = null;
     await _player.stop();
     await WakelockPlus.disable();
+    notifyListeners();
+  }
+
+  Future<void> pauseNatureSound() async {
+    await _player.pause();
+    _isPlaying = false;
+    notifyListeners();
+  }
+
+  Future<void> resumeNatureSound() async {
+    await _player.play();
+    _isPlaying = true;
     notifyListeners();
   }
 

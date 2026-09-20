@@ -8,9 +8,12 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'settings_screen.dart';
 import 'radio_home_screen.dart';
+import 'nature_sound_detail_screen.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
 import '../main.dart' show globalAudioHandler;
+import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NatureSoundsScreen extends StatefulWidget {
   const NatureSoundsScreen({super.key});
@@ -39,6 +42,8 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
   Timer? _sleepTimer;
   int? _sleepMinutes;
   _NatureSound? _selectedSound;
+  Set<String> _favoriteNames = {};
+  bool _showFavoritesOnly = false;
 
   static const _sounds = <_NatureSound>[
     _NatureSound(
@@ -77,6 +82,83 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
       assetPath: 'assets/stream_sound.mp3',
     ),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavorites();
+  }
+
+  Future<void> _loadFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+    final favs = prefs.getStringList('nature_favorites') ?? [];
+    if (mounted) setState(() => _favoriteNames = favs.toSet());
+  }
+
+  Future<void> _toggleFavorite(String name) async {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    final prefs = await SharedPreferences.getInstance();
+    final favs = prefs.getStringList('nature_favorites') ?? [];
+    final nowFavorite = !_favoriteNames.contains(name);
+    setState(() {
+      if (nowFavorite) {
+        _favoriteNames.add(name);
+      } else {
+        _favoriteNames.remove(name);
+      }
+    });
+    if (nowFavorite) {
+      if (!favs.contains(name)) favs.add(name);
+    } else {
+      favs.remove(name);
+    }
+    await prefs.setStringList('nature_favorites', favs);
+    _showCenterToast(nowFavorite ? '즐겨찾기에 추가되었습니다' : '즐겨찾기에서 삭제되었습니다');
+  }
+
+  void _showCenterToast(String message) {
+    final overlay = Overlay.of(context);
+    late OverlayEntry entry;
+    entry = OverlayEntry(
+      builder: (_) => Positioned.fill(
+        child: Center(
+          child: TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.0, end: 1.0),
+            duration: const Duration(milliseconds: 300),
+            builder: (_, value, child) => Opacity(
+              opacity: value,
+              child: Transform.scale(scale: 0.85 + 0.15 * value, child: child),
+            ),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Text(
+                message,
+                style: const TextStyle(
+                  color: Colors.black87,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  decoration: TextDecoration.none,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    overlay.insert(entry);
+    Future.delayed(const Duration(seconds: 2), () => entry.remove());
+  }
 
   @override
   void dispose() {
@@ -310,11 +392,6 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
     final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
     final primaryColor = Theme.of(context).colorScheme.primary;
     final playerProvider = context.watch<PlayerProvider>();
-    final gridSounds = _sounds.where((s) => s.name != '모닥불').toList();
-    final langCode = Localizations.localeOf(context).languageCode;
-    final designChangeText = langCode == 'ko'
-        ? '이 메뉴는 디자인 변경중입니다.\n기다려주시면 새로운 메뉴로 찾아뵙겠습니다.'
-        : 'This menu is currently being redesigned.\nPlease check back soon for the new version.';
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       SystemChrome.setSystemUIOverlayStyle(
@@ -366,7 +443,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
         actions: [
           _CircleIconButton(
             baseColor: baseColor,
-            icon: Icons.queue_music,
+            icon: Icons.home_rounded,
             onTap: () {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
               Navigator.of(context).popUntil((route) => route.isFirst);
@@ -374,21 +451,12 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
           ),
           const SizedBox(width: 8),
           _CircleIconButton(
-            baseColor: baseColor,
-            icon: Icons.radio_outlined,
+            baseColor: _showFavoritesOnly ? primaryColor : baseColor,
+            icon: _showFavoritesOnly ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
             onTap: () {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const RadioHomeScreen()),
-              );
+              setState(() => _showFavoritesOnly = !_showFavoritesOnly);
             },
-          ),
-          const SizedBox(width: 8),
-          _CircleIconButton(
-            baseColor: _sleepMinutes != null ? primaryColor : baseColor,
-            icon: Icons.bedtime,
-            onTap: () => _showSleepTimerDialog(baseColor, isDarkMode),
           ),
           const SizedBox(width: 8),
           _CircleIconButton(
@@ -407,217 +475,335 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
               showModalBottomSheet(
                 context: context,
-                backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
+                backgroundColor: Colors.transparent,
+                barrierColor: Colors.black.withOpacity(0.45),
                 shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
-                builder: (ctx) => SafeArea(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListTile(
-                        leading: Icon(Icons.share_outlined, color: baseColor),
-                        title: Text('친구에게 공유하기', style: TextStyle(color: baseColor)),
-                        onTap: () {
-                          Navigator.pop(ctx);
-                          Share.share('파란소리 자연소리로 편안한 시간 보내요 🌊\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
-                        },
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+                builder: (ctx) {
+                  final sheetBg = isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFFAFCFE);
+                  final cardBg = isDarkMode
+                      ? const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight,
+                      colors: [Color(0xFF22303F), Color(0xFF1A2632)])
+                      : const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight,
+                      colors: [Colors.white, Color(0xFFEAF3FC)]);
+                  final cardBorder = isDarkMode ? Colors.white12 : const Color(0xFFE1EDF7);
+                  const navy = Color(0xFF15304D);
+                  final subColor = isDarkMode ? Colors.white60 : const Color(0xFF7891A8);
+
+                  Widget menuCard({
+                    required IconData icon,
+                    required String title,
+                    required String subtitle,
+                    required VoidCallback onTap,
+                  }) {
+                    return Expanded(
+                      child: GestureDetector(
+                        onTap: onTap,
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            gradient: cardBg,
+                            border: Border.all(color: cardBorder),
+                            borderRadius: BorderRadius.circular(18),
+                            boxShadow: [
+                              BoxShadow(
+                                color: isDarkMode
+                                    ? Colors.black.withOpacity(0.35)
+                                    : const Color(0xFF2C6BB3).withOpacity(0.08),
+                                blurRadius: 16,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [Color(0xFF4A90D9), Color(0xFF2C6BB3)],
+                                  ),
+                                  borderRadius: BorderRadius.circular(14),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(0xFF2C6BB3).withOpacity(0.35),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: Icon(icon, color: Colors.white, size: 21),
+                              ),
+                              const SizedBox(height: 14),
+                              Text(title,
+                                  style: TextStyle(
+                                      color: isDarkMode ? Colors.white : navy,
+                                      fontSize: 14.5,
+                                      fontWeight: FontWeight.w700)),
+                              const SizedBox(height: 4),
+                              Text(subtitle,
+                                  maxLines: 2,
+                                  style: TextStyle(color: subColor, fontSize: 11, height: 1.4)),
+                            ],
+                          ),
+                        ),
                       ),
-                      ListTile(
-                        leading: Icon(Icons.mood, color: baseColor),
-                        title: Text('앱 평가하기', style: TextStyle(color: baseColor)),
-                        onTap: () async {
-                          Navigator.pop(ctx);
-                          final uri = Uri.parse('https://play.google.com/store/apps/details?id=kr.ssing.catsong');
-                          if (await canLaunchUrl(uri)) {
-                            await launchUrl(uri, mode: LaunchMode.externalApplication);
-                          }
-                        },
+                    );
+                  }
+
+                  return SafeArea(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: sheetBg,
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                       ),
-                      ListTile(
-                        leading: Icon(Icons.settings_outlined, color: baseColor),
-                        title: Text('설정', style: TextStyle(color: baseColor)),
-                        onTap: () {
-                          Navigator.pop(ctx);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => const SettingsScreen()),
-                          );
-                        },
+                      padding: const EdgeInsets.fromLTRB(16, 10, 16, 20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 4,
+                            margin: const EdgeInsets.only(bottom: 4),
+                            decoration: BoxDecoration(
+                              color: isDarkMode ? Colors.white24 : const Color(0xFFCBD9EC),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: GestureDetector(
+                              onTap: () => Navigator.pop(ctx),
+                              child: Container(
+                                width: 30,
+                                height: 30,
+                                margin: const EdgeInsets.only(bottom: 8),
+                                decoration: BoxDecoration(
+                                  color: isDarkMode ? Colors.white10 : const Color(0xFFF0F5FA),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(Icons.close,
+                                    size: 16, color: isDarkMode ? Colors.white70 : subColor),
+                              ),
+                            ),
+                          ),
+                          IntrinsicHeight(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                menuCard(
+                                  icon: Icons.share_outlined,
+                                  title: '친구에게 공유하기',
+                                  subtitle: '파란소리를 친구에게\n소개해보세요.',
+                                  onTap: () {
+                                    Navigator.pop(ctx);
+                                    Share.share('파란소리 자연소리로 편안한 시간 보내요 🌊\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                                  },
+                                ),
+                                const SizedBox(width: 12),
+                                menuCard(
+                                  icon: Icons.star_border_rounded,
+                                  title: '앱 평가하기',
+                                  subtitle: '좋은 평가가\n큰 힘이 됩니다.',
+                                  onTap: () async {
+                                    Navigator.pop(ctx);
+                                    final uri = Uri.parse('https://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                                    if (await canLaunchUrl(uri)) {
+                                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(ctx);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                              );
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                gradient: cardBg,
+                                border: Border.all(color: cardBorder),
+                                borderRadius: BorderRadius.circular(18),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: isDarkMode
+                                        ? Colors.black.withOpacity(0.35)
+                                        : const Color(0xFF2C6BB3).withOpacity(0.08),
+                                    blurRadius: 16,
+                                    offset: const Offset(0, 6),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 44,
+                                    height: 44,
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [Color(0xFF4A90D9), Color(0xFF2C6BB3)],
+                                      ),
+                                      borderRadius: BorderRadius.circular(14),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: const Color(0xFF2C6BB3).withOpacity(0.35),
+                                          blurRadius: 10,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    child: const Icon(Icons.settings_outlined, color: Colors.white, size: 21),
+                                  ),
+                                  const SizedBox(width: 14),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text('설정',
+                                            style: TextStyle(
+                                                color: isDarkMode ? Colors.white : navy,
+                                                fontSize: 14.5,
+                                                fontWeight: FontWeight.w700)),
+                                        const SizedBox(height: 2),
+                                        Text('앱 환경을 설정할 수 있어요.',
+                                            style: TextStyle(color: subColor, fontSize: 11.5)),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               );
             },
           ),
           const SizedBox(width: 12),
         ],
       ),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              decoration: BoxDecoration(
-                color: baseColor.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.construction_outlined, color: baseColor.withOpacity(0.5), size: 16),
-                  const SizedBox(width: 8),
-                  Text(
-                    '리뉴얼중입니다',
-                    style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            if (_selectedSound != null) ...[
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                decoration: BoxDecoration(
-                  color: primaryColor.withOpacity(0.06),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${_selectedSound!.emoji} ${_selectedSound!.name}',
-                      style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 11),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      _selectedSound!.description,
-                      style: TextStyle(color: baseColor.withOpacity(0.85), fontSize: 13, height: 1.5),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-            ],
-            // 모닥불 큰 배경카드
-            Builder(builder: (context) {
-              final campfire = _sounds.firstWhere((s) => s.name == '모닥불');
-              final isThisOne = playerProvider.natureSoundName == campfire.name;
-              final isPlaying = isThisOne && playerProvider.isPlaying;
-              return GestureDetector(
-                onTap: campfire.isReady ? () => _toggleSound(campfire, isPlaying) : null,
-                child: Container(
-                  width: double.infinity,
-                  height: 140,
-                  margin: const EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/campfire_bg.png'),
-                      fit: BoxFit.cover,
-                    ),
-                    border: isPlaying ? Border.all(color: primaryColor, width: 2) : null,
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.05),
-                          Colors.black.withOpacity(0.55),
-                        ],
-                      ),
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    alignment: Alignment.bottomLeft,
-                    child: Row(
-                      children: [
-                        Icon(
-                          isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          '${campfire.emoji} ${campfire.name}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            }),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: gridSounds.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                childAspectRatio: 1,
-              ),
-              itemBuilder: (context, index) {
-                final sound = gridSounds[index];
+            ...(() {
+              const soundColors = <String, Color>{
+                '파도소리': Color(0xFF4A7BA6),
+                '빗소리': Color(0xFF3E5A78),
+                '새소리': Color(0xFF5C7A5E),
+                '모닥불': Color(0xFFC97B4A),
+                '시냇물': Color(0xFF2C6BB3),
+              };
+              final filtered = _showFavoritesOnly
+                  ? _sounds.where((s) => _favoriteNames.contains(s.name)).toList()
+                  : _sounds;
+              return filtered.map((sound) {
                 final isThisOne = playerProvider.natureSoundName == sound.name;
                 final isPlaying = isThisOne && playerProvider.isPlaying;
+                final soundColor = soundColors[sound.name] ?? primaryColor;
                 return GestureDetector(
-                  onTap: sound.isReady ? () => _toggleSound(sound, isPlaying) : null,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: isPlaying ? primaryColor.withOpacity(0.12) : baseColor.withOpacity(0.04),
-                      borderRadius: BorderRadius.circular(14),
-                      border: isPlaying ? Border.all(color: primaryColor, width: 1.5) : null,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          isPlaying ? Icons.pause : sound.icon,
-                          color: sound.isReady
-                              ? (isPlaying ? primaryColor : baseColor.withOpacity(0.7))
-                              : baseColor.withOpacity(0.25),
-                          size: 22,
+                  onTap: sound.isReady
+                      ? () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    if (!isPlaying) {
+                      _toggleSound(sound, isPlaying);
+                    }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => NatureSoundDetailScreen(
+                          name: sound.name,
+                          icon: sound.icon,
+                          description: sound.description,
+                          assetPath: sound.assetPath,
+                          color: soundColor,
                         ),
-                        const SizedBox(height: 6),
-                        Text(
-                          sound.name,
-                          style: TextStyle(
-                            color: sound.isReady
-                                ? (isPlaying ? primaryColor : baseColor.withOpacity(0.8))
-                                : baseColor.withOpacity(0.3),
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  }
+                      : null,
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: isPlaying ? primaryColor.withOpacity(0.08) : baseColor.withOpacity(0.03),
+                      borderRadius: BorderRadius.circular(14),
+                      border: isPlaying ? Border.all(color: primaryColor, width: 1.2) : null,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 52,
+                          height: 52,
+                          decoration: BoxDecoration(
+                            color: soundColor,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(sound.icon, color: Colors.white, size: 22),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(sound.name,
+                                  style: TextStyle(
+                                      color: baseColor, fontSize: 14.5, fontWeight: FontWeight.w600)),
+                              const SizedBox(height: 2),
+                              Text(sound.description,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: baseColor.withOpacity(0.45), fontSize: 11.5)),
+                            ],
                           ),
                         ),
-                        if (!sound.isReady) ...[
-                          const SizedBox(height: 2),
-                          Text('준비중', style: TextStyle(color: baseColor.withOpacity(0.25), fontSize: 9)),
-                        ],
+                        const SizedBox(width: 8),
+                        GestureDetector(
+                          onTap: () => _toggleFavorite(sound.name),
+                          child: Container(
+                            width: 34,
+                            height: 34,
+                            decoration: BoxDecoration(
+                              color: _favoriteNames.contains(sound.name)
+                                  ? primaryColor
+                                  : baseColor.withOpacity(0.08),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              _favoriteNames.contains(sound.name)
+                                  ? CupertinoIcons.heart_fill
+                                  : CupertinoIcons.heart,
+                              color: _favoriteNames.contains(sound.name)
+                                  ? Colors.white
+                                  : baseColor.withOpacity(0.5),
+                              size: 16,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 );
-              },
-            ),
-            const SizedBox(height: 20),
-            Center(
-              child: Text(
-                designChangeText,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: baseColor.withOpacity(0.45), fontSize: 15, height: 1.5),
-              ),
-            ),
+              }).toList();
+            })(),
           ],
         ),
       ),

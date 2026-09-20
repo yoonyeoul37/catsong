@@ -333,15 +333,15 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         elevation: 0,
         systemOverlayStyle: isDarkMode
             ? const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.light,
-                statusBarBrightness: Brightness.dark,
-              )
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+        )
             : const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.dark,
-                statusBarBrightness: Brightness.light,
-              ),
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+        ),
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
@@ -614,10 +614,14 @@ class _StationTile extends StatelessWidget {
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                    final wasFav = context.read<RadioProvider>().isFavorite(radioStation.stationUuid);
-                    context.read<RadioProvider>().toggleFavorite(radioStation);
+                    final radioProvider = context.read<RadioProvider>();
+                    final wasFav = radioProvider.isFavorite(radioStation.stationUuid);
                     final overlay = Overlay.of(context);
-                    final entry = OverlayEntry(
+                    final toastText = wasFav
+                        ? AppLocalizations.of(context)!.radioRemovedFromFavorites
+                        : AppLocalizations.of(context)!.radioAddedToFavoritesToast;
+                    late final OverlayEntry entry;
+                    entry = OverlayEntry(
                       builder: (_) => Positioned(
                         bottom: 500, left: 0, right: 0,
                         child: Center(
@@ -651,9 +655,7 @@ class _StationTile extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    wasFav
-                                        ? AppLocalizations.of(context)!.radioRemovedFromFavorites
-                                        : AppLocalizations.of(context)!.radioAddedToFavoritesToast,
+                                    toastText,
                                     style: const TextStyle(
                                       color: Colors.black87,
                                       fontSize: 13,
@@ -670,6 +672,7 @@ class _StationTile extends StatelessWidget {
                     );
                     overlay.insert(entry);
                     Future.delayed(const Duration(seconds: 2), () => entry.remove());
+                    Future.microtask(() => radioProvider.toggleFavorite(radioStation));
                   },
                   child: Icon(
                     context.watch<RadioProvider>().isFavorite(radioStation.stationUuid)
@@ -990,15 +993,15 @@ class _BroadcasterStationList extends StatelessWidget {
         elevation: 0,
         systemOverlayStyle: isDarkMode
             ? const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.light,
-                statusBarBrightness: Brightness.dark,
-              )
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+        )
             : const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.dark,
-                statusBarBrightness: Brightness.light,
-              ),
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+        ),
         leading: IconButton(
           onPressed: () {
             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');

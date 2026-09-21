@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/player_provider.dart';
 import '../providers/theme_provider.dart';
+import '../providers/sound_mix_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'settings_screen.dart';
@@ -43,6 +44,10 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
     super.initState();
     _loadFavorite();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      final mix = context.read<SoundMixProvider>();
+      if (mix.isPlaying) {
+        mix.stopAll();
+      }
       final pp = context.read<PlayerProvider>();
       final alreadyPlaying = pp.natureSoundName == widget.name && pp.isPlaying;
       if (!alreadyPlaying && widget.assetPath != null) {
@@ -315,7 +320,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
     late final String farewellAsset;
     switch (langCode) {
       case 'ko':
-        farewellAsset = 'assets/farewell_ko_v3.mp3';
+        farewellAsset = 'assets/farewell_ko_v2.mp3';
         break;
       case 'ja':
         farewellAsset = 'assets/farewell_ja.mp3';
@@ -367,7 +372,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
     );
     overlay.insert(entry);
 
-    Future.delayed(const Duration(milliseconds: 8000), () async {
+    Future.delayed(const Duration(milliseconds: 15000), () async {
       late OverlayEntry fadeOutEntry;
       fadeOutEntry = OverlayEntry(
         builder: (_) => TweenAnimationBuilder<double>(

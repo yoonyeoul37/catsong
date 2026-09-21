@@ -250,63 +250,63 @@ class _PlayerScreenState extends State<PlayerScreen>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                  _buildBottomBarItem(
-                    context,
-                    icon: Icons.shuffle,
-                    label: AppLocalizations.of(context)!.shuffle,
-                    isActive: playerProvider.isShuffled,
-                    onTap: () {
-                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      playerProvider.toggleShuffle();
-                    },
-                  ),
-                  _buildBottomBarItem(
-                    context,
-                    icon: playerProvider.loopMode == LoopMode.one
-                        ? Icons.repeat_one
-                        : Icons.repeat,
-                    label: '반복',
-                    isActive: playerProvider.loopMode != LoopMode.off,
-                    onTap: () {
-                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      playerProvider.toggleLoopMode();
-                    },
-                  ),
-                  _buildBottomBarItem(
-                    context,
-                    icon: Icons.nightlight_round,
-                    label: '수면',
-                    isActive: playerProvider.isSleepTimerActive,
-                    onTap: () {
-                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      _showSleepTimerDialog(context, playerProvider, primaryColor);
-                    },
-                  ),
-                  _buildBottomBarItem(
-                    context,
-                    icon: Icons.speed,
-                    label: '배속',
-                    isActive: playerProvider.playbackSpeed != 1.0,
-                    onTap: () {
-                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      _showSpeedDialog(context, playerProvider, primaryColor);
-                    },
-                  ),
-                  _buildBottomBarItem(
-                    context,
-                    icon: Icons.lyrics_outlined,
-                    label: AppLocalizations.of(context)!.lyrics,
-                    isActive: false,
-                    onTap: () {
-                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LyricsScreen(),
+                        _buildBottomBarItem(
+                          context,
+                          icon: Icons.shuffle,
+                          label: AppLocalizations.of(context)!.shuffle,
+                          isActive: playerProvider.isShuffled,
+                          onTap: () {
+                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                            playerProvider.toggleShuffle();
+                          },
                         ),
-                      );
-                    },
-                  ),
+                        _buildBottomBarItem(
+                          context,
+                          icon: playerProvider.loopMode == LoopMode.one
+                              ? Icons.repeat_one
+                              : Icons.repeat,
+                          label: '반복',
+                          isActive: playerProvider.loopMode != LoopMode.off,
+                          onTap: () {
+                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                            playerProvider.toggleLoopMode();
+                          },
+                        ),
+                        _buildBottomBarItem(
+                          context,
+                          icon: Icons.nightlight_round,
+                          label: '수면',
+                          isActive: playerProvider.isSleepTimerActive,
+                          onTap: () {
+                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                            _showSleepTimerDialog(context, playerProvider, primaryColor);
+                          },
+                        ),
+                        _buildBottomBarItem(
+                          context,
+                          icon: Icons.speed,
+                          label: '배속',
+                          isActive: playerProvider.playbackSpeed != 1.0,
+                          onTap: () {
+                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                            _showSpeedDialog(context, playerProvider, primaryColor);
+                          },
+                        ),
+                        _buildBottomBarItem(
+                          context,
+                          icon: Icons.lyrics_outlined,
+                          label: AppLocalizations.of(context)!.lyrics,
+                          isActive: false,
+                          onTap: () {
+                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LyricsScreen(),
+                              ),
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),

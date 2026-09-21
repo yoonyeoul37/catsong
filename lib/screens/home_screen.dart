@@ -12,6 +12,8 @@ import '../models/recent_content_entry.dart';
 import '../models/radio_station.dart';
 import '../providers/video_provider.dart';
 import '../widgets/nature_mini_player.dart';
+import '../providers/sound_mix_provider.dart';
+import '../widgets/sound_mix_mini_player.dart';
 import 'video_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -364,7 +366,7 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (langCode) {
       case 'ko':
         smallText = '파란소리와 함께한 시간,\n즐거우셨나요?\n\n언제든 다시 찾아오시면,\n좋은 소리로 맞아드릴게요.\n안녕히 가세요!';
-        farewellAsset = 'assets/farewell_ko_v2.mp3';
+        farewellAsset = 'assets/farewell_ko_v3.mp3';
         break;
       case 'ja':
         smallText = 'Paransoriと過ごした時間、\n楽しんでいただけましたか?\n\nいつでもまた遊びに来てください、\n素敵な音でお迎えします。\nまた会いましょう!';
@@ -419,7 +421,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     overlay.insert(entry);
 
-    Future.delayed(const Duration(milliseconds: 15000), () async {
+    Future.delayed(const Duration(milliseconds: 8000), () async {
       late OverlayEntry fadeOutEntry;
       fadeOutEntry = OverlayEntry(
         builder: (_) => TweenAnimationBuilder<double>(
@@ -579,6 +581,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                   if (playerProvider.natureSoundName != null) {
                     return const NatureMiniPlayer();
+                  }
+                  if (context.watch<SoundMixProvider>().hasSession) {
+                    return const SoundMixMiniPlayer();
                   }
                   return const SizedBox.shrink();
                 },

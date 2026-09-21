@@ -102,6 +102,11 @@ class PlayerProvider extends ChangeNotifier {
     _audioHandler = handler;
   }
 
+  VoidCallback? _onStopMixMusic;
+  void setOnStopMixMusic(VoidCallback cb) {
+    _onStopMixMusic = cb;
+  }
+
   void setOnStopRadio(VoidCallback cb) {
     _onStopRadio = cb;
   }
@@ -198,6 +203,8 @@ class PlayerProvider extends ChangeNotifier {
 
     // 라디오 재생 중이면 정지
     _onStopRadio?.call();
+    _onStopMixMusic?.call();
+    _onStopMixMusic?.call();
 
     _currentIndex = index;
     _isLoading = true;

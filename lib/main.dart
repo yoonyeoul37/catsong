@@ -35,6 +35,7 @@ void main() async {
   final playerProvider = PlayerProvider();
   final musicProvider = MusicProvider();
   final recentContentProvider = RecentContentProvider();
+  final soundMixProvider = SoundMixProvider();
   playerProvider.onSongPlayed = (song) {
     musicProvider.addToRecent(song);
     recentContentProvider.addMusic(song);
@@ -75,6 +76,9 @@ void main() async {
 
   playerProvider.setOnStopRadio(() async {
     await radioProvider.stopRadioAndClear();
+  });
+  playerProvider.setOnStopMixMusic(() {
+    soundMixProvider.stopAll();
   });
 
   simpleHandler.onRadioPlay = () {
@@ -134,6 +138,7 @@ void main() async {
     radioProvider: radioProvider,
     videoProvider: videoProvider,
     recentContentProvider: recentContentProvider,
+    soundMixProvider: soundMixProvider,
   ));
 }
 
@@ -143,6 +148,7 @@ class MyApp extends StatelessWidget {
   final RadioProvider radioProvider;
   final VideoProvider videoProvider;
   final RecentContentProvider recentContentProvider;
+  final SoundMixProvider soundMixProvider;
   const MyApp({
     super.key,
     required this.playerProvider,
@@ -150,6 +156,7 @@ class MyApp extends StatelessWidget {
     required this.radioProvider,
     required this.videoProvider,
     required this.recentContentProvider,
+    required this.soundMixProvider,
   });
 
   @override
@@ -165,7 +172,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: radioProvider),
         ChangeNotifierProvider(create: (_) => StartScreenProvider()),
         ChangeNotifierProvider.value(value: recentContentProvider),
-        ChangeNotifierProvider(create: (_) => SoundMixProvider()),
+        ChangeNotifierProvider.value(value: soundMixProvider),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

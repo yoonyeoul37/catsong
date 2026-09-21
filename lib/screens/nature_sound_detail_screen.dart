@@ -427,8 +427,8 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
                     child: Container(
-                      width: 38,
-                      height: 38,
+                      width: 32,
+                      height: 32,
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.15),
                         shape: BoxShape.circle,
@@ -443,21 +443,21 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                       Navigator.of(context).popUntil((route) => route.isFirst);
                     },
                     child: Container(
-                      width: 38,
-                      height: 38,
+                      width: 32,
+                      height: 32,
                       decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), shape: BoxShape.circle),
-                      child: const Icon(Icons.home_rounded, color: Colors.white, size: 17),
+                      child: const Icon(Icons.home_rounded, color: Colors.white, size: 16),
                     ),
                   ),
                   const SizedBox(width: 8),
                   GestureDetector(
                     onTap: _toggleFavorite,
                     child: Container(
-                      width: 38,
-                      height: 38,
+                      width: 32,
+                      height: 32,
                       decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), shape: BoxShape.circle),
                       child: Icon(_isFavorite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                          color: Colors.white, size: 17),
+                          color: Colors.white, size: 16),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -467,11 +467,11 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                       context.read<ThemeProvider>().setDarkMode(!isDarkMode);
                     },
                     child: Container(
-                      width: 38,
-                      height: 38,
+                      width: 32,
+                      height: 32,
                       decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), shape: BoxShape.circle),
                       child: Icon(isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-                          color: Colors.white, size: 17),
+                          color: Colors.white, size: 16),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -677,20 +677,20 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                       );
                     },
                     child: Container(
-                      width: 38,
-                      height: 38,
+                      width: 32,
+                      height: 32,
                       decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), shape: BoxShape.circle),
-                      child: const Icon(Icons.more_vert, color: Colors.white, size: 20),
+                      child: const Icon(Icons.more_vert, color: Colors.white, size: 16),
                     ),
                   ),
                   const SizedBox(width: 8),
                   GestureDetector(
                     onTap: () => _showExitConfirmDialog(context),
                     child: Container(
-                      width: 38,
-                      height: 38,
+                      width: 32,
+                      height: 32,
                       decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), shape: BoxShape.circle),
-                      child: const Icon(Icons.power_settings_new_rounded, color: Colors.white, size: 18),
+                      child: const Icon(Icons.power_settings_new_rounded, color: Colors.white, size: 16),
                     ),
                   ),
                 ],

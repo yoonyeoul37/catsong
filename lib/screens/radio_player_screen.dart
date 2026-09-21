@@ -68,7 +68,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     switch (langCode) {
       case 'ko':
         smallText = '파란소리와 함께한 시간,\n즐거우셨나요?\n\n언제든 다시 찾아오시면,\n좋은 소리로 맞아드릴게요.\n안녕히 가세요!';
-        farewellAsset = 'assets/farewell_ko_v3.mp3';
+        farewellAsset = 'assets/farewell_ko_v2.mp3';
         break;
       case 'ja':
         smallText = 'Paransoriと過ごした時間、\n楽しんでいただけましたか?\n\nいつでもまた遊びに来てください、\n素敵な音でお迎えします。\nまた会いましょう!';
@@ -121,7 +121,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     );
     overlay.insert(entry);
 
-    Future.delayed(const Duration(milliseconds: 8000), () async {
+    Future.delayed(const Duration(milliseconds: 16000), () async {
       late OverlayEntry fadeOutEntry;
       fadeOutEntry = OverlayEntry(
         builder: (_) => TweenAnimationBuilder<double>(
@@ -535,7 +535,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                 const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                                 Navigator.pop(context);
                               },
-                              child: Icon(Icons.expand_more, color: baseColor, size: 24),
+                              child: Icon(Icons.expand_more, color: baseColor, size: 16),
                             ),
                             Row(
                               children: [
@@ -599,7 +599,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                   child: Icon(
                                     radioProvider.isFavorite(current.stationUuid) ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
                                     color: radioProvider.isFavorite(current.stationUuid) ? baseColor : baseColor.withOpacity(0.6),
-                                    size: 18,
+                                    size: 16,
                                   ),
                                 ),
                                 const SizedBox(width: 10),
@@ -611,7 +611,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                   child: Icon(
                                     isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
                                     color: baseColor,
-                                    size: 20,
+                                    size: 16,
                                   ),
                                 ),
                                 const SizedBox(width: 10),
@@ -620,7 +620,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                                     Navigator.of(context).popUntil((route) => route.isFirst);
                                   },
-                                  child: Icon(Icons.home_rounded, color: baseColor, size: 20),
+                                  child: Icon(Icons.home_rounded, color: baseColor, size: 16),
                                 ),
                                 const SizedBox(width: 10),
                                 Builder(builder: (ctx) {
@@ -817,7 +817,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                         },
                                       );
                                     },
-                                    child: Icon(Icons.more_vert, color: baseColor, size: 20),
+                                    child: Icon(Icons.more_vert, color: baseColor, size: 16),
                                   );
                                 }),
                               ],
@@ -1864,7 +1864,7 @@ class _FloatButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 36, height: 36,
+        width: 32, height: 32,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: baseColor.withOpacity(0.07),

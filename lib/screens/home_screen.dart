@@ -1955,14 +1955,14 @@ class _AppBarCircleButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 36,
-        height: 36,
+        width: 32,
+        height: 32,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: baseColor.withOpacity(0.07),
           border: Border.all(color: baseColor.withOpacity(0.08)),
         ),
-        child: Icon(icon, color: baseColor, size: 18),
+        child: Icon(icon, color: baseColor, size: 16),
       ),
     );
   }

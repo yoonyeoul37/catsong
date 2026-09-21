@@ -1062,7 +1062,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: c.onTap,
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.16),
@@ -1072,7 +1072,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(10),
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
@@ -1235,7 +1235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.16),
@@ -1245,7 +1245,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(10),
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
@@ -1347,7 +1347,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ? [const Color(0xFF1A2632), const Color(0xFF22303F)]
                         : [const Color(0xFFEAF3FC), const Color(0xFFD9E9F8)],
                   ),
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1481,7 +1481,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
+                                borderRadius: BorderRadius.circular(10),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.16),
@@ -1493,7 +1493,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Stack(
                                 children: [
                                   ClipRRect(
-                                    borderRadius: BorderRadius.circular(14),
+                                    borderRadius: BorderRadius.circular(10),
                                     child: thumbnail,
                                   ),
                                   Positioned(

@@ -364,7 +364,7 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (langCode) {
       case 'ko':
         smallText = '파란소리와 함께한 시간,\n즐거우셨나요?\n\n언제든 다시 찾아오시면,\n좋은 소리로 맞아드릴게요.\n안녕히 가세요!';
-        farewellAsset = 'assets/farewell_ko_v3.mp3';
+        farewellAsset = 'assets/farewell_ko_v2.mp3';
         break;
       case 'ja':
         smallText = 'Paransoriと過ごした時間、\n楽しんでいただけましたか?\n\nいつでもまた遊びに来てください、\n素敵な音でお迎えします。\nまた会いましょう!';
@@ -1116,10 +1116,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                             fontSize: 16,
                                             fontWeight: FontWeight.w800,
                                             shadows: [
+                                              const Shadow(
+                                                color: Colors.black,
+                                                blurRadius: 3,
+                                                offset: Offset(0, 1),
+                                              ),
                                               Shadow(
-                                                color: Colors.black.withOpacity(0.7),
+                                                color: Colors.black.withOpacity(0.9),
                                                 blurRadius: 8,
-                                                offset: const Offset(0, 1),
+                                                offset: const Offset(0, 2),
+                                              ),
+                                              Shadow(
+                                                color: Colors.black.withOpacity(0.75),
+                                                blurRadius: 20,
+                                                offset: const Offset(0, 3),
                                               ),
                                             ])),
                                     const SizedBox(height: 2),
@@ -1131,10 +1141,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                             fontSize: 11,
                                             fontWeight: FontWeight.w500,
                                             shadows: [
+                                              const Shadow(
+                                                color: Colors.black,
+                                                blurRadius: 2,
+                                                offset: Offset(0, 1),
+                                              ),
                                               Shadow(
-                                                color: Colors.black.withOpacity(0.7),
+                                                color: Colors.black.withOpacity(0.85),
                                                 blurRadius: 6,
                                                 offset: const Offset(0, 1),
+                                              ),
+                                              Shadow(
+                                                color: Colors.black.withOpacity(0.65),
+                                                blurRadius: 14,
+                                                offset: const Offset(0, 2),
                                               ),
                                             ])),
                                   ],
@@ -1268,10 +1288,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                             fontSize: 12,
                                             fontWeight: FontWeight.w700,
                                             shadows: [
+                                              const Shadow(
+                                                color: Colors.black,
+                                                blurRadius: 2,
+                                                offset: Offset(0, 1),
+                                              ),
                                               Shadow(
-                                                color: Colors.black.withOpacity(0.7),
+                                                color: Colors.black.withOpacity(0.9),
                                                 blurRadius: 6,
                                                 offset: const Offset(0, 1),
+                                              ),
+                                              Shadow(
+                                                color: Colors.black.withOpacity(0.7),
+                                                blurRadius: 14,
+                                                offset: const Offset(0, 2),
                                               ),
                                             ])),
                                   ),

@@ -16,6 +16,7 @@ import 'providers/video_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/radio_provider.dart';
 import 'providers/start_screen_provider.dart';
+import 'providers/sound_mix_provider.dart';
 import 'providers/recent_content_provider.dart';
 import 'screens/home_screen.dart';
 import 'theme/app_theme.dart';
@@ -164,6 +165,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: radioProvider),
         ChangeNotifierProvider(create: (_) => StartScreenProvider()),
         ChangeNotifierProvider.value(value: recentContentProvider),
+        ChangeNotifierProvider(create: (_) => SoundMixProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
@@ -230,7 +232,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
   Future<void> _checkAndShowWelcome() async {
     if (!context.read<ThemeProvider>().voiceGreetingEnabled) return;
     final langCode = Localizations.localeOf(context).languageCode;
-    final welcomeAsset = langCode == 'ko' ? 'assets/welcome_ko_v2.mp3' : null;
+    final welcomeAsset = langCode == 'ko' ? 'assets/welcome_ko_v3.mp3' : null;
     if (welcomeAsset != null) {
       final welcomePlayer = AudioPlayer();
       welcomePlayer.setAsset(welcomeAsset).then((_) => welcomePlayer.play());
@@ -241,7 +243,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    Future.delayed(const Duration(seconds: 8), () {
+    Future.delayed(const Duration(seconds: 5), () {
       if (mounted) setState(() => _showIntro = false);
     });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -261,7 +263,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
       }
     });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await Future.delayed(const Duration(seconds: 8));
+      await Future.delayed(const Duration(seconds: 5));
       final musicProvider = context.read<MusicProvider>();
       if (musicProvider.songs.isEmpty) {
         await musicProvider.initialize();

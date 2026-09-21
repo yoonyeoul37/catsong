@@ -9,6 +9,7 @@ import '../providers/theme_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'settings_screen.dart';
+import 'sound_mix_screen.dart';
 import 'package:just_audio/just_audio.dart';
 
 class NatureSoundDetailScreen extends StatefulWidget {
@@ -366,7 +367,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
     );
     overlay.insert(entry);
 
-    Future.delayed(const Duration(milliseconds: 15000), () async {
+    Future.delayed(const Duration(milliseconds: 8000), () async {
       late OverlayEntry fadeOutEntry;
       fadeOutEntry = OverlayEntry(
         builder: (_) => TweenAnimationBuilder<double>(
@@ -394,13 +395,11 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
     });
   }
 
-  void _showMixComingSoon() {
+  void _goToSoundMix(BuildContext context) {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('여러 소리를 함께 섞는 믹스 기능은 곧 추가돼요.'),
-        duration: Duration(seconds: 2),
-      ),
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const SoundMixScreen()),
     );
   }
 
@@ -760,7 +759,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: _showMixComingSoon,
+                    onTap: () => _goToSoundMix(context),
                     child: Column(
                       children: [
                         Icon(Icons.graphic_eq_rounded, color: Colors.white.withOpacity(0.7), size: 22),

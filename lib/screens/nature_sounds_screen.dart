@@ -313,7 +313,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
     );
     overlay.insert(entry);
 
-    Future.delayed(const Duration(milliseconds: 15000), () async {
+    Future.delayed(const Duration(milliseconds: 8000), () async {
       late OverlayEntry fadeOutEntry;
       fadeOutEntry = OverlayEntry(
         builder: (_) => TweenAnimationBuilder<double>(

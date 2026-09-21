@@ -121,7 +121,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     );
     overlay.insert(entry);
 
-    Future.delayed(const Duration(milliseconds: 16000), () async {
+    Future.delayed(const Duration(milliseconds: 8000), () async {
       late OverlayEntry fadeOutEntry;
       fadeOutEntry = OverlayEntry(
         builder: (_) => TweenAnimationBuilder<double>(

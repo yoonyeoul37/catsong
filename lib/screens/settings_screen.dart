@@ -8,7 +8,6 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../providers/theme_provider.dart';
-import '../providers/start_screen_provider.dart';
 import '../theme/app_theme.dart';
 import 'ringtone_screen.dart';
 import '../l10n/app_localizations.dart';
@@ -129,19 +128,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildTile(context, icon: Icons.text_fields, title: l.textSize, onTap: () => _showTextSizeDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.font_download_outlined, title: l.fontChange, onTap: () => _showFontDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.style, title: l.playerStyle, onTap: () => _showPlayerStyleDialog(context), primaryColor: primaryColor, isLast: true),
-          _buildSection('앱 시작 화면'),
-          Consumer<StartScreenProvider>(
-            builder: (context, startScreenProvider, _) => _buildTile(
-              context,
-              icon: Icons.home_outlined,
-              title: '앱 시작 화면',
-              subtitle: _startScreenLabel(startScreenProvider.startScreen),
-              onTap: () => _showStartScreenDialog(context, startScreenProvider),
-              primaryColor: primaryColor,
-              isFirst: true,
-              isLast: true,
-            ),
-          ),
           _buildSection(l.equalizer),
           _buildTile(context, icon: Icons.equalizer, title: l.equalizer, onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const EqualizerScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor, isFirst: true),
           _buildTile(context, icon: _isFlashlightOn ? Icons.flashlight_on : Icons.flashlight_off, title: l.flashlight, subtitle: _isFlashlightOn ? l.on : l.off, onTap: () => _toggleFlashlight(context), primaryColor: primaryColor,
@@ -176,9 +162,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildSection(String title) {
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
-      child: Text(title.toUpperCase(), style: const TextStyle(color: Color(0xFF232016), fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 1.2)),
+      child: Text(title.toUpperCase(),
+          style: TextStyle(
+              color: isDarkMode ? Colors.white70 : const Color(0xFF232016),
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 1.2)),
     );
   }
 
@@ -448,69 +440,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _launchUrl(String url) async {
     final uri = Uri.parse(url);
     try { await launchUrl(uri, mode: LaunchMode.externalApplication); } catch (e) { await launchUrl(uri, mode: LaunchMode.inAppWebView); }
-  }
-
-  String _startScreenLabel(StartScreenType? type) {
-    switch (type) {
-      case StartScreenType.music:
-        return '음악';
-      case StartScreenType.radio:
-        return '라디오';
-      case StartScreenType.nature:
-        return '자연소리';
-      case StartScreenType.sleep:
-        return '수면 · 집중';
-      case null:
-        return '기본 화면';
-    }
-  }
-
-  void _showStartScreenDialog(BuildContext context, StartScreenProvider provider) {
-    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
-    final options = [
-      (StartScreenType.music, '음악'),
-      (StartScreenType.radio, '라디오'),
-      (StartScreenType.nature, '자연소리'),
-      (StartScreenType.sleep, '수면 · 집중'),
-    ];
-    showDialog(
-      context: context,
-      builder: (ctx) => Dialog(
-        backgroundColor: _sCard(isDarkMode),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('앱 시작 화면',
-                  style: TextStyle(
-                      color: _sText(isDarkMode), fontSize: 17, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 6),
-              Text('앱을 실행할 때 처음 보여줄 화면을 선택하세요.',
-                  style: TextStyle(color: _sTextSub(isDarkMode), fontSize: 13),
-                  textAlign: TextAlign.center),
-              const SizedBox(height: 8),
-              ...options.map((opt) {
-                final selected = provider.startScreen == opt.$1;
-                return ListTile(
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    provider.setStartScreen(opt.$1);
-                    Navigator.pop(ctx);
-                  },
-                  leading: Icon(
-                    selected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
-                    color: selected ? Theme.of(context).colorScheme.primary : _sTextHint(isDarkMode),
-                  ),
-                  title: Text(opt.$2, style: TextStyle(color: _sText(isDarkMode), fontSize: 15)),
-                );
-              }),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   void _showColorPicker(BuildContext context) {

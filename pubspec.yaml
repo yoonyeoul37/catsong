@@ -74,6 +74,8 @@ flutter:
     - assets/cat_icon.png
     - assets/no_album.svg
     - assets/no_album2.jpg
+    - assets/no_album3.jpg
+    - assets/no_album4.jpg
     - assets/radio_mood_bg.jpg
     - assets/wave_sound.mp3
     - assets/rain_sound.mp3

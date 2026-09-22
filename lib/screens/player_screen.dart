@@ -1,3 +1,4 @@
+import '../utils/no_album_helper.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:async';
 import 'dart:math';
@@ -352,7 +353,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   gaplessPlayback: true,
                 )
                     : Image.asset(
-                  'assets/no_album2.jpg',
+                  noAlbumImagePath(song.title),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -609,7 +610,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     )
                         : SizedBox.expand(
                       child: Image.asset(
-                        'assets/no_album2.jpg',
+                        noAlbumImagePath(song.title),
                         fit: BoxFit.cover,
                       ),
                     ),

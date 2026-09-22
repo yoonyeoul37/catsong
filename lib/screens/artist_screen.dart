@@ -1,3 +1,4 @@
+import '../utils/no_album_helper.dart';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -161,7 +162,7 @@ class ArtistDetailScreen extends StatelessWidget {
                 gaplessPlayback: true,
               )
                   : Image.asset(
-                'assets/no_album2.jpg',
+                noAlbumImagePath(artist.name),
                 fit: BoxFit.cover,
               ),
             ),
@@ -193,7 +194,7 @@ class ArtistDetailScreen extends StatelessWidget {
                           gaplessPlayback: true,
                         )
                       else
-                        Image.asset('assets/no_album2.jpg', fit: BoxFit.cover),
+                        Image.asset(noAlbumImagePath(artist.name), fit: BoxFit.cover),
                       Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(

@@ -1,3 +1,4 @@
+import '../utils/no_album_helper.dart';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -123,7 +124,7 @@ class MiniPlayer extends StatelessWidget {
                                 ),
                                 child: Center(
                                   child: Image.asset(
-                                    'assets/no_album2.jpg',
+                                    noAlbumImagePath(song.title),
                                     width: 44,
                                     height: 44,
                                     fit: BoxFit.cover,

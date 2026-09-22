@@ -1,3 +1,4 @@
+import '../utils/no_album_helper.dart';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -120,7 +121,7 @@ class AlbumScreen extends StatelessWidget {
                 color: (context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black).withOpacity(0.15),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
-                  child: Image.asset('assets/no_album2.jpg', fit: BoxFit.cover),
+                  child: Image.asset(noAlbumImagePath(album.title), fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -166,7 +167,7 @@ class AlbumDetailScreen extends StatelessWidget {
                 gaplessPlayback: true,
               )
                   : Image.asset(
-                'assets/no_album2.jpg',
+                noAlbumImagePath(album.title),
                 fit: BoxFit.cover,
               ),
             ),
@@ -198,7 +199,7 @@ class AlbumDetailScreen extends StatelessWidget {
                           gaplessPlayback: true,
                         )
                       else
-                        Image.asset('assets/no_album2.jpg', fit: BoxFit.cover),
+                        Image.asset(noAlbumImagePath(album.title), fit: BoxFit.cover),
                       Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(

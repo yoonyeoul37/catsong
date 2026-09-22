@@ -32,13 +32,13 @@ class FavoritesScreen extends StatelessWidget {
                   Text(AppLocalizations.of(context)!.favorites,
                       style: TextStyle(
                           color: baseColor,
-                          fontSize: 24,
+                          fontSize: 15,
                           fontWeight: FontWeight.w900,
                           letterSpacing: -0.5)),
                   const SizedBox(width: 8),
-                  Text('${favorites.length}',
+                  Text('(${favorites.length})',
                       style: TextStyle(
-                          color: baseColor.withOpacity(0.38), fontSize: 16)),
+                          color: baseColor.withOpacity(0.38), fontSize: 13)),
                 ],
               ),
             ),

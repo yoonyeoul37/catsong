@@ -318,7 +318,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text('나만의 소리 믹스',
-            style: TextStyle(color: baseColor, fontSize: 18, fontWeight: FontWeight.bold)),
+            style: TextStyle(color: baseColor, fontSize: 16, fontWeight: FontWeight.bold)),
         actions: [
           _iconBtn(
             icon: Icons.home_rounded,

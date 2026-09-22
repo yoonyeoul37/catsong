@@ -31,7 +31,7 @@ class PlaylistScreen extends StatelessWidget {
                 Text(AppLocalizations.of(context)!.playlists,
                     style: TextStyle(
                         color: baseColor,
-                        fontSize: 24,
+                        fontSize: 15,
                         fontWeight: FontWeight.w900,
                         letterSpacing: -0.5)),
                 const Spacer(),
@@ -334,7 +334,7 @@ class PlaylistDetailScreen extends StatelessWidget {
                         Text(playlist.name,
                             style: TextStyle(
                                 color: baseColor,
-                                fontSize: 24,
+                                fontSize: 15,
                                 fontWeight: FontWeight.w900,
                                 letterSpacing: -0.5)),
                         const SizedBox(height: 4),

@@ -412,6 +412,41 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                                 ),
                               ],
                             ),
+                            if (selectedSongs.isNotEmpty) ...[
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10, left: 44, right: 0),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.volume_up_rounded,
+                                        size: 15, color: baseColor.withOpacity(0.4)),
+                                    const SizedBox(width: 6),
+                                    Text('음악 음량',
+                                        style: TextStyle(
+                                            color: baseColor.withOpacity(0.6), fontSize: 12)),
+                                    const Spacer(),
+                                    Text('${(mix.songVolume * 100).round()}%',
+                                        style: TextStyle(color: primaryColor, fontSize: 12.5, fontWeight: FontWeight.w700)),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 34),
+                                child: SliderTheme(
+                                  data: SliderTheme.of(context).copyWith(
+                                    trackHeight: 6,
+                                    thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
+                                    overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
+                                    activeTrackColor: primaryColor,
+                                    inactiveTrackColor: baseColor.withOpacity(0.08),
+                                    thumbColor: primaryColor,
+                                  ),
+                                  child: Slider(
+                                    value: mix.songVolume,
+                                    onChanged: (v) => context.read<SoundMixProvider>().setSongVolume(v),
+                                  ),
+                                ),
+                              ),
+                            ],
                             if (selectedSongs.isEmpty)
                               Padding(
                                 padding: const EdgeInsets.only(top: 8, left: 44),

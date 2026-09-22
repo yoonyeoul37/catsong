@@ -39,6 +39,13 @@ class SoundMixProvider extends ChangeNotifier {
   bool get hasSession => _natureLayers.isNotEmpty || _songPlayer != null;
   List<Song> get selectedSongs => List.unmodifiable(_selectedSongs);
   double get songVolume => _songVolume;
+
+  /// 선택된 노래들 전체(재생목록)의 음량을 한번에 조절한다.
+  Future<void> setSongVolume(double value) async {
+    _songVolume = value;
+    notifyListeners();
+    await _songPlayer?.setVolume(value);
+  }
   int? get sleepMinutes => _sleepMinutes;
 
   bool isSongSelected(Song song) =>

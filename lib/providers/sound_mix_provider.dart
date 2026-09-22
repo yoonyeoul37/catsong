@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/song.dart';
+import 'player_provider.dart';
 
 /// 자연소리 5개(각자 반복 재생, 동시에 섞임) + 선택한 노래들(순서대로 이어서 재생, 끝나면 처음으로)
 /// 을 함께 트는 믹스 Provider.
@@ -31,6 +32,20 @@ class SoundMixProvider extends ChangeNotifier {
 
   bool _isPlaying = false;
   Timer? _sleepTicker;
+  PlayerProvider? _playerProvider;
+
+  /// main.dart에서 SoundMixProvider를 만든 직후 한 번 연결해줘야 해요.
+  /// 이게 연결되어야 알림(백그라운드 미디어 컨트롤)이 믹스랑 이어져요.
+  void attachPlayerProvider(PlayerProvider provider) {
+    _playerProvider = provider;
+    final handler = provider.audioHandler;
+    if (handler is SimpleAudioHandler) {
+      handler.onMixPlay = () => playAll();
+      handler.onMixPause = () => stopAll();
+      handler.onMixNext = () => skipToNextSong();
+      handler.onMixPrevious = () => skipToPreviousSong();
+    }
+  }
   DateTime? _sleepEndTime;
   int? _sleepMinutes;
 
@@ -133,6 +148,21 @@ class SoundMixProvider extends ChangeNotifier {
     _saveVolumes();
   }
 
+  void _updateNotification({required bool playing}) {
+    final handler = _playerProvider?.audioHandler;
+    if (handler is! SimpleAudioHandler) return;
+
+    final activeNature = <String>[
+      for (final entry in natureAssets.keys)
+        if ((_volumes[entry] ?? 0.0) > 0) entry,
+    ];
+    final title = currentSong?.titleDisplay ?? '나만의 소리 믹스';
+    final subtitle = activeNature.isNotEmpty ? activeNature.join(' · ') : '파란소리 믹스';
+
+    handler.setMixMediaItem(title: title, subtitle: subtitle);
+    handler.setMixPlaybackState(playing: playing);
+  }
+
   Future<void> _ensureNatureLayerPlaying(String key) async {
     final vol = _volumes[key] ?? 0.0;
     if (vol <= 0) return;
@@ -168,6 +198,20 @@ class SoundMixProvider extends ChangeNotifier {
     await _rebuildSongPlaylist();
   }
 
+  /// 알림(백그라운드 미디어 컨트롤)에서 다음곡 눌렀을 때
+  Future<void> skipToNextSong() async {
+    try {
+      await _songPlayer?.seekToNext();
+    } catch (_) {}
+  }
+
+  /// 알림(백그라운드 미디어 컨트롤)에서 이전곡 눌렀을 때
+  Future<void> skipToPreviousSong() async {
+    try {
+      await _songPlayer?.seekToPrevious();
+    } catch (_) {}
+  }
+
   Future<void> _rebuildSongPlaylist() async {
     if (_selectedSongs.isEmpty) {
       await _songPlayer?.stop();
@@ -179,7 +223,10 @@ class SoundMixProvider extends ChangeNotifier {
     final isNewPlayer = _songPlayer == null;
     _songPlayer ??= AudioPlayer();
     if (isNewPlayer) {
-      _songPlayer!.currentIndexStream.listen((_) => notifyListeners());
+      _songPlayer!.currentIndexStream.listen((_) {
+        notifyListeners();
+        _updateNotification(playing: _isPlaying);
+      });
     }
     final source = ConcatenatingAudioSource(
       children: _selectedSongs
@@ -201,6 +248,7 @@ class SoundMixProvider extends ChangeNotifier {
   Future<void> playAll() async {
     _isPlaying = true;
     notifyListeners();
+    _updateNotification(playing: true);
     for (final key in _volumes.keys.toList()) {
       if ((_volumes[key] ?? 0.0) > 0) {
         await _ensureNatureLayerPlaying(key);
@@ -228,6 +276,7 @@ class SoundMixProvider extends ChangeNotifier {
     } catch (_) {}
     _isPlaying = false;
     notifyListeners();
+    _updateNotification(playing: false);
   }
 
   @override

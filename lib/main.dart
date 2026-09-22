@@ -60,6 +60,7 @@ void main() async {
     ),
   );
   playerProvider.setAudioHandler(globalAudioHandler);
+  soundMixProvider.attachPlayerProvider(playerProvider);
   radioAudioHandler = simpleHandler;
 
   // RadioProvider 생성 + 음악/라디오 상호 정지 연결
@@ -270,7 +271,6 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
       }
     });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await Future.delayed(const Duration(seconds: 4));
       final musicProvider = context.read<MusicProvider>();
       if (musicProvider.songs.isEmpty) {
         await musicProvider.initialize();

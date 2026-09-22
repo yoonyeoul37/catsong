@@ -98,6 +98,8 @@ class PlayerProvider extends ChangeNotifier {
     });
   }
 
+  AudioHandler? get audioHandler => _audioHandler;
+
   void setAudioHandler(AudioHandler handler) {
     _audioHandler = handler;
   }
@@ -498,6 +500,12 @@ class SimpleAudioHandler extends BaseAudioHandler {
   VoidCallback? onRadioNext;
   VoidCallback? onRadioPrevious;
 
+  bool _mixMode = false;
+  VoidCallback? onMixPlay;
+  VoidCallback? onMixPause;
+  VoidCallback? onMixNext;
+  VoidCallback? onMixPrevious;
+
   SimpleAudioHandler(this._provider) : _player = _provider.player {
     _player.playbackEventStream.listen((event) {
       if (!_radioMode) {
@@ -514,6 +522,36 @@ class SimpleAudioHandler extends BaseAudioHandler {
 
   void setRadioMode(bool enabled) {
     _radioMode = enabled;
+  }
+
+  void setMixMode(bool enabled) {
+    _mixMode = enabled;
+  }
+
+  void setMixPlaybackState({required bool playing}) {
+    if (playing) _mixMode = true;
+    playbackState.add(PlaybackState(
+      controls: [
+        MediaControl.skipToPrevious,
+        if (playing) MediaControl.pause else MediaControl.play,
+        MediaControl.skipToNext,
+      ],
+      androidCompactActionIndices: const [0, 1, 2],
+      playing: playing,
+      processingState: AudioProcessingState.ready,
+    ));
+  }
+
+  void setMixMediaItem({
+    required String title,
+    required String subtitle,
+  }) {
+    mediaItem.add(MediaItem(
+      id: 'sound_mix',
+      title: title,
+      artist: subtitle,
+      album: '파란소리 믹스',
+    ));
   }
 
   void setRadioPlaybackState({required bool playing}) {
@@ -581,6 +619,8 @@ class SimpleAudioHandler extends BaseAudioHandler {
   Future<void> play() async {
     if (_radioMode && onRadioPlay != null) {
       onRadioPlay!();
+    } else if (_mixMode && onMixPlay != null) {
+      onMixPlay!();
     } else {
       if (_player.processingState != ProcessingState.idle) {
         _radioMode = false;
@@ -593,6 +633,8 @@ class SimpleAudioHandler extends BaseAudioHandler {
   Future<void> pause() async {
     if (_radioMode && onRadioPause != null) {
       onRadioPause!();
+    } else if (_mixMode && onMixPause != null) {
+      onMixPause!();
     } else {
       // 알림바 클릭 등 외부 이벤트로 인한 자동 pause 방지
       // 실제 재생 중일 때만 pause 허용
@@ -609,6 +651,8 @@ class SimpleAudioHandler extends BaseAudioHandler {
   Future<void> skipToNext() async {
     if (_radioMode && onRadioNext != null) {
       onRadioNext!();
+    } else if (_mixMode && onMixNext != null) {
+      onMixNext!();
     } else {
       await _provider.playNext();
     }
@@ -618,6 +662,8 @@ class SimpleAudioHandler extends BaseAudioHandler {
   Future<void> skipToPrevious() async {
     if (_radioMode && onRadioPrevious != null) {
       onRadioPrevious!();
+    } else if (_mixMode && onMixPrevious != null) {
+      onMixPrevious!();
     } else {
       await _provider.playPrevious();
     }

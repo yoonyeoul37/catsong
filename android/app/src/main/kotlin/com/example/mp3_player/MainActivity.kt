@@ -2,6 +2,7 @@ package kr.ssing.catsong
 
 import android.content.ContentValues
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.media.audiofx.Equalizer
 import android.provider.MediaStore
@@ -450,7 +451,8 @@ class MainActivity : AudioServiceActivity() {
             val artist = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
             val album = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
             val duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-            val albumArt = retriever.embeddedPicture
+            val rawArt = retriever.embeddedPicture
+            val albumArt = rawArt?.let { resizeAlbumArt(it) }
             retriever.release()
             mapOf("title" to title, "artist" to artist, "album" to album,
                 "duration" to duration?.toLongOrNull(), "albumArt" to albumArt)
@@ -458,6 +460,28 @@ class MainActivity : AudioServiceActivity() {
             retriever.release()
             mapOf("title" to null, "artist" to null, "album" to null,
                 "duration" to null, "albumArt" to null)
+        }
+    }
+
+    // 앨범아트가 너무 크면(폰 카메라로 찍은 원본 화질 등) 메모리를 많이 잡아먹어서,
+    // 목록/미니플레이어에 쓸 정도의 작은 크기로 줄여서 내려보낸다.
+    private fun resizeAlbumArt(bytes: ByteArray, maxSize: Int = 300): ByteArray {
+        return try {
+            val original = BitmapFactory.decodeByteArray(bytes, 0, bytes.size) ?: return bytes
+            val width = original.width
+            val height = original.height
+            if (width <= maxSize && height <= maxSize) {
+                return bytes
+            }
+            val scale = maxSize.toFloat() / maxOf(width, height)
+            val newWidth = (width * scale).toInt().coerceAtLeast(1)
+            val newHeight = (height * scale).toInt().coerceAtLeast(1)
+            val resized = Bitmap.createScaledBitmap(original, newWidth, newHeight, true)
+            val stream = ByteArrayOutputStream()
+            resized.compress(Bitmap.CompressFormat.JPEG, 80, stream)
+            stream.toByteArray()
+        } catch (e: Exception) {
+            bytes
         }
     }
 

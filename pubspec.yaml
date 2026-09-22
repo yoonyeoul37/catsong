@@ -1,8 +1,7 @@
 name: mp3_player
 description: Local MP3 Player App
 publish_to: 'none'
-version: 1.0.0+85
-
+version: 1.0.0+86
 environment:
   sdk: ^3.12.0
 

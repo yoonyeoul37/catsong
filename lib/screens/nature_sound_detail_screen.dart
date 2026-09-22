@@ -320,7 +320,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
     late final String farewellAsset;
     switch (langCode) {
       case 'ko':
-        farewellAsset = 'assets/farewell_ko_v2.mp3';
+        farewellAsset = 'assets/farewell_ko_v3.mp3';
         break;
       case 'ja':
         farewellAsset = 'assets/farewell_ja.mp3';

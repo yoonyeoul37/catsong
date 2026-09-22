@@ -68,7 +68,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     switch (langCode) {
       case 'ko':
         smallText = '파란소리와 함께한 시간,\n즐거우셨나요?\n\n언제든 다시 찾아오시면,\n좋은 소리로 맞아드릴게요.\n안녕히 가세요!';
-        farewellAsset = 'assets/farewell_ko_v2.mp3';
+        farewellAsset = 'assets/farewell_ko_v3.mp3';
         break;
       case 'ja':
         smallText = 'Paransoriと過ごした時間、\n楽しんでいただけましたか?\n\nいつでもまた遊びに来てください、\n素敵な音でお迎えします。\nまた会いましょう!';

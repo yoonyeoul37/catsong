@@ -300,6 +300,22 @@ class PlayerProvider extends ChangeNotifier {
     }
   }
 
+  static const List<Map<String, String>> natureSoundOrder = [
+    {'name': '파도소리', 'assetPath': 'assets/wave_sound.mp3'},
+    {'name': '빗소리', 'assetPath': 'assets/rain_sound.mp3'},
+    {'name': '새소리', 'assetPath': 'assets/bird_sound.mp3'},
+    {'name': '모닥불', 'assetPath': 'assets/campfire_sound.mp3'},
+    {'name': '시냇물', 'assetPath': 'assets/stream_sound.mp3'},
+  ];
+
+  Future<void> playAdjacentNatureSound(int direction) async {
+    final idx = natureSoundOrder.indexWhere((s) => s['name'] == _natureSoundName);
+    if (idx == -1) return;
+    final nextIdx = (idx + direction + natureSoundOrder.length) % natureSoundOrder.length;
+    final next = natureSoundOrder[nextIdx];
+    await playNatureSound(next['assetPath']!, next['name']!);
+  }
+
   Future<void> playNatureSound(String assetPath, String displayName) async {
     _onStopRadio?.call();
     _natureSoundName = displayName;
@@ -311,6 +327,12 @@ class PlayerProvider extends ChangeNotifier {
     final handler = _audioHandler;
     if (handler is SimpleAudioHandler) {
       handler.setRadioMode(false);
+      handler.setMixMode(false);
+      handler.setNatureMode(true);
+      handler.onNaturePlay = () => resumeNatureSound();
+      handler.onNaturePause = () => pauseNatureSound();
+      handler.onNatureNext = () => playAdjacentNatureSound(1);
+      handler.onNaturePrevious = () => playAdjacentNatureSound(-1);
       handler.updateMediaItem(MediaItem(
         id: assetPath,
         title: displayName,
@@ -332,6 +354,10 @@ class PlayerProvider extends ChangeNotifier {
 
   Future<void> stopNatureSound() async {
     _natureSoundName = null;
+    final handler = _audioHandler;
+    if (handler is SimpleAudioHandler) {
+      handler.setNatureMode(false);
+    }
     await _player.stop();
     await WakelockPlus.disable();
     notifyListeners();
@@ -507,6 +533,12 @@ class SimpleAudioHandler extends BaseAudioHandler {
   VoidCallback? onMixNext;
   VoidCallback? onMixPrevious;
 
+  bool _natureMode = false;
+  VoidCallback? onNaturePlay;
+  VoidCallback? onNaturePause;
+  VoidCallback? onNatureNext;
+  VoidCallback? onNaturePrevious;
+
   SimpleAudioHandler(this._provider) : _player = _provider.player {
     _player.playbackEventStream.listen((event) {
       if (!_radioMode) {
@@ -527,6 +559,10 @@ class SimpleAudioHandler extends BaseAudioHandler {
 
   void setMixMode(bool enabled) {
     _mixMode = enabled;
+  }
+
+  void setNatureMode(bool enabled) {
+    _natureMode = enabled;
   }
 
   void setMixPlaybackState({required bool playing}) {
@@ -624,6 +660,8 @@ class SimpleAudioHandler extends BaseAudioHandler {
       onRadioPause!();
     } else if (_mixMode && onMixPause != null) {
       onMixPause!();
+    } else if (_natureMode && onNaturePause != null) {
+      onNaturePause!();
     } else {
       await _player.pause();
     }
@@ -636,6 +674,8 @@ class SimpleAudioHandler extends BaseAudioHandler {
       onRadioPlay!();
     } else if (_mixMode && onMixPlay != null) {
       onMixPlay!();
+    } else if (_natureMode && onNaturePlay != null) {
+      onNaturePlay!();
     } else {
       if (_player.processingState != ProcessingState.idle) {
         _radioMode = false;
@@ -650,6 +690,8 @@ class SimpleAudioHandler extends BaseAudioHandler {
       onRadioPause!();
     } else if (_mixMode && onMixPause != null) {
       onMixPause!();
+    } else if (_natureMode && onNaturePause != null) {
+      onNaturePause!();
     } else {
       // 알림바 클릭 등 외부 이벤트로 인한 자동 pause 방지
       // 실제 재생 중일 때만 pause 허용
@@ -668,6 +710,8 @@ class SimpleAudioHandler extends BaseAudioHandler {
       onRadioNext!();
     } else if (_mixMode && onMixNext != null) {
       onMixNext!();
+    } else if (_natureMode && onNatureNext != null) {
+      onNatureNext!();
     } else {
       await _provider.playNext();
     }
@@ -679,6 +723,8 @@ class SimpleAudioHandler extends BaseAudioHandler {
       onRadioPrevious!();
     } else if (_mixMode && onMixPrevious != null) {
       onMixPrevious!();
+    } else if (_natureMode && onNaturePrevious != null) {
+      onNaturePrevious!();
     } else {
       await _provider.playPrevious();
     }

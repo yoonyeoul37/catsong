@@ -517,13 +517,16 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         children: [
           LayoutBuilder(builder: (context, constraints) {
             final h = constraints.maxHeight;
-            return SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
-              child: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: Column(
-                    children: [
+            return SafeArea(
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: SizedBox(
+                  width: constraints.maxWidth,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
                       // ── 상단 버튼: 뒤로가기 + 공유 + 즐겨찾기 ──
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -941,20 +944,19 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                           ),
                         ),
 
-                      // ── 편성표 ──
-                      SizedBox(
-                        height: 68,
-                        child: Center(
-                          child: radioProvider.currentProgram != null
-                              ? _ProgramCard(
-                            program: radioProvider.currentProgram!,
-                            primaryColor: primaryColor,
-                            radioProvider: radioProvider,
-                            freq: freq,
-                          )
-                              : const SizedBox.shrink(),
+                      // ── 편성표 (편성 정보가 있을 때만 자리를 차지하게) ──
+                      if (radioProvider.currentProgram != null)
+                        SizedBox(
+                          height: 68,
+                          child: Center(
+                            child: _ProgramCard(
+                              program: radioProvider.currentProgram!,
+                              primaryColor: primaryColor,
+                              radioProvider: radioProvider,
+                              freq: freq,
+                            ),
+                          ),
                         ),
-                      ),
 
                       if (radioProvider.currentProgram != null &&
                           radioProvider.scheduleList.isNotEmpty) ...[
@@ -1040,7 +1042,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                       if (sleep != null) _SleepTimerBadge(remaining: sleep),
 
                       SizedBox(height: h * 0.02),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

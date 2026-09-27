@@ -17,6 +17,50 @@ import 'radio_country_stations_screen.dart';
 import '../l10n/app_localizations.dart';
 
 
+/// 라디오 진입 시 호출. 내 폰의 국가 설정에 맞는 방송국 목록이 있으면
+/// 국가 선택 화면을 건너뛰고 바로 그 나라로 들어가고, 없으면 국가 선택 화면으로 간다.
+Future<void> pushRadioEntry(BuildContext context, {bool instant = false}) {
+  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+  final deviceCode = PlatformDispatcher.instance.locale.countryCode;
+  RadioCountry? matched;
+  if (deviceCode != null) {
+    for (final c in RadioCountry.supported) {
+      if (c.code == deviceCode) {
+        matched = c;
+        break;
+      }
+    }
+  }
+
+  Widget screen;
+  if (matched != null) {
+    context.read<RadioProvider>().selectCountry(matched);
+    screen = matched.code == 'KR'
+        ? const RadioKoreaScreen()
+        : RadioCountryStationsScreen(country: matched);
+  } else {
+    screen = const RadioHomeScreen();
+  }
+
+  return Navigator.push(
+    context,
+    PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(
+          textScaler: const TextScaler.linear(1.25),
+        ),
+        child: screen,
+      ),
+      transitionsBuilder: instant
+          ? (context, animation, secondaryAnimation, child) => child
+          : (context, animation, secondaryAnimation, child) =>
+              FadeTransition(opacity: animation, child: child),
+      transitionDuration: instant ? Duration.zero : const Duration(milliseconds: 250),
+      reverseTransitionDuration: instant ? Duration.zero : const Duration(milliseconds: 250),
+    ),
+  );
+}
+
 class RadioHomeScreen extends StatelessWidget {
   const RadioHomeScreen({super.key});
 

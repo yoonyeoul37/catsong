@@ -10,7 +10,7 @@ import '../widgets/radio_mini_player.dart';
 import 'radio_player_screen.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/theme_provider.dart';
-
+import 'radio_home_screen.dart';
 enum _ViewMode { all, broadcaster, region, recent }
 
 class RadioKoreaScreen extends StatefulWidget {
@@ -351,6 +351,18 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           icon: Icon(Icons.arrow_back_ios,
               color: baseColor, size: 20),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const RadioHomeScreen()),
+              );
+            },
+            icon: Icon(Icons.public, color: baseColor, size: 20),
+          ),
+        ],
         title: Builder(builder: (ctx) {
           final isKorean = Localizations.localeOf(context).languageCode == 'ko';
           if (isKorean) {

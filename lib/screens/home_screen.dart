@@ -98,20 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() => _showMusicLibrary = true);
         break;
       case StartScreenType.radio:
-        await Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(
-              data: MediaQuery.of(context).copyWith(
-                textScaler: const TextScaler.linear(1.25),
-              ),
-              child: const RadioHomeScreen(),
-            ),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) => child,
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
-          ),
-        );
+        await pushRadioEntry(context, instant: true);
         if (mounted) setState(() => _pendingStartScreenNav = false);
         break;
       case StartScreenType.nature:
@@ -847,21 +834,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   subtitle: '다양한 라디오 방송을\n바로 들어보세요.',
                                   onTap: () {
                                     Navigator.pop(ctx);
-                                    Navigator.push(
-                                      context,
-                                      PageRouteBuilder(
-                                        pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(
-                                          data: MediaQuery.of(context).copyWith(
-                                            textScaler: const TextScaler.linear(1.25),
-                                          ),
-                                          child: const RadioHomeScreen(),
-                                        ),
-                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                          return FadeTransition(opacity: animation, child: child);
-                                        },
-                                        transitionDuration: const Duration(milliseconds: 250),
-                                      ),
-                                    );
+                                    pushRadioEntry(context);
                                   },
                                 ),
                               ],
@@ -988,22 +961,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() => _showMusicLibrary = true);
       }),
       _DashboardCategory('라디오', '국내외 라디오 · 즐겨찾기', 'assets/radio_bg.png', StartScreenType.radio, () {
-        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(
-              data: MediaQuery.of(context).copyWith(
-                textScaler: const TextScaler.linear(1.25),
-              ),
-              child: const RadioHomeScreen(),
-            ),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-            transitionDuration: const Duration(milliseconds: 250),
-          ),
-        );
+        pushRadioEntry(context);
       }),
       _DashboardCategory('자연소리', '비 · 바람 · 숲 · 파도', 'assets/nature_bg.png', StartScreenType.nature, () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');

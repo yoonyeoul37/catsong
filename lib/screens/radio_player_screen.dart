@@ -517,16 +517,13 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         children: [
           LayoutBuilder(builder: (context, constraints) {
             final h = constraints.maxHeight;
-            return SafeArea(
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: SizedBox(
-                  width: constraints.maxWidth,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
+            return SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Column(
+                    children: [
                       // ── 상단 버튼: 뒤로가기 + 공유 + 즐겨찾기 ──
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -863,7 +860,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                 height: h * 0.28,
                                 fit: BoxFit.cover,
                                 errorBuilder: (errCtx, err, stack) =>
-                                    RadioMoodPlaceholder(height: h * 0.28),
+                                    RadioMoodPlaceholder(height: (h * 0.24).clamp(120.0, 220.0)),
                               )
                                   : RadioMoodPlaceholder(height: h * 0.28),
                               Positioned(
@@ -944,10 +941,10 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                           ),
                         ),
 
-                      // ── 편성표 (편성 정보가 있을 때만 자리를 차지하게) ──
+                      // ── 편성표 (편성 정보가 있을 때만 자리를 차지하게, 높이도 화면 비율) ──
                       if (radioProvider.currentProgram != null)
                         SizedBox(
-                          height: 68,
+                          height: (h * 0.09).clamp(48.0, 68.0),
                           child: Center(
                             child: _ProgramCard(
                               program: radioProvider.currentProgram!,
@@ -960,14 +957,14 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
 
                       if (radioProvider.currentProgram != null &&
                           radioProvider.scheduleList.isNotEmpty) ...[
-                        const SizedBox(height: 4),
+                        SizedBox(height: (h * 0.005).clamp(2.0, 4.0)),
                         _NextProgramLine(
                           scheduleList: radioProvider.scheduleList,
                           currentProgram: radioProvider.currentProgram!,
                           radioProvider: radioProvider,
                         ),
                       ] else if (radioProvider.descriptionFor(current.name) != null) ...[
-                        const SizedBox(height: 4),
+                        SizedBox(height: (h * 0.005).clamp(2.0, 4.0)),
                         Container(
                           width: double.infinity,
                           padding: const EdgeInsets.all(14),
@@ -999,12 +996,12 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                         ),
                       ],
 
-                      SizedBox(height: h * 0.01),
+                      SizedBox(height: (h * 0.008).clamp(3.0, 8.0)),
 
                       if (isPlaying) ...[
-                        const SizedBox(height: 10),
+                        SizedBox(height: (h * 0.008).clamp(3.0, 8.0)),
                         SizedBox(
-                          height: 20,
+                          height: (h * 0.02).clamp(14.0, 20.0),
                           child: EqualizerAnimation(color: primaryColor),
                         ),
                       ],
@@ -1042,8 +1039,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                       if (sleep != null) _SleepTimerBadge(remaining: sleep),
 
                       SizedBox(height: h * 0.02),
-                      ],
-                    ),
+                    ],
                   ),
                 ),
               ),

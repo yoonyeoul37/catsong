@@ -351,18 +351,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           icon: Icon(Icons.arrow_back_ios,
               color: baseColor, size: 20),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const RadioHomeScreen()),
-              );
-            },
-            icon: Icon(Icons.public, color: baseColor, size: 20),
-          ),
-        ],
+
         title: Builder(builder: (ctx) {
           final isKorean = Localizations.localeOf(context).languageCode == 'ko';
           if (isKorean) {
@@ -385,23 +374,56 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           );
         }),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
+          preferredSize: const Size.fromHeight(102),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(24, 4, 24, 12),
-            child: Container(
-              height: 38,
-              decoration: BoxDecoration(
-                color: baseColor.withOpacity(0.08),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: [
-                  _toggleButton('전체', _ViewMode.all, isDarkMode),
-                  _toggleButton('방송사별', _ViewMode.broadcaster, isDarkMode),
-                  _toggleButton('지역별', _ViewMode.region, isDarkMode),
-                  _toggleButton('최근청취', _ViewMode.recent, isDarkMode),
-                ],
-              ),
+            child: Column(
+              children: [
+                Container(
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: baseColor.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    children: [
+                      _toggleButton('전체', _ViewMode.all, isDarkMode),
+                      _toggleButton('방송사별', _ViewMode.broadcaster, isDarkMode),
+                      _toggleButton('지역별', _ViewMode.region, isDarkMode),
+                      _toggleButton('최근청취', _ViewMode.recent, isDarkMode),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                GestureDetector(
+                  onTap: () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const RadioHomeScreen()),
+                    );
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 38,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: baseColor.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.public, color: baseColor, size: 15),
+                        const SizedBox(width: 6),
+                        Text('국가선택',
+                            style: TextStyle(
+                                color: baseColor, fontSize: 13, fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

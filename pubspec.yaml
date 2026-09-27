@@ -77,6 +77,11 @@ flutter:
     - assets/no_album4.jpg
     - assets/radio_mood_bg.jpg
     - assets/wave_sound.mp3
+    - assets/nature_wave_bg.png
+    - assets/nature_rain_bg.png
+    - assets/nature_bird_bg.png
+    - assets/nature_fire_bg.png
+    - assets/nature_stream_bg.png
     - assets/rain_sound.mp3
     - assets/bird_sound.mp3
     - assets/campfire_sound.mp3

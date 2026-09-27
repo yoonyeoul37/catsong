@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import '../models/song.dart';
 import '../providers/music_provider.dart';
 import '../theme/app_theme.dart';
-import '../providers/theme_provider.dart';
 import '../l10n/app_localizations.dart';
+import '../providers/theme_provider.dart';
 
 class EditSongScreen extends StatefulWidget {
   final Song song;
@@ -38,13 +38,16 @@ class _EditSongScreenState extends State<EditSongScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final bgColor = isDarkMode ? const Color(0xFF17140F) : Colors.white;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: bgColor,
         elevation: 0,
         title: Text(AppLocalizations.of(context)!.editSong,
-            style: const TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w600)),
+            style: TextStyle(color: baseColor, fontSize: 17, fontWeight: FontWeight.w600)),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios, color: _accent, size: 20),
@@ -72,7 +75,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    const Color(0xFFF5F5F5),
+                    isDarkMode ? const Color(0xFF2A2A2A) : const Color(0xFFF5F5F5),
                     _accent.withOpacity(0.15),
                   ],
                 ),
@@ -83,11 +86,11 @@ class _EditSongScreenState extends State<EditSongScreen> {
               ),
             ),
             const SizedBox(height: 32),
-            _buildTextField('제목', _titleController, Icons.title),
+            _buildTextField('제목', _titleController, Icons.title, baseColor, isDarkMode),
             const SizedBox(height: 16),
-            _buildTextField('아티스트', _artistController, Icons.person),
+            _buildTextField('아티스트', _artistController, Icons.person, baseColor, isDarkMode),
             const SizedBox(height: 16),
-            _buildTextField('앨범', _albumController, Icons.album),
+            _buildTextField('앨범', _albumController, Icons.album, baseColor, isDarkMode),
             const SizedBox(height: 32),
             SizedBox(
               width: double.infinity,
@@ -112,30 +115,32 @@ class _EditSongScreenState extends State<EditSongScreen> {
   }
 
   Widget _buildTextField(
-      String label, TextEditingController controller, IconData icon) {
+      String label, TextEditingController controller, IconData icon,
+      Color baseColor, bool isDarkMode) {
     return TextField(
       controller: controller,
-      style: const TextStyle(color: Colors.black),
+      style: TextStyle(color: baseColor),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.black54),
+        labelStyle: TextStyle(color: baseColor.withOpacity(0.54)),
         prefixIcon: Icon(icon, color: _accent),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
+          borderSide: BorderSide(color: isDarkMode ? Colors.white24 : const Color(0xFFE5E5E5)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: _accent),
         ),
         filled: true,
-        fillColor: const Color(0xFFF5F5F5),
+        fillColor: isDarkMode ? const Color(0xFF2A2A2A) : const Color(0xFFF5F5F5),
       ),
     );
   }
 
   Future<void> _saveSong(BuildContext context) async {
     final musicProvider = context.read<MusicProvider>();
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     await musicProvider.updateSongInfo(
       widget.song,
       title: _titleController.text,
@@ -143,10 +148,10 @@ class _EditSongScreenState extends State<EditSongScreen> {
       album: _albumController.text,
     );
     Navigator.pop(context);
-    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(AppLocalizations.of(context)!.songSaved),
+        content: Text(AppLocalizations.of(context)!.songSaved,
+            style: TextStyle(color: isDarkMode ? Colors.white : Colors.black87)),
         backgroundColor: isDarkMode ? const Color(0xFF2A2A2A) : const Color(0xFFEDE7DA),
         duration: const Duration(seconds: 2),
       ),

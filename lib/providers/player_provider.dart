@@ -301,11 +301,15 @@ class PlayerProvider extends ChangeNotifier {
   }
 
   static const List<Map<String, String>> natureSoundOrder = [
-    {'name': '파도소리', 'assetPath': 'assets/wave_sound.mp3'},
-    {'name': '빗소리', 'assetPath': 'assets/rain_sound.mp3'},
-    {'name': '새소리', 'assetPath': 'assets/bird_sound.mp3'},
-    {'name': '모닥불', 'assetPath': 'assets/campfire_sound.mp3'},
-    {'name': '시냇물', 'assetPath': 'assets/stream_sound.mp3'},
+    {'name': '파도소리', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_sound.mp3'},
+    {'name': '잔잔한 파도', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_calm_sound.mp3'},
+    {'name': '갈매기와 파도', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_seagull_sound.mp3'},
+    {'name': '바위에 부딪히는 파도', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_rocks_sound.mp3'},
+    {'name': '멀리서 들리는 갈매기', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_distant_seagull_sound.mp3'},
+    {'name': '빗소리', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_sound.mp3'},
+    {'name': '새소리', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/bird_sound.mp3'},
+    {'name': '모닥불', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/campfire_sound.mp3'},
+    {'name': '시냇물', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/stream_sound.mp3'},
   ];
 
   Future<void> playAdjacentNatureSound(int direction) async {
@@ -341,7 +345,10 @@ class PlayerProvider extends ChangeNotifier {
     }
 
     try {
-      await _player.setAudioSource(AudioSource.asset(assetPath));
+      final source = assetPath.startsWith('http')
+          ? AudioSource.uri(Uri.parse(assetPath))
+          : AudioSource.asset(assetPath);
+      await _player.setAudioSource(source);
       await _player.setLoopMode(LoopMode.one);
       await _player.play();
       await WakelockPlus.enable();

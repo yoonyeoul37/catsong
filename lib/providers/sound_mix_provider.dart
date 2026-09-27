@@ -11,11 +11,11 @@ import 'player_provider.dart';
 class SoundMixProvider extends ChangeNotifier {
   // 자연소리 고정 레이어 (asset 기반, 각자 무한 반복)
   static const natureAssets = <String, String>{
-    '파도소리': 'assets/wave_sound.mp3',
-    '빗소리': 'assets/rain_sound.mp3',
-    '새소리': 'assets/bird_sound.mp3',
-    '모닥불': 'assets/campfire_sound.mp3',
-    '시냇물': 'assets/stream_sound.mp3',
+    '파도소리': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_sound.mp3',
+    '빗소리': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_sound.mp3',
+    '새소리': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/bird_sound.mp3',
+    '모닥불': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/campfire_sound.mp3',
+    '시냇물': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/stream_sound.mp3',
   };
 
   static const double _defaultSongVolume = 0.7;
@@ -174,7 +174,10 @@ class SoundMixProvider extends ChangeNotifier {
       _natureLayers[key] = player;
       final assetPath = natureAssets[key];
       if (assetPath == null) return;
-      await player.setAudioSource(AudioSource.asset(assetPath));
+      final source = assetPath.startsWith('http')
+          ? AudioSource.uri(Uri.parse(assetPath))
+          : AudioSource.asset(assetPath);
+      await player.setAudioSource(source);
       await player.setLoopMode(LoopMode.one);
     }
 

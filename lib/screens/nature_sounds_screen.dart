@@ -24,12 +24,14 @@ class NatureSoundsScreen extends StatefulWidget {
 
 class _NatureSound {
   final String name;
+  final String category;
   final IconData icon;
   final String emoji;
   final String description;
   final String? assetPath;
   const _NatureSound({
     required this.name,
+    required this.category,
     required this.icon,
     required this.emoji,
     required this.description,
@@ -49,38 +51,75 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
   static const _sounds = <_NatureSound>[
     _NatureSound(
       name: '파도소리',
+      category: '파도소리',
       icon: Icons.waves,
       emoji: '🌊',
       description: '규칙적인 파도 소리는 마음을 차분히 가라앉혀 깊은 휴식과 수면에 도움을 줘요',
-      assetPath: 'assets/wave_sound.mp3',
+      assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_sound.mp3',
+    ),
+    _NatureSound(
+      name: '잔잔한 파도',
+      category: '파도소리',
+      icon: Icons.waves,
+      emoji: '🌊',
+      description: '한결 부드럽고 잔잔하게 밀려오는 파도 소리로 편안한 휴식을 도와줘요',
+      assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_calm_sound.mp3',
+    ),
+    _NatureSound(
+      name: '갈매기와 파도',
+      category: '파도소리',
+      icon: Icons.waves,
+      emoji: '🌊',
+      description: '갈매기 울음소리가 어우러진 파도 소리로 생생한 해변 분위기를 느껴보세요',
+      assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_seagull_sound.mp3',
+    ),
+    _NatureSound(
+      name: '바위에 부딪히는 파도',
+      category: '파도소리',
+      icon: Icons.waves,
+      emoji: '🌊',
+      description: '바위에 세게 부딪히며 부서지는 파도 소리로 역동적인 바다를 느껴보세요',
+      assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_rocks_sound.mp3',
+    ),
+    _NatureSound(
+      name: '멀리서 들리는 갈매기',
+      category: '파도소리',
+      icon: Icons.waves,
+      emoji: '🌊',
+      description: '고요한 바닷가, 멀리서 은은하게 들려오는 갈매기 소리로 차분한 휴식을 느껴보세요',
+      assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_distant_seagull_sound.mp3',
     ),
     _NatureSound(
       name: '빗소리',
+      category: '빗소리',
       icon: Icons.water_drop_outlined,
       emoji: '☔',
       description: '일정한 빗소리는 집중력을 높이고 불안한 마음을 편안하게 다독여줘요',
-      assetPath: 'assets/rain_sound.mp3',
+      assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_sound.mp3',
     ),
     _NatureSound(
       name: '새소리',
+      category: '새소리',
       icon: Icons.forest_outlined,
       emoji: '🐦',
       description: '청아한 새소리는 스트레스를 줄이고 상쾌한 기분을 만들어줘요',
-      assetPath: 'assets/bird_sound.mp3',
+      assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/bird_sound.mp3',
     ),
     _NatureSound(
       name: '모닥불',
+      category: '모닥불',
       icon: Icons.local_fire_department_outlined,
       emoji: '🔥',
       description: '타닥타닥 장작 타는 소리는 아늑한 분위기로 깊은 이완을 도와줘요',
-      assetPath: 'assets/campfire_sound.mp3',
+      assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/campfire_sound.mp3',
     ),
     _NatureSound(
       name: '시냇물',
+      category: '시냇물',
       icon: Icons.water_outlined,
       emoji: '💧',
       description: '졸졸 흐르는 시냇물 소리는 마음을 편안하게 하고 잡생각을 줄여줘요',
-      assetPath: 'assets/stream_sound.mp3',
+      assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/stream_sound.mp3',
     ),
   ];
 
@@ -462,7 +501,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                     final category = categories[index];
                     final count = category == '전체'
                         ? _sounds.length
-                        : _sounds.where((s) => s.name == category).length;
+                        : _sounds.where((s) => s.category == category).length;
                     final isSelected = _selectedCategory == category;
                     return GestureDetector(
                       onTap: () {
@@ -501,39 +540,78 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
               };
               final filtered = _selectedCategory == '전체'
                   ? _sounds
-                  : _sounds.where((s) => s.name == _selectedCategory).toList();
-              return filtered.map((sound) {
+                  : _sounds.where((s) => s.category == _selectedCategory).toList();
+
+              // 같은 카테고리(예: 파도소리)끼리 묶는다
+              final Map<String, List<_NatureSound>> grouped = {};
+              for (final s in filtered) {
+                grouped.putIfAbsent(s.category, () => []).add(s);
+              }
+
+              void openVariant(_NatureSound sound, Color soundColor) {
+                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                 final isThisOne = playerProvider.natureSoundName == sound.name;
-                final isPlaying = isThisOne && playerProvider.isPlaying;
-                final soundColor = soundColors[sound.name] ?? primaryColor;
+                final isPlayingThis = isThisOne && playerProvider.isPlaying;
+                if (!isPlayingThis) {
+                  _toggleSound(sound, isPlayingThis);
+                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => NatureSoundDetailScreen(
+                      name: sound.name,
+                      icon: sound.icon,
+                      description: sound.description,
+                      assetPath: sound.assetPath,
+                      color: soundColor,
+                    ),
+                  ),
+                );
+              }
+
+              return grouped.entries.map((entry) {
+                final categoryName = entry.key;
+                final variants = entry.value;
+                final primary = variants.first;
+                final isMulti = variants.length > 1;
+                final soundColor = soundColors[categoryName] ?? primaryColor;
+                final isGroupPlaying = variants.any((v) => playerProvider.natureSoundName == v.name) &&
+                    playerProvider.isPlaying;
+                final displayTitle = isMulti ? '$categoryName (${variants.length})' : primary.name;
+                final displayDescription = isMulti ? '${variants.length}가지 버전 중 골라보세요' : primary.description;
+
                 return GestureDetector(
-                  onTap: sound.isReady
-                      ? () {
-                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                    if (!isPlaying) {
-                      _toggleSound(sound, isPlaying);
+                  onTap: variants.every((v) => !v.isReady)
+                      ? null
+                      : () {
+                    if (!isMulti) {
+                      openVariant(primary, soundColor);
+                      return;
                     }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => NatureSoundDetailScreen(
-                          name: sound.name,
-                          icon: sound.icon,
-                          description: sound.description,
-                          assetPath: sound.assetPath,
-                          color: soundColor,
-                        ),
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      builder: (ctx) => _VariantPickerSheet(
+                        categoryName: categoryName,
+                        variants: variants,
+                        soundColor: soundColor,
+                        baseColor: baseColor,
+                        favoriteNames: _favoriteNames,
+                        onPick: (sound) {
+                          Navigator.pop(ctx);
+                          openVariant(sound, soundColor);
+                        },
                       ),
                     );
-                  }
-                      : null,
+                  },
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 10),
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: isPlaying ? primaryColor.withOpacity(0.08) : baseColor.withOpacity(0.03),
+                      color: isGroupPlaying ? primaryColor.withOpacity(0.08) : baseColor.withOpacity(0.03),
                       borderRadius: BorderRadius.circular(14),
-                      border: isPlaying ? Border.all(color: primaryColor, width: 1.2) : null,
+                      border: isGroupPlaying ? Border.all(color: primaryColor, width: 1.2) : null,
                     ),
                     child: Row(
                       children: [
@@ -544,18 +622,18 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                             color: soundColor,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Icon(sound.icon, color: Colors.white, size: 22),
+                          child: Icon(primary.icon, color: Colors.white, size: 22),
                         ),
                         const SizedBox(width: 14),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(sound.name,
+                              Text(displayTitle,
                                   style: TextStyle(
                                       color: baseColor, fontSize: 14.5, fontWeight: FontWeight.w600)),
                               const SizedBox(height: 2),
-                              Text(sound.description,
+                              Text(displayDescription,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(color: baseColor.withOpacity(0.45), fontSize: 11.5)),
@@ -563,28 +641,31 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        GestureDetector(
-                          onTap: () => _toggleFavorite(sound.name),
-                          child: Container(
-                            width: 34,
-                            height: 34,
-                            decoration: BoxDecoration(
-                              color: _favoriteNames.contains(sound.name)
-                                  ? primaryColor
-                                  : baseColor.withOpacity(0.08),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              _favoriteNames.contains(sound.name)
-                                  ? CupertinoIcons.heart_fill
-                                  : CupertinoIcons.heart,
-                              color: _favoriteNames.contains(sound.name)
-                                  ? Colors.white
-                                  : baseColor.withOpacity(0.5),
-                              size: 16,
+                        if (isMulti)
+                          Icon(Icons.chevron_right_rounded, color: baseColor.withOpacity(0.3), size: 22)
+                        else
+                          GestureDetector(
+                            onTap: () => _toggleFavorite(primary.name),
+                            child: Container(
+                              width: 34,
+                              height: 34,
+                              decoration: BoxDecoration(
+                                color: _favoriteNames.contains(primary.name)
+                                    ? primaryColor
+                                    : baseColor.withOpacity(0.08),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                _favoriteNames.contains(primary.name)
+                                    ? CupertinoIcons.heart_fill
+                                    : CupertinoIcons.heart,
+                                color: _favoriteNames.contains(primary.name)
+                                    ? Colors.white
+                                    : baseColor.withOpacity(0.5),
+                                size: 16,
+                              ),
                             ),
                           ),
-                        ),
                       ],
                     ),
                   ),
@@ -593,6 +674,97 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
             })(),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _VariantPickerSheet extends StatelessWidget {
+  final String categoryName;
+  final List<_NatureSound> variants;
+  final Color soundColor;
+  final Color baseColor;
+  final Set<String> favoriteNames;
+  final ValueChanged<_NatureSound> onPick;
+
+  const _VariantPickerSheet({
+    required this.categoryName,
+    required this.variants,
+    required this.soundColor,
+    required this.baseColor,
+    required this.favoriteNames,
+    required this.onPick,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
+      decoration: BoxDecoration(
+        color: baseColor == Colors.white ? const Color(0xFF17140F) : const Color(0xFFF7F5F0),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                color: baseColor.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 18),
+          Text('$categoryName 버전 고르기',
+              style: TextStyle(color: baseColor, fontSize: 17, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 14),
+          ...variants.map((v) => GestureDetector(
+                onTap: v.isReady ? () => onPick(v) : null,
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: baseColor.withOpacity(0.04),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: soundColor,
+                          borderRadius: BorderRadius.circular(11),
+                        ),
+                        child: Icon(v.icon, color: Colors.white, size: 20),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(v.name,
+                                style: TextStyle(
+                                    color: baseColor, fontSize: 14, fontWeight: FontWeight.w600)),
+                            const SizedBox(height: 2),
+                            Text(v.description,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: baseColor.withOpacity(0.45), fontSize: 11)),
+                          ],
+                        ),
+                      ),
+                      if (favoriteNames.contains(v.name))
+                        Icon(CupertinoIcons.heart_fill, color: soundColor, size: 15),
+                    ],
+                  ),
+                ),
+              )),
+        ],
       ),
     );
   }

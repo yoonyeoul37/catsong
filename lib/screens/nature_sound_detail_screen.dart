@@ -263,15 +263,47 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.waves,
       'color': Color(0xFF4A7BA6),
       'description': '규칙적인 파도 소리는 마음을 차분히 가라앉혀 깊은 휴식과 수면에 도움을 줘요',
-      'assetPath': 'assets/wave_sound.mp3',
+      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_sound.mp3',
       'image': 'assets/nature_wave_bg.png',
+    },
+    {
+      'name': '잔잔한 파도',
+      'icon': Icons.waves,
+      'color': Color(0xFF5B8FB0),
+      'description': '한결 부드럽고 잔잔하게 밀려오는 파도 소리로 편안한 휴식을 도와줘요',
+      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_calm_sound.mp3',
+      'image': null,
+    },
+    {
+      'name': '갈매기와 파도',
+      'icon': Icons.waves,
+      'color': Color(0xFF3D6E8C),
+      'description': '갈매기 울음소리가 어우러진 파도 소리로 생생한 해변 분위기를 느껴보세요',
+      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_seagull_sound.mp3',
+      'image': null,
+    },
+    {
+      'name': '바위에 부딪히는 파도',
+      'icon': Icons.waves,
+      'color': Color(0xFF2A4D66),
+      'description': '바위에 세게 부딪히며 부서지는 파도 소리로 역동적인 바다를 느껴보세요',
+      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_rocks_sound.mp3',
+      'image': null,
+    },
+    {
+      'name': '멀리서 들리는 갈매기',
+      'icon': Icons.waves,
+      'color': Color(0xFF6E97AD),
+      'description': '고요한 바닷가, 멀리서 은은하게 들려오는 갈매기 소리로 차분한 휴식을 느껴보세요',
+      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_distant_seagull_sound.mp3',
+      'image': null,
     },
     {
       'name': '빗소리',
       'icon': Icons.water_drop_outlined,
       'color': Color(0xFF3E5A78),
       'description': '일정한 빗소리는 집중력을 높이고 불안한 마음을 편안하게 다독여줘요',
-      'assetPath': 'assets/rain_sound.mp3',
+      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_sound.mp3',
       'image': 'assets/nature_rain_bg.png',
     },
     {
@@ -279,7 +311,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.forest_outlined,
       'color': Color(0xFF5C7A5E),
       'description': '청아한 새소리는 스트레스를 줄이고 상쾌한 기분을 만들어줘요',
-      'assetPath': 'assets/bird_sound.mp3',
+      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/bird_sound.mp3',
       'image': 'assets/nature_bird_bg.png',
     },
     {
@@ -287,7 +319,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.local_fire_department_outlined,
       'color': Color(0xFFC97B4A),
       'description': '타닥타닥 장작 타는 소리는 아늑하고 포근한 분위기를 만들어줘요',
-      'assetPath': 'assets/campfire_sound.mp3',
+      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/campfire_sound.mp3',
       'image': 'assets/nature_fire_bg.png',
     },
     {
@@ -295,7 +327,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.water_outlined,
       'color': Color(0xFF2C6BB3),
       'description': '졸졸 흐르는 시냇물 소리는 마음을 편안하게 이완시켜줘요',
-      'assetPath': 'assets/stream_sound.mp3',
+      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/stream_sound.mp3',
       'image': 'assets/nature_stream_bg.png',
     },
   ];
@@ -465,8 +497,13 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
-    final playerProvider = context.watch<PlayerProvider>();
-    final currentName = playerProvider.natureSoundName ?? widget.name;
+    // context.watch 대신 select를 써서, "재생 중인 곡 이름"과 "재생 여부"
+    // 이 두 값이 실제로 바뀔 때만 이 화면이 다시 그려지게 한다.
+    // (watch를 쓰면 재생 위치 업데이트 같은 사소한 변화에도 화면 전체가
+    // 다시 그려져서 아이콘/시스템바가 깜빡이는 원인이 된다.)
+    final watchedNatureSoundName = context.select<PlayerProvider, String?>((p) => p.natureSoundName);
+    final watchedIsPlaying = context.select<PlayerProvider, bool>((p) => p.isPlaying);
+    final currentName = watchedNatureSoundName ?? widget.name;
     final currentData = _allSounds.firstWhere(
           (s) => s['name'] == currentName,
       orElse: () => {
@@ -482,8 +519,8 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
     final currentDescription = currentData['description'] as String;
     final currentAssetPath = currentData['assetPath'] as String?;
     final currentImage = currentData['image'] as String?;
-    final isThisOne = playerProvider.natureSoundName == currentName;
-    final isPlaying = isThisOne && playerProvider.isPlaying;
+    final isThisOne = watchedNatureSoundName == currentName;
+    final isPlaying = isThisOne && watchedIsPlaying;
     final isFavorite = _favoriteNames.contains(currentName);
 
     return Scaffold(
@@ -500,7 +537,21 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
             ),
           if (currentImage != null)
             Positioned.fill(
-              child: Container(color: Colors.black.withOpacity(0.35)),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withOpacity(0.7),
+                      Colors.black.withOpacity(0.15),
+                      Colors.black.withOpacity(0.15),
+                      Colors.black.withOpacity(0.75),
+                    ],
+                    stops: const [0.0, 0.2, 0.72, 1.0],
+                  ),
+                ),
+              ),
             ),
           GestureDetector(
             onHorizontalDragEnd: (details) {
@@ -524,7 +575,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                             width: 32,
                             height: 32,
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.15),
+                              color: Colors.black.withOpacity(0.38),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 16),
@@ -539,7 +590,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                           child: Container(
                             width: 32,
                             height: 32,
-                            decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), shape: BoxShape.circle),
+                            decoration: BoxDecoration(color: Colors.black.withOpacity(0.38), shape: BoxShape.circle),
                             child: const Icon(Icons.home_rounded, color: Colors.white, size: 16),
                           ),
                         ),
@@ -549,7 +600,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                           child: Container(
                             width: 32,
                             height: 32,
-                            decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), shape: BoxShape.circle),
+                            decoration: BoxDecoration(color: Colors.black.withOpacity(0.38), shape: BoxShape.circle),
                             child: Icon(isFavorite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
                                 color: Colors.white, size: 16),
                           ),
@@ -563,7 +614,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                           child: Container(
                             width: 32,
                             height: 32,
-                            decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), shape: BoxShape.circle),
+                            decoration: BoxDecoration(color: Colors.black.withOpacity(0.38), shape: BoxShape.circle),
                             child: Icon(isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
                                 color: Colors.white, size: 16),
                           ),
@@ -773,7 +824,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                           child: Container(
                             width: 32,
                             height: 32,
-                            decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), shape: BoxShape.circle),
+                            decoration: BoxDecoration(color: Colors.black.withOpacity(0.38), shape: BoxShape.circle),
                             child: const Icon(Icons.more_vert, color: Colors.white, size: 16),
                           ),
                         ),
@@ -783,7 +834,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                           child: Container(
                             width: 32,
                             height: 32,
-                            decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), shape: BoxShape.circle),
+                            decoration: BoxDecoration(color: Colors.black.withOpacity(0.38), shape: BoxShape.circle),
                             child: const Icon(Icons.power_settings_new_rounded, color: Colors.white, size: 16),
                           ),
                         ),

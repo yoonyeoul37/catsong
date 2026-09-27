@@ -149,6 +149,7 @@ class SoundMixProvider extends ChangeNotifier {
   }
 
   void _updateNotification({required bool playing}) {
+    if (!hasSession) return;
     final handler = _playerProvider?.audioHandler;
     if (handler is! SimpleAudioHandler) return;
 

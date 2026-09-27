@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../models/song.dart';
 import '../providers/music_provider.dart';
 import '../theme/app_theme.dart';
+import '../providers/theme_provider.dart';
 import '../l10n/app_localizations.dart';
 
 class EditSongScreen extends StatefulWidget {
@@ -142,10 +143,11 @@ class _EditSongScreenState extends State<EditSongScreen> {
       album: _albumController.text,
     );
     Navigator.pop(context);
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(AppLocalizations.of(context)!.songSaved),
-        backgroundColor: AppTheme.surfaceVariant,
+        backgroundColor: isDarkMode ? const Color(0xFF2A2A2A) : const Color(0xFFEDE7DA),
         duration: const Duration(seconds: 2),
       ),
     );

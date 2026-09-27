@@ -251,7 +251,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    Future.delayed(const Duration(seconds: 4), () {
+    Future.delayed(const Duration(seconds: 3), () {
       if (mounted) setState(() => _showIntro = false);
     });
     WidgetsBinding.instance.addPostFrameCallback((_) async {

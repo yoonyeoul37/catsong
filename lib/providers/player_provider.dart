@@ -206,7 +206,7 @@ class PlayerProvider extends ChangeNotifier {
     // 라디오 재생 중이면 정지
     _onStopRadio?.call();
     _onStopMixMusic?.call();
-    _onStopMixMusic?.call();
+    _natureSoundName = null;
 
     _currentIndex = index;
     _isLoading = true;
@@ -219,6 +219,7 @@ class PlayerProvider extends ChangeNotifier {
       final handler = _audioHandler;
       if (handler is SimpleAudioHandler) {
         handler.setRadioMode(false);
+        handler.setMixMode(false);
         handler.updateMediaItem(MediaItem(
           id: song.uri!,
           title: song.titleDisplay,
@@ -613,6 +614,20 @@ class SimpleAudioHandler extends BaseAudioHandler {
         updatePosition: position,
       ));
     } catch (e) {}
+  }
+
+  @override
+  Future<void> onTaskRemoved() async {
+    // 최근 앱 목록에서 위로 밀어서 앱을 끄면, 재생 중이던 걸(라디오/믹스/음악/자연소리
+    // 뭐든) 확실하게 다 멈춘다.
+    if (_radioMode && onRadioPause != null) {
+      onRadioPause!();
+    } else if (_mixMode && onMixPause != null) {
+      onMixPause!();
+    } else {
+      await _player.pause();
+    }
+    await super.onTaskRemoved();
   }
 
   @override

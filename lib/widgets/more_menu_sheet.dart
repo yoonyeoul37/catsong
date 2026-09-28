@@ -1,4 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -8,6 +11,53 @@ import '../screens/settings_screen.dart';
 
 const String _kStoreUrl =
     'https://play.google.com/store/apps/details?id=kr.ssing.catsong';
+
+// ─────────────────────────────────────────────────────────────
+// 가는 선 아이콘 (시안과 같은 모양). 색은 그릴 때 정한다.
+// ─────────────────────────────────────────────────────────────
+const String _kIconShare =
+    '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/>'
+    '<circle cx="18" cy="19" r="3"/>'
+    '<line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>'
+    '<line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>';
+const String _kIconStar =
+    '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 '
+    '5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>';
+const String _kIconGear =
+    '<circle cx="12" cy="12" r="3"/>'
+    '<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>';
+const String _kIconGlobe =
+    '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>'
+    '<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>';
+const String _kIconChevron = '<polyline points="9 18 15 12 9 6"/>';
+const String _kIconClose =
+    '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
+
+class _LineIcon extends StatelessWidget {
+  final String body;
+  final double size;
+  final Color color;
+  final double stroke;
+
+  const _LineIcon(
+      this.body, {
+        required this.size,
+        required this.color,
+        this.stroke = 1.7,
+      });
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.string(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" '
+          'stroke="#000000" stroke-width="$stroke" stroke-linecap="round" '
+          'stroke-linejoin="round">$body</svg>',
+      width: size,
+      height: size,
+      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+    );
+  }
+}
 
 /// 더보기(⋮) 메뉴 시트. 홈 / 자연소리 / 라디오 화면이 함께 쓴다.
 ///
@@ -120,7 +170,7 @@ class _Pal {
     closeBg: Color(0x123C2D14),
     closeIcon: Color(0xFF6E675B),
     brandBg: Color(0xFFF8F4EC),
-    bars: Color(0x522F7DE8),
+    bars: Color(0x802F7DE8),
   );
 
   static const dark = _Pal(
@@ -137,7 +187,7 @@ class _Pal {
     closeBg: Color(0x14FFFFFF),
     closeIcon: Color(0xFFB9B1A3),
     brandBg: Color(0xFF26221A),
-    bars: Color(0x576FB0FF),
+    bars: Color(0x856FB0FF),
   );
 }
 
@@ -187,7 +237,7 @@ class _MoreMenuSheet extends StatelessWidget {
                 _TopBar(p: p),
                 _MenuCard(
                   p: p,
-                  icon: Icons.share_outlined,
+                  icon: _kIconShare,
                   title: '친구에게 공유하기',
                   subtitle: shareSubtitle,
                   onTap: onShare,
@@ -195,7 +245,7 @@ class _MoreMenuSheet extends StatelessWidget {
                 const SizedBox(height: 12),
                 _MenuCard(
                   p: p,
-                  icon: Icons.star_outline_rounded,
+                  icon: _kIconStar,
                   title: '앱 평가하기',
                   subtitle: '좋은 평가가 큰 힘이 됩니다.',
                   onTap: onRate,
@@ -203,7 +253,7 @@ class _MoreMenuSheet extends StatelessWidget {
                 const SizedBox(height: 12),
                 _MenuCard(
                   p: p,
-                  icon: Icons.settings_outlined,
+                  icon: _kIconGear,
                   title: '설정',
                   subtitle: '앱 환경을 설정해요.',
                   onTap: onSettings,
@@ -212,7 +262,7 @@ class _MoreMenuSheet extends StatelessWidget {
                   const SizedBox(height: 12),
                   _MenuCard(
                     p: p,
-                    icon: Icons.language_rounded,
+                    icon: _kIconGlobe,
                     title: '방송국 홈페이지',
                     subtitle: '공식 홈페이지로 이동해요.',
                     onTap: onHomepage,
@@ -268,7 +318,7 @@ class _TopBar extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: p.closeBg,
                 ),
-                child: Icon(Icons.close_rounded, size: 16, color: p.closeIcon),
+                child: _LineIcon(_kIconClose, size: 15, color: p.closeIcon, stroke: 2.2),
               ),
             ),
           ),
@@ -281,7 +331,7 @@ class _TopBar extends StatelessWidget {
 // 공유 / 평가 / 설정 카드
 class _MenuCard extends StatelessWidget {
   final _Pal p;
-  final IconData icon;
+  final String icon;
   final String title;
   final String subtitle;
   final VoidCallback onTap;
@@ -329,7 +379,7 @@ class _MenuCard extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: p.iconBg,
                   ),
-                  child: Icon(icon, size: 21, color: p.accent),
+                  child: _LineIcon(icon, size: 22, color: p.accent),
                 ),
                 const SizedBox(width: 14),
                 Expanded(
@@ -359,7 +409,7 @@ class _MenuCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Icon(Icons.chevron_right_rounded, size: 22, color: p.chevron),
+                _LineIcon(_kIconChevron, size: 18, color: p.chevron, stroke: 2.0),
               ],
             ),
           ),
@@ -403,6 +453,7 @@ class _BrandCard extends StatelessWidget {
                         color: p.accent,
                         fontSize: 9.5,
                         fontWeight: FontWeight.w700,
+                        fontStyle: FontStyle.italic,
                         letterSpacing: 2.6,
                       ),
                     ),
@@ -440,34 +491,79 @@ class _BrandCard extends StatelessWidget {
   }
 }
 
-class _SoundBars extends StatelessWidget {
+class _SoundBars extends StatefulWidget {
   final Color color;
   const _SoundBars({required this.color});
 
+  @override
+  State<_SoundBars> createState() => _SoundBarsState();
+}
+
+class _SoundBarsState extends State<_SoundBars>
+    with SingleTickerProviderStateMixin {
   static const List<double> _heights = [
     10.0, 18.0, 28.0, 16.0, 34.0, 22.0, 30.0, 14.0, 20.0,
   ];
+
+  late final AnimationController _c;
+
+  @override
+  void initState() {
+    super.initState();
+    _c = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1800),
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // 폰에서 "애니메이션 줄이기"를 켜둔 경우에는 움직이지 않는다.
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _c.stop();
+    } else if (!_c.isAnimating) {
+      _c.repeat();
+    }
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  double _barHeight(int i) {
+    final t = _c.value * 2 * math.pi + i * 0.85;
+    final wave = 0.5 + 0.5 * math.sin(t);
+    return (_heights[i] * (0.55 + 0.75 * wave)).clamp(6.0, 38.0);
+  }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 40,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          for (int i = 0; i < _heights.length; i++) ...[
-            if (i > 0) const SizedBox(width: 4),
-            Container(
-              width: 3,
-              height: _heights[i],
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ],
-        ],
+      child: AnimatedBuilder(
+        animation: _c,
+        builder: (context, _) {
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              for (int i = 0; i < _heights.length; i++) ...[
+                if (i > 0) const SizedBox(width: 4),
+                Container(
+                  width: 3,
+                  height: _c.isAnimating ? _barHeight(i) : _heights[i],
+                  decoration: BoxDecoration(
+                    color: widget.color,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ],
+            ],
+          );
+        },
       ),
     );
   }

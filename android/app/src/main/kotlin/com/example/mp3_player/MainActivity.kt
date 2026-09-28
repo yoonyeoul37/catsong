@@ -403,7 +403,7 @@ class MainActivity : AudioServiceActivity() {
                     result.success(true)
                 }
                 "updateWidget" -> {
-                    val title = call.argument<String>("title") ?: "캣송"
+                    val title = call.argument<String>("title") ?: "파란소리"
                     val artist = call.argument<String>("artist") ?: "음악을 재생해보세요"
                     val isPlaying = call.argument<Boolean>("isPlaying") ?: false
                     val schedule = call.argument<String>("schedule") ?: ""

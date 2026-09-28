@@ -49,7 +49,7 @@ void main() async {
     builder: () => simpleHandler,
     config: const AudioServiceConfig(
       androidNotificationChannelId: 'kr.ssing.catsong.audio',
-      androidNotificationChannelName: 'MP3 Player',
+      androidNotificationChannelName: '파란소리',
       androidNotificationOngoing: false,
       androidStopForegroundOnPause: false,
       androidNotificationIcon: 'mipmap/ic_launcher',

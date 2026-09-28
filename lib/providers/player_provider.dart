@@ -628,7 +628,7 @@ class SimpleAudioHandler extends BaseAudioHandler {
       id: url ?? '',
       title: title,
       artist: artist,
-      album: 'CatSong Radio',
+      album: '파란소리 라디오',
     ));
   }
 

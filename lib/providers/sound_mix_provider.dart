@@ -149,9 +149,16 @@ class SoundMixProvider extends ChangeNotifier {
   }
 
   void _updateNotification({required bool playing}) {
-    if (!hasSession) return;
+    // 재생 시작(playing: true)은 플레이어가 만들어지기 전에 불릴 수 있어서
+    // 세션이 없어도 알림을 가져와야 한다. 정지 갱신만 세션이 있을 때 한다.
+    if (!playing && !hasSession) return;
     final handler = _playerProvider?.audioHandler;
     if (handler is! SimpleAudioHandler) return;
+
+    // "정지" 알림 갱신은, 알림의 주인이 아직 믹스일 때만 한다.
+    // (음악/자연소리/라디오가 새로 시작되면 그쪽이 알림을 가져가는데,
+    //  믹스의 정지 처리가 뒤늦게 끝나면서 믹스 정보로 덮어쓰는 걸 막는다.)
+    if (!playing && (!handler.isMixMode || handler.isRadioMode)) return;
 
     final activeNature = <String>[
       for (final entry in natureAssets.keys)
@@ -175,7 +182,7 @@ class SoundMixProvider extends ChangeNotifier {
       final assetPath = natureAssets[key];
       if (assetPath == null) return;
       final source = assetPath.startsWith('http')
-          ? AudioSource.uri(Uri.parse(assetPath))
+          ? LockCachingAudioSource(Uri.parse(assetPath))
           : AudioSource.asset(assetPath);
       await player.setAudioSource(source);
       await player.setLoopMode(LoopMode.one);

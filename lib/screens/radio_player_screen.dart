@@ -28,6 +28,7 @@ import 'package:just_audio/just_audio.dart';
 import 'nature_sounds_screen.dart';
 import 'settings_screen.dart';
 import '../widgets/seasonal_effect.dart';
+import '../widgets/more_menu_sheet.dart';
 
 double? _parseFrequency(String? freq) {
   if (freq == null || freq.isEmpty) return null;
@@ -628,6 +629,13 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                   return _FloatButton(
                                     onTap: () {
                                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                      showMoreMenuSheet(
+                                        context,
+                                        shareText: '지금 ${current.name} 듣고 있어요! 파란소리에서 같이 들어요 🎧',
+                                        shareSubtitle: '지금 듣는 방송을 소개해보세요.',
+                                        stationHomepage: homepage,
+                                      );
+                                      return;
                                       showModalBottomSheet(
                                         context: context,
                                         backgroundColor: Colors.transparent,

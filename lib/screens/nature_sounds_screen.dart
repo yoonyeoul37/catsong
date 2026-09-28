@@ -90,6 +90,14 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
       assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_distant_seagull_sound.mp3',
     ),
     _NatureSound(
+      name: '거친 파도',
+      category: '파도소리',
+      icon: Icons.waves,
+      emoji: '🌊',
+      description: '거칠게 밀려와 부서지는 파도 소리로 힘 있는 바다를 느껴보세요',
+      assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_rough_sound.mp3',
+    ),
+    _NatureSound(
       name: '빗소리',
       category: '빗소리',
       icon: Icons.water_drop_outlined,
@@ -484,7 +492,9 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
           SizedBox(width: 8),
         ],
       ),
-      body: SingleChildScrollView(
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -545,7 +555,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
               // 같은 카테고리(예: 파도소리)끼리 묶는다
               final Map<String, List<_NatureSound>> grouped = {};
               for (final s in filtered) {
-                grouped.putIfAbsent(s.category, () => []).add(s);
+                grouped.putIfAbsent(s.name, () => []).add(s);
               }
 
               void openVariant(_NatureSound sound, Color soundColor) {
@@ -574,7 +584,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                 final variants = entry.value;
                 final primary = variants.first;
                 final isMulti = variants.length > 1;
-                final soundColor = soundColors[categoryName] ?? primaryColor;
+                final soundColor = soundColors[primary.category] ?? primaryColor;
                 final isGroupPlaying = variants.any((v) => playerProvider.natureSoundName == v.name) &&
                     playerProvider.isPlaying;
                 final displayTitle = isMulti ? '$categoryName (${variants.length})' : primary.name;
@@ -674,6 +684,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
             })(),
           ],
         ),
+      ),
       ),
     );
   }

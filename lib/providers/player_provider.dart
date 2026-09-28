@@ -306,6 +306,7 @@ class PlayerProvider extends ChangeNotifier {
     {'name': '갈매기와 파도', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_seagull_sound.mp3'},
     {'name': '바위에 부딪히는 파도', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_rocks_sound.mp3'},
     {'name': '멀리서 들리는 갈매기', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_distant_seagull_sound.mp3'},
+    {'name': '거친 파도', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_rough_sound.mp3'},
     {'name': '빗소리', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_sound.mp3'},
     {'name': '새소리', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/bird_sound.mp3'},
     {'name': '모닥불', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/campfire_sound.mp3'},
@@ -346,7 +347,7 @@ class PlayerProvider extends ChangeNotifier {
 
     try {
       final source = assetPath.startsWith('http')
-          ? AudioSource.uri(Uri.parse(assetPath))
+          ? LockCachingAudioSource(Uri.parse(assetPath))
           : AudioSource.asset(assetPath);
       await _player.setAudioSource(source);
       await _player.setLoopMode(LoopMode.one);
@@ -567,6 +568,9 @@ class SimpleAudioHandler extends BaseAudioHandler {
   void setMixMode(bool enabled) {
     _mixMode = enabled;
   }
+
+  bool get isMixMode => _mixMode;
+  bool get isRadioMode => _radioMode;
 
   void setNatureMode(bool enabled) {
     _natureMode = enabled;

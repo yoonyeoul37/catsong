@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'settings_screen.dart';
 import 'sound_mix_screen.dart';
 import 'package:just_audio/just_audio.dart';
+import '../widgets/more_menu_sheet.dart';
 
 class NatureSoundDetailScreen extends StatefulWidget {
   final String name;
@@ -299,6 +300,14 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'image': null,
     },
     {
+      'name': '거친 파도',
+      'icon': Icons.waves,
+      'color': Color(0xFF345F80),
+      'description': '거칠게 밀려와 부서지는 파도 소리로 힘 있는 바다를 느껴보세요',
+      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_rough_sound.mp3',
+      'image': null,
+    },
+    {
       'name': '빗소리',
       'icon': Icons.water_drop_outlined,
       'color': Color(0xFF3E5A78),
@@ -331,6 +340,27 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'image': 'assets/nature_stream_bg.png',
     },
   ];
+
+  // 파도소리 종류는 이미지를 순서대로 하나씩 받아요.
+  // (이미지보다 소리가 많아지면 처음 이미지부터 다시 돌려 써요)
+  static const _waveImages = [
+    'assets/nature_wave_bg.png',
+    'assets/wave2.png',
+    'assets/wave3.png',
+    'assets/wave4.png',
+    'assets/wave5.png',
+    'assets/wave6.png',
+  ];
+
+  bool _isWave(Map<String, Object?> s) =>
+      ((s['assetPath'] as String?) ?? '').contains('/wave_');
+
+  String? _resolveImage(Map<String, Object?> data, String name) {
+    if (!_isWave(data)) return data['image'] as String?;
+    final waves = _allSounds.where((s) => _isWave(s)).toList();
+    final idx = waves.indexWhere((s) => s['name'] == name);
+    return _waveImages[(idx < 0 ? 0 : idx) % _waveImages.length];
+  }
 
   void _goToAdjacentSound(BuildContext context, int direction) {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -518,7 +548,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
     final currentColor = currentData['color'] as Color;
     final currentDescription = currentData['description'] as String;
     final currentAssetPath = currentData['assetPath'] as String?;
-    final currentImage = currentData['image'] as String?;
+    final currentImage = _resolveImage(currentData, currentName);
     final isThisOne = watchedNatureSoundName == currentName;
     final isPlaying = isThisOne && watchedIsPlaying;
     final isFavorite = _favoriteNames.contains(currentName);
@@ -623,6 +653,11 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                         GestureDetector(
                           onTap: () {
                             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                            showMoreMenuSheet(
+                              context,
+                              shareText: '파란소리 자연소리로 편안한 시간 보내요 🌊',
+                            );
+                            return;
                             showModalBottomSheet(
                               context: context,
                               backgroundColor: Colors.transparent,

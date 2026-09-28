@@ -42,6 +42,7 @@ import '../providers/theme_provider.dart';
 import 'nature_sounds_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../widgets/more_menu_sheet.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -657,6 +658,8 @@ class _HomeScreenState extends State<HomeScreen> {
           _AppBarCircleButton(
             onTap: () {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              showMoreMenuSheet(context);
+              return;
               showModalBottomSheet(
                 context: context,
                 backgroundColor: Colors.transparent,

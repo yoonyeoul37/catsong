@@ -87,8 +87,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         bottom: PreferredSize(preferredSize: Size.fromHeight(1), child: Divider(height: 1, color: _sBorder(isDarkMode))),
       ),
-      body: ListView(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 32),
+      body: SafeArea(
+        top: false,
+        child: ListView(
+        padding: const EdgeInsets.only(bottom: 16),
         children: [
           _buildSection(l.themeColor),
           Consumer<ThemeProvider>(
@@ -157,6 +159,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Center(child: Text('KNEXM.Co.,LTD', style: TextStyle(color: Colors.grey[400], fontSize: 12))),
           const SizedBox(height: 8),
         ],
+      ),
       ),
     );
   }

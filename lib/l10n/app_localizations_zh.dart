@@ -9,7 +9,7 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get appName => 'MusicWave';
+  String get appName => 'Paransori';
 
   @override
   String get songs => '歌曲';
@@ -349,7 +349,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reset => '重置';
 
   @override
-  String get reviewTitle => '您喜歡 MusicWave 嗎？';
+  String get reviewTitle => '您喜歡 Paransori 嗎？';
 
   @override
   String get reviewMessage => '請留下評分！\n這將幫助我們改善應用程式 😊';

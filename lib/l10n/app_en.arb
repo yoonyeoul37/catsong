@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appName": "MusicWave",
+  "appName": "Paransori",
   "songs": "Songs",
   "albums": "Albums",
   "artists": "Artists",
@@ -113,7 +113,7 @@
 "virtualizer": "Virtualizer",
 "surroundEffect": "Creates surround sound effect",
 "reset": "Reset",
-"reviewTitle": "Do you enjoy MusicWave?",
+"reviewTitle": "Do you enjoy Paransori?",
 "reviewMessage": "Please leave a rating!\nIt helps us improve the app 😊",
 "reviewButton": "⭐ Leave a Rating",
 "reviewLater": "Maybe Later",

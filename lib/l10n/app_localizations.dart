@@ -105,7 +105,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In ko, this message translates to:
-  /// **'뮤직웨이브'**
+  /// **'파란소리'**
   String get appName;
 
   /// No description provided for @songs.
@@ -783,7 +783,7 @@ abstract class AppLocalizations {
   /// No description provided for @reviewTitle.
   ///
   /// In ko, this message translates to:
-  /// **'뮤직웨이브가 마음에 드시나요?'**
+  /// **'파란소리가 마음에 드시나요?'**
   String get reviewTitle;
 
   /// No description provided for @reviewMessage.

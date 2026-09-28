@@ -1,6 +1,6 @@
 {
   "@@locale": "ja",
-  "appName": "MusicWave",
+  "appName": "Paransori",
   "songs": "曲",
   "albums": "アルバム",
   "artists": "歌手",
@@ -113,7 +113,7 @@
 "virtualizer": "バーチャライザー",
 "surroundEffect": "立体音響を作ります",
 "reset": "リセット",
-"reviewTitle": "MusicWaveはいかがですか？",
+"reviewTitle": "Paransoriはいかがですか？",
 "reviewMessage": "評価を残していただけると\nアプリ改善に大変役立ちます 😊",
 "reviewButton": "⭐ 評価を残す",
 "reviewLater": "後で",

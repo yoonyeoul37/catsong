@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'MusicWave';
+  String get appName => 'Paransori';
 
   @override
   String get songs => 'Songs';
@@ -351,7 +351,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reset => 'Reset';
 
   @override
-  String get reviewTitle => 'Do you enjoy MusicWave?';
+  String get reviewTitle => 'Do you enjoy Paransori?';
 
   @override
   String get reviewMessage =>

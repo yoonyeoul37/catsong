@@ -406,19 +406,54 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                   child: Container(
                     width: double.infinity,
                     height: 38,
-                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                       color: baseColor.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.public, color: baseColor, size: 15),
-                        const SizedBox(width: 6),
+                        Container(
+                          width: 26,
+                          height: 26,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: isDarkMode
+                                ? const Color(0x14FFFFFF)
+                                : Colors.white.withOpacity(0.8),
+                          ),
+                          child: Icon(
+                            Icons.public,
+                            size: 16,
+                            color: isDarkMode
+                                ? const Color(0xFF6FB0FF)
+                                : const Color(0xFF2F7DE8),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
                         Text('국가선택',
                             style: TextStyle(
-                                color: baseColor, fontSize: 13, fontWeight: FontWeight.w600)),
+                                color: baseColor, fontSize: 13, fontWeight: FontWeight.w700)),
+                        Container(
+                          width: 1,
+                          height: 14,
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          color: baseColor.withOpacity(0.18),
+                        ),
+                        const Text('🇰🇷', style: TextStyle(fontSize: 16)),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text('한국',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: baseColor.withOpacity(0.7),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500)),
+                        ),
+                        Icon(Icons.keyboard_arrow_down_rounded,
+                            size: 20, color: baseColor.withOpacity(0.5)),
                       ],
                     ),
                   ),

@@ -1339,7 +1339,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               )
             else
-              SizedBox(
+              Builder(builder: (context) {
+                // 다음곡/이전곡이 "최근 재생 기록" 안의 음악끼리만 넘어가도록,
+                // 여기 보이는 것 중 음악 항목만 모아서 재생목록으로 쓴다.
+                final musicProviderForQueue = context.read<MusicProvider>();
+                final recentMusicSongs = <Song>[];
+                for (final e in recentContent) {
+                  if (e.type == RecentContentType.music) {
+                    for (final s in musicProviderForQueue.allSongs) {
+                      if (s.uri == e.songUri) {
+                        recentMusicSongs.add(s);
+                        break;
+                      }
+                    }
+                  }
+                }
+                return SizedBox(
                 height: 124,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
@@ -1382,7 +1397,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                         onTapAction = () {
                           if (matched != null) {
-                            context.read<PlayerProvider>().playFromList([matched], 0);
+                            final queueIndex = recentMusicSongs.indexWhere((s) => s.uri == matched!.uri);
+                            context.read<PlayerProvider>().playFromList(
+                              recentMusicSongs,
+                              queueIndex >= 0 ? queueIndex : 0,
+                            );
                           }
                         };
                         break;
@@ -1489,7 +1508,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   },
                 ),
-              ),
+              );
+              }),
           ],
         ],
       ),

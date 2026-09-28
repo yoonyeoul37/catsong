@@ -29,6 +29,10 @@ import 'nature_sounds_screen.dart';
 import 'settings_screen.dart';
 import '../widgets/seasonal_effect.dart';
 import '../widgets/more_menu_sheet.dart';
+import '../models/radio_country.dart';
+import 'radio_korea_screen2.dart';
+import 'radio_country_stations_screen.dart';
+import 'radio_home_screen.dart';
 
 double? _parseFrequency(String? freq) {
   if (freq == null || freq.isEmpty) return null;
@@ -43,11 +47,13 @@ class RadioPlayerScreen extends StatefulWidget {
   final RadioStation station;
   final List<RadioStation>? stationList;
   final int? currentIndex;
+  final bool openedFromList;
   const RadioPlayerScreen({
     super.key,
     required this.station,
     this.stationList,
     this.currentIndex,
+    this.openedFromList = true,
   });
 
   @override
@@ -534,7 +540,24 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                             _FloatButton(
                               onTap: () {
                                 const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                                Navigator.pop(context);
+                                if (widget.openedFromList) {
+                                  Navigator.pop(context);
+                                } else {
+                                  final country = radioProvider.selectedCountry;
+                                  final Widget listScreen = country == null
+                                      ? const RadioHomeScreen()
+                                      : country.code == 'KR'
+                                          ? const RadioKoreaScreen()
+                                          : RadioCountryStationsScreen(country: country);
+                                  Navigator.of(context).pushReplacement(
+                                    PageRouteBuilder(
+                                      pageBuilder: (context, animation, secondaryAnimation) => listScreen,
+                                      transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                                          FadeTransition(opacity: animation, child: child),
+                                      transitionDuration: const Duration(milliseconds: 250),
+                                    ),
+                                  );
+                                }
                               },
                               child: Icon(Icons.expand_more, color: baseColor, size: 16),
                             ),

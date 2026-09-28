@@ -53,6 +53,7 @@ class RadioMiniPlayer extends StatelessWidget {
             currentIndex: radioProvider.currentQueueIndex >= 0
                 ? radioProvider.currentQueueIndex
                 : null,
+            openedFromList: false,
           ),
           transitionsBuilder: (_, animation, __, child) =>
               SlideTransition(

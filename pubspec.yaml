@@ -45,9 +45,9 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: false
-  image_path: "assets/play_song.png"
-  adaptive_icon_background: "#1A1A1A"
-  adaptive_icon_foreground: "assets/icon_no_bg.png"
+  image_path: "assets/app_icon.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/app_icon.png"
   min_sdk_android: 21
 
 flutter:
@@ -66,8 +66,7 @@ flutter:
           weight: 700
 
   assets:
-    - assets/play_song.png
-    - assets/icon_no_bg.png
+
     - assets/cat.png
     - assets/no_album.png
     - assets/cat_icon.png

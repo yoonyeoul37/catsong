@@ -14,6 +14,34 @@ const _natureSoundMeta = <String, Map<String, dynamic>>{
   '시냇물': {'icon': Icons.water_outlined, 'color': Color(0xFF2C6BB3)},
 };
 
+// 목록 화면과 같은 사진들을 여기서도 쓴다. 파도소리 종류는 이름으로 하나를 골라 고정한다.
+const List<String> _miniWaveImages = [
+  'assets/nature_wave_bg.png',
+  'assets/wave2.png',
+  'assets/wave3.png',
+  'assets/wave4.png',
+  'assets/wave5.png',
+  'assets/wave6.png',
+];
+
+String _natureMiniImage(String name) {
+  if (name.contains('파도') || name.contains('갈매기')) {
+    return _miniWaveImages[name.hashCode.abs() % _miniWaveImages.length];
+  }
+  switch (name) {
+    case '빗소리':
+      return 'assets/nature_rain_bg.png';
+    case '새소리':
+      return 'assets/nature_bird_bg.png';
+    case '모닥불':
+      return 'assets/nature_fire_bg.png';
+    case '시냇물':
+      return 'assets/nature_stream_bg.png';
+    default:
+      return 'assets/nature_wave_bg.png';
+  }
+}
+
 class NatureMiniPlayer extends StatelessWidget {
   const NatureMiniPlayer({super.key});
 
@@ -65,11 +93,20 @@ class NatureMiniPlayer extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Row(
                 children: [
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(color: accent, borderRadius: BorderRadius.circular(10)),
-                    child: Icon(icon, color: Colors.white, size: 20),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      _natureMiniImage(name),
+                      width: 44,
+                      height: 44,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(color: accent, borderRadius: BorderRadius.circular(10)),
+                        child: Icon(icon, color: Colors.white, size: 20),
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(

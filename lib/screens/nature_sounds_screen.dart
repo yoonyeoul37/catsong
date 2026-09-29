@@ -925,7 +925,7 @@ class _NatureEqBarsState extends State<_NatureEqBars>
       3,
           (i) => AnimationController(
         vsync: this,
-        duration: Duration(milliseconds: 1000 + i * 300),
+        duration: Duration(milliseconds: 1400 + i * 400),
       )..repeat(reverse: true),
     );
   }

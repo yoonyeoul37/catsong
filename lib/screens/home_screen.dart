@@ -780,10 +780,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             boxShadow: [
                               BoxShadow(
                                 color: isDarkMode
-                                    ? Colors.black.withOpacity(0.35)
-                                    : const Color(0xFF2C6BB3).withOpacity(0.08),
-                                blurRadius: 16,
-                                offset: const Offset(0, 6),
+                                    ? Colors.black.withOpacity(0.45)
+                                    : const Color(0xFF2C6BB3).withOpacity(0.16),
+                                blurRadius: 22,
+                                offset: const Offset(0, 10),
                               ),
                             ],
                           ),
@@ -1104,7 +1104,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(width: 6),
               Text('무엇을 들으실까요?',
                   style: TextStyle(
-                      color: baseColor, fontSize: 16, fontWeight: FontWeight.w800)),
+                      color: baseColor, fontSize: 14, fontWeight: FontWeight.w800)),
             ],
           ),
           const SizedBox(height: 16),
@@ -1266,7 +1266,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(width: 6),
               Text('오늘의 쉼표',
                   style: TextStyle(
-                      color: baseColor, fontSize: 16, fontWeight: FontWeight.w800)),
+                      color: baseColor, fontSize: 14, fontWeight: FontWeight.w800)),
             ],
           ),
           const SizedBox(height: 12),
@@ -1296,9 +1296,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.16),
-                            blurRadius: 16,
-                            offset: const Offset(0, 6),
+                            color: Colors.black.withOpacity(isDarkMode ? 0.5 : 0.24),
+                            blurRadius: 22,
+                            offset: const Offset(0, 10),
                           ),
                         ],
                       ),
@@ -1388,7 +1388,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(width: 6),
                 Text('최근 재생 기록',
                     style: TextStyle(
-                        color: baseColor, fontSize: 16, fontWeight: FontWeight.w800)),
+                        color: baseColor, fontSize: 14, fontWeight: FontWeight.w800)),
               ],
             ),
             const SizedBox(height: 12),
@@ -1561,9 +1561,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius: BorderRadius.circular(10),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.16),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 4),
+                                    color: Colors.black.withOpacity(isDarkMode ? 0.5 : 0.24),
+                                    blurRadius: 16,
+                                    offset: const Offset(0, 6),
                                   ),
                                 ],
                               ),

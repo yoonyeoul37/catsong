@@ -565,9 +565,33 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
           },
           icon: Icon(Icons.arrow_back_ios, color: baseColor, size: 20),
         ),
-        title: Text(
-          '자연소리',
-          style: TextStyle(color: baseColor, fontSize: 18, fontWeight: FontWeight.bold),
+        titleSpacing: 0,
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '자연',
+                    style: const TextStyle(
+                        color: Color(0xFF2F7DE8), fontSize: 20, fontWeight: FontWeight.w800),
+                  ),
+                  TextSpan(
+                    text: '소리',
+                    style: TextStyle(
+                        color: baseColor, fontSize: 20, fontWeight: FontWeight.w800),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              '마음이 편안해지는 소리를 들어보세요',
+              style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 11.5),
+            ),
+          ],
         ),
         actions: const [
           SizedBox(width: 8),

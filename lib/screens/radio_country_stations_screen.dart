@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -366,7 +367,7 @@ class _RadioCountryStationsScreenState
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.light,
         ),
-        centerTitle: true,
+        centerTitle: false,
         leading: IconButton(
           onPressed: () {
             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -375,27 +376,10 @@ class _RadioCountryStationsScreenState
           icon: Icon(Icons.arrow_back_ios,
               color: baseColor, size: 20),
         ),
-        title: Builder(builder: (ctx) {
-          final isKorean = Localizations.localeOf(context).languageCode == 'ko';
-          if (isKorean) {
-            return Image.asset(
-              'assets/home_logo.png',
-              height: 44,
-              width: 120,
-              fit: BoxFit.fill,
-            );
-          }
-          return Text(
-            'Paransori',
-            style: TextStyle(
-              color: baseColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w700,
-              fontStyle: FontStyle.italic,
-              letterSpacing: 1.5,
-            ),
-          );
-        }),
+        title: Padding(
+          padding: const EdgeInsets.only(bottom: 2),
+          child: _LogoEqBars(),
+        ),
       ),
       body: SafeArea(
         top: false,
@@ -845,6 +829,64 @@ class _PlayingBarsState extends State<_PlayingBars>
             ),
           );
         }),
+      ),
+    );
+  }
+}
+
+// 상단바에 쓰는 작은 이퀄라이저 막대 (은은하게 움직임)
+class _LogoEqBars extends StatefulWidget {
+  const _LogoEqBars();
+
+  @override
+  State<_LogoEqBars> createState() => _LogoEqBarsState();
+}
+
+class _LogoEqBarsState extends State<_LogoEqBars>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c;
+
+  @override
+  void initState() {
+    super.initState();
+    _c = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 4200),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 14,
+      child: AnimatedBuilder(
+        animation: _c,
+        builder: (context, _) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: List.generate(3, (i) {
+              final t = _c.value * 2 * math.pi + i * 1.3;
+              final v = 0.35 + 0.65 * (0.5 + 0.5 * math.sin(t));
+              return Padding(
+                padding: EdgeInsets.only(left: i == 0 ? 0 : 2),
+                child: Container(
+                  width: 3,
+                  height: 14 * v,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2F7DE8),
+                    borderRadius: BorderRadius.circular(1.5),
+                  ),
+                ),
+              );
+            }),
+          );
+        },
       ),
     );
   }

@@ -33,10 +33,36 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
             Navigator.pop(context);
           },
         ),
-        title: Text('수면 · 명상',
-            style: TextStyle(
-                color: baseColor, fontSize: 17, fontWeight: FontWeight.w600)),
-        centerTitle: true,
+        toolbarHeight: 64,
+        titleSpacing: 0,
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            RichText(
+              text: TextSpan(
+                children: [
+                  const TextSpan(
+                    text: '수면',
+                    style: TextStyle(
+                        color: Color(0xFF2F7DE8), fontSize: 19, fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(
+                    text: ' · 명상',
+                    style: TextStyle(
+                        color: baseColor, fontSize: 19, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              '편안한 소리로 잠들고, 마음을 가다듬어보세요',
+              style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 11.5),
+            ),
+          ],
+        ),
+        centerTitle: false,
       ),
       body: SafeArea(
         child: Padding(

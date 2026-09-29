@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:just_audio/just_audio.dart';
 import 'package:audio_service/audio_service.dart';
 import '../main.dart' show globalAudioHandler, SimpleAudioHandler;
@@ -634,23 +635,66 @@ class _HomeScreenState extends State<HomeScreen> {
           ? _buildSearchField()
           : Builder(builder: (ctx) {
         final isKorean = Localizations.localeOf(context).languageCode == 'ko';
-        if (isKorean) {
-          return Image.asset(
-            'assets/home_logo.png',
-            height: 44,
-            width: 110,
-            fit: BoxFit.fill,
-          );
-        }
-        return Transform(
-          transform: Matrix4.skewX(-0.15),
-          child: Text(
-              'Paransori',
-              style: TextStyle(
-                  color: baseColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -0.5)),
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            isKorean
+                ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            const TextSpan(
+                              text: '파란',
+                              style: TextStyle(
+                                  color: Color(0xFF2F7DE8),
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: -0.5),
+                            ),
+                            TextSpan(
+                              text: '소리',
+                              style: TextStyle(
+                                  color: baseColor,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: -0.5),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Transform.translate(
+                        offset: const Offset(0, -4),
+                        child: Text(
+                          'Paransori',
+                          style: TextStyle(
+                              color: baseColor.withOpacity(0.55),
+                              fontSize: 13,
+                              fontStyle: FontStyle.italic,
+                              letterSpacing: 0.3),
+                        ),
+                      ),
+                    ],
+                  )
+                : Transform(
+                    transform: Matrix4.skewX(-0.15),
+                    child: Text(
+                        'Paransori',
+                        style: TextStyle(
+                            color: baseColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -0.5)),
+                  ),
+            const SizedBox(width: 6),
+            const Padding(
+              padding: EdgeInsets.only(top: 8, bottom: 4),
+              child: _LogoEqBars(),
+            ),
+          ],
         );
       }),
       actions: [
@@ -2073,4 +2117,63 @@ class _DashboardCategory {
   final VoidCallback onTap;
 
   _DashboardCategory(this.title, this.subtitle, this.imageAsset, this.type, this.onTap);
+}
+
+
+// 홈 화면 로고 옆의 작은 이퀄라이저 막대 (은은하게 움직임)
+class _LogoEqBars extends StatefulWidget {
+  const _LogoEqBars();
+
+  @override
+  State<_LogoEqBars> createState() => _LogoEqBarsState();
+}
+
+class _LogoEqBarsState extends State<_LogoEqBars>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c;
+
+  @override
+  void initState() {
+    super.initState();
+    _c = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 4200),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 14,
+      child: AnimatedBuilder(
+        animation: _c,
+        builder: (context, _) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: List.generate(3, (i) {
+              final t = _c.value * 2 * math.pi + i * 1.3;
+              final v = 0.35 + 0.65 * (0.5 + 0.5 * math.sin(t));
+              return Padding(
+                padding: EdgeInsets.only(left: i == 0 ? 0 : 2),
+                child: Container(
+                  width: 3,
+                  height: 14 * v,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2F7DE8),
+                    borderRadius: BorderRadius.circular(1.5),
+                  ),
+                ),
+              );
+            }),
+          );
+        },
+      ),
+    );
+  }
 }

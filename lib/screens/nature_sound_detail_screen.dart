@@ -894,14 +894,26 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                           const SizedBox(height: 28),
                           Text(currentName,
                               style: const TextStyle(
-                                  color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
+                                  color: Colors.white,
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                  shadows: [
+                                    Shadow(color: Colors.black45, blurRadius: 3, offset: Offset(0, 1)),
+                                    Shadow(color: Colors.black38, blurRadius: 12, offset: Offset(0, 2)),
+                                  ])),
                           const SizedBox(height: 8),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 32),
                             child: Text(currentDescription,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.white.withOpacity(0.65), fontSize: 13, height: 1.6)),
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                    height: 1.6,
+                                    shadows: [
+                                      Shadow(color: Colors.black45, blurRadius: 3, offset: Offset(0, 1)),
+                                      Shadow(color: Colors.black38, blurRadius: 10, offset: Offset(0, 2)),
+                                    ])),
                           ),
                         ],
                       ),
@@ -911,7 +923,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                     margin: const EdgeInsets.fromLTRB(16, 0, 16, 22),
                     padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.10),
+                      color: Colors.black.withOpacity(0.35),
                       border: Border.all(color: Colors.white.withOpacity(0.16)),
                       borderRadius: BorderRadius.circular(22),
                     ),

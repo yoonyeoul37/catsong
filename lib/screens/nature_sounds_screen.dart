@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +9,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'settings_screen.dart';
 import 'radio_home_screen.dart';
+import '../widgets/equalizer_animation.dart';
 import 'nature_sound_detail_screen.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
@@ -38,6 +40,35 @@ class _NatureSound {
     this.assetPath,
   });
   bool get isReady => assetPath != null;
+}
+
+// 파도소리는 곡마다 다른 사진을, 나머지는 정해진 사진 한 장을 보여준다.
+const List<String> _waveThumbImages = [
+  'assets/nature_wave_bg.png',
+  'assets/wave2.png',
+  'assets/wave3.png',
+  'assets/wave4.png',
+  'assets/wave5.png',
+  'assets/wave6.png',
+];
+
+String _natureThumbImage(String category, String assetPath) {
+  if (category == '파도소리') {
+    final hash = assetPath.hashCode.abs();
+    return _waveThumbImages[hash % _waveThumbImages.length];
+  }
+  switch (category) {
+    case '빗소리':
+      return 'assets/nature_rain_bg.png';
+    case '새소리':
+      return 'assets/nature_bird_bg.png';
+    case '모닥불':
+      return 'assets/nature_fire_bg.png';
+    case '시냇물':
+      return 'assets/nature_stream_bg.png';
+    default:
+      return 'assets/nature_wave_bg.png';
+  }
 }
 
 class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
@@ -501,12 +532,16 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
           children: [
             Builder(builder: (context) {
               final categories = ['전체', '파도소리', '빗소리', '새소리', '모닥불', '시냇물'];
-              return SizedBox(
-                height: 36,
+              return Container(
+                height: 38,
+                decoration: BoxDecoration(
+                  color: baseColor.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: categories.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  separatorBuilder: (_, __) => const SizedBox(width: 4),
                   itemBuilder: (context, index) {
                     final category = categories[index];
                     final count = category == '전체'
@@ -518,19 +553,24 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                         setState(() => _selectedCategory = category);
                       },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        padding: const EdgeInsets.symmetric(horizontal: 14),
                         decoration: BoxDecoration(
-                          color: isSelected ? primaryColor : baseColor.withOpacity(0.06),
-                          borderRadius: BorderRadius.circular(999),
+                          color: isSelected
+                              ? (isDarkMode ? Colors.white : const Color(0xFF17140F))
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         alignment: Alignment.center,
                         child: Text(
                           '$category($count)',
                           style: TextStyle(
-                            color: isSelected ? Colors.white : baseColor.withOpacity(0.7),
+                            color: isSelected
+                                ? (isDarkMode ? const Color(0xFF17140F) : Colors.white)
+                                : baseColor.withOpacity(0.7),
                             fontSize: 13,
-                            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -579,7 +619,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                 );
               }
 
-              return grouped.entries.map((entry) {
+              final _natureCards = grouped.entries.map((entry) {
                 final categoryName = entry.key;
                 final variants = entry.value;
                 final primary = variants.first;
@@ -616,23 +656,29 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                     );
                   },
                   child: Container(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: isGroupPlaying ? primaryColor.withOpacity(0.08) : baseColor.withOpacity(0.03),
-                      borderRadius: BorderRadius.circular(14),
-                      border: isGroupPlaying ? Border.all(color: primaryColor, width: 1.2) : null,
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    color: isGroupPlaying
+                        ? (isDarkMode ? const Color(0x262F7DE8) : const Color(0x142F7DE8))
+                        : Colors.transparent,
                     child: Row(
                       children: [
-                        Container(
-                          width: 52,
-                          height: 52,
-                          decoration: BoxDecoration(
-                            color: soundColor,
-                            borderRadius: BorderRadius.circular(12),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            _natureThumbImage(primary.category, primary.assetPath ?? ''),
+                            width: 52,
+                            height: 52,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) => Container(
+                              width: 52,
+                              height: 52,
+                              decoration: BoxDecoration(
+                                color: soundColor,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Icon(primary.icon, color: Colors.white, size: 22),
+                            ),
                           ),
-                          child: Icon(primary.icon, color: Colors.white, size: 22),
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -641,7 +687,11 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                             children: [
                               Text(displayTitle,
                                   style: TextStyle(
-                                      color: baseColor, fontSize: 14.5, fontWeight: FontWeight.w600)),
+                                      color: isGroupPlaying
+                                          ? (isDarkMode ? const Color(0xFF6FB0FF) : const Color(0xFF2F7DE8))
+                                          : baseColor,
+                                      fontSize: 14.5,
+                                      fontWeight: FontWeight.w600)),
                               const SizedBox(height: 2),
                               Text(displayDescription,
                                   maxLines: 1,
@@ -651,28 +701,28 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        if (isMulti)
+                        if (isGroupPlaying)
+                          _NatureEqBars(
+                            color: isDarkMode ? const Color(0xFF6FB0FF) : const Color(0xFF2F7DE8),
+                          )
+                        else if (isMulti)
                           Icon(Icons.chevron_right_rounded, color: baseColor.withOpacity(0.3), size: 22)
                         else
                           GestureDetector(
                             onTap: () => _toggleFavorite(primary.name),
-                            child: Container(
+                            child: SizedBox(
                               width: 34,
                               height: 34,
-                              decoration: BoxDecoration(
-                                color: _favoriteNames.contains(primary.name)
-                                    ? primaryColor
-                                    : baseColor.withOpacity(0.08),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                _favoriteNames.contains(primary.name)
-                                    ? CupertinoIcons.heart_fill
-                                    : CupertinoIcons.heart,
-                                color: _favoriteNames.contains(primary.name)
-                                    ? Colors.white
-                                    : baseColor.withOpacity(0.5),
-                                size: 16,
+                              child: Center(
+                                child: Icon(
+                                  _favoriteNames.contains(primary.name)
+                                      ? CupertinoIcons.heart_fill
+                                      : CupertinoIcons.heart,
+                                  color: _favoriteNames.contains(primary.name)
+                                      ? const Color(0xFFF0506E)
+                                      : baseColor.withOpacity(0.3),
+                                  size: 22,
+                                ),
                               ),
                             ),
                           ),
@@ -681,6 +731,13 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                   ),
                 );
               }).toList();
+              return [
+                for (var i = 0; i < _natureCards.length; i++) ...[
+                  _natureCards[i],
+                  if (i != _natureCards.length - 1)
+                    Divider(height: 1, color: baseColor.withOpacity(0.12)),
+                ],
+              ];
             })(),
           ],
         ),
@@ -843,6 +900,65 @@ class _CircleIconButton extends StatelessWidget {
           border: Border.all(color: baseColor.withOpacity(0.08)),
         ),
         child: Icon(icon, color: baseColor, size: 18),
+      ),
+    );
+  }
+}
+
+// 라디오 목록에서 실제로 쓰는 것과 완전히 똑같은 재생중 막대 (막대 3개, 폭이 좁아요)
+class _NatureEqBars extends StatefulWidget {
+  final Color color;
+  const _NatureEqBars({required this.color});
+
+  @override
+  State<_NatureEqBars> createState() => _NatureEqBarsState();
+}
+
+class _NatureEqBarsState extends State<_NatureEqBars>
+    with TickerProviderStateMixin {
+  late final List<AnimationController> _ctrls;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrls = List.generate(
+      3,
+          (i) => AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 1000 + i * 300),
+      )..repeat(reverse: true),
+    );
+  }
+
+  @override
+  void dispose() {
+    for (final c in _ctrls) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 22,
+      height: 22,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: List.generate(3, (i) {
+          return AnimatedBuilder(
+            animation: _ctrls[i],
+            builder: (_, __) => Container(
+              width: 4,
+              height: 6 + _ctrls[i].value * 14,
+              decoration: BoxDecoration(
+                color: widget.color,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          );
+        }),
       ),
     );
   }

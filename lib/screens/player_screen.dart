@@ -344,7 +344,12 @@ class _PlayerScreenState extends State<PlayerScreen>
           children: [
             // 앨범아트 블러 배경
             SizedBox.expand(
-              child: ImageFiltered(
+              child: _albumArtStyle == 6
+                  ? Image.asset(
+                'assets/music_night_bg.png',
+                fit: BoxFit.cover,
+              )
+                  : ImageFiltered(
                 imageFilter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
                 child: song.albumArt != null
                     ? Image.memory(
@@ -567,6 +572,7 @@ class _PlayerScreenState extends State<PlayerScreen>
       case 3: return _buildCardStyle(song, primaryColor);
       case 4: return _buildVisualizerStyle(song, primaryColor);
       case 5: return _buildGradientStyle(song, primaryColor);
+      case 6: return const SizedBox.shrink();
       default: return _buildCDStyle(song, primaryColor);
     }
   }
@@ -904,21 +910,9 @@ class _PlayerScreenState extends State<PlayerScreen>
                   fit: BoxFit.cover,
                   gaplessPlayback: true,
                 )
-                    : Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        AppTheme.surfaceVariant,
-                        primaryColor.withOpacity(0.3),
-                      ],
-                    ),
-                  ),
-                  child: Center(
-                    child: Icon(Icons.music_note,
-                        color: primaryColor.withOpacity(0.7), size: 80),
-                  ),
+                    : Image.asset(
+                  noAlbumImagePath(song.title),
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
@@ -1587,6 +1581,7 @@ class _PlayerScreenState extends State<PlayerScreen>
       {'id': 3, 'name': AppLocalizations.of(context)!.styleCard, 'icon': Icons.image, 'desc': AppLocalizations.of(context)!.styleCardDesc},
       {'id': 4, 'name': AppLocalizations.of(context)!.styleVisualizer, 'icon': Icons.graphic_eq, 'desc': AppLocalizations.of(context)!.styleVisualizerDesc},
       {'id': 5, 'name': AppLocalizations.of(context)!.styleGradient, 'icon': Icons.gradient, 'desc': AppLocalizations.of(context)!.styleGradientDesc},
+      {'id': 6, 'name': '나이트 스카이', 'icon': Icons.nightlight_round, 'desc': '차분한 밤하늘 배경으로 감상해요'},
     ];
 
     showDialog(

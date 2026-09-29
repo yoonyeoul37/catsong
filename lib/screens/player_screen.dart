@@ -280,7 +280,11 @@ class _PlayerScreenState extends State<PlayerScreen>
                           isActive: playerProvider.isSleepTimerActive,
                           onTap: () {
                             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                            _showSleepTimerDialog(context, playerProvider, primaryColor);
+                            if (playerProvider.isSleepTimerActive) {
+                              _showSleepTimerDialog(context, playerProvider, primaryColor);
+                            } else {
+                              _showSleepWheelPickerDirect(context, playerProvider, primaryColor);
+                            }
                           },
                         ),
                         _buildBottomBarItem(
@@ -1367,6 +1371,80 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
   }
 
+  void _showSleepWheelPickerDirect(BuildContext context, PlayerProvider playerProvider, Color _unusedColor) {
+    final primaryColor = AppTheme.fixedAccent;
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+    Duration picked = const Duration(minutes: 30);
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 12, bottom: 12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('몇 시간 몇 분 후 정지할까요?',
+                    style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
+                SizedBox(
+                  height: 216,
+                  child: CupertinoTheme(
+                    data: CupertinoThemeData(
+                      brightness: isDarkMode ? Brightness.dark : Brightness.light,
+                      textTheme: CupertinoTextThemeData(
+                        pickerTextStyle: TextStyle(color: textColor, fontSize: 20),
+                      ),
+                    ),
+                    child: CupertinoTimerPicker(
+                      mode: CupertinoTimerPickerMode.hm,
+                      initialTimerDuration: picked,
+                      onTimerDurationChanged: (d) => picked = d,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(ctx);
+                        if (picked.inMinutes > 0) {
+                          playerProvider.setSleepTimer(picked);
+                          final timeLabel =
+                              '${picked.inHours > 0 ? '${picked.inHours}${AppLocalizations.of(context)!.hourWord} ' : ''}${picked.inMinutes % 60}${AppLocalizations.of(context)!.minuteShort}';
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                AppLocalizations.of(context)!.autoStopFormat(timeLabel),
+                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                            backgroundColor: primaryColor,
+                            duration: const Duration(seconds: 2),
+                          ));
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: Text(AppLocalizations.of(context)!.set,
+                          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _showSpeedDialog(BuildContext context, PlayerProvider playerProvider, Color primaryColor) {
     showModalBottomSheet(
       context: context,
@@ -1792,8 +1870,6 @@ class _SleepTimerDialog extends StatefulWidget {
 }
 
 class _SleepTimerDialogState extends State<_SleepTimerDialog> {
-  int selectedHours = 0;
-  int selectedMinutes = 30;
   Timer? _countdownTimer;
   Duration _remaining = Duration.zero;
 
@@ -1834,36 +1910,6 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
     super.dispose();
   }
 
-  Widget _quickButton(String label, int hours, int minutes, Color primaryColor) {
-    return GestureDetector(
-      onTap: () {
-        widget.playerProvider.setSleepTimer(
-          Duration(hours: hours, minutes: minutes),
-        );
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(AppLocalizations.of(context)!.autoStopFormat(label),
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-          backgroundColor: primaryColor,
-          duration: const Duration(seconds: 2),
-        ));
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: primaryColor.withOpacity(0.10),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: primaryColor.withOpacity(0.4)),
-        ),
-        child: Text(label,
-            style: TextStyle(
-                color: primaryColor,
-                fontSize: 13,
-                fontWeight: FontWeight.bold)),
-      ),
-    );
-  }
-
   String _formatRemaining(Duration d) {
     final hours = d.inHours;
     final minutes = d.inMinutes % 60;
@@ -1875,10 +1921,86 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
     return '$timeStr ${l.autoStopCountdownSuffix}';
   }
 
+  // 자연소리와 똑같은, 시간·분을 휠로 돌려서 정하는 방식
+  void _showWheelPicker(BuildContext context) {
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+    Duration picked = const Duration(minutes: 30);
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 12, bottom: 12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('몇 시간 몇 분 후 정지할까요?',
+                    style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
+                SizedBox(
+                  height: 216,
+                  child: CupertinoTheme(
+                    data: CupertinoThemeData(
+                      brightness: isDarkMode ? Brightness.dark : Brightness.light,
+                      textTheme: CupertinoTextThemeData(
+                        pickerTextStyle: TextStyle(color: textColor, fontSize: 20),
+                      ),
+                    ),
+                    child: CupertinoTimerPicker(
+                      mode: CupertinoTimerPickerMode.hm,
+                      initialTimerDuration: picked,
+                      onTimerDurationChanged: (d) => picked = d,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(ctx);
+                        if (picked.inMinutes > 0) {
+                          widget.playerProvider.setSleepTimer(picked);
+                          if (!mounted) return;
+                          _startCountdown();
+                          setState(() {});
+                          final timeLabel =
+                              '${picked.inHours > 0 ? '${picked.inHours}${AppLocalizations.of(context)!.hourWord} ' : ''}${picked.inMinutes % 60}${AppLocalizations.of(context)!.minuteShort}';
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                AppLocalizations.of(context)!.autoStopFormat(timeLabel),
+                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                            backgroundColor: widget.primaryColor,
+                            duration: const Duration(seconds: 2),
+                          ));
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: widget.primaryColor,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: Text(AppLocalizations.of(context)!.set,
+                          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isActive = widget.playerProvider.isSleepTimerActive;
-    final primaryColor = AppTheme.fixedAccent;
+    final primaryColor = widget.primaryColor;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + MediaQuery.of(context).viewPadding.bottom),
@@ -1897,22 +2019,6 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
             ],
           ),
           const SizedBox(height: 16),
-          if (!isActive) ...[
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                _quickButton('15${AppLocalizations.of(context)!.minuteShort}', 0, 15, primaryColor),
-                _quickButton('30${AppLocalizations.of(context)!.minuteShort}', 0, 30, primaryColor),
-                _quickButton('1${AppLocalizations.of(context)!.hourWord}', 1, 0, primaryColor),
-                _quickButton('2${AppLocalizations.of(context)!.hourWord}', 2, 0, primaryColor),
-                _quickButton('3${AppLocalizations.of(context)!.hourWord}', 3, 0, primaryColor),
-                _quickButton('4${AppLocalizations.of(context)!.hourWord}', 4, 0, primaryColor),
-                _quickButton('5${AppLocalizations.of(context)!.hourWord}', 5, 0, primaryColor),
-              ],
-            ),
-            const SizedBox(height: 16),
-          ],
           if (isActive) ...[
             Container(
               padding: const EdgeInsets.all(16),
@@ -1966,127 +2072,19 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
               ],
             ),
           ] else ...[
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.08),
-                borderRadius: BorderRadius.circular(12),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => _showWheelPicker(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryColor,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: Text(AppLocalizations.of(context)!.set,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
               ),
-              child: Center(
-                child: Text(
-                  '${selectedHours > 0 ? '$selectedHours${AppLocalizations.of(context)!.hourWord} ' : ''}$selectedMinutes${AppLocalizations.of(context)!.minuteShort}',
-                  style: TextStyle(
-                      color: primaryColor,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                SizedBox(
-                  width: 30,
-                  child: Text(AppLocalizations.of(context)!.minuteShort,
-                      style: const TextStyle(color: Colors.black45, fontSize: 12)),
-                ),
-                Expanded(
-                  child: SliderTheme(
-                    data: SliderTheme.of(context).copyWith(
-                      activeTrackColor: primaryColor,
-                      inactiveTrackColor: primaryColor.withOpacity(0.15),
-                      thumbColor: primaryColor,
-                    ),
-                    child: Slider(
-                      value: selectedMinutes.toDouble(),
-                      min: 0, max: 59, divisions: 59,
-                      onChanged: (value) =>
-                          setState(() => selectedMinutes = value.toInt()),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 24,
-                  child: Text('$selectedMinutes',
-                      style: const TextStyle(color: Colors.black45, fontSize: 12)),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  width: 30,
-                  child: Text(AppLocalizations.of(context)!.hourShort,
-                      style: const TextStyle(color: Colors.black45, fontSize: 12)),
-                ),
-                Expanded(
-                  child: SliderTheme(
-                    data: SliderTheme.of(context).copyWith(
-                      activeTrackColor: primaryColor,
-                      inactiveTrackColor: primaryColor.withOpacity(0.15),
-                      thumbColor: primaryColor,
-                    ),
-                    child: Slider(
-                      value: selectedHours.toDouble(),
-                      min: 0, max: 6, divisions: 6,
-                      onChanged: (value) =>
-                          setState(() => selectedHours = value.toInt()),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 24,
-                  child: Text('$selectedHours',
-                      style: const TextStyle(color: Colors.black45, fontSize: 12)),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.black45,
-                      side: const BorderSide(color: Color(0xFFE5E5E5)),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                    ),
-                    child: Text(AppLocalizations.of(context)!.cancel),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      final total = selectedHours * 60 + selectedMinutes;
-                      if (total > 0) {
-                        widget.playerProvider.setSleepTimer(
-                          Duration(hours: selectedHours, minutes: selectedMinutes),
-                        );
-                        Navigator.pop(context);
-                        final timeLabel = '${selectedHours > 0 ? '$selectedHours${AppLocalizations.of(context)!.hourWord} ' : ''}$selectedMinutes${AppLocalizations.of(context)!.minuteShort}';
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                              AppLocalizations.of(context)!.autoStopFormat(timeLabel),
-                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                          backgroundColor: primaryColor,
-                          duration: const Duration(seconds: 2),
-                        ));
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                    ),
-                    child: Text(AppLocalizations.of(context)!.set,
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                ),
-              ],
             ),
           ],
         ],
@@ -2105,17 +2103,42 @@ class _SpeedDialog extends StatefulWidget {
 }
 
 class _SpeedDialogState extends State<_SpeedDialog> {
+  static const List<double> _speeds = [
+    0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95,
+    1.0, 1.05, 1.1, 1.15, 1.2, 1.25, 1.3, 1.35, 1.4, 1.45,
+    1.5, 1.55, 1.6, 1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95, 2.0,
+  ];
+
   late double _speed;
+  late FixedExtentScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
     _speed = widget.playerProvider.playbackSpeed;
+    final initialIndex = _speeds.indexWhere((s) => (s - _speed).abs() < 0.01);
+    _scrollController = FixedExtentScrollController(
+      initialItem: initialIndex >= 0 ? initialIndex : 10,
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _setSpeed(double speed) {
+    setState(() => _speed = speed);
+    widget.playerProvider.setPlaybackSpeed(speed);
   }
 
   @override
   Widget build(BuildContext context) {
     final primaryColor = AppTheme.fixedAccent;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+
     return Padding(
       padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + MediaQuery.of(context).viewPadding.bottom),
       child: Column(
@@ -2126,77 +2149,46 @@ class _SpeedDialogState extends State<_SpeedDialog> {
               Icon(Icons.speed, color: primaryColor, size: 20),
               const SizedBox(width: 8),
               Text(AppLocalizations.of(context)!.playbackSpeed,
-                  style: const TextStyle(
-                      color: Colors.black,
+                  style: TextStyle(
+                      color: textColor,
                       fontSize: 16,
                       fontWeight: FontWeight.bold)),
             ],
           ),
           const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(
-              color: primaryColor.withOpacity(0.08),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Center(
-              child: Text(
-                '${_speed.toStringAsFixed(2)}x',
-                style: TextStyle(
-                    color: primaryColor,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          SliderTheme(
-            data: SliderTheme.of(context).copyWith(
-              activeTrackColor: primaryColor,
-              inactiveTrackColor: primaryColor.withOpacity(0.15),
-              thumbColor: primaryColor,
-            ),
-            child: Slider(
-              value: _speed,
-              min: 0.5,
-              max: 2.0,
-              divisions: 6,
-              onChanged: (value) {
-                setState(() => _speed = value);
-                widget.playerProvider.setPlaybackSpeed(value);
-              },
-            ),
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            alignment: WrapAlignment.center,
-            children: [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0].map((speed) {
-              final isSelected = (_speed - speed).abs() < 0.01;
-              return GestureDetector(
-                onTap: () {
-                  setState(() => _speed = speed);
-                  widget.playerProvider.setPlaybackSpeed(speed);
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          SizedBox(
+            height: 180,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  height: 44,
                   decoration: BoxDecoration(
-                    color: isSelected ? primaryColor : const Color(0xFFF5F5F5),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                        color: isSelected ? primaryColor : const Color(0xFFE5E5E5)),
-                  ),
-                  child: Text(
-                    '${speed}x',
-                    style: TextStyle(
-                        color: isSelected ? Colors.white : Colors.black54,
-                        fontSize: 12,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal),
+                    color: primaryColor.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-              );
-            }).toList(),
+                CupertinoPicker(
+                  scrollController: _scrollController,
+                  itemExtent: 44,
+                  selectionOverlay: const SizedBox.shrink(),
+                  onSelectedItemChanged: (index) => _setSpeed(_speeds[index]),
+                  children: _speeds.map((speed) {
+                    final isSelected = (_speed - speed).abs() < 0.01;
+                    return Center(
+                      child: Text(
+                        '${speed.toStringAsFixed(2)}x',
+                        style: TextStyle(
+                          color: isSelected ? primaryColor : textColor.withOpacity(0.4),
+                          fontSize: isSelected ? 22 : 16,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
           Row(
@@ -2204,12 +2196,17 @@ class _SpeedDialogState extends State<_SpeedDialog> {
               Expanded(
                 child: OutlinedButton(
                   onPressed: () {
-                    setState(() => _speed = 1.0);
-                    widget.playerProvider.setPlaybackSpeed(1.0);
+                    final index = _speeds.indexWhere((s) => (s - 1.0).abs() < 0.01);
+                    _scrollController.animateToItem(
+                      index >= 0 ? index : 10,
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeOut,
+                    );
+                    _setSpeed(1.0);
                   },
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.black45,
-                    side: const BorderSide(color: Color(0xFFE5E5E5)),
+                    foregroundColor: primaryColor,
+                    side: BorderSide(color: primaryColor),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
@@ -2236,7 +2233,6 @@ class _SpeedDialogState extends State<_SpeedDialog> {
     );
   }
 }
-
 class _RadialVisualizerPainter extends CustomPainter {
   final double progress;
   final bool isPlaying;

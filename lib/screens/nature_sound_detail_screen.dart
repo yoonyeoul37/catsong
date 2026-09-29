@@ -13,6 +13,7 @@ import 'settings_screen.dart';
 import 'sound_mix_screen.dart';
 import 'package:just_audio/just_audio.dart';
 import '../widgets/more_menu_sheet.dart';
+import 'nature_sounds_screen.dart';
 
 class NatureSoundDetailScreen extends StatefulWidget {
   final String name;
@@ -20,6 +21,7 @@ class NatureSoundDetailScreen extends StatefulWidget {
   final String description;
   final String? assetPath;
   final Color color;
+  final bool openedFromList;
 
   const NatureSoundDetailScreen({
     super.key,
@@ -28,6 +30,7 @@ class NatureSoundDetailScreen extends StatefulWidget {
     required this.description,
     required this.assetPath,
     required this.color,
+    this.openedFromList = true,
   });
 
   @override
@@ -316,12 +319,44 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'image': 'assets/nature_rain_bg.png',
     },
     {
+      'name': '창문에 떨어지는 비',
+      'icon': Icons.water_drop_outlined,
+      'color': Color(0xFF3E5A78),
+      'description': '창문을 두드리는 부드러운 빗소리로 편안하게 잠들어보세요',
+      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_window_sound.mp3',
+      'image': 'assets/nature_rain_bg.png',
+    },
+    {
+      'name': '숲속의 비와 새소리',
+      'icon': Icons.water_drop_outlined,
+      'color': Color(0xFF3E5A78),
+      'description': '숲속에 내리는 빗소리와 새소리가 어우러져 마음을 편안하게 해줘요',
+      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_forest_sound.mp3',
+      'image': 'assets/rain3.png',
+    },
+    {
+      'name': '숲속의 거센 밤비',
+      'icon': Icons.water_drop_outlined,
+      'color': Color(0xFF3E5A78),
+      'description': '깊은 밤 숲속에 세차게 내리는 빗소리로 몰입감 있는 휴식을 느껴보세요',
+      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_night_forest_sound.mp3',
+      'image': 'assets/rain4.png',
+    },
+    {
       'name': '새소리',
       'icon': Icons.forest_outlined,
       'color': Color(0xFF5C7A5E),
       'description': '청아한 새소리는 스트레스를 줄이고 상쾌한 기분을 만들어줘요',
       'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/bird_sound.mp3',
       'image': 'assets/nature_bird_bg.png',
+    },
+    {
+      'name': '뻐꾸기와 숲속 새소리',
+      'icon': Icons.forest_outlined,
+      'color': Color(0xFF5C7A5E),
+      'description': '뻐꾸기 소리가 어우러진 숲속의 새소리로 상쾌한 아침을 느껴보세요',
+      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/bird_forest_cuckoo_sound.mp3',
+      'image': 'assets/bird2.png',
     },
     {
       'name': '모닥불',
@@ -338,6 +373,14 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'description': '졸졸 흐르는 시냇물 소리는 마음을 편안하게 이완시켜줘요',
       'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/stream_sound.mp3',
       'image': 'assets/nature_stream_bg.png',
+    },
+    {
+      'name': '잔잔한 강물',
+      'icon': Icons.water_outlined,
+      'color': Color(0xFF2C6BB3),
+      'description': '넓은 강물이 잔잔하게 흐르는 소리로 편안한 휴식을 느껴보세요',
+      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/stream_river_sound.mp3',
+      'image': 'assets/stream2.png',
     },
   ];
 
@@ -600,7 +643,21 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                     child: Row(
                       children: [
                         GestureDetector(
-                          onTap: () => Navigator.pop(context),
+                          onTap: () {
+                            if (widget.openedFromList) {
+                              Navigator.pop(context);
+                            } else {
+                              Navigator.of(context).pushReplacement(
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation, secondaryAnimation) =>
+                                      const NatureSoundsScreen(),
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                                      FadeTransition(opacity: animation, child: child),
+                                  transitionDuration: const Duration(milliseconds: 250),
+                                ),
+                              );
+                            }
+                          },
                           child: Container(
                             width: 32,
                             height: 32,

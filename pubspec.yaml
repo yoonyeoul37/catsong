@@ -1,7 +1,7 @@
 name: mp3_player
 description: Local MP3 Player App
 publish_to: 'none'
-version: 1.0.0+96
+version: 1.0.0+97
 environment:
   sdk: ^3.12.0
 
@@ -81,6 +81,10 @@ flutter:
     - assets/wave4.png
     - assets/wave5.png
     - assets/wave6.png
+    - assets/rain3.png
+    - assets/rain4.png
+    - assets/bird2.png
+    - assets/stream2.png
     - assets/nature_rain_bg.png
     - assets/nature_bird_bg.png
     - assets/nature_fire_bg.png

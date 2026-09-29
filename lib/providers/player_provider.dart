@@ -308,9 +308,14 @@ class PlayerProvider extends ChangeNotifier {
     {'name': '멀리서 들리는 갈매기', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_distant_seagull_sound.mp3'},
     {'name': '거친 파도', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_rough_sound.mp3'},
     {'name': '빗소리', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_sound.mp3'},
+    {'name': '창문에 떨어지는 비', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_window_sound.mp3'},
+    {'name': '숲속의 비와 새소리', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_forest_sound.mp3'},
+    {'name': '숲속의 거센 밤비', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_night_forest_sound.mp3'},
     {'name': '새소리', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/bird_sound.mp3'},
+    {'name': '뻐꾸기와 숲속 새소리', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/bird_forest_cuckoo_sound.mp3'},
     {'name': '모닥불', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/campfire_sound.mp3'},
     {'name': '시냇물', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/stream_sound.mp3'},
+    {'name': '잔잔한 강물', 'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/stream_river_sound.mp3'},
   ];
 
   Future<void> playAdjacentNatureSound(int direction) async {

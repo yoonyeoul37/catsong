@@ -70,6 +70,7 @@ class NatureMiniPlayer extends StatelessWidget {
               description: '',
               assetPath: null,
               color: accent,
+              openedFromList: false,
             ),
           ),
         );

@@ -52,14 +52,24 @@ const List<String> _waveThumbImages = [
   'assets/wave6.png',
 ];
 
-String _natureThumbImage(String category, String assetPath) {
+// 소리 이름별로 상세페이지에 실제 정해둔 사진을 그대로 쓴다. (여기 없는 이름은 아래 폴백으로)
+const Map<String, String> _natureImageByName = {
+  '빗소리': 'assets/nature_rain_bg.png',
+  '창문에 떨어지는 비': 'assets/nature_rain_bg.png',
+  '숲속의 비와 새소리': 'assets/rain3.png',
+  '숲속의 거센 밤비': 'assets/rain4.png',
+  '뻐꾸기와 숲속 새소리': 'assets/bird2.png',
+  '잔잔한 강물': 'assets/stream2.png',
+};
+
+String _natureThumbImage(String name, String category, String assetPath) {
+  final fixed = _natureImageByName[name];
+  if (fixed != null) return fixed;
   if (category == '파도소리') {
     final hash = assetPath.hashCode.abs();
     return _waveThumbImages[hash % _waveThumbImages.length];
   }
   switch (category) {
-    case '빗소리':
-      return 'assets/nature_rain_bg.png';
     case '새소리':
       return 'assets/nature_bird_bg.png';
     case '모닥불':
@@ -137,12 +147,44 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
       assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_sound.mp3',
     ),
     _NatureSound(
+      name: '창문에 떨어지는 비',
+      category: '빗소리',
+      icon: Icons.water_drop_outlined,
+      emoji: '🪟',
+      description: '창문을 두드리는 부드러운 빗소리로 편안하게 잠들어보세요',
+      assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_window_sound.mp3',
+    ),
+    _NatureSound(
+      name: '숲속의 비와 새소리',
+      category: '빗소리',
+      icon: Icons.water_drop_outlined,
+      emoji: '🌲',
+      description: '숲속에 내리는 빗소리와 새소리가 어우러져 마음을 편안하게 해줘요',
+      assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_forest_sound.mp3',
+    ),
+    _NatureSound(
+      name: '숲속의 거센 밤비',
+      category: '빗소리',
+      icon: Icons.water_drop_outlined,
+      emoji: '🌙',
+      description: '깊은 밤 숲속에 세차게 내리는 빗소리로 몰입감 있는 휴식을 느껴보세요',
+      assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_night_forest_sound.mp3',
+    ),
+    _NatureSound(
       name: '새소리',
       category: '새소리',
       icon: Icons.forest_outlined,
       emoji: '🐦',
       description: '청아한 새소리는 스트레스를 줄이고 상쾌한 기분을 만들어줘요',
       assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/bird_sound.mp3',
+    ),
+    _NatureSound(
+      name: '뻐꾸기와 숲속 새소리',
+      category: '새소리',
+      icon: Icons.forest_outlined,
+      emoji: '🌳',
+      description: '뻐꾸기 소리가 어우러진 숲속의 새소리로 상쾌한 아침을 느껴보세요',
+      assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/bird_forest_cuckoo_sound.mp3',
     ),
     _NatureSound(
       name: '모닥불',
@@ -159,6 +201,14 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
       emoji: '💧',
       description: '졸졸 흐르는 시냇물 소리는 마음을 편안하게 하고 잡생각을 줄여줘요',
       assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/stream_sound.mp3',
+    ),
+    _NatureSound(
+      name: '잔잔한 강물',
+      category: '시냇물',
+      icon: Icons.water_outlined,
+      emoji: '🌊',
+      description: '넓은 강물이 잔잔하게 흐르는 소리로 편안한 휴식을 느껴보세요',
+      assetPath: 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/stream_river_sound.mp3',
     ),
   ];
 
@@ -665,7 +715,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: Image.asset(
-                            _natureThumbImage(primary.category, primary.assetPath ?? ''),
+                            _natureThumbImage(primary.name, primary.category, primary.assetPath ?? ''),
                             width: 52,
                             height: 52,
                             fit: BoxFit.cover,

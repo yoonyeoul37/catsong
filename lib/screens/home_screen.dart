@@ -40,9 +40,12 @@ import 'package:marquee/marquee.dart';
 import 'package:flutter/services.dart';
 import '../providers/theme_provider.dart';
 import 'nature_sounds_screen.dart';
+import 'sleep_focus_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/more_menu_sheet.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:permission_handler/permission_handler.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -149,7 +152,43 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _searchController.dispose();
+    _speech.stop();
     super.dispose();
+  }
+
+  final stt.SpeechToText _speech = stt.SpeechToText();
+  bool _isListening = false;
+
+  Future<void> _toggleListening() async {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    if (_isListening) {
+      await _speech.stop();
+      setState(() => _isListening = false);
+      return;
+    }
+    final status = await Permission.microphone.request();
+    if (!status.isGranted) return;
+    final available = await _speech.initialize(
+      onStatus: (status) {
+        if (status == 'done' || status == 'notListening') {
+          setState(() => _isListening = false);
+        }
+      },
+      onError: (error) => setState(() => _isListening = false),
+    );
+    if (!available || !mounted) return;
+    setState(() => _isListening = true);
+    _speech.listen(
+      localeId: 'ko_KR',
+      onResult: (result) {
+        _searchController.text = result.recognizedWords;
+        _searchController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _searchController.text.length),
+        );
+        context.read<MusicProvider>().search(result.recognizedWords);
+        setState(() {});
+      },
+    );
   }
 
   void _handleStartScreenStarTap(BuildContext context, StartScreenType type, String label) {
@@ -616,15 +655,17 @@ class _HomeScreenState extends State<HomeScreen> {
       }),
       actions: [
         if (!_isSearching) ...[
-          _AppBarCircleButton(
-            onTap: () {
-              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              setState(() => _isSearching = true);
-            },
-            icon: Icons.search,
-            baseColor: baseColor,
-          ),
-          const SizedBox(width: 8),
+          if (_showMusicLibrary) ...[
+            _AppBarCircleButton(
+              onTap: () {
+                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                setState(() => _isSearching = true);
+              },
+              icon: Icons.search,
+              baseColor: baseColor,
+            ),
+            const SizedBox(width: 8),
+          ],
           _AppBarCircleButton(
             onTap: () {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -892,6 +933,14 @@ class _HomeScreenState extends State<HomeScreen> {
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         prefixIcon: const Icon(Icons.search, color: AppTheme.fixedAccent, size: 18),
+        suffixIcon: IconButton(
+          icon: Icon(
+            _isListening ? Icons.mic : Icons.mic_none,
+            color: _isListening ? Colors.redAccent : AppTheme.fixedAccent,
+            size: 20,
+          ),
+          onPressed: _toggleListening,
+        ),
         isDense: true,
       ),
       onChanged: (value) {
@@ -979,12 +1028,16 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
       }),
-      _DashboardCategory('수면 · 집중', '백색소음 · 집중음 (준비중)', 'assets/sleep_bg.png', StartScreenType.sleep, () {
+      _DashboardCategory('수면 · 명상', '백색소음 · 명상음 (준비중)', 'assets/sleep_bg.png', StartScreenType.sleep, () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('수면 · 집중 기능은 준비중입니다.'),
-            duration: Duration(seconds: 2),
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => const SleepFocusScreen(),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            transitionDuration: const Duration(milliseconds: 250),
           ),
         );
       }),

@@ -578,8 +578,8 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
         child: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            
             Builder(builder: (context) {
               final categories = ['전체', '파도소리', '빗소리', '새소리', '모닥불', '시냇물'];
               return Container(
@@ -1013,3 +1013,4 @@ class _NatureEqBarsState extends State<_NatureEqBars>
     );
   }
 }
+

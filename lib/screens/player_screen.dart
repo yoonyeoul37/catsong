@@ -320,13 +320,6 @@ class _PlayerScreenState extends State<PlayerScreen>
       _equalizerController.stop();
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.dark,
-      ));
-    });
     return GestureDetector(
       onHorizontalDragEnd: (details) {
         if (details.primaryVelocity == null) return;
@@ -337,7 +330,7 @@ class _PlayerScreenState extends State<PlayerScreen>
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         extendBody: true,
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
@@ -604,119 +597,238 @@ class _PlayerScreenState extends State<PlayerScreen>
                       letterSpacing: 1.2)),
             ),
           ),
-          PopupMenuButton<String>(
-            icon: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Icon(Icons.more_vert, color: baseColor),
-                if (!_hasSeenParanPhoto)
-                  Positioned(
-                    top: -1,
-                    right: -1,
-                    child: Container(
-                      width: 8,
-                      height: 8,
-                      decoration: const BoxDecoration(
-                        color: Colors.redAccent,
-                        shape: BoxShape.circle,
+          GestureDetector(
+            onTap: () => _showPlayerOptionsSheet(context, song, primaryColor),
+            behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: const EdgeInsets.all(6),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Icon(Icons.more_vert, color: baseColor),
+                  if (!_hasSeenParanPhoto)
+                    Positioned(
+                      top: -1,
+                      right: -1,
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          color: Colors.redAccent,
+                          shape: BoxShape.circle,
+                        ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12)),
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'edit',
-                child: Row(
-                  children: [
-                    const Icon(Icons.edit, color: AppTheme.fixedAccent, size: 18),
-                    const SizedBox(width: 10),
-                    Text(AppLocalizations.of(context)!.editSong,
-                        style: const TextStyle(color: Colors.black87)),
-                  ],
-                ),
-              ),
-              PopupMenuItem(
-                value: 'playlist',
-                child: Row(
-                  children: [
-                    const Icon(Icons.playlist_add, color: AppTheme.fixedAccent, size: 18),
-                    const SizedBox(width: 10),
-                    Text(AppLocalizations.of(context)!.addToPlaylist,
-                        style: const TextStyle(color: Colors.black87)),
-                  ],
-                ),
-              ),
-              PopupMenuItem(
-                value: 'style',
-                child: Row(
-                  children: [
-                    const Icon(Icons.style, color: AppTheme.fixedAccent, size: 18),
-                    const SizedBox(width: 10),
-                    Text(AppLocalizations.of(context)!.playerStyle,
-                        style: const TextStyle(color: Colors.black87)),
-                  ],
-                ),
-              ),
-              PopupMenuItem(
-                value: 'speed',
-                child: Row(
-                  children: [
-                    const Icon(Icons.speed, color: AppTheme.fixedAccent, size: 18),
-                    const SizedBox(width: 10),
-                    const Text('배속', style: TextStyle(color: Colors.black87)),
-                  ],
-                ),
-              ),
-              PopupMenuItem(
-                value: 'lyrics',
-                child: Row(
-                  children: [
-                    const Icon(Icons.lyrics_outlined, color: AppTheme.fixedAccent, size: 18),
-                    const SizedBox(width: 10),
-                    Text(AppLocalizations.of(context)!.lyrics,
-                        style: const TextStyle(color: Colors.black87)),
-                  ],
-                ),
-              ),
-            ],
-            onSelected: (value) {
-              if (song == null) return;
-              if (value == 'edit') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditSongScreen(song: song),
-                  ),
-                );
-              } else if (value == 'playlist') {
-                _showAddToPlaylistDialog(context, song, primaryColor);
-              } else if (value == 'style') {
-                if (!_hasSeenParanPhoto) {
-                  setState(() => _hasSeenParanPhoto = true);
-                  SharedPreferences.getInstance().then((p) => p.setBool('hasSeenParanPhoto', true));
-                }
-                _showStyleDialog(context, primaryColor);
-              } else if (value == 'speed') {
-                _showSpeedDialog(context, context.read<PlayerProvider>(), primaryColor);
-              } else if (value == 'lyrics') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LyricsScreen(),
-                  ),
-                );
-              }
-            },
           ),
         ],
       ),
     );
   }
 
+  void _showPlayerOptionsSheet(BuildContext context, Song? song, Color primaryColor) {
+    if (song == null) return;
+    final playerProvider = context.read<PlayerProvider>();
+    const sheetColor = Color(0xFFF4EFE5);
+    const baseColor = Color(0xFF1A1A1A);
+    const descColor = Color(0xFF8A8378);
+    const accent = AppTheme.fixedAccent;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return SafeArea(
+          top: false,
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+            constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.7),
+            decoration: BoxDecoration(
+              color: sheetColor,
+              borderRadius: BorderRadius.circular(22),
+            ),
+            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      const SizedBox(width: 40),
+                      Expanded(
+                        child: Center(
+                          child: Container(
+                            width: 36,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: baseColor.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => Navigator.pop(ctx),
+                        behavior: HitTestBehavior.opaque,
+                        child: const Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Icon(Icons.close, size: 24, color: Colors.black45),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: song.albumArt != null
+                            ? Image.memory(
+                          Uint8List.fromList(song.albumArt!),
+                          width: 42,
+                          height: 42,
+                          fit: BoxFit.cover,
+                          gaplessPlayback: true,
+                        )
+                            : Image.asset(
+                          noAlbumImagePath(song.title),
+                          width: 42,
+                          height: 42,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(song.titleDisplay,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(color: baseColor, fontSize: 13.5, fontWeight: FontWeight.w700)),
+                            const SizedBox(height: 2),
+                            Text(song.artistDisplay,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(color: descColor, fontSize: 11)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
+                  ),
+                  _playerSheetItem(
+                    ctx,
+                    Icons.shuffle_rounded,
+                    AppLocalizations.of(context)!.shuffle,
+                    playerProvider.isShuffled ? accent : baseColor,
+                    baseColor,
+                        () {
+                      Navigator.pop(ctx);
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                      playerProvider.toggleShuffle();
+                    },
+                  ),
+                  _playerSheetItem(
+                    ctx,
+                    Icons.repeat_rounded,
+                    '반복',
+                    playerProvider.loopMode != LoopMode.off ? accent : baseColor,
+                    baseColor,
+                        () {
+                      Navigator.pop(ctx);
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                      playerProvider.toggleLoopMode();
+                    },
+                  ),
+                  _playerSheetItem(
+                    ctx,
+                    Icons.nightlight_round,
+                    '수면',
+                    playerProvider.isSleepTimerActive ? accent : baseColor,
+                    baseColor,
+                        () {
+                      Navigator.pop(ctx);
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                      if (playerProvider.isSleepTimerActive) {
+                        _showSleepTimerDialog(context, playerProvider, primaryColor);
+                      } else {
+                        _showSleepWheelPickerDirect(context, playerProvider, primaryColor);
+                      }
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
+                  ),
+                  _playerSheetItem(ctx, Icons.edit, AppLocalizations.of(context)!.editSong, accent, baseColor, () {
+                    Navigator.pop(ctx);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => EditSongScreen(song: song)));
+                  }),
+                  _playerSheetItem(ctx, Icons.playlist_add, AppLocalizations.of(context)!.addToPlaylist, accent, baseColor, () {
+                    Navigator.pop(ctx);
+                    _showAddToPlaylistDialog(context, song, primaryColor);
+                  }),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
+                  ),
+                  _playerSheetItem(ctx, Icons.style, AppLocalizations.of(context)!.playerStyle, accent, baseColor, () {
+                    Navigator.pop(ctx);
+                    if (!_hasSeenParanPhoto) {
+                      setState(() => _hasSeenParanPhoto = true);
+                      SharedPreferences.getInstance().then((p) => p.setBool('hasSeenParanPhoto', true));
+                    }
+                    _showStyleDialog(context, primaryColor);
+                  }),
+                  _playerSheetItem(ctx, Icons.speed, '배속', accent, baseColor, () {
+                    Navigator.pop(ctx);
+                    _showSpeedDialog(context, context.read<PlayerProvider>(), primaryColor);
+                  }),
+                  _playerSheetItem(ctx, Icons.lyrics_outlined, AppLocalizations.of(context)!.lyrics, accent, baseColor, () {
+                    Navigator.pop(ctx);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LyricsScreen()));
+                  }),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _playerSheetItem(BuildContext context, IconData icon, String label, Color iconColor, Color textColor, VoidCallback onTap) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 4),
+        child: Row(
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: iconColor.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(9),
+              ),
+              child: Icon(icon, color: iconColor, size: 16),
+            ),
+            const SizedBox(width: 12),
+            Text(label, style: TextStyle(color: textColor, fontSize: 13.5, fontWeight: FontWeight.w600)),
+          ],
+        ),
+      ),
+    );
+  }
   Widget _buildAlbumArt(Song song, Color primaryColor) {
     switch (_albumArtStyle) {
       case 3: return _buildCardStyle(song, primaryColor);
@@ -2356,6 +2468,11 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
+    ));
     if (widget.playerProvider.isSleepTimerActive &&
         widget.playerProvider.sleepTimerEnd != null) {
       _startCountdown();

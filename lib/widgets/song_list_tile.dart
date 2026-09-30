@@ -116,30 +116,15 @@ class SongListTile extends StatelessWidget {
                 fontSize: 12,
               ),
             ),
-            PopupMenuButton<String>(
-              icon: Icon(Icons.more_vert,
-                  color: isCurrentSong ? baseColor.withOpacity(0.7) : baseColor.withOpacity(0.3),
-                  size: 20),
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              itemBuilder: (context) => [
-                _buildPopupItem(Icons.play_arrow, AppLocalizations.of(context)!.play, 'play', AppTheme.fixedAccent),
-                _buildPopupItem(Icons.skip_next, AppLocalizations.of(context)!.playNext, 'play_next', AppTheme.fixedAccent),
-                _buildPopupItem(Icons.playlist_add, AppLocalizations.of(context)!.addToPlaylist, 'playlist', AppTheme.fixedAccent),
-                _buildPopupItem(
-                  isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                  isFav ? AppLocalizations.of(context)!.removeFromFavorites : AppLocalizations.of(context)!.addToFavorites,
-                  'favorite',
-                  isFav ? Colors.redAccent : AppTheme.fixedAccent,
-                ),
-                _buildPopupItem(Icons.music_note, AppLocalizations.of(context)!.setRingtone, 'ringtone', AppTheme.fixedAccent),
-                _buildPopupItem(Icons.info_outline, AppLocalizations.of(context)!.songInfo, 'info', AppTheme.fixedAccent),
-                _buildPopupItem(Icons.equalizer, AppLocalizations.of(context)!.equalizer, 'equalizer', AppTheme.fixedAccent),
-                _buildPopupItem(Icons.share, AppLocalizations.of(context)!.share, 'share', AppTheme.fixedAccent),
-                _buildPopupItem(Icons.delete_outline, AppLocalizations.of(context)!.delete, 'delete', Colors.redAccent),
-              ],
-              onSelected: (value) => _handleMenuAction(context, value),
+            GestureDetector(
+              onTap: () => _showOptionsSheet(context, isFav),
+              behavior: HitTestBehavior.opaque,
+              child: Padding(
+                padding: const EdgeInsets.all(6),
+                child: Icon(Icons.more_vert,
+                    color: isCurrentSong ? baseColor.withOpacity(0.7) : baseColor.withOpacity(0.3),
+                    size: 20),
+              ),
             ),
           ],
         ),
@@ -202,16 +187,165 @@ class SongListTile extends StatelessWidget {
     );
   }
 
-  PopupMenuItem<String> _buildPopupItem(
-      IconData icon, String label, String value, Color primaryColor) {
-    return PopupMenuItem(
-      value: value,
-      child: Row(
-        children: [
-          Icon(icon, color: primaryColor, size: 18),
-          const SizedBox(width: 10),
-          Text(label, style: const TextStyle(color: Colors.black87)),
-        ],
+  void _showOptionsSheet(BuildContext context, bool isFav) {
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    final sheetColor = isDarkMode ? const Color(0xFF2A251D) : const Color(0xFFF4EFE5);
+    final baseColor = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF1A1A1A);
+    final descColor = isDarkMode ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
+    const accent = AppTheme.fixedAccent;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return SafeArea(
+          top: false,
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(ctx).size.height * 0.85,
+            ),
+            decoration: BoxDecoration(
+              color: sheetColor,
+              borderRadius: BorderRadius.circular(22),
+            ),
+            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                Row(
+                  children: [
+                    const SizedBox(width: 40),
+                    Expanded(
+                      child: Center(
+                        child: Container(
+                          width: 36,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: baseColor.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.pop(ctx),
+                      behavior: HitTestBehavior.opaque,
+                      child: const Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Icon(Icons.close, size: 24, color: Colors.black45),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: song.albumArt != null
+                          ? Image.memory(
+                        Uint8List.fromList(song.albumArt!),
+                        width: 42,
+                        height: 42,
+                        fit: BoxFit.cover,
+                        gaplessPlayback: true,
+                      )
+                          : Container(
+                        width: 42,
+                        height: 42,
+                        color: baseColor.withOpacity(0.12),
+                        child: SvgPicture.asset('assets/no_album.svg', width: 24, height: 24),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(song.titleDisplay,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: baseColor, fontSize: 13.5, fontWeight: FontWeight.w700)),
+                          const SizedBox(height: 2),
+                          Text(song.artistDisplay,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: descColor, fontSize: 11)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                  ),
+                ],
+              ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
+                ),
+                _sheetItem(context, Icons.play_arrow, AppLocalizations.of(context)!.play, 'play', accent, baseColor),
+                _sheetItem(context, Icons.skip_next, AppLocalizations.of(context)!.playNext, 'play_next', accent, baseColor),
+                _sheetItem(context, Icons.playlist_add, AppLocalizations.of(context)!.addToPlaylist, 'playlist', accent, baseColor),
+                _sheetItem(
+                  context,
+                  isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                  isFav ? AppLocalizations.of(context)!.removeFromFavorites : AppLocalizations.of(context)!.addToFavorites,
+                  'favorite',
+                  isFav ? Colors.redAccent : accent,
+                  baseColor,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
+                ),
+                _sheetItem(context, Icons.music_note, AppLocalizations.of(context)!.setRingtone, 'ringtone', accent, baseColor),
+                _sheetItem(context, Icons.info_outline, AppLocalizations.of(context)!.songInfo, 'info', accent, baseColor),
+                _sheetItem(context, Icons.equalizer, AppLocalizations.of(context)!.equalizer, 'equalizer', accent, baseColor),
+                _sheetItem(context, Icons.share, AppLocalizations.of(context)!.share, 'share', accent, baseColor),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
+                ),
+                _sheetItem(context, Icons.delete_outline, AppLocalizations.of(context)!.delete, 'delete', Colors.redAccent, Colors.redAccent),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _sheetItem(BuildContext context, IconData icon, String label, String value, Color iconColor, Color textColor) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () {
+        Navigator.pop(context);
+        _handleMenuAction(context, value);
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 4),
+        child: Row(
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: iconColor.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(9),
+              ),
+              child: Icon(icon, color: iconColor, size: 16),
+            ),
+            const SizedBox(width: 12),
+            Text(label, style: TextStyle(color: textColor, fontSize: 13.5, fontWeight: FontWeight.w600)),
+          ],
+        ),
       ),
     );
   }

@@ -139,18 +139,23 @@ class _EditSongScreenState extends State<EditSongScreen> {
   }
 
   Future<void> _saveSong(BuildContext context) async {
+    FocusManager.instance.primaryFocus?.unfocus();
     final musicProvider = context.read<MusicProvider>();
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    final navigator = Navigator.of(context);
     await musicProvider.updateSongInfo(
       widget.song,
       title: _titleController.text,
       artist: _artistController.text,
       album: _albumController.text,
     );
-    Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
+    if (!context.mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    final message = AppLocalizations.of(context)!.songSaved;
+    navigator.pop();
+    messenger.showSnackBar(
       SnackBar(
-        content: Text(AppLocalizations.of(context)!.songSaved,
+        content: Text(message,
             style: TextStyle(color: isDarkMode ? Colors.white : Colors.black87)),
         backgroundColor: isDarkMode ? const Color(0xFF2A2A2A) : const Color(0xFFEDE7DA),
         duration: const Duration(seconds: 2),

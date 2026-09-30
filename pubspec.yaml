@@ -69,9 +69,9 @@ flutter:
 
   assets:
 
-    - assets/cat.png
+
     - assets/no_album.png
-    - assets/cat_icon.png
+
     - assets/no_album.svg
     - assets/no_album2.jpg
     - assets/no_album3.jpg

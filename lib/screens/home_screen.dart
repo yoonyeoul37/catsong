@@ -18,6 +18,7 @@ import '../widgets/sound_mix_mini_player.dart';
 import 'video_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../providers/music_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/playlist_provider.dart';
@@ -647,20 +648,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       RichText(
                         text: TextSpan(
                           children: [
-                            const TextSpan(
+                            TextSpan(
                               text: '파란',
-                              style: TextStyle(
-                                  color: Color(0xFF2F7DE8),
+                              style: GoogleFonts.doHyeon(
+                                  color: const Color(0xFF2F7DE8),
                                   fontSize: 22,
-                                  fontWeight: FontWeight.w800,
                                   letterSpacing: -0.5),
                             ),
                             TextSpan(
                               text: '소리',
-                              style: TextStyle(
+                              style: GoogleFonts.doHyeon(
                                   color: baseColor,
                                   fontSize: 22,
-                                  fontWeight: FontWeight.w800,
                                   letterSpacing: -0.5),
                             ),
                           ],

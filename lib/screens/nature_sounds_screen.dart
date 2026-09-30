@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/player_provider.dart';
@@ -575,18 +576,18 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                 children: [
                   TextSpan(
                     text: '자연',
-                    style: const TextStyle(
-                        color: Color(0xFF2F7DE8), fontSize: 20, fontWeight: FontWeight.w800),
+                    style: GoogleFonts.doHyeon(
+                        color: const Color(0xFF2F7DE8), fontSize: 20),
                   ),
                   TextSpan(
                     text: '소리',
-                    style: TextStyle(
-                        color: baseColor, fontSize: 20, fontWeight: FontWeight.w800),
+                    style: GoogleFonts.doHyeon(
+                        color: baseColor, fontSize: 20),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: 0),
             Text(
               '마음이 편안해지는 소리를 들어보세요',
               style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 11.5),

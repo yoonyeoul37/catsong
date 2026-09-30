@@ -1,3 +1,4 @@
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -42,20 +43,20 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
             RichText(
               text: TextSpan(
                 children: [
-                  const TextSpan(
+                  TextSpan(
                     text: '수면',
-                    style: TextStyle(
-                        color: Color(0xFF2F7DE8), fontSize: 19, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.doHyeon(
+                        color: const Color(0xFF2F7DE8), fontSize: 19),
                   ),
                   TextSpan(
                     text: ' · 명상',
-                    style: TextStyle(
-                        color: baseColor, fontSize: 19, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.doHyeon(
+                        color: baseColor, fontSize: 19),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: 0),
             Text(
               '편안한 소리로 잠들고, 마음을 가다듬어보세요',
               style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 11.5),

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
@@ -40,6 +41,7 @@ class MusicProvider extends ChangeNotifier {
 
     try {
       await _loadFavorites();
+      await _loadPlayCounts();
       await _loadEditedSongs();
       await _loadRecentSongsUris();
       final granted = await _requestPermissions();
@@ -97,6 +99,27 @@ class MusicProvider extends ChangeNotifier {
         'favorites', _favoriteIds.map((id) => id.toString()).toList());
   }
 
+  // 곡별 재생 횟수 (곡 파일 경로 → 횟수)
+  Map<String, int> _playCounts = {};
+
+  int playCountOf(Song song) =>
+      song.uri == null ? 0 : (_playCounts[song.uri!] ?? 0);
+
+  Future<void> _loadPlayCounts() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('play_counts');
+    if (raw == null) return;
+    try {
+      final Map decoded = jsonDecode(raw);
+      _playCounts = decoded.map((k, v) => MapEntry(k.toString(), (v as num).toInt()));
+    } catch (_) {}
+  }
+
+  Future<void> _savePlayCounts() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('play_counts', jsonEncode(_playCounts));
+  }
+
   List<String> _recentSongUris = [];
 
   Future<void> _loadRecentSongsUris() async {
@@ -138,6 +161,10 @@ class MusicProvider extends ChangeNotifier {
 
   Future<void> addToRecent(Song song) async {
     song.lastPlayedAt = DateTime.now();
+    if (song.uri != null) {
+      _playCounts[song.uri!] = (_playCounts[song.uri!] ?? 0) + 1;
+      _savePlayCounts();
+    }
     _recentSongs.removeWhere((s) => s.id == song.id);
     _recentSongs.insert(0, song);
     if (_recentSongs.length > 50) {

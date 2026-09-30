@@ -109,13 +109,34 @@ class SongListTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            Text(
-              song.durationFormatted,
-              style: TextStyle(
-                color: isCurrentSong ? baseColor.withOpacity(0.7) : baseColor.withOpacity(0.3),
-                fontSize: 12,
-              ),
-            ),
+            Builder(builder: (context) {
+              final playCount = context.watch<MusicProvider>().playCountOf(song);
+              final subColor = isCurrentSong ? baseColor.withOpacity(0.7) : baseColor.withOpacity(0.3);
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    song.durationFormatted,
+                    style: TextStyle(color: subColor, fontSize: 12),
+                  ),
+                  if (playCount > 0) ...[
+                    const SizedBox(height: 2),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.play_arrow_rounded, size: 11, color: subColor),
+                        const SizedBox(width: 1),
+                        Text(
+                          '$playCount',
+                          style: TextStyle(color: subColor, fontSize: 10.5),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              );
+            }),
             GestureDetector(
               onTap: () => _showOptionsSheet(context, isFav),
               behavior: HitTestBehavior.opaque,

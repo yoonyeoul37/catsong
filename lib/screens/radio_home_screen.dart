@@ -3,6 +3,7 @@ import 'dart:ui' show PlatformDispatcher, ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../models/radio_country.dart';
 import '../providers/radio_provider.dart';
@@ -241,7 +242,7 @@ class RadioHomeScreen extends StatelessWidget {
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.light,
         ),
-        centerTitle: false,
+        centerTitle: true,
         leading: IconButton(
           onPressed: () {
             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -249,9 +250,24 @@ class RadioHomeScreen extends StatelessWidget {
           },
           icon: Icon(Icons.arrow_back_ios, color: isDarkMode ? Colors.white : Colors.black, size: 20),
         ),
-        title: Padding(
-          padding: const EdgeInsets.only(bottom: 2),
-          child: const _LogoEqBars(),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'RADIO',
+              style: GoogleFonts.doHyeon(
+                color: isDarkMode ? Colors.white : Colors.black,
+                fontSize: 22,
+                letterSpacing: 1,
+              ),
+            ),
+            const SizedBox(width: 6),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 3),
+              child: _LogoEqBars(),
+            ),
+          ],
         ),
         actions: [
           const SizedBox(width: 6),

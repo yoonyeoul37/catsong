@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/radio_station.dart';
 import '../models/radio_country.dart';
 import '../providers/radio_provider.dart';
@@ -367,7 +368,7 @@ class _RadioCountryStationsScreenState
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.light,
         ),
-        centerTitle: false,
+        centerTitle: true,
         leading: IconButton(
           onPressed: () {
             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -376,9 +377,24 @@ class _RadioCountryStationsScreenState
           icon: Icon(Icons.arrow_back_ios,
               color: baseColor, size: 20),
         ),
-        title: Padding(
-          padding: const EdgeInsets.only(bottom: 2),
-          child: _LogoEqBars(),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'RADIO',
+              style: GoogleFonts.doHyeon(
+                color: baseColor,
+                fontSize: 22,
+                letterSpacing: 1,
+              ),
+            ),
+            const SizedBox(width: 6),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 3),
+              child: _LogoEqBars(),
+            ),
+          ],
         ),
       ),
       body: SafeArea(

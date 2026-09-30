@@ -919,7 +919,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                       SharedPreferences.getInstance().then((p) => p.setBool('hasSeenParanPhoto', true));
                     }
                     _showStyleDialog(context, primaryColor);
-                  }),
+                  }, showNew: !_hasSeenParanPhoto),
                   _playerSheetItem(ctx, Icons.speed, '배속', accent, baseColor, () {
                     Navigator.pop(ctx);
                     _showSpeedDialog(context, context.read<PlayerProvider>(), primaryColor);
@@ -937,7 +937,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
   }
 
-  Widget _playerSheetItem(BuildContext context, IconData icon, String label, Color iconColor, Color textColor, VoidCallback onTap) {
+  Widget _playerSheetItem(BuildContext context, IconData icon, String label, Color iconColor, Color textColor, VoidCallback onTap, {bool showNew = false}) {
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: onTap,
@@ -956,6 +956,20 @@ class _PlayerScreenState extends State<PlayerScreen>
             ),
             const SizedBox(width: 12),
             Text(label, style: TextStyle(color: textColor, fontSize: 13.5, fontWeight: FontWeight.w600)),
+            if (showNew) ...[
+              const SizedBox(width: 6),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                decoration: BoxDecoration(
+                  color: Colors.redAccent,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: const Text(
+                  'NEW',
+                  style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
           ],
         ),
       ),

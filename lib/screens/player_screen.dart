@@ -2492,6 +2492,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                   style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
             ],
           ),
+          contentPadding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+          actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
           content: SizedBox(
             width: double.maxFinite,
             child: ListView.builder(

@@ -620,7 +620,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        bottomNavigationBar: _buildBottomNavBar(primaryColor),
+        bottomNavigationBar: _showMusicLibrary
+            ? _buildBottomNavBar(primaryColor)
+            : const SafeArea(top: false, child: SizedBox.shrink()),
       ),
     );
   }
@@ -1102,8 +1104,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Icon(Icons.tune_rounded, size: 18, color: baseColor.withOpacity(0.7)),
               const SizedBox(width: 6),
               Text('무엇을 들으실까요?',
-                  style: TextStyle(
-                      color: baseColor, fontSize: 14, fontWeight: FontWeight.w800)),
+                  style: GoogleFonts.notoSansKr(
+                      color: baseColor, fontSize: 14, fontWeight: FontWeight.w700)),
             ],
           ),
           const SizedBox(height: 16),
@@ -1173,10 +1175,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(c.title,
-                                        style: TextStyle(
+                                        style: GoogleFonts.notoSansKr(
                                             color: Colors.white,
                                             fontSize: 16,
-                                            fontWeight: FontWeight.w800,
+                                            fontWeight: FontWeight.w700,
                                             shadows: [
                                               const Shadow(
                                                 color: Colors.black,
@@ -1264,8 +1266,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Icon(Icons.volume_up_rounded, size: 18, color: baseColor.withOpacity(0.7)),
               const SizedBox(width: 6),
               Text('오늘의 쉼표',
-                  style: TextStyle(
-                      color: baseColor, fontSize: 14, fontWeight: FontWeight.w800)),
+                  style: GoogleFonts.notoSansKr(
+                      color: baseColor, fontSize: 14, fontWeight: FontWeight.w700)),
             ],
           ),
           const SizedBox(height: 12),
@@ -1386,8 +1388,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 Icon(Icons.headphones_rounded, size: 18, color: baseColor.withOpacity(0.7)),
                 const SizedBox(width: 6),
                 Text('최근 재생 기록',
-                    style: TextStyle(
-                        color: baseColor, fontSize: 14, fontWeight: FontWeight.w800)),
+                    style: GoogleFonts.notoSansKr(
+                        color: baseColor, fontSize: 14, fontWeight: FontWeight.w700)),
               ],
             ),
             const SizedBox(height: 12),
@@ -1994,7 +1996,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Icon(
                         items[index]['icon'] as IconData,
-                        color: isSelected ? baseColor : baseColor.withOpacity(0.6),
+                        color: isSelected ? const Color(0xFF2F7DE8) : baseColor.withOpacity(0.6),
                         size: 24,
                       ),
                       const SizedBox(height: 3),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
@@ -13,6 +14,7 @@ class SleepTimerSheet extends StatefulWidget {
 
 class _SleepTimerSheetState extends State<SleepTimerSheet> {
   int _selectedMinutes = 30;
+  Duration _wheelDuration = const Duration(minutes: 30);
 
   @override
   Widget build(BuildContext context) {
@@ -141,108 +143,26 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 ),
               ),
             ] else ...[
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF5F5F5),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: primaryColor.withOpacity(0.15)),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: [
-                        Text(
-                          _formatSelected(l, _selectedMinutes),
-                          style: TextStyle(
-                            color: primaryColor,
-                            fontSize: 36,
-                            fontWeight: FontWeight.w200,
-                            letterSpacing: -1,
-                          ),
-                        ),
-                      ],
+              Text('몇 시간 몇 분 후 정지할까요?',
+                  style: TextStyle(color: Colors.black87, fontSize: 15, fontWeight: FontWeight.w600)),
+              SizedBox(
+                height: 180,
+                child: CupertinoTheme(
+                  data: const CupertinoThemeData(
+                    brightness: Brightness.light,
+                    textTheme: CupertinoTextThemeData(
+                      pickerTextStyle: TextStyle(color: Colors.black, fontSize: 20),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      l.radioAfterEnd,
-                      style: const TextStyle(color: Colors.black45, fontSize: 12),
-                    ),
-                  ],
+                  ),
+                  child: CupertinoTimerPicker(
+                    mode: CupertinoTimerPickerMode.hm,
+                    initialTimerDuration: _wheelDuration,
+                    onTimerDurationChanged: (d) {
+                      _wheelDuration = d;
+                      _selectedMinutes = d.inMinutes;
+                    },
+                  ),
                 ),
-              ),
-              const SizedBox(height: 14),
-
-              SliderTheme(
-                data: SliderTheme.of(context).copyWith(
-                  activeTrackColor: primaryColor,
-                  inactiveTrackColor: primaryColor.withOpacity(0.15),
-                  thumbColor: primaryColor,
-                  trackHeight: 4,
-                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
-                ),
-                child: Slider(
-                  value: _selectedMinutes.toDouble(),
-                  min: 15,
-                  max: 360,
-                  divisions: 23,
-                  onChanged: (v) => setState(() => _selectedMinutes = v.toInt()),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(l.sleepMinuteUnit(15), style: const TextStyle(color: Colors.black38, fontSize: 10)),
-                    Text(l.sleepHourUnit(2), style: const TextStyle(color: Colors.black38, fontSize: 10)),
-                    Text(l.sleepHourUnit(4), style: const TextStyle(color: Colors.black38, fontSize: 10)),
-                    Text(l.sleepHourUnit(6), style: const TextStyle(color: Colors.black38, fontSize: 10)),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              GridView.count(
-                crossAxisCount: 4,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisSpacing: 6,
-                mainAxisSpacing: 6,
-                childAspectRatio: 1.8,
-                children: quickOptions.map((opt) {
-                  final isSelected = _selectedMinutes == opt.minutes;
-                  return GestureDetector(
-                    onTap: () => setState(() => _selectedMinutes = opt.minutes),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? primaryColor.withOpacity(0.10)
-                            : const Color(0xFFF5F5F5),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: isSelected
-                              ? primaryColor.withOpacity(0.4)
-                              : const Color(0xFFE5E5E5),
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          opt.label,
-                          style: TextStyle(
-                            color: isSelected ? primaryColor : Colors.black54,
-                            fontSize: 11,
-                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
               ),
               const SizedBox(height: 16),
 
@@ -250,8 +170,10 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
+                    if (_wheelDuration.inMinutes <= 0) return;
+                    _selectedMinutes = _wheelDuration.inMinutes;
                     context.read<RadioProvider>().setSleepTimer(
-                      Duration(minutes: _selectedMinutes),
+                      _wheelDuration,
                     );
                     Navigator.pop(context);
                     final overlay = Overlay.of(context);

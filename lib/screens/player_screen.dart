@@ -1,5 +1,7 @@
 import '../utils/no_album_helper.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
@@ -38,8 +40,82 @@ class _PlayerScreenState extends State<PlayerScreen>
   late List<AnimationController> _eqControllers;
   late List<Animation<double>> _eqAnimations;
   int _albumArtStyle = 1;
+  bool _showNightPicker = true;
+  String? _nightSelectedCategory;
+  String _nightBgPath = 'assets/music_night_bg.png';
+  bool _nightBgIsFile = false;
+
+  static const Map<String, String> _nightCategoryCover = {
+    '봄': 'assets/spring_photo1.png',
+    '여름': 'assets/summer_photo1.png',
+    '가을': 'assets/autumn_photo1.png',
+    '겨울': 'assets/winter_photo1.png',
+    '감성': 'assets/mood_photo1.png',
+    '동물': 'assets/animal_photo1.png',
+    '기타': 'assets/etc_photo1.png',
+  };
+
+  static const Map<String, List<String>> _nightCategoryPhotos = {
+    '봄': [
+      'assets/spring_photo1.png',
+      'assets/spring_photo2.png',
+      'assets/spring_photo3.png',
+      'assets/spring_photo4.png',
+      'assets/spring_photo5.png',
+      'assets/spring_photo6.png',
+    ],
+    '여름': [
+      'assets/summer_photo1.png',
+      'assets/summer_photo2.png',
+      'assets/summer_photo3.png',
+      'assets/summer_photo4.png',
+      'assets/summer_photo5.png',
+      'assets/summer_photo6.png',
+    ],
+    '가을': [
+      'assets/autumn_photo1.png',
+      'assets/autumn_photo2.png',
+      'assets/autumn_photo3.png',
+      'assets/autumn_photo4.png',
+      'assets/autumn_photo5.png',
+      'assets/autumn_photo6.png',
+    ],
+    '겨울': [
+      'assets/winter_photo1.png',
+      'assets/winter_photo2.png',
+      'assets/winter_photo3.png',
+      'assets/winter_photo4.png',
+      'assets/winter_photo5.png',
+      'assets/winter_photo6.png',
+    ],
+    '감성': [
+      'assets/mood_photo1.png',
+      'assets/mood_photo2.png',
+      'assets/mood_photo3.png',
+      'assets/mood_photo4.png',
+      'assets/mood_photo5.png',
+      'assets/mood_photo6.png',
+    ],
+    '동물': [
+      'assets/animal_photo1.png',
+      'assets/animal_photo2.png',
+      'assets/animal_photo3.png',
+      'assets/animal_photo4.png',
+      'assets/animal_photo5.png',
+      'assets/animal_photo6.png',
+    ],
+    '기타': [
+      'assets/etc_photo1.png',
+      'assets/etc_photo2.png',
+      'assets/etc_photo3.png',
+      'assets/etc_photo4.png',
+      'assets/etc_photo5.png',
+      'assets/etc_photo6.png',
+    ],
+  };
   Color _dominantColor = const Color(0xFF1A1A1A);
   bool _showSwipeHint = false;
+  bool _hasSeenParanPhoto = true;
 
   @override
   void initState() {
@@ -77,6 +153,10 @@ class _PlayerScreenState extends State<PlayerScreen>
     final shown = false;
     setState(() {
       _albumArtStyle = prefs.getInt('albumArtStyle') ?? 1;
+      _nightBgPath = prefs.getString('nightBgPath') ?? 'assets/spring_photo1.png';
+      _nightBgIsFile = prefs.getBool('nightBgIsFile') ?? false;
+      _showNightPicker = prefs.getBool('showNightPicker') ?? true;
+      _hasSeenParanPhoto = prefs.getBool('hasSeenParanPhoto') ?? false;
       _showSwipeHint = !shown;
     });
     if (!shown) {
@@ -90,6 +170,27 @@ class _PlayerScreenState extends State<PlayerScreen>
   Future<void> _saveStyle(int style) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('albumArtStyle', style);
+  }
+
+  Future<void> _saveNightBg(String path, {bool isFile = false}) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('nightBgPath', path);
+    await prefs.setBool('nightBgIsFile', isFile);
+    await prefs.setBool('showNightPicker', false);
+  }
+
+  Future<void> _pickFromGallery() async {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.gallery, imageQuality: 90);
+    if (picked == null || !mounted) return;
+    setState(() {
+      _nightBgPath = picked.path;
+      _nightBgIsFile = true;
+      _showNightPicker = false;
+      _nightSelectedCategory = null;
+    });
+    _saveNightBg(picked.path, isFile: true);
   }
 
   Future<void> _extractColor(Song song) async {
@@ -237,9 +338,18 @@ class _PlayerScreenState extends State<PlayerScreen>
       },
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        extendBody: true,
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.8),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.black.withOpacity(0.1),
+                Colors.black.withOpacity(0.45),
+              ],
+              stops: const [0.0, 1.0],
+            ),
           ),
           child: SafeArea(
             top: false,
@@ -253,7 +363,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                       children: [
                         _buildBottomBarItem(
                           context,
-                          icon: Icons.shuffle,
+                          icon: null,
+                          customIcon: '<path d="M18 4L22 8L18 12" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 6H5.5C7 6 8 6.7 9 8L11 11" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 20L22 16L18 12" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 18H5.5C7 18 8 17.3 9 16L15 8C16 6.7 17 6 18.5 6H22" stroke-linecap="round" stroke-linejoin="round"/>',
                           label: AppLocalizations.of(context)!.shuffle,
                           isActive: playerProvider.isShuffled,
                           onTap: () {
@@ -264,8 +375,11 @@ class _PlayerScreenState extends State<PlayerScreen>
                         _buildBottomBarItem(
                           context,
                           icon: playerProvider.loopMode == LoopMode.one
-                              ? Icons.repeat_one
-                              : Icons.repeat,
+                              ? null
+                              : null,
+                          customIcon: playerProvider.loopMode == LoopMode.one
+                              ? '<path d="M17 2L21 6L17 10" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11V9C3 7.3 4.3 6 6 6H21" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 22L3 18L7 14" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 13V15C21 16.7 19.7 18 18 18H3" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 10V14M13 10L11 10V14L13 14" stroke-linecap="round" stroke-linejoin="round"/>'
+                              : '<path d="M17 2L21 6L17 10" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11V9C3 7.3 4.3 6 6 6H21" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 22L3 18L7 14" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 13V15C21 16.7 19.7 18 18 18H3" stroke-linecap="round" stroke-linejoin="round"/>',
                           label: '반복',
                           isActive: playerProvider.loopMode != LoopMode.off,
                           onTap: () {
@@ -287,32 +401,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                             }
                           },
                         ),
-                        _buildBottomBarItem(
-                          context,
-                          icon: Icons.speed,
-                          label: '배속',
-                          isActive: playerProvider.playbackSpeed != 1.0,
-                          onTap: () {
-                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                            _showSpeedDialog(context, playerProvider, primaryColor);
-                          },
-                        ),
-                        _buildBottomBarItem(
-                          context,
-                          icon: Icons.lyrics_outlined,
-                          label: AppLocalizations.of(context)!.lyrics,
-                          isActive: false,
-                          onTap: () {
-                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LyricsScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                        ],
                     ),
                   ),
                   Container(
@@ -325,15 +414,19 @@ class _PlayerScreenState extends State<PlayerScreen>
                     onTap: () => _showExitConfirmDialog(context),
                     behavior: HitTestBehavior.opaque,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Icon(Icons.power_settings_new, color: Color(0xFFE8877E), size: 22),
-                          const SizedBox(height: 3),
-                          Text(
-                            AppLocalizations.of(context)!.radioExitConfirmButton,
-                            style: const TextStyle(color: Color(0xFFE8877E), fontSize: 10, fontWeight: FontWeight.w600),
+                          const SizedBox(height: 4),
+                          Container(
+                            width: 3,
+                            height: 3,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.transparent,
+                            ),
                           ),
                         ],
                       ),
@@ -349,10 +442,9 @@ class _PlayerScreenState extends State<PlayerScreen>
             // 앨범아트 블러 배경
             SizedBox.expand(
               child: _albumArtStyle == 6
-                  ? Image.asset(
-                'assets/music_night_bg.png',
-                fit: BoxFit.cover,
-              )
+                  ? (_nightBgIsFile
+                  ? Image.file(File(_nightBgPath), fit: BoxFit.cover)
+                  : Image.asset(_nightBgPath, fit: BoxFit.cover))
                   : ImageFiltered(
                 imageFilter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
                 child: song.albumArt != null
@@ -438,7 +530,9 @@ class _PlayerScreenState extends State<PlayerScreen>
             ),
             SafeArea(
               bottom: false,
-              child: LayoutBuilder(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 62),
+                child: LayoutBuilder(
                 builder: (context, constraints) {
                   return SingleChildScrollView(
                     physics: constraints.maxHeight < 600
@@ -476,6 +570,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   );
                 },
               ),
+              ),
             ),
           ],
         ),
@@ -510,7 +605,25 @@ class _PlayerScreenState extends State<PlayerScreen>
             ),
           ),
           PopupMenuButton<String>(
-            icon: Icon(Icons.more_vert, color: baseColor),
+            icon: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Icon(Icons.more_vert, color: baseColor),
+                if (!_hasSeenParanPhoto)
+                  Positioned(
+                    top: -1,
+                    right: -1,
+                    child: Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        color: Colors.redAccent,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
             color: Colors.white,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12)),
@@ -548,6 +661,27 @@ class _PlayerScreenState extends State<PlayerScreen>
                   ],
                 ),
               ),
+              PopupMenuItem(
+                value: 'speed',
+                child: Row(
+                  children: [
+                    const Icon(Icons.speed, color: AppTheme.fixedAccent, size: 18),
+                    const SizedBox(width: 10),
+                    const Text('배속', style: TextStyle(color: Colors.black87)),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'lyrics',
+                child: Row(
+                  children: [
+                    const Icon(Icons.lyrics_outlined, color: AppTheme.fixedAccent, size: 18),
+                    const SizedBox(width: 10),
+                    Text(AppLocalizations.of(context)!.lyrics,
+                        style: const TextStyle(color: Colors.black87)),
+                  ],
+                ),
+              ),
             ],
             onSelected: (value) {
               if (song == null) return;
@@ -561,7 +695,20 @@ class _PlayerScreenState extends State<PlayerScreen>
               } else if (value == 'playlist') {
                 _showAddToPlaylistDialog(context, song, primaryColor);
               } else if (value == 'style') {
+                if (!_hasSeenParanPhoto) {
+                  setState(() => _hasSeenParanPhoto = true);
+                  SharedPreferences.getInstance().then((p) => p.setBool('hasSeenParanPhoto', true));
+                }
                 _showStyleDialog(context, primaryColor);
+              } else if (value == 'speed') {
+                _showSpeedDialog(context, context.read<PlayerProvider>(), primaryColor);
+              } else if (value == 'lyrics') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LyricsScreen(),
+                  ),
+                );
               }
             },
           ),
@@ -572,15 +719,323 @@ class _PlayerScreenState extends State<PlayerScreen>
 
   Widget _buildAlbumArt(Song song, Color primaryColor) {
     switch (_albumArtStyle) {
-      case 2: return _buildCassetteStyle(song, primaryColor);
       case 3: return _buildCardStyle(song, primaryColor);
-      case 4: return _buildVisualizerStyle(song, primaryColor);
-      case 5: return _buildGradientStyle(song, primaryColor);
-      case 6: return const SizedBox.shrink();
+      case 6: return _buildNightPhotoArea(song);
       default: return _buildCDStyle(song, primaryColor);
     }
   }
 
+  Widget _buildNightPhotoArea(Song song) {
+    return Stack(
+      children: [
+        _buildNightBgPicker(),
+        Align(
+          alignment: Alignment.center,
+          child: Container(
+            width: 220,
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.32),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.white.withOpacity(0.15)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  song.titleDisplay,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  song.artistDisplay,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  Widget _buildNightBgPicker() {
+    if (!_showNightPicker) {
+      return Align(
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: GestureDetector(
+            onTap: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              setState(() => _showNightPicker = true);
+              SharedPreferences.getInstance().then((p) => p.setBool('showNightPicker', true));
+            },
+            child: Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.black.withOpacity(0.35),
+              ),
+              child: const Icon(Icons.photo_outlined, color: Colors.white, size: 18),
+            ),
+          ),
+        ),
+      );
+    }
+
+    // 2단계: 카테고리를 아직 안 골랐으면 카테고리 목록을 보여준다.
+    if (_nightSelectedCategory == null) {
+      return Align(
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: SizedBox(
+            height: 74,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: _nightCategoryCover.length + 2,
+              separatorBuilder: (_, __) => const SizedBox(width: 10),
+              itemBuilder: (context, index) {
+                if (index == _nightCategoryCover.length) {
+                  return GestureDetector(
+                    onTap: _pickFromGallery,
+                    child: Container(
+                      width: 60,
+                      height: 74,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.black.withOpacity(0.35),
+                        border: Border.all(color: Colors.white.withOpacity(0.25)),
+                      ),
+                      child: const Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.add_photo_alternate_outlined, color: Colors.white, size: 22),
+                          SizedBox(height: 4),
+                          Text('내 사진', style: TextStyle(color: Colors.white, fontSize: 10)),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+                if (index == _nightCategoryCover.length + 1) {
+                  return GestureDetector(
+                    onTap: () {
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                      setState(() => _showNightPicker = false);
+                      SharedPreferences.getInstance().then((p) => p.setBool('showNightPicker', false));
+                    },
+                    child: Container(
+                      width: 60,
+                      height: 74,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.black.withOpacity(0.35),
+                        border: Border.all(color: Colors.white.withOpacity(0.25)),
+                      ),
+                      child: const Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.close, color: Colors.white, size: 22),
+                          SizedBox(height: 4),
+                          Text('닫기', style: TextStyle(color: Colors.white, fontSize: 10)),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+                final category = _nightCategoryCover.keys.elementAt(index);
+                final cover = _nightCategoryCover[category]!;
+                return GestureDetector(
+                  onTap: () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    setState(() => _nightSelectedCategory = category);
+                  },
+                  child: Container(
+                    width: 60,
+                    height: 74,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.white.withOpacity(0.25)),
+                    ),
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(11),
+                          child: Image.asset(
+                            cover,
+                            width: 60,
+                            height: 74,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            decoration: const BoxDecoration(
+                              color: Colors.black38,
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(11),
+                                bottomRight: Radius.circular(11),
+                              ),
+                            ),
+                            child: Text(
+                              category,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      );
+    }
+
+    // 3단계: 고른 카테고리 안의 사진들을 보여준다.
+    final photos = _nightCategoryPhotos[_nightSelectedCategory] ?? [];
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: SizedBox(
+          height: 64,
+          child: photos.isEmpty
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(width: 20),
+                    GestureDetector(
+                      onTap: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        setState(() => _nightSelectedCategory = null);
+                      },
+                      child: Container(
+                        width: 56,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.black.withOpacity(0.35),
+                          border: Border.all(color: Colors.white.withOpacity(0.25)),
+                        ),
+                        child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 14),
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    const Text(
+                      '준비중입니다',
+                      style: TextStyle(color: Colors.white70, fontSize: 13),
+                    ),
+                  ],
+                )
+              : ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  itemCount: photos.length + 2,
+                  separatorBuilder: (_, __) => const SizedBox(width: 10),
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return GestureDetector(
+                        onTap: () {
+                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                          setState(() => _nightSelectedCategory = null);
+                        },
+                        child: Container(
+                          width: 56,
+                          height: 56,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.black.withOpacity(0.35),
+                            border: Border.all(color: Colors.white.withOpacity(0.25)),
+                          ),
+                          child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 14),
+                        ),
+                      );
+                    }
+                    if (index == photos.length + 1) {
+                      return GestureDetector(
+                        onTap: () {
+                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                          setState(() {
+                            _showNightPicker = false;
+                            _nightSelectedCategory = null;
+                          });
+                          SharedPreferences.getInstance().then((p) => p.setBool('showNightPicker', false));
+                        },
+                        child: Container(
+                          width: 56,
+                          height: 56,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.white.withOpacity(0.9),
+                          ),
+                          child: const Icon(Icons.check, color: Colors.black, size: 22),
+                        ),
+                      );
+                    }
+                    final path = photos[index - 1];
+                    final isSelected = _nightBgPath == path;
+                    return GestureDetector(
+                      onTap: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        setState(() {
+                          _nightBgPath = path;
+                          _nightBgIsFile = false;
+                        });
+                        _saveNightBg(path);
+                      },
+                      child: Container(
+                        width: 56,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: isSelected ? Colors.white : Colors.white.withOpacity(0.25),
+                            width: isSelected ? 2.5 : 1,
+                          ),
+                          boxShadow: isSelected
+                              ? [BoxShadow(color: Colors.black.withOpacity(0.4), blurRadius: 8)]
+                              : null,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.asset(path, fit: BoxFit.cover),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+        ),
+      ),
+    );
+  }
   Widget _buildCDStyle(Song song, Color primaryColor) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 48),
@@ -1144,7 +1599,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     Text(song.titleDisplay,
                         style: TextStyle(
                             color: baseColor,
-                            fontSize: 20,
+                            fontSize: 16,
                             fontWeight: FontWeight.w900,
                             letterSpacing: -0.5),
                         maxLines: 1,
@@ -1152,7 +1607,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     const SizedBox(height: 0),
                     Text(song.artistDisplay,
                         style: TextStyle(
-                            color: baseColor.withOpacity(0.7), fontSize: 12),
+                            color: baseColor.withOpacity(0.7), fontSize: 11),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis),
                   ],
@@ -1617,32 +2072,41 @@ class _PlayerScreenState extends State<PlayerScreen>
 
   Widget _buildBottomBarItem(
       BuildContext context, {
-        required IconData icon,
+        IconData? icon,
+        String? customIcon,
         required String label,
         required bool isActive,
         required VoidCallback onTap,
       }) {
     const baseColor = Colors.white;
+    final iconColor = isActive ? baseColor : baseColor.withOpacity(0.55);
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            customIcon != null
+                ? SvgPicture.string(
+                    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2">$customIcon</svg>',
+                    width: 18,
+                    height: 18,
+                    colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                  )
+                : Icon(
               icon,
-              color: isActive ? baseColor : baseColor.withOpacity(0.6),
-              size: 22,
+              color: iconColor,
+              size: 18,
             ),
-            const SizedBox(height: 3),
-            Text(
-              label,
-              style: TextStyle(
-                color: isActive ? baseColor : baseColor.withOpacity(0.6),
-                fontSize: 10,
-                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+            const SizedBox(height: 4),
+            Container(
+              width: 3,
+              height: 3,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isActive ? AppTheme.fixedAccent : Colors.transparent,
               ),
             ),
           ],
@@ -1655,11 +2119,8 @@ class _PlayerScreenState extends State<PlayerScreen>
     const accent = AppTheme.fixedAccent;
     final styles = [
       {'id': 1, 'name': AppLocalizations.of(context)!.styleCD, 'icon': Icons.album, 'desc': AppLocalizations.of(context)!.styleCDDesc},
-      {'id': 2, 'name': AppLocalizations.of(context)!.styleCassette, 'icon': Icons.settings_input_composite, 'desc': AppLocalizations.of(context)!.styleCassetteDesc},
+      {'id': 6, 'name': '파란포토', 'icon': Icons.photo_outlined, 'desc': '좋아하는 사진을 배경으로 골라보세요'},
       {'id': 3, 'name': AppLocalizations.of(context)!.styleCard, 'icon': Icons.image, 'desc': AppLocalizations.of(context)!.styleCardDesc},
-      {'id': 4, 'name': AppLocalizations.of(context)!.styleVisualizer, 'icon': Icons.graphic_eq, 'desc': AppLocalizations.of(context)!.styleVisualizerDesc},
-      {'id': 5, 'name': AppLocalizations.of(context)!.styleGradient, 'icon': Icons.gradient, 'desc': AppLocalizations.of(context)!.styleGradientDesc},
-      {'id': 6, 'name': '나이트 스카이', 'icon': Icons.nightlight_round, 'desc': '차분한 밤하늘 배경으로 감상해요'},
     ];
 
     showDialog(
@@ -1710,11 +2171,30 @@ class _PlayerScreenState extends State<PlayerScreen>
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(style['name'] as String,
-                                  style: TextStyle(
-                                      color: isSelected ? accent : Colors.black87,
-                                      fontSize: 14,
-                                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+                              Row(
+                                children: [
+                                  Text(style['name'] as String,
+                                      style: TextStyle(
+                                          color: isSelected ? accent : Colors.black87,
+                                          fontSize: 14,
+                                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+                                  if (style['id'] == 6) ...[
+                                    const SizedBox(width: 6),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                                      decoration: BoxDecoration(
+                                        color: Colors.redAccent,
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: const Text(
+                                        'NEW',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
                               Text(style['desc'] as String,
                                   style: const TextStyle(color: Colors.black45, fontSize: 11)),
                             ],

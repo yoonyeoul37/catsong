@@ -242,7 +242,10 @@ class SongListTile extends StatelessWidget {
         final isFav = musicProvider.isFavorite(song.id);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(isFav ? '즐겨찾기에 추가됐습니다' : '즐겨찾기에서 제거됐습니다'),
+            content: Text(
+              isFav ? '즐겨찾기에 추가됐습니다' : '즐겨찾기에서 제거됐습니다',
+              style: const TextStyle(color: Colors.white),
+            ),
             backgroundColor: AppTheme.surfaceVariant,
             duration: const Duration(seconds: 2),
           ),

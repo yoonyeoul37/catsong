@@ -53,7 +53,7 @@ class FavoritesScreen extends StatelessWidget {
                     child: ElevatedButton.icon(
                       onPressed: () {
                         context.read<PlayerProvider>()
-                            .playFromList(favorites, 0);
+                            .playFromList(favorites, 0, isPlayAllAction: true);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color.lerp(primaryColor, Colors.black, 0.15),
@@ -73,7 +73,7 @@ class FavoritesScreen extends StatelessWidget {
                     child: OutlinedButton.icon(
                       onPressed: () {
                         final songs = List<Song>.from(favorites)..shuffle();
-                        context.read<PlayerProvider>().playFromList(songs, 0);
+                        context.read<PlayerProvider>().playFromList(songs, 0, isPlayAllAction: true);
                       },
                       style: OutlinedButton.styleFrom(
                         foregroundColor: baseColor,

@@ -1,7 +1,7 @@
 name: mp3_player
 description: Local MP3 Player App
 publish_to: 'none'
-version: 1.0.0+100
+version: 1.0.0+101
 environment:
   sdk: ^3.12.0
 
@@ -13,6 +13,7 @@ dependencies:
   audio_service: ^0.18.15
   permission_handler: ^11.3.0
   speech_to_text: ^7.0.0
+  image_picker: ^1.1.2
   provider: ^6.1.2
   marquee: ^2.2.3
   cupertino_icons: ^1.0.8
@@ -98,6 +99,50 @@ flutter:
     - assets/welcome_ko_v3.mp3
     - assets/paransori_logo.png
     - assets/music_night_bg.png
+    - assets/spring_photo1.png
+    - assets/spring_photo2.png
+    - assets/spring_photo3.png
+    - assets/spring_photo4.png
+    - assets/spring_photo5.png
+    - assets/spring_photo6.png
+    - assets/summer_photo1.png
+    - assets/summer_photo2.png
+    - assets/summer_photo3.png
+    - assets/summer_photo4.png
+    - assets/summer_photo5.png
+    - assets/summer_photo6.png
+    - assets/autumn_photo1.png
+    - assets/autumn_photo2.png
+    - assets/autumn_photo3.png
+    - assets/autumn_photo4.png
+    - assets/autumn_photo5.png
+    - assets/autumn_photo6.png
+    - assets/winter_photo1.png
+    - assets/winter_photo2.png
+    - assets/winter_photo3.png
+    - assets/winter_photo4.png
+    - assets/winter_photo5.png
+    - assets/winter_photo6.png
+    - assets/mood_photo1.png
+    - assets/mood_photo2.png
+    - assets/mood_photo3.png
+    - assets/mood_photo4.png
+    - assets/mood_photo5.png
+    - assets/mood_photo6.png
+    - assets/animal_photo1.png
+    - assets/animal_photo2.png
+    - assets/animal_photo3.png
+    - assets/animal_photo4.png
+    - assets/animal_photo5.png
+    - assets/animal_photo6.png
+    - assets/etc_photo1.png
+    - assets/etc_photo2.png
+    - assets/etc_photo3.png
+    - assets/etc_photo4.png
+    - assets/etc_photo5.png
+    - assets/etc_photo6.png
+    - assets/paran_photo5.png
+    - assets/paran_photo6.png
     - assets/home_logo.png
     - assets/intro_photo.png
     - assets/campfire_bg.png

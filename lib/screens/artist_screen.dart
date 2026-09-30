@@ -241,7 +241,7 @@ class ArtistDetailScreen extends StatelessWidget {
                       IconButton(
                         onPressed: () {
                           const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                          context.read<PlayerProvider>().playFromList(artist.songs, 0);
+                          context.read<PlayerProvider>().playFromList(artist.songs, 0, isPlayAllAction: true);
                           Navigator.pop(context);
                         },
                         icon: const Icon(Icons.play_arrow, color: Colors.white60, size: 26),
@@ -252,7 +252,7 @@ class ArtistDetailScreen extends StatelessWidget {
                         onPressed: () {
                           const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                           final songs = List<Song>.from(artist.songs)..shuffle();
-                          context.read<PlayerProvider>().playFromList(songs, 0);
+                          context.read<PlayerProvider>().playFromList(songs, 0, isPlayAllAction: true);
                           Navigator.pop(context);
                         },
                         icon: const Icon(Icons.shuffle, color: Colors.white60, size: 20),

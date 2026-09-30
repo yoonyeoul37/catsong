@@ -273,11 +273,14 @@ class PlayerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> playFromList(List<Song> songs, int index) async {
+  Future<void> playFromList(List<Song> songs, int index, {bool isPlayAllAction = false}) async {
     _queue = List.from(songs);
     final handler = _audioHandler;
     if (handler is SimpleAudioHandler) {
       handler.setRadioMode(false);
+    }
+    if (isPlayAllAction && _loopMode == LoopMode.one) {
+      setLoopMode(LoopMode.all);
     }
     await _playAtIndex(index);
   }

@@ -121,7 +121,7 @@ class AlbumScreen extends StatelessWidget {
                 color: (context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black).withOpacity(0.15),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
-                  child: Image.asset(noAlbumImagePath(album.title), fit: BoxFit.cover),
+                  child: Image.asset(noAlbumImagePath(album.name), fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -167,7 +167,7 @@ class AlbumDetailScreen extends StatelessWidget {
                 gaplessPlayback: true,
               )
                   : Image.asset(
-                noAlbumImagePath(album.title),
+                noAlbumImagePath(album.name),
                 fit: BoxFit.cover,
               ),
             ),
@@ -199,7 +199,7 @@ class AlbumDetailScreen extends StatelessWidget {
                           gaplessPlayback: true,
                         )
                       else
-                        Image.asset(noAlbumImagePath(album.title), fit: BoxFit.cover),
+                        Image.asset(noAlbumImagePath(album.name), fit: BoxFit.cover),
                       Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(

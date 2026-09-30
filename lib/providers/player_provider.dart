@@ -193,8 +193,10 @@ class PlayerProvider extends ChangeNotifier {
       default:
         if (hasNext) {
           playNext();
-        } else if (_queue.isNotEmpty) {
-          _playAtIndex(0);
+        } else {
+          // 마지막 곡이 끝나면 멈춤 (재생 버튼 누르면 그 곡 처음부터)
+          _player.pause();
+          _player.seek(Duration.zero);
         }
         break;
     }
@@ -232,6 +234,8 @@ class PlayerProvider extends ChangeNotifier {
       onSongPlayed?.call(song);
       onSongChanged?.call(song);
       await _player.setAudioSource(AudioSource.uri(Uri.parse(song.uri!)));
+      // 자연소리가 남긴 "무한반복" 설정을 꺼준다 (반복은 앱이 직접 처리함)
+      await _player.setLoopMode(LoopMode.off);
       await _player.play();
       await WakelockPlus.enable();
       _updateWidgetSongInfo(song);

@@ -194,18 +194,120 @@ class _PlayerScreenState extends State<PlayerScreen>
         .then((p) => p.setStringList('nightFavPaths', _nightFavPaths.toList()));
   }
 
+  void _showGalleryFavManager(BuildContext context) {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setSheetState) {
+            final myPhotos = _nightFavPaths.where((p) => !p.startsWith('assets/')).toList();
+            return SafeArea(
+              top: false,
+              child: Container(
+                margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.7),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF2A251D),
+                  borderRadius: BorderRadius.circular(22),
+                ),
+                padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        const Expanded(
+                          child: Text('내 사진 관리',
+                              style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700)),
+                        ),
+                        GestureDetector(
+                          onTap: () => Navigator.pop(ctx),
+                          behavior: HitTestBehavior.opaque,
+                          child: const Padding(
+                            padding: EdgeInsets.all(4),
+                            child: Icon(Icons.close, size: 20, color: Colors.white70),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    if (myPhotos.isEmpty)
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 24),
+                        child: Text('아직 등록한 내 사진이 없어요',
+                            style: TextStyle(color: Colors.white54, fontSize: 13)),
+                      )
+                    else
+                      Flexible(
+                        child: SingleChildScrollView(
+                          child: Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: myPhotos.map((path) {
+                              return Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.file(File(path), width: 70, height: 70, fit: BoxFit.cover),
+                                  ),
+                                  Positioned(
+                                    right: 2,
+                                    top: 2,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                        setState(() => _nightFavPaths.remove(path));
+                                        setSheetState(() {});
+                                        SharedPreferences.getInstance().then(
+                                                (p) => p.setStringList('nightFavPaths', _nightFavPaths.toList()));
+                                      },
+                                      child: Container(
+                                        width: 20,
+                                        height: 20,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.black87,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(Icons.close, size: 13, color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
   Future<void> _pickFromGallery() async {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
     final picker = ImagePicker();
-    final picked = await picker.pickImage(source: ImageSource.gallery, imageQuality: 90);
-    if (picked == null || !mounted) return;
+    final picked = await picker.pickMultiImage(imageQuality: 90);
+    if (picked.isEmpty || !mounted) return;
+    for (final file in picked) {
+      _nightFavPaths.add(file.path);
+    }
+    SharedPreferences.getInstance()
+        .then((p) => p.setStringList('nightFavPaths', _nightFavPaths.toList()));
+    final first = picked.first.path;
     setState(() {
-      _nightBgPath = picked.path;
+      _nightBgPath = first;
       _nightBgIsFile = true;
       _showNightPicker = false;
       _nightSelectedCategory = null;
     });
-    _saveNightBg(picked.path, isFile: true);
+    _saveNightBg(first, isFile: true);
   }
 
   Future<void> _extractColor(Song song) async {
@@ -329,13 +431,14 @@ class _PlayerScreenState extends State<PlayerScreen>
         final options = _nightFavPaths.where((p) => p != _nightBgPath).toList();
         if (options.isNotEmpty) {
           final next = options[math.Random().nextInt(options.length)];
+          final nextIsFile = !next.startsWith('assets/');
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (!mounted) return;
             setState(() {
               _nightBgPath = next;
-              _nightBgIsFile = false;
+              _nightBgIsFile = nextIsFile;
             });
-            _saveNightBg(next);
+            _saveNightBg(next, isFile: nextIsFile);
           });
         }
       }
@@ -945,7 +1048,7 @@ class _PlayerScreenState extends State<PlayerScreen>
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              itemCount: _nightCategoryCover.length + 3,
+              itemCount: _nightCategoryCover.length + 4,
               separatorBuilder: (_, __) => const SizedBox(width: 10),
               itemBuilder: (context, index) {
                 if (index == 0) {
@@ -998,6 +1101,29 @@ class _PlayerScreenState extends State<PlayerScreen>
                   );
                 }
                 if (index == _nightCategoryCover.length + 2) {
+                  return GestureDetector(
+                    onTap: () => _showGalleryFavManager(context),
+                    child: Container(
+                      width: 60,
+                      height: 74,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.black.withOpacity(0.35),
+                        border: Border.all(color: Colors.white.withOpacity(0.25)),
+                      ),
+                      child: const Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.tune_rounded, color: Colors.white, size: 22),
+                          SizedBox(height: 4),
+                          Text('관리', style: TextStyle(color: Colors.white, fontSize: 10)),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+                if (index == _nightCategoryCover.length + 3) {
                   return GestureDetector(
                     onTap: () {
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -1125,7 +1251,7 @@ class _PlayerScreenState extends State<PlayerScreen>
               : ListView.separated(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  itemCount: photos.length + 2,
+                  itemCount: _nightSelectedCategory == '전체' ? photos.length + 3 : photos.length + 2,
                   separatorBuilder: (_, __) => const SizedBox(width: 10),
                   itemBuilder: (context, index) {
                     if (index == 0) {
@@ -1147,7 +1273,53 @@ class _PlayerScreenState extends State<PlayerScreen>
                         ),
                       );
                     }
-                    if (index == photos.length + 1) {
+                    if (_nightSelectedCategory == '전체' && index == 1) {
+                      final allSelected = photos.every((p) => _nightFavPaths.contains(p));
+                      return GestureDetector(
+                        onTap: () {
+                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                          setState(() {
+                            if (allSelected) {
+                              _nightFavPaths.removeAll(photos);
+                            } else {
+                              _nightFavPaths.addAll(photos);
+                            }
+                          });
+                          SharedPreferences.getInstance()
+                              .then((p) => p.setStringList('nightFavPaths', _nightFavPaths.toList()));
+                        },
+                        child: Container(
+                          width: 56,
+                          height: 56,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: allSelected ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.35),
+                            border: Border.all(color: Colors.white.withOpacity(0.25)),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                allSelected ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
+                                color: allSelected ? Colors.black : Colors.white,
+                                size: 20,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '전체 선택',
+                                style: TextStyle(
+                                  color: allSelected ? Colors.black : Colors.white,
+                                  fontSize: 9,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+                    final photoIndex = _nightSelectedCategory == '전체' ? index - 2 : index - 1;
+                    if (index == photos.length + (_nightSelectedCategory == '전체' ? 2 : 1)) {
                       return GestureDetector(
                         onTap: () {
                           const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -1169,7 +1341,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                         ),
                       );
                     }
-                    final path = photos[index - 1];
+                    final path = photos[photoIndex];
                     final isFav = _nightFavPaths.contains(path);
                     return GestureDetector(
                       onTap: () {

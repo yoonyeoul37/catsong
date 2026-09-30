@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import '../utils/no_album_helper.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -43,6 +44,7 @@ class _PlayerScreenState extends State<PlayerScreen>
   bool _showNightPicker = true;
   String? _nightSelectedCategory;
   String _nightBgPath = 'assets/music_night_bg.png';
+  Set<String> _nightFavPaths = {};
   bool _nightBgIsFile = false;
 
   static const Map<String, String> _nightCategoryCover = {
@@ -154,6 +156,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     setState(() {
       _albumArtStyle = prefs.getInt('albumArtStyle') ?? 1;
       _nightBgPath = prefs.getString('nightBgPath') ?? 'assets/spring_photo1.png';
+      _nightFavPaths = (prefs.getStringList('nightFavPaths') ?? []).toSet();
       _nightBgIsFile = prefs.getBool('nightBgIsFile') ?? false;
       _showNightPicker = prefs.getBool('showNightPicker') ?? true;
       _hasSeenParanPhoto = prefs.getBool('hasSeenParanPhoto') ?? false;
@@ -177,6 +180,18 @@ class _PlayerScreenState extends State<PlayerScreen>
     await prefs.setString('nightBgPath', path);
     await prefs.setBool('nightBgIsFile', isFile);
     await prefs.setBool('showNightPicker', false);
+  }
+
+  void _toggleNightFav(String path) {
+    setState(() {
+      if (_nightFavPaths.contains(path)) {
+        _nightFavPaths.remove(path);
+      } else {
+        _nightFavPaths.add(path);
+      }
+    });
+    SharedPreferences.getInstance()
+        .then((p) => p.setStringList('nightFavPaths', _nightFavPaths.toList()));
   }
 
   Future<void> _pickFromGallery() async {
@@ -310,6 +325,20 @@ class _PlayerScreenState extends State<PlayerScreen>
           filePath: song.uri,
         );
       });
+      if (_albumArtStyle == 6 && _nightFavPaths.length >= 2) {
+        final options = _nightFavPaths.where((p) => p != _nightBgPath).toList();
+        if (options.isNotEmpty) {
+          final next = options[math.Random().nextInt(options.length)];
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!mounted) return;
+            setState(() {
+              _nightBgPath = next;
+              _nightBgIsFile = false;
+            });
+            _saveNightBg(next);
+          });
+        }
+      }
     }
 
     if (playerProvider.isPlaying) {
@@ -844,7 +873,7 @@ class _PlayerScreenState extends State<PlayerScreen>
         Align(
           alignment: Alignment.center,
           child: Container(
-            width: 220,
+            width: MediaQuery.of(context).size.width - 90,
             margin: const EdgeInsets.symmetric(horizontal: 20),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             decoration: BoxDecoration(
@@ -916,10 +945,36 @@ class _PlayerScreenState extends State<PlayerScreen>
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              itemCount: _nightCategoryCover.length + 2,
+              itemCount: _nightCategoryCover.length + 3,
               separatorBuilder: (_, __) => const SizedBox(width: 10),
               itemBuilder: (context, index) {
-                if (index == _nightCategoryCover.length) {
+                if (index == 0) {
+                  return GestureDetector(
+                    onTap: () {
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                      setState(() => _nightSelectedCategory = '전체');
+                    },
+                    child: Container(
+                      width: 60,
+                      height: 74,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.black.withOpacity(0.35),
+                        border: Border.all(color: Colors.white.withOpacity(0.25)),
+                      ),
+                      child: const Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.grid_view_rounded, color: Colors.white, size: 22),
+                          SizedBox(height: 4),
+                          Text('전체보기', style: TextStyle(color: Colors.white, fontSize: 10)),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+                if (index == _nightCategoryCover.length + 1) {
                   return GestureDetector(
                     onTap: _pickFromGallery,
                     child: Container(
@@ -942,7 +997,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     ),
                   );
                 }
-                if (index == _nightCategoryCover.length + 1) {
+                if (index == _nightCategoryCover.length + 2) {
                   return GestureDetector(
                     onTap: () {
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -969,7 +1024,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     ),
                   );
                 }
-                final category = _nightCategoryCover.keys.elementAt(index);
+                final category = _nightCategoryCover.keys.elementAt(index - 1);
                 final cover = _nightCategoryCover[category]!;
                 return GestureDetector(
                   onTap: () {
@@ -1030,7 +1085,9 @@ class _PlayerScreenState extends State<PlayerScreen>
     }
 
     // 3단계: 고른 카테고리 안의 사진들을 보여준다.
-    final photos = _nightCategoryPhotos[_nightSelectedCategory] ?? [];
+    final photos = _nightSelectedCategory == '전체'
+        ? _nightCategoryPhotos.values.expand((e) => e).toList()
+        : (_nightCategoryPhotos[_nightSelectedCategory] ?? []);
     return Align(
       alignment: Alignment.topCenter,
       child: Padding(
@@ -1113,10 +1170,11 @@ class _PlayerScreenState extends State<PlayerScreen>
                       );
                     }
                     final path = photos[index - 1];
-                    final isSelected = _nightBgPath == path;
+                    final isFav = _nightFavPaths.contains(path);
                     return GestureDetector(
                       onTap: () {
                         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        _toggleNightFav(path);
                         setState(() {
                           _nightBgPath = path;
                           _nightBgIsFile = false;
@@ -1129,10 +1187,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: isSelected ? Colors.white : Colors.white.withOpacity(0.25),
-                            width: isSelected ? 2.5 : 1,
+                            color: isFav ? Colors.white : Colors.white.withOpacity(0.25),
+                            width: isFav ? 2.5 : 1,
                           ),
-                          boxShadow: isSelected
+                          boxShadow: isFav
                               ? [BoxShadow(color: Colors.black.withOpacity(0.4), blurRadius: 8)]
                               : null,
                         ),

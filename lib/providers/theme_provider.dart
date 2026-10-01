@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,8 +32,30 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// 라이트/다크에 맞게 상단 상태바·하단 시스템 바 아이콘 색을 맞춘다
+  void _applySystemBars() {
+    SystemChrome.setSystemUIOverlayStyle(
+      _isDarkMode
+          ? const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light,
+              statusBarBrightness: Brightness.dark,
+              systemNavigationBarColor: Color(0xFF17140F),
+              systemNavigationBarIconBrightness: Brightness.light,
+            )
+          : const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark,
+              statusBarBrightness: Brightness.light,
+              systemNavigationBarColor: Color(0xFFEDE7DA),
+              systemNavigationBarIconBrightness: Brightness.dark,
+            ),
+    );
+  }
+
   Future<void> setDarkMode(bool value) async {
     _isDarkMode = value;
+    _applySystemBars();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isDarkMode', value);
     notifyListeners();
@@ -90,6 +113,7 @@ class ThemeProvider extends ChangeNotifier {
     if (voiceGreetingEnabled != null) {
       _voiceGreetingEnabled = voiceGreetingEnabled;
     }
+    _applySystemBars();
     notifyListeners();
   }
 

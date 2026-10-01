@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 import 'package:just_audio/just_audio.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../utils/greeting_images.dart';
 import 'package:audio_service/audio_service.dart';
 import '../main.dart' show globalAudioHandler, SimpleAudioHandler;
 import 'package:flutter/cupertino.dart';
@@ -433,7 +435,8 @@ class _HomeScreenState extends State<HomeScreen> {
               height: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: const AssetImage('assets/farewell_bg.png'),
+                  image: CachedNetworkImageProvider(farewellImageUrl(context)),
+                  onError: (_, __) {},
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(darkValue),
@@ -1053,14 +1056,14 @@ class _HomeScreenState extends State<HomeScreen> {
     final startScreen = context.watch<StartScreenProvider>().startScreen;
 
     final categories = [
-      _DashboardCategory('음악', '내 음악 · MP3 플레이어', 'assets/music_bg.png', StartScreenType.music, () {
+      _DashboardCategory('음악', '내 음악 · MP3 플레이어', 'assets/music_bg.jpg', StartScreenType.music, () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         setState(() => _showMusicLibrary = true);
       }),
-      _DashboardCategory('라디오', '국내외 라디오 · 즐겨찾기', 'assets/radio_bg.png', StartScreenType.radio, () {
+      _DashboardCategory('라디오', '국내외 라디오 · 즐겨찾기', 'assets/radio_bg.jpg', StartScreenType.radio, () {
         pushRadioEntry(context);
       }),
-      _DashboardCategory('자연소리', '비 · 바람 · 숲 · 파도', 'assets/nature_bg.png', StartScreenType.nature, () {
+      _DashboardCategory('자연소리', '비 · 바람 · 숲 · 파도', 'assets/nature_bg.jpg', StartScreenType.nature, () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         Navigator.push(
           context,
@@ -1073,7 +1076,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
       }),
-      _DashboardCategory('수면 · 명상', '백색소음 · 명상음 (준비중)', 'assets/sleep_bg.png', StartScreenType.sleep, () {
+      _DashboardCategory('수면 · 명상', '백색소음 · 명상음 (준비중)', 'assets/sleep_bg.jpg', StartScreenType.sleep, () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         Navigator.push(
           context,
@@ -1089,9 +1092,9 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     final recommended = [
-      ('비 오는 날', 'assets/sound_rain.png'),
-      ('파도 소리', 'assets/sound_wave.png'),
-      ('장작불 소리', 'assets/sound_fire.png'),
+      ('비 오는 날', 'assets/sound_rain.jpg'),
+      ('파도 소리', 'assets/sound_wave.jpg'),
+      ('장작불 소리', 'assets/sound_fire.jpg'),
     ];
 
     return SingleChildScrollView(

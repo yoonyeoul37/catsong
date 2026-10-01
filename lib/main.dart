@@ -5,6 +5,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'utils/greeting_images.dart';
+import 'utils/paran_photo.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -259,16 +262,21 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       for (final path in [
-        'assets/music_bg.png',
-        'assets/radio_bg.png',
-        'assets/nature_bg.png',
-        'assets/sleep_bg.png',
-        'assets/sound_rain.png',
-        'assets/sound_wave.png',
-        'assets/sound_fire.png',
+        'assets/music_bg.jpg',
+        'assets/radio_bg.jpg',
+        'assets/nature_bg.jpg',
+        'assets/sleep_bg.jpg',
+        'assets/sound_rain.jpg',
+        'assets/sound_wave.jpg',
+        'assets/sound_fire.jpg',
       ]) {
         precacheImage(AssetImage(path), context);
       }
+      precacheImage(CachedNetworkImageProvider(farewellImageUrl(context)), context);
+      SharedPreferences.getInstance().then((prefs) {
+        final bg = prefs.getString('nightBgPath');
+        if (bg != null && mounted) precacheParanPhoto(bg, context);
+      });
     });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final musicProvider = context.read<MusicProvider>();
@@ -558,9 +566,12 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
           body: Stack(
             fit: StackFit.expand,
             children: [
-              Image.asset(
-                'assets/intro_photo.png',
+              CachedNetworkImage(
+                imageUrl: introImageUrl(context),
                 fit: BoxFit.contain,
+                fadeInDuration: const Duration(milliseconds: 300),
+                placeholder: (_, __) => const SizedBox.shrink(),
+                errorWidget: (_, __, ___) => const SizedBox.shrink(),
               ),
             ],
           ),

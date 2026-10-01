@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../utils/paran_photo.dart';
+import '../utils/greeting_images.dart';
 import '../providers/theme_provider.dart';
 import '../providers/player_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -425,7 +428,8 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
               height: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: const AssetImage('assets/farewell_bg.png'),
+                  image: CachedNetworkImageProvider(farewellImageUrl(context)),
+                  onError: (_, __) {},
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(darkValue),
@@ -739,12 +743,13 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
+                          child: paranPhoto(
                             _natureThumbImage(primary.name, primary.category, primary.assetPath ?? ''),
+                            thumb: true,
                             width: 52,
                             height: 52,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => Container(
+                            fallback: Container(
                               width: 52,
                               height: 52,
                               decoration: BoxDecoration(

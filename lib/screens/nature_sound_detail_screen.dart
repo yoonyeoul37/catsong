@@ -4,6 +4,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../utils/paran_photo.dart';
+import '../utils/greeting_images.dart';
 import '../providers/player_provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/sound_mix_provider.dart';
@@ -514,7 +517,8 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
               height: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: const AssetImage('assets/farewell_bg.png'),
+                  image: CachedNetworkImageProvider(farewellImageUrl(context)),
+                  onError: (_, __) {},
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(darkValue),
@@ -602,10 +606,10 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
         children: [
           if (currentImage != null)
             Positioned.fill(
-              child: Image.asset(
+              child: paranPhoto(
                 currentImage,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(color: currentColor),
+                fallback: Container(color: currentColor),
               ),
             ),
           if (currentImage != null)

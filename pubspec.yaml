@@ -37,6 +37,7 @@ dependencies:
   flutter_svg: ^2.0.10
   in_app_update: ^5.0.0
   flutter_tts: ^4.0.2
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:
@@ -71,90 +72,36 @@ flutter:
   assets:
 
 
-    - assets/no_album.png
+
 
     - assets/no_album.svg
     - assets/no_album2.jpg
     - assets/no_album3.jpg
     - assets/no_album4.jpg
     - assets/radio_mood_bg.jpg
-    - assets/nature_wave_bg.png
-    - assets/wave2.png
-    - assets/wave3.png
-    - assets/wave4.png
-    - assets/wave5.png
-    - assets/wave6.png
-    - assets/rain3.png
-    - assets/rain4.png
-    - assets/bird2.png
-    - assets/stream2.png
-    - assets/nature_rain_bg.png
-    - assets/nature_bird_bg.png
-    - assets/nature_fire_bg.png
-    - assets/nature_stream_bg.png
 
     - assets/farewell_ko_v3.mp3
     - assets/farewell_en.mp3
     - assets/farewell_ja.mp3
     - assets/farewell_zh.mp3
     - assets/welcome_ko_v3.mp3
-    - assets/paransori_logo.png
+
     - assets/music_night_bg.png
-    - assets/spring_photo1.png
-    - assets/spring_photo2.png
-    - assets/spring_photo3.png
-    - assets/spring_photo4.png
-    - assets/spring_photo5.png
-    - assets/spring_photo6.png
-    - assets/summer_photo1.png
-    - assets/summer_photo2.png
-    - assets/summer_photo3.png
-    - assets/summer_photo4.png
-    - assets/summer_photo5.png
-    - assets/summer_photo6.png
-    - assets/autumn_photo1.png
-    - assets/autumn_photo2.png
-    - assets/autumn_photo3.png
-    - assets/autumn_photo4.png
-    - assets/autumn_photo5.png
-    - assets/autumn_photo6.png
-    - assets/winter_photo1.png
-    - assets/winter_photo2.png
-    - assets/winter_photo3.png
-    - assets/winter_photo4.png
-    - assets/winter_photo5.png
-    - assets/winter_photo6.png
-    - assets/mood_photo1.png
-    - assets/mood_photo2.png
-    - assets/mood_photo3.png
-    - assets/mood_photo4.png
-    - assets/mood_photo5.png
-    - assets/mood_photo6.png
-    - assets/animal_photo1.png
-    - assets/animal_photo2.png
-    - assets/animal_photo3.png
-    - assets/animal_photo4.png
-    - assets/animal_photo5.png
-    - assets/animal_photo6.png
-    - assets/etc_photo1.png
-    - assets/etc_photo2.png
-    - assets/etc_photo3.png
-    - assets/etc_photo4.png
-    - assets/etc_photo5.png
-    - assets/etc_photo6.png
-    - assets/paran_photo5.png
-    - assets/paran_photo6.png
-    - assets/home_logo.png
-    - assets/intro_photo.png
-    - assets/campfire_bg.png
-    - assets/farewell_bg.png
-    - assets/music_bg.png
-    - assets/radio_bg.png
-    - assets/nature_bg.png
-    - assets/sleep_bg.png
-    - assets/sound_rain.png
-    - assets/sound_wave.png
-    - assets/sound_fire.png
+
+    - assets/intro_photo_ko.png
+    - assets/intro_photo_en.png
+    - assets/intro_photo_ja.png
+    - assets/intro_photo_zh.png
+
+
+
+    - assets/music_bg.jpg
+    - assets/radio_bg.jpg
+    - assets/nature_bg.jpg
+    - assets/sleep_bg.jpg
+    - assets/sound_rain.jpg
+    - assets/sound_wave.jpg
+    - assets/sound_fire.jpg
 
 flutter_native_splash:
   color: "#F7F5F0"

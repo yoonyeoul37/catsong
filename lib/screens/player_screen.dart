@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import '../utils/no_album_helper.dart';
+import '../utils/paran_photo.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -10,6 +11,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../utils/greeting_images.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/song.dart';
@@ -54,6 +57,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     '겨울': 'assets/winter_photo1.png',
     '감성': 'assets/mood_photo1.png',
     '동물': 'assets/animal_photo1.png',
+    '사랑': 'assets/love_photo1.png',
     '기타': 'assets/etc_photo1.png',
   };
 
@@ -105,6 +109,18 @@ class _PlayerScreenState extends State<PlayerScreen>
       'assets/animal_photo4.png',
       'assets/animal_photo5.png',
       'assets/animal_photo6.png',
+    ],
+    '사랑': [
+      'assets/love_photo1.png',
+      'assets/love_photo2.png',
+      'assets/love_photo3.png',
+      'assets/love_photo4.png',
+      'assets/love_photo5.png',
+      'assets/love_photo6.png',
+      'assets/love_photo7.png',
+      'assets/love_photo8.png',
+      'assets/love_photo9.png',
+      'assets/love_photo10.png',
     ],
     '기타': [
       'assets/etc_photo1.png',
@@ -569,7 +585,7 @@ class _PlayerScreenState extends State<PlayerScreen>
               child: _albumArtStyle == 6
                   ? (_nightBgIsFile
                   ? Image.file(File(_nightBgPath), fit: BoxFit.cover)
-                  : Image.asset(_nightBgPath, fit: BoxFit.cover))
+                  : paranPhoto(_nightBgPath, fit: BoxFit.cover))
                   : ImageFiltered(
                 imageFilter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
                 child: song.albumArt != null
@@ -1182,8 +1198,9 @@ class _PlayerScreenState extends State<PlayerScreen>
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(11),
-                          child: Image.asset(
+                          child: paranPhoto(
                             cover,
+                            thumb: true,
                             width: 60,
                             height: 74,
                             fit: BoxFit.cover,
@@ -1382,7 +1399,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: Image.asset(path, fit: BoxFit.cover),
+                          child: paranPhoto(path, fit: BoxFit.cover, thumb: true),
                         ),
                       ),
                     );
@@ -2311,7 +2328,8 @@ class _PlayerScreenState extends State<PlayerScreen>
               height: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: const AssetImage('assets/farewell_bg.png'),
+                  image: CachedNetworkImageProvider(farewellImageUrl(context)),
+                  onError: (_, __) {},
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(darkValue),

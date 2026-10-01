@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import '../utils/paran_photo.dart';
 import '../providers/player_provider.dart';
 import '../providers/theme_provider.dart';
 import '../screens/nature_sound_detail_screen.dart';
@@ -96,12 +97,13 @@ class NatureMiniPlayer extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
+                    child: paranPhoto(
                       _natureMiniImage(name),
+                      thumb: true,
                       width: 44,
                       height: 44,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
+                      fallback: Container(
                         width: 44,
                         height: 44,
                         decoration: BoxDecoration(color: accent, borderRadius: BorderRadius.circular(10)),

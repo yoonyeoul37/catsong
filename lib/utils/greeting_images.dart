@@ -9,8 +9,8 @@ String _lang(BuildContext context) {
   return const ['ko', 'en', 'ja', 'zh'].contains(code) ? code : 'en';
 }
 
-String introImageUrl(BuildContext context) =>
-    '$_base/intro_photo_${_lang(context)}.png';
+String introAssetPath(BuildContext context) =>
+    'assets/intro_photo_${_lang(context)}.png';
 
 String farewellImageUrl(BuildContext context) =>
     '$_base/farewell_bg_${_lang(context)}.png';

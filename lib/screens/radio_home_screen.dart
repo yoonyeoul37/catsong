@@ -255,7 +255,7 @@ class RadioHomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'RADIO',
+              'Radio',
               style: GoogleFonts.doHyeon(
                 color: isDarkMode ? Colors.white : Colors.black,
                 fontSize: 22,

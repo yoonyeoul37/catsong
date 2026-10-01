@@ -566,12 +566,9 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
           body: Stack(
             fit: StackFit.expand,
             children: [
-              CachedNetworkImage(
-                imageUrl: introImageUrl(context),
+              Image.asset(
+                introAssetPath(context),
                 fit: BoxFit.contain,
-                fadeInDuration: const Duration(milliseconds: 300),
-                placeholder: (_, __) => const SizedBox.shrink(),
-                errorWidget: (_, __, ___) => const SizedBox.shrink(),
               ),
             ],
           ),

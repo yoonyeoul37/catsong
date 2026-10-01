@@ -382,7 +382,7 @@ class _RadioCountryStationsScreenState
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'RADIO',
+              'Radio',
               style: GoogleFonts.doHyeon(
                 color: baseColor,
                 fontSize: 22,

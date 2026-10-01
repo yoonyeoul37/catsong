@@ -359,7 +359,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'RADIO',
+              'Radio',
               style: GoogleFonts.doHyeon(
                 color: baseColor,
                 fontSize: 22,

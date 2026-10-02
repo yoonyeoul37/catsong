@@ -9,6 +9,8 @@ import '../providers/player_provider.dart';
 import '../models/song.dart';
 import 'settings_screen.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../widgets/logo_eq_bars.dart';
 
 class SoundMixScreen extends StatefulWidget {
   const SoundMixScreen({super.key});
@@ -414,8 +416,33 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
           icon: Icon(Icons.arrow_back_ios, color: baseColor, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text('나만의 소리 믹스',
-            style: TextStyle(color: baseColor, fontSize: 16, fontWeight: FontWeight.bold)),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '나만의',
+                    style: GoogleFonts.doHyeon(
+                        color: const Color(0xFF2F7DE8), fontSize: 20, letterSpacing: -0.5),
+                  ),
+                  TextSpan(
+                    text: ' 소리',
+                    style: GoogleFonts.doHyeon(
+                        color: baseColor, fontSize: 20, letterSpacing: -0.5),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 6),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 3),
+              child: LogoEqBars(),
+            ),
+          ],
+        ),
         actions: [
           _iconBtn(
             icon: Icons.home_rounded,
@@ -458,7 +485,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('여러 소리를 조합하여\n나만의 힐링 사운드를 만들어보세요.',
+              Text('나만의 힐링 사운드를 만들어보세요.',
                   style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 13, height: 1.5)),
               const SizedBox(height: 20),
               Expanded(

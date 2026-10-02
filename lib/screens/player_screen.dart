@@ -49,6 +49,9 @@ class _PlayerScreenState extends State<PlayerScreen>
   String _nightBgPath = 'assets/music_night_bg.png';
   Set<String> _nightFavPaths = {};
   bool _nightBgIsFile = false;
+  int _bgFilter = 0; // 0 컬러, 1 흑백, 2 세피아
+  int _autoBgMin = 0; // 0 끄기, 10, 30 (분)
+  Timer? _autoBgTimer;
 
   static const Map<String, String> _nightCategoryCover = {
     '봄': 'assets/spring_photo1.png',
@@ -177,13 +180,160 @@ class _PlayerScreenState extends State<PlayerScreen>
       _showNightPicker = prefs.getBool('showNightPicker') ?? true;
       _hasSeenParanPhoto = prefs.getBool('hasSeenParanPhoto') ?? false;
       _showSwipeHint = !shown;
+      _bgFilter = prefs.getInt('bgFilter') ?? 0;
+      _autoBgMin = prefs.getInt('autoBgMin') ?? 0;
     });
+    _restartAutoBgTimer();
     if (!shown) {
       await prefs.setBool('swipe_hint_shown', true);
       Future.delayed(const Duration(seconds: 3), () {
         if (mounted) setState(() => _showSwipeHint = false);
       });
     }
+  }
+
+  // ===== 파란포토 색감 / 자동 변경 =====
+  Future<void> _setBgFilter(int v) async {
+    setState(() => _bgFilter = v);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('bgFilter', v);
+  }
+
+  Future<void> _setAutoBg(int minutes) async {
+    setState(() => _autoBgMin = minutes);
+    _restartAutoBgTimer();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('autoBgMin', minutes);
+  }
+
+  void _restartAutoBgTimer() {
+    _autoBgTimer?.cancel();
+    _autoBgTimer = null;
+    if (_autoBgMin <= 0) return;
+    _autoBgTimer = Timer.periodic(Duration(minutes: _autoBgMin), (_) => _autoChangeBg());
+  }
+
+  void _autoChangeBg() {
+    if (!mounted || _albumArtStyle != 6) return;
+    if (!context.read<PlayerProvider>().isPlaying) return;
+    // 하트한 사진이 2장 이상이면 그중에서, 아니면 지금 사진과 같은 카테고리에서
+    final List<String> pool = _nightFavPaths.length >= 2
+        ? _nightFavPaths.toList()
+        : _nightCategoryPhotos.values
+            .firstWhere((l) => l.contains(_nightBgPath), orElse: () => const [])
+            .toList();
+    pool.remove(_nightBgPath);
+    if (pool.isEmpty) return;
+    final next = pool[math.Random().nextInt(pool.length)];
+    final nextIsFile = !next.startsWith('assets/');
+    if (!nextIsFile) precacheParanPhoto(next, context); // 미리 받아두기
+    Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+      setState(() {
+        _nightBgPath = next;
+        _nightBgIsFile = nextIsFile;
+      });
+      _saveNightBg(next, isFile: nextIsFile);
+    });
+  }
+
+  Widget _bgFiltered(Widget child) {
+    if (_bgFilter == 1) {
+      return ColorFiltered(
+        colorFilter: const ColorFilter.matrix(<double>[
+          0.2126, 0.7152, 0.0722, 0, 0,
+          0.2126, 0.7152, 0.0722, 0, 0,
+          0.2126, 0.7152, 0.0722, 0, 0,
+          0, 0, 0, 1, 0,
+        ]),
+        child: child,
+      );
+    }
+    if (_bgFilter == 2) {
+      return ColorFiltered(
+        colorFilter: const ColorFilter.matrix(<double>[
+          0.393, 0.769, 0.189, 0, 0,
+          0.349, 0.686, 0.168, 0, 0,
+          0.272, 0.534, 0.131, 0, 0,
+          0, 0, 0, 1, 0,
+        ]),
+        child: child,
+      );
+    }
+    return child;
+  }
+
+  Widget _buildPhotoOptions() {
+    Widget chip(String label, bool selected, VoidCallback onTap) {
+      return GestureDetector(
+        onTap: () {
+          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+          onTap();
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: selected ? const Color(0xFF2F7DE8) : Colors.black.withOpacity(0.35),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: selected ? Colors.transparent : Colors.white.withOpacity(0.25),
+            ),
+          ),
+          child: Text(
+            label,
+            style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+          ),
+        ),
+      );
+    }
+
+    Widget optionRow(String title, List<Widget> chips) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 64,
+              child: Text(title, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+            ),
+            for (final c in chips) ...[c, const SizedBox(width: 6)],
+          ],
+        ),
+      );
+    }
+
+    Widget label(String text) => Padding(
+          padding: const EdgeInsets.only(right: 6),
+          child: Center(
+            child: Text(text, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+          ),
+        );
+
+    return SizedBox(
+      height: 30,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        children: [
+          label('색감'),
+          chip('컬러', _bgFilter == 0, () => _setBgFilter(0)),
+          const SizedBox(width: 6),
+          chip('흑백', _bgFilter == 1, () => _setBgFilter(1)),
+          const SizedBox(width: 6),
+          chip('세피아', _bgFilter == 2, () => _setBgFilter(2)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+            child: Container(width: 1, color: Colors.white.withOpacity(0.3)),
+          ),
+          label('자동'),
+          chip('끄기', _autoBgMin == 0, () => _setAutoBg(0)),
+          const SizedBox(width: 6),
+          chip('10분', _autoBgMin == 10, () => _setAutoBg(10)),
+          const SizedBox(width: 6),
+          chip('30분', _autoBgMin == 30, () => _setAutoBg(30)),
+        ],
+      ),
+    );
   }
 
   Future<void> _saveStyle(int style) async {
@@ -275,7 +425,18 @@ class _PlayerScreenState extends State<PlayerScreen>
                                     child: GestureDetector(
                                       onTap: () {
                                         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                                        setState(() => _nightFavPaths.remove(path));
+                                        setState(() {
+                                          _nightFavPaths.remove(path);
+                                          // 지금 배경으로 쓰는 사진을 지웠으면 바로 다른 사진으로 바꾼다
+                                          if (_nightBgPath == path) {
+                                            final next = _nightFavPaths.isNotEmpty
+                                                ? _nightFavPaths.first
+                                                : 'assets/spring_photo1.png';
+                                            _nightBgPath = next;
+                                            _nightBgIsFile = !next.startsWith('assets/');
+                                            _saveNightBg(next, isFile: _nightBgIsFile);
+                                          }
+                                        });
                                         setSheetState(() {});
                                         SharedPreferences.getInstance().then(
                                                 (p) => p.setStringList('nightFavPaths', _nightFavPaths.toList()));
@@ -406,6 +567,7 @@ class _PlayerScreenState extends State<PlayerScreen>
 
   @override
   void dispose() {
+    _autoBgTimer?.cancel();
     _rotationController.dispose();
     _equalizerController.dispose();
     for (final c in _eqControllers) c.dispose();
@@ -583,9 +745,19 @@ class _PlayerScreenState extends State<PlayerScreen>
             // 앨범아트 블러 배경
             SizedBox.expand(
               child: _albumArtStyle == 6
-                  ? (_nightBgIsFile
-                  ? Image.file(File(_nightBgPath), fit: BoxFit.cover)
-                  : paranPhoto(_nightBgPath, fit: BoxFit.cover))
+                  ? AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 1200),
+                      layoutBuilder: (current, previous) => Stack(
+                        fit: StackFit.expand,
+                        children: [...previous, if (current != null) current],
+                      ),
+                      child: KeyedSubtree(
+                        key: ValueKey('$_nightBgPath-$_bgFilter'),
+                        child: _bgFiltered(_nightBgIsFile
+                            ? Image.file(File(_nightBgPath), fit: BoxFit.cover)
+                            : paranPhoto(_nightBgPath, fit: BoxFit.cover)),
+                      ),
+                    )
                   : ImageFiltered(
                 imageFilter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
                 child: song.albumArt != null
@@ -1249,7 +1421,10 @@ class _PlayerScreenState extends State<PlayerScreen>
       alignment: Alignment.topCenter,
       child: Padding(
         padding: const EdgeInsets.only(top: 8),
-        child: SizedBox(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+        SizedBox(
           height: 64,
           child: photos.isEmpty
               ? Row(
@@ -1405,6 +1580,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                     );
                   },
                 ),
+        ),
+            const SizedBox(height: 10),
+            _buildPhotoOptions(),
+          ],
         ),
       ),
     );

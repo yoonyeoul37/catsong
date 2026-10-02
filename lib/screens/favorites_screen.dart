@@ -9,6 +9,9 @@ import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/song_list_tile.dart';
 
+// 마지막에 누른 버튼 기억 (true = 셔플, false = 전체재생)
+final ValueNotifier<bool> _favShuffleOn = ValueNotifier(false);
+
 class FavoritesScreen extends StatelessWidget {
   final bool showHeader;
   const FavoritesScreen({super.key, this.showHeader = true});
@@ -45,19 +48,23 @@ class FavoritesScreen extends StatelessWidget {
           ),
         if (favorites.isNotEmpty)
           SliverToBoxAdapter(
-            child: Padding(
+            child: ValueListenableBuilder<bool>(
+              valueListenable: _favShuffleOn,
+              builder: (context, shuffleOn, _) => Padding(
               padding: EdgeInsets.fromLTRB(16, showHeader ? 0 : 16, 16, 8),
               child: Row(
                 children: [
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () {
+                        _favShuffleOn.value = false;
                         context.read<PlayerProvider>()
                             .playFromList(favorites, 0, isPlayAllAction: true);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.lerp(primaryColor, Colors.black, 0.15),
-                        foregroundColor: Colors.white,
+                        backgroundColor: shuffleOn ? Colors.transparent : Color.lerp(primaryColor, Colors.black, 0.15),
+                        foregroundColor: shuffleOn ? baseColor : Colors.white,
+                        side: shuffleOn ? BorderSide(color: baseColor.withOpacity(0.16)) : null,
                         elevation: 0,
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         shape: RoundedRectangleBorder(
@@ -72,12 +79,14 @@ class FavoritesScreen extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () {
+                        _favShuffleOn.value = true;
                         final songs = List<Song>.from(favorites)..shuffle();
                         context.read<PlayerProvider>().playFromList(songs, 0, isPlayAllAction: true);
                       },
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: baseColor,
-                        side: BorderSide(color: baseColor.withOpacity(0.16)),
+                        backgroundColor: shuffleOn ? Color.lerp(primaryColor, Colors.black, 0.15) : null,
+                        foregroundColor: shuffleOn ? Colors.white : baseColor,
+                        side: BorderSide(color: shuffleOn ? Colors.transparent : baseColor.withOpacity(0.16)),
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14)),
@@ -89,6 +98,7 @@ class FavoritesScreen extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
             ),
           ),
         if (favorites.isEmpty)

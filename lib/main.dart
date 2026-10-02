@@ -203,6 +203,10 @@ class MyApp extends StatelessWidget {
                   : AppTheme.buildTheme(themeProvider.primaryColor)
                       .textTheme
                       .apply(fontFamily: themeProvider.getTextTheme().bodyLarge?.fontFamily),
+              // 제목 줄이 화면을 다시 그릴 때마다 시스템 바 색을 덮어쓰므로, 라이트/다크에 맞는 값을 쥐여준다
+              appBarTheme: AppTheme.buildTheme(themeProvider.primaryColor)
+                  .appBarTheme
+                  .copyWith(systemOverlayStyle: themeProvider.systemBarStyle),
             ),
             builder: (context, child) {
               AppLocale.current = AppLocalizations.of(context);

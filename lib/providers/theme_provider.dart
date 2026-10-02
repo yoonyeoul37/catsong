@@ -32,6 +32,23 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// 라이트/다크에 맞는 상단 상태바·하단 시스템 바 설정
+  SystemUiOverlayStyle get systemBarStyle => _isDarkMode
+      ? const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: Color(0xFF17140F),
+          systemNavigationBarIconBrightness: Brightness.light,
+        )
+      : const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+          systemNavigationBarColor: Color(0xFFEDE7DA),
+          systemNavigationBarIconBrightness: Brightness.dark,
+        );
+
   /// 라이트/다크에 맞게 상단 상태바·하단 시스템 바 아이콘 색을 맞춘다
   void _applySystemBars() {
     SystemChrome.setSystemUIOverlayStyle(

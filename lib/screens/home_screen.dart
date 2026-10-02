@@ -411,7 +411,7 @@ class _HomeScreenState extends State<HomeScreen> {
         smallText = 'Did you enjoy your time\nwith Paransori?\n\nCome back anytime — we\'ll\nwelcome you with great sounds again.\nGoodbye, and see you soon!';
         farewellAsset = 'assets/farewell_en.mp3';
     }
-    if (context.read<ThemeProvider>().voiceGreetingEnabled) {
+    if (langCode == 'ko' && context.read<ThemeProvider>().voiceGreetingEnabled) {
       final farewellPlayer = AudioPlayer();
       farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
     }

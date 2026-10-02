@@ -14,6 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'settings_screen.dart';
 import 'radio_home_screen.dart';
 import '../widgets/equalizer_animation.dart';
+import '../widgets/logo_eq_bars.dart';
 import 'nature_sound_detail_screen.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
@@ -575,21 +576,32 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: '자연',
-                    style: GoogleFonts.doHyeon(
-                        color: const Color(0xFF2F7DE8), fontSize: 20),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '자연',
+                        style: GoogleFonts.doHyeon(
+                            color: const Color(0xFF2F7DE8), fontSize: 20),
+                      ),
+                      TextSpan(
+                        text: '소리',
+                        style: GoogleFonts.doHyeon(
+                            color: baseColor, fontSize: 20),
+                      ),
+                    ],
                   ),
-                  TextSpan(
-                    text: '소리',
-                    style: GoogleFonts.doHyeon(
-                        color: baseColor, fontSize: 20),
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 6),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 3),
+                  child: LogoEqBars(),
+                ),
+              ],
             ),
             const SizedBox(height: 0),
             Text(

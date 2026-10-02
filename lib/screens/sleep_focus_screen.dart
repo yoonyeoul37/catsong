@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
+import '../widgets/logo_eq_bars.dart';
 
 class SleepFocusScreen extends StatefulWidget {
   const SleepFocusScreen({super.key});
@@ -40,21 +41,32 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: '수면',
-                    style: GoogleFonts.doHyeon(
-                        color: const Color(0xFF2F7DE8), fontSize: 19),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '수면',
+                        style: GoogleFonts.doHyeon(
+                            color: const Color(0xFF2F7DE8), fontSize: 19),
+                      ),
+                      TextSpan(
+                        text: ' · 명상',
+                        style: GoogleFonts.doHyeon(
+                            color: baseColor, fontSize: 19),
+                      ),
+                    ],
                   ),
-                  TextSpan(
-                    text: ' · 명상',
-                    style: GoogleFonts.doHyeon(
-                        color: baseColor, fontSize: 19),
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 6),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 3),
+                  child: LogoEqBars(),
+                ),
+              ],
             ),
             const SizedBox(height: 0),
             Text(

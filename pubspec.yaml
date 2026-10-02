@@ -1,7 +1,7 @@
 name: mp3_player
 description: Local MP3 Player App
 publish_to: 'none'
-version: 1.0.0+105
+version: 1.0.0+106
 environment:
   sdk: ^3.12.0
 
@@ -81,9 +81,6 @@ flutter:
     - assets/radio_mood_bg.jpg
 
     - assets/farewell_ko_v3.mp3
-    - assets/farewell_en.mp3
-    - assets/farewell_ja.mp3
-    - assets/farewell_zh.mp3
     - assets/welcome_ko_v3.mp3
 
     - assets/music_night_bg.png

@@ -466,23 +466,23 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
       builder: (ctx) => Dialog(
         backgroundColor: Colors.white,
         shape:
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(28, 32, 28, 24),
+          padding: const EdgeInsets.fromLTRB(24, 28, 24, 16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                    5,
-                        (i) => const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 2),
-                      child: Icon(Icons.star_rounded,
-                          color: accent, size: 26),
-                    )),
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF2F7DE8),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: const Icon(Icons.music_note_rounded,
+                    color: Colors.white, size: 32),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 18),
               Text(
                 l.reviewTitle,
                 style: const TextStyle(
@@ -505,7 +505,19 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  5,
+                  (i) => const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 2),
+                    child: Icon(Icons.star_rounded,
+                        color: Color(0xFFF5B83D), size: 28),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: TextButton(
@@ -521,11 +533,10 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
                     } catch (e) {}
                   },
                   style: TextButton.styleFrom(
-                    backgroundColor: accent,
+                    backgroundColor: const Color(0xFF2F7DE8),
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 13),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: const StadiumBorder(),
                   ),
                   child: Text(l.reviewButton,
                       style: const TextStyle(

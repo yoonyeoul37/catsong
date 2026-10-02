@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../utils/paran_photo.dart';
+import '../utils/nature_sound_catalog.dart';
 import '../utils/greeting_images.dart';
 import '../providers/theme_provider.dart';
 import '../providers/player_provider.dart';
@@ -29,23 +30,8 @@ class NatureSoundsScreen extends StatefulWidget {
   State<NatureSoundsScreen> createState() => _NatureSoundsScreenState();
 }
 
-class _NatureSound {
-  final String name;
-  final String category;
-  final IconData icon;
-  final String emoji;
-  final String description;
-  final String? assetPath;
-  const _NatureSound({
-    required this.name,
-    required this.category,
-    required this.icon,
-    required this.emoji,
-    required this.description,
-    this.assetPath,
-  });
-  bool get isReady => assetPath != null;
-}
+// 자연소리 목록은 utils/nature_sound_catalog.dart 에 있어요
+typedef _NatureSound = NatureSound;
 
 // 파도소리는 곡마다 다른 사진을, 나머지는 정해진 사진 한 장을 보여준다.
 const List<String> _waveThumbImages = [
@@ -94,7 +80,10 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
   bool _showFavoritesOnly = false;
   String _selectedCategory = '전체';
 
-  static const _sounds = <_NatureSound>[
+  static const _sounds = natureSoundCatalog;
+
+  // 예전 목록 (안 씀) — 나중에 지워도 됨
+  static const _oldSounds = <_NatureSound>[
     _NatureSound(
       name: '파도소리',
       category: '파도소리',

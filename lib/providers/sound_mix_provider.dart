@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/song.dart';
+import '../utils/nature_sound_catalog.dart';
 import 'player_provider.dart';
 
 /// 자연소리 5개(각자 반복 재생, 동시에 섞임) + 선택한 노래들(순서대로 이어서 재생, 끝나면 처음으로)
@@ -18,12 +19,28 @@ class SoundMixProvider extends ChangeNotifier {
     '시냇물': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/stream_sound.mp3',
   };
 
+  /// 칸마다 고를 수 있는 종류 — 자연소리 목록(nature_sound_catalog.dart)에서 자동으로 만든다.
+  /// 같은 category끼리 한 칸에 묶이고, 목록에서 먼저 나온 게 기본.
+  static Map<String, Map<String, String>> get natureVariants {
+    final map = <String, Map<String, String>>{};
+    for (final s in natureSoundCatalog) {
+      if (s.assetPath == null || !natureAssets.containsKey(s.category)) continue;
+      map.putIfAbsent(s.category, () => {})[s.name] = s.assetPath!;
+    }
+    return map;
+  }
+
+
   static const double _defaultSongVolume = 0.7;
 
   final Map<String, double> _volumes = {
     for (final name in natureAssets.keys) name: 0.0,
   };
   final Map<String, AudioPlayer> _natureLayers = {};
+  // 칸 이름 → 고른 종류 이름 (처음엔 칸 이름과 같은 기본 종류)
+  final Map<String, String> _variants = {
+    for (final name in natureAssets.keys) name: name,
+  };
 
   // 선택한 노래들: 하나의 재생목록(플레이리스트)으로 순서대로 이어서 재생
   final List<Song> _selectedSongs = [];
@@ -107,6 +124,34 @@ class SoundMixProvider extends ChangeNotifier {
 
   double volumeOf(String key) => _volumes[key] ?? 0.0;
 
+  /// 이 칸에서 지금 고른 종류 이름
+  String variantOf(String key) => _variants[key] ?? key;
+
+  String _urlFor(String key) =>
+      natureVariants[key]?[variantOf(key)] ?? natureAssets[key]!;
+
+  /// 칸의 종류를 바꾼다. 재생 중이면 새 소리를 먼저 틀고 예전 소리를 끈다 (끊김 없이).
+  Future<void> setVariant(String key, String variant) async {
+    if (variantOf(key) == variant) return;
+    _variants[key] = variant;
+    notifyListeners();
+    _saveVariants();
+    final old = _natureLayers.remove(key);
+    if (_isPlaying && (_volumes[key] ?? 0.0) > 0) {
+      await _ensureNatureLayerPlaying(key);
+    }
+    try {
+      await old?.stop();
+      await old?.dispose();
+    } catch (_) {}
+    _updateNotification(playing: _isPlaying);
+  }
+
+  Future<void> _saveVariants() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('sound_mix_variants', jsonEncode(_variants));
+  }
+
   SoundMixProvider() {
     _loadSaved();
   }
@@ -120,6 +165,18 @@ class SoundMixProvider extends ChangeNotifier {
         decoded.forEach((k, v) {
           if (_volumes.containsKey(k) && v is num) {
             _volumes[k] = v.toDouble();
+          }
+        });
+        notifyListeners();
+      } catch (_) {}
+    }
+    final rawV = prefs.getString('sound_mix_variants');
+    if (rawV != null) {
+      try {
+        final Map decoded = jsonDecode(rawV);
+        decoded.forEach((k, v) {
+          if (v is String && (natureVariants[k]?.containsKey(v) ?? false)) {
+            _variants[k] = v;
           }
         });
         notifyListeners();
@@ -162,7 +219,7 @@ class SoundMixProvider extends ChangeNotifier {
 
     final activeNature = <String>[
       for (final entry in natureAssets.keys)
-        if ((_volumes[entry] ?? 0.0) > 0) entry,
+        if ((_volumes[entry] ?? 0.0) > 0) variantOf(entry),
     ];
     final title = currentSong?.titleDisplay ?? '나만의 소리 믹스';
     final subtitle = activeNature.isNotEmpty ? activeNature.join(' · ') : '파란소리 믹스';
@@ -179,7 +236,7 @@ class SoundMixProvider extends ChangeNotifier {
     if (player == null) {
       player = AudioPlayer();
       _natureLayers[key] = player;
-      final assetPath = natureAssets[key];
+      final String? assetPath = _urlFor(key);
       if (assetPath == null) return;
       final source = assetPath.startsWith('http')
           ? LockCachingAudioSource(Uri.parse(assetPath))

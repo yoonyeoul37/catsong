@@ -235,6 +235,83 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
     );
   }
 
+  void _showVariantPicker(BuildContext context, String key) {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final sheetBg = isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0);
+    const blue = Color(0xFF2F7DE8);
+    final variants = SoundMixProvider.natureVariants[key]!.keys.toList();
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: sheetBg,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        final selected = context.read<SoundMixProvider>().variantOf(key);
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 36,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: baseColor.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text('$key 고르기',
+                    style: TextStyle(color: baseColor, fontSize: 16, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 8),
+                for (final v in variants)
+                  InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () {
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                      context.read<SoundMixProvider>().setVariant(key, v);
+                      Navigator.pop(ctx);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 4),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 24,
+                            child: v == selected
+                                ? const Icon(Icons.check_rounded, color: blue, size: 20)
+                                : null,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              v,
+                              style: TextStyle(
+                                color: v == selected ? blue : baseColor,
+                                fontSize: 15,
+                                fontWeight: v == selected ? FontWeight.w700 : FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildSliderRow(
       BuildContext context, {
         required String label,
@@ -243,6 +320,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
         required double value,
         required ValueChanged<double> onChanged,
         required Color baseColor,
+        VoidCallback? onLabelTap,
       }) {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final percent = (value * 100).round();
@@ -261,8 +339,27 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: Text(label,
-                    style: TextStyle(color: baseColor, fontSize: 14, fontWeight: FontWeight.w600)),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: onLabelTap,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(label,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: baseColor, fontSize: 14, fontWeight: FontWeight.w600)),
+                        ),
+                        if (onLabelTap != null)
+                          Icon(Icons.keyboard_arrow_down_rounded,
+                              size: 20, color: baseColor.withOpacity(0.5)),
+                      ],
+                    ),
+                  ),
+                ),
               ),
               Text('$percent%',
                   style: TextStyle(
@@ -371,7 +468,10 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                       for (final entry in SoundMixProvider.natureAssets.keys)
                         _buildSliderRow(
                           context,
-                          label: entry,
+                          label: mix.variantOf(entry),
+                          onLabelTap: (SoundMixProvider.natureVariants[entry]?.length ?? 0) > 1
+                              ? () => _showVariantPicker(context, entry)
+                              : null,
                           icon: _natureIcons[entry]!,
                           color: _natureColors[entry]!,
                           value: mix.volumeOf(entry),
@@ -569,6 +669,8 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
                     foregroundColor: Colors.white,
+                    disabledBackgroundColor: primaryColor.withOpacity(0.55),
+                    disabledForegroundColor: Colors.white.withOpacity(0.8),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   ),

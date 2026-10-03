@@ -18,10 +18,12 @@ import '../screens/radio_home_screen.dart';
 class OverseasRadioView extends StatelessWidget {
   final RadioStation station;
   final bool openedFromList;
+  final VoidCallback? onExit; // 전원 버튼 (종료)
   const OverseasRadioView({
     super.key,
     required this.station,
     this.openedFromList = true,
+    this.onExit,
   });
 
   /// 뒤로가기: 목록에서 들어왔으면 그냥 닫고, 아니면(미니플레이어 등) 목록 화면으로
@@ -130,6 +132,13 @@ class OverseasRadioView extends StatelessWidget {
                               color: Colors.white, size: 32),
                         ),
                         const Spacer(),
+                        // 전원: 종료 확인창
+                        if (onExit != null)
+                          IconButton(
+                            onPressed: onExit,
+                            icon: const Icon(Icons.power_settings_new_rounded,
+                                color: Color(0xFFE8877E), size: 24),
+                          ),
                         // 홈: 처음 화면까지 한 번에
                         IconButton(
                           onPressed: () {

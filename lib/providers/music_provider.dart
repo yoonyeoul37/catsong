@@ -179,6 +179,14 @@ Future<void> updateSongInfo(Song song, {String? title, String? artist, String? a
     if (album != null) song.album = album;
     song.isEdited = true;
     await _saveEditedSong(song);
+    // 새로고침해도 방금 고친 내용이 유지되도록 바로 기억해둠
+    if (song.uri != null) {
+      _editedSongs[song.uri!] = {
+        'title': song.title,
+        'artist': song.artist,
+        'album': song.album,
+      };
+    }
 
     // 실제 파일 메타데이터 업데이트
     if (song.uri != null) {
@@ -309,6 +317,14 @@ Future<void> updateSongInfo(Song song, {String? title, String? artist, String? a
                   }
                 } catch (e) {
                   // 메타데이터 읽기 실패시 무시
+                }
+                // 고친 곡은 파일 정보를 못 읽어도 항상 고친 내용으로
+                final edited = _editedSongs[song.uri];
+                if (edited != null) {
+                  song.title = edited['title'] ?? song.title;
+                  song.artist = edited['artist'] ?? song.artist;
+                  song.album = edited['album'] ?? song.album;
+                  song.isEdited = true;
                 }
                 updateCount++;
                 // 10개마다 한 번씩 업데이트

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -77,7 +78,15 @@ void showMoreMenuSheet(
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     barrierColor: const Color(0x73000000),
-    builder: (ctx) => _MoreMenuSheet(
+    builder: (ctx) => AnnotatedRegion<SystemUiOverlayStyle>(
+      // 메뉴가 열려 있는 동안 하단 시스템바를 메뉴 색에 맞춤
+      value: SystemUiOverlayStyle(
+        systemNavigationBarColor:
+            isDarkMode ? const Color(0xFF1F1B15) : const Color(0xFFF4EFE5),
+        systemNavigationBarIconBrightness:
+            isDarkMode ? Brightness.light : Brightness.dark,
+      ),
+      child: _MoreMenuSheet(
       isDarkMode: isDarkMode,
       shareSubtitle: shareSubtitle,
       hasHomepage: stationHomepage != null && stationHomepage.isNotEmpty,
@@ -115,6 +124,7 @@ void showMoreMenuSheet(
           await launchUrl(uri, mode: LaunchMode.externalApplication);
         }
       },
+    ),
     ),
   );
 }

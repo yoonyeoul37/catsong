@@ -44,6 +44,10 @@ import 'package:marquee/marquee.dart';
 import 'package:flutter/services.dart';
 import '../providers/theme_provider.dart';
 import 'nature_sounds_screen.dart';
+import 'nature_sound_detail_screen.dart';
+import 'radio_player_screen.dart';
+import '../utils/nature_sound_catalog.dart';
+import '../utils/paran_photo.dart';
 import 'sleep_focus_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -1091,10 +1095,107 @@ class _HomeScreenState extends State<HomeScreen> {
       }),
     ];
 
-    final recommended = [
-      ('비 오는 날', 'assets/sound_rain.jpg'),
-      ('파도 소리', 'assets/sound_wave.jpg'),
-      ('장작불 소리', 'assets/sound_fire.jpg'),
+    // ── 잠시 쉬어가요: 하루에 한 번 바뀌는 추천 (자연소리 2개 + 편안한 라디오 1개) ──
+    final now = DateTime.now();
+    final daySeed = DateTime(now.year, now.month, now.day).millisecondsSinceEpoch ~/ 86400000;
+
+    // 자연소리: 서로 다른 종류로 2개
+    final naturePool = natureSoundCatalog.where((s) => s.isReady).toList()
+      ..shuffle(math.Random(daySeed));
+    final naturePicks = <NatureSound>[];
+    for (final s in naturePool) {
+      if (naturePicks.any((p) => p.category == s.category)) continue;
+      naturePicks.add(s);
+      if (naturePicks.length == 2) break;
+    }
+
+    const restColors = <String, Color>{
+      '파도소리': Color(0xFF4A7BA6),
+      '빗소리': Color(0xFF3E5A78),
+      '새소리': Color(0xFF5C7A5E),
+      '모닥불': Color(0xFFC97B4A),
+      '시냇물': Color(0xFF2C6BB3),
+    };
+
+    String natureImage(NatureSound s) {
+      switch (s.category) {
+        case '파도소리':
+          const waves = [
+            'assets/nature_wave_bg.png',
+            'assets/wave2.png',
+            'assets/wave3.png',
+            'assets/wave4.png',
+            'assets/wave5.png',
+            'assets/wave6.png',
+          ];
+          return waves[s.name.hashCode.abs() % waves.length];
+        case '빗소리':
+          return 'assets/nature_rain_bg.png';
+        case '새소리':
+          return 'assets/nature_bird_bg.png';
+        case '모닥불':
+          return 'assets/nature_fire_bg.png';
+        case '시냇물':
+          return 'assets/nature_stream_bg.png';
+        default:
+          return 'assets/nature_wave_bg.png';
+      }
+    }
+
+    // 편안한 라디오: 하루에 하나씩 돌아가며 (보이는 이름, 방송국 이름, 주파수, 주소)
+    const restRadios = [
+      ('KBS 클래식FM', 'KBS Classic FM', '93.1 MHz',
+          'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/24'),
+      ('국악FM', '국악FM', '99.1 MHz',
+          'http://mgugaklive.nowcdn.co.kr/gugakradio/gugakradio.stream/playlist.m3u8'),
+      ('CBS 음악FM', 'CBS 음악FM', '93.9 MHz',
+          'https://m-aac.cbs.co.kr/mweb_cbs939/_definst_/cbs939.stream/playlist.m3u8'),
+    ];
+    final todayRadio = restRadios[daySeed % restRadios.length];
+    final restStation = RadioStation.fromJson({
+      'stationuuid': 'kr_${todayRadio.$2.hashCode.abs()}',
+      'name': todayRadio.$2,
+      'url': todayRadio.$4,
+      'url_resolved': '',
+      'homepage': '',
+      'favicon': '',
+      'tags': '',
+      'frequency': todayRadio.$3,
+      'country': 'South Korea',
+      'countrycode': 'KR',
+      'bitrate': 0,
+      'votes': 0,
+    });
+
+    // (카드 글자, 사진, 눌렀을 때)
+    final recommended = <(String, String, VoidCallback)>[
+      for (final s in naturePicks)
+        (
+          s.name,
+          natureImage(s),
+          () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => NatureSoundDetailScreen(
+                    name: s.name,
+                    icon: s.icon,
+                    description: s.description,
+                    assetPath: s.assetPath,
+                    color: restColors[s.category] ?? const Color(0xFF2F7DE8),
+                  ),
+                ),
+              ),
+        ),
+      (
+        '📻 ${todayRadio.$1}',
+        'assets/radio_bg.jpg',
+        () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => RadioPlayerScreen(station: restStation),
+              ),
+            ),
+      ),
     ];
 
     return SingleChildScrollView(
@@ -1106,7 +1207,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Icon(Icons.tune_rounded, size: 18, color: baseColor.withOpacity(0.7)),
               const SizedBox(width: 6),
-              Text('무엇을 들으실까요?',
+              Text('이런 소리는 어때요?',
                   style: GoogleFonts.notoSansKr(
                       color: baseColor, fontSize: 14, fontWeight: FontWeight.w700)),
             ],
@@ -1268,7 +1369,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Icon(Icons.volume_up_rounded, size: 18, color: baseColor.withOpacity(0.7)),
               const SizedBox(width: 6),
-              Text('오늘의 쉼표',
+              Text('잠시 쉬어가요',
                   style: GoogleFonts.notoSansKr(
                       color: baseColor, fontSize: 14, fontWeight: FontWeight.w700)),
             ],
@@ -1284,16 +1385,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: GestureDetector(
                     onTap: () {
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation, secondaryAnimation) => NatureSoundsScreen(),
-                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                            return FadeTransition(opacity: animation, child: child);
-                          },
-                          transitionDuration: const Duration(milliseconds: 250),
-                        ),
-                      );
+                      item.$3();
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -1311,12 +1403,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
-                            Image.asset(
+                            paranPhoto(
                               item.$2,
+                              thumb: true,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) => Container(
-                                color: baseColor.withOpacity(0.08),
-                              ),
+                              fallback: Container(color: baseColor.withOpacity(0.08)),
                             ),
                             Container(
                               decoration: BoxDecoration(
@@ -1390,7 +1481,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Icon(Icons.headphones_rounded, size: 18, color: baseColor.withOpacity(0.7)),
                 const SizedBox(width: 6),
-                Text('최근 재생 기록',
+                Text('최근에 들었어요',
                     style: GoogleFonts.notoSansKr(
                         color: baseColor, fontSize: 14, fontWeight: FontWeight.w700)),
               ],

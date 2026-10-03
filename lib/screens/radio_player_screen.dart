@@ -69,6 +69,76 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
   late int _currentIdx;
   bool _scheduleTimedOut = false;
 
+  /// 종료 확인창 → 작별 인사 → 종료 (해외 라디오 화면에서 사용)
+  Future<void> _confirmExit(BuildContext context) async {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => Dialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                AppLocalizations.of(ctx)!.radioExitConfirmTitle,
+                style: const TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                AppLocalizations.of(ctx)!.radioExitConfirmMessage,
+                style: const TextStyle(color: Colors.black54, fontSize: 13),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        Navigator.pop(ctx, false);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.black54,
+                        side: const BorderSide(color: Color(0xFFE5E5E5)),
+                        padding: const EdgeInsets.symmetric(vertical: 13),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: Text(AppLocalizations.of(ctx)!.radioExitKeepListening),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        Navigator.pop(ctx, true);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 13),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: Text(AppLocalizations.of(ctx)!.radioExitConfirmButton),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (confirmed != true) return;
+    if (!context.mounted) return;
+    _showFarewellAndExit(context);
+  }
+
   void _showFarewellAndExit(BuildContext context) {
     final langCode = Localizations.localeOf(context).languageCode;
     late final String smallText;
@@ -321,6 +391,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
       return OverseasRadioView(
         station: current,
         openedFromList: widget.openedFromList,
+        onExit: () => _confirmExit(context),
       );
     }
 

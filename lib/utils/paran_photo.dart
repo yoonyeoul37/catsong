@@ -11,6 +11,7 @@ const _onlinePrefixes = [
   'nature_wave_bg', 'nature_rain_bg', 'nature_bird_bg',
   'nature_fire_bg', 'nature_stream_bg',
   'wave', 'rain', 'bird2', 'stream2',
+  'rest_radio_',
 ];
 
 bool _isOnline(String path) {

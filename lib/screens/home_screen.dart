@@ -1198,7 +1198,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       (
         '📻 ${todayRadio.$1}',
-        'assets/radio_bg.jpg',
+        // 라디오 사진 10장 중 하루에 한 장
+        'assets/rest_radio_${(daySeed % 10) + 1}.png',
         () => Navigator.push(
               context,
               MaterialPageRoute(

@@ -11,6 +11,7 @@ class RadioStation {
   final String? homepage;
   final int? bitrate;
   final String? frequency;
+  final String? tags; // 장르 (예: "jazz,blues")
   final int votes;
   bool isFavorite;
   DateTime? lastListened;
@@ -28,10 +29,23 @@ class RadioStation {
     this.homepage,
     this.bitrate,
     this.frequency,
+    this.tags,
     this.votes = 0,
     this.isFavorite = false,
     this.lastListened,
   });
+
+  /// 장르 앞에서 2개만, 첫 글자 대문자 (예: "Jazz · Blues")
+  String get genre {
+    if (tags == null || tags!.trim().isEmpty) return '';
+    return tags!
+        .split(',')
+        .map((t) => t.trim())
+        .where((t) => t.isNotEmpty)
+        .take(2)
+        .map((t) => t[0].toUpperCase() + t.substring(1))
+        .join(' · ');
+  }
 
   String get playableUrl {
     if (urlResolved != null && urlResolved!.isNotEmpty) {
@@ -61,6 +75,7 @@ class RadioStation {
           ? json['bitrate'] as int
           : int.tryParse(json['bitrate']?.toString() ?? ''),
       frequency: json['frequency']?.toString(),
+      tags: json['tags']?.toString(),
       votes: json['votes'] is int
           ? json['votes'] as int
           : int.tryParse(json['votes']?.toString() ?? '') ?? 0,
@@ -81,6 +96,7 @@ class RadioStation {
     'countrycode': countryCode,
     'bitrate': bitrate,
     'frequency': frequency,
+    'tags': tags,
     'votes': votes,
     'isFavorite': isFavorite,
     'lastListened': lastListened?.toIso8601String(),
@@ -100,6 +116,7 @@ class RadioStation {
       homepage: homepage,
       bitrate: bitrate,
       frequency: frequency,
+      tags: tags,
       votes: votes,
       isFavorite: isFavorite ?? this.isFavorite,
       lastListened: lastListened ?? this.lastListened,

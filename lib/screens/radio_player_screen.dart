@@ -15,6 +15,7 @@ import '../widgets/global_radio_dial.dart';
 import '../widgets/simple_radio_dial.dart';
 import '../widgets/frequency_ruler.dart';
 import '../widgets/radio_mood_placeholder.dart';
+import '../widgets/overseas_radio_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -314,6 +315,14 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     final broadcaster = _getBroadcaster(current.name);
     final bcColor = _brandColor(broadcaster);
     final freq = current.frequency ?? '';
+
+    // 해외 방송국은 애플뮤직 스타일 화면으로 (한국은 기존 화면 그대로)
+    if (current.countryCode != 'KR') {
+      return OverseasRadioView(
+        station: current,
+        openedFromList: widget.openedFromList,
+      );
+    }
 
     return Scaffold(
       backgroundColor: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA),

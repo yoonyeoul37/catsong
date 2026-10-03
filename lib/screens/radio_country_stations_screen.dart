@@ -12,6 +12,7 @@ import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
 import '../widgets/station_logo.dart';
 import 'radio_player_screen.dart';
+import 'radio_home_screen.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/theme_provider.dart';
 
@@ -31,6 +32,7 @@ class _RadioCountryStationsScreenState
   final TextEditingController _searchController = TextEditingController();
   String _query = '';
   _ViewMode _mode = _ViewMode.all;
+  bool _showSearch = false; // 돋보기 눌렀을 때만 검색칸 보이기
 
   @override
   void initState() {
@@ -351,7 +353,10 @@ class _RadioCountryStationsScreenState
       );
     });
 
-    return Scaffold(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      // 상세페이지에서 돌아와도 하단 시스템바 색을 항상 다시 맞춤
+      value: context.watch<ThemeProvider>().systemBarStyle,
+      child: Scaffold(
       backgroundColor: bgColor,
       extendBody: false,
       appBar: AppBar(
@@ -396,13 +401,36 @@ class _RadioCountryStationsScreenState
             ),
           ],
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              setState(() {
+                _showSearch = !_showSearch;
+                if (!_showSearch) {
+                  _searchController.clear();
+                  _query = '';
+                }
+              });
+            },
+            icon: Icon(_showSearch ? Icons.close : Icons.search,
+                color: baseColor, size: 22),
+          ),
+          IconButton(
+            onPressed: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            },
+            icon: Icon(Icons.home_rounded, color: baseColor, size: 22),
+          ),
+        ],
       ),
       body: SafeArea(
         top: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
+            if (_showSearch) Padding(
               padding: const EdgeInsets.fromLTRB(24, 4, 24, 4),
               child: Container(
                 height: 48,
@@ -414,6 +442,7 @@ class _RadioCountryStationsScreenState
                 child: Center(
                   child: TextField(
                     controller: _searchController,
+                    autofocus: true,
                     onChanged: (v) => setState(() => _query = v),
                     style: TextStyle(color: baseColor, fontSize: 14.5),
                     textAlignVertical: TextAlignVertical.center,
@@ -449,9 +478,75 @@ class _RadioCountryStationsScreenState
                 child: Row(
                   children: [
                     _toggleButton('전체', _ViewMode.all, baseColor, isDarkMode),
-                    _toggleButton('지역별', _ViewMode.region, baseColor, isDarkMode),
                     _toggleButton('최근청취', _ViewMode.recent, baseColor, isDarkMode),
                   ],
+                ),
+              ),
+            ),
+            // 국가선택 (한국 화면과 같은 모양)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 4, 24, 8),
+              child: GestureDetector(
+                onTap: () {
+                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const RadioHomeScreen()),
+                  );
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 38,
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: baseColor.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 26,
+                        height: 26,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: isDarkMode
+                              ? const Color(0x14FFFFFF)
+                              : Colors.white.withOpacity(0.8),
+                        ),
+                        child: Icon(
+                          Icons.public,
+                          size: 16,
+                          color: isDarkMode
+                              ? const Color(0xFF6FB0FF)
+                              : const Color(0xFF2F7DE8),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text('국가선택',
+                          style: TextStyle(
+                              color: baseColor, fontSize: 13, fontWeight: FontWeight.w700)),
+                      Container(
+                        width: 1,
+                        height: 14,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        color: baseColor.withOpacity(0.18),
+                      ),
+                      Text(widget.country.flag, style: const TextStyle(fontSize: 16)),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(widget.country.displayName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                color: baseColor.withOpacity(0.7),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500)),
+                      ),
+                      Icon(Icons.keyboard_arrow_down_rounded,
+                          size: 20, color: baseColor.withOpacity(0.5)),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -536,6 +631,7 @@ class _RadioCountryStationsScreenState
         child: const RadioMiniPlayer(),
       )
           : SizedBox(height: MediaQuery.of(context).viewPadding.bottom),
+    ),
     );
   }
 }
@@ -557,11 +653,18 @@ class _StationTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final baseColor = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
     return Container(
-      color: isPlaying ? baseColor.withOpacity(0.08) : Colors.transparent,
+      color: Colors.transparent,
       child: InkWell(
         onTap: () {
           const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-          context.read<RadioProvider>().setQueue(stationList, stationIndex);
+          final radio = context.read<RadioProvider>();
+          radio.setQueue(stationList, stationIndex);
+          // 처음 누르면 바로 재생만 (화면 안 바뀜)
+          if (!isPlaying) {
+            radio.playStation(station);
+            return;
+          }
+          // 이미 재생 중인 방송국을 한 번 더 누르면 상세페이지로
           Navigator.push(
             context,
             PageRouteBuilder(
@@ -583,10 +686,26 @@ class _StationTile extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 13),
           child: Row(
             children: [
-              StationLogo(
-                  logoUrl: station.logoUrl,
-                  name: station.name,
-                  size: 46),
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  StationLogo(
+                      logoUrl: station.logoUrl,
+                      name: station.name,
+                      size: 46),
+                  if (isPlaying)
+                    Container(
+                      width: 46,
+                      height: 46,
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.45),
+                        borderRadius: BorderRadius.circular(46 * 0.2),
+                      ),
+                      alignment: Alignment.center,
+                      child: _PlayingBars(),
+                    ),
+                ],
+              ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -596,7 +715,7 @@ class _StationTile extends StatelessWidget {
                     Text(
                       station.name,
                       style: TextStyle(
-                        color: baseColor,
+                        color: isPlaying ? const Color(0xFF2F7DE8) : baseColor,
                         fontSize: 15.5,
                         fontWeight: FontWeight.w600,
                         letterSpacing: -0.2,
@@ -605,25 +724,45 @@ class _StationTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 3),
-                    Text(
-                      [
-                        if (station.bitrate != null &&
-                            station.bitrate! > 0)
-                          '${station.bitrate} kbps',
-                        if (station.country != null &&
-                            station.country!.isNotEmpty)
-                          station.country!,
-                      ].join('  ·  '),
-                      style: TextStyle(
-                          color: baseColor.withOpacity(0.55), fontSize: 11.5),
-                    ),
+                    Builder(builder: (context) {
+                      // 두 번째 줄: 지금 방송 → 주파수 → 국가 순서로 있는 것만
+                      final nowPlaying = context
+                          .watch<RadioProvider>()
+                          .nowPlayingFor(station.name);
+                      final freq = station.frequency;
+                      final hasFreq = freq != null &&
+                          freq.isNotEmpty &&
+                          freq != 'null';
+                      final String sub;
+                      if (nowPlaying != null && nowPlaying.isNotEmpty) {
+                        sub = nowPlaying;
+                      } else if (hasFreq) {
+                        sub = [
+                          'FM $freq',
+                          if (station.country != null && station.country!.isNotEmpty)
+                            station.country!,
+                        ].join(' · ');
+                      } else {
+                        // 장르 · 국가 (예: "Jazz · United Kingdom")
+                        sub = [
+                          if (station.genre.isNotEmpty) station.genre,
+                          if (station.country != null && station.country!.isNotEmpty)
+                            station.country!,
+                        ].join(' · ');
+                      }
+                      if (sub.isEmpty) return const SizedBox.shrink();
+                      return Text(
+                        sub,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            color: baseColor.withOpacity(0.5), fontSize: 12),
+                      );
+                    }),
                   ],
                 ),
               ),
-              if (isPlaying)
-                _PlayingBars()
-              else
-                IconButton(
+              IconButton(
                   icon: Icon(
                     context
                         .watch<RadioProvider>()
@@ -839,7 +978,7 @@ class _PlayingBarsState extends State<_PlayingBars>
               width: 4,
               height: 6 + _ctrls[i].value * 14,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
+                color: Colors.white,
                 borderRadius: const BorderRadius.all(Radius.circular(2)),
               ),
             ),

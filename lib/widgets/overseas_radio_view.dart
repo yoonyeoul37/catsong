@@ -240,7 +240,7 @@ class OverseasRadioView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    _WhiteEqBars(isPlaying: isPlaying),
+                    MountainEqBars(isPlaying: isPlaying),
                     const Spacer(),
                     // 아래 조작 버튼
                     Row(
@@ -333,15 +333,20 @@ class OverseasRadioView extends StatelessWidget {
 }
 
 /// 음악 재생화면과 같은 흰색 산 모양 이퀄라이저 (정지 중엔 낮게 멈춤)
-class _WhiteEqBars extends StatefulWidget {
+class MountainEqBars extends StatefulWidget {
   final bool isPlaying;
-  const _WhiteEqBars({required this.isPlaying});
+  final Color color;
+  const MountainEqBars({
+    super.key,
+    required this.isPlaying,
+    this.color = Colors.white,
+  });
 
   @override
-  State<_WhiteEqBars> createState() => _WhiteEqBarsState();
+  State<MountainEqBars> createState() => _WhiteEqBarsState();
 }
 
-class _WhiteEqBarsState extends State<_WhiteEqBars>
+class _WhiteEqBarsState extends State<MountainEqBars>
     with TickerProviderStateMixin {
   static const _durations = [1400, 1200, 1600, 1250, 1750, 1150, 1700, 1350, 1550, 1220, 1480];
   static const _minHeights = [4.0, 4.0, 5.0, 7.0, 9.0, 11.0, 9.0, 7.0, 5.0, 4.0, 4.0];
@@ -389,7 +394,7 @@ class _WhiteEqBarsState extends State<_WhiteEqBars>
                 width: 4,
                 height: _minHeights[i] + (_maxHeights[i] - _minHeights[i]) * v,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.8),
+                  color: widget.color.withOpacity(0.8),
                   borderRadius: BorderRadius.circular(2),
                   boxShadow: [
                     BoxShadow(

@@ -25,7 +25,7 @@ class RadioCountryStationsScreen extends StatefulWidget {
       _RadioCountryStationsScreenState();
 }
 
-enum _ViewMode { all, broadcaster, region, recent }
+enum _ViewMode { all, broadcaster, region, recent, favorite }
 
 class _RadioCountryStationsScreenState
     extends State<RadioCountryStationsScreen> {
@@ -103,6 +103,31 @@ class _RadioCountryStationsScreenState
         );
       }
       return _buildGroupGrid(context, keys, grouped, baseColor, isDarkMode);
+    } else if (_mode == _ViewMode.favorite) {
+      // 즐겨찾기: 모든 나라 것 전부
+      final favs = radioProvider.favorites;
+      if (favs.isEmpty) {
+        return Center(
+          child: Text('하트를 눌러 즐겨찾기에 추가해보세요',
+              style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 14)),
+        );
+      }
+      final current = radioProvider.currentStation;
+      return ListView.separated(
+        padding: EdgeInsets.fromLTRB(24, 8, 24, 80 + MediaQuery.of(context).padding.bottom),
+        itemCount: favs.length,
+        separatorBuilder: (_, __) => Divider(height: 1, color: baseColor.withOpacity(0.16)),
+        itemBuilder: (context, index) {
+          final station = favs[index];
+          final isPlaying = current?.stationUuid == station.stationUuid;
+          return _StationTile(
+            station: station,
+            isPlaying: isPlaying,
+            stationList: favs,
+            stationIndex: index,
+          );
+        },
+      );
     } else {
       final recent = radioProvider.recentlyListened
           .where((s) => s.countryCode == widget.country.code)
@@ -478,6 +503,7 @@ class _RadioCountryStationsScreenState
                 child: Row(
                   children: [
                     _toggleButton('전체', _ViewMode.all, baseColor, isDarkMode),
+                    _toggleButton('즐겨찾기', _ViewMode.favorite, baseColor, isDarkMode),
                     _toggleButton('최근청취', _ViewMode.recent, baseColor, isDarkMode),
                   ],
                 ),

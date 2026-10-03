@@ -1038,13 +1038,10 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
 
                       SizedBox(height: (h * 0.008).clamp(3.0, 8.0)),
 
-                      if (isPlaying) ...[
-                        SizedBox(height: (h * 0.008).clamp(3.0, 8.0)),
-                        SizedBox(
-                          height: (h * 0.02).clamp(14.0, 20.0),
-                          child: EqualizerAnimation(color: primaryColor),
-                        ),
-                      ],
+                      // 해외·음악 화면과 같은 산 모양 (정지 중엔 낮게 멈춤)
+                      SizedBox(height: (h * 0.008).clamp(3.0, 8.0)),
+                      MountainEqBars(isPlaying: isPlaying, color: primaryColor),
+                      const SizedBox(height: 6),
 
                       // ── 상태 뱃지 ──
                       _StatusBadge(state: state),

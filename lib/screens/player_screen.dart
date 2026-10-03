@@ -37,8 +37,45 @@ class PlayerScreen extends StatefulWidget {
   State<PlayerScreen> createState() => _PlayerScreenState();
 }
 
+/// 재생바 동그라미: 흰색 + 아주 은은한 빛
+class _GlowThumbShape extends SliderComponentShape {
+  final double radius;
+  const _GlowThumbShape({this.radius = 6});
+
+  @override
+  Size getPreferredSize(bool isEnabled, bool isDiscrete) =>
+      Size.fromRadius(radius);
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset center, {
+    required Animation<double> activationAnimation,
+    required Animation<double> enableAnimation,
+    required bool isDiscrete,
+    required TextPainter labelPainter,
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required TextDirection textDirection,
+    required double value,
+    required double textScaleFactor,
+    required Size sizeWithOverflow,
+  }) {
+    final canvas = context.canvas;
+    canvas.drawCircle(
+      center,
+      radius + 3,
+      Paint()
+        ..color = Colors.white.withOpacity(0.25)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4),
+    );
+    canvas.drawCircle(center, radius, Paint()..color = Colors.white);
+  }
+}
+
 class _PlayerScreenState extends State<PlayerScreen>
     with TickerProviderStateMixin {
+  bool _isSeeking = false; // 재생바를 손으로 잡고 있는 중인지
   late AnimationController _rotationController;
   late AnimationController _equalizerController;
   late List<AnimationController> _eqControllers;
@@ -546,9 +583,9 @@ class _PlayerScreenState extends State<PlayerScreen>
   }
 
   void _startEqAnimations() {
-    final durations = [900, 1100, 800, 1300];
-    final delays = [0, 200, 400, 100];
-    _eqControllers = List.generate(4, (i) {
+    final durations = [1400, 1200, 1600, 1250, 1750, 1150, 1700, 1350, 1550, 1220, 1480];
+    final delays = [0, 150, 300, 80, 220, 0, 260, 120, 340, 60, 180];
+    _eqControllers = List.generate(11, (i) {
       final ctrl = AnimationController(
         vsync: this,
         duration: Duration(milliseconds: durations[i]),
@@ -558,9 +595,9 @@ class _PlayerScreenState extends State<PlayerScreen>
       });
       return ctrl;
     });
-    _eqAnimations = List.generate(4, (i) {
+    _eqAnimations = List.generate(11, (i) {
       return Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(parent: _eqControllers[i], curve: Curves.easeInOut),
+        CurvedAnimation(parent: _eqControllers[i], curve: Curves.easeInOutSine),
       );
     });
   }
@@ -1454,10 +1491,13 @@ class _PlayerScreenState extends State<PlayerScreen>
                     ),
                   ],
                 )
-              : ListView.separated(
+              : Row(
+                  children: [
+                    Expanded(
+                child: ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  itemCount: _nightSelectedCategory == '전체' ? photos.length + 3 : photos.length + 2,
+                  padding: const EdgeInsets.only(left: 20, right: 10),
+                  itemCount: _nightSelectedCategory == '전체' ? photos.length + 2 : photos.length + 1,
                   separatorBuilder: (_, __) => const SizedBox(width: 10),
                   itemBuilder: (context, index) {
                     if (index == 0) {
@@ -1525,28 +1565,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                       );
                     }
                     final photoIndex = _nightSelectedCategory == '전체' ? index - 2 : index - 1;
-                    if (index == photos.length + (_nightSelectedCategory == '전체' ? 2 : 1)) {
-                      return GestureDetector(
-                        onTap: () {
-                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                          setState(() {
-                            _showNightPicker = false;
-                            _nightSelectedCategory = null;
-                          });
-                          SharedPreferences.getInstance().then((p) => p.setBool('showNightPicker', false));
-                        },
-                        child: Container(
-                          width: 56,
-                          height: 56,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.white.withOpacity(0.9),
-                          ),
-                          child: const Icon(Icons.check, color: Colors.black, size: 22),
-                        ),
-                      );
-                    }
+
                     final path = photos[photoIndex];
                     final isFav = _nightFavPaths.contains(path);
                     return GestureDetector(
@@ -1579,6 +1598,31 @@ class _PlayerScreenState extends State<PlayerScreen>
                       ),
                     );
                   },
+                ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        setState(() {
+                          _showNightPicker = false;
+                          _nightSelectedCategory = null;
+                        });
+                        SharedPreferences.getInstance().then((p) => p.setBool('showNightPicker', false));
+                      },
+                      child: Container(
+                        width: 56,
+                        height: 64,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.black.withOpacity(0.35),
+                          border: Border.all(color: Colors.white.withOpacity(0.25)),
+                        ),
+                        child: const Icon(Icons.check, color: Colors.white, size: 22),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                  ],
                 ),
         ),
             const SizedBox(height: 10),
@@ -2073,30 +2117,39 @@ class _PlayerScreenState extends State<PlayerScreen>
   }
 
   Widget _buildEqualizer(PlayerProvider playerProvider, Color primaryColor) {
-    if (!playerProvider.isPlaying) return const SizedBox(height: 20);
-    final minHeights = [6.0, 4.0, 8.0, 5.0];
-    final maxHeights = [18.0, 16.0, 20.0, 14.0];
+    final isPlaying = playerProvider.isPlaying;
+    // 가운데가 제일 높고 양옆으로 낮아지는 산 모양
+    final minHeights = [4.0, 4.0, 5.0, 7.0, 9.0, 11.0, 9.0, 7.0, 5.0, 4.0, 4.0];
+    final maxHeights = [5.0, 9.0, 14.0, 20.0, 26.0, 32.0, 26.0, 20.0, 14.0, 9.0, 5.0];
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: SizedBox(
-        height: 20,
+        height: 32,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(4, (i) {
+          children: List.generate(11, (i) {
             return AnimatedBuilder(
               animation: _eqAnimations[i],
               builder: (context, child) {
+                // 정지 중이면 움직이지 않고 가장 낮은 모양으로 멈춰 있음
+                final value = isPlaying ? _eqAnimations[i].value : 0.0;
                 final height = minHeights[i] +
-                    (maxHeights[i] - minHeights[i]) * _eqAnimations[i].value;
+                    (maxHeights[i] - minHeights[i]) * value;
                 return Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 3),
-                    width: 3,
+                    margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                    width: 4,
                     height: height,
                     decoration: BoxDecoration(
-                      color: Colors.white70,
+                      color: Colors.white.withOpacity(0.8),
                       borderRadius: BorderRadius.circular(2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.15),
+                          blurRadius: 4,
+                        ),
+                      ],
                     ),
                   ),
                 );
@@ -2231,15 +2284,25 @@ class _PlayerScreenState extends State<PlayerScreen>
             ],
           ),
           const SizedBox(height: 8),
-          SliderTheme(
+          TweenAnimationBuilder<double>(
+            // 잡고 있을 때만 1.4배 (6 → 8.4), 놓으면 부드럽게 돌아옴
+            tween: Tween(end: _isSeeking ? 8.4 : 6.0),
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOut,
+            builder: (context, thumbRadius, _) => SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: baseColor.withOpacity(0.7),
-              inactiveTrackColor: baseColor.withOpacity(0.24),
-              thumbColor: baseColor,
-              overlayColor: baseColor.withOpacity(0.1),
+              trackHeight: 3,
+              activeTrackColor: Colors.white.withOpacity(0.85),
+              inactiveTrackColor: Colors.white.withOpacity(0.28),
+              thumbColor: Colors.white,
+              overlayColor: Colors.transparent,
+              thumbShape: _GlowThumbShape(radius: thumbRadius),
+              overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
             ),
             child: Slider(
               value: playerProvider.progress,
+              onChangeStart: (_) => setState(() => _isSeeking = true),
+              onChangeEnd: (_) => setState(() => _isSeeking = false),
               onChanged: (value) {
                 final position = Duration(
                   milliseconds:
@@ -2248,6 +2311,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 playerProvider.seekTo(position);
               },
             ),
+          ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

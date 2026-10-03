@@ -277,6 +277,14 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
         precacheImage(AssetImage(path), context);
       }
       precacheImage(CachedNetworkImageProvider(farewellImageUrl(context)), context);
+      // 잠시 쉬어가요 라디오 사진(썸네일 10장)을 미리 받아두기
+      for (var i = 1; i <= 10; i++) {
+        precacheImage(
+          CachedNetworkImageProvider(
+              'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/app-images/rest_radio_${i}_thumb.jpg'),
+          context,
+        );
+      }
       SharedPreferences.getInstance().then((prefs) {
         final bg = prefs.getString('nightBgPath');
         if (bg != null && mounted) precacheParanPhoto(bg, context);

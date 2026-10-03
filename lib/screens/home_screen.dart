@@ -687,20 +687,30 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   )
-                : Transform(
-                    transform: Matrix4.skewX(-0.15),
-                    child: Text(
-                        'Paransori',
-                        style: TextStyle(
-                            color: baseColor,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: -0.5)),
+                : Column(
+                    // 해외: Paran(파란색) / 밑에 Sori (가운데 정렬)
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text('Paran',
+                          style: GoogleFonts.doHyeon(
+                              color: const Color(0xFF2F7DE8),
+                              fontSize: 20,
+                              height: 1.0,
+                              letterSpacing: -0.3)),
+                      Text('Sori',
+                          style: GoogleFonts.doHyeon(
+                              color: baseColor,
+                              fontSize: 20,
+                              height: 1.0,
+                              letterSpacing: -0.3)),
+                    ],
                   ),
             const SizedBox(width: 6),
-            const Padding(
-              padding: EdgeInsets.only(top: 8, bottom: 4),
-              child: _LogoEqBars(),
+            Padding(
+              // 해외는 아래 Sori 옆에 붙게 (파란 Paran과 안 겹치게)
+              padding: EdgeInsets.only(top: isKorean ? 8 : 23, bottom: 4),
+              child: const _LogoEqBars(),
             ),
           ],
         );

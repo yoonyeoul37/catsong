@@ -48,6 +48,8 @@ import 'nature_sound_detail_screen.dart';
 import 'radio_player_screen.dart';
 import '../utils/nature_sound_catalog.dart';
 import '../utils/paran_photo.dart';
+import '../utils/index_letter.dart';
+import '../widgets/index_bar.dart';
 import 'sleep_focus_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -73,6 +75,25 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _pendingStartScreenNav = false;
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
+  final ScrollController _songListController = ScrollController();
+  final ValueNotifier<String?> _indexBubble = ValueNotifier(null); // 가운데 큰 글자
+
+  /// 빠른 이동 막대: 그 글자로 시작하는 첫 곡으로 점프
+  void _jumpToLetter(String letter, List<Song> songs) {
+    final i = songs.indexWhere((s) => indexLetterOf(s.titleDisplay) == letter);
+    if (i < 0 || !_songListController.hasClients) return;
+    // 곡 한 줄 높이를 화면에 보이는 곡으로 재서 위치 계산
+    double rowH = 76;
+    for (final k in _songItemKeys.values) {
+      final box = k.currentContext?.findRenderObject() as RenderBox?;
+      if (box != null && box.hasSize) {
+        rowH = box.size.height;
+        break;
+      }
+    }
+    final max = _songListController.position.maxScrollExtent;
+    _songListController.jumpTo((i * rowH).clamp(0.0, max));
+  }
   bool _showBanner = false;
   bool _isSelectionMode = false;
   final Map<int, GlobalKey> _songItemKeys = {};
@@ -160,6 +181,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _searchController.dispose();
+    _songListController.dispose();
+    _indexBubble.dispose();
     _speech.stop();
     super.dispose();
   }
@@ -1192,6 +1215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     description: s.description,
                     assetPath: s.assetPath,
                     color: restColors[s.category] ?? const Color(0xFF2F7DE8),
+                    openedFromList: false, // 뒤로가기 → 자연소리 목록
                   ),
                 ),
               ),
@@ -1203,7 +1227,10 @@ class _HomeScreenState extends State<HomeScreen> {
         () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => RadioPlayerScreen(station: restStation),
+                builder: (_) => RadioPlayerScreen(
+                  station: restStation,
+                  openedFromList: false, // 뒤로가기 → 라디오 목록
+                ),
               ),
             ),
       ),
@@ -1862,11 +1889,22 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Expanded(
-              child: RefreshIndicator(
+              child: Builder(builder: (context) {
+              // 빠른 이동 막대: 30곡 이상이고 검색 중이 아닐 때만
+              final listSongs = musicProvider.songs;
+              final showIndexBar = listSongs.length >= 30 && !_isSearching;
+              final present = showIndexBar
+                  ? listSongs.map((s) => indexLetterOf(s.titleDisplay)).toSet()
+                  : <String>{};
+              final indexLetters = kIndexOrder.where(present.contains).toList();
+              return Stack(
+              children: [
+              RefreshIndicator(
                 color: Theme.of(context).colorScheme.primary,
                 onRefresh: () => musicProvider.loadSongs(),
                 child: ListView.builder(
-                  padding: const EdgeInsets.only(bottom: 8),
+                  controller: _songListController,
+                  padding: EdgeInsets.only(bottom: 8, right: showIndexBar ? 18 : 0),
                   itemCount: musicProvider.songs.length,
                   itemBuilder: (context, index) {
                     final songs = musicProvider.songs;
@@ -1945,6 +1983,46 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
+              if (showIndexBar)
+                Positioned(
+                  right: 2,
+                  top: 4,
+                  bottom: 12,
+                  child: IndexBar(
+                    letters: indexLetters,
+                    color: Theme.of(context).colorScheme.primary,
+                    onLetter: (l) => _jumpToLetter(l, listSongs),
+                    onActiveChanged: (l) => _indexBubble.value = l,
+                  ),
+                ),
+              // 누르는 동안 가운데 큰 글자
+              IgnorePointer(
+                child: ValueListenableBuilder<String?>(
+                  valueListenable: _indexBubble,
+                  builder: (context, letter, _) {
+                    if (letter == null) return const SizedBox.shrink();
+                    return Center(
+                      child: Container(
+                        width: 72,
+                        height: 72,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.65),
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        child: Text(letter,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 34,
+                                fontWeight: FontWeight.w700)),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              ],
+              );
+              }),
             ),
           ],
         );

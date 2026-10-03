@@ -624,11 +624,14 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                   Navigator.pop(context);
                                 } else {
                                   final country = radioProvider.selectedCountry;
-                                  final Widget listScreen = country == null
-                                      ? const RadioHomeScreen()
-                                      : country.code == 'KR'
-                                          ? const RadioKoreaScreen()
-                                          : RadioCountryStationsScreen(country: country);
+                                  // 한국 방송이면 항상 한국 목록으로
+                                  final Widget listScreen = current.countryCode == 'KR'
+                                      ? const RadioKoreaScreen()
+                                      : country == null
+                                          ? const RadioHomeScreen()
+                                          : country.code == 'KR'
+                                              ? const RadioKoreaScreen()
+                                              : RadioCountryStationsScreen(country: country);
                                   Navigator.of(context).pushReplacement(
                                     PageRouteBuilder(
                                       pageBuilder: (context, animation, secondaryAnimation) => listScreen,

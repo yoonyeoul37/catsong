@@ -139,7 +139,7 @@ class _AllFavoritesScreenState extends State<AllFavoritesScreen>
                 itemCount: favorites.length,
                 separatorBuilder: (_, __) =>
                     Divider(height: 1, color: baseColor.withOpacity(0.12)),
-                itemBuilder: (context, index) => StationTile(station: favorites[index]),
+                itemBuilder: (context, index) => StationTile(station: favorites[index], openedFromList: false),
               );
             },
           ),

@@ -15,6 +15,7 @@ class IndexBar extends StatefulWidget {
   final Set<String> available; // 실제 곡이 있는 묶음 (A-Z, ㄱ, ㄴ ... #)
   final bool isDark;
   final ValueChanged<String> onLetter; // 묶음 바뀔 때마다 (점프)
+  final String? current; // 지금 보고 있는 구간 (파란 글자로 표시)
   final ValueChanged<String?> onActiveChanged; // 가운데 큰 글자 표시용
 
   const IndexBar({
@@ -23,6 +24,7 @@ class IndexBar extends StatefulWidget {
     required this.isDark,
     required this.onLetter,
     required this.onActiveChanged,
+    this.current,
   });
 
   @override
@@ -78,10 +80,12 @@ class _IndexBarState extends State<IndexBar> {
       style: TextStyle(
         color: isActive
             ? Colors.white
-            : (widget.isDark ? kIndexMutedDark : kIndexMuted)
-                .withOpacity(has ? 1.0 : 0.35),
+            : g == widget.current
+                ? kIndexBlue // 지금 보고 있는 구간
+                : (widget.isDark ? kIndexMutedDark : kIndexMuted)
+                    .withOpacity(has ? 1.0 : 0.35),
         fontSize: isAZ ? 11.5 : 14.5,
-        fontWeight: isActive ? FontWeight.w800 : FontWeight.w600,
+        fontWeight: (isActive || g == widget.current) ? FontWeight.w800 : FontWeight.w600,
         height: 1.0,
       ),
     );

@@ -77,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isSearching = false;
   final ScrollController _songListController = ScrollController();
   final ValueNotifier<String?> _indexBubble = ValueNotifier(null); // 가운데 큰 글자
+  final ValueNotifier<String?> _currentGroup = ValueNotifier(null); // 지금 보고 있는 구간
 
   // ── 빠른 이동 막대용: 묶음(A-Z → ㄱ~ㅎ → #) 순서로 정리한 목록 (곡이 바뀔 때만 다시 계산) ──
   List<(String?, int)> _indexEntries = const []; // (머리글, null이면 곡) / 곡 번호
@@ -112,6 +113,28 @@ class _HomeScreenState extends State<HomeScreen> {
     _indexSongs = ordered;
     _indexCounts = {for (final e in byGroup.entries) e.key: e.value.length};
     _indexEntries = entries;
+  }
+
+  /// 지금 화면 맨 위에 보이는 구간(초성)을 찾아서 오른쪽 막대에 파랗게 표시
+  void _updateCurrentGroup() {
+    if (_indexEntries.isEmpty || !_songListController.hasClients) return;
+    double rowH = 76;
+    for (final k in _songItemKeys.values) {
+      final box = k.currentContext?.findRenderObject() as RenderBox?;
+      if (box != null && box.hasSize) {
+        rowH = box.size.height;
+        break;
+      }
+    }
+    final top = _songListController.offset + 1;
+    double y = 0;
+    String? cur;
+    for (final e in _indexEntries) {
+      if (y > top) break;
+      if (e.$1 != null) cur = e.$1;
+      y += e.$1 != null ? _indexHeaderH : rowH;
+    }
+    if (_currentGroup.value != cur) _currentGroup.value = cur;
   }
 
   /// 빠른 이동 막대: 그 묶음 머리글로 점프
@@ -152,9 +175,9 @@ class _HomeScreenState extends State<HomeScreen> {
               Text(
                 group,
                 style: TextStyle(
-                  color: isDark ? kIndexMutedDark : kIndexMuted,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
+                  color: isDark ? Colors.white.withOpacity(0.85) : const Color(0xFF4A443B),
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
               const SizedBox(width: 7),
@@ -181,6 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _songListController.addListener(_updateCurrentGroup); // 스크롤하면 오른쪽 초성 파랗게 따라감
     final savedStart = context.read<StartScreenProvider>().startScreen;
     if (savedStart == StartScreenType.music) {
       _showMusicLibrary = true;
@@ -260,6 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _searchController.dispose();
     _songListController.dispose();
     _indexBubble.dispose();
+    _currentGroup.dispose();
     _speech.stop();
     super.dispose();
   }
@@ -2077,11 +2102,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   right: 0,
                   top: 4,
                   bottom: 12,
-                  child: IndexBar(
-                    available: available,
-                    isDark: isDarkList,
-                    onLetter: _jumpToGroup,
-                    onActiveChanged: (l) => _indexBubble.value = l,
+                  child: ValueListenableBuilder<String?>(
+                    valueListenable: _currentGroup,
+                    builder: (context, cur, _) => IndexBar(
+                      available: available,
+                      isDark: isDarkList,
+                      onLetter: _jumpToGroup,
+                      onActiveChanged: (l) => _indexBubble.value = l,
+                      current: cur ?? (available.isNotEmpty ? kIndexGroups.firstWhere(available.contains) : null),
+                    ),
                   ),
                 ),
               // 누르는 동안 가운데 큰 글자

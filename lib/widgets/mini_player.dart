@@ -10,6 +10,7 @@ import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../screens/player_screen.dart';
 import 'equalizer_animation.dart';
+import 'album_eq_overlay.dart';
 import '../providers/theme_provider.dart';
 
 class MiniPlayer extends StatelessWidget {
@@ -132,22 +133,21 @@ class MiniPlayer extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            if (playerProvider.isPlaying)
-                              Container(
-                                width: 44,
-                                height: 44,
-                                decoration: BoxDecoration(
-                                  color: Colors.black45,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Center(
-                                  child: SizedBox(
-                                    width: 20,
-                                    height: 16,
-                                    child: EqualizerAnimation(color: Colors.white),
-                                  ),
+                            Container(
+                              width: 44,
+                              height: 44,
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.35),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Center(
+                                child: AlbumEqOverlay(
+                                  isPlaying: playerProvider.isPlaying,
+                                  width: 20,
+                                  height: 16,
                                 ),
                               ),
+                            ),
                           ],
                         ),
                         const SizedBox(width: 12),

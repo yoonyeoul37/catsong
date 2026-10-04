@@ -4,6 +4,7 @@ import '../utils/paran_photo.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
@@ -84,7 +85,9 @@ class _PlayerScreenState extends State<PlayerScreen>
   bool _showNightPicker = true;
   String? _nightSelectedCategory;
   String _nightBgPath = 'assets/music_night_bg.png';
-  String? _lastBgSongUri; // 파란포토 자동 변경용: 곡 파일 경로로 곡 바뀜 판단
+  // 파란포토 자동 변경용: 마지막 곡을 화면이 닫혀도 기억 (뒤로 갔다 다른 곡 골라도 바뀌게)
+  static String? _lastBgSongUri;
+  bool _styleLoaded = false; // 저장된 스타일·사진을 다 불러왔는지
   Set<String> _nightFavPaths = {};
   bool _nightBgIsFile = false;
   int _bgFilter = 0; // 0 컬러, 1 흑백, 2 세피아
@@ -220,6 +223,7 @@ class _PlayerScreenState extends State<PlayerScreen>
       _showSwipeHint = !shown;
       _bgFilter = prefs.getInt('bgFilter') ?? 0;
       _autoBgMin = prefs.getInt('autoBgMin') ?? 0;
+      _styleLoaded = true;
     });
     _restartAutoBgTimer();
     if (!shown) {
@@ -646,11 +650,18 @@ class _PlayerScreenState extends State<PlayerScreen>
     }
 
     // 파란포토는 "진짜 다른 곡"일 때만 바꿈 (곡 정보 편집으로는 안 바뀜)
-    if (_lastBgSongUri != song.uri) {
+    // 설정을 다 불러온 뒤에만 "곡이 바뀌었나" 검사 (먼저 하면 파란포토인 줄 모르고 넘어감)
+    if (_styleLoaded && _lastBgSongUri != song.uri) {
       final isFirst = _lastBgSongUri == null;
       _lastBgSongUri = song.uri;
-      if (!isFirst && _albumArtStyle == 6 && _nightFavPaths.length >= 2) {
-        final options = _nightFavPaths.where((p) => p != _nightBgPath).toList();
+      if (!isFirst && _albumArtStyle == 6) {
+        // 하트한 사진이 2장 이상이면 그중에서, 아니면 지금 사진과 같은 카테고리에서
+        final List<String> options = (_nightFavPaths.length >= 2
+                ? _nightFavPaths.toList()
+                : _nightCategoryPhotos.values
+                    .firstWhere((l) => l.contains(_nightBgPath), orElse: () => const [])
+                    .toList())
+          ..remove(_nightBgPath);
         if (options.isNotEmpty) {
           final next = options[math.Random().nextInt(options.length)];
           final nextIsFile = !next.startsWith('assets/');
@@ -952,20 +963,50 @@ class _PlayerScreenState extends State<PlayerScreen>
           ),
           Expanded(
             child: Center(
-              child: Text(AppLocalizations.of(context)!.nowPlaying,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: baseColor.withOpacity(0.7),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 1.2)),
+              // "재생 중" 대신 파란소리 워터마크 (홈 로고 스타일, 이퀄라이저 없이)
+              child: Builder(builder: (context) {
+                final isKo = Localizations.localeOf(context).languageCode == 'ko';
+                const sky = Color(0xFF7FB8F0); // 사진 위에서 잘 보이는 밝은 파란색
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text.rich(
+                      TextSpan(children: [
+                        TextSpan(
+                          text: isKo ? '파란' : 'Paran',
+                          style: GoogleFonts.doHyeon(color: sky, fontSize: 20, height: 1.0),
+                        ),
+                        TextSpan(
+                          text: isKo ? '소리' : 'Sori',
+                          style: GoogleFonts.doHyeon(
+                              color: baseColor.withOpacity(0.85), fontSize: 20, height: 1.0),
+                        ),
+                      ]),
+                    ),
+                    if (isKo) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        'Paransori',
+                        style: TextStyle(
+                          color: baseColor.withOpacity(0.45),
+                          fontSize: 9.5,
+                          letterSpacing: 3,
+                          fontWeight: FontWeight.w600,
+                          height: 1.0,
+                        ),
+                      ),
+                    ],
+                  ],
+                );
+              }),
             ),
           ),
           GestureDetector(
             onTap: () => _showPlayerOptionsSheet(context, song, primaryColor),
             behavior: HitTestBehavior.opaque,
             child: Padding(
-              padding: const EdgeInsets.all(6),
+              // 왼쪽 ⌄ 버튼과 폭을 똑같이(48) 맞춰서 가운데 워터마크가 화면 정중앙에 오게
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
@@ -1156,7 +1197,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     await _showStyleDialog(context, primaryColor);
                     // 고르고 돌아오면 메뉴의 스타일 썸네일도 바로 바뀌게
                     if (ctx.mounted) setSheet(() {});
-                  }, showNew: !_hasSeenParanPhoto, trailing: _sheetStyleThumbs(song)),
+                  }, trailing: _sheetStyleThumbs(song)),
                   _playerSheetItem(ctx, Icons.speed, '배속', accent, baseColor, () {
                     _showSpeedDialog(context, context.read<PlayerProvider>(), primaryColor);
                   }, trailing: _sheetValue(_sheetSpeedLabel(playerProvider.playbackSpeed)), arrow: true),
@@ -1321,11 +1362,13 @@ class _PlayerScreenState extends State<PlayerScreen>
   }
 
   Widget _sheetStyleThumbs(Song song) =>
-      _styleThumbs(song, _albumArtStyle, _nightBgPath, _nightBgIsFile);
+      _styleThumbs(song, _albumArtStyle, _nightBgPath, _nightBgIsFile,
+          showNew: !_hasSeenParanPhoto);
 
   /// 재생화면 스타일 썸네일 3개 (재생화면 메뉴 · 곡 목록 메뉴 같이 씀)
-  static Widget _styleThumbs(Song song, int style, String bgPath, bool bgIsFile) {
-    Widget box(int id, String label, Widget img) {
+  static Widget _styleThumbs(Song song, int style, String bgPath, bool bgIsFile,
+      {bool showNew = false}) {
+    Widget box(int id, String label, Widget img, {bool isNew = false}) {
       final sel = style == id;
       return Padding(
         padding: const EdgeInsets.only(left: 8),
@@ -1348,6 +1391,21 @@ class _PlayerScreenState extends State<PlayerScreen>
                     child: img,
                   ),
                 ),
+                if (isNew)
+                  Positioned(
+                    left: -4,
+                    top: -6,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                      decoration: BoxDecoration(
+                        color: Colors.redAccent,
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: Colors.white, width: 1),
+                      ),
+                      child: const Text('NEW',
+                          style: TextStyle(color: Colors.white, fontSize: 7.5, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
                 if (sel)
                   Positioned(
                     right: -4,
@@ -1415,7 +1473,7 @@ class _PlayerScreenState extends State<PlayerScreen>
       mainAxisSize: MainAxisSize.min,
       children: [
         box(1, '시디롬', cd),
-        box(6, '파란포토', photo),
+        box(6, '파란포토', photo, isNew: showNew),
         box(3, '앨범', album),
       ],
     );
@@ -1434,7 +1492,10 @@ class _PlayerScreenState extends State<PlayerScreen>
         _buildNightBgPicker(),
         Align(
           alignment: Alignment.center,
-          child: Container(
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+          Container(
             width: MediaQuery.of(context).size.width - 90,
             margin: const EdgeInsets.symmetric(horizontal: 20),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -1466,11 +1527,14 @@ class _PlayerScreenState extends State<PlayerScreen>
               ],
             ),
           ),
+            ],
+          ),
         ),
       ],
     );
   }
   Widget _buildNightBgPicker() {
+
     if (!_showNightPicker) {
       return Align(
         alignment: Alignment.topCenter,
@@ -3079,6 +3143,7 @@ List<Widget> playerSettingRows(
   required bool bgIsFile,
   required Color textColor,
   required VoidCallback onStyleChanged,
+  bool showNew = false,
 }) {
   final p = context.watch<PlayerProvider>();
   const accent = Color(0xFF2589E8);
@@ -3104,7 +3169,7 @@ List<Widget> playerSettingRows(
     _PlayerScreenState._playerSheetItem(
       context, Icons.style, AppLocalizations.of(context)!.playerStyle, accent, textColor,
       () async { await showPlayerStyleMenu(context); onStyleChanged(); },
-      trailing: _PlayerScreenState._styleThumbs(song, style, bgPath, bgIsFile),
+      trailing: _PlayerScreenState._styleThumbs(song, style, bgPath, bgIsFile, showNew: showNew),
     ),
     _PlayerScreenState._playerSheetItem(
       context, Icons.speed, '배속', accent, textColor,
@@ -3131,7 +3196,109 @@ Future<void> showPlayerStyleMenu(BuildContext context) async {
   final prefs = await SharedPreferences.getInstance();
   if (!context.mounted) return;
   final current = prefs.getInt('albumArtStyle') ?? 1;
+  await prefs.setBool('hasSeenParanPhoto', true);
   await _PlayerScreenState._styleDialog(context, current, (id) => prefs.setInt('albumArtStyle', id));
+}
+
+/// 꼬리가 살랑살랑 흔들리는 고양이 (재생 중일 때만)
+class _SwayingCat extends StatefulWidget {
+  final Color color;
+  final Size size;
+  final bool moving;
+  const _SwayingCat({required this.color, required this.size, required this.moving});
+
+  @override
+  State<_SwayingCat> createState() => _SwayingCatState();
+}
+
+class _SwayingCatState extends State<_SwayingCat> with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1800), // 숫자가 클수록 천천히
+    value: 0.5,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.moving) _c.repeat(reverse: true);
+  }
+
+  @override
+  void didUpdateWidget(_SwayingCat old) {
+    super.didUpdateWidget(old);
+    if (widget.moving && !_c.isAnimating) {
+      _c.repeat(reverse: true);
+    } else if (!widget.moving && old.moving) {
+      // 멈추면 꼬리를 가운데로 천천히 돌려놓기
+      _c.animateTo(0.5, duration: const Duration(milliseconds: 600));
+    }
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _c,
+      builder: (context, _) {
+        final sway = Curves.easeInOut.transform(_c.value) * 2 - 1; // -1 ~ 1
+        return CustomPaint(
+          size: widget.size,
+          painter: _CatSilhouettePainter(widget.color, sway: sway),
+        );
+      },
+    );
+  }
+}
+
+/// 앉아 있는 고양이 실루엣 (파란포토 제목 박스)
+class _CatSilhouettePainter extends CustomPainter {
+  final Color color;
+  final double sway; // 꼬리 흔들림 -1 ~ 1
+  _CatSilhouettePainter(this.color, {this.sway = 0});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // 엎드린 고양이: 46 x 26 칸 기준으로 그린 뒤 크기에 맞춰 줄임
+    canvas.save();
+    canvas.scale(size.width / 46, size.height / 26);
+    final fill = Paint()..color = color;
+    final body = Path()
+      ..addOval(const Rect.fromLTRB(10, 11, 36, 23.5)) // 몸 (길게 엎드림)
+      ..addOval(const Rect.fromLTRB(3, 5, 15, 16.5)) // 머리
+      ..moveTo(3.8, 9) // 왼쪽 귀
+      ..lineTo(4.4, 2.4)
+      ..lineTo(8.4, 6)
+      ..close()
+      ..moveTo(9.4, 5.6) // 오른쪽 귀
+      ..lineTo(13, 2.4)
+      ..lineTo(13.8, 9)
+      ..close()
+      ..addRRect(RRect.fromLTRBR(1.5, 19.5, 13, 23.5, const Radius.circular(2))); // 앞발
+    canvas.drawPath(body, fill);
+    // 꼬리 (끝이 위아래로 살랑)
+    final tail = Path()
+      ..moveTo(34.5, 19.5)
+      ..cubicTo(40, 20, 43, 15 + 3 * sway, 41 + 0.8 * sway, 9.5 + 3 * sway);
+    canvas.drawPath(
+      tail,
+      Paint()
+        ..color = color
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.4
+        ..strokeCap = StrokeCap.round,
+    );
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(_CatSilhouettePainter old) =>
+      old.color != color || old.sway != sway;
 }
 
 void _showLoopModeDialog(BuildContext context, PlayerProvider playerProvider, Color primaryColor) {

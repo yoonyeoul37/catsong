@@ -11,6 +11,7 @@ import '../providers/playlist_provider.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../screens/player_screen.dart';
+import 'album_eq_overlay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/edit_song_screen.dart';
 import '../screens/ringtone_screen.dart';
@@ -196,13 +197,11 @@ class SongListTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
             ),
             child: Center(
-              child: playerProvider.isPlaying
-                  ? const SizedBox(
-                width: 24,
-                height: 20,
-                child: EqualizerAnimation(color: Colors.white70),
-              )
-                  : const Icon(Icons.pause, color: Colors.white70, size: 22),
+              child: AlbumEqOverlay(
+                isPlaying: playerProvider.isPlaying,
+                width: 26,
+                height: 22,
+              ),
             ),
           ),
       ],
@@ -215,6 +214,7 @@ class SongListTile extends StatelessWidget {
     int style = prefs.getInt('albumArtStyle') ?? 1;
     final bgPath = prefs.getString('nightBgPath') ?? 'assets/spring_photo1.png';
     final bgIsFile = prefs.getBool('nightBgIsFile') ?? false;
+    bool showNew = !(prefs.getBool('hasSeenParanPhoto') ?? false);
     if (!context.mounted) return;
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     final sheetColor = isDarkMode ? const Color(0xFF2A251D) : const Color(0xFFF4EFE5);
@@ -352,10 +352,12 @@ class SongListTile extends StatelessWidget {
                   style: style,
                   bgPath: bgPath,
                   bgIsFile: bgIsFile,
+                  showNew: showNew,
                   textColor: baseColor,
                   onStyleChanged: () async {
                     final p2 = await SharedPreferences.getInstance();
                     style = p2.getInt('albumArtStyle') ?? 1;
+                    showNew = false;
                     if (ctx.mounted) setSheet(() {});
                   },
                 ),

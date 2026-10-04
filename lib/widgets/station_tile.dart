@@ -10,7 +10,8 @@ import '../screens/radio_player_screen.dart';
 
 class StationTile extends StatelessWidget {
   final RadioStation station;
-  const StationTile({super.key, required this.station});
+  final bool openedFromList; // false면 재생화면에서 뒤로가기 → 라디오 목록
+  const StationTile({super.key, required this.station, this.openedFromList = true});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,10 @@ class StationTile extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => RadioPlayerScreen(station: station),
+            builder: (_) => RadioPlayerScreen(
+              station: station,
+              openedFromList: openedFromList,
+            ),
           ),
         );
       },

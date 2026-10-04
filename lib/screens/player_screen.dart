@@ -998,13 +998,16 @@ class _PlayerScreenState extends State<PlayerScreen>
     const sheetColor = Color(0xFFF4EFE5);
     const baseColor = Color(0xFF1A1A1A);
     const descColor = Color(0xFF8A8378);
-    const accent = AppTheme.fixedAccent;
+    const accent = Color(0xFF2589E8); // 파란소리 포인트 블루 (메뉴 아이콘 통일)
 
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (ctx) {
+        // 메뉴를 안 닫고 여러 개 바꿀 수 있게: 값이 바뀌면 메뉴가 바로 다시 그려짐
+        return StatefulBuilder(builder: (ctx, setSheet) {
+        final playerProvider = ctx.watch<PlayerProvider>();
         return SafeArea(
           top: false,
           child: Container(
@@ -1092,34 +1095,34 @@ class _PlayerScreenState extends State<PlayerScreen>
                     ctx,
                     Icons.shuffle_rounded,
                     AppLocalizations.of(context)!.shuffle,
-                    playerProvider.isShuffled ? accent : baseColor,
+                    accent,
                     baseColor,
                         () {
-                      Navigator.pop(ctx);
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                       playerProvider.toggleShuffle();
                     },
+                    trailing: _sheetMiniSwitch(playerProvider.isShuffled),
                   ),
                   _playerSheetItem(
                     ctx,
                     Icons.repeat_rounded,
                     '반복',
-                    playerProvider.loopMode != LoopMode.off ? accent : baseColor,
+                    accent,
                     baseColor,
                         () {
-                      Navigator.pop(ctx);
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                       playerProvider.toggleLoopMode();
                     },
+                    trailing: _sheetRepeatChips(playerProvider),
+                    trailingTappable: true,
                   ),
                   _playerSheetItem(
                     ctx,
                     Icons.nightlight_round,
                     '수면',
-                    playerProvider.isSleepTimerActive ? accent : baseColor,
+                    accent,
                     baseColor,
                         () {
-                      Navigator.pop(ctx);
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                       if (playerProvider.isSleepTimerActive) {
                         _showSleepTimerDialog(context, playerProvider, primaryColor);
@@ -1127,6 +1130,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                         _showSleepWheelPickerDirect(context, playerProvider, primaryColor);
                       }
                     },
+                    trailing: _sheetValue(_sheetSleepLabel(playerProvider)),
+                    arrow: true,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
@@ -1135,41 +1140,42 @@ class _PlayerScreenState extends State<PlayerScreen>
                   _playerSheetItem(ctx, Icons.edit, AppLocalizations.of(context)!.editSong, accent, baseColor, () {
                     Navigator.pop(ctx);
                     Navigator.push(context, MaterialPageRoute(builder: (context) => EditSongScreen(song: song)));
-                  }),
+                  }, arrow: true),
                   _playerSheetItem(ctx, Icons.playlist_add, AppLocalizations.of(context)!.addToPlaylist, accent, baseColor, () {
-                    Navigator.pop(ctx);
                     _showAddToPlaylistDialog(context, song, primaryColor);
-                  }),
+                  }, arrow: true),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
                   ),
-                  _playerSheetItem(ctx, Icons.style, AppLocalizations.of(context)!.playerStyle, accent, baseColor, () {
-                    Navigator.pop(ctx);
+                  _playerSheetItem(ctx, Icons.style, AppLocalizations.of(context)!.playerStyle, accent, baseColor, () async {
                     if (!_hasSeenParanPhoto) {
                       setState(() => _hasSeenParanPhoto = true);
                       SharedPreferences.getInstance().then((p) => p.setBool('hasSeenParanPhoto', true));
                     }
-                    _showStyleDialog(context, primaryColor);
-                  }, showNew: !_hasSeenParanPhoto),
+                    await _showStyleDialog(context, primaryColor);
+                    // 고르고 돌아오면 메뉴의 스타일 썸네일도 바로 바뀌게
+                    if (ctx.mounted) setSheet(() {});
+                  }, showNew: !_hasSeenParanPhoto, trailing: _sheetStyleThumbs(song)),
                   _playerSheetItem(ctx, Icons.speed, '배속', accent, baseColor, () {
-                    Navigator.pop(ctx);
                     _showSpeedDialog(context, context.read<PlayerProvider>(), primaryColor);
-                  }),
+                  }, trailing: _sheetValue(_sheetSpeedLabel(playerProvider.playbackSpeed)), arrow: true),
                   _playerSheetItem(ctx, Icons.lyrics_outlined, AppLocalizations.of(context)!.lyrics, accent, baseColor, () {
                     Navigator.pop(ctx);
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const LyricsScreen()));
-                  }),
+                  }, arrow: true),
                 ],
               ),
             ),
           ),
         );
+        });
       },
     );
   }
 
-  Widget _playerSheetItem(BuildContext context, IconData icon, String label, Color iconColor, Color textColor, VoidCallback onTap, {bool showNew = false}) {
+  static Widget _playerSheetItem(BuildContext context, IconData icon, String label, Color iconColor, Color textColor, VoidCallback onTap,
+      {bool showNew = false, Widget? trailing, bool arrow = false, bool trailingTappable = false}) {
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: onTap,
@@ -1181,30 +1187,237 @@ class _PlayerScreenState extends State<PlayerScreen>
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.12),
+                color: const Color(0xFFEDF4F8), // 아이콘 배경: 아주 연한 블루그레이
                 borderRadius: BorderRadius.circular(9),
               ),
               child: Icon(icon, color: iconColor, size: 16),
             ),
             const SizedBox(width: 12),
-            Text(label, style: TextStyle(color: textColor, fontSize: 13.5, fontWeight: FontWeight.w600)),
-            if (showNew) ...[
-              const SizedBox(width: 6),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                decoration: BoxDecoration(
-                  color: Colors.redAccent,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: const Text(
-                  'NEW',
-                  style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold),
-                ),
+            Expanded(
+              child: Row(
+                children: [
+                  Flexible(
+                    child: Text(label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: textColor, fontSize: 13.5, fontWeight: FontWeight.w600)),
+                  ),
+                  if (showNew) ...[
+                    const SizedBox(width: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                      decoration: BoxDecoration(
+                        color: Colors.redAccent,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Text(
+                        'NEW',
+                        style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ],
               ),
+            ),
+            // 오른쪽: 지금 상태 표시 (보여주기만, 누르면 줄 전체 동작 그대로)
+            if (trailing != null) trailingTappable ? trailing : IgnorePointer(child: trailing),
+            if (arrow) ...[
+              const SizedBox(width: 2),
+              Icon(Icons.chevron_right_rounded, size: 20, color: textColor.withOpacity(0.3)),
             ],
           ],
         ),
       ),
+    );
+  }
+
+  // ── 더보기 메뉴 오른쪽 상태 표시용 ──
+  static const _sheetBlue = Color(0xFF2589E8);
+  static const _sheetSub = Color(0xFF8A8378);
+
+  static Widget _sheetValue(String text) => Text(text,
+      style: const TextStyle(color: _sheetSub, fontSize: 12.5, fontWeight: FontWeight.w500));
+
+  static String _sheetSleepLabel(PlayerProvider p) {
+    final end = p.sleepTimerEnd;
+    if (!p.isSleepTimerActive || end == null) return '꺼짐';
+    final secs = end.difference(DateTime.now()).inSeconds;
+    final m = (secs / 60).ceil().clamp(1, 100000);
+    if (m < 60) return '$m분 후 중지';
+    final h = m ~/ 60;
+    final r = m % 60;
+    return r == 0 ? '$h시간 후 중지' : '$h시간 $r분 후 중지';
+  }
+
+  static String _sheetSpeedLabel(double speed) {
+    var t = speed.toStringAsFixed(2);
+    if (t.endsWith('0')) t = t.substring(0, t.length - 1); // 1.00 → 1.0, 1.50 → 1.5
+    return '$t×';
+  }
+
+  static Widget _sheetMiniSwitch(bool on) {
+    return Container(
+      width: 38,
+      height: 22,
+      padding: const EdgeInsets.all(2),
+      alignment: on ? Alignment.centerRight : Alignment.centerLeft,
+      decoration: BoxDecoration(
+        color: on ? _sheetBlue : Colors.black.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(11),
+      ),
+      child: Container(
+        width: 18,
+        height: 18,
+        decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+      ),
+    );
+  }
+
+  static Widget _sheetRepeatChips(PlayerProvider p) {
+    final mode = p.loopMode;
+    // 원하는 상태가 될 때까지 기존 반복 기능을 그대로 넘김 (로직 그대로)
+    void setTo(LoopMode target) {
+      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+      for (var i = 0; i < 3 && p.loopMode != target; i++) {
+        p.toggleLoopMode();
+      }
+    }
+
+    Widget chip(String label, LoopMode m) {
+      final sel = mode == m;
+      return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => setTo(m),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+          decoration: BoxDecoration(
+            color: sel ? _sheetBlue : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(label,
+              style: TextStyle(
+                color: sel ? Colors.white : _sheetSub,
+                fontSize: 11.5,
+                fontWeight: sel ? FontWeight.w700 : FontWeight.w500,
+              )),
+        ),
+      );
+    }
+    return Container(
+      padding: const EdgeInsets.all(2),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black.withOpacity(0.08)),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          chip('꺼짐', LoopMode.off),
+          chip('한 곡', LoopMode.one),
+          chip('전체', LoopMode.all),
+        ],
+      ),
+    );
+  }
+
+  Widget _sheetStyleThumbs(Song song) =>
+      _styleThumbs(song, _albumArtStyle, _nightBgPath, _nightBgIsFile);
+
+  /// 재생화면 스타일 썸네일 3개 (재생화면 메뉴 · 곡 목록 메뉴 같이 씀)
+  static Widget _styleThumbs(Song song, int style, String bgPath, bool bgIsFile) {
+    Widget box(int id, String label, Widget img) {
+      final sel = style == id;
+      return Padding(
+        padding: const EdgeInsets.only(left: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(9),
+                    border: Border.all(
+                        color: sel ? _sheetBlue : Colors.transparent, width: 2),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(7),
+                    child: img,
+                  ),
+                ),
+                if (sel)
+                  Positioned(
+                    right: -4,
+                    top: -4,
+                    child: Container(
+                      width: 15,
+                      height: 15,
+                      decoration: BoxDecoration(
+                        color: _sheetBlue,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 1.5),
+                      ),
+                      child: const Icon(Icons.check, size: 9, color: Colors.white),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 3),
+            Text(label,
+                style: TextStyle(
+                  color: sel ? _sheetBlue : _sheetSub,
+                  fontSize: 9.5,
+                  fontWeight: sel ? FontWeight.w700 : FontWeight.w500,
+                )),
+          ],
+        ),
+      );
+    }
+
+    // 시디롬: 작은 CD 그림
+    final cd = Container(
+      color: const Color(0xFFEDF4F8),
+      alignment: Alignment.center,
+      child: Container(
+        width: 28,
+        height: 28,
+        alignment: Alignment.center,
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: SweepGradient(colors: [
+            Color(0xFFD5DAE1), Colors.white, Color(0xFFC6CCD5), Colors.white, Color(0xFFD5DAE1),
+          ]),
+        ),
+        child: Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(
+            color: const Color(0xFFEDF4F8),
+            shape: BoxShape.circle,
+            border: Border.all(color: const Color(0xFFB8BEC8)),
+          ),
+        ),
+      ),
+    );
+    // 파란포토: 지금 고른 사진
+    final photo = bgIsFile
+        ? Image.file(File(bgPath), fit: BoxFit.cover)
+        : paranPhoto(bgPath, thumb: true, fit: BoxFit.cover);
+    // 앨범: 지금 곡 앨범아트
+    final album = song.albumArt != null
+        ? Image.memory(Uint8List.fromList(song.albumArt!), fit: BoxFit.cover, gaplessPlayback: true)
+        : Image.asset(noAlbumImagePath(song.uri ?? song.title), fit: BoxFit.cover);
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        box(1, '시디롬', cd),
+        box(6, '파란포토', photo),
+        box(3, '앨범', album),
+      ],
     );
   }
   Widget _buildAlbumArt(Song song, Color primaryColor) {
@@ -2438,7 +2651,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
   }
 
-  void _showSleepTimerDialog(BuildContext context, PlayerProvider playerProvider, Color primaryColor) {
+  static void _showSleepTimerDialog(BuildContext context, PlayerProvider playerProvider, Color primaryColor) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -2449,7 +2662,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
   }
 
-  void _showSleepWheelPickerDirect(BuildContext context, PlayerProvider playerProvider, Color _unusedColor) {
+  static void _showSleepWheelPickerDirect(BuildContext context, PlayerProvider playerProvider, Color _unusedColor) {
     final primaryColor = AppTheme.fixedAccent;
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     final textColor = isDarkMode ? Colors.white : Colors.black;
@@ -2523,7 +2736,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
   }
 
-  void _showSpeedDialog(BuildContext context, PlayerProvider playerProvider, Color primaryColor) {
+  static void _showSpeedDialog(BuildContext context, PlayerProvider playerProvider, Color primaryColor) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -2739,7 +2952,15 @@ class _PlayerScreenState extends State<PlayerScreen>
     );
   }
 
-  void _showStyleDialog(BuildContext context, Color primaryColor) {
+  Future<void> _showStyleDialog(BuildContext context, Color primaryColor) {
+    return _styleDialog(context, _albumArtStyle, (id) {
+      if (mounted) setState(() => _albumArtStyle = id);
+      _saveStyle(id);
+    });
+  }
+
+  /// 재생화면 스타일 선택 창 (재생화면 메뉴 · 곡 목록 메뉴 같이 씀)
+  static Future<void> _styleDialog(BuildContext context, int current, ValueChanged<int> onPick) {
     const accent = AppTheme.fixedAccent;
     final styles = [
       {'id': 1, 'name': AppLocalizations.of(context)!.styleCD, 'icon': Icons.album, 'desc': AppLocalizations.of(context)!.styleCDDesc},
@@ -2747,7 +2968,7 @@ class _PlayerScreenState extends State<PlayerScreen>
       {'id': 3, 'name': AppLocalizations.of(context)!.styleCard, 'icon': Icons.image, 'desc': AppLocalizations.of(context)!.styleCardDesc},
     ];
 
-    showDialog(
+    return showDialog(
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
@@ -2769,11 +2990,11 @@ class _PlayerScreenState extends State<PlayerScreen>
               itemCount: styles.length,
               itemBuilder: (context, index) {
                 final style = styles[index];
-                final isSelected = _albumArtStyle == style['id'];
+                final isSelected = current == style['id'];
                 return InkWell(
                   onTap: () {
-                    setState(() => _albumArtStyle = style['id'] as int);
-                    _saveStyle(style['id'] as int);
+                    current = style['id'] as int;
+                    onPick(current);
                     setDialogState(() {});
                     Navigator.pop(ctx);
                   },
@@ -2845,6 +3066,72 @@ class _PlayerScreenState extends State<PlayerScreen>
       ),
     );
   }
+}
+
+// ── 곡 목록 점 3개 메뉴에서도 재생화면 메뉴와 똑같은 줄을 쓰기 위한 공용 함수 ──
+
+/// 셔플 · 반복 · 수면 · 재생화면 스타일 · 배속 줄 묶음
+List<Widget> playerSettingRows(
+  BuildContext context, {
+  required Song song,
+  required int style,
+  required String bgPath,
+  required bool bgIsFile,
+  required Color textColor,
+  required VoidCallback onStyleChanged,
+}) {
+  final p = context.watch<PlayerProvider>();
+  const accent = Color(0xFF2589E8);
+  void vib() => const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+  return [
+    _PlayerScreenState._playerSheetItem(
+      context, Icons.shuffle_rounded, AppLocalizations.of(context)!.shuffle, accent, textColor,
+      () { vib(); p.toggleShuffle(); },
+      trailing: _PlayerScreenState._sheetMiniSwitch(p.isShuffled),
+    ),
+    _PlayerScreenState._playerSheetItem(
+      context, Icons.repeat_rounded, '반복', accent, textColor,
+      () { vib(); p.toggleLoopMode(); },
+      trailing: _PlayerScreenState._sheetRepeatChips(p),
+      trailingTappable: true,
+    ),
+    _PlayerScreenState._playerSheetItem(
+      context, Icons.nightlight_round, '수면', accent, textColor,
+      () { vib(); showPlayerSleepMenu(context); },
+      trailing: _PlayerScreenState._sheetValue(_PlayerScreenState._sheetSleepLabel(p)),
+      arrow: true,
+    ),
+    _PlayerScreenState._playerSheetItem(
+      context, Icons.style, AppLocalizations.of(context)!.playerStyle, accent, textColor,
+      () async { await showPlayerStyleMenu(context); onStyleChanged(); },
+      trailing: _PlayerScreenState._styleThumbs(song, style, bgPath, bgIsFile),
+    ),
+    _PlayerScreenState._playerSheetItem(
+      context, Icons.speed, '배속', accent, textColor,
+      () { showPlayerSpeedMenu(context); },
+      trailing: _PlayerScreenState._sheetValue(_PlayerScreenState._sheetSpeedLabel(p.playbackSpeed)),
+      arrow: true,
+    ),
+  ];
+}
+
+void showPlayerSleepMenu(BuildContext context) {
+  final p = context.read<PlayerProvider>();
+  if (p.isSleepTimerActive) {
+    _PlayerScreenState._showSleepTimerDialog(context, p, AppTheme.fixedAccent);
+  } else {
+    _PlayerScreenState._showSleepWheelPickerDirect(context, p, AppTheme.fixedAccent);
+  }
+}
+
+void showPlayerSpeedMenu(BuildContext context) =>
+    _PlayerScreenState._showSpeedDialog(context, context.read<PlayerProvider>(), AppTheme.fixedAccent);
+
+Future<void> showPlayerStyleMenu(BuildContext context) async {
+  final prefs = await SharedPreferences.getInstance();
+  if (!context.mounted) return;
+  final current = prefs.getInt('albumArtStyle') ?? 1;
+  await _PlayerScreenState._styleDialog(context, current, (id) => prefs.setInt('albumArtStyle', id));
 }
 
 void _showLoopModeDialog(BuildContext context, PlayerProvider playerProvider, Color primaryColor) {

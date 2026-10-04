@@ -11,6 +11,7 @@ import '../providers/playlist_provider.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../screens/player_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/edit_song_screen.dart';
 import '../screens/ringtone_screen.dart';
 import '../screens/equalizer_screen.dart';
@@ -208,18 +209,28 @@ class SongListTile extends StatelessWidget {
     );
   }
 
-  void _showOptionsSheet(BuildContext context, bool isFav) {
+  Future<void> _showOptionsSheet(BuildContext context, bool isFav) async {
+    // 재생화면 스타일 썸네일용 (지금 고른 스타일 · 파란포토 사진)
+    final prefs = await SharedPreferences.getInstance();
+    int style = prefs.getInt('albumArtStyle') ?? 1;
+    final bgPath = prefs.getString('nightBgPath') ?? 'assets/spring_photo1.png';
+    final bgIsFile = prefs.getBool('nightBgIsFile') ?? false;
+    if (!context.mounted) return;
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     final sheetColor = isDarkMode ? const Color(0xFF2A251D) : const Color(0xFFF4EFE5);
     final baseColor = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF1A1A1A);
     final descColor = isDarkMode ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-    const accent = AppTheme.fixedAccent;
+    const accent = Color(0xFF2589E8); // 파란소리 포인트 블루 (재생화면 메뉴와 통일)
 
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (ctx) {
+        bool addedNext = false; // "다음에 재생" 눌렀는지 (메뉴 안에 표시)
+        // 메뉴를 안 닫고 여러 개 할 수 있게: 즐겨찾기 등이 바로 다시 그려짐
+        return StatefulBuilder(builder: (ctx, setSheet) {
+        final isFav = ctx.watch<MusicProvider>().isFavorite(song.id);
         return SafeArea(
           top: false,
           child: Container(
@@ -310,45 +321,77 @@ class SongListTile extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
                 ),
-                _sheetItem(context, Icons.play_arrow, AppLocalizations.of(context)!.play, 'play', accent, baseColor),
-                _sheetItem(context, Icons.skip_next, AppLocalizations.of(context)!.playNext, 'play_next', accent, baseColor),
-                _sheetItem(context, Icons.playlist_add, AppLocalizations.of(context)!.addToPlaylist, 'playlist', accent, baseColor),
+                _sheetItem(context, Icons.play_arrow, AppLocalizations.of(context)!.play, 'play', accent, baseColor, isDarkMode),
+                _sheetItem(context, Icons.skip_next, AppLocalizations.of(context)!.playNext, 'play_next', accent, baseColor, isDarkMode,
+                    keepOpen: true,
+                    afterTap: () => setSheet(() => addedNext = true),
+                    trailing: addedNext
+                        ? const Text('추가됨 ✓',
+                            style: TextStyle(color: accent, fontSize: 12.5, fontWeight: FontWeight.w600))
+                        : null),
+                _sheetItem(context, Icons.playlist_add, AppLocalizations.of(context)!.addToPlaylist, 'playlist', accent, baseColor, isDarkMode,
+                    keepOpen: true, arrow: true),
                 _sheetItem(
                   context,
                   isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
                   isFav ? AppLocalizations.of(context)!.removeFromFavorites : AppLocalizations.of(context)!.addToFavorites,
                   'favorite',
-                  isFav ? Colors.redAccent : accent,
+                  accent,
                   baseColor,
+                  isDarkMode,
+                  keepOpen: true,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
                 ),
-                _sheetItem(context, Icons.music_note, AppLocalizations.of(context)!.setRingtone, 'ringtone', accent, baseColor),
-                _sheetItem(context, Icons.info_outline, AppLocalizations.of(context)!.songInfo, 'info', accent, baseColor),
-                _sheetItem(context, Icons.equalizer, AppLocalizations.of(context)!.equalizer, 'equalizer', accent, baseColor),
-                _sheetItem(context, Icons.share, AppLocalizations.of(context)!.share, 'share', accent, baseColor),
+                // 재생화면 메뉴와 똑같은 줄: 셔플 · 반복 · 수면 · 재생화면 스타일 · 배속
+                ...playerSettingRows(
+                  ctx,
+                  song: song,
+                  style: style,
+                  bgPath: bgPath,
+                  bgIsFile: bgIsFile,
+                  textColor: baseColor,
+                  onStyleChanged: () async {
+                    final p2 = await SharedPreferences.getInstance();
+                    style = p2.getInt('albumArtStyle') ?? 1;
+                    if (ctx.mounted) setSheet(() {});
+                  },
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
                 ),
-                _sheetItem(context, Icons.delete_outline, AppLocalizations.of(context)!.delete, 'delete', Colors.redAccent, Colors.redAccent),
+                _sheetItem(context, Icons.music_note, AppLocalizations.of(context)!.setRingtone, 'ringtone', accent, baseColor, isDarkMode, arrow: true),
+                _sheetItem(context, Icons.info_outline, AppLocalizations.of(context)!.songInfo, 'info', accent, baseColor, isDarkMode, arrow: true),
+                _sheetItem(context, Icons.equalizer, AppLocalizations.of(context)!.equalizer, 'equalizer', accent, baseColor, isDarkMode, arrow: true),
+                _sheetItem(context, Icons.share, AppLocalizations.of(context)!.share, 'share', accent, baseColor, isDarkMode),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
+                ),
+                _sheetItem(context, Icons.delete_outline, AppLocalizations.of(context)!.delete, 'delete', Colors.redAccent, Colors.redAccent, isDarkMode),
                 ],
               ),
             ),
           ),
         );
+        });
       },
     );
   }
 
-  Widget _sheetItem(BuildContext context, IconData icon, String label, String value, Color iconColor, Color textColor) {
+  Widget _sheetItem(BuildContext context, IconData icon, String label, String value, Color iconColor, Color textColor, bool isDarkMode,
+      {bool keepOpen = false, bool arrow = false, Widget? trailing, VoidCallback? afterTap}) {
+    final isDelete = iconColor == Colors.redAccent;
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: () {
-        Navigator.pop(context);
+        // keepOpen이면 메뉴를 닫지 않고 바로 실행 (여러 개 연달아 가능)
+        if (!keepOpen) Navigator.pop(context);
         _handleMenuAction(context, value);
+        afterTap?.call();
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 4),
@@ -358,13 +401,26 @@ class SongListTile extends StatelessWidget {
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.12),
+                // 아이콘 배경: 아주 연한 블루그레이 (삭제만 연한 빨강)
+                color: isDelete
+                    ? Colors.redAccent.withOpacity(0.12)
+                    : (isDarkMode ? const Color(0xFF2589E8).withOpacity(0.14) : const Color(0xFFEDF4F8)),
                 borderRadius: BorderRadius.circular(9),
               ),
               child: Icon(icon, color: iconColor, size: 16),
             ),
             const SizedBox(width: 12),
-            Text(label, style: TextStyle(color: textColor, fontSize: 13.5, fontWeight: FontWeight.w600)),
+            Expanded(
+              child: Text(label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: textColor, fontSize: 13.5, fontWeight: FontWeight.w600)),
+            ),
+            if (trailing != null) trailing,
+            if (arrow) ...[
+              const SizedBox(width: 2),
+              Icon(Icons.chevron_right_rounded, size: 20, color: textColor.withOpacity(0.3)),
+            ],
           ],
         ),
       ),

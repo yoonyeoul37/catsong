@@ -78,10 +78,44 @@ class _HomeScreenState extends State<HomeScreen> {
   final ScrollController _songListController = ScrollController();
   final ValueNotifier<String?> _indexBubble = ValueNotifier(null); // 가운데 큰 글자
 
-  /// 빠른 이동 막대: 그 글자로 시작하는 첫 곡으로 점프
-  void _jumpToLetter(String letter, List<Song> songs) {
-    final i = songs.indexWhere((s) => indexLetterOf(s.titleDisplay) == letter);
-    if (i < 0 || !_songListController.hasClients) return;
+  // ── 빠른 이동 막대용: 묶음(A-Z → ㄱ~ㅎ → #) 순서로 정리한 목록 (곡이 바뀔 때만 다시 계산) ──
+  List<(String?, int)> _indexEntries = const []; // (머리글, null이면 곡) / 곡 번호
+  List<Song> _indexSongs = const [];
+  int _indexFingerprint = -1;
+  static const double _indexHeaderH = 42; // 바 30 + 위 여백 8 + 아래 여백 4
+
+  void _buildIndexEntries(List<Song> songs) {
+    var fp = songs.length;
+    for (final s in songs) {
+      fp = (fp * 31 + s.titleDisplay.hashCode) & 0x3fffffff;
+    }
+    if (fp == _indexFingerprint) return;
+    _indexFingerprint = fp;
+    final byGroup = <String, List<Song>>{};
+    for (final s in songs) {
+      byGroup.putIfAbsent(indexGroupOf(s.titleDisplay), () => []).add(s);
+    }
+    final ordered = <Song>[];
+    final entries = <(String?, int)>[];
+    for (final g in kIndexGroups) {
+      final list = byGroup[g];
+      if (list == null || list.isEmpty) continue;
+      list.sort((a, b) =>
+          a.titleDisplay.toLowerCase().compareTo(b.titleDisplay.toLowerCase()));
+      entries.add((g, -1));
+      for (final s in list) {
+        entries.add((null, ordered.length));
+        ordered.add(s);
+      }
+    }
+    _indexSongs = ordered;
+    _indexEntries = entries;
+  }
+
+  /// 빠른 이동 막대: 그 묶음 머리글로 점프
+  void _jumpToGroup(String group) {
+    final hi = _indexEntries.indexWhere((e) => e.$1 == group);
+    if (hi < 0 || !_songListController.hasClients) return;
     // 곡 한 줄 높이를 화면에 보이는 곡으로 재서 위치 계산
     double rowH = 76;
     for (final k in _songItemKeys.values) {
@@ -91,8 +125,42 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
       }
     }
+    double offset = 0;
+    for (var j = 0; j < hi; j++) {
+      offset += _indexEntries[j].$1 != null ? _indexHeaderH : rowH;
+    }
     final max = _songListController.position.maxScrollExtent;
-    _songListController.jumpTo((i * rowH).clamp(0.0, max));
+    _songListController.jumpTo(offset.clamp(0.0, max));
+  }
+
+  /// 목록 안 초성 섹션 헤더 바 (ㄱ, ㄴ, A-Z ...)
+  Widget _buildIndexHeader(String group, bool isDark) {
+    return SizedBox(
+      height: _indexHeaderH,
+      child: Padding(
+        // 좌우는 곡 줄 끝과 맞춤, 위 8 / 아래 4 여백
+        // 좌우를 곡 줄 끝과 똑같이 맞춤
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
+        child: Container(
+          height: 30,
+          // 글자 시작을 앨범 이미지 시작 위치에 맞춤
+          padding: const EdgeInsets.only(left: 14),
+          alignment: Alignment.centerLeft,
+          decoration: BoxDecoration(
+            color: isDark ? kIndexBlue.withOpacity(0.14) : kIndexBg,
+            borderRadius: BorderRadius.circular(7),
+          ),
+          child: Text(
+            group,
+            style: const TextStyle(
+              color: kIndexBlue,
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+      ),
+    );
   }
   bool _showBanner = false;
   bool _isSelectionMode = false;
@@ -1893,10 +1961,16 @@ class _HomeScreenState extends State<HomeScreen> {
               // 빠른 이동 막대: 30곡 이상이고 검색 중이 아닐 때만
               final listSongs = musicProvider.songs;
               final showIndexBar = listSongs.length >= 30 && !_isSearching;
-              final present = showIndexBar
-                  ? listSongs.map((s) => indexLetterOf(s.titleDisplay)).toSet()
+              if (showIndexBar) _buildIndexEntries(listSongs);
+              final available = showIndexBar
+                  ? _indexEntries.where((e) => e.$1 != null).map((e) => e.$1!).toSet()
                   : <String>{};
-              final indexLetters = kIndexOrder.where(present.contains).toList();
+              // 막대가 있을 땐 묶음 순서(A-Z → ㄱ~ㅎ → #) + 머리글, 아니면 원래 목록 그대로
+              final viewSongs = showIndexBar ? _indexSongs : listSongs;
+              final List<(String?, int)> entries = showIndexBar
+                  ? _indexEntries
+                  : [for (var k = 0; k < listSongs.length; k++) (null, k)];
+              final isDarkList = baseColor == Colors.white;
               return Stack(
               children: [
               RefreshIndicator(
@@ -1904,10 +1978,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 onRefresh: () => musicProvider.loadSongs(),
                 child: ListView.builder(
                   controller: _songListController,
-                  padding: EdgeInsets.only(bottom: 8, right: showIndexBar ? 18 : 0),
-                  itemCount: musicProvider.songs.length,
-                  itemBuilder: (context, index) {
-                    final songs = musicProvider.songs;
+                  // 인덱스 띠와 곡 줄(선택 배경 포함) 사이에 틈 두기
+                  padding: EdgeInsets.only(bottom: 8, right: showIndexBar ? 34 : 0),
+                  itemCount: entries.length,
+                  itemBuilder: (context, i) {
+                    final entry = entries[i];
+                    if (entry.$1 != null) {
+                      return _buildIndexHeader(entry.$1!, isDarkList);
+                    }
+                    final index = entry.$2;
+                    final songs = viewSongs;
                     final song = songs[index];
                     final isSelected = _selectedSongIds.contains(song.id);
                     _songItemKeys.putIfAbsent(song.id, () => GlobalKey());
@@ -1985,13 +2065,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               if (showIndexBar)
                 Positioned(
-                  right: 2,
+                  right: 0,
                   top: 4,
                   bottom: 12,
                   child: IndexBar(
-                    letters: indexLetters,
-                    color: Theme.of(context).colorScheme.primary,
-                    onLetter: (l) => _jumpToLetter(l, listSongs),
+                    available: available,
+                    isDark: isDarkList,
+                    onLetter: _jumpToGroup,
                     onActiveChanged: (l) => _indexBubble.value = l,
                   ),
                 ),
@@ -2003,17 +2083,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (letter == null) return const SizedBox.shrink();
                     return Center(
                       child: Container(
-                        width: 72,
-                        height: 72,
+                        width: 84,
+                        height: 84,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.65),
-                          borderRadius: BorderRadius.circular(18),
+                          color: kIndexBlue.withOpacity(0.85),
+                          borderRadius: BorderRadius.circular(22),
                         ),
                         child: Text(letter,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 34,
+                                fontSize: letter.length > 1 ? 28 : 40,
                                 fontWeight: FontWeight.w700)),
                       ),
                     );

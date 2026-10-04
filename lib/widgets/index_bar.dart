@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../utils/index_letter.dart';
 
-/// 곡 목록 오른쪽 세로 빠른 이동 막대 (A~Z, ㄱ~ㅎ, #)
-/// 평소엔 은은하게, 손가락 대는 동안만 진하게.
+/// 파란소리 포인트 블루 / 연한 배경
+const kIndexBlue = Color(0xFF2589E8);
+const kIndexBg = Color(0xFFEDF4F8);
+
+/// 곡 목록 오른쪽 세로 빠른 이동 막대
+/// 항목은 항상 A-Z / ㄱ ~ ㅎ / # 16개. 곡이 없는 글자는 연하게, 누르면 가까운 글자로.
 class IndexBar extends StatefulWidget {
-  final List<String> letters; // 실제 곡이 있는 글자만
-  final ValueChanged<String> onLetter; // 글자 바뀔 때마다 (점프)
+  final Set<String> available; // 실제 곡이 있는 묶음 (A-Z, ㄱ, ㄴ ... #)
+  final bool isDark;
+  final ValueChanged<String> onLetter; // 묶음 바뀔 때마다 (점프)
   final ValueChanged<String?> onActiveChanged; // 가운데 큰 글자 표시용
-  final Color color;
 
   const IndexBar({
     super.key,
-    required this.letters,
+    required this.available,
+    required this.isDark,
     required this.onLetter,
     required this.onActiveChanged,
-    required this.color,
   });
 
   @override
@@ -23,50 +28,77 @@ class IndexBar extends StatefulWidget {
 
 class _IndexBarState extends State<IndexBar> {
   String? _active;
+  int _releaseToken = 0;
+
+  /// 누른 칸에 곡이 없으면 아래쪽 → 위쪽으로 가장 가까운 글자
+  String? _resolve(int i) {
+    const g = kIndexGroups;
+    for (var k = i; k < g.length; k++) {
+      if (widget.available.contains(g[k])) return g[k];
+    }
+    for (var k = i - 1; k >= 0; k--) {
+      if (widget.available.contains(g[k])) return g[k];
+    }
+    return null;
+  }
 
   void _handle(double dy, double height) {
-    final letters = widget.letters;
-    if (letters.isEmpty || height <= 0) return;
-    final i = (dy / height * letters.length).floor().clamp(0, letters.length - 1);
-    final l = letters[i];
-    if (l == _active) return;
-    setState(() => _active = l);
+    if (height <= 0) return;
+    final i = (dy / height * kIndexGroups.length)
+        .floor()
+        .clamp(0, kIndexGroups.length - 1);
+    final g = _resolve(i);
+    if (g == null || g == _active) return;
+    _releaseToken++; // 사라지기 예약 취소
+    setState(() => _active = g);
     HapticFeedback.selectionClick();
-    widget.onActiveChanged(l);
-    widget.onLetter(l);
+    widget.onActiveChanged(g);
+    widget.onLetter(g);
   }
 
   void _release() {
     if (_active == null) return;
     setState(() => _active = null);
-    widget.onActiveChanged(null);
+    // 큰 글자 팝업은 손 떼고 잠시 뒤에 사라짐
+    final token = ++_releaseToken;
+    Future.delayed(const Duration(milliseconds: 450), () {
+      if (mounted && token == _releaseToken) widget.onActiveChanged(null);
+    });
+  }
+
+  Widget _item(String g) {
+    final isActive = g == _active;
+    final has = widget.available.contains(g);
+    final isAZ = g == 'A-Z';
+    final text = Text(
+      g,
+      style: TextStyle(
+        color: isActive
+            ? Colors.white
+            : kIndexBlue.withOpacity(has ? 1.0 : 0.3),
+        fontSize: isAZ ? 11.5 : 14.5,
+        fontWeight: isActive ? FontWeight.w800 : FontWeight.w600,
+        height: 1.0,
+      ),
+    );
+    if (!isActive) return text;
+    return Container(
+      height: 24,
+      constraints: const BoxConstraints(minWidth: 24),
+      padding: EdgeInsets.symmetric(horizontal: isAZ ? 4 : 0),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: kIndexBlue,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: text,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, cons) {
       final h = cons.maxHeight;
-      final letters = widget.letters;
-
-      // 자리가 모자라면 글자 사이를 점(·)으로 줄여서 보여줌 (누르는 건 전체 글자 기준)
-      final maxVisible = (h / 15).floor().clamp(3, 1000);
-      List<String> shown;
-      if (letters.length <= maxVisible) {
-        shown = letters;
-      } else {
-        final slots = maxVisible.isOdd ? maxVisible : maxVisible - 1;
-        shown = [];
-        for (int i = 0; i < slots; i++) {
-          if (i.isEven) {
-            final idx = (i * (letters.length - 1) / (slots - 1)).round();
-            shown.add(letters[idx]);
-          } else {
-            shown.add('·');
-          }
-        }
-      }
-
-      final touching = _active != null;
       return GestureDetector(
         behavior: HitTestBehavior.opaque,
         onVerticalDragStart: (d) => _handle(d.localPosition.dy, h),
@@ -76,28 +108,23 @@ class _IndexBarState extends State<IndexBar> {
         onTapDown: (d) => _handle(d.localPosition.dy, h),
         onTapUp: (_) => _release(),
         onTapCancel: _release,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          width: 22,
-          decoration: BoxDecoration(
-            color: touching ? widget.color.withOpacity(0.08) : Colors.transparent,
-            borderRadius: BorderRadius.circular(11),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: shown.map((l) {
-              final isActive = l == _active;
-              return Text(
-                l,
-                style: TextStyle(
-                  color: widget.color.withOpacity(
-                      isActive ? 1.0 : (touching ? 0.85 : 0.55)),
-                  fontSize: 10,
-                  height: 1.1,
-                  fontWeight: isActive ? FontWeight.w800 : FontWeight.w600,
-                ),
-              );
-            }).toList(),
+        // 터치 영역은 넓게(36), 보이는 띠는 좁게(30)
+        child: SizedBox(
+          width: 36,
+          child: Center(
+            child: Container(
+              width: 30,
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              decoration: BoxDecoration(
+                color: widget.isDark ? kIndexBlue.withOpacity(0.12) : kIndexBg,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                children: kIndexGroups
+                    .map((g) => Expanded(child: Center(child: _item(g))))
+                    .toList(),
+              ),
+            ),
           ),
         ),
       );

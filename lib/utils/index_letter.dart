@@ -32,3 +32,16 @@ String indexLetterOf(String text) {
   // 숫자, 기호, 그 밖의 글자
   return '#';
 }
+
+/// 막대 항목: 영어는 A-Z 하나로 묶음
+const kIndexGroups = [
+  'A-Z',
+  'ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅅ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ',
+  '#',
+];
+
+String indexGroupOf(String text) {
+  final l = indexLetterOf(text);
+  final c = l.codeUnitAt(0);
+  return (c >= 65 && c <= 90) ? 'A-Z' : l;
+}

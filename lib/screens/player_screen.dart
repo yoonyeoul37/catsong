@@ -1338,18 +1338,21 @@ class _PlayerScreenState extends State<PlayerScreen>
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text.rich(
-                      TextSpan(children: [
-                        TextSpan(
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // "파란"만 숨쉬기 (재생 중일 때만)
+                        _BreathingText(
                           text: isKo ? '파란' : 'Paran',
                           style: GoogleFonts.doHyeon(color: sky, fontSize: 20, height: 1.0),
+                          moving: playerProvider.isPlaying,
                         ),
-                        TextSpan(
-                          text: isKo ? '소리' : 'Sori',
+                        Text(
+                          isKo ? '소리' : 'Sori',
                           style: GoogleFonts.doHyeon(
                               color: baseColor.withOpacity(0.85), fontSize: 20, height: 1.0),
                         ),
-                      ]),
+                      ],
                     ),
                     if (isKo) ...[
                       const SizedBox(height: 4),
@@ -3816,6 +3819,147 @@ class _TornEdgePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_TornEdgePainter old) => old.seed != seed || old.shadow != shadow;
+}
+
+/// 파란 글자가 천천히 밝아졌다 어두워지는 숨쉬기 (재생 중일 때만)
+class _BreathingText extends StatefulWidget {
+  final String text;
+  final TextStyle style;
+  final bool moving;
+  const _BreathingText({required this.text, required this.style, required this.moving});
+
+  @override
+  State<_BreathingText> createState() => _BreathingTextState();
+}
+
+class _BreathingTextState extends State<_BreathingText> with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1600), // 반 번 숨쉬는 시간 (클수록 천천히)
+  );
+
+  static const _dim = Color(0xFF5C9FE0); // 어두울 때
+  static const _bright = Color(0xFFA9D2FA); // 밝을 때
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.moving) _c.repeat(reverse: true);
+  }
+
+  @override
+  void didUpdateWidget(_BreathingText old) {
+    super.didUpdateWidget(old);
+    if (widget.moving && !_c.isAnimating) {
+      _c.repeat(reverse: true);
+    } else if (!widget.moving && _c.isAnimating) {
+      Future.delayed(const Duration(milliseconds: 450), () {
+        if (mounted && !widget.moving) _c.stop();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final base = widget.style.color ?? _dim;
+    return TweenAnimationBuilder<double>(
+      // 재생 중 1 → 일시정지 0 (원래 색으로 부드럽게)
+      tween: Tween(end: widget.moving ? 1.0 : 0.0),
+      duration: const Duration(milliseconds: 400),
+      builder: (context, f, _) => AnimatedBuilder(
+        animation: _c,
+        builder: (context, __) {
+          final t = Curves.easeInOut.transform(_c.value);
+          final breath = Color.lerp(_dim, _bright, t)!;
+          return Text(
+            widget.text,
+            style: widget.style.copyWith(
+              color: Color.lerp(base, breath, f),
+              shadows: [
+                Shadow(
+                  color: const Color(0xFF7FB8F0).withOpacity(0.45 * t * f),
+                  blurRadius: 10,
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// 글자가 하나씩 번갈아 살짝 위아래로 움직이는 물결 (재생 중일 때만)
+class _WavyText extends StatefulWidget {
+  final String text;
+  final TextStyle style;
+  final bool moving;
+  const _WavyText({required this.text, required this.style, required this.moving});
+
+  @override
+  State<_WavyText> createState() => _WavyTextState();
+}
+
+class _WavyTextState extends State<_WavyText> with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1800), // 숫자가 클수록 천천히
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.moving) _c.repeat();
+  }
+
+  @override
+  void didUpdateWidget(_WavyText old) {
+    super.didUpdateWidget(old);
+    if (widget.moving && !_c.isAnimating) {
+      _c.repeat();
+    } else if (!widget.moving && _c.isAnimating) {
+      // 제자리로 내려오는 동안은 조금 더 움직이다가 멈춤
+      Future.delayed(const Duration(milliseconds: 450), () {
+        if (mounted && !widget.moving) _c.stop();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final chars = widget.text.characters.toList();
+    return TweenAnimationBuilder<double>(
+      // 재생 중 1 → 일시정지 0 으로 부드럽게 (움직임 크기)
+      tween: Tween(end: widget.moving ? 1.0 : 0.0),
+      duration: const Duration(milliseconds: 400),
+      builder: (context, f, _) => AnimatedBuilder(
+        animation: _c,
+        builder: (context, __) => Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (var i = 0; i < chars.length; i++)
+              Transform.translate(
+                // 글자마다 조금씩 늦게 → 물결처럼 번갈아 올라감 (최대 4px)
+                offset: Offset(0, -4 * f * (0.5 - 0.5 * math.cos(2 * math.pi * (_c.value - i * 0.14)))),
+                child: Text(chars[i], style: widget.style),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 void _showLoopModeDialog(BuildContext context, PlayerProvider playerProvider, Color primaryColor) {

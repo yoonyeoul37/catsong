@@ -90,7 +90,8 @@ class _PlayerScreenState extends State<PlayerScreen>
   bool _styleLoaded = false; // 저장된 스타일·사진을 다 불러왔는지
   Set<String> _nightFavPaths = {};
   bool _nightBgIsFile = false;
-  int _bgFilter = 0; // 0 컬러, 1 흑백, 2 세피아
+  int _bgFilter = 0; // 0 컬러, 1 흑백, 2 세피아, 3 필름, 4 인화
+  int _printStyle = 0; // 앨범 스타일 인화 모양: 0 기본, 1 폴라로이드, 2 테이프, 3 겹친 사진, 4 둥근 테두리
   int _autoBgMin = 0; // 0 끄기, 10, 30 (분)
   Timer? _autoBgTimer;
 
@@ -222,6 +223,8 @@ class _PlayerScreenState extends State<PlayerScreen>
       _hasSeenParanPhoto = prefs.getBool('hasSeenParanPhoto') ?? false;
       _showSwipeHint = !shown;
       _bgFilter = prefs.getInt('bgFilter') ?? 0;
+      if (_bgFilter == 4) _bgFilter = 0; // 예전 인화 설정 → 컬러로
+      _printStyle = prefs.getInt('printStyle') ?? 0;
       _autoBgMin = prefs.getInt('autoBgMin') ?? 0;
       _styleLoaded = true;
     });
@@ -239,6 +242,88 @@ class _PlayerScreenState extends State<PlayerScreen>
     setState(() => _bgFilter = v);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('bgFilter', v);
+  }
+
+  Future<void> _setPrintStyle(int v) async {
+    setState(() => _printStyle = v);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('printStyle', v);
+  }
+
+  /// 인화 사진 카드 (모양 4가지)
+  Widget _printCard(Widget photo) {
+    const paperColor = Color(0xFFF6F1E6); // 인화지 색
+    final shadow = [
+      BoxShadow(color: Colors.black.withOpacity(0.35), blurRadius: 24, offset: const Offset(0, 10)),
+    ];
+    Widget paper(Widget c, EdgeInsets pad, {Color color = paperColor}) => Container(
+          padding: pad,
+          decoration: BoxDecoration(color: color, boxShadow: shadow),
+          child: c,
+        );
+    Widget square(Widget c) => AspectRatio(aspectRatio: 1, child: c);
+
+    switch (_printStyle) {
+      case 2: // 테이프 붙인 사진
+        Widget tape(double angle) => Transform.rotate(
+              angle: angle,
+              child: Container(width: 62, height: 20, color: const Color(0xD9ECE0C4)),
+            );
+        return Transform.rotate(
+          angle: 0.035,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              paper(square(photo), const EdgeInsets.all(9)),
+              Positioned(left: -18, top: -6, child: tape(-0.55)),
+              Positioned(right: -18, top: -6, child: tape(0.55)),
+            ],
+          ),
+        );
+      case 3: // 겹쳐 놓은 사진
+        Widget washed() => Stack(
+              fit: StackFit.passthrough,
+              children: [photo, Container(color: const Color(0x66F6F1E6))],
+            );
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            Transform.translate(
+              offset: const Offset(-16, 8),
+              child: Transform.rotate(
+                angle: -0.14,
+                child: paper(square(washed()), const EdgeInsets.all(8), color: const Color(0xFFEFE8DA)),
+              ),
+            ),
+            Transform.translate(
+              offset: const Offset(14, -6),
+              child: Transform.rotate(
+                angle: 0.1,
+                child: paper(square(washed()), const EdgeInsets.all(8), color: const Color(0xFFF2ECDF)),
+              ),
+            ),
+            Transform.rotate(
+              angle: -0.02,
+              child: paper(square(photo), const EdgeInsets.fromLTRB(9, 9, 9, 26)),
+            ),
+          ],
+        );
+      case 4: // 둥근 모서리 + 얇은 테두리
+        return Container(
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.9),
+            borderRadius: BorderRadius.circular(18),
+            boxShadow: shadow,
+          ),
+          child: ClipRRect(borderRadius: BorderRadius.circular(13), child: square(photo)),
+        );
+      default: // 폴라로이드
+        return Transform.rotate(
+          angle: -0.05,
+          child: paper(square(photo), const EdgeInsets.fromLTRB(10, 10, 10, 34)),
+        );
+    }
   }
 
   Future<void> _setAutoBg(int minutes) async {
@@ -302,6 +387,40 @@ class _PlayerScreenState extends State<PlayerScreen>
         child: child,
       );
     }
+
+    if (_bgFilter == 3) {
+      // 필름: 바랜 따뜻한 색 + 가장자리 어둡게 + 필름 입자
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          ColorFiltered(
+            colorFilter: const ColorFilter.matrix(<double>[
+              0.7016, 0.1803, 0.0182, 0, 19,
+              0.0524, 0.8099, 0.0178, 0, 17,
+              0.0464, 0.1562, 0.5774, 0, 19,
+              0, 0, 0, 1, 0,
+            ]),
+            child: child,
+          ),
+          const IgnorePointer(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  radius: 1.0,
+                  colors: [Colors.transparent, Color(0x73000000)],
+                  stops: [0.55, 1.0],
+                ),
+              ),
+            ),
+          ),
+          IgnorePointer(
+            child: RepaintBoundary(
+              child: CustomPaint(painter: _FilmGrainPainter()),
+            ),
+          ),
+        ],
+      );
+    }
     return child;
   }
 
@@ -351,7 +470,10 @@ class _PlayerScreenState extends State<PlayerScreen>
           ),
         );
 
-    return SizedBox(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+    SizedBox(
       height: 30,
       child: ListView(
         scrollDirection: Axis.horizontal,
@@ -363,6 +485,9 @@ class _PlayerScreenState extends State<PlayerScreen>
           chip('흑백', _bgFilter == 1, () => _setBgFilter(1)),
           const SizedBox(width: 6),
           chip('세피아', _bgFilter == 2, () => _setBgFilter(2)),
+          const SizedBox(width: 6),
+          chip('필름', _bgFilter == 3, () => _setBgFilter(3)),
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
             child: Container(width: 1, color: Colors.white.withOpacity(0.3)),
@@ -375,6 +500,9 @@ class _PlayerScreenState extends State<PlayerScreen>
           chip('30분', _autoBgMin == 30, () => _setAutoBg(30)),
         ],
       ),
+    ),
+
+      ],
     );
   }
 
@@ -807,7 +935,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                         children: [...previous, if (current != null) current],
                       ),
                       child: KeyedSubtree(
-                        key: ValueKey('$_nightBgPath-$_bgFilter'),
+                        key: ValueKey('$_nightBgPath-$_bgFilter-$_printStyle'),
                         child: _bgFiltered(_nightBgIsFile
                             ? Image.file(File(_nightBgPath), fit: BoxFit.cover)
                             : paranPhoto(_nightBgPath, fit: BoxFit.cover)),
@@ -1489,7 +1617,6 @@ class _PlayerScreenState extends State<PlayerScreen>
   Widget _buildNightPhotoArea(Song song) {
     return Stack(
       children: [
-        _buildNightBgPicker(),
         Align(
           alignment: Alignment.center,
           child: Stack(
@@ -1530,6 +1657,8 @@ class _PlayerScreenState extends State<PlayerScreen>
             ],
           ),
         ),
+        // 사진 고르기를 제일 위에 (제목 박스에 가려서 안 눌리는 것 방지)
+        _buildNightBgPicker(),
       ],
     );
   }
@@ -2219,6 +2348,9 @@ class _PlayerScreenState extends State<PlayerScreen>
   }
 
   Widget _buildCardStyle(Song song, Color primaryColor) {
+    final albumPhoto = song.albumArt != null
+        ? Image.memory(Uint8List.fromList(song.albumArt!), fit: BoxFit.cover, gaplessPlayback: true)
+        : Image.asset(noAlbumImagePath(song.uri ?? song.title), fit: BoxFit.cover);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Center(
@@ -2228,7 +2360,10 @@ class _PlayerScreenState extends State<PlayerScreen>
             final scale = _rotationController.isAnimating ? 1.03 : 1.0;
             return Transform.scale(scale: scale, child: child);
           },
-          child: Container(
+          // 인화 모양을 골랐으면 인화 사진 카드, 아니면 기본 카드
+          child: _printStyle != 0
+              ? FractionallySizedBox(widthFactor: 0.88, child: _printCard(albumPhoto))
+              : Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
@@ -2250,7 +2385,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   gaplessPlayback: true,
                 )
                     : Image.asset(
-                  noAlbumImagePath(song.title),
+                  noAlbumImagePath(song.uri ?? song.title),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -3020,11 +3155,14 @@ class _PlayerScreenState extends State<PlayerScreen>
     return _styleDialog(context, _albumArtStyle, (id) {
       if (mounted) setState(() => _albumArtStyle = id);
       _saveStyle(id);
+    }, printStyle: _printStyle, onPrintPick: (v) {
+      if (mounted) _setPrintStyle(v);
     });
   }
 
   /// 재생화면 스타일 선택 창 (재생화면 메뉴 · 곡 목록 메뉴 같이 씀)
-  static Future<void> _styleDialog(BuildContext context, int current, ValueChanged<int> onPick) {
+  static Future<void> _styleDialog(BuildContext context, int current, ValueChanged<int> onPick,
+      {int printStyle = 0, ValueChanged<int>? onPrintPick}) {
     const accent = AppTheme.fixedAccent;
     final styles = [
       {'id': 1, 'name': AppLocalizations.of(context)!.styleCD, 'icon': Icons.album, 'desc': AppLocalizations.of(context)!.styleCDDesc},
@@ -3060,7 +3198,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                     current = style['id'] as int;
                     onPick(current);
                     setDialogState(() {});
-                    Navigator.pop(ctx);
+                    // 앨범은 바로 닫지 않고 아래에서 인화 모양을 고르게
+                    if (current != 3 || onPrintPick == null) Navigator.pop(ctx);
                   },
                   borderRadius: BorderRadius.circular(12),
                   child: Container(
@@ -3073,7 +3212,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                         color: isSelected ? accent : Colors.transparent,
                       ),
                     ),
-                    child: Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    Row(
                       children: [
                         Icon(style['icon'] as IconData,
                             color: isSelected ? accent : Colors.black38, size: 24),
@@ -3113,6 +3255,41 @@ class _PlayerScreenState extends State<PlayerScreen>
                         ),
                         if (isSelected)
                           const Icon(Icons.check_circle, color: accent, size: 20),
+                      ],
+                    ),
+                        // 앨범을 골랐을 때: 인화 모양 고르기
+                        if (style['id'] == 3 && isSelected && onPrintPick != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, left: 36),
+                            child: Wrap(
+                              spacing: 6,
+                              runSpacing: 6,
+                              children: [
+                                for (final e in const ['기본', '폴라로이드', '테이프', '겹친 사진', '둥근 테두리'].asMap().entries)
+                                  GestureDetector(
+                                    onTap: () {
+                                      printStyle = e.key;
+                                      onPrintPick(e.key);
+                                      Navigator.pop(ctx);
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                      decoration: BoxDecoration(
+                                        color: printStyle == e.key ? accent : Colors.white,
+                                        borderRadius: BorderRadius.circular(14),
+                                        border: Border.all(
+                                            color: printStyle == e.key ? accent : Colors.black12),
+                                      ),
+                                      child: Text(e.value,
+                                          style: TextStyle(
+                                            color: printStyle == e.key ? Colors.white : Colors.black87,
+                                            fontSize: 12,
+                                          )),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -3197,7 +3374,9 @@ Future<void> showPlayerStyleMenu(BuildContext context) async {
   if (!context.mounted) return;
   final current = prefs.getInt('albumArtStyle') ?? 1;
   await prefs.setBool('hasSeenParanPhoto', true);
-  await _PlayerScreenState._styleDialog(context, current, (id) => prefs.setInt('albumArtStyle', id));
+  await _PlayerScreenState._styleDialog(context, current, (id) => prefs.setInt('albumArtStyle', id),
+      printStyle: prefs.getInt('printStyle') ?? 0,
+      onPrintPick: (v) => prefs.setInt('printStyle', v));
 }
 
 /// 꼬리가 살랑살랑 흔들리는 고양이 (재생 중일 때만)
@@ -3299,6 +3478,90 @@ class _CatSilhouettePainter extends CustomPainter {
   @override
   bool shouldRepaint(_CatSilhouettePainter old) =>
       old.color != color || old.sway != sway;
+}
+
+/// 필름 입자: 화면 위에 아주 옅은 점들을 한 번만 그림 (매번 같은 무늬)
+class _FilmGrainPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rnd = math.Random(7);
+    final count = (size.width * size.height / 160).round();
+    final light = Paint();
+    final dark = Paint();
+    for (var i = 0; i < count; i++) {
+      final x = rnd.nextDouble() * size.width;
+      final y = rnd.nextDouble() * size.height;
+      final a = 0.04 + rnd.nextDouble() * 0.07;
+      final p = rnd.nextBool()
+          ? (light..color = Colors.white.withOpacity(a))
+          : (dark..color = Colors.black.withOpacity(a));
+      canvas.drawRect(Rect.fromLTWH(x, y, 1.3, 1.3), p);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_FilmGrainPainter old) => false;
+}
+
+/// 찢어진 인화 사진 모양: 위·왼쪽은 반듯, 오른쪽·아래는 찢어짐 (곡마다 찢어진 모양이 조금씩 다름)
+Path _tornPhotoPath(Size s, int seed) {
+  final rnd = math.Random(seed);
+  double jitter() => (rnd.nextDouble() - 0.5) * 4.4;
+  const depth = 12.0;
+  final p = Path()
+    ..moveTo(0, 0)
+    ..lineTo(s.width, 0);
+  double off = 0;
+  for (double y = 0; y <= s.height; y += 6) {
+    off = (off + jitter()).clamp(-depth, 0.0).toDouble();
+    p.lineTo(s.width + off - rnd.nextDouble() * 1.5, y);
+  }
+  off = 0;
+  final tearStart = s.width * 0.62; // 오른쪽 아래 모서리가 더 크게 찢어짐
+  for (double x = s.width; x >= 0; x -= 6) {
+    off = (off + jitter()).clamp(-depth, 0.0).toDouble();
+    final cut = math.max(0.0, x - tearStart) * 0.38;
+    p.lineTo(x, s.height + off - cut - rnd.nextDouble() * 1.5);
+  }
+  p
+    ..lineTo(0, s.height)
+    ..close();
+  return p;
+}
+
+class _TornClipper extends CustomClipper<Path> {
+  final int seed;
+  _TornClipper(this.seed);
+  @override
+  Path getClip(Size size) => _tornPhotoPath(size, seed);
+  @override
+  bool shouldReclip(_TornClipper old) => old.seed != seed;
+}
+
+/// 뒤: 그림자 / 앞: 찢어진 가장자리 하얀 종이 결
+class _TornEdgePainter extends CustomPainter {
+  final int seed;
+  final bool shadow;
+  _TornEdgePainter({required this.seed, required this.shadow});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = _tornPhotoPath(size, seed);
+    if (shadow) {
+      canvas.drawShadow(path.shift(const Offset(0, 4)), Colors.black, 12, false);
+    } else {
+      canvas.drawPath(
+        path,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 3
+          ..color = Colors.white.withOpacity(0.9),
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_TornEdgePainter old) => old.seed != seed || old.shadow != shadow;
 }
 
 void _showLoopModeDialog(BuildContext context, PlayerProvider playerProvider, Color primaryColor) {

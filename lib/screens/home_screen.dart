@@ -81,8 +81,9 @@ class _HomeScreenState extends State<HomeScreen> {
   // ── 빠른 이동 막대용: 묶음(A-Z → ㄱ~ㅎ → #) 순서로 정리한 목록 (곡이 바뀔 때만 다시 계산) ──
   List<(String?, int)> _indexEntries = const []; // (머리글, null이면 곡) / 곡 번호
   List<Song> _indexSongs = const [];
+  Map<String, int> _indexCounts = const {}; // 초성별 곡 수
   int _indexFingerprint = -1;
-  static const double _indexHeaderH = 42; // 바 30 + 위 여백 8 + 아래 여백 4
+  static const double _indexHeaderH = 34; // 위 여백 + 초성 글자
 
   void _buildIndexEntries(List<Song> songs) {
     var fp = songs.length;
@@ -109,6 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
     _indexSongs = ordered;
+    _indexCounts = {for (final e in byGroup.entries) e.key: e.value.length};
     _indexEntries = entries;
   }
 
@@ -133,30 +135,37 @@ class _HomeScreenState extends State<HomeScreen> {
     _songListController.jumpTo(offset.clamp(0.0, max));
   }
 
-  /// 목록 안 초성 섹션 헤더 바 (ㄱ, ㄴ, A-Z ...)
+  /// 목록 안 초성 머리글: 바·선 없이 회갈색 초성 + 연한 곡 수
   Widget _buildIndexHeader(String group, bool isDark) {
+    final count = _indexCounts[group] ?? 0;
     return SizedBox(
       height: _indexHeaderH,
       child: Padding(
-        // 좌우는 곡 줄 끝과 맞춤, 위 8 / 아래 4 여백
-        // 좌우를 곡 줄 끝과 똑같이 맞춤
-        padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
-        child: Container(
-          height: 30,
-          // 글자 시작을 앨범 이미지 시작 위치에 맞춤
-          padding: const EdgeInsets.only(left: 14),
-          alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-            color: isDark ? kIndexBlue.withOpacity(0.14) : kIndexBg,
-            borderRadius: BorderRadius.circular(7),
-          ),
-          child: Text(
-            group,
-            style: const TextStyle(
-              color: kIndexBlue,
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-            ),
+        // 글자 시작을 앨범 이미지 시작 위치에 맞춤, 위쪽 여백으로 구간 구분
+        padding: const EdgeInsets.fromLTRB(22, 14, 12, 2),
+        child: Align(
+          alignment: Alignment.bottomLeft,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                group,
+                style: TextStyle(
+                  color: isDark ? kIndexMutedDark : kIndexMuted,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(width: 7),
+              Text(
+                '$count ${AppLocalizations.of(context)!.songCount}',
+                style: TextStyle(
+                  color: (isDark ? kIndexMutedDark : kIndexMuted).withOpacity(0.6),
+                  fontSize: 11,
+                ),
+              ),
+            ],
           ),
         ),
       ),

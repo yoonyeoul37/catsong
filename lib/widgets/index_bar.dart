@@ -5,6 +5,9 @@ import '../utils/index_letter.dart';
 /// 파란소리 포인트 블루 / 연한 배경
 const kIndexBlue = Color(0xFF2589E8);
 const kIndexBg = Color(0xFFEDF4F8);
+/// 평소 글자색: 차분한 회갈색 (라이트 / 다크)
+const kIndexMuted = Color(0xFF8A857B);
+const kIndexMutedDark = Color(0xFFA29A8B);
 
 /// 곡 목록 오른쪽 세로 빠른 이동 막대
 /// 항목은 항상 A-Z / ㄱ ~ ㅎ / # 16개. 곡이 없는 글자는 연하게, 누르면 가까운 글자로.
@@ -75,7 +78,8 @@ class _IndexBarState extends State<IndexBar> {
       style: TextStyle(
         color: isActive
             ? Colors.white
-            : kIndexBlue.withOpacity(has ? 1.0 : 0.3),
+            : (widget.isDark ? kIndexMutedDark : kIndexMuted)
+                .withOpacity(has ? 1.0 : 0.35),
         fontSize: isAZ ? 11.5 : 14.5,
         fontWeight: isActive ? FontWeight.w800 : FontWeight.w600,
         height: 1.0,
@@ -116,7 +120,7 @@ class _IndexBarState extends State<IndexBar> {
               width: 30,
               padding: const EdgeInsets.symmetric(vertical: 6),
               decoration: BoxDecoration(
-                color: widget.isDark ? kIndexBlue.withOpacity(0.12) : kIndexBg,
+                color: Colors.transparent, // 막대 배경 없음
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Column(

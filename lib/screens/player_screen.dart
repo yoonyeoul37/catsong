@@ -84,6 +84,7 @@ class _PlayerScreenState extends State<PlayerScreen>
   bool _showNightPicker = true;
   String? _nightSelectedCategory;
   String _nightBgPath = 'assets/music_night_bg.png';
+  String? _lastBgSongUri; // 파란포토 자동 변경용: 곡 파일 경로로 곡 바뀜 판단
   Set<String> _nightFavPaths = {};
   bool _nightBgIsFile = false;
   int _bgFilter = 0; // 0 컬러, 1 흑백, 2 세피아
@@ -642,7 +643,13 @@ class _PlayerScreenState extends State<PlayerScreen>
           filePath: song.uri,
         );
       });
-      if (_albumArtStyle == 6 && _nightFavPaths.length >= 2) {
+    }
+
+    // 파란포토는 "진짜 다른 곡"일 때만 바꿈 (곡 정보 편집으로는 안 바뀜)
+    if (_lastBgSongUri != song.uri) {
+      final isFirst = _lastBgSongUri == null;
+      _lastBgSongUri = song.uri;
+      if (!isFirst && _albumArtStyle == 6 && _nightFavPaths.length >= 2) {
         final options = _nightFavPaths.where((p) => p != _nightBgPath).toList();
         if (options.isNotEmpty) {
           final next = options[math.Random().nextInt(options.length)];
@@ -804,7 +811,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   gaplessPlayback: true,
                 )
                     : Image.asset(
-                  noAlbumImagePath(song.title),
+                  noAlbumImagePath(song.uri ?? song.title),
                   fit: BoxFit.cover,
                 ),
               ),

@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:ui' show FontFeature;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../utils/greeting_images.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../models/radio_station.dart';
@@ -182,7 +184,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
               height: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: const AssetImage('assets/farewell_bg.png'),
+                  image: CachedNetworkImageProvider(farewellImageUrl(context)),
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(darkValue),

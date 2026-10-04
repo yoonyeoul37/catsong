@@ -124,7 +124,7 @@ class MiniPlayer extends StatelessWidget {
                                 ),
                                 child: Center(
                                   child: Image.asset(
-                                    noAlbumImagePath(song.title),
+                                    noAlbumImagePath(song.uri ?? song.title),
                                     width: 44,
                                     height: 44,
                                     fit: BoxFit.cover,

@@ -36,6 +36,8 @@ import '../models/radio_country.dart';
 import 'radio_korea_screen2.dart';
 import 'radio_country_stations_screen.dart';
 import 'radio_home_screen.dart';
+import '../services/cast_service.dart';
+import '../widgets/cast_sheets.dart';
 
 double? _parseFrequency(String? freq) {
   if (freq == null || freq.isEmpty) return null;
@@ -70,6 +72,40 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
   late AnimationController _rotCtrl;   // 안쪽 원 회전
   late int _currentIdx;
   bool _scheduleTimedOut = false;
+
+  void _onCastChanged() {
+    if (mounted) setState(() {});
+  }
+
+  /// TV로 듣기 버튼: 연결 중이면 조작 창, 아니면 TV 고르기
+  void _onRadioCastTap(RadioStation station, RadioProvider radio) {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    final cast = CastService.instance;
+    if (cast.isConnected) {
+      showCastControlSheet(context);
+      return;
+    }
+    final url = radio.lastPlayStationId == station.stationUuid ? radio.lastPlayUrl : null;
+    if (url == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('방송이 나오고 있을 때 TV로 보낼 수 있어요'),
+      ));
+      return;
+    }
+    showCastPickerSheet(context, onPick: (d) async {
+      final ok = await cast.connectRadio(
+        d,
+        key: 'radio:${station.stationUuid}',
+        url: url,
+        headers: radio.castHeadersFor(station),
+        title: station.name,
+        subtitle: station.country ?? '',
+        logoUrl: station.logoUrl,
+      );
+      if (ok && radio.isPlaying) radio.togglePlayPause(); // 폰 소리는 멈춤
+      return ok;
+    });
+  }
 
   /// 종료 확인창 → 작별 인사 → 종료 (해외 라디오 화면에서 사용)
   Future<void> _confirmExit(BuildContext context) async {
@@ -240,6 +276,10 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) setState(() => _scheduleTimedOut = true);
     });
+    // TV 상태가 바뀌면 화면도 바로 다시 그리기
+    CastService.instance.addListener(_onCastChanged);
+    Future.delayed(Duration.zero, () {
+    });
     _dialCtrl = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -286,6 +326,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
 
   @override
   void dispose() {
+    CastService.instance.removeListener(_onCastChanged);
     _dialCtrl.dispose();
     _pulseCtrl.dispose();
     _rotCtrl.dispose();
@@ -373,7 +414,10 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         (widget.stationList != null && _currentIdx < widget.stationList!.length
             ? widget.stationList![_currentIdx]
             : widget.station);
-    final isPlaying = state == RadioPlayerState.playing;
+    // TV로 듣는 중이면 재생 버튼·이퀄라이저는 TV 상태를 따름
+    final isPlaying = CastService.instance.isConnected
+        ? CastService.instance.tvPlaying
+        : state == RadioPlayerState.playing;
     final isLoading = state == RadioPlayerState.loading;
     final isError = state == RadioPlayerState.error;
     final sleep = radioProvider.sleepRemaining;
@@ -388,12 +432,36 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     final bcColor = _brandColor(broadcaster);
     final freq = current.frequency ?? '';
 
+    // TV로 듣는 중이면: 방송이 바뀌면 TV로 새 방송을 보내고, 폰 소리는 멈춤
+    final cast = CastService.instance;
+    if (cast.isConnected) {
+      final key = 'radio:${current.stationUuid}';
+      final url = radioProvider.lastPlayStationId == current.stationUuid ? radioProvider.lastPlayUrl : null;
+      final needNew = cast.currentUri != key && url != null;
+      if (needNew || radioProvider.isPlaying) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (radioProvider.isPlaying) radioProvider.togglePlayPause();
+          if (needNew) {
+            cast.castRadio(
+              key: key,
+              url: url!,
+              headers: radioProvider.castHeadersFor(current),
+              title: current.name,
+              subtitle: current.country ?? '',
+              logoUrl: current.logoUrl,
+            );
+          }
+        });
+      }
+    }
+
     // 해외 방송국은 애플뮤직 스타일 화면으로 (한국은 기존 화면 그대로)
     if (current.countryCode != 'KR') {
       return OverseasRadioView(
         station: current,
         openedFromList: widget.openedFromList,
         onExit: () => _confirmExit(context),
+        onCast: () => _onRadioCastTap(current, radioProvider),
       );
     }
 
@@ -730,6 +798,19 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                     Navigator.of(context).popUntil((route) => route.isFirst);
                                   },
                                   child: Icon(Icons.home_rounded, color: baseColor, size: 16),
+                                ),
+                                const SizedBox(width: 10),
+                                // TV로 듣기 (연결되면 파란색)
+                                AnimatedBuilder(
+                                  animation: CastService.instance,
+                                  builder: (ctx, _) => _FloatButton(
+                                    onTap: () => _onRadioCastTap(current, radioProvider),
+                                    child: Icon(
+                                      CastService.instance.isConnected ? Icons.cast_connected : Icons.cast,
+                                      color: CastService.instance.isConnected ? const Color(0xFF2589E8) : baseColor,
+                                      size: 16,
+                                    ),
+                                  ),
                                 ),
                                 const SizedBox(width: 10),
                                 Builder(builder: (ctx) {
@@ -1120,7 +1201,28 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                       const SizedBox(height: 6),
 
                       // ── 상태 뱃지 ──
-                      _StatusBadge(state: state),
+                      // TV로 듣는 중이면 "OO에서 재생 중" (폰은 멈춰 있어도 '일시정지'로 안 보이게)
+                      CastService.instance.isConnected
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF2589E8).withOpacity(0.14),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: const Color(0xFF2589E8).withOpacity(0.35)),
+                              ),
+                              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                                const Icon(Icons.cast_connected, size: 14, color: Color(0xFF2589E8)),
+                                const SizedBox(width: 6),
+                                Text(
+                                  CastService.instance.tvPlaying
+                                      ? '${CastService.instance.device?.name ?? 'TV'}에서 재생 중'
+                                      : 'TV에서 일시정지',
+                                  style: const TextStyle(
+                                      color: Color(0xFF2589E8), fontSize: 12, fontWeight: FontWeight.bold),
+                                ),
+                              ]),
+                            )
+                          : _StatusBadge(state: state),
 
                       if (isError)
                         Padding(
@@ -1918,7 +2020,12 @@ class _Controls extends StatelessWidget {
             if (isError) {
               radioProvider.playStation(current);
             } else {
-              radioProvider.togglePlayPause();
+              final cast = CastService.instance;
+              if (cast.isConnected) {
+                cast.tvPlaying ? cast.pause() : cast.play(); // TV로 듣는 중이면 TV를 멈추고/재생
+              } else {
+                radioProvider.togglePlayPause();
+              }
             }
           },
           child: Container(

@@ -9,7 +9,8 @@ import '../l10n/app_localizations.dart';
 
 class RingtoneScreen extends StatefulWidget {
   final Song? initialSong;
-  const RingtoneScreen({super.key, this.initialSong});
+  final bool trimMode; // true면 자르기 화면 (벨소리 대신 새 파일로 저장)
+  const RingtoneScreen({super.key, this.initialSong, this.trimMode = false});
 
   @override
   State<RingtoneScreen> createState() => _RingtoneScreenState();
@@ -33,7 +34,10 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
         setState(() {
           _selectedSong = widget.initialSong;
           _startValue = 0.0;
-          _endValue = (widget.initialSong!.duration / 1000).clamp(0, 60).toDouble();
+          // 자르기는 처음에 곡 전체, 벨소리는 최대 60초
+          _endValue = widget.trimMode
+              ? (widget.initialSong!.duration / 1000).toDouble()
+              : (widget.initialSong!.duration / 1000).clamp(0, 60).toDouble();
         });
       });
     }
@@ -77,7 +81,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Text(AppLocalizations.of(context)!.ringtone,
+        title: Text(widget.trimMode ? '자르기' : AppLocalizations.of(context)!.ringtone,
             style: const TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w600)),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
@@ -127,7 +131,9 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                       _selectedSong = song;
                       _startValue = 0.0;
                       _endValue = song != null
-                          ? (song.duration / 1000).clamp(0, 60).toDouble()
+                          ? (widget.trimMode
+                              ? (song.duration / 1000).toDouble()
+                              : (song.duration / 1000).clamp(0, 60).toDouble())
                           : 30.0;
                       _isPlaying = false;
                     });
@@ -271,7 +277,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                 child: ElevatedButton(
                   onPressed: _isProcessing
                       ? null
-                      : () => _setRingtone(context),
+                      : () => widget.trimMode ? _trimAndSave(context) : _setRingtone(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _accent,
                     foregroundColor: Colors.white,
@@ -281,7 +287,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                   ),
                   child: _isProcessing
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : Text(AppLocalizations.of(context)!.setRingtone,
+                      : Text(widget.trimMode ? '잘라서 저장' : AppLocalizations.of(context)!.setRingtone,
                       style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 16)),
                 ),
@@ -297,6 +303,55 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
     final m = seconds ~/ 60;
     final s = seconds % 60;
     return '$m:${s.toString().padLeft(2, '0')}';
+  }
+
+  /// 자르기: 고른 구간만 새 파일로 저장 (원본은 그대로)
+  Future<void> _trimAndSave(BuildContext context) async {
+    final uri = _selectedSong?.uri;
+    if (uri == null) return;
+    final ext = uri.split('.').last.toLowerCase();
+    if (!['mp3', 'm4a', 'aac', 'mp4'].contains(ext)) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('mp3, m4a 파일만 자를 수 있어요'),
+        backgroundColor: Colors.redAccent,
+      ));
+      return;
+    }
+    await _previewPlayer.stop();
+    setState(() {
+      _isProcessing = true;
+      _isPlaying = false;
+    });
+    try {
+      final saved = await _channel.invokeMethod<String>('trimAndSave', {
+        'path': uri,
+        'startMs': (_startValue * 1000).toInt(),
+        'endMs': (_endValue * 1000).toInt(),
+      });
+      if (!context.mounted) return;
+      if (saved != null) {
+        context.read<MusicProvider>().loadSongs(); // 목록에 새 파일이 보이게
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('저장했어요: ${saved.split('/').last}'),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 3),
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('자르기에 실패했어요'),
+          backgroundColor: Colors.redAccent,
+          duration: Duration(seconds: 3),
+        ));
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error: $e'),
+        backgroundColor: Colors.redAccent,
+      ));
+    } finally {
+      if (mounted) setState(() => _isProcessing = false);
+    }
   }
 
   Future<void> _setRingtone(BuildContext context) async {

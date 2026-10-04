@@ -12,6 +12,7 @@ import 'sleep_timer_sheet.dart';
 import 'more_menu_sheet.dart';
 import '../screens/radio_country_stations_screen.dart';
 import '../screens/radio_home_screen.dart';
+import '../services/cast_service.dart';
 
 /// 해외 라디오 상세화면 (애플뮤직 스타일)
 /// 큰 로고 + 이름 + 장르·국가 + LIVE + 흰색 이퀄라이저 + 조작 버튼
@@ -19,11 +20,13 @@ class OverseasRadioView extends StatelessWidget {
   final RadioStation station;
   final bool openedFromList;
   final VoidCallback? onExit; // 전원 버튼 (종료)
+  final VoidCallback? onCast; // TV로 듣기
   const OverseasRadioView({
     super.key,
     required this.station,
     this.openedFromList = true,
     this.onExit,
+    this.onCast,
   });
 
   /// 뒤로가기: 목록에서 들어왔으면 그냥 닫고, 아니면(미니플레이어 등) 목록 화면으로
@@ -65,7 +68,8 @@ class OverseasRadioView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final radio = context.watch<RadioProvider>();
-    final isPlaying = radio.isPlaying;
+    // TV로 듣는 중이면 TV 상태를 따름
+    final isPlaying = CastService.instance.isConnected ? CastService.instance.tvPlaying : radio.isPlaying;
     final isLoading = radio.isLoading;
     final isFav = radio.isFavorite(station.stationUuid);
     final sub = [
@@ -148,6 +152,19 @@ class OverseasRadioView extends StatelessWidget {
                           icon: const Icon(Icons.home_rounded,
                               color: Colors.white, size: 24),
                         ),
+                        // TV로 듣기 (연결되면 하늘색)
+                        if (onCast != null)
+                          AnimatedBuilder(
+                            animation: CastService.instance,
+                            builder: (context, _) => IconButton(
+                              onPressed: onCast,
+                              icon: Icon(
+                                CastService.instance.isConnected ? Icons.cast_connected : Icons.cast,
+                                color: CastService.instance.isConnected ? const Color(0xFF7FB8F0) : Colors.white,
+                                size: 23,
+                              ),
+                            ),
+                          ),
                         // 더보기: 공유 / 앱 평가 / 설정 / 방송국 홈페이지
                         IconButton(
                           onPressed: () {
@@ -285,7 +302,12 @@ class OverseasRadioView extends StatelessWidget {
                               ? null
                               : () {
                             _vibrate();
-                            context.read<RadioProvider>().togglePlayPause();
+                            final cast = CastService.instance;
+                            if (cast.isConnected) {
+                              cast.tvPlaying ? cast.pause() : cast.play(); // TV를 멈추고/재생
+                            } else {
+                              context.read<RadioProvider>().togglePlayPause();
+                            }
                           },
                           child: Container(
                             width: 72,

@@ -95,6 +95,19 @@ class RadioProvider extends ChangeNotifier {
   RadioPlayerState get playerState => _playerState;
   RadioStation? get currentStation => _currentStation;
   String? get errorMessage => _errorMessage;
+
+  // TV로 보내기(캐스팅)용: 마지막으로 실제 재생한 방송 주소
+  String? _lastPlayUrl;
+  String? _lastPlayStationId;
+  String? get lastPlayUrl => _lastPlayUrl;
+  String? get lastPlayStationId => _lastPlayStationId;
+
+  /// 방송국이 요구하는 헤더 (TV로 보낼 때 폰이 대신 붙여줌)
+  Map<String, String> castHeadersFor(RadioStation s) => {
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36',
+        'Referer': _getReferer(s),
+        'Origin': _getOrigin(s),
+      };
   RadioCountry? get selectedCountry => _selectedCountry;
   RadioBroadcaster? get selectedBroadcaster => _selectedBroadcaster;
   List<RadioStation> get broadcasterStations => _broadcasterStations;
@@ -479,6 +492,8 @@ class RadioProvider extends ChangeNotifier {
       }
 
       debugPrint('FINAL_URL: $playUrl');
+      _lastPlayUrl = playUrl;
+      _lastPlayStationId = station.stationUuid;
 
       await WakelockPlus.disable();
       _startForeground(station, playUrl);

@@ -24,6 +24,12 @@ import '../providers/playlist_provider.dart';
 import '../theme/app_theme.dart';
 import 'edit_song_screen.dart';
 import 'lyrics_screen.dart';
+import 'ringtone_screen.dart';
+import 'equalizer_screen.dart';
+import '../widgets/song_list_tile.dart';
+import 'package:share_plus/share_plus.dart';
+import '../widgets/menu_parts.dart';
+import '../services/cast_service.dart';
 import '../l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
 import '../providers/theme_provider.dart';
@@ -764,6 +770,23 @@ class _PlayerScreenState extends State<PlayerScreen>
       );
     }
 
+    // TV로 듣는 중이면: 폰 소리는 멈추고, 곡이 바뀌면 TV로 새 곡을 보냄
+    final cast = CastService.instance;
+    if (cast.isConnected) {
+      final needNew = cast.currentUri != song.uri;
+      final localPlaying = playerProvider.isPlaying;
+      if (needNew || localPlaying) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          playerProvider.player.pause();
+          if (needNew) {
+            cast.castSong(song);
+          } else if (!cast.tvPlaying) {
+            cast.play(); // 앱의 재생 버튼 → TV 재생
+          }
+        });
+      }
+    }
+
     final lyricsProvider = context.read<LyricsProvider>();
     final currentKey = '${song.titleDisplay}-${song.artistDisplay}';
     if (lyricsProvider.currentSongKey != currentKey) {
@@ -1059,6 +1082,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                               child: _buildControls(
                                   context, playerProvider, musicProvider, song, primaryColor),
                             ),
+
                           ],
                         ),
                       ),
@@ -1070,6 +1094,221 @@ class _PlayerScreenState extends State<PlayerScreen>
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// 재생 버튼 아래: TV로 듣기 / OO에서 재생 중
+  Widget _buildCastBar(Song song, PlayerProvider playerProvider) {
+    return AnimatedBuilder(
+      animation: CastService.instance,
+      builder: (context, _) {
+        final cast = CastService.instance;
+        final label = cast.isConnected ? '${cast.device!.name}에서 재생 중' : 'TV로 듣기';
+        return Padding(
+          padding: const EdgeInsets.only(top: 2, bottom: 8),
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              if (cast.isConnected) {
+                _showCastControl();
+              } else {
+                _showCastPicker(song, playerProvider);
+              }
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: cast.isConnected ? const Color(0xFF2589E8).withOpacity(0.3) : Colors.transparent,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(cast.isConnected ? Icons.cast_connected : Icons.cast,
+                      color: Colors.white.withOpacity(0.85), size: 18),
+                  const SizedBox(width: 6),
+                  Flexible(
+                    child: Text(label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 12.5)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// 같은 와이파이의 TV 찾아서 고르기
+  void _showCastPicker(Song song, PlayerProvider playerProvider) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        Future<List<CastDevice>> search = CastService.instance.discover();
+        return StatefulBuilder(builder: (ctx, setSheet) {
+          return SafeArea(
+            top: false,
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+              padding: const EdgeInsets.fromLTRB(16, 18, 16, 12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF4EFE5),
+                borderRadius: BorderRadius.circular(22),
+              ),
+              child: FutureBuilder<List<CastDevice>>(
+                future: search,
+                builder: (ctx, snap) {
+                  final title = Row(
+                    children: [
+                      const Icon(Icons.cast, color: Color(0xFF2589E8), size: 22),
+                      const SizedBox(width: 8),
+                      const Expanded(
+                        child: Text('TV로 듣기',
+                            style: TextStyle(color: Color(0xFF17140F), fontSize: 16, fontWeight: FontWeight.w700)),
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.pop(ctx),
+                        icon: const Icon(Icons.close, color: Colors.black45),
+                      ),
+                    ],
+                  );
+                  if (snap.connectionState != ConnectionState.done) {
+                    return Column(mainAxisSize: MainAxisSize.min, children: [
+                      title,
+                      const SizedBox(height: 18),
+                      const CircularProgressIndicator(color: Color(0xFF2589E8)),
+                      const SizedBox(height: 12),
+                      const Text('같은 와이파이에 있는 TV를 찾고 있어요',
+                          style: TextStyle(color: Color(0xFF8A857B), fontSize: 13)),
+                      const SizedBox(height: 18),
+                    ]);
+                  }
+                  final devices = snap.data ?? [];
+                  if (devices.isEmpty) {
+                    return Column(mainAxisSize: MainAxisSize.min, children: [
+                      title,
+                      const SizedBox(height: 14),
+                      const Text('TV를 못 찾았어요.\nTV가 켜져 있고 폰과 같은 와이파이인지 확인해 주세요.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Color(0xFF5A5348), fontSize: 13, height: 1.5)),
+                      const SizedBox(height: 12),
+                      TextButton(
+                        onPressed: () => setSheet(() => search = CastService.instance.discover()),
+                        child: const Text('다시 찾기', style: TextStyle(color: Color(0xFF2589E8))),
+                      ),
+                    ]);
+                  }
+                  return Column(mainAxisSize: MainAxisSize.min, children: [
+                    title,
+                    const SizedBox(height: 6),
+                    Container(
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
+                      child: Column(children: [
+                        for (final d in devices)
+                          ListTile(
+                            leading: const Icon(Icons.tv, color: Color(0xFF2589E8)),
+                            title: Text(d.name, style: const TextStyle(color: Color(0xFF17140F))),
+                            onTap: () async {
+                              Navigator.pop(ctx);
+                              final cast = CastService.instance;
+                              cast.onTrackEnded = () => playerProvider.playNext(); // TV에서 곡 끝나면 다음 곡
+                              final ok = await cast.connect(d, song);
+                              if (ok) {
+                                playerProvider.player.pause();
+                              } else if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                  content: Text('TV로 보내지 못했어요. 다시 시도해 주세요.'),
+                                ));
+                              }
+                            },
+                          ),
+                      ]),
+                    ),
+                    const SizedBox(height: 6),
+                  ]);
+                },
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
+
+  /// TV로 듣는 중: 일시정지 / 연결 끊기
+  void _showCastControl() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => AnimatedBuilder(
+        animation: CastService.instance,
+        builder: (ctx, _) {
+          final cast = CastService.instance;
+          return SafeArea(
+            top: false,
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+              padding: const EdgeInsets.fromLTRB(16, 18, 16, 16),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF4EFE5),
+                borderRadius: BorderRadius.circular(22),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.cast_connected, color: Color(0xFF2589E8), size: 30),
+                  const SizedBox(height: 8),
+                  Text(cast.device?.name ?? 'TV',
+                      style: const TextStyle(color: Color(0xFF17140F), fontSize: 16, fontWeight: FontWeight.w700)),
+                  const SizedBox(height: 2),
+                  Text(cast.tvPlaying ? 'TV에서 재생 중' : 'TV에서 일시정지',
+                      style: const TextStyle(color: Color(0xFF8A857B), fontSize: 12.5)),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () => cast.tvPlaying ? cast.pause() : cast.play(),
+                          icon: Icon(cast.tvPlaying ? Icons.pause : Icons.play_arrow),
+                          label: Text(cast.tvPlaying ? '일시정지' : '재생'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF2589E8),
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () async {
+                            Navigator.pop(ctx);
+                            await cast.disconnect();
+                          },
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: const Color(0xFF5A5348),
+                            side: const BorderSide(color: Color(0xFFE2DACB)),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                          ),
+                          child: const Text('연결 끊기'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -1089,6 +1328,7 @@ class _PlayerScreenState extends State<PlayerScreen>
             icon: Icon(Icons.keyboard_arrow_down,
                 color: baseColor, size: 30),
           ),
+          const SizedBox(width: 40), // 오른쪽 TV 버튼 폭만큼 비워서 가운데 워터마크 정렬 유지
           Expanded(
             child: Center(
               // "재생 중" 대신 파란소리 워터마크 (홈 로고 스타일, 이퀄라이저 없이)
@@ -1128,6 +1368,34 @@ class _PlayerScreenState extends State<PlayerScreen>
                 );
               }),
             ),
+          ),
+          // TV로 듣기 (연결되면 하늘색 아이콘)
+          AnimatedBuilder(
+            animation: CastService.instance,
+            builder: (context, _) {
+              final cast = CastService.instance;
+              return GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                  if (song == null) return;
+                  if (cast.isConnected) {
+                    _showCastControl();
+                  } else {
+                    _showCastPicker(song, playerProvider);
+                  }
+                },
+                child: SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: Icon(
+                    cast.isConnected ? Icons.cast_connected : Icons.cast,
+                    color: cast.isConnected ? const Color(0xFF7FB8F0) : baseColor,
+                    size: 22,
+                  ),
+                ),
+              );
+            },
           ),
           GestureDetector(
             onTap: () => _showPlayerOptionsSheet(context, song, primaryColor),
@@ -1216,50 +1484,35 @@ class _PlayerScreenState extends State<PlayerScreen>
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: song.albumArt != null
-                            ? Image.memory(
-                          Uint8List.fromList(song.albumArt!),
-                          width: 42,
-                          height: 42,
-                          fit: BoxFit.cover,
-                          gaplessPlayback: true,
-                        )
-                            : Image.asset(
-                          noAlbumImagePath(song.title),
-                          width: 42,
-                          height: 42,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(song.titleDisplay,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(color: baseColor, fontSize: 13.5, fontWeight: FontWeight.w700)),
-                            const SizedBox(height: 2),
-                            Text(song.artistDisplay,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(color: descColor, fontSize: 11)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
-                  ),
+                  const SizedBox(height: 8),
+                  // 곡 정보 + 빠른 버튼 (즐겨찾기 · 재생목록 · 공유 · 편집)
+                  Builder(builder: (_) {
+                    final music = ctx.watch<MusicProvider>();
+                    final fav = music.isFavorite(song.id);
+                    return MenuSongCard(
+                      song: song,
+                      actions: [
+                        MenuQuickAction(fav ? CupertinoIcons.heart_fill : CupertinoIcons.heart, '즐겨찾기', () {
+                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                          music.toggleFavorite(song);
+                        }),
+                        MenuQuickAction(Icons.playlist_add, '재생목록', () {
+                          _showAddToPlaylistDialog(context, song, primaryColor);
+                        }),
+                        MenuQuickAction(Icons.share, '공유', () async {
+                          Navigator.pop(ctx);
+                          if (song.uri != null) {
+                            await Share.shareXFiles([XFile(song.uri!)], text: song.titleDisplay);
+                          }
+                        }),
+                        MenuQuickAction(Icons.edit, '편집', () {
+                          Navigator.pop(ctx);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditSongScreen(song: song)));
+                        }),
+                      ],
+                    );
+                  }),
+                  MenuCard(children: [
                   _playerSheetItem(
                     ctx,
                     Icons.shuffle_rounded,
@@ -1302,21 +1555,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                     trailing: _sheetValue(_sheetSleepLabel(playerProvider)),
                     arrow: true,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
-                  ),
-                  _playerSheetItem(ctx, Icons.edit, AppLocalizations.of(context)!.editSong, accent, baseColor, () {
-                    Navigator.pop(ctx);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => EditSongScreen(song: song)));
-                  }, arrow: true),
-                  _playerSheetItem(ctx, Icons.playlist_add, AppLocalizations.of(context)!.addToPlaylist, accent, baseColor, () {
-                    _showAddToPlaylistDialog(context, song, primaryColor);
-                  }, arrow: true),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
-                  ),
+                  ]),
+                  MenuCard(children: [
                   _playerSheetItem(ctx, Icons.style, AppLocalizations.of(context)!.playerStyle, accent, baseColor, () async {
                     if (!_hasSeenParanPhoto) {
                       setState(() => _hasSeenParanPhoto = true);
@@ -1333,6 +1573,27 @@ class _PlayerScreenState extends State<PlayerScreen>
                     Navigator.pop(ctx);
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const LyricsScreen()));
                   }, arrow: true),
+                  ]),
+                  MenuCard(children: [
+                  _playerSheetItem(ctx, Icons.music_note, AppLocalizations.of(context)!.setRingtone, accent, baseColor, () {
+                    Navigator.pop(ctx);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => RingtoneScreen(initialSong: song)));
+                  }, arrow: true),
+                  _playerSheetItem(ctx, Icons.content_cut, '자르기', accent, baseColor, () {
+                    Navigator.pop(ctx);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => RingtoneScreen(initialSong: song, trimMode: true)));
+                  }, arrow: true),
+                  _playerSheetItem(ctx, Icons.info_outline, AppLocalizations.of(context)!.songInfo, accent, baseColor, () {
+                    Navigator.pop(ctx);
+                    SongListTile.showInfo(context, song);
+                  }, arrow: true),
+                  _playerSheetItem(ctx, Icons.equalizer, AppLocalizations.of(context)!.equalizer, accent, baseColor, () {
+                    Navigator.pop(ctx);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const EqualizerScreen()));
+                  }, arrow: true),
+                  ]),
+                  const SizedBox(height: 4),
                 ],
               ),
             ),
@@ -1349,18 +1610,11 @@ class _PlayerScreenState extends State<PlayerScreen>
       borderRadius: BorderRadius.circular(12),
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 12),
         child: Row(
           children: [
-            Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: const Color(0xFFEDF4F8), // 아이콘 배경: 아주 연한 블루그레이
-                borderRadius: BorderRadius.circular(9),
-              ),
-              child: Icon(icon, color: iconColor, size: 16),
-            ),
+            // 카드 안 줄: 아이콘 배경 없이 파란 아이콘만
+            SizedBox(width: 24, child: Icon(icon, color: iconColor, size: 20)),
             const SizedBox(width: 12),
             Expanded(
               child: Row(

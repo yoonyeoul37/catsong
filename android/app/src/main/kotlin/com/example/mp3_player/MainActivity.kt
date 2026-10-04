@@ -118,6 +118,37 @@ class MainActivity : AudioServiceActivity() {
                     if (path != null) result.success(trimAndSetRingtone(path, startMs, endMs))
                     else result.success(false)
                 }
+                "multicastLock" -> {
+                    // TV 찾기(DLNA) 할 때 와이파이 멀티캐스트 응답을 받기 위해
+                    val on = call.argument<Boolean>("on") ?: false
+                    val wifi = applicationContext.getSystemService(android.content.Context.WIFI_SERVICE)
+                            as android.net.wifi.WifiManager
+                    if (on) {
+                        if (multicastLock == null) {
+                            multicastLock = wifi.createMulticastLock("paransori_cast").apply {
+                                setReferenceCounted(false)
+                            }
+                        }
+                        multicastLock?.acquire()
+                    } else {
+                        multicastLock?.release()
+                    }
+                    result.success(true)
+                }
+                "trimAndSave" -> {
+                    // 자르기: 원본은 그대로 두고 잘라낸 부분을 새 파일로 저장 (오래 걸릴 수 있어 따로 실행)
+                    val path = call.argument<String>("path")
+                    val startMs = (call.argument<Any>("startMs") as? Number)?.toLong() ?: 0L
+                    val endMs = (call.argument<Any>("endMs") as? Number)?.toLong() ?: 0L
+                    if (path == null) {
+                        result.success(null)
+                    } else {
+                        Thread {
+                            val saved = trimAndSave(path, startMs, endMs)
+                            runOnUiThread { result.success(saved) }
+                        }.start()
+                    }
+                }
                 "initEqualizer" -> {
                     val audioSessionId = (call.argument<Any>("audioSessionId") as? Number)?.toInt() ?: 0
                     result.success(initEqualizer(audioSessionId))
@@ -555,6 +586,121 @@ class MainActivity : AudioServiceActivity() {
             android.util.Log.e("Ringtone", "Error: ${e.message}", e)
             false
         }
+    }
+
+    /// 자르기: mp3는 바이트로, m4a/aac는 MediaMuxer로 잘라서 Music/Paransori 폴더에 새 파일로 저장
+    /// 성공하면 저장된 파일 경로, 실패하거나 지원 안 하는 형식이면 null
+    private var multicastLock: android.net.wifi.WifiManager.MulticastLock? = null
+
+    private fun trimAndSave(path: String, startMs: Long, endMs: Long): String? {
+        return try {
+            val inputFile = File(path)
+            if (!inputFile.exists() || endMs <= startMs) return null
+            val ext = inputFile.extension.lowercase()
+            val isMp3 = ext == "mp3"
+            val isMp4 = ext == "m4a" || ext == "aac" || ext == "mp4"
+            if (!isMp3 && !isMp4) return null
+
+            val outExt = if (isMp3) "mp3" else "m4a"
+            val tmp = File(cacheDir, "trim_tmp.$outExt")
+            val ok = if (isMp3) trimMp3Bytes(inputFile, tmp, startMs, endMs)
+                     else trimWithMuxer(path, tmp, startMs, endMs)
+            if (!ok) return null
+
+            val relDir = "Music/Paransori"
+            val values = ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, "${inputFile.nameWithoutExtension}_자름.$outExt")
+                put(MediaStore.MediaColumns.MIME_TYPE, if (isMp3) "audio/mpeg" else "audio/mp4")
+                put(MediaStore.Audio.Media.IS_MUSIC, true)
+                put(MediaStore.MediaColumns.RELATIVE_PATH, "$relDir/")
+            }
+            val uri = contentResolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values) ?: return null
+            contentResolver.openOutputStream(uri)?.use { os -> tmp.inputStream().use { it.copyTo(os) } }
+            tmp.delete()
+
+            // 같은 이름이 있으면 안드로이드가 (1) 등을 붙이니까 실제 이름을 다시 확인
+            var savedName = "${inputFile.nameWithoutExtension}_자름.$outExt"
+            contentResolver.query(uri, arrayOf(MediaStore.MediaColumns.DISPLAY_NAME), null, null, null)?.use { c ->
+                if (c.moveToFirst()) savedName = c.getString(0) ?: savedName
+            }
+            val outPath = File(android.os.Environment.getExternalStorageDirectory(), "$relDir/$savedName").absolutePath
+            android.media.MediaScannerConnection.scanFile(this, arrayOf(outPath), null, null)
+            outPath
+        } catch (e: Exception) {
+            android.util.Log.e("Trim", "Error: ${e.message}", e)
+            null
+        }
+    }
+
+    /// mp3: 길이 비율로 바이트를 잘라냄 (벨소리 만들기와 같은 방식)
+    private fun trimMp3Bytes(inputFile: File, out: File, startMs: Long, endMs: Long): Boolean {
+        val retriever = MediaMetadataRetriever()
+        retriever.setDataSource(inputFile.absolutePath)
+        val durationMs = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+            ?.toLongOrNull() ?: 0L
+        retriever.release()
+        if (durationMs <= 0) return false
+        val totalBytes = inputFile.length()
+        val startByte = totalBytes * startMs / durationMs
+        val endByte = totalBytes * minOf(endMs, durationMs) / durationMs
+        inputFile.inputStream().use { input ->
+            input.skip(startByte)
+            out.outputStream().use { output ->
+                val buffer = ByteArray(8192)
+                var remaining = endByte - startByte
+                while (remaining > 0) {
+                    val read = input.read(buffer, 0, minOf(buffer.size.toLong(), remaining).toInt())
+                    if (read < 0) break
+                    output.write(buffer, 0, read)
+                    remaining -= read
+                }
+            }
+        }
+        return out.length() > 0
+    }
+
+    /// m4a/aac: 다시 압축하지 않고 구간만 그대로 옮겨 담음 (음질 그대로)
+    private fun trimWithMuxer(src: String, out: File, startMs: Long, endMs: Long): Boolean {
+        val extractor = android.media.MediaExtractor()
+        extractor.setDataSource(src)
+        var track = -1
+        for (i in 0 until extractor.trackCount) {
+            val mime = extractor.getTrackFormat(i).getString(android.media.MediaFormat.KEY_MIME) ?: ""
+            if (mime.startsWith("audio/")) { track = i; break }
+        }
+        if (track < 0) { extractor.release(); return false }
+        extractor.selectTrack(track)
+        val format = extractor.getTrackFormat(track)
+        val muxer = android.media.MediaMuxer(out.absolutePath,
+            android.media.MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
+        val dst = muxer.addTrack(format)
+        muxer.start()
+        val maxSize = if (format.containsKey(android.media.MediaFormat.KEY_MAX_INPUT_SIZE))
+            format.getInteger(android.media.MediaFormat.KEY_MAX_INPUT_SIZE) else 1024 * 1024
+        val buffer = java.nio.ByteBuffer.allocate(maxSize)
+        val info = android.media.MediaCodec.BufferInfo()
+        val startUs = startMs * 1000
+        val endUs = endMs * 1000
+        extractor.seekTo(startUs, android.media.MediaExtractor.SEEK_TO_CLOSEST_SYNC)
+        var wrote = false
+        while (true) {
+            info.offset = 0
+            info.size = extractor.readSampleData(buffer, 0)
+            if (info.size < 0) break
+            val t = extractor.sampleTime
+            if (t > endUs) break
+            if (t >= startUs) {
+                info.presentationTimeUs = t - startUs
+                info.flags = extractor.sampleFlags
+                muxer.writeSampleData(dst, buffer, info)
+                wrote = true
+            }
+            extractor.advance()
+        }
+        muxer.stop()
+        muxer.release()
+        extractor.release()
+        return wrote
     }
 
     private fun updateSongMetadata(path: String, title: String?, artist: String?, album: String?): Boolean {

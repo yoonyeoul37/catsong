@@ -12,6 +12,7 @@ import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../screens/player_screen.dart';
 import 'album_eq_overlay.dart';
+import 'menu_parts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/edit_song_screen.dart';
 import '../screens/ringtone_screen.dart';
@@ -34,6 +35,10 @@ class SongListTile extends StatelessWidget {
     required this.songList,
     this.forceWhiteText = false,
   });
+
+  /// 다른 화면(재생화면 메뉴)에서도 같은 곡 정보 창을 띄울 수 있게
+  static void showInfo(BuildContext context, Song song) =>
+      SongListTile(song: song, index: 0, songList: [song])._showSongInfo(context);
 
   @override
   Widget build(BuildContext context) {
@@ -272,79 +277,39 @@ class SongListTile extends StatelessWidget {
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: song.albumArt != null
-                          ? Image.memory(
-                        Uint8List.fromList(song.albumArt!),
-                        width: 42,
-                        height: 42,
-                        fit: BoxFit.cover,
-                        gaplessPlayback: true,
-                      )
-                          : Container(
-                        width: 42,
-                        height: 42,
-                        color: baseColor.withOpacity(0.12),
-                        child: SvgPicture.asset('assets/no_album.svg', width: 24, height: 24),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(song.titleDisplay,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: baseColor, fontSize: 13.5, fontWeight: FontWeight.w700)),
-                          const SizedBox(height: 2),
-                          Text(song.artistDisplay,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: descColor, fontSize: 11)),
-                        ],
-                      ),
-                    ),
+                const SizedBox(height: 8),
+                // 곡 정보 + 빠른 버튼 (즐겨찾기 · 재생목록 · 공유 · 편집)
+                MenuSongCard(
+                  song: song,
+                  isDark: isDarkMode,
+                  actions: [
+                    MenuQuickAction(isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart, '즐겨찾기', () {
+                      _handleMenuAction(context, 'favorite');
+                    }),
+                    MenuQuickAction(Icons.playlist_add, '재생목록', () {
+                      _handleMenuAction(context, 'playlist');
+                    }),
+                    MenuQuickAction(Icons.share, '공유', () {
+                      Navigator.pop(ctx);
+                      _handleMenuAction(context, 'share');
+                    }),
+                    MenuQuickAction(Icons.edit, '편집', () {
+                      Navigator.pop(ctx);
+                      _handleMenuAction(context, 'edit');
+                    }),
                   ],
                 ),
-                  ),
-                ],
-              ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
-                ),
-                _sheetItem(context, Icons.play_arrow, AppLocalizations.of(context)!.play, 'play', accent, baseColor, isDarkMode),
-                _sheetItem(context, Icons.skip_next, AppLocalizations.of(context)!.playNext, 'play_next', accent, baseColor, isDarkMode,
-                    keepOpen: true,
-                    afterTap: () => setSheet(() => addedNext = true),
-                    trailing: addedNext
-                        ? const Text('추가됨 ✓',
-                            style: TextStyle(color: accent, fontSize: 12.5, fontWeight: FontWeight.w600))
-                        : null),
-                _sheetItem(context, Icons.playlist_add, AppLocalizations.of(context)!.addToPlaylist, 'playlist', accent, baseColor, isDarkMode,
-                    keepOpen: true, arrow: true),
-                _sheetItem(
-                  context,
-                  isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                  isFav ? AppLocalizations.of(context)!.removeFromFavorites : AppLocalizations.of(context)!.addToFavorites,
-                  'favorite',
-                  accent,
-                  baseColor,
-                  isDarkMode,
-                  keepOpen: true,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
-                ),
+                MenuCard(isDark: isDarkMode, children: [
+                  _sheetItem(context, Icons.play_arrow, AppLocalizations.of(context)!.play, 'play', accent, baseColor, isDarkMode),
+                  _sheetItem(context, Icons.skip_next, AppLocalizations.of(context)!.playNext, 'play_next', accent, baseColor, isDarkMode,
+                      keepOpen: true,
+                      afterTap: () => setSheet(() => addedNext = true),
+                      trailing: addedNext
+                          ? const Text('추가됨 ✓',
+                              style: TextStyle(color: accent, fontSize: 12.5, fontWeight: FontWeight.w600))
+                          : null),
+                ]),
+                MenuCard(isDark: isDarkMode, children: [
                 // 재생화면 메뉴와 똑같은 줄: 셔플 · 반복 · 수면 · 재생화면 스타일 · 배속
                 ...playerSettingRows(
                   ctx,
@@ -361,19 +326,17 @@ class SongListTile extends StatelessWidget {
                     if (ctx.mounted) setSheet(() {});
                   },
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
-                ),
-                _sheetItem(context, Icons.music_note, AppLocalizations.of(context)!.setRingtone, 'ringtone', accent, baseColor, isDarkMode, arrow: true),
-                _sheetItem(context, Icons.info_outline, AppLocalizations.of(context)!.songInfo, 'info', accent, baseColor, isDarkMode, arrow: true),
-                _sheetItem(context, Icons.equalizer, AppLocalizations.of(context)!.equalizer, 'equalizer', accent, baseColor, isDarkMode, arrow: true),
-                _sheetItem(context, Icons.share, AppLocalizations.of(context)!.share, 'share', accent, baseColor, isDarkMode),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Divider(height: 1, color: baseColor.withOpacity(0.08)),
-                ),
-                _sheetItem(context, Icons.delete_outline, AppLocalizations.of(context)!.delete, 'delete', Colors.redAccent, Colors.redAccent, isDarkMode),
+                ]),
+                MenuCard(isDark: isDarkMode, children: [
+                  _sheetItem(context, Icons.music_note, AppLocalizations.of(context)!.setRingtone, 'ringtone', accent, baseColor, isDarkMode, arrow: true),
+                  _sheetItem(context, Icons.content_cut, '자르기', 'trim', accent, baseColor, isDarkMode, arrow: true),
+                  _sheetItem(context, Icons.info_outline, AppLocalizations.of(context)!.songInfo, 'info', accent, baseColor, isDarkMode, arrow: true),
+                  _sheetItem(context, Icons.equalizer, AppLocalizations.of(context)!.equalizer, 'equalizer', accent, baseColor, isDarkMode, arrow: true),
+                ]),
+                MenuCard(isDark: isDarkMode, children: [
+                  _sheetItem(context, Icons.delete_outline, AppLocalizations.of(context)!.delete, 'delete', Colors.redAccent, Colors.redAccent, isDarkMode),
+                ]),
+                const SizedBox(height: 4),
                 ],
               ),
             ),
@@ -396,21 +359,11 @@ class SongListTile extends StatelessWidget {
         afterTap?.call();
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 12),
         child: Row(
           children: [
-            Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                // 아이콘 배경: 아주 연한 블루그레이 (삭제만 연한 빨강)
-                color: isDelete
-                    ? Colors.redAccent.withOpacity(0.12)
-                    : (isDarkMode ? const Color(0xFF2589E8).withOpacity(0.14) : const Color(0xFFEDF4F8)),
-                borderRadius: BorderRadius.circular(9),
-              ),
-              child: Icon(icon, color: iconColor, size: 16),
-            ),
+            // 카드 안 줄: 아이콘 배경 없이 아이콘만 (삭제는 빨간색)
+            SizedBox(width: 24, child: Icon(icon, color: iconColor, size: 20)),
             const SizedBox(width: 12),
             Expanded(
               child: Text(label,
@@ -472,8 +425,22 @@ class SongListTile extends StatelessWidget {
           ),
         );
         break;
+      case 'trim':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RingtoneScreen(initialSong: song, trimMode: true),
+          ),
+        );
+        break;
       case 'info':
         _showSongInfo(context);
+        break;
+      case 'edit':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => EditSongScreen(song: song)),
+        );
         break;
       case 'equalizer':
         Navigator.push(

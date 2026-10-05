@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -82,6 +83,7 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
   StreamSubscription<RecordState>? _stateSub;
   bool _byUser = false; // 사용자가 직접 누른 일시정지/이어서인지
   bool _interrupted = false; // 전화 등으로 자동 일시정지된 상태
+  Duration? _limit; // 타이머: 이만큼 녹음되면 자동 저장 (null = 없음)
 
   late final AnimationController _pulse = AnimationController(
     vsync: this,
@@ -192,6 +194,11 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
       ..start();
     _svc('start'); // 알림창에 "녹음 중" → 앱을 나가도 계속 녹음
     _tick = Timer.periodic(const Duration(milliseconds: 100), (_) {
+      // 타이머 시간만큼 녹음됐으면 자동 저장
+      if (_limit != null && _state == _RecState.recording && _watch.elapsed >= _limit!) {
+        _finish();
+        return;
+      }
       if (mounted) setState(() {});
     });
     _ampSub = _rec.onAmplitudeChanged(const Duration(milliseconds: 80)).listen((a) {
@@ -382,7 +389,9 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
                       fontFeatures: const [FontFeature.tabularFigures()],
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 10),
+                  _timerChip(),
+                  const SizedBox(height: 28),
                   // 파형
                   SizedBox(
                     height: 150,
@@ -396,6 +405,164 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
                   const SizedBox(height: 40),
                 ],
               ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ───────── 타이머 (자동 저장) ─────────
+  Widget _timerChip() {
+    String label;
+    if (_limit == null) {
+      label = '타이머 없음';
+    } else if (_state == _RecState.idle) {
+      label = '${_limitText(_limit!)} 녹음하면 자동 저장';
+    } else {
+      final left = _limit! - _watch.elapsed;
+      final s = left.isNegative ? 0 : left.inSeconds;
+      final h = s ~/ 3600;
+      final mm = ((s ~/ 60) % 60).toString().padLeft(2, '0');
+      final ss = (s % 60).toString().padLeft(2, '0');
+      label = '${h > 0 ? '$h:$mm:$ss' : '$mm:$ss'} 후 자동 저장';
+    }
+    return GestureDetector(
+      onTap: _state == _RecState.saving ? null : _pickTimer,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(_limit == null ? 0.05 : 0.1),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.timer_outlined, size: 15, color: Colors.white.withOpacity(_limit == null ? 0.45 : 0.85)),
+            const SizedBox(width: 5),
+            Text(label,
+                style: TextStyle(
+                    color: Colors.white.withOpacity(_limit == null ? 0.45 : 0.85), fontSize: 12.5)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _limitText(Duration d) {
+    final h = d.inHours;
+    final m = d.inMinutes % 60;
+    if (h == 0) return '$m분';
+    return m == 0 ? '$h시간' : '$h시간 $m분';
+  }
+
+  /// 타이머 고르기: 빠른 버튼 + 시간·분 휠 (음악 수면 타이머처럼)
+  void _pickTimer() {
+    HapticFeedback.selectionClick();
+    var picked = _limit ?? const Duration(minutes: 30);
+
+    void apply(BuildContext ctx, Duration? d) {
+      Navigator.pop(ctx);
+      // 이미 지난 시간을 고르면 바로 저장되지 않게
+      if (d != null && _watch.elapsed >= d) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('이미 그보다 오래 녹음했어요')),
+        );
+        return;
+      }
+      setState(() => _limit = d);
+    }
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setSheet) => SafeArea(
+          top: false,
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+            decoration: BoxDecoration(
+              color: const Color(0xFF18304B),
+              borderRadius: BorderRadius.circular(22),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('이만큼 녹음되면 자동으로 저장',
+                    style: TextStyle(color: Colors.white70, fontSize: 13.5)),
+                const SizedBox(height: 12),
+                // 빠른 버튼
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    for (final d in const [Duration(minutes: 15), Duration(minutes: 30), Duration(hours: 1)])
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: GestureDetector(
+                          onTap: () => apply(ctx, d),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Text(_limitText(d),
+                                style: const TextStyle(color: Colors.white, fontSize: 13)),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                // 시간·분 휠
+                SizedBox(
+                  height: 180,
+                  child: CupertinoTheme(
+                    data: const CupertinoThemeData(
+                      brightness: Brightness.dark,
+                      textTheme: CupertinoTextThemeData(
+                        pickerTextStyle: TextStyle(color: Colors.white, fontSize: 21),
+                      ),
+                    ),
+                    child: CupertinoTimerPicker(
+                      mode: CupertinoTimerPickerMode.hm,
+                      initialTimerDuration: picked,
+                      onTimerDurationChanged: (d) => picked = d,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => apply(ctx, null),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white70,
+                          side: BorderSide(color: Colors.white.withOpacity(0.2)),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        ),
+                        child: const Text('타이머 끄기'),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => apply(ctx, picked.inMinutes == 0 ? null : picked),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _blue,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        ),
+                        child: const Text('설정'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),

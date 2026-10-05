@@ -735,7 +735,8 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
           duration: const Duration(milliseconds: 200),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: selected ? (isDark ? const Color(0xFF35302A) : Colors.white) : Colors.transparent,
+            // 선택된 칸: 라이트는 진한 베이지, 다크는 어두운 갈색
+            color: selected ? (isDark ? const Color(0xFF35302A) : const Color(0xFFDCD2C0)) : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(label,

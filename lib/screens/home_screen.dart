@@ -782,25 +782,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: '파란',
-                              style: GoogleFonts.doHyeon(
-                                  color: const Color(0xFF2F7DE8),
-                                  fontSize: 22,
-                                  letterSpacing: -0.5),
-                            ),
-                            TextSpan(
-                              text: '소리',
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // "파란"만 숨쉬듯 은은하게
+                          _LogoBreathe(
+                            child: Text('파란',
+                                textScaler: TextScaler.noScaling, // 로고는 텍스트 크기 설정과 상관없이 고정
+                                style: GoogleFonts.doHyeon(
+                                    color: const Color(0xFF2F7DE8),
+                                    fontSize: 22,
+                                    letterSpacing: -0.5)),
+                          ),
+                          Text('소리',
+                              textScaler: TextScaler.noScaling,
                               style: GoogleFonts.doHyeon(
                                   color: baseColor,
                                   fontSize: 22,
-                                  letterSpacing: -0.5),
-                            ),
-                          ],
-                        ),
+                                  letterSpacing: -0.5)),
+                        ],
                       ),
                       Transform.translate(
                         offset: const Offset(0, -4),
@@ -820,12 +820,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text('Paran',
-                          style: GoogleFonts.doHyeon(
-                              color: const Color(0xFF2F7DE8),
-                              fontSize: 20,
-                              height: 1.0,
-                              letterSpacing: -0.3)),
+                      _LogoBreathe(
+                        child: Text('Paran',
+                            style: GoogleFonts.doHyeon(
+                                color: const Color(0xFF2F7DE8),
+                                fontSize: 20,
+                                height: 1.0,
+                                letterSpacing: -0.3)),
+                      ),
                       Text('Sori',
                           style: GoogleFonts.doHyeon(
                               color: baseColor,
@@ -2479,6 +2481,67 @@ class _DashboardCategory {
 
 
 // 홈 화면 로고 옆의 작은 이퀄라이저 막대 (은은하게 움직임)
+/// 로고 "파란"이 숨쉬듯 은은하게 밝아졌다 연해졌다 (3.2초에 한 번)
+class _LogoBreathe extends StatefulWidget {
+  final Widget child;
+  const _LogoBreathe({required this.child});
+
+  @override
+  State<_LogoBreathe> createState() => _LogoBreatheState();
+}
+
+class _LogoBreatheState extends State<_LogoBreathe> with SingleTickerProviderStateMixin {
+  // 3.5초마다 빛이 쉬지 않고 계속 흘러감 (시안과 같게)
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 3500),
+  )..repeat();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _c,
+      child: widget.child,
+      builder: (_, child) {
+        final x = -0.5 + _c.value * 2.0; // 빛 위치: 왼쪽 밖 → 오른쪽 밖 (쉬지 않고)
+        return ShaderMask(
+          blendMode: BlendMode.srcIn,
+          shaderCallback: (rect) => LinearGradient(
+            begin: const Alignment(-1, -0.4), // 시안처럼 살짝 비스듬히
+            end: const Alignment(1, 0.4),
+            // 가운데만 밝고 양옆으로 부드럽게 번지는 넓은 빛
+            colors: const [
+              Color(0xFF2F7DE8),
+              Color(0xFF2F7DE8),
+              Color(0xFF5FA6F2), // 번짐 시작
+              Color(0xFFA9D3FF), // 가장 밝은 곳
+              Color(0xFF5FA6F2), // 번짐 끝
+              Color(0xFF2F7DE8),
+              Color(0xFF2F7DE8),
+            ],
+            stops: [
+              0,
+              (x - 0.38).clamp(0.0, 1.0),
+              (x - 0.16).clamp(0.0, 1.0),
+              x.clamp(0.0, 1.0),
+              (x + 0.16).clamp(0.0, 1.0),
+              (x + 0.38).clamp(0.0, 1.0),
+              1,
+            ],
+          ).createShader(rect),
+          child: child,
+        );
+      },
+    );
+  }
+}
+
 class _LogoEqBars extends StatefulWidget {
   const _LogoEqBars();
 

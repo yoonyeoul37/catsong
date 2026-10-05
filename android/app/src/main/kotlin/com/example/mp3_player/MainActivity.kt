@@ -18,6 +18,11 @@ import java.io.File
 
 class MainActivity : AudioServiceActivity() {
     private val CHANNEL = "kr.ssing.catsong/media"
+
+    companion object {
+        // 녹음 알림 버튼(일시정지·이어서·완료) → 앱(녹음 화면)으로 전달
+        var recordingChannel: MethodChannel? = null
+    }
     private var equalizer: Equalizer? = null
     private var audioFocusRequest: AudioFocusRequest? = null
     private var flutterMethodChannel: MethodChannel? = null
@@ -99,6 +104,7 @@ class MainActivity : AudioServiceActivity() {
         super.configureFlutterEngine(flutterEngine)
         val channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
         flutterMethodChannel = channel
+        recordingChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "kr.ssing.catsong/recording")
         channel.setMethodCallHandler { call, result ->
             when (call.method) {
                 "getAlbumArt" -> {
@@ -132,6 +138,26 @@ class MainActivity : AudioServiceActivity() {
                         multicastLock?.acquire()
                     } else {
                         multicastLock?.release()
+                    }
+                    result.success(true)
+                }
+                "recordingService" -> {
+                    // 녹음 중 알림: start / pause / resume / stop
+                    val action = call.argument<String>("action") ?: "stop"
+                    val intent = android.content.Intent(this, RecordingService::class.java)
+                    if (action == "stop") {
+                        stopService(intent)
+                    } else {
+                        intent.putExtra(RecordingService.EXTRA_PAUSED, action == "pause")
+                        intent.putExtra(RecordingService.EXTRA_BASE,
+                            (call.argument<Any>("base") as? Number)?.toLong() ?: System.currentTimeMillis())
+                        intent.putExtra(RecordingService.EXTRA_ELAPSED,
+                            (call.argument<Any>("elapsed") as? Number)?.toLong() ?: 0L)
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            startForegroundService(intent)
+                        } else {
+                            startService(intent)
+                        }
                     }
                     result.success(true)
                 }

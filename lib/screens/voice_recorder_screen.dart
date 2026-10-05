@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../providers/player_provider.dart';
 
 /// 파란소리 녹음기 (음성 녹음)
@@ -38,11 +39,35 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
     duration: const Duration(milliseconds: 900),
   )..repeat(reverse: true);
 
+  // 알림창 버튼(일시정지·이어서·완료)을 받는 통로
+  static const _actions = MethodChannel('kr.ssing.catsong/recording');
+
+  @override
+  void initState() {
+    super.initState();
+    _actions.setMethodCallHandler((call) async {
+      if (call.method != 'action' || !mounted) return;
+      switch (call.arguments as String?) {
+        case 'pause':
+          if (_state == _RecState.recording) await _togglePause();
+          break;
+        case 'resume':
+          if (_state == _RecState.paused) await _togglePause();
+          break;
+        case 'finish':
+          await _finish();
+          break;
+      }
+    });
+  }
+
   @override
   void dispose() {
+    _actions.setMethodCallHandler(null);
     _tick?.cancel();
     _ampSub?.cancel();
     _pulse.dispose();
+    _svc('stop');
     _rec.dispose();
     super.dispose();
   }
@@ -57,6 +82,15 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
       );
       return;
     }
+    // 알림창에 "녹음 중"을 보여주려면 알림 권한이 필요해요 (안드로이드 13+)
+    try {
+      final st = await Permission.notification.request();
+      if (!st.isGranted && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('알림을 허용하면 알림창에서 녹음 중인 걸 볼 수 있어요'),
+        ));
+      }
+    } catch (_) {}
     // 음악이 나오고 있으면 잠깐 멈추기
     try {
       if (mounted) context.read<PlayerProvider>().player.pause();
@@ -70,6 +104,7 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
     _watch
       ..reset()
       ..start();
+    _svc('start'); // 알림창에 "녹음 중" → 앱을 나가도 계속 녹음
     _tick = Timer.periodic(const Duration(milliseconds: 100), (_) {
       if (mounted) setState(() {});
     });
@@ -89,10 +124,12 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
       await _rec.pause();
       _watch.stop();
       setState(() => _state = _RecState.paused);
+      _svc('pause');
     } else if (_state == _RecState.paused) {
       await _rec.resume();
       _watch.start();
       setState(() => _state = _RecState.recording);
+      _svc('resume');
     }
   }
 
@@ -105,6 +142,7 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
     _ampSub?.cancel();
     _watch.stop();
     final path = await _rec.stop() ?? _tmpPath;
+    _svc('stop');
     if (path == null) {
       if (mounted) Navigator.pop(context);
       return;
@@ -155,10 +193,20 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
     _tick?.cancel();
     _ampSub?.cancel();
     final p = await _rec.stop();
+    _svc('stop');
     try {
       if (p != null) await File(p).delete();
     } catch (_) {}
     if (mounted) Navigator.pop(context);
+  }
+
+  /// 알림창 "녹음 중" 켜기·바꾸기·끄기 (start / pause / resume / stop)
+  void _svc(String action) {
+    _channel.invokeMethod('recordingService', {
+      'action': action,
+      'base': DateTime.now().millisecondsSinceEpoch - _watch.elapsedMilliseconds,
+      'elapsed': _watch.elapsedMilliseconds,
+    }).catchError((_) {});
   }
 
   String get _timeText {

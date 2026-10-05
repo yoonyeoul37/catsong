@@ -19,15 +19,16 @@ class CallRecordingsScreen extends StatefulWidget {
 }
 
 class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
-  static const _blue = Color(0xFF2589E8);
-  String? _person; // null = 전체, 아니면 그 사람 것만
+  static const _blue = Color(0xFF2589E8); // 파란색은 "지금 재생 중"에만
+  static const _ink = Color(0xFF3A352D); // 선택·강조는 차분한 먹색
   bool _voice = false; // false = 통화 녹음, true = 음성 녹음
   int _sort = 0; // 0 최신순, 1 오래된순, 2 긴 통화순
   bool _searching = false;
   String _query = '';
   final _searchCtrl = TextEditingController();
   final Set<String> _selected = {}; // 여러 개 선택 (파일 경로)
-  bool get _selecting => _selected.isNotEmpty;
+  bool _selectMode = false; // ⋮ → 선택하기로 켰을 때
+  bool get _selecting => _selectMode || _selected.isNotEmpty;
 
   @override
   void dispose() {
@@ -52,13 +53,12 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
     final everything = music.callRecordings;
     final all = everything.where((r) => r.isVoice == _voice).toList();
 
-    // 사람별 개수 (많은 순)
-    final counts = <String, int>{};
-    for (final r in all) {
-      counts[r.name] = (counts[r.name] ?? 0) + 1;
-    }
-    final people = counts.keys.toList()..sort((a, b) => counts[b]!.compareTo(counts[a]!));
-    var list = _person == null ? all : all.where((r) => r.name == _person).toList();
+    // 차분한 색 (라이트: 베이지·갈색 / 다크: 반투명 흰색)
+    final soft = isDark ? Colors.white.withOpacity(0.08) : const Color(0xFFE2DACB);
+    final muted = isDark ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
+    final selBg = isDark ? Colors.white.withOpacity(0.9) : _ink;
+    final selFg = isDark ? const Color(0xFF17140F) : Colors.white;
+    var list = all;
     // 검색 (이름·번호·내가 바꾼 제목)
     if (_query.isNotEmpty) {
       final q = _query.toLowerCase();
@@ -82,280 +82,272 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
 
     return Stack(
       children: [
-    CustomScrollView(
-      slivers: [
-        // 제목 (여러 개 선택 중이면 선택 막대)
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 8, 6),
-            child: _selecting
-                ? Row(
-              children: [
-                IconButton(
-                  onPressed: () => setState(() => _selected.clear()),
-                  icon: Icon(Icons.close, color: baseColor),
-                ),
-                Text('${_selected.length}개 선택',
-                    style: TextStyle(color: baseColor, fontSize: 15, fontWeight: FontWeight.w700)),
-                const Spacer(),
-                TextButton(
-                  onPressed: () => setState(() {
-                    if (_selected.length == list.length) {
-                      _selected.clear();
-                    } else {
-                      _selected
-                        ..clear()
-                        ..addAll(list.map((r) => r.path));
-                    }
-                  }),
-                  child: Text(_selected.length == list.length ? '선택 해제' : '전체 선택',
-                      style: const TextStyle(color: _blue)),
-                ),
-                IconButton(
-                  onPressed: () => _share(list.where((r) => _selected.contains(r.path)).toList()),
-                  icon: const Icon(Icons.share, color: _blue, size: 21),
-                ),
-                IconButton(
-                  onPressed: () => _confirmTrash(list.where((r) => _selected.contains(r.path)).toList(),
-                      isAll: true),
-                  icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 22),
-                ),
-              ],
-            )
-                : Row(
-              children: [
-                const Icon(Icons.mic_none, color: _blue, size: 18),
-                const SizedBox(width: 6),
-                Text('녹음',
-                    style: TextStyle(
-                        color: baseColor, fontSize: 15, fontWeight: FontWeight.w900, letterSpacing: -0.5)),
-                const SizedBox(width: 8),
-                Text('(${everything.length})',
-                    style: TextStyle(color: baseColor.withOpacity(0.38), fontSize: 13)),
-                const Spacer(),
-                // 검색
-                IconButton(
-                  onPressed: () => setState(() {
-                    _searching = !_searching;
-                    if (!_searching) {
-                      _query = '';
-                      _searchCtrl.clear();
-                    }
-                  }),
-                  icon: Icon(_searching ? Icons.search_off : Icons.search,
-                      color: baseColor.withOpacity(0.5), size: 21),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(minWidth: 34, minHeight: 34),
-                ),
-                // 정렬
-                PopupMenuButton<int>(
-                  initialValue: _sort,
-                  onSelected: (v) => setState(() => _sort = v),
-                  icon: Icon(Icons.sort, color: baseColor.withOpacity(0.5), size: 21),
-                  padding: EdgeInsets.zero,
-                  itemBuilder: (_) => const [
-                    PopupMenuItem(value: 0, child: Text('최신순')),
-                    PopupMenuItem(value: 1, child: Text('오래된순')),
-                    PopupMenuItem(value: 2, child: Text('긴 통화순')),
-                  ],
-                ),
-                // 지금 보이는 녹음 전체 삭제 (잠근 건 남김)
-                if (list.isNotEmpty)
-                  IconButton(
-                    onPressed: () => _confirmTrash(list, isAll: true),
-                    icon: Icon(Icons.delete_sweep, color: baseColor.withOpacity(0.4), size: 22),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 34, minHeight: 34),
-                  ),
-              ],
-            ),
-          ),
-        ),
-        // 검색 칸
-        if (_searching && !_selecting)
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-              child: TextField(
-                controller: _searchCtrl,
-                autofocus: true,
-                onChanged: (v) => setState(() => _query = v.trim()),
-                style: TextStyle(color: baseColor, fontSize: 14),
-                decoration: InputDecoration(
-                  hintText: '이름, 번호, 제목으로 찾기',
-                  hintStyle: TextStyle(color: baseColor.withOpacity(0.35)),
-                  prefixIcon: Icon(Icons.search, color: baseColor.withOpacity(0.4), size: 20),
-                  isDense: true,
-                  filled: true,
-                  fillColor: baseColor.withOpacity(0.06),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-                ),
-              ),
-            ),
-          ),
-        // 지금 재생 중인 녹음: 10초 앞뒤 · 배속
-        if (playing != null)
-          SliverToBoxAdapter(child: _miniBar(playing, player, music, baseColor)),
-        // 통화 녹음 | 음성 녹음
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
-            child: Container(
-              height: 38,
-              padding: const EdgeInsets.all(3),
-              decoration: BoxDecoration(
-                color: baseColor.withOpacity(0.06),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: [
-                  _seg('통화 녹음 ${everything.where((r) => !r.isVoice).length}', !_voice,
-                          () => setState(() => _voice = false), baseColor, isDark),
-                  _seg('음성 녹음 ${everything.where((r) => r.isVoice).length}', _voice, () => setState(() {
-                    _voice = true;
-                    _person = null;
-                  }), baseColor, isDark),
-                ],
-              ),
-            ),
-          ),
-        ),
-        // 사람별 묶기
-        if (!_voice && people.length > 1)
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: 40,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                children: [
-                  _chip('전체 ${all.length}', _person == null, () => setState(() => _person = null), baseColor),
-                  for (final p in people)
-                    _chip('$p ${counts[p]}', _person == p, () => setState(() => _person = p), baseColor),
-                ],
-              ),
-            ),
-          ),
-        if (music.callLoading && all.isEmpty)
-          const SliverFillRemaining(child: Center(child: CircularProgressIndicator(color: _blue)))
-        else if (all.isEmpty)
-          SliverFillRemaining(
-            child: Center(
+        CustomScrollView(
+          slivers: [
+            // 제목 (여러 개 선택 중이면 선택 막대)
+            SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                padding: const EdgeInsets.fromLTRB(16, 12, 8, 6),
+                child: _selecting
+                    ? Row(
                   children: [
-                    Icon(_voice ? Icons.mic : Icons.call, size: 64, color: baseColor.withOpacity(0.2)),
-                    const SizedBox(height: 14),
-                    Text(_voice ? '음성 녹음이 없어요' : '통화 녹음이 없어요',
-                        style: TextStyle(color: baseColor.withOpacity(0.45), fontSize: 15)),
-                    const SizedBox(height: 6),
-                    Text(
-                        _voice
-                            ? '오른쪽 아래 🎙 버튼으로\n바로 녹음할 수 있어요'
-                            : '전화 앱 설정에서 통화 녹음을 켜면\n녹음된 통화가 여기에 모여요',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: baseColor.withOpacity(0.3), fontSize: 12.5, height: 1.5)),
+                    IconButton(
+                      onPressed: () => setState(() {
+                        _selected.clear();
+                        _selectMode = false;
+                      }),
+                      icon: Icon(Icons.close, color: baseColor),
+                    ),
+                    Text('${_selected.length}개 선택',
+                        style: TextStyle(color: baseColor, fontSize: 15, fontWeight: FontWeight.w700)),
+                    const Spacer(),
+                    TextButton(
+                      onPressed: () => setState(() {
+                        if (_selected.length == list.length) {
+                          _selected.clear();
+                        } else {
+                          _selected
+                            ..clear()
+                            ..addAll(list.map((r) => r.path));
+                        }
+                      }),
+                      child: Text(_selected.length == list.length ? '선택 해제' : '전체 선택',
+                          style: TextStyle(color: baseColor.withOpacity(0.75))),
+                    ),
+                    IconButton(
+                      onPressed: () => _share(list.where((r) => _selected.contains(r.path)).toList()),
+                      icon: Icon(Icons.share, color: baseColor.withOpacity(0.7), size: 21),
+                    ),
+                    IconButton(
+                      onPressed: () => _confirmTrash(list.where((r) => _selected.contains(r.path)).toList(),
+                          isAll: true),
+                      icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 22),
+                    ),
+                  ],
+                )
+                    : Row(
+                  children: [
+                    Icon(Icons.mic_none, color: baseColor.withOpacity(0.55), size: 18),
+                    const SizedBox(width: 6),
+                    Text('녹음',
+                        style: TextStyle(
+                            color: baseColor, fontSize: 15, fontWeight: FontWeight.w900, letterSpacing: -0.5)),
+                    const SizedBox(width: 8),
+                    Text('(${everything.length})',
+                        style: TextStyle(color: baseColor.withOpacity(0.38), fontSize: 13)),
+                    const Spacer(),
+                    // 검색
+                    IconButton(
+                      onPressed: () => setState(() {
+                        _searching = !_searching;
+                        if (!_searching) {
+                          _query = '';
+                          _searchCtrl.clear();
+                        }
+                      }),
+                      icon: Icon(_searching ? Icons.search_off : Icons.search,
+                          color: baseColor.withOpacity(0.5), size: 21),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(minWidth: 34, minHeight: 34),
+                    ),
+                    // ⋮ 정렬 · 선택하기 · 전체 삭제 (자주 안 쓰는 건 안으로)
+                    PopupMenuButton<String>(
+                      icon: Icon(Icons.more_vert, color: baseColor.withOpacity(0.55), size: 21),
+                      padding: EdgeInsets.zero,
+                      onSelected: (v) {
+                        if (v == 'select') {
+                          setState(() => _selectMode = true);
+                        } else if (v == 'trashAll') {
+                          _confirmTrash(list, isAll: true);
+                        } else {
+                          setState(() => _sort = int.parse(v));
+                        }
+                      },
+                      itemBuilder: (_) => [
+                        CheckedPopupMenuItem(value: '0', checked: _sort == 0, child: const Text('최신순')),
+                        CheckedPopupMenuItem(value: '1', checked: _sort == 1, child: const Text('오래된순')),
+                        CheckedPopupMenuItem(value: '2', checked: _sort == 2, child: const Text('긴 통화순')),
+                        const PopupMenuDivider(),
+                        if (list.isNotEmpty) const PopupMenuItem(value: 'select', child: Text('선택하기')),
+                        if (list.isNotEmpty)
+                          const PopupMenuItem(
+                            value: 'trashAll',
+                            child: Text('전체 삭제', style: TextStyle(color: Colors.redAccent)),
+                          ),
+                      ],
+                    ),
                   ],
                 ),
               ),
             ),
-          )
-        else
-          SliverPadding(
-            padding: EdgeInsets.fromLTRB(8, 4, 8, _voice ? 100 : 16), // 녹음 버튼에 안 가리게
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, i) {
-                  final r = list[i];
-                  final isCurrent = player.currentSong?.uri == r.path;
-                  final sub = [r.dateLabel, if (r.durationLabel.isNotEmpty) r.durationLabel].join(' · ');
-                  return InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: () {
-                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      if (_selecting) {
-                        setState(() => _selected.contains(r.path) ? _selected.remove(r.path) : _selected.add(r.path));
-                        return;
-                      }
-                      context.read<PlayerProvider>().playFromList(songs, i);
-                    },
-                    // 길게 누르면 여러 개 선택 시작
-                    onLongPress: () {
-                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      setState(() => _selected.add(r.path));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 44,
-                            height: 44,
-                            decoration: BoxDecoration(
-                              color: (isCurrent || _selected.contains(r.path)) ? _blue : _blue.withOpacity(0.12),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                                _selecting
-                                    ? (_selected.contains(r.path) ? Icons.check : Icons.circle_outlined)
-                                    : (isCurrent && player.isPlaying
-                                    ? Icons.graphic_eq
-                                    : (r.isVoice ? Icons.mic : Icons.call)),
-                                color: (isCurrent || _selected.contains(r.path)) ? Colors.white : _blue,
-                                size: 20),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
+            // 검색 칸
+            if (_searching && !_selecting)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: TextField(
+                    controller: _searchCtrl,
+                    autofocus: true,
+                    onChanged: (v) => setState(() => _query = v.trim()),
+                    style: TextStyle(color: baseColor, fontSize: 14),
+                    decoration: InputDecoration(
+                      hintText: '이름, 번호, 제목으로 찾기',
+                      hintStyle: TextStyle(color: baseColor.withOpacity(0.35)),
+                      prefixIcon: Icon(Icons.search, color: baseColor.withOpacity(0.4), size: 20),
+                      isDense: true,
+                      filled: true,
+                      fillColor: baseColor.withOpacity(0.06),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                    ),
+                  ),
+                ),
+              ),
+            // 지금 재생 중인 녹음: 10초 앞뒤 · 배속
+            if (playing != null)
+              SliverToBoxAdapter(child: _miniBar(playing, player, music, baseColor)),
+            // 통화 녹음 | 음성 녹음
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
+                child: Container(
+                  height: 38,
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    color: baseColor.withOpacity(0.06),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    children: [
+                      _seg('통화 녹음 ${everything.where((r) => !r.isVoice).length}', !_voice,
+                              () => setState(() => _voice = false), baseColor, isDark),
+                      _seg('음성 녹음 ${everything.where((r) => r.isVoice).length}', _voice,
+                              () => setState(() => _voice = true), baseColor, isDark),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            if (music.callLoading && all.isEmpty)
+              SliverFillRemaining(child: Center(child: CircularProgressIndicator(color: muted)))
+            else if (all.isEmpty)
+              SliverFillRemaining(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(_voice ? Icons.mic : Icons.call, size: 64, color: baseColor.withOpacity(0.2)),
+                        const SizedBox(height: 14),
+                        Text(_voice ? '음성 녹음이 없어요' : '통화 녹음이 없어요',
+                            style: TextStyle(color: baseColor.withOpacity(0.45), fontSize: 15)),
+                        const SizedBox(height: 6),
+                        Text(
+                            _voice
+                                ? '오른쪽 아래 🎙 버튼으로\n바로 녹음할 수 있어요'
+                                : '전화 앱 설정에서 통화 녹음을 켜면\n녹음된 통화가 여기에 모여요',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: baseColor.withOpacity(0.3), fontSize: 12.5, height: 1.5)),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            else
+              SliverPadding(
+                padding: EdgeInsets.fromLTRB(8, 4, 8, _voice ? 100 : 16), // 녹음 버튼에 안 가리게
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                        (context, i) {
+                      final r = list[i];
+                      final isCurrent = player.currentSong?.uri == r.path;
+                      final sub = [r.dateLabel, if (r.durationLabel.isNotEmpty) r.durationLabel].join(' · ');
+                      return InkWell(
+                        borderRadius: BorderRadius.circular(12),
+                        onTap: () {
+                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                          if (_selecting) {
+                            setState(() => _selected.contains(r.path) ? _selected.remove(r.path) : _selected.add(r.path));
+                            return;
+                          }
+                          context.read<PlayerProvider>().playFromList(songs, i);
+                        },
+                        // 길게 누르면 여러 개 선택 시작
+                        onLongPress: () {
+                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                          setState(() => _selected.add(r.path));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  // 선택 = 먹색, 재생 중 = 파란색, 나머지 = 베이지
+                                  color: _selected.contains(r.path) ? selBg : (isCurrent ? _blue : soft),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                    _selecting
+                                        ? (_selected.contains(r.path) ? Icons.check : Icons.circle_outlined)
+                                        : (isCurrent && player.isPlaying
+                                        ? Icons.graphic_eq
+                                        : (r.isVoice ? Icons.mic : Icons.call)),
+                                    color: _selected.contains(r.path) ? selFg : (isCurrent ? Colors.white : muted),
+                                    size: 20),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Flexible(
-                                      child: Text(music.recordingTitle(r),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              color: isCurrent ? _blue : baseColor,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600)),
+                                    Row(
+                                      children: [
+                                        Flexible(
+                                          child: Text(music.recordingTitle(r),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  color: isCurrent ? _blue : baseColor,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w600)),
+                                        ),
+                                        if (music.isRecordingLocked(r.path)) ...[
+                                          const SizedBox(width: 4),
+                                          Icon(Icons.lock, size: 14, color: baseColor.withOpacity(0.45)),
+                                        ],
+                                      ],
                                     ),
-                                    if (music.isRecordingLocked(r.path)) ...[
-                                      const SizedBox(width: 4),
-                                      Icon(Icons.lock, size: 14, color: baseColor.withOpacity(0.45)),
-                                    ],
+                                    const SizedBox(height: 3),
+                                    Text(sub,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 12)),
                                   ],
                                 ),
-                                const SizedBox(height: 3),
-                                Text(sub,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 12)),
-                              ],
-                            ),
-                          ),
-                          if (!_selecting)
-                            GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () => _showMenu(r),
-                              child: Padding(
-                                padding: const EdgeInsets.all(6),
-                                child: Icon(Icons.more_vert, color: baseColor.withOpacity(0.35), size: 20),
                               ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                childCount: list.length,
+                              if (!_selecting)
+                                GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () => _showMenu(r),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(6),
+                                    child: Icon(Icons.more_vert, color: baseColor.withOpacity(0.35), size: 20),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    childCount: list.length,
+                  ),
+                ),
               ),
-            ),
-          ),
-      ],
-    ),
+          ],
+        ),
         // 음성 녹음 칸에서만: 새로 녹음하기 버튼
         if (_voice && !_selecting)
           Positioned(right: 20, bottom: 24, child: _recordFab()),
@@ -421,11 +413,13 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
 
     const speeds = [1.0, 1.25, 1.5, 2.0];
     final speed = player.playbackSpeed;
+    final isDark = baseColor == Colors.white;
+    final muted = isDark ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 2, 16, 8),
       padding: const EdgeInsets.fromLTRB(14, 10, 8, 8),
       decoration: BoxDecoration(
-        color: _blue.withOpacity(0.08),
+        color: isDark ? Colors.white.withOpacity(0.06) : Colors.white, // 흰 카드
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -448,20 +442,20 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 3,
-              backgroundColor: _blue.withOpacity(0.15),
+              backgroundColor: baseColor.withOpacity(0.08),
               valueColor: const AlwaysStoppedAnimation(_blue),
             ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(onPressed: () => jump(-10), icon: const Icon(Icons.replay_10, color: _blue, size: 26)),
+              IconButton(onPressed: () => jump(-10), icon: Icon(Icons.replay_10, color: muted, size: 26)),
               IconButton(
                 onPressed: () => player.togglePlayPause(),
                 icon: Icon(player.isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled,
                     color: _blue, size: 38),
               ),
-              IconButton(onPressed: () => jump(10), icon: const Icon(Icons.forward_10, color: _blue, size: 26)),
+              IconButton(onPressed: () => jump(10), icon: Icon(Icons.forward_10, color: muted, size: 26)),
               const SizedBox(width: 8),
               // 배속: 누를 때마다 1.0 → 1.25 → 1.5 → 2.0
               GestureDetector(
@@ -473,13 +467,15 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
-                    color: speed == 1.0 ? Colors.transparent : _blue,
+                    color: speed == 1.0 ? Colors.transparent : (isDark ? Colors.white.withOpacity(0.9) : _ink),
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: _blue),
+                    border: Border.all(color: speed == 1.0 ? baseColor.withOpacity(0.2) : Colors.transparent),
                   ),
                   child: Text('${speed == speed.roundToDouble() ? speed.toStringAsFixed(1) : speed}×',
                       style: TextStyle(
-                          color: speed == 1.0 ? _blue : Colors.white, fontSize: 12, fontWeight: FontWeight.w700)),
+                          color: speed == 1.0 ? muted : (isDark ? const Color(0xFF17140F) : Colors.white),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700)),
                 ),
               ),
             ],
@@ -584,7 +580,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
   Widget _menuItem(IconData icon, String label, Color color, VoidCallback? onTap) {
     return ListTile(
       enabled: onTap != null,
-      leading: Icon(icon, color: onTap == null ? color.withOpacity(0.35) : (color == Colors.redAccent ? color : _blue)),
+      leading: Icon(icon, color: onTap == null ? color.withOpacity(0.35) : (color == Colors.redAccent ? color : color.withOpacity(0.6))),
       title: Text(label,
           style: TextStyle(color: onTap == null ? color.withOpacity(0.35) : color, fontSize: 14.5)),
       onTap: onTap,
@@ -645,7 +641,10 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
               Navigator.pop(ctx);
               final n = await music.trashRecordings(targets);
               if (!mounted) return;
-              setState(() => _selected.clear());
+              setState(() {
+                _selected.clear();
+                _selectMode = false;
+              });
               if (n > 0) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$n개를 휴지통으로 옮겼어요')));
               }
@@ -674,7 +673,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
           ),
           child: Text(label,
               style: TextStyle(
-                  color: selected ? _blue : baseColor.withOpacity(0.55),
+                  color: selected ? baseColor : baseColor.withOpacity(0.55),
                   fontSize: 13,
                   fontWeight: selected ? FontWeight.w700 : FontWeight.normal)),
         ),
@@ -682,29 +681,4 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
     );
   }
 
-  Widget _chip(String label, bool selected, VoidCallback onTap, Color baseColor) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 6),
-      child: GestureDetector(
-        onTap: () {
-          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-          onTap();
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: selected ? _blue : Colors.transparent,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: selected ? _blue : baseColor.withOpacity(0.15)),
-          ),
-          child: Text(label,
-              style: TextStyle(
-                  color: selected ? Colors.white : baseColor.withOpacity(0.7),
-                  fontSize: 12.5,
-                  fontWeight: selected ? FontWeight.w600 : FontWeight.normal)),
-        ),
-      ),
-    );
-  }
 }

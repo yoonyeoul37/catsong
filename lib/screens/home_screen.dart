@@ -90,33 +90,98 @@ class _HomeScreenState extends State<HomeScreen> {
   int _indexFingerprint = -1;
   static const double _indexHeaderH = 34; // 위 여백 + 초성 글자
 
+  // 정렬: false = 제목, true = 가수 (가수일 땐 초성 바도 가수 이름 기준 + 가수 묶음 줄)
+  bool _byArtist = false;
+  Map<String, int> _artistCounts = const {}; // 가수별 곡 수
+  static const double _artistHeaderH = 30; // 가수 이름 줄 높이
+
+  // 목록 줄 종류: (머리글, -1) = 초성 머리글 / (가수, -2) = 가수 줄 / (null, 번호) = 곡
   void _buildIndexEntries(List<Song> songs) {
-    var fp = songs.length;
+    var fp = songs.length * 2 + (_byArtist ? 1 : 0);
     for (final s in songs) {
-      fp = (fp * 31 + s.titleDisplay.hashCode) & 0x3fffffff;
+      fp = (fp * 31 + s.titleDisplay.hashCode + (_byArtist ? s.artistDisplay.hashCode : 0)) & 0x3fffffff;
     }
     if (fp == _indexFingerprint) return;
     _indexFingerprint = fp;
+    String keyOf(Song s) => _byArtist ? s.artistDisplay : s.titleDisplay;
     final byGroup = <String, List<Song>>{};
+    final artistCounts = <String, int>{};
     for (final s in songs) {
-      byGroup.putIfAbsent(indexGroupOf(s.titleDisplay), () => []).add(s);
+      byGroup.putIfAbsent(indexGroupOf(keyOf(s)), () => []).add(s);
+      artistCounts[s.artistDisplay] = (artistCounts[s.artistDisplay] ?? 0) + 1;
     }
     final ordered = <Song>[];
     final entries = <(String?, int)>[];
     for (final g in kIndexGroups) {
       final list = byGroup[g];
       if (list == null || list.isEmpty) continue;
-      list.sort((a, b) =>
-          a.titleDisplay.toLowerCase().compareTo(b.titleDisplay.toLowerCase()));
+      list.sort((a, b) {
+        if (_byArtist) {
+          final c = a.artistDisplay.toLowerCase().compareTo(b.artistDisplay.toLowerCase());
+          if (c != 0) return c;
+        }
+        return a.titleDisplay.toLowerCase().compareTo(b.titleDisplay.toLowerCase());
+      });
       entries.add((g, -1));
+      String? lastArtist;
       for (final s in list) {
+        if (_byArtist && s.artistDisplay != lastArtist) {
+          lastArtist = s.artistDisplay;
+          entries.add((lastArtist, -2)); // 가수 이름 줄
+        }
         entries.add((null, ordered.length));
         ordered.add(s);
       }
     }
     _indexSongs = ordered;
     _indexCounts = {for (final e in byGroup.entries) e.key: e.value.length};
+    _artistCounts = artistCounts;
     _indexEntries = entries;
+  }
+
+  /// 정렬 바꾸기 (제목 / 가수) — 기억해 둠
+  Future<void> _setSortByArtist(bool v) async {
+    if (v == _byArtist) return;
+    setState(() {
+      _byArtist = v;
+      _indexFingerprint = -1;
+    });
+    if (_songListController.hasClients) _songListController.jumpTo(0);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('song_sort_by_artist', v);
+  }
+
+  /// 가수 정렬일 때 가수 이름 줄: 가수 + 곡 수
+  Widget _buildArtistHeader(String artist, bool isDark) {
+    final count = _artistCounts[artist] ?? 0;
+    return SizedBox(
+      height: _artistHeaderH,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(22, 8, 12, 0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Flexible(
+              child: Text(artist,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: isDark ? Colors.white.withOpacity(0.8) : const Color(0xFF17140F),
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w700,
+                  )),
+            ),
+            const SizedBox(width: 6),
+            Text('$count ${AppLocalizations.of(context)!.songCount}',
+                style: TextStyle(
+                  color: (isDark ? kIndexMutedDark : kIndexMuted).withOpacity(0.7),
+                  fontSize: 11,
+                )),
+          ],
+        ),
+      ),
+    );
   }
 
   /// 지금 화면 맨 위에 보이는 구간(초성)을 찾아서 오른쪽 막대에 파랗게 표시
@@ -135,15 +200,15 @@ class _HomeScreenState extends State<HomeScreen> {
     String? cur;
     for (final e in _indexEntries) {
       if (y > top) break;
-      if (e.$1 != null) cur = e.$1;
-      y += e.$1 != null ? _indexHeaderH : rowH;
+      if (e.$2 == -1) cur = e.$1;
+      y += e.$2 == -1 ? _indexHeaderH : (e.$2 == -2 ? _artistHeaderH : rowH);
     }
     if (_currentGroup.value != cur) _currentGroup.value = cur;
   }
 
   /// 빠른 이동 막대: 그 묶음 머리글로 점프
   void _jumpToGroup(String group) {
-    final hi = _indexEntries.indexWhere((e) => e.$1 == group);
+    final hi = _indexEntries.indexWhere((e) => e.$2 == -1 && e.$1 == group);
     if (hi < 0 || !_songListController.hasClients) return;
     // 곡 한 줄 높이를 화면에 보이는 곡으로 재서 위치 계산
     double rowH = 76;
@@ -156,7 +221,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     double offset = 0;
     for (var j = 0; j < hi; j++) {
-      offset += _indexEntries[j].$1 != null ? _indexHeaderH : rowH;
+      final t = _indexEntries[j].$2;
+      offset += t == -1 ? _indexHeaderH : (t == -2 ? _artistHeaderH : rowH);
     }
     final max = _songListController.position.maxScrollExtent;
     _songListController.jumpTo(offset.clamp(0.0, max));
@@ -209,6 +275,16 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _songListController.addListener(_updateCurrentGroup); // 스크롤하면 오른쪽 초성 파랗게 따라감
+    // 지난번 정렬(제목/가수) 불러오기
+    SharedPreferences.getInstance().then((p) {
+      final v = p.getBool('song_sort_by_artist') ?? false;
+      if (mounted && v != _byArtist) {
+        setState(() {
+          _byArtist = v;
+          _indexFingerprint = -1;
+        });
+      }
+    });
     final savedStart = context.read<StartScreenProvider>().startScreen;
     if (savedStart == StartScreenType.music) {
       _showMusicLibrary = true;
@@ -2010,6 +2086,35 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text('${musicProvider.songCount} ${AppLocalizations.of(context)!.songCount}',
                       style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 12)),
                   const Spacer(),
+                  // 정렬: 제목 / 가수
+                  // 누를 때마다 제목 ↔ 가수
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                      final next = !_byArtist;
+                      _setSortByArtist(next);
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(SnackBar(
+                          content: Text(next ? '가수 이름순으로 정렬했어요' : '제목순으로 정렬했어요'),
+                          duration: const Duration(milliseconds: 1200),
+                        ));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.swap_vert, size: 17, color: baseColor.withOpacity(0.55)),
+                          const SizedBox(width: 2),
+                          Text(_byArtist ? '가수' : '제목',
+                              style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 12.5)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
                   IconButton(
                     onPressed: () {
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -2042,13 +2147,15 @@ class _HomeScreenState extends State<HomeScreen> {
               // 빠른 이동 막대: 30곡 이상이고 검색 중이 아닐 때만
               final listSongs = musicProvider.songs;
               final showIndexBar = listSongs.length >= 30 && !_isSearching;
-              if (showIndexBar) _buildIndexEntries(listSongs);
+              // 가수 정렬이면 곡이 적어도 가수별로 묶어서 보여줌
+              final grouped = showIndexBar || (_byArtist && !_isSearching);
+              if (grouped) _buildIndexEntries(listSongs);
               final available = showIndexBar
-                  ? _indexEntries.where((e) => e.$1 != null).map((e) => e.$1!).toSet()
+                  ? _indexEntries.where((e) => e.$2 == -1).map((e) => e.$1!).toSet()
                   : <String>{};
               // 막대가 있을 땐 묶음 순서(A-Z → ㄱ~ㅎ → #) + 머리글, 아니면 원래 목록 그대로
-              final viewSongs = showIndexBar ? _indexSongs : listSongs;
-              final List<(String?, int)> entries = showIndexBar
+              final viewSongs = grouped ? _indexSongs : listSongs;
+              final List<(String?, int)> entries = grouped
                   ? _indexEntries
                   : [for (var k = 0; k < listSongs.length; k++) (null, k)];
               final isDarkList = baseColor == Colors.white;
@@ -2064,6 +2171,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemCount: entries.length,
                   itemBuilder: (context, i) {
                     final entry = entries[i];
+                    if (entry.$2 == -2) {
+                      return _buildArtistHeader(entry.$1!, isDarkList); // 가수 이름 줄
+                    }
                     if (entry.$1 != null) {
                       return _buildIndexHeader(entry.$1!, isDarkList);
                     }

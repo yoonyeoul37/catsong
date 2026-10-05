@@ -47,6 +47,28 @@ class CastService extends ChangeNotifier {
   DateTime _cmdAt = DateTime(2000); // 마지막으로 재생/일시정지 누른 시각
   // 누른 직후 2초는 TV가 보내는 예전 상태를 무시 (아이콘이 되돌아가는 것 방지)
   bool get _justCommanded => DateTime.now().difference(_cmdAt) < const Duration(seconds: 2);
+
+  // ───── 파란포토 사진을 TV로 ─────
+  Uint8List? _paranArt; // 파란포토 화면 그대로 찍은 사진 (null이면 곡 앨범 사진)
+  /// 앨범 카드(인화 모양)를 곡마다 찍어주는 함수 — 재생화면이 열려 있을 때만 들어 있음
+  Future<Uint8List?> Function(Song song)? cardArt;
+
+  Future<Uint8List?> _cardArtFor(Song song) async {
+    if (cardArt == null) return null;
+    try {
+      return await cardArt!(song).timeout(const Duration(seconds: 2));
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// 지금 곡의 TV 사진을 다시 만들어 보내기 (인화 모양을 바꿨을 때)
+  Future<void> refreshArt() => setParanArt(_paranArt);
+  int _artVer = 0; // 사진이 바뀔 때마다 주소를 바꿔서 TV가 새로 받게
+  Song? _song; // 지금 TV로 보낸 곡
+  Duration _posBase = Duration.zero; // TV 재생 위치 어림잡기 (사진 바꿀 때 같은 위치부터)
+  DateTime _posAt = DateTime.now();
+  Duration get _tvPos => _tvPlaying ? _posBase + DateTime.now().difference(_posAt) : _posBase;
   _GoogleCast? _gc; // 구글 캐스트 연결
 Uint8List? _artBytes; // TV 화면에 보여줄 앨범 사진
 bool _isRadio = false; // 라디오를 보내는 중인지 (라디오는 "곡 끝"이 없음)
@@ -175,8 +197,10 @@ Map<String, String> _proxyHeaders = const {}; // 라디오 방송국이 요구�
       final url = await _serve(song.uri!);
       if (url == null) return false;
 // TV 화면에 보여줄 앨범 사진 (없으면 기본 이미지)
-_artBytes = await _artFor(song);
-final artUrl = url.replaceFirst(RegExp(r'/song/.*$'), '/art/${song.uri.hashCode.abs()}.jpg');
+_song = song;
+// 파란포토 사진이 있으면 그걸, 없으면 곡 앨범 사진
+_artBytes = _paranArt ?? (await _cardArtFor(song)) ?? await _artFor(song);
+final artUrl = url.replaceFirst(RegExp(r'/song/.*$'), '/art/${song.uri.hashCode.abs()}_${_artVer++}.jpg');
       if (_device!.kind == CastKind.google) {
         await _gc!.load(url, _mime(song.uri!), song.titleDisplay, song.artistDisplay, artUrl);
       } else {
@@ -188,6 +212,8 @@ final artUrl = url.replaceFirst(RegExp(r'/song/.*$'), '/art/${song.uri.hashCode.
       }
       _tvPlaying = true;
       _wasPlaying = true;
+      _posBase = Duration.zero; // 새 곡은 처음부터
+      _posAt = DateTime.now();
       notifyListeners();
       return true;
     } catch (e) {
@@ -284,10 +310,52 @@ final artUrl = url.replaceFirst(RegExp(r'/song/.*$'), '/art/${song.uri.hashCode.
     }
   }
 
+  /// 파란포토 사진 정하기 (null이면 곡 앨범 사진)
+  /// TV로 듣는 중이면 지금 곡을 같은 위치에서 다시 보내서 TV 사진도 바꿈
+  Future<void> setParanArt(Uint8List? bytes) async {
+    _paranArt = bytes;
+    if (_device == null || _isRadio || _song == null || _song!.uri == null) return;
+    try {
+      final song = _song!;
+      final pos = _tvPos;
+      final wasPlaying = _tvPlaying;
+      final url = await _serve(song.uri!);
+      if (url == null) return;
+      _artBytes = _paranArt ?? (await _cardArtFor(song)) ?? await _artFor(song);
+      final artUrl = url.replaceFirst(RegExp(r'/song/.*$'), '/art/${song.uri.hashCode.abs()}_${_artVer++}.jpg');
+      _cmdAt = DateTime.now();
+      if (_device!.kind == CastKind.google) {
+        await _gc!.load(url, _mime(song.uri!), song.titleDisplay, song.artistDisplay, artUrl,
+            startSec: pos.inSeconds);
+      } else {
+        final meta = _didl(song, url, artUrl);
+        await _soap('SetAVTransportURI',
+            '<InstanceID>0</InstanceID><CurrentURI>${_escape(url)}</CurrentURI>'
+                '<CurrentURIMetaData>${_escape(meta)}</CurrentURIMetaData>');
+        await _soap('Play', '<InstanceID>0</InstanceID><Speed>1</Speed>');
+        final s = pos.inSeconds;
+        final hms = '${s ~/ 3600}:${((s ~/ 60) % 60).toString().padLeft(2, '0')}:${(s % 60).toString().padLeft(2, '0')}';
+        try {
+          await _soap('Seek', '<InstanceID>0</InstanceID><Unit>REL_TIME</Unit><Target>$hms</Target>');
+        } catch (_) {}
+      }
+      _cmdAt = DateTime.now(); // 다시 보내는 동안의 "멈춤"을 곡 끝으로 착각하지 않게
+      _posBase = pos;
+      _posAt = DateTime.now();
+      _tvPlaying = true;
+      _wasPlaying = true;
+      if (!wasPlaying) await pause(); // 멈춰 있었으면 다시 멈춤
+      notifyListeners();
+    } catch (e) {
+      debugPrint('TV 사진 바꾸기 오류: $e');
+    }
+  }
+
   // ───────────────── 3) TV 조작 ─────────────────
   Future<void> play() async {
     if (_device == null) return;
     _cmdAt = DateTime.now();
+    _posAt = DateTime.now(); // 이어서 재생 → 여기서부터 다시 세기
     try {
       if (_device!.kind == CastKind.google) {
         _gc?.play();
@@ -303,6 +371,7 @@ final artUrl = url.replaceFirst(RegExp(r'/song/.*$'), '/art/${song.uri.hashCode.
   Future<void> pause() async {
     if (_device == null) return;
     _cmdAt = DateTime.now();
+    if (_tvPlaying) _posBase = _tvPos; // 멈춘 위치 기억
     try {
       if (_device!.kind == CastKind.google) {
         _gc?.pause();
@@ -664,7 +733,7 @@ class _GoogleCast {
   }
 
   Future<void> load(String url, String contentType, String title, String artist, String artUrl,
-      {bool live = false}) async {
+      {bool live = false, int startSec = 0}) async {
     if (_transportId == null) throw Exception('캐스트 앱이 준비 안 됨');
     _mediaReady = Completer<void>();
     _mediaSessionId = null;
@@ -673,7 +742,7 @@ class _GoogleCast {
       'requestId': _reqId++,
       'sessionId': _sessionId,
       'autoplay': true,
-      'currentTime': 0,
+      'currentTime': startSec,
       'media': {
         'contentId': url,
         'contentType': contentType,

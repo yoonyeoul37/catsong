@@ -9,6 +9,7 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
+import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -98,6 +99,10 @@ class _PlayerScreenState extends State<PlayerScreen>
   Set<String> _nightFavPaths = {};
   bool _nightBgIsFile = false;
   int _bgFilter = 0; // 0 컬러, 1 흑백, 2 세피아, 3 필름, 4 인화
+  final GlobalKey _paranKey = GlobalKey(); // 파란포토 화면을 사진으로 찍어 TV에 보내기
+  final GlobalKey _cardKey = GlobalKey(); // 앨범 카드(인화 모양)를 찍어 TV에 보내기
+  String? _tvArtKey; // 마지막으로 찍은 사진 (같으면 다시 안 찍음)
+  Timer? _tvArtTimer;
   int _printStyle = 0; // 앨범 스타일 인화 모양: 0 기본, 1 폴라로이드, 2 테이프, 3 겹친 사진, 4 둥근 테두리
   int _autoBgMin = 0; // 0 끄기, 10, 30 (분)
   Timer? _autoBgTimer;
@@ -258,6 +263,73 @@ class _PlayerScreenState extends State<PlayerScreen>
   }
 
   /// 인화 사진 카드 (모양 4가지)
+  /// TV에 보낼 사진 정하기 (스타일·사진·색감·인화 모양이 바뀔 때만)
+  /// - 파란포토: 보이는 사진(색감 포함) 그대로
+  /// - 앨범 + 인화 모양: 곡마다 꾸민 카드 그대로
+  /// - 그 밖: 곡 앨범 사진
+  void _syncTvArt() {
+    final cast = CastService.instance;
+    final isCard = _albumArtStyle == 3 && _printStyle != 0;
+    final key = _albumArtStyle == 6
+        ? 'paran-$_nightBgPath-$_bgFilter'
+        : (isCard ? 'card-$_printStyle' : 'album');
+    if (key == _tvArtKey) return;
+    final first = _tvArtKey == null;
+    _tvArtKey = key;
+    _tvArtTimer?.cancel();
+    // 앨범 카드면 곡마다 찍어줄 함수를 넘겨둠
+    cast.cardArt = isCard ? _makeCardArt : null;
+    if (_albumArtStyle == 6) {
+      // 사진 바뀌는 애니메이션(1.2초)이 끝난 뒤에 찍기
+      _tvArtTimer = Timer(const Duration(milliseconds: 1600), () async {
+        if (!mounted) return;
+        final bytes = await _captureKey(_paranKey);
+        if (bytes != null) cast.setParanArt(bytes);
+      });
+    } else if (!first) {
+      // 스타일·인화 모양을 바꿨으면 TV 사진도 바로 바꾸기
+      cast.setParanArt(null);
+    } else {
+      cast.setParanArt(null);
+    }
+  }
+
+  /// 이 곡의 앨범 카드가 화면에 그려지면 찍기
+  Future<Uint8List?> _makeCardArt(Song song) async {
+    for (var i = 0; i < 12; i++) {
+      if (!mounted) return null;
+      if (context.read<PlayerProvider>().currentSong?.uri == song.uri) break;
+      await Future.delayed(const Duration(milliseconds: 150));
+    }
+    await Future.delayed(const Duration(milliseconds: 250)); // 새 앨범 사진이 그려질 시간
+    if (!mounted) return null;
+    return _captureKey(_cardKey);
+  }
+
+  Future<Uint8List?> _captureKey(GlobalKey key) async {
+    try {
+      final b = key.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      if (b == null) return null;
+      final img = await b.toImage(pixelRatio: 2.0);
+      final data = await img.toByteData(format: ImageByteFormat.png);
+      return data?.buffer.asUint8List();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<Uint8List?> _captureParan() async {
+    try {
+      final b = _paranKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      if (b == null) return null;
+      final img = await b.toImage(pixelRatio: 2.0);
+      final data = await img.toByteData(format: ImageByteFormat.png);
+      return data?.buffer.asUint8List();
+    } catch (_) {
+      return null;
+    }
+  }
+
   Widget _printCard(Widget photo) {
     const paperColor = Color(0xFFF6F1E6); // 인화지 색
     final shadow = [
@@ -745,6 +817,8 @@ class _PlayerScreenState extends State<PlayerScreen>
   @override
   void dispose() {
     _autoBgTimer?.cancel();
+    _tvArtTimer?.cancel();
+    CastService.instance.cardArt = null; // 재생화면이 없으면 카드를 못 찍으니 앨범 사진으로
     _rotationController.dispose();
     _equalizerController.dispose();
     for (final c in _eqControllers) c.dispose();
@@ -772,6 +846,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     }
 
     // (TV로 보내기·TV 재생/일시정지는 player_provider가 알아서 처리)
+    _syncTvArt(); // 파란포토면 보이는 사진 그대로 TV에
 
     final lyricsProvider = context.read<LyricsProvider>();
     final currentKey = '${song.titleDisplay}-${song.artistDisplay}';
@@ -937,7 +1012,7 @@ class _PlayerScreenState extends State<PlayerScreen>
             // 앨범아트 블러 배경
             SizedBox.expand(
               child: _albumArtStyle == 6
-                  ? AnimatedSwitcher(
+                  ? RepaintBoundary(key: _paranKey, child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 1200),
                       layoutBuilder: (current, previous) => Stack(
                         fit: StackFit.expand,
@@ -949,7 +1024,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                             ? Image.file(File(_nightBgPath), fit: BoxFit.cover)
                             : paranPhoto(_nightBgPath, fit: BoxFit.cover)),
                       ),
-                    )
+                    ))
                   : ImageFiltered(
                 imageFilter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
                 child: song.albumArt != null
@@ -2663,7 +2738,10 @@ class _PlayerScreenState extends State<PlayerScreen>
           },
           // 인화 모양을 골랐으면 인화 사진 카드, 아니면 기본 카드
           child: _printStyle != 0
-              ? FractionallySizedBox(widthFactor: 0.88, child: _printCard(albumPhoto))
+              ? RepaintBoundary(
+                  key: _cardKey,
+                  child: FractionallySizedBox(widthFactor: 0.88, child: _printCard(albumPhoto)),
+                )
               : Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),

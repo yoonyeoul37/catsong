@@ -61,9 +61,9 @@ class CallRecording {
   }
 
   /// 재생할 때 쓰는 곡 모양으로 (id는 일반 음악과 안 겹치게 음수)
-  Song toSong(int index) => Song(
+  Song toSong(int index, {String? title}) => Song(
     id: -100000 - index,
-    title: name,
+    title: title ?? name, // 내가 바꾼 제목이 있으면 그걸로
     artist: isVoice ? '음성 녹음' : '통화 녹음',
     album: '',
     uri: path,

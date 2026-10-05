@@ -327,7 +327,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
               ),
               const SizedBox(height: 10),
               const Text(
-                '지금 나가면 소리가 멈춰요.',
+                '다음에 또 좋은 소리로 만나요.',
                 style: TextStyle(color: Colors.black54, fontSize: 14),
                 textAlign: TextAlign.center,
               ),

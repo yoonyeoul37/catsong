@@ -26,6 +26,10 @@ class SoundMixMiniPlayer extends StatelessWidget {
     final subtitle = activeNames.isEmpty ? '믹스 재생 중' : activeNames.join(' · ');
 
     return GestureDetector(
+      // 아래로 휙 쓸어내리면 미니플레이어 닫기
+      onVerticalDragEnd: (details) {
+        if ((details.primaryVelocity ?? 0) > 300) _close(context);
+      },
       onTap: () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         Navigator.push(
@@ -92,6 +96,14 @@ class SoundMixMiniPlayer extends StatelessWidget {
                           color: baseColor.withOpacity(0.7), size: 20),
                     ),
                   ),
+                  // × (닫기): 재생 중에도 누르면 바로 멈추고 닫힘
+                  IconButton(
+                    onPressed: () => _close(context),
+                    icon: Icon(Icons.close, color: baseColor.withOpacity(0.45)),
+                    iconSize: 20,
+                    padding: const EdgeInsets.all(4),
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  ),
                 ],
               ),
             ),
@@ -99,5 +111,11 @@ class SoundMixMiniPlayer extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// 미니플레이어 닫기: 믹스 멈추고 닫기 (고른 소리·노래·음량은 그대로 기억)
+  Future<void> _close(BuildContext context) async {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    await context.read<SoundMixProvider>().closeSession();
   }
 }

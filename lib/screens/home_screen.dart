@@ -1961,18 +1961,31 @@ class _HomeScreenState extends State<HomeScreen> {
                     Theme.of(context).colorScheme.primary,
                   ),
                   // 녹음 (일반 음악과 따로) — 아이폰은 다른 앱 파일을 못 읽어서 안드로이드만
+                  if (Platform.isAndroid) const Spacer(), // 통화녹음은 오른쪽 끝으로
+                  // 통화녹음: 탭이 아니라 "다른 곳으로 가는" 작은 버튼 (안드로이드만)
                   if (Platform.isAndroid)
-                  _buildFilterTab(
-                    '녹음',
-                    _showCalls,
-                        () => setState(() {
-                      _showFavorites = false;
-                      _showRecent = false;
-                      _showCalls = true;
-                    }),
-                    Theme.of(context).colorScheme.primary,
-                    icon: Icons.mic_none,
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: GestureDetector(
+                        onTap: () {
+                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                          setState(() {
+                            _showFavorites = false;
+                            _showRecent = false;
+                            _showCalls = true;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 4),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: baseColor.withOpacity(0.18), width: 0.8),
+                          ),
+                          child: Text('통화녹음 ›',
+                              style: TextStyle(color: baseColor.withOpacity(0.65), fontSize: 12)),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -2174,7 +2187,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildFilterTab(String label, bool isSelected, VoidCallback onTap, Color primaryColor,
-      {IconData? icon}) {
+      {IconData? icon, bool specialFont = false}) {
     final baseColor = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
     return GestureDetector(
       onTap: () {
@@ -2182,7 +2195,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap();
       },
       child: Container(
-        margin: const EdgeInsets.only(right: 20),
+        margin: EdgeInsets.only(right: specialFont ? 0 : 20),
         padding: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
           border: Border(
@@ -2202,11 +2215,18 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
             Text(
               label,
-              style: TextStyle(
-                color: isSelected ? baseColor : baseColor.withOpacity(0.54),
-                fontSize: 14,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
-              ),
+              style: specialFont
+                  // 녹음 탭: 고운돋움 서체
+                  ? GoogleFonts.dongle(
+                      color: isSelected ? baseColor : baseColor.withOpacity(0.54),
+                      fontSize: 19,
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
+                    )
+                  : TextStyle(
+                      color: isSelected ? baseColor : baseColor.withOpacity(0.54),
+                      fontSize: 14,
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
+                    ),
             ),
           ],
         ),

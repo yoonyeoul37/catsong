@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "435765413076",
+    "project_id": "paransori-f96d6",
+    "storage_bucket": "paransori-f96d6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:435765413076:android:86028391070ed22053a741",
+        "android_client_info": {
+          "package_name": "kr.ssing.catsong"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiOMObNchu1XpsWGAk8vfeWngDj4Y11js"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

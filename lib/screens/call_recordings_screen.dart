@@ -87,7 +87,10 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
     for (final r in everything) {
       if (r.path == player.currentSong?.uri) playing = r;
     }
-    final songs = <Song>[for (var i = 0; i < list.length; i++) list[i].toSong(i)];
+    // 바꾼 제목으로 재생 (미니플레이어·재생화면에도 바꾼 제목이 나오게)
+    final songs = <Song>[
+      for (var i = 0; i < list.length; i++) list[i].toSong(i, title: music.recordingTitle(list[i]))
+    ];
 
     return Stack(
       children: [
@@ -123,15 +126,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                       child: Text(_selected.length == list.length ? '선택 해제' : '전체 선택',
                           style: TextStyle(color: baseColor.withOpacity(0.75))),
                     ),
-                    IconButton(
-                      onPressed: () => _share(list.where((r) => _selected.contains(r.path)).toList()),
-                      icon: Icon(Icons.share, color: baseColor.withOpacity(0.7), size: 21),
-                    ),
-                    IconButton(
-                      onPressed: () => _confirmTrash(list.where((r) => _selected.contains(r.path)).toList(),
-                          isAll: true),
-                      icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 22),
-                    ),
+                    // (공유·잠금·삭제는 화면 아래 고정 버튼으로)
                   ],
                 )
                     : Row(
@@ -212,9 +207,10 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                 ),
               ),
             // 지금 재생 중인 녹음: 10초 앞뒤 · 배속
-            if (playing != null)
+            if (playing != null && !_selecting)
               SliverToBoxAdapter(child: _miniBar(playing, player, music, baseColor)),
-            // 통화 녹음 | 음성 녹음
+            // 통화 녹음 | 음성 녹음 (선택 중엔 숨김)
+            if (!_selecting)
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
@@ -227,9 +223,9 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                   ),
                   child: Row(
                     children: [
-                      _seg('통화 녹음 ${everything.where((r) => !r.isVoice).length}', !_voice,
+                      _seg('통화 녹음 (${everything.where((r) => !r.isVoice).length})', !_voice,
                               () => setState(() => _voice = false), baseColor, isDark),
-                      _seg('음성 녹음 ${everything.where((r) => r.isVoice).length}', _voice,
+                      _seg('음성 녹음 (${everything.where((r) => r.isVoice).length})', _voice,
                               () => setState(() => _voice = true), baseColor, isDark),
                     ],
                   ),
@@ -264,7 +260,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
               )
             else
               SliverPadding(
-                padding: EdgeInsets.fromLTRB(8, 4, 8, _voice ? 100 : 16), // 녹음 버튼에 안 가리게
+                padding: EdgeInsets.fromLTRB(8, 4, 8, (_voice || _selecting) ? 100 : 16), // 녹음 버튼에 안 가리게
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                         (context, i) {
@@ -360,7 +356,66 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
         // 음성 녹음 칸에서만: 새로 녹음하기 버튼
         if (_voice && !_selecting)
           Positioned(right: 20, bottom: 24, child: _recordFab()),
+        // 여러 개 선택 중: 아래 고정 버튼 (공유 · 잠금 · 삭제)
+        if (_selecting)
+          Positioned(left: 0, right: 0, bottom: 0, child: _selectBar(list, music, baseColor, isDark)),
       ],
+    );
+  }
+
+  /// 여러 개 선택했을 때 아래 버튼: 공유 · 잠금 · 삭제
+  Widget _selectBar(List<CallRecording> list, MusicProvider music, Color baseColor, bool isDark) {
+    final picked = list.where((r) => _selected.contains(r.path)).toList();
+    final enabled = picked.isNotEmpty;
+    final allLocked = enabled && picked.every((r) => music.isRecordingLocked(r.path));
+
+    Widget btn(IconData icon, String label, VoidCallback onTap, {Color? color}) {
+      final c = enabled ? (color ?? baseColor.withOpacity(0.75)) : baseColor.withOpacity(0.25);
+      return Expanded(
+        child: InkWell(
+          onTap: enabled
+              ? () {
+                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                  onTap();
+                }
+              : null,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: c, size: 22),
+                const SizedBox(height: 3),
+                Text(label, style: TextStyle(color: c, fontSize: 11.5)),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF26221C) : Colors.white,
+        border: Border(top: BorderSide(color: baseColor.withOpacity(0.08))),
+      ),
+      child: Row(
+        children: [
+          btn(Icons.share_outlined, '공유', () => _share(picked)),
+          btn(allLocked ? Icons.lock_open : Icons.lock_outline, allLocked ? '잠금 풀기' : '잠금', () async {
+            // 다 잠겨 있으면 다 풀고, 아니면 안 잠긴 것만 잠그기
+            for (final r in picked) {
+              if (music.isRecordingLocked(r.path) == allLocked) await music.toggleRecordingLock(r);
+            }
+            if (!mounted) return;
+            setState(() {
+              _selected.clear();
+              _selectMode = false;
+            });
+          }),
+          btn(Icons.delete_outline, '삭제', () => _confirmTrash(picked, isAll: true), color: Colors.redAccent),
+        ],
+      ),
     );
   }
 
@@ -614,6 +669,9 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
           TextButton(
             onPressed: () {
               music.setRecordingTitle(r, ctrl.text.trim());
+              // 지금 듣고 있는 녹음이면 미니플레이어·재생화면 제목도 바로 바꾸기
+              final cur = context.read<PlayerProvider>().currentSong;
+              if (cur != null && cur.uri == r.path) cur.title = music.recordingTitle(r);
               Navigator.pop(ctx);
             },
             child: const Text('저장', style: TextStyle(color: _blue)),

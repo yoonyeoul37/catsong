@@ -60,6 +60,10 @@ class NatureMiniPlayer extends StatelessWidget {
     final icon = (meta?['icon'] as IconData?) ?? Icons.eco_rounded;
 
     return GestureDetector(
+      // 아래로 휙 쓸어내리면 미니플레이어 닫기
+      onVerticalDragEnd: (details) {
+        if ((details.primaryVelocity ?? 0) > 300) _close(context);
+      },
       onTap: () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         Navigator.push(
@@ -144,6 +148,14 @@ class NatureMiniPlayer extends StatelessWidget {
                           color: baseColor.withOpacity(0.7), size: 20),
                     ),
                   ),
+                  // × (닫기): 재생 중에도 누르면 바로 멈추고 닫힘
+                  IconButton(
+                    onPressed: () => _close(context),
+                    icon: Icon(Icons.close, color: baseColor.withOpacity(0.45)),
+                    iconSize: 20,
+                    padding: const EdgeInsets.all(4),
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  ),
                 ],
               ),
             ),
@@ -151,5 +163,13 @@ class NatureMiniPlayer extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// 미니플레이어 닫기: 자연소리 완전히 멈추고 비우기
+  Future<void> _close(BuildContext context) async {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    final p = context.read<PlayerProvider>();
+    await p.player.stop();
+    p.clearNatureSoundState();
   }
 }

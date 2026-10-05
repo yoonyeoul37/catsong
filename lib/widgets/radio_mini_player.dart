@@ -7,6 +7,7 @@ import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import '../screens/radio_player_screen.dart';
 import 'dart:math' as math;
+import '../services/cast_service.dart';
 
 class RadioMiniPlayer extends StatelessWidget {
   const RadioMiniPlayer({super.key});
@@ -24,6 +25,10 @@ class RadioMiniPlayer extends StatelessWidget {
     final baseColor = isDarkMode ? Colors.white : Colors.black;
 
     return GestureDetector(
+      // 아래로 휙 쓸어내리면 미니플레이어 닫기
+      onVerticalDragEnd: (details) {
+        if ((details.primaryVelocity ?? 0) > 300) _close(context);
+      },
       onHorizontalDragEnd: (details) {
         final queue = radioProvider.currentQueue;
         if (queue.isEmpty) return;
@@ -230,7 +235,14 @@ class RadioMiniPlayer extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 4),
+                        // × (닫기): 재생 중에도 누르면 바로 멈추고 닫힘
+                        IconButton(
+                          onPressed: () => _close(context),
+                          icon: Icon(Icons.close, color: baseColor.withOpacity(0.45)),
+                          iconSize: 20,
+                          padding: const EdgeInsets.all(4),
+                          constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                        ),
                       ],
                     ),
                   ),
@@ -241,6 +253,13 @@ class RadioMiniPlayer extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// 미니플레이어 닫기: 라디오 완전히 멈추고 비우기 (TV로 보내는 중이면 TV도 끊기)
+  Future<void> _close(BuildContext context) async {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    if (CastService.instance.isConnected) await CastService.instance.disconnect();
+    await context.read<RadioProvider>().stopRadioAndClear();
   }
 }
 class _MiniEqualizerBars extends StatefulWidget {

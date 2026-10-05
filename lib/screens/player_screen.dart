@@ -1497,9 +1497,11 @@ class _PlayerScreenState extends State<PlayerScreen>
   void _showPlayerOptionsSheet(BuildContext context, Song? song, Color primaryColor) {
     if (song == null) return;
     final playerProvider = context.read<PlayerProvider>();
-    const sheetColor = Color(0xFFF4EFE5);
-    const baseColor = Color(0xFF1A1A1A);
-    const descColor = Color(0xFF8A8378);
+    // 다크 모드면 메뉴도 어둡게 (음악 목록 메뉴와 같은 색)
+    final isDark = context.read<ThemeProvider>().isDarkMode;
+    final sheetColor = isDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
+    final baseColor = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF1A1A1A);
+    final descColor = isDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
     const accent = Color(0xFF2589E8); // 파란소리 포인트 블루 (메뉴 아이콘 통일)
 
     showModalBottomSheet(
@@ -1542,9 +1544,9 @@ class _PlayerScreenState extends State<PlayerScreen>
                       GestureDetector(
                         onTap: () => Navigator.pop(ctx),
                         behavior: HitTestBehavior.opaque,
-                        child: const Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Icon(Icons.close, size: 24, color: Colors.black45),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Icon(Icons.close, size: 24, color: baseColor.withOpacity(0.45)),
                         ),
                       ),
                     ],
@@ -1555,6 +1557,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     final music = ctx.watch<MusicProvider>();
                     final fav = music.isFavorite(song.id);
                     return MenuSongCard(
+                      isDark: isDark,
                       song: song,
                       actions: [
                         MenuQuickAction(fav ? CupertinoIcons.heart_fill : CupertinoIcons.heart, '즐겨찾기', () {
@@ -1577,7 +1580,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                       ],
                     );
                   }),
-                  MenuCard(children: [
+                  MenuCard(isDark: isDark, children: [
                   _playerSheetItem(
                     ctx,
                     Icons.shuffle_rounded,
@@ -1621,7 +1624,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     arrow: true,
                   ),
                   ]),
-                  MenuCard(children: [
+                  MenuCard(isDark: isDark, children: [
                   _playerSheetItem(ctx, Icons.style, AppLocalizations.of(context)!.playerStyle, accent, baseColor, () async {
                     if (!_hasSeenParanPhoto) {
                       setState(() => _hasSeenParanPhoto = true);
@@ -1656,7 +1659,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     ),
                   ),
                   ]),
-                  MenuCard(children: [
+                  MenuCard(isDark: isDark, children: [
                   _playerSheetItem(ctx, Icons.music_note, AppLocalizations.of(context)!.setRingtone, accent, baseColor, () {
                     Navigator.pop(ctx);
                     Navigator.push(context, MaterialPageRoute(builder: (context) => RingtoneScreen(initialSong: song)));

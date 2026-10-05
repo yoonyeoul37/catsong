@@ -480,7 +480,7 @@
   "updateReadyLater": "나중에",
   "radioNextProgram": "다음 방송",
   "radioExitConfirmTitle": "라디오를 종료하시겠어요?",
-  "radioExitConfirmMessage": "지금 나가면 재생이 멈춰요.",
+  "radioExitConfirmMessage": "다음에 또 좋은 소리로 만나요.",
   "radioExitKeepListening": "계속 듣기",
   "radioExitConfirmButton": "종료",
   "darkMode": "다크 모드",
@@ -488,5 +488,5 @@
   "darkModeOff": "꺼짐",
 "rateApp": "앱 평가하기",
 "musicExitConfirmTitle": "음악을 종료하시겠어요?",
-"musicExitConfirmMessage": "지금 나가면 재생이 멈춰요."
+"musicExitConfirmMessage": "다음에 또 좋은 소리로 만나요."
 }

@@ -1499,7 +1499,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get radioExitConfirmTitle => '라디오를 종료하시겠어요?';
 
   @override
-  String get radioExitConfirmMessage => '지금 나가면 재생이 멈춰요.';
+  String get radioExitConfirmMessage => '다음에 또 좋은 소리로 만나요.';
 
   @override
   String get radioExitKeepListening => '계속 듣기';
@@ -1523,5 +1523,5 @@ class AppLocalizationsKo extends AppLocalizations {
   String get musicExitConfirmTitle => '음악을 종료하시겠어요?';
 
   @override
-  String get musicExitConfirmMessage => '지금 나가면 재생이 멈춰요.';
+  String get musicExitConfirmMessage => '다음에 또 좋은 소리로 만나요.';
 }

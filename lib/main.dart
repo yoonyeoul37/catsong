@@ -27,6 +27,9 @@ import 'l10n/app_localizations.dart';
 import 'l10n/locale_holder.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:just_audio/just_audio.dart';
+import 'dart:ui' show PlatformDispatcher;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 late AudioHandler globalAudioHandler;
 late BaseAudioHandler radioAudioHandler;
@@ -34,6 +37,19 @@ late BaseAudioHandler radioAudioHandler;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
+
+  // 오류 기록 (Firebase Crashlytics): 앱이 튕기거나 빨간 오류 화면이 뜨면 자동으로 기록
+  try {
+    await Firebase.initializeApp();
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+  } catch (e) {
+    debugPrint('Firebase 시작 오류: $e');
+  }
+
 
   final playerProvider = PlayerProvider();
   final musicProvider = MusicProvider();

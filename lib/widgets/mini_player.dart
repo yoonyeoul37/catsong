@@ -29,6 +29,10 @@ class MiniPlayer extends StatelessWidget {
     if (song == null) return const SizedBox.shrink();
 
     return GestureDetector(
+      // 아래로 휙 쓸어내리면 미니플레이어 닫기
+      onVerticalDragEnd: (details) {
+        if ((details.primaryVelocity ?? 0) > 300) _close(context);
+      },
       onHorizontalDragEnd: (details) {
         if (details.primaryVelocity! < -300) {
           const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -256,6 +260,14 @@ class MiniPlayer extends StatelessWidget {
                           constraints: const BoxConstraints(
                               minWidth: 36, minHeight: 36),
                         ),
+                        // × (닫기): 재생 중에도 누르면 바로 멈추고 닫힘
+                        IconButton(
+                            onPressed: () => _close(context),
+                            icon: Icon(Icons.close, color: baseColor.withOpacity(0.45)),
+                            iconSize: 20,
+                            padding: const EdgeInsets.all(4),
+                            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                          ),
                       ],
                     ),
                   ),
@@ -266,5 +278,15 @@ class MiniPlayer extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// 미니플레이어 닫기: 완전히 멈추고 비우기 (TV로 보내는 중이면 TV도 끊기)
+  Future<void> _close(BuildContext context) async {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    final p = context.read<PlayerProvider>();
+    if (CastService.instance.isConnected) await CastService.instance.disconnect();
+    await p.player.stop();
+    p.clearNatureSoundState();
+    p.clearCurrentSong();
   }
 }

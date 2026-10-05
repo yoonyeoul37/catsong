@@ -331,6 +331,26 @@ class SoundMixProvider extends ChangeNotifier {
     }
   }
 
+  /// 미니플레이어 닫기: 멈추고 플레이어를 정리해서 미니플레이어가 사라지게
+  /// (고른 소리·노래·음량은 그대로 → 다음에 믹스 화면에서 그대로 다시 재생)
+  Future<void> closeSession() async {
+    await stopAll();
+    for (final p in _natureLayers.values) {
+      try {
+        await p.dispose();
+      } catch (_) {}
+    }
+    _natureLayers.clear();
+    try {
+      await _songPlayer?.dispose();
+    } catch (_) {}
+    _songPlayer = null;
+    _sleepTicker?.cancel();
+    _sleepMinutes = null;
+    _sleepEndTime = null;
+    notifyListeners();
+  }
+
   /// 재생 중인 것을 전부 멈춘다 (선택/음량 값 자체는 유지).
   Future<void> stopAll() async {
     final natureSnapshot = _natureLayers.values.toList();

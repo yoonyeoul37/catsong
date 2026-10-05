@@ -2985,7 +2985,7 @@ abstract class AppLocalizations {
   /// No description provided for @radioExitConfirmMessage.
   ///
   /// In ko, this message translates to:
-  /// **'지금 나가면 재생이 멈춰요.'**
+  /// **'다음에 또 좋은 소리로 만나요.'**
   String get radioExitConfirmMessage;
 
   /// No description provided for @radioExitKeepListening.
@@ -3033,7 +3033,7 @@ abstract class AppLocalizations {
   /// No description provided for @musicExitConfirmMessage.
   ///
   /// In ko, this message translates to:
-  /// **'지금 나가면 재생이 멈춰요.'**
+  /// **'다음에 또 좋은 소리로 만나요.'**
   String get musicExitConfirmMessage;
 }
 

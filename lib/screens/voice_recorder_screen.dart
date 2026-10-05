@@ -79,6 +79,9 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
   String? _tmpPath; // 녹음 중인 파일 (.aac: 끊겨도 그때까지는 살아 있음)
   RandomAccessFile? _raf; // 받는 대로 바로 파일에 씀
   StreamSubscription<Uint8List>? _dataSub;
+  StreamSubscription<RecordState>? _stateSub;
+  bool _byUser = false; // 사용자가 직접 누른 일시정지/이어서인지
+  bool _interrupted = false; // 전화 등으로 자동 일시정지된 상태
 
   late final AnimationController _pulse = AnimationController(
     vsync: this,
@@ -111,6 +114,7 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
   void dispose() {
     _actions.setMethodCallHandler(null);
     _dataSub?.cancel();
+    _stateSub?.cancel();
     _closeFile(); // 저장 안 하고 닫혔으면 파일은 남겨둠 → 다음에 되살림
     _tick?.cancel();
     _ampSub?.cancel();
@@ -150,12 +154,38 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
     _raf = File(_tmpPath!).openSync(mode: FileMode.append);
     activeRecordingPath = _tmpPath;
     final stream = await _rec.startStream(
-      const RecordConfig(encoder: AudioEncoder.aacLc, bitRate: 128000, sampleRate: 44100, numChannels: 1),
+      const RecordConfig(
+        encoder: AudioEncoder.aacLc,
+        bitRate: 128000,
+        sampleRate: 44100,
+        numChannels: 1,
+        // 전화 등이 끼어들면 자동 일시정지 → 끝나면 자동으로 이어서
+        audioInterruption: AudioInterruptionMode.pauseResume,
+      ),
     );
     _dataSub = stream.listen((data) {
       try {
         _raf?.writeFromSync(data);
       } catch (_) {}
+    });
+    // 전화가 와서 녹음기가 스스로 멈추거나 다시 시작하면 화면·알림도 맞춰주기
+    _stateSub = _rec.onStateChanged().listen((st) {
+      if (!mounted || _byUser) return;
+      if (st == RecordState.pause && _state == _RecState.recording) {
+        _watch.stop();
+        setState(() {
+          _state = _RecState.paused;
+          _interrupted = true;
+        });
+        _svc('pause');
+      } else if (st == RecordState.record && _state == _RecState.paused && _interrupted) {
+        _watch.start();
+        setState(() {
+          _state = _RecState.recording;
+          _interrupted = false;
+        });
+        _svc('resume');
+      }
     });
     _watch
       ..reset()
@@ -176,6 +206,9 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
   // ───────── 일시정지 / 이어서 ─────────
   Future<void> _togglePause() async {
     HapticFeedback.selectionClick();
+    _byUser = true; // 직접 누른 거라 전화 끼어들기로 착각하지 않게
+    _interrupted = false;
+    Future.delayed(const Duration(milliseconds: 600), () => _byUser = false);
     if (_state == _RecState.recording) {
       await _rec.pause();
       _watch.stop();
@@ -375,7 +408,7 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
     final (label, dot) = switch (_state) {
       _RecState.idle => ('준비됐어요', Colors.white38),
       _RecState.recording => ('녹음 중', _red),
-      _RecState.paused => ('일시정지', const Color(0xFFFFC857)),
+      _RecState.paused => (_interrupted ? '통화 중 · 끝나면 이어서 녹음' : '일시정지', const Color(0xFFFFC857)),
       _RecState.saving => ('저장 중…', _sky),
     };
     return Container(

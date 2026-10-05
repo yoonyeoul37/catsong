@@ -216,9 +216,9 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
                 child: Container(
                   height: 38,
-                  padding: const EdgeInsets.all(3),
+                  // 라디오 카테고리와 같은 모양
                   decoration: BoxDecoration(
-                    color: baseColor.withOpacity(0.06),
+                    color: baseColor.withOpacity(0.08),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Row(
@@ -734,16 +734,18 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           alignment: Alignment.center,
+          // 라디오 카테고리와 같게: 선택 = 먹색 채움 + 흰 글자 (다크는 반대)
           decoration: BoxDecoration(
-            // 선택된 칸: 라이트는 진한 베이지, 다크는 어두운 갈색
-            color: selected ? (isDark ? const Color(0xFF35302A) : const Color(0xFFDCD2C0)) : Colors.transparent,
+            color: selected ? (isDark ? Colors.white : const Color(0xFF17140F)) : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(label,
               style: TextStyle(
-                  color: selected ? baseColor : baseColor.withOpacity(0.55),
+                  color: selected
+                      ? (isDark ? const Color(0xFF17140F) : Colors.white)
+                      : baseColor.withOpacity(0.7),
                   fontSize: 13,
-                  fontWeight: selected ? FontWeight.w700 : FontWeight.normal)),
+                  fontWeight: FontWeight.w600)), // 굵기를 항상 같게 → 글자가 안 흔들림
         ),
       ),
     );

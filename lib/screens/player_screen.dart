@@ -1406,13 +1406,13 @@ class _PlayerScreenState extends State<PlayerScreen>
                         _BreathingText(
                           text: 'Paran',
                           style: GoogleFonts.quicksand(
-    color: sky.withOpacity(0.75), fontSize: 20, fontWeight: FontWeight.w700, height: 1.0, letterSpacing: 1.5),
+    color: sky.withOpacity(0.8), fontSize: 21, fontWeight: FontWeight.w600, height: 1.0, letterSpacing: 0.3),
                           moving: playerProvider.isPlaying,
                         ),
                         Text(
                           isKo ? 'sori' : 'Sori', // 한국은 Paransori, 해외는 발음 때문에 ParanSori
                           style: GoogleFonts.quicksand(
-                              color: baseColor.withOpacity(0.4), fontSize: 20, fontWeight: FontWeight.w700, height: 1.0, letterSpacing: 1.5),
+                              color: baseColor.withOpacity(0.42), fontSize: 21, fontWeight: FontWeight.w600, height: 1.0, letterSpacing: 0.3),
                         ),
                       ],
                     ),
@@ -3337,7 +3337,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     switch (langCode) {
       case 'ko':
         smallText = '파란소리와 함께한 시간,\n즐거우셨나요?\n\n언제든 다시 찾아오시면,\n좋은 소리로 맞아드릴게요.\n안녕히 가세요!';
-        farewellAsset = 'assets/farewell_ko_v3.mp3';
+        farewellAsset = 'assets/farewell_ko_v4.mp3';
         break;
       case 'ja':
         smallText = 'Paransoriと過ごした時間、\n楽しんでいただけましたか?\n\nいつでもまた遊びに来てください、\n素敵な音でお迎えします。\nまた会いましょう!';

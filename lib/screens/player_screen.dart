@@ -30,6 +30,7 @@ import '../widgets/song_list_tile.dart';
 import 'package:share_plus/share_plus.dart';
 import '../widgets/menu_parts.dart';
 import '../services/cast_service.dart';
+import '../services/nature_overlay.dart';
 import '../l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
 import '../providers/theme_provider.dart';
@@ -1577,6 +1578,23 @@ class _PlayerScreenState extends State<PlayerScreen>
                     Navigator.pop(ctx);
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const LyricsScreen()));
                   }, arrow: true),
+                  // 🌿 자연소리 섞기 (음악 위에 빗소리·파도 등을 깔기)
+                  AnimatedBuilder(
+                    animation: NatureOverlay.instance,
+                    builder: (_, __) => _playerSheetItem(
+                      ctx,
+                      Icons.forest_outlined,
+                      '자연소리 섞기',
+                      accent,
+                      baseColor,
+                      () {
+                        Navigator.pop(ctx);
+                        showNatureOverlaySheet(context);
+                      },
+                      trailing: _sheetValue(NatureOverlay.instance.summary),
+                      arrow: true,
+                    ),
+                  ),
                   ]),
                   MenuCard(children: [
                   _playerSheetItem(ctx, Icons.music_note, AppLocalizations.of(context)!.setRingtone, accent, baseColor, () {
@@ -1872,6 +1890,44 @@ class _PlayerScreenState extends State<PlayerScreen>
     }
   }
 
+  /// "잔잔한 파도와 함께" (누르면 자연소리 섞기 창, 안 켜져 있으면 안 보임)
+  /// withLine: 파란포토 박스 안처럼 위에 가는 선으로 나누기
+  Widget _natureBadge(EdgeInsets padding, {bool withLine = false}) {
+    return AnimatedBuilder(
+      animation: NatureOverlay.instance,
+      builder: (_, __) {
+        final o = NatureOverlay.instance;
+        if (!o.anyOn) return const SizedBox.shrink();
+        return Padding(
+          padding: padding,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              showNatureOverlaySheet(context);
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (withLine)
+                  Container(
+                    height: 1,
+                    margin: const EdgeInsets.fromLTRB(30, 10, 30, 8),
+                    color: Colors.white.withOpacity(0.12),
+                  ),
+                Text(o.withLabel,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: Colors.white.withOpacity(0.7), fontSize: 11.5, letterSpacing: 0.3)),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildNightPhotoArea(Song song) {
     return Stack(
       children: [
@@ -1909,6 +1965,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12),
                 ),
+                // 자연소리 같이 듣는 중이면 가는 선 아래에 표시
+                _natureBadge(const EdgeInsets.only(top: 0), withLine: true),
               ],
             ),
           ),
@@ -2892,6 +2950,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                             color: baseColor.withOpacity(0.7), fontSize: 11),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis),
+                    // 🌿 자연소리 섞는 중 (파란포토는 가운데 박스에 나오니까 여기선 빼기)
+                    if (_albumArtStyle != 6) _natureBadge(const EdgeInsets.only(top: 6)),
                   ],
                 ),
               ),

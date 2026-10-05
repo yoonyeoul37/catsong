@@ -595,6 +595,7 @@ class MainActivity : AudioServiceActivity() {
     private fun trimAndSave(path: String, startMs: Long, endMs: Long): String? {
         return try {
             val inputFile = File(path)
+            android.util.Log.d("Trim", "요청: ${inputFile.name} 시작=$startMs 끝=$endMs")
             if (!inputFile.exists() || endMs <= startMs) return null
             val ext = inputFile.extension.lowercase()
             val isMp3 = ext == "mp3"
@@ -625,6 +626,7 @@ class MainActivity : AudioServiceActivity() {
             }
             val outPath = File(android.os.Environment.getExternalStorageDirectory(), "$relDir/$savedName").absolutePath
             android.media.MediaScannerConnection.scanFile(this, arrayOf(outPath), null, null)
+            android.util.Log.d("Trim", "저장 완료: $outPath 크기=${File(outPath).length()}")
             outPath
         } catch (e: Exception) {
             android.util.Log.e("Trim", "Error: ${e.message}", e)
@@ -632,7 +634,9 @@ class MainActivity : AudioServiceActivity() {
         }
     }
 
-    /// mp3: 길이 비율로 바이트를 잘라냄 (벨소리 만들기와 같은 방식)
+    /// mp3: 길이 비율로 바이트를 잘라냄
+    /// 맨 앞의 곡 정보(ID3)와 "전체 길이 정보(Xing/Info)" 칸은 빼고 소리 부분만 자름
+    /// (그대로 두면 잘라도 원래 노래처럼 같은 제목·같은 길이로 보이는 문제가 있었음)
     private fun trimMp3Bytes(inputFile: File, out: File, startMs: Long, endMs: Long): Boolean {
         val retriever = MediaMetadataRetriever()
         retriever.setDataSource(inputFile.absolutePath)
@@ -640,12 +644,85 @@ class MainActivity : AudioServiceActivity() {
             ?.toLongOrNull() ?: 0L
         retriever.release()
         if (durationMs <= 0) return false
+
+        // 잘라낸 파일에 새로 붙일 곡 정보 (제목 뒤에 "(자름)", 가수·앨범·앨범 사진은 그대로)
+        val metaR = MediaMetadataRetriever()
+        metaR.setDataSource(inputFile.absolutePath)
+        val origTitle = metaR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
+            ?.takeIf { it.isNotBlank() } ?: inputFile.nameWithoutExtension
+        val origArtist = metaR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST) ?: ""
+        val origAlbum = metaR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM) ?: ""
+        val origArt = metaR.embeddedPicture
+        metaR.release()
+        // 제목은 원래 그대로 (자른 곡은 앱에서 가위 아이콘으로 구분, 파일 이름에 _자름)
+        val newTag = buildId3Tag(origTitle, origArtist, origAlbum, origArt)
+
         val totalBytes = inputFile.length()
-        val startByte = totalBytes * startMs / durationMs
-        val endByte = totalBytes * minOf(endMs, durationMs) / durationMs
+        var audioStart = 0L
+        java.io.RandomAccessFile(inputFile, "r").use { raf ->
+            // 1) 맨 앞 곡 정보(ID3) 건너뛰기
+            val head = ByteArray(10)
+            raf.readFully(head)
+            if (head[0] == 'I'.code.toByte() && head[1] == 'D'.code.toByte() && head[2] == '3'.code.toByte()) {
+                val size = ((head[6].toInt() and 0x7F) shl 21) or ((head[7].toInt() and 0x7F) shl 14) or
+                        ((head[8].toInt() and 0x7F) shl 7) or (head[9].toInt() and 0x7F)
+                audioStart = 10L + size + (if ((head[5].toInt() and 0x10) != 0) 10 else 0)
+            }
+            // 2) 첫 소리 조각에 "전체 길이 정보"가 있으면 그 조각도 건너뛰기
+            val probe = ByteArray(131072) // 곡 정보 뒤에 빈 공간이 긴 파일도 있어서 넉넉히 찾기
+            raf.seek(audioStart)
+            val n = raf.read(probe)
+            var sync = -1
+            for (i in 0 until maxOf(0, n - 3)) {
+                if ((probe[i].toInt() and 0xFF) == 0xFF && (probe[i + 1].toInt() and 0xE0) == 0xE0) {
+                    sync = i
+                    break
+                }
+            }
+            android.util.Log.d("Trim", "첫 소리 위치 sync=$sync")
+            if (sync >= 0) {
+                val text = String(probe, sync, minOf(200, n - sync), Charsets.ISO_8859_1)
+                var skip = sync.toLong()
+                if (text.contains("Xing") || text.contains("Info") || text.contains("VBRI")) {
+                    val h1 = probe[sync + 1].toInt() and 0xFF
+                    val h2 = probe[sync + 2].toInt() and 0xFF
+                    val ver = (h1 shr 3) and 3 // 3=MPEG1, 2=MPEG2, 0=MPEG2.5
+                    val brIdx = (h2 shr 4) and 0xF
+                    val srIdx = (h2 shr 2) and 3
+                    val pad = (h2 shr 1) and 1
+                    val br1 = intArrayOf(0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 0)
+                    val br2 = intArrayOf(0, 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160, 0)
+                    val srTable = when (ver) {
+                        3 -> intArrayOf(44100, 48000, 32000, 0)
+                        2 -> intArrayOf(22050, 24000, 16000, 0)
+                        else -> intArrayOf(11025, 12000, 8000, 0)
+                    }
+                    val sr = srTable[srIdx]
+                    val br = (if (ver == 3) br1 else br2)[brIdx]
+                    if (sr > 0 && br > 0) {
+                        val frameLen = (if (ver == 3) 144000 else 72000) * br / sr + pad
+                        skip += frameLen
+                    }
+                }
+                audioStart += skip
+            }
+        }
+
+        // 3) 소리 부분 안에서 길이 비율로 자르기
+        val audioLen = totalBytes - audioStart
+        if (audioLen <= 0) return false
+        val startByte = audioStart + audioLen * startMs / durationMs
+        val endByte = audioStart + audioLen * minOf(endMs, durationMs) / durationMs
+        android.util.Log.d("Trim", "mp3 원래길이=$durationMs 파일크기=$totalBytes 소리시작=$audioStart 자를곳=$startByte~$endByte")
         inputFile.inputStream().use { input ->
-            input.skip(startByte)
+            var toSkip = startByte
+            while (toSkip > 0) {
+                val s = input.skip(toSkip)
+                if (s <= 0) break
+                toSkip -= s
+            }
             out.outputStream().use { output ->
+                output.write(newTag) // 새 곡 정보 먼저
                 val buffer = ByteArray(8192)
                 var remaining = endByte - startByte
                 while (remaining > 0) {
@@ -657,6 +734,46 @@ class MainActivity : AudioServiceActivity() {
             }
         }
         return out.length() > 0
+    }
+
+    /// 잘라낸 mp3 앞에 붙일 새 곡 정보(ID3v2.3): 제목·가수·앨범·앨범 사진 (길이 메모는 안 넣음)
+    private fun buildId3Tag(title: String, artist: String, album: String, art: ByteArray?): ByteArray {
+        val frames = java.io.ByteArrayOutputStream()
+        fun frame(id: String, body: ByteArray) {
+            frames.write(id.toByteArray(Charsets.ISO_8859_1))
+            val n = body.size
+            frames.write(byteArrayOf((n shr 24).toByte(), (n shr 16).toByte(), (n shr 8).toByte(), n.toByte()))
+            frames.write(byteArrayOf(0, 0))
+            frames.write(body)
+        }
+        fun text(id: String, value: String) {
+            if (value.isEmpty()) return
+            // 1 = UTF-16 (한글 안 깨지게)
+            frame(id, byteArrayOf(1) + value.toByteArray(Charsets.UTF_16))
+        }
+        text("TIT2", title)
+        text("TPE1", artist)
+        text("TALB", album)
+        if (art != null && art.isNotEmpty()) {
+            val isPng = art.size > 4 && art[0] == 0x89.toByte() && art[1] == 0x50.toByte()
+            val mime = if (isPng) "image/png" else "image/jpeg"
+            val body = java.io.ByteArrayOutputStream()
+            body.write(0)
+            body.write(mime.toByteArray(Charsets.ISO_8859_1))
+            body.write(0)
+            body.write(3) // 앞표지
+            body.write(0) // 설명 없음
+            body.write(art)
+            frame("APIC", body.toByteArray())
+        }
+        val data = frames.toByteArray()
+        val size = data.size
+        val header = byteArrayOf(
+            'I'.code.toByte(), 'D'.code.toByte(), '3'.code.toByte(), 3, 0, 0,
+            ((size shr 21) and 0x7F).toByte(), ((size shr 14) and 0x7F).toByte(),
+            ((size shr 7) and 0x7F).toByte(), (size and 0x7F).toByte()
+        )
+        return header + data
     }
 
     /// m4a/aac: 다시 압축하지 않고 구간만 그대로 옮겨 담음 (음질 그대로)

@@ -222,6 +222,18 @@ Future<void> updateSongInfo(Song song, {String? title, String? artist, String? a
 
   bool isFavorite(int songId) => _favoriteIds.contains(songId);
 
+  /// 자른 곡(파일 이름에 _자름)의 원본이 목록에 아직 있으면 true → 가위 표시
+  /// 원본을 지우면 false가 돼서 가위도 사라짐
+  bool isTrimmedWithOriginal(Song song) {
+    final uri = song.uri ?? '';
+    if (!uri.contains('_자름')) return false;
+    return _songs.any((s) =>
+        !identical(s, song) &&
+        !(s.uri ?? '').contains('_자름') &&
+        s.title == song.title &&
+        s.artistDisplay == song.artistDisplay);
+  }
+
   Future<bool> _requestPermissions() async {
     try {
       final statuses = await [

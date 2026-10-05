@@ -86,7 +86,8 @@ class SongListTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            _buildAlbumArt(isCurrentSong, playerProvider, primaryColor, baseColor),
+            _buildAlbumArt(isCurrentSong, playerProvider, primaryColor, baseColor,
+                musicProvider.isTrimmedWithOriginal(song)),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
@@ -160,9 +161,11 @@ class SongListTile extends StatelessWidget {
     );
   }
 
-  Widget _buildAlbumArt(bool isCurrentSong, PlayerProvider playerProvider, Color primaryColor, Color baseColor) {
+  Widget _buildAlbumArt(bool isCurrentSong, PlayerProvider playerProvider, Color primaryColor, Color baseColor,
+      bool showTrimBadge) {
     return Stack(
       alignment: Alignment.center,
+      clipBehavior: Clip.none,
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(4),
@@ -207,6 +210,23 @@ class SongListTile extends StatelessWidget {
                 width: 26,
                 height: 22,
               ),
+            ),
+          ),
+        // 자른 곡 표시: 앨범 사진 오른쪽 아래 파란 가위
+        // 원본이 목록에 같이 있을 때만 (원본 지우면 자동으로 사라짐)
+        if (showTrimBadge)
+          Positioned(
+            right: -4,
+            bottom: -4,
+            child: Container(
+              width: 18,
+              height: 18,
+              decoration: BoxDecoration(
+                color: const Color(0xFF2589E8),
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 1.5),
+              ),
+              child: const Icon(Icons.content_cut, size: 11, color: Colors.white),
             ),
           ),
       ],

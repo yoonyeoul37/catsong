@@ -38,6 +38,7 @@ import 'radio_country_stations_screen.dart';
 import 'radio_home_screen.dart';
 import '../services/cast_service.dart';
 import '../widgets/cast_sheets.dart';
+import '../widgets/exit_confirm_dialog.dart';
 
 double? _parseFrequency(String? freq) {
   if (freq == null || freq.isEmpty) return null;
@@ -109,6 +110,12 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
 
   /// 종료 확인창 → 작별 인사 → 종료 (해외 라디오 화면에서 사용)
   Future<void> _confirmExit(BuildContext context) async {
+    // 새 종료창 (사진 + 큰 질문) — 홈·음악·라디오·자연소리 공통
+    if (await showExitConfirm(context) && context.mounted) _showFarewellAndExit(context);
+  }
+
+  // (예전 종료창 — 코드 정리할 때 지우기)
+  Future<void> _oldConfirmExit(BuildContext context) async {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
     final confirmed = await showDialog<bool>(
       context: context,
@@ -581,7 +588,10 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                       GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         onTap: () async {
-                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                          // 새 종료창 (사진 + 큰 질문) — 홈·음악·라디오·자연소리 공통
+                          if (await showExitConfirm(context) && context.mounted) _showFarewellAndExit(context);
+                          return;
+                          // ignore: dead_code
                           final confirmed = await showDialog<bool>(
                             context: context,
                             builder: (ctx) => Dialog(

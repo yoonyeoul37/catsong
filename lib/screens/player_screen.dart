@@ -28,6 +28,7 @@ import 'lyrics_screen.dart';
 import 'ringtone_screen.dart';
 import 'equalizer_screen.dart';
 import '../widgets/song_list_tile.dart';
+import '../widgets/exit_confirm_dialog.dart';
 import 'package:share_plus/share_plus.dart';
 import '../widgets/menu_parts.dart';
 import '../services/cast_service.dart';
@@ -3427,7 +3428,13 @@ class _PlayerScreenState extends State<PlayerScreen>
     });
   }
 
-  void _showExitConfirmDialog(BuildContext context) {
+  void _showExitConfirmDialog(BuildContext context) async {
+    // 새 종료창 (사진 + 큰 질문) — 홈·음악·라디오·자연소리 공통
+    if (await showExitConfirm(context) && context.mounted) _showFarewellAndExit(context);
+  }
+
+  // (예전 종료창 — 코드 정리할 때 지우기)
+  void _oldExitConfirmDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (ctx) => Dialog(

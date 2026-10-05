@@ -15,6 +15,7 @@ import '../models/recent_content_entry.dart';
 import '../models/radio_station.dart';
 import '../providers/video_provider.dart';
 import '../widgets/nature_mini_player.dart';
+import '../widgets/exit_confirm_dialog.dart';
 import '../providers/sound_mix_provider.dart';
 import '../widgets/sound_mix_mini_player.dart';
 import 'video_screen.dart';
@@ -454,7 +455,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showExitConfirmDialog(BuildContext context) {
+  void _showExitConfirmDialog(BuildContext context) async {
+    // 새 종료창 (사진 + 큰 질문) — 홈·음악·라디오·자연소리 공통
+    if (await showExitConfirm(context) && context.mounted) _showFarewellAndExit(context);
+  }
+
+  // (예전 종료창 — 코드 정리할 때 지우기)
+  void _oldExitConfirmDialog(BuildContext context) {
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     showDialog(
       context: context,
@@ -475,7 +482,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 10),
               Text(
-                '재생 중인 소리가 멈춰요.',
+                '다음에 또 좋은 소리로 만나요.',
                 style: TextStyle(
                     color: isDarkMode ? Colors.white60 : Colors.black54, fontSize: 14),
                 textAlign: TextAlign.center,

@@ -16,6 +16,7 @@ import 'settings_screen.dart';
 import 'sound_mix_screen.dart';
 import 'package:just_audio/just_audio.dart';
 import '../widgets/more_menu_sheet.dart';
+import '../widgets/exit_confirm_dialog.dart';
 import 'nature_sounds_screen.dart';
 
 class NatureSoundDetailScreen extends StatefulWidget {
@@ -413,7 +414,13 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
     context.read<PlayerProvider>().playAdjacentNatureSound(direction);
   }
 
-  void _showExitConfirmDialog(BuildContext context) {
+  void _showExitConfirmDialog(BuildContext context) async {
+    // 새 종료창 (사진 + 큰 질문) — 홈·음악·라디오·자연소리 공통
+    if (await showExitConfirm(context) && context.mounted) _showFarewellAndExit(context);
+  }
+
+  // (예전 종료창 — 코드 정리할 때 지우기)
+  void _oldExitConfirmDialog(BuildContext context) {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
     showDialog(
       context: context,

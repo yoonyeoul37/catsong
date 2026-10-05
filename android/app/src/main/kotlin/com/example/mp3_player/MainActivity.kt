@@ -61,6 +61,7 @@ class MainActivity : AudioServiceActivity() {
         }
     }
     private var bassBoost: android.media.audiofx.BassBoost? = null
+    private var presetReverb: android.media.audiofx.PresetReverb? = null // 울림
     private var virtualizer: android.media.audiofx.Virtualizer? = null
     private var deleteResult: MethodChannel.Result? = null
     private var renameResult: MethodChannel.Result? = null
@@ -282,6 +283,31 @@ class MainActivity : AudioServiceActivity() {
                     val strength = (call.argument<Any>("strength") as? Number)?.toShort() ?: 0
                     try {
                         virtualizer?.setStrength(strength)
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.success(false)
+                    }
+                }
+                "initReverb" -> {
+                    // 울림(리버브): 폰이 지원하면 true
+                    val audioSessionId = (call.argument<Any>("audioSessionId") as? Number)?.toInt() ?: 0
+                    try {
+                        presetReverb?.release()
+                        presetReverb = android.media.audiofx.PresetReverb(0, audioSessionId)
+                        presetReverb?.enabled = true
+                        result.success(true)
+                    } catch (e: Exception) {
+                        android.util.Log.e("Reverb", "울림 안 됨: ${e.message}")
+                        presetReverb = null
+                        result.success(false)
+                    }
+                }
+                "setReverb" -> {
+                    // 0 끄기 · 1 작은 방 · 2 거실 · 3 큰 방 · 4 공연장 · 5 대극장 · 6 스튜디오
+                    val preset = (call.argument<Any>("preset") as? Number)?.toShort() ?: 0
+                    try {
+                        presetReverb?.preset = preset
+                        presetReverb?.enabled = preset.toInt() != 0
                         result.success(true)
                     } catch (e: Exception) {
                         result.success(false)

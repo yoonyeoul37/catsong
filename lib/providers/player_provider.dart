@@ -7,6 +7,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/song.dart';
 import '../services/nature_overlay.dart';
+import '../services/sound_effects.dart';
 
 class PlayerProvider extends ChangeNotifier {
   final AudioPlayer _player = AudioPlayer(handleInterruptions: false);
@@ -59,6 +60,7 @@ class PlayerProvider extends ChangeNotifier {
     _initWidgetChannel();
     _loadLoopMode();
     NatureOverlay.instance.attach(this); // 음악 + 자연소리 섞기
+    SoundEffects.instance.attach(this); // 이퀄라이저 · 울림 (저장된 값 자동 적용)
   }
 
   Future<void> _loadLoopMode() async {

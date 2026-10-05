@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,6 +9,49 @@ import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../providers/player_provider.dart';
+
+/// 지금 녹음 중인 파일 (되살리기에서 건드리지 않게)
+String? activeRecordingPath;
+
+String _stamp(DateTime t) {
+  String two(int n) => n.toString().padLeft(2, '0');
+  return '${two(t.year % 100)}${two(t.month)}${two(t.day)}_${two(t.hour)}${two(t.minute)}${two(t.second)}';
+}
+
+/// 녹음 중인 파일을 두는 앱 전용 폴더 (캐시처럼 지워지지 않는 곳)
+Future<Directory> recordingWorkDir() async {
+  String? base;
+  try {
+    base = await const MethodChannel('kr.ssing.catsong/media').invokeMethod<String>('appFilesDir');
+  } catch (_) {}
+  final d = Directory('${base ?? Directory.systemTemp.path}/recording');
+  if (!await d.exists()) await d.create(recursive: true);
+  return d;
+}
+
+/// 녹음 중에 앱이 꺼져서 저장 못 한 녹음을 되살려 저장 → 되살린 개수 (녹음 탭 열 때 실행)
+Future<int> recoverUnsavedRecordings() async {
+  const ch = MethodChannel('kr.ssing.catsong/media');
+  var n = 0;
+  try {
+    final dir = await recordingWorkDir();
+    await for (final e in dir.list()) {
+      if (e is! File || !e.path.endsWith('.aac')) continue;
+      if (e.path == activeRecordingPath) continue; // 지금 녹음 중인 건 건드리지 않기
+      if (await e.length() < 4096) {
+        await e.delete(); // 너무 짧으면 버리기
+        continue;
+      }
+      final stem = e.path.split('rec_').last.replaceAll('.aac', '');
+      final saved = await ch.invokeMethod<String>('saveRecording', {'path': e.path, 'name': '녹음 (복구) $stem'});
+      if (saved != null) {
+        await e.delete();
+        n++;
+      }
+    }
+  } catch (_) {}
+  return n;
+}
 
 /// 파란소리 녹음기 (음성 녹음)
 /// 녹음 → 일시정지·이어서 → 완료하면 Recordings/Paransori 폴더에 저장
@@ -32,7 +76,9 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
   Timer? _tick;
   StreamSubscription<Amplitude>? _ampSub;
   final List<double> _levels = []; // 소리 크기 기록 (파형)
-  String? _tmpPath;
+  String? _tmpPath; // 녹음 중인 파일 (.aac: 끊겨도 그때까지는 살아 있음)
+  RandomAccessFile? _raf; // 받는 대로 바로 파일에 씀
+  StreamSubscription<Uint8List>? _dataSub;
 
   late final AnimationController _pulse = AnimationController(
     vsync: this,
@@ -64,6 +110,8 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
   @override
   void dispose() {
     _actions.setMethodCallHandler(null);
+    _dataSub?.cancel();
+    _closeFile(); // 저장 안 하고 닫혔으면 파일은 남겨둠 → 다음에 되살림
     _tick?.cancel();
     _ampSub?.cancel();
     _pulse.dispose();
@@ -96,11 +144,19 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
       if (mounted) context.read<PlayerProvider>().player.pause();
     } catch (_) {}
 
-    _tmpPath = '${Directory.systemTemp.path}/rec_${DateTime.now().millisecondsSinceEpoch}.m4a';
-    await _rec.start(
+    // 안전 저장: 앱 전용 폴더에 .aac로 받는 즉시 써둠 → 앱이 꺼져도 그때까지 녹음이 남음
+    final dir = await recordingWorkDir();
+    _tmpPath = '${dir.path}/rec_${_stamp(DateTime.now())}.aac';
+    _raf = File(_tmpPath!).openSync(mode: FileMode.append);
+    activeRecordingPath = _tmpPath;
+    final stream = await _rec.startStream(
       const RecordConfig(encoder: AudioEncoder.aacLc, bitRate: 128000, sampleRate: 44100, numChannels: 1),
-      path: _tmpPath!,
     );
+    _dataSub = stream.listen((data) {
+      try {
+        _raf?.writeFromSync(data);
+      } catch (_) {}
+    });
     _watch
       ..reset()
       ..start();
@@ -141,23 +197,28 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
     _tick?.cancel();
     _ampSub?.cancel();
     _watch.stop();
-    final path = await _rec.stop() ?? _tmpPath;
+    await _rec.stop();
+    await _dataSub?.cancel();
+    _closeFile();
     _svc('stop');
+    final path = _tmpPath;
     if (path == null) {
       if (mounted) Navigator.pop(context);
       return;
     }
-    final now = DateTime.now();
-    String two(int n) => n.toString().padLeft(2, '0');
-    final name =
-        '녹음 ${two(now.year % 100)}${two(now.month)}${two(now.day)}_${two(now.hour)}${two(now.minute)}${two(now.second)}';
+    // 이름: 녹음 251006_110930 (녹음 시작 시각)
+    final name = '녹음 ${path.split('rec_').last.replaceAll('.aac', '')}';
     String? saved;
     try {
       saved = await _channel.invokeMethod<String>('saveRecording', {'path': path, 'name': name});
     } catch (_) {}
-    try {
-      await File(path).delete();
-    } catch (_) {}
+    // 저장에 성공했을 때만 지움 (실패하면 남겨뒀다가 다음에 되살림)
+    if (saved != null) {
+      try {
+        await File(path).delete();
+      } catch (_) {}
+    }
+    activeRecordingPath = null;
     if (!mounted) return;
     Navigator.pop(context, saved);
   }
@@ -192,12 +253,22 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
     }
     _tick?.cancel();
     _ampSub?.cancel();
-    final p = await _rec.stop();
+    await _rec.stop();
+    await _dataSub?.cancel();
+    _closeFile();
     _svc('stop');
     try {
-      if (p != null) await File(p).delete();
+      if (_tmpPath != null) await File(_tmpPath!).delete();
     } catch (_) {}
+    activeRecordingPath = null;
     if (mounted) Navigator.pop(context);
+  }
+
+  void _closeFile() {
+    try {
+      _raf?.closeSync();
+    } catch (_) {}
+    _raf = null;
   }
 
   /// 알림창 "녹음 중" 켜기·바꾸기·끄기 (start / pause / resume / stop)

@@ -39,8 +39,17 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MusicProvider>().loadCallRecordings();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final music = context.read<MusicProvider>();
+      // 녹음 중에 앱이 꺼져서 저장 못 한 녹음이 있으면 되살리기
+      final n = await recoverUnsavedRecordings();
+      if (!mounted) return;
+      music.loadCallRecordings();
+      if (n > 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('중간에 끊긴 녹음 $n개를 되살렸어요')),
+        );
+      }
     });
   }
 

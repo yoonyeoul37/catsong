@@ -161,6 +161,7 @@ class MainActivity : AudioServiceActivity() {
                     }
                     result.success(true)
                 }
+                "appFilesDir" -> result.success(filesDir.absolutePath) // 녹음 중인 파일을 두는 앱 전용 폴더
                 "saveRecording" -> {
                     // 파란소리에서 녹음한 파일을 Recordings/Paransori 폴더에 저장
                     val path = call.argument<String>("path")
@@ -169,7 +170,13 @@ class MainActivity : AudioServiceActivity() {
                         result.success(null)
                     } else {
                         try {
-                            val src = File(path)
+                            // 녹음은 끊겨도 안전한 .aac로 받으니까, 저장할 때 .m4a로 옮겨 담기 (길이·넘기기 정확하게)
+                            var src = File(path)
+                            if (path.endsWith(".aac")) {
+                                val m4a = File(cacheDir, "rec_save.m4a")
+                                if (m4a.exists()) m4a.delete()
+                                if (trimWithMuxer(path, m4a, 0L, 24L * 3600 * 1000)) src = m4a
+                            }
                             val relDir = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S)
                                 "Recordings/Paransori" else "Music/Paransori"
                             val values = ContentValues().apply {

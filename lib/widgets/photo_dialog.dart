@@ -121,6 +121,16 @@ class ParanBanner extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           Image.asset(image, fit: BoxFit.cover, alignment: const Alignment(-0.2, 0)),
+          // 오른쪽 아래 구석만 살짝 어둡게 → 밝은 사진에서도 워터마크가 잘 보이게
+          const DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                center: Alignment.bottomRight,
+                radius: 0.9,
+                colors: [Color(0x66000000), Color(0x00000000)],
+              ),
+            ),
+          ),
           Positioned(
             right: 14,
             bottom: 10,

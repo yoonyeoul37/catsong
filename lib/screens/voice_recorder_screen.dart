@@ -85,7 +85,9 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
   bool _interrupted = false; // 전화 등으로 자동 일시정지된 상태
   Duration? _limit; // 타이머: 이만큼 녹음되면 자동 저장 (null = 없음)
 
-  late final AnimationController _pulse = AnimationController(
+  // 화면 열 때 바로 만들어 둠 (녹음 안 하고 닫을 때 생기던 오류 방지)
+  late final AnimationController _pulse = _makePulse();
+  AnimationController _makePulse() => AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 900),
   )..repeat(reverse: true);
@@ -96,6 +98,7 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
   @override
   void initState() {
     super.initState();
+    _pulse; // 깜빡이 장치를 여기서 미리 만들기
     _actions.setMethodCallHandler((call) async {
       if (call.method != 'action' || !mounted) return;
       switch (call.arguments as String?) {

@@ -738,6 +738,7 @@ class _PlayerScreenState extends State<PlayerScreen>
   }
 
   Future<void> _extractColor(Song song) async {
+    if (!mounted) return; // 화면이 닫혔으면 안 함
     if (song.albumArt == null) {
       final primaryColor = Theme.of(context).colorScheme.primary;
       setState(() => _dominantColor = Color.fromRGBO(
@@ -756,6 +757,7 @@ class _PlayerScreenState extends State<PlayerScreen>
       );
       final frame = await codec.getNextFrame();
       final byteData = await frame.image.toByteData();
+      if (!mounted) return; // 계산하는 동안 화면이 닫혔으면 그만
       if (byteData != null) {
         int totalR = 0, totalG = 0, totalB = 0;
         int pixelCount = 0;

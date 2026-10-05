@@ -42,7 +42,8 @@ void main() async {
   // 오류 기록 (Firebase Crashlytics): 앱이 튕기거나 빨간 오류 화면이 뜨면 자동으로 기록
   try {
     await Firebase.initializeApp();
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+    // 화면 경고는 "튕김"이 아니라 "일반 오류"로 기록 (진짜 튕김만 비정상 종료로 집계)
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
     PlatformDispatcher.instance.onError = (error, stack) {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
@@ -293,13 +294,15 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
       ]) {
         precacheImage(AssetImage(path), context);
       }
-      precacheImage(CachedNetworkImageProvider(farewellImageUrl(context)), context);
+      precacheImage(CachedNetworkImageProvider(farewellImageUrl(context)), context,
+          onError: (_, __) {}); // 미리 받기 실패해도 조용히
       // 잠시 쉬어가요 라디오 사진(썸네일 10장)을 미리 받아두기
       for (var i = 1; i <= 10; i++) {
         precacheImage(
           CachedNetworkImageProvider(
               'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/app-images/rest_radio_${i}_thumb.jpg'),
           context,
+          onError: (_, __) {}, // 미리 받기 실패해도 조용히
         );
       }
       SharedPreferences.getInstance().then((prefs) {

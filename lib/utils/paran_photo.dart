@@ -36,6 +36,7 @@ Widget paranPhoto(String path,
           fallback ?? Container(width: width, height: height, color: const Color(0xFF2A2A2A)),
       errorWidget: (_, __, ___) =>
           fallback ?? Container(width: width, height: height, color: const Color(0xFF2A2A2A)),
+      errorListener: (_) {}, // 서버가 잠깐 늦어도 오류로 보고하지 않기 (회색 칸 → 다음에 다시 받음)
     );
   }
   return Image.asset(path, fit: fit, width: width, height: height);
@@ -45,6 +46,7 @@ Widget paranPhoto(String path,
 void precacheParanPhoto(String path, BuildContext context) {
   if (_isOnline(path)) {
     final name = path.substring('assets/'.length).replaceAll('.png', '.jpg');
-    precacheImage(CachedNetworkImageProvider('$_paranBase/$name'), context);
+    precacheImage(CachedNetworkImageProvider('$_paranBase/$name'), context,
+        onError: (_, __) {}); // 미리 받기 실패해도 조용히
   }
 }

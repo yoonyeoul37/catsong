@@ -8,6 +8,7 @@ import '../models/song.dart';
 import '../models/album.dart';
 import '../models/artist.dart';
 import '../models/folder.dart';
+import '../models/call_recording.dart';
 
 class MusicProvider extends ChangeNotifier {
   List<Song> _songs = [];
@@ -130,9 +131,9 @@ class MusicProvider extends ChangeNotifier {
   Future<void> _loadRecentSongs() async {
     _recentSongs = _recentSongUris
         .map((uri) => _songs.firstWhere(
-              (s) => s.uri == uri,
-              orElse: () => Song(id: -1, title: '', artist: '', album: '', uri: uri),
-            ))
+          (s) => s.uri == uri,
+      orElse: () => Song(id: -1, title: '', artist: '', album: '', uri: uri),
+    ))
         .where((s) => s.id != -1)
         .toList();
   }
@@ -160,6 +161,8 @@ class MusicProvider extends ChangeNotifier {
   }
 
   Future<void> addToRecent(Song song) async {
+    // 통화 녹음은 사적인 내용이라 최근 목록·재생 횟수에 안 남김
+    if (isCallRecordingPath(song.uri)) return;
     song.lastPlayedAt = DateTime.now();
     if (song.uri != null) {
       _playCounts[song.uri!] = (_playCounts[song.uri!] ?? 0) + 1;
@@ -173,7 +176,7 @@ class MusicProvider extends ChangeNotifier {
     await _saveRecentSongs();
     notifyListeners();
   }
-Future<void> updateSongInfo(Song song, {String? title, String? artist, String? album}) async {
+  Future<void> updateSongInfo(Song song, {String? title, String? artist, String? album}) async {
     if (title != null) song.title = title;
     if (artist != null) song.artist = artist;
     if (album != null) song.album = album;
@@ -222,13 +225,130 @@ Future<void> updateSongInfo(Song song, {String? title, String? artist, String? a
 
   bool isFavorite(int songId) => _favoriteIds.contains(songId);
 
+  // ───────── 통화 녹음 (일반 음악과 따로) ─────────
+  static const _callDirs = [
+    '/storage/emulated/0/Recordings/Call',
+    '/storage/emulated/0/Call',
+  ];
+  // 음성 녹음 (삼성 녹음기 앱)
+  static const _voiceDirs = [
+    '/storage/emulated/0/Recordings/Voice Recorder',
+    '/storage/emulated/0/Recordings/Paransori', // 파란소리에서 녹음한 것
+    '/storage/emulated/0/Voice Recorder',
+  ];
+  List<CallRecording> _callRecordings = [];
+  bool _callLoading = false;
+  List<CallRecording> get callRecordings => _callRecordings;
+  bool get callLoading => _callLoading;
+
+  // 녹음: 내가 붙인 제목 / 잠금 (파일 경로 기준, 앱 안에만 저장 → 원래 파일 이름은 그대로)
+  Map<String, String> _recTitles = {};
+  Set<String> _recLocked = {};
+
+  String recordingTitle(CallRecording r) => _recTitles[r.path] ?? r.name;
+  bool isRecordingLocked(String path) => _recLocked.contains(path);
+
+  Future<void> _loadRecMeta() async {
+    final prefs = await SharedPreferences.getInstance();
+    try {
+      final raw = prefs.getString('rec_titles');
+      if (raw != null) {
+        _recTitles = Map<String, String>.from(jsonDecode(raw));
+      }
+    } catch (_) {}
+    _recLocked = (prefs.getStringList('rec_locked') ?? []).toSet();
+  }
+
+  Future<void> setRecordingTitle(CallRecording r, String title) async {
+    if (title.isEmpty || title == r.name) {
+      _recTitles.remove(r.path); // 비우면 원래 이름으로
+    } else {
+      _recTitles[r.path] = title;
+    }
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('rec_titles', jsonEncode(_recTitles));
+    notifyListeners();
+  }
+
+  Future<void> toggleRecordingLock(CallRecording r) async {
+    if (!_recLocked.remove(r.path)) _recLocked.add(r.path);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('rec_locked', _recLocked.toList());
+    notifyListeners();
+  }
+
+  /// 녹음 삭제 → 휴지통으로 (잠근 건 빼고). 옮긴 개수, 취소·실패면 0
+  Future<int> trashRecordings(List<CallRecording> list) async {
+    final targets = list.where((r) => !_recLocked.contains(r.path)).toList();
+    if (targets.isEmpty) return 0;
+    try {
+      final ok = await _channel.invokeMethod('trashFiles', {
+        'paths': targets.map((r) => r.path).toList(),
+      });
+      if (ok == true) {
+        final gone = targets.map((r) => r.path).toSet();
+        _callRecordings.removeWhere((r) => gone.contains(r.path));
+        notifyListeners();
+        return targets.length;
+      }
+    } catch (e) {
+      debugPrint('녹음 삭제 오류: $e');
+    }
+    return 0;
+  }
+
+  /// 통화 녹음 폴더에 있는 파일인지
+  bool isCallRecordingPath(String? path) =>
+      path != null && [..._callDirs, ..._voiceDirs].any((d) => path.startsWith('$d/'));
+
+  /// 통화 녹음 불러오기 (최신순) → 통화 길이는 뒤에서 천천히 채움
+  Future<void> loadCallRecordings() async {
+    _callLoading = true;
+    await _loadRecMeta(); // 내가 붙인 제목·잠금
+    notifyListeners();
+    final found = <CallRecording>[];
+    for (final d in [..._callDirs, ..._voiceDirs]) {
+      final isVoice = _voiceDirs.contains(d);
+      final dir = Directory(d);
+      if (!await dir.exists()) continue;
+      await for (final e in dir.list()) {
+        if (e is! File) continue;
+        final lower = e.path.toLowerCase();
+        if (!(lower.endsWith('.m4a') || lower.endsWith('.mp3') || lower.endsWith('.amr') || lower.endsWith('.3gp'))) {
+          continue;
+        }
+        DateTime modified;
+        try {
+          modified = await e.lastModified();
+        } catch (_) {
+          modified = DateTime.now();
+        }
+        found.add(CallRecording.fromPath(e.path, modified, isVoice: isVoice));
+      }
+    }
+    found.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+    _callRecordings = found;
+    _callLoading = false;
+    notifyListeners();
+
+    var n = 0;
+    for (final r in found) {
+      try {
+        final meta = await _channel.invokeMethod('getSongMetadata', {'path': r.path});
+        r.durationMs = (meta?['duration'] as int?) ?? 0;
+      } catch (_) {}
+      if (++n % 10 == 0) notifyListeners();
+    }
+    notifyListeners();
+  }
+
   /// 자른 곡(파일 이름에 _자름)의 원본이 목록에 아직 있으면 true → 가위 표시
   /// 원본을 지우면 false가 돼서 가위도 사라짐
   bool isTrimmedWithOriginal(Song song) {
     final uri = song.uri ?? '';
     if (!uri.contains('_자름')) return false;
     return _songs.any((s) =>
-        !identical(s, song) &&
+    !identical(s, song) &&
         !(s.uri ?? '').contains('_자름') &&
         s.title == song.title &&
         s.artistDisplay == song.artistDisplay);
@@ -249,115 +369,115 @@ Future<void> updateSongInfo(Song song, {String? title, String? artist, String? a
   }
 
   Future<void> loadSongs() async {
-      try {
-        _isLoading = true;
-        notifyListeners();
+    try {
+      _isLoading = true;
+      notifyListeners();
 
-        final List<Song> foundSongs = [];
-        int idCounter = 0;
+      final List<Song> foundSongs = [];
+      int idCounter = 0;
 
-        final scanPaths = [
-          '/storage/emulated/0/Music',
-          '/storage/emulated/0/Download',
-          '/storage/emulated/0/melon',
-          '/storage/emulated/0/KakaoTalkDownload',
-          '/storage/emulated/0/Skai',
-        ];
+      final scanPaths = [
+        '/storage/emulated/0/Music',
+        '/storage/emulated/0/Download',
+        '/storage/emulated/0/melon',
+        '/storage/emulated/0/KakaoTalkDownload',
+        '/storage/emulated/0/Skai',
+      ];
 
-        // 1단계: 파일 목록만 빠르게 스캔
-        for (final path in scanPaths) {
-          final dir = Directory(path);
-          if (!await dir.exists()) continue;
+      // 1단계: 파일 목록만 빠르게 스캔
+      for (final path in scanPaths) {
+        final dir = Directory(path);
+        if (!await dir.exists()) continue;
 
-          await for (final entity in dir.list(recursive: true)) {
-            if (entity is File) {
-              final ext = entity.path.toLowerCase();
-              if (ext.endsWith('.mp3') ||
-                  ext.endsWith('.m4a') ||
-                  ext.endsWith('.flac') ||
-                  ext.endsWith('.wav')) {
-                foundSongs.add(Song(
-                  id: idCounter++,
-                  title: _getFileName(entity.path),
-                  artist: '',
-                  album: '',
-                  uri: entity.path,
-                  duration: 0,
-                  isFavorite: _favoriteIds.contains(idCounter - 1),
-                ));
-              }
+        await for (final entity in dir.list(recursive: true)) {
+          if (entity is File) {
+            final ext = entity.path.toLowerCase();
+            if (ext.endsWith('.mp3') ||
+                ext.endsWith('.m4a') ||
+                ext.endsWith('.flac') ||
+                ext.endsWith('.wav')) {
+              foundSongs.add(Song(
+                id: idCounter++,
+                title: _getFileName(entity.path),
+                artist: '',
+                album: '',
+                uri: entity.path,
+                duration: 0,
+                isFavorite: _favoriteIds.contains(idCounter - 1),
+              ));
             }
           }
         }
-
-        foundSongs.sort((a, b) => a.title.compareTo(b.title));
-        _songs = foundSongs;
-        _filteredSongs = List.from(_songs);
-        _buildAlbums();
-        _buildArtists();
-        _buildFolders();
-        await _loadRecentSongs();
-        _isLoading = false;
-        notifyListeners();
-
-        // 2단계: 백그라운드에서 메타데이터 읽기
-              int updateCount = 0;
-              for (final song in _songs) {
-                if (song.uri == null) continue;
-                try {
-                  final metadata = await _channel.invokeMethod(
-                      'getSongMetadata', {'path': song.uri});
-                  if (metadata != null) {
-                    final edited = song.uri != null ? _editedSongs[song.uri] : null;
-                    if (edited != null) {
-                      song.title = edited['title'] ?? song.title;
-                      song.artist = edited['artist'] ?? song.artist;
-                      song.album = edited['album'] ?? song.album;
-                      song.isEdited = true;
-                    } else {
-                      final metaTitle = metadata['title'] as String?;
-                      if (metaTitle != null && metaTitle.isNotEmpty && !_looksBroken(metaTitle)) {
-                        song.title = metaTitle;
-                      }
-                      song.artist = metadata['artist'] ?? song.artist;
-                      song.album = metadata['album'] ?? song.album;
-                    }
-                    song.duration = (metadata['duration'] as int?) ?? song.duration;
-                    song.albumArt = metadata['albumArt'] != null
-                        ? List<int>.from(metadata['albumArt'])
-                        : null;
-                  }
-                } catch (e) {
-                  // 메타데이터 읽기 실패시 무시
-                }
-                // 고친 곡은 파일 정보를 못 읽어도 항상 고친 내용으로
-                final edited = _editedSongs[song.uri];
-                if (edited != null) {
-                  song.title = edited['title'] ?? song.title;
-                  song.artist = edited['artist'] ?? song.artist;
-                  song.album = edited['album'] ?? song.album;
-                  song.isEdited = true;
-                }
-                updateCount++;
-                // 10개마다 한 번씩 업데이트
-                if (updateCount % 10 == 0) {
-                  notifyListeners();
-                }
-              }
-        _buildAlbums();
-        _buildArtists();
-        _buildFolders();
-        notifyListeners();
-
-        await _loadRecentSongs();
-        debugPrint('스캔 완료: ${_songs.length}개 곡 발견');
-      } catch (e) {
-        _errorMessage = '음악 스캔 오류: $e';
-      } finally {
-        _isLoading = false;
-        notifyListeners();
       }
+
+      foundSongs.sort((a, b) => a.title.compareTo(b.title));
+      _songs = foundSongs;
+      _filteredSongs = List.from(_songs);
+      _buildAlbums();
+      _buildArtists();
+      _buildFolders();
+      await _loadRecentSongs();
+      _isLoading = false;
+      notifyListeners();
+
+      // 2단계: 백그라운드에서 메타데이터 읽기
+      int updateCount = 0;
+      for (final song in _songs) {
+        if (song.uri == null) continue;
+        try {
+          final metadata = await _channel.invokeMethod(
+              'getSongMetadata', {'path': song.uri});
+          if (metadata != null) {
+            final edited = song.uri != null ? _editedSongs[song.uri] : null;
+            if (edited != null) {
+              song.title = edited['title'] ?? song.title;
+              song.artist = edited['artist'] ?? song.artist;
+              song.album = edited['album'] ?? song.album;
+              song.isEdited = true;
+            } else {
+              final metaTitle = metadata['title'] as String?;
+              if (metaTitle != null && metaTitle.isNotEmpty && !_looksBroken(metaTitle)) {
+                song.title = metaTitle;
+              }
+              song.artist = metadata['artist'] ?? song.artist;
+              song.album = metadata['album'] ?? song.album;
+            }
+            song.duration = (metadata['duration'] as int?) ?? song.duration;
+            song.albumArt = metadata['albumArt'] != null
+                ? List<int>.from(metadata['albumArt'])
+                : null;
+          }
+        } catch (e) {
+          // 메타데이터 읽기 실패시 무시
+        }
+        // 고친 곡은 파일 정보를 못 읽어도 항상 고친 내용으로
+        final edited = _editedSongs[song.uri];
+        if (edited != null) {
+          song.title = edited['title'] ?? song.title;
+          song.artist = edited['artist'] ?? song.artist;
+          song.album = edited['album'] ?? song.album;
+          song.isEdited = true;
+        }
+        updateCount++;
+        // 10개마다 한 번씩 업데이트
+        if (updateCount % 10 == 0) {
+          notifyListeners();
+        }
+      }
+      _buildAlbums();
+      _buildArtists();
+      _buildFolders();
+      notifyListeners();
+
+      await _loadRecentSongs();
+      debugPrint('스캔 완료: ${_songs.length}개 곡 발견');
+    } catch (e) {
+      _errorMessage = '음악 스캔 오류: $e';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
+  }
   void _buildAlbums() {
     final Map<String, List<Song>> albumMap = {};
     for (final song in _songs) {
@@ -375,42 +495,42 @@ Future<void> updateSongInfo(Song song, {String? title, String? artist, String? a
   }
 
   void _buildArtists() {
-      final Map<String, List<Song>> artistMap = {};
-      for (final song in _songs) {
-        final key = song.artistDisplay;
-        artistMap.putIfAbsent(key, () => []).add(song);
-      }
-      _artists = artistMap.entries.map((e) {
-        return Artist(
-          name: e.key,
-          songs: e.value,
-        );
-      }).toList()
-        ..sort((a, b) => a.name.compareTo(b.name));
+    final Map<String, List<Song>> artistMap = {};
+    for (final song in _songs) {
+      final key = song.artistDisplay;
+      artistMap.putIfAbsent(key, () => []).add(song);
     }
+    _artists = artistMap.entries.map((e) {
+      return Artist(
+        name: e.key,
+        songs: e.value,
+      );
+    }).toList()
+      ..sort((a, b) => a.name.compareTo(b.name));
+  }
 
-    void _buildFolders() {
-      final Map<String, List<Song>> folderMap = {};
-      for (final song in _songs) {
-        if (song.uri == null) continue;
-        final parts = song.uri!.split('/');
-        parts.removeLast();
-        final folderPath = parts.join('/');
-        final folderName = parts.last;
-        folderMap.putIfAbsent(folderPath, () => []).add(song);
-      }
-      _folders = folderMap.entries.map((e) {
-        final folderName = e.key.split('/').last;
-        return MusicFolder(
-          path: e.key,
-          name: folderName,
-          songs: e.value,
-        );
-      }).toList()
-        ..sort((a, b) => a.name.compareTo(b.name));
+  void _buildFolders() {
+    final Map<String, List<Song>> folderMap = {};
+    for (final song in _songs) {
+      if (song.uri == null) continue;
+      final parts = song.uri!.split('/');
+      parts.removeLast();
+      final folderPath = parts.join('/');
+      final folderName = parts.last;
+      folderMap.putIfAbsent(folderPath, () => []).add(song);
     }
+    _folders = folderMap.entries.map((e) {
+      final folderName = e.key.split('/').last;
+      return MusicFolder(
+        path: e.key,
+        name: folderName,
+        songs: e.value,
+      );
+    }).toList()
+      ..sort((a, b) => a.name.compareTo(b.name));
+  }
 
-    bool _looksBroken(String text) {
+  bool _looksBroken(String text) {
     // 깨진 인코딩(물음표, 대체문자 등)이 많이 섞여있으면 true
     int badCount = 0;
     for (final ch in text.runes) {
@@ -420,43 +540,43 @@ Future<void> updateSongInfo(Song song, {String? title, String? artist, String? a
   }
 
   String _getFileName(String path) {
-      final name = path.split('/').last;
-      return name.replaceAll(RegExp(r'\.[^.]+$'), '');
-    }
-
-    void search(String query) {
-      final q = query.toLowerCase().trim();
-      if (q.isEmpty) {
-        _filteredSongs = List.from(_songs);
-      } else {
-        _filteredSongs = _songs.where((song) {
-          return song.title.toLowerCase().contains(q) ||
-              song.artistDisplay.toLowerCase().contains(q) ||
-              song.albumDisplay.toLowerCase().contains(q);
-        }).toList();
-      }
-      notifyListeners();
-    }
-
-    void clearSearch() {
-      _filteredSongs = List.from(_songs);
-      notifyListeners();
-    }
-
-    List<Album> searchAlbums(String query) {
-      final q = query.toLowerCase().trim();
-      if (q.isEmpty) return _albums;
-      return _albums.where((album) {
-        return album.name.toLowerCase().contains(q) ||
-            album.artist.toLowerCase().contains(q);
-      }).toList();
-    }
-
-    List<Artist> searchArtists(String query) {
-      final q = query.toLowerCase().trim();
-      if (q.isEmpty) return _artists;
-      return _artists.where((artist) {
-        return artist.name.toLowerCase().contains(q);
-      }).toList();
-    }
+    final name = path.split('/').last;
+    return name.replaceAll(RegExp(r'\.[^.]+$'), '');
   }
+
+  void search(String query) {
+    final q = query.toLowerCase().trim();
+    if (q.isEmpty) {
+      _filteredSongs = List.from(_songs);
+    } else {
+      _filteredSongs = _songs.where((song) {
+        return song.title.toLowerCase().contains(q) ||
+            song.artistDisplay.toLowerCase().contains(q) ||
+            song.albumDisplay.toLowerCase().contains(q);
+      }).toList();
+    }
+    notifyListeners();
+  }
+
+  void clearSearch() {
+    _filteredSongs = List.from(_songs);
+    notifyListeners();
+  }
+
+  List<Album> searchAlbums(String query) {
+    final q = query.toLowerCase().trim();
+    if (q.isEmpty) return _albums;
+    return _albums.where((album) {
+      return album.name.toLowerCase().contains(q) ||
+          album.artist.toLowerCase().contains(q);
+    }).toList();
+  }
+
+  List<Artist> searchArtists(String query) {
+    final q = query.toLowerCase().trim();
+    if (q.isEmpty) return _artists;
+    return _artists.where((artist) {
+      return artist.name.toLowerCase().contains(q);
+    }).toList();
+  }
+}

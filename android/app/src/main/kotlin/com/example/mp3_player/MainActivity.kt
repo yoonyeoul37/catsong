@@ -135,6 +135,41 @@ class MainActivity : AudioServiceActivity() {
                     }
                     result.success(true)
                 }
+                "saveRecording" -> {
+                    // 파란소리에서 녹음한 파일을 Recordings/Paransori 폴더에 저장
+                    val path = call.argument<String>("path")
+                    val name = call.argument<String>("name") ?: "녹음"
+                    if (path == null) {
+                        result.success(null)
+                    } else {
+                        try {
+                            val src = File(path)
+                            val relDir = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S)
+                                "Recordings/Paransori" else "Music/Paransori"
+                            val values = ContentValues().apply {
+                                put(MediaStore.MediaColumns.DISPLAY_NAME, "$name.m4a")
+                                put(MediaStore.MediaColumns.MIME_TYPE, "audio/mp4")
+                                put(MediaStore.MediaColumns.RELATIVE_PATH, "$relDir/")
+                            }
+                            val uri = contentResolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values)
+                            if (uri == null) {
+                                result.success(null)
+                            } else {
+                                contentResolver.openOutputStream(uri)?.use { os -> src.inputStream().use { it.copyTo(os) } }
+                                var savedName = "$name.m4a"
+                                contentResolver.query(uri, arrayOf(MediaStore.MediaColumns.DISPLAY_NAME), null, null, null)?.use { c ->
+                                    if (c.moveToFirst()) savedName = c.getString(0) ?: savedName
+                                }
+                                val outPath = File(android.os.Environment.getExternalStorageDirectory(), "$relDir/$savedName").absolutePath
+                                android.media.MediaScannerConnection.scanFile(this, arrayOf(outPath), null, null)
+                                result.success(outPath)
+                            }
+                        } catch (e: Exception) {
+                            android.util.Log.e("SaveRecording", "Error: ${e.message}", e)
+                            result.success(null)
+                        }
+                    }
+                }
                 "trimAndSave" -> {
                     // 자르기: 원본은 그대로 두고 잘라낸 부분을 새 파일로 저장 (오래 걸릴 수 있어 따로 실행)
                     val path = call.argument<String>("path")
@@ -144,7 +179,7 @@ class MainActivity : AudioServiceActivity() {
                         result.success(null)
                     } else {
                         Thread {
-                            val saved = trimAndSave(path, startMs, endMs)
+                            val saved = trimAndSave(path, startMs, endMs, call.argument<String>("relDir"), call.argument<String>("outBase"))
                             runOnUiThread { result.success(saved) }
                         }.start()
                     }
@@ -255,6 +290,46 @@ class MainActivity : AudioServiceActivity() {
                         null, null
                     )
                     result.success(true)
+                }
+                "trashFiles" -> {
+                    // 녹음 삭제: 바로 지우지 않고 휴지통으로 (30일 동안 내 파일 → 휴지통에서 되살릴 수 있음)
+                    val paths = call.argument<List<String>>("paths")
+                    if (paths.isNullOrEmpty()) {
+                        result.success(false)
+                    } else {
+                        try {
+                            val uris = mutableListOf<android.net.Uri>()
+                            for (path in paths) {
+                                contentResolver.query(
+                                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                                    arrayOf(MediaStore.Audio.Media._ID),
+                                    "${MediaStore.Audio.Media.DATA}=?",
+                                    arrayOf(path), null
+                                )?.use {
+                                    if (it.moveToFirst()) {
+                                        val id = it.getLong(it.getColumnIndexOrThrow(MediaStore.Audio.Media._ID))
+                                        uris.add(android.net.Uri.withAppendedPath(
+                                            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id.toString()
+                                        ))
+                                    }
+                                }
+                            }
+                            if (uris.isEmpty()) {
+                                result.success(false)
+                            } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                                deleteResult = result
+                                val pendingIntent = MediaStore.createTrashRequest(contentResolver, uris, true)
+                                startIntentSenderForResult(pendingIntent.intentSender, 102, null, 0, 0, 0)
+                            } else {
+                                var count = 0
+                                for (uri in uris) count += contentResolver.delete(uri, null, null)
+                                result.success(count > 0)
+                            }
+                        } catch (e: Exception) {
+                            android.util.Log.e("TrashFiles", "Error: ${e.message}", e)
+                            result.success(false)
+                        }
+                    }
                 }
                 "deleteSongs" -> {
                     val paths = call.argument<List<String>>("paths")
@@ -592,7 +667,10 @@ class MainActivity : AudioServiceActivity() {
     /// 성공하면 저장된 파일 경로, 실패하거나 지원 안 하는 형식이면 null
     private var multicastLock: android.net.wifi.WifiManager.MulticastLock? = null
 
-    private fun trimAndSave(path: String, startMs: Long, endMs: Long): String? {
+    private fun trimAndSave(
+        path: String, startMs: Long, endMs: Long,
+        relDirArg: String? = null, outBase: String? = null
+    ): String? {
         return try {
             val inputFile = File(path)
             android.util.Log.d("Trim", "요청: ${inputFile.name} 시작=$startMs 끝=$endMs")
@@ -608,9 +686,12 @@ class MainActivity : AudioServiceActivity() {
                      else trimWithMuxer(path, tmp, startMs, endMs)
             if (!ok) return null
 
-            val relDir = "Music/Paransori"
+            // 녹음 자르기는 원래 녹음 폴더에 (Recordings 폴더는 안드로이드 12 이상만 가능)
+            val relDir = if (relDirArg != null &&
+                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) relDirArg else "Music/Paransori"
+            val outName = (outBase ?: "${inputFile.nameWithoutExtension}_자름") + ".$outExt"
             val values = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, "${inputFile.nameWithoutExtension}_자름.$outExt")
+                put(MediaStore.MediaColumns.DISPLAY_NAME, outName)
                 put(MediaStore.MediaColumns.MIME_TYPE, if (isMp3) "audio/mpeg" else "audio/mp4")
                 put(MediaStore.Audio.Media.IS_MUSIC, true)
                 put(MediaStore.MediaColumns.RELATIVE_PATH, "$relDir/")
@@ -620,7 +701,7 @@ class MainActivity : AudioServiceActivity() {
             tmp.delete()
 
             // 같은 이름이 있으면 안드로이드가 (1) 등을 붙이니까 실제 이름을 다시 확인
-            var savedName = "${inputFile.nameWithoutExtension}_자름.$outExt"
+            var savedName = outName
             contentResolver.query(uri, arrayOf(MediaStore.MediaColumns.DISPLAY_NAME), null, null, null)?.use { c ->
                 if (c.moveToFirst()) savedName = c.getString(0) ?: savedName
             }

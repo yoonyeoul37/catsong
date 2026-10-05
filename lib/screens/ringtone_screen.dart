@@ -10,7 +10,10 @@ import '../l10n/app_localizations.dart';
 class RingtoneScreen extends StatefulWidget {
   final Song? initialSong;
   final bool trimMode; // true면 자르기 화면 (벨소리 대신 새 파일로 저장)
-  const RingtoneScreen({super.key, this.initialSong, this.trimMode = false});
+  final String? saveRelDir; // 자른 파일 저장 폴더 (녹음은 원래 녹음 폴더로)
+  final String? saveBaseName; // 자른 파일 이름 (확장자 빼고)
+  const RingtoneScreen(
+      {super.key, this.initialSong, this.trimMode = false, this.saveRelDir, this.saveBaseName});
 
   @override
   State<RingtoneScreen> createState() => _RingtoneScreenState();
@@ -74,7 +77,11 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
   @override
   Widget build(BuildContext context) {
     final musicProvider = context.watch<MusicProvider>();
-    final songs = musicProvider.allSongs;
+    // 녹음처럼 음악 목록에 없는 곡을 자를 때도 선택 칸에 보이게 같이 넣기
+    final songs = [
+      ...musicProvider.allSongs,
+      if (_selectedSong != null && !musicProvider.allSongs.contains(_selectedSong)) _selectedSong!,
+    ];
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -323,7 +330,18 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
       _isPlaying = false;
     });
     try {
+      // 녹음 파일이면 어디서 자르든(녹음 탭·재생화면·곡 메뉴) 원래 녹음 폴더에 저장
+      var relDir = widget.saveRelDir;
+      var outBase = widget.saveBaseName;
+      if (relDir == null && context.read<MusicProvider>().isCallRecordingPath(uri)) {
+        relDir = uri.contains('/Voice Recorder/') ? 'Recordings/Voice Recorder' : 'Recordings/Call';
+        final base = uri.split('/').last.replaceAll(RegExp(r'\.[^.]+$'), '');
+        final m = RegExp(r'^(.*)(_\d{6}_\d{6})$').firstMatch(base);
+        outBase = m != null ? '${m.group(1)} (자름)${m.group(2)}' : '$base (자름)';
+      }
       final saved = await _channel.invokeMethod<String>('trimAndSave', {
+        'relDir': relDir,
+        'outBase': outBase,
         'path': uri,
         'startMs': (_startValue * 1000).toInt(),
         'endMs': (_endValue * 1000).toInt(),

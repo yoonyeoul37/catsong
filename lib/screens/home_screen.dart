@@ -34,6 +34,8 @@ import 'artist_screen.dart';
 import 'playlist_screen.dart';
 import 'favorites_screen.dart';
 import 'recent_screen.dart';
+import 'dart:io' show Platform;
+import 'call_recordings_screen.dart';
 import 'folder_screen.dart';
 import 'settings_screen.dart';
 import 'radio_home_screen.dart';
@@ -71,6 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentTabIndex = 0;
   bool _showFavorites = false;
   bool _showRecent = false;
+  bool _showCalls = false; // 통화녹음 탭
   bool _showMusicLibrary = false;
   bool _pendingStartScreenNav = false;
   final TextEditingController _searchController = TextEditingController();
@@ -1140,6 +1143,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildBody() {
     switch (_currentTabIndex) {
       case 0:
+        if (_showCalls) {
+          return WillPopScope(
+            onWillPop: () async {
+              setState(() => _showCalls = false);
+              return false;
+            },
+            child: const CallRecordingsScreen(),
+          );
+        }
         if (_showFavorites) {
           return WillPopScope(
             onWillPop: () async {
@@ -1948,6 +1960,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     }),
                     Theme.of(context).colorScheme.primary,
                   ),
+                  // 녹음 (일반 음악과 따로) — 아이폰은 다른 앱 파일을 못 읽어서 안드로이드만
+                  if (Platform.isAndroid)
+                  _buildFilterTab(
+                    '녹음',
+                    _showCalls,
+                        () => setState(() {
+                      _showFavorites = false;
+                      _showRecent = false;
+                      _showCalls = true;
+                    }),
+                    Theme.of(context).colorScheme.primary,
+                    icon: Icons.mic_none,
+                  ),
                 ],
               ),
             ),
@@ -2148,7 +2173,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildFilterTab(String label, bool isSelected, VoidCallback onTap, Color primaryColor) {
+  Widget _buildFilterTab(String label, bool isSelected, VoidCallback onTap, Color primaryColor,
+      {IconData? icon}) {
     final baseColor = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
     return GestureDetector(
       onTap: () {
@@ -2166,13 +2192,23 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? baseColor : baseColor.withOpacity(0.54),
-            fontSize: 14,
-            fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // 아이콘이 있으면 글자 앞에 작게 (예: 🎙 녹음)
+            if (icon != null) ...[
+              Icon(icon, size: 15, color: isSelected ? baseColor : baseColor.withOpacity(0.54)),
+              const SizedBox(width: 3),
+            ],
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? baseColor : baseColor.withOpacity(0.54),
+                fontSize: 14,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
+              ),
+            ),
+          ],
         ),
       ),
     );

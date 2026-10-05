@@ -1343,18 +1343,19 @@ class _PlayerScreenState extends State<PlayerScreen>
                       children: [
                         // "파란"만 숨쉬기 (재생 중일 때만)
                         _BreathingText(
-                          text: isKo ? '파란' : 'Paran',
-                          style: GoogleFonts.doHyeon(color: sky, fontSize: 20, height: 1.0),
+                          text: 'Paran',
+                          style: GoogleFonts.quicksand(
+    color: sky.withOpacity(0.75), fontSize: 20, fontWeight: FontWeight.w700, height: 1.0, letterSpacing: 1.5),
                           moving: playerProvider.isPlaying,
                         ),
                         Text(
-                          isKo ? '소리' : 'Sori',
-                          style: GoogleFonts.doHyeon(
-                              color: baseColor.withOpacity(0.85), fontSize: 20, height: 1.0),
+                          isKo ? 'sori' : 'Sori', // 한국은 Paransori, 해외는 발음 때문에 ParanSori
+                          style: GoogleFonts.quicksand(
+                              color: baseColor.withOpacity(0.4), fontSize: 20, fontWeight: FontWeight.w700, height: 1.0, letterSpacing: 1.5),
                         ),
                       ],
                     ),
-                    if (isKo) ...[
+                    if (false) ...[ // 아래 작은 영문 줄은 이제 안 씀 (위에 영어로 나와서)
                       const SizedBox(height: 4),
                       Text(
                         'Paransori',
@@ -3838,8 +3839,8 @@ class _BreathingTextState extends State<_BreathingText> with SingleTickerProvide
     duration: const Duration(milliseconds: 1600), // 반 번 숨쉬는 시간 (클수록 천천히)
   );
 
-  static const _dim = Color(0xFF5C9FE0); // 어두울 때
-  static const _bright = Color(0xFFA9D2FA); // 밝을 때
+  static const _dim = Color(0xB35C9FE0); // 어두울 때 (반투명 70%)
+  static const _bright = Color(0xCCA9D2FA); // 밝을 때 (반투명 80%)
 
   @override
   void initState() {
@@ -3883,7 +3884,7 @@ class _BreathingTextState extends State<_BreathingText> with SingleTickerProvide
               color: Color.lerp(base, breath, f),
               shadows: [
                 Shadow(
-                  color: const Color(0xFF7FB8F0).withOpacity(0.45 * t * f),
+                  color: const Color(0xFF7FB8F0).withOpacity(0.25 * t * f),
                   blurRadius: 10,
                 ),
               ],

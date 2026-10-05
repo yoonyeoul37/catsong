@@ -1,7 +1,7 @@
 name: mp3_player
 description: Local MP3 Player App
 publish_to: 'none'
-version: 1.0.0+119
+version: 1.0.0+120
 environment:
   sdk: ^3.12.0
 
@@ -107,6 +107,8 @@ flutter:
     - assets/sound_wave.jpg
     - assets/sound_fire.jpg
     - assets/exit_banner.jpg
+    - assets/update_banner.jpg
+    - assets/review_banner.jpg
 
 flutter_native_splash:
   color: "#F7F5F0"

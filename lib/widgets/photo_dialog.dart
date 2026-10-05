@@ -1,0 +1,151 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../providers/theme_provider.dart';
+
+/// 위에 사진(+ Paransori 워터마크)이 들어간 알림창 (리뷰·업데이트 공통)
+/// 큰 버튼을 누르면 true, "나중에"를 누르면 false
+Future<bool> showPhotoDialog(
+    BuildContext context, {
+      required String image,
+      required String title,
+      required String message,
+      required String primary,
+      required String secondary,
+      IconData? primaryIcon,
+      bool stars = false,
+      bool barrierDismissible = true,
+    }) async {
+  final isDark = context.read<ThemeProvider>().isDarkMode;
+  final accent = Theme.of(context).colorScheme.primary;
+  final ok = await showDialog<bool>(
+    context: context,
+    barrierDismissible: barrierDismissible,
+    builder: (ctx) {
+      final bg = isDark ? const Color(0xFF1F1B16) : Colors.white;
+      final titleColor = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+      final subColor = isDark ? const Color(0xFFA29A8B) : const Color(0xFFA39C90);
+      return Dialog(
+        backgroundColor: bg,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ParanBanner(image: image),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(22, 20, 22, 14),
+              child: Column(
+                children: [
+                  Text(title,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: titleColor, fontSize: 19, fontWeight: FontWeight.w800, letterSpacing: -0.4)),
+                  if (stars) ...[
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        5,
+                            (_) => const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 1.5),
+                          child: Icon(Icons.star_rounded, color: Color(0xFFF5B83D), size: 26),
+                        ),
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 6),
+                  Text(message,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: subColor, fontSize: 12.5, height: 1.5)),
+                  const SizedBox(height: 18),
+                  // 큰 버튼 (살짝 떠 보이게)
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        Navigator.pop(ctx, true);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: accent,
+                        foregroundColor: Colors.white,
+                        elevation: 6,
+                        shadowColor: accent.withOpacity(0.45),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (primaryIcon != null) ...[
+                            Icon(primaryIcon, size: 19),
+                            const SizedBox(width: 6),
+                          ],
+                          Text(primary, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // 작은 "나중에"
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx, false),
+                    style: TextButton.styleFrom(foregroundColor: subColor),
+                    child: Text(secondary, style: const TextStyle(fontSize: 13)),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+  return ok == true;
+}
+
+/// 알림창 위 사진 + 오른쪽 아래 Paransori 워터마크 (종료·리뷰·업데이트 공통 모양)
+class ParanBanner extends StatelessWidget {
+  final String image;
+  const ParanBanner({super.key, required this.image});
+
+  @override
+  Widget build(BuildContext context) {
+    final isKo = Localizations.localeOf(context).languageCode == 'ko';
+    const shadow = [Shadow(color: Color(0x88000000), blurRadius: 8)];
+    return AspectRatio(
+      aspectRatio: 2.2,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(image, fit: BoxFit.cover, alignment: const Alignment(-0.2, 0)),
+          Positioned(
+            right: 14,
+            bottom: 10,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Paran',
+                    style: GoogleFonts.quicksand(
+                        color: const Color(0xFF9FD3FF),
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.3,
+                        shadows: shadow)),
+                Text(isKo ? 'sori' : 'Sori',
+                    style: GoogleFonts.quicksand(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.3,
+                        shadows: shadow)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

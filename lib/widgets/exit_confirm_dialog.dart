@@ -70,7 +70,7 @@ Future<bool> showExitConfirm(BuildContext context) async {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(22, 22, 22, 18),
+              padding: const EdgeInsets.fromLTRB(22, 22, 22, 22),
               child: Column(
                 children: [
                   // 질문은 크고 굵게
@@ -100,8 +100,12 @@ Future<bool> showExitConfirm(BuildContext context) async {
                             },
                             style: OutlinedButton.styleFrom(
                               foregroundColor: isDark ? Colors.white70 : const Color(0xFF5A5348),
+                              backgroundColor: isDark ? const Color(0xFF2A251E) : Colors.white,
                               side: BorderSide(color: isDark ? Colors.white24 : const Color(0xFFE2DACB)),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                              // 살짝 떠 보이게 연한 그림자
+                              elevation: 3,
+                              shadowColor: Colors.black.withOpacity(isDark ? 0.5 : 0.12),
                             ),
                             child: Text(l.radioExitKeepListening, style: const TextStyle(fontSize: 14.5)),
                           ),
@@ -119,8 +123,10 @@ Future<bool> showExitConfirm(BuildContext context) async {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: primary,
                               foregroundColor: Colors.white,
-                              elevation: 0,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                              // 파란빛 그림자로 떠 보이게
+                              elevation: 6,
+                              shadowColor: primary.withOpacity(0.45),
                             ),
                             child: Text(l.radioExitConfirmButton,
                                 style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold)),

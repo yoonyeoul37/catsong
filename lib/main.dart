@@ -22,6 +22,7 @@ import 'providers/start_screen_provider.dart';
 import 'providers/sound_mix_provider.dart';
 import 'providers/recent_content_provider.dart';
 import 'screens/home_screen.dart';
+import 'widgets/photo_dialog.dart';
 import 'theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
 import 'l10n/locale_holder.dart';
@@ -367,7 +368,25 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
     }
   }
 
-  void _showUpdateReadySnackbar() {
+  /// 업데이트 완료 창 (아침 사진 + 워터마크)
+  Future<void> _showUpdateReadySnackbar() async {
+    if (!mounted) return;
+    final l = AppLocalizations.of(context)!;
+    final restart = await showPhotoDialog(
+      context,
+      image: 'assets/update_banner.jpg',
+      title: l.updateReadyTitle,
+      message: l.updateReadyMessage,
+      primary: l.updateReadyButton,
+      secondary: l.updateReadyLater,
+      primaryIcon: Icons.refresh_rounded,
+      barrierDismissible: false,
+    );
+    if (restart) InAppUpdate.completeFlexibleUpdate();
+  }
+
+  // (예전 업데이트 창 — 코드 정리할 때 지우기)
+  void _oldUpdateReadySnackbar() {
     if (!mounted) return;
     const accent = AppTheme.fixedAccent;
     showDialog(
@@ -482,7 +501,32 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
     }
   }
 
+  /// 리뷰 부탁 창 (오후 사진 + 별 5개 + 워터마크)
   Future<void> _showReviewDialog() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
+    final l = AppLocalizations.of(context)!;
+    final go = await showPhotoDialog(
+      context,
+      image: 'assets/review_banner.jpg',
+      title: l.reviewTitle,
+      message: l.reviewMessage,
+      primary: l.reviewButton,
+      secondary: l.reviewLater,
+      stars: true,
+      barrierDismissible: false,
+    );
+    await prefs.setInt('last_review_request', DateTime.now().millisecondsSinceEpoch);
+    if (go) {
+      try {
+        await launchUrl(Uri.parse('https://play.google.com/store/apps/details?id=kr.ssing.catsong'),
+            mode: LaunchMode.externalApplication);
+      } catch (_) {}
+    }
+  }
+
+  // (예전 리뷰 창 — 코드 정리할 때 지우기)
+  Future<void> _oldReviewDialog() async {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final prefs = await SharedPreferences.getInstance();
     final l = AppLocalizations.of(context)!;

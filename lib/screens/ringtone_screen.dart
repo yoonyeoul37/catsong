@@ -385,12 +385,21 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
         'startMs': (_startValue * 1000).toInt(),
         'endMs': (_endValue * 1000).toInt(),
       });
-      if (result == true) {
+      if (result == 'ok' || result == true) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(AppLocalizations.of(context)!.ringtoneSet),
             backgroundColor: Colors.green,
             duration: const Duration(seconds: 3),
+          ),
+        );
+      } else if (result == 'permission') {
+        // 허용 화면이 열렸어요 → 켜고 돌아와서 다시 누르면 됨
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('"시스템 설정 변경"을 허용으로 켜고 돌아와서 다시 눌러주세요'),
+            backgroundColor: Color(0xFFE09A2B),
+            duration: Duration(seconds: 5),
           ),
         );
       } else {

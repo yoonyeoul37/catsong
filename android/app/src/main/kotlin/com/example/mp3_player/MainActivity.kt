@@ -121,8 +121,13 @@ class MainActivity : AudioServiceActivity() {
                     val path = call.argument<String>("path")
                     val startMs = (call.argument<Any>("startMs") as? Number)?.toLong() ?: 0L
                     val endMs = (call.argument<Any>("endMs") as? Number)?.toLong() ?: 0L
-                    if (path != null) result.success(trimAndSetRingtone(path, startMs, endMs))
-                    else result.success(false)
+                    // 자르는 동안 화면이 안 멈추게 따로 처리
+                    if (path != null) {
+                        Thread {
+                            val r = trimAndSetRingtone(path, startMs, endMs)
+                            runOnUiThread { result.success(r) }
+                        }.start()
+                    } else result.success("fail")
                 }
                 "multicastLock" -> {
                     // TV 찾기(DLNA) 할 때 와이파이 멀티캐스트 응답을 받기 위해
@@ -624,7 +629,61 @@ class MainActivity : AudioServiceActivity() {
         }
     }
 
-    private fun trimAndSetRingtone(path: String, startMs: Long, endMs: Long): Boolean {
+    /// 벨소리: 고른 구간을 제대로 잘라서 Ringtones 폴더에 저장 → 기본 벨소리로 지정
+    /// 결과: "ok" / "permission"(시스템 설정 변경 허용 필요) / "fail"
+    private fun trimAndSetRingtone(path: String, startMs: Long, endMs: Long): String {
+        return try {
+            val inputFile = File(path)
+            if (!inputFile.exists()) return "fail"
+            // 먼저 허용부터 확인 (안 돼 있으면 허용 화면만 열고 끝)
+            if (!Settings.System.canWrite(this)) {
+                val intent = android.content.Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS)
+                intent.data = android.net.Uri.parse("package:$packageName")
+                intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                return "permission"
+            }
+            // 곡 자르기와 같은 방식으로 제대로 자르기 (mp3: 소리 부분만 / m4a: 정식 방식)
+            val isMp3 = path.lowercase().endsWith(".mp3")
+            val ext = if (isMp3) "mp3" else "m4a"
+            val tmp = File(cacheDir, "ringtone_tmp.$ext")
+            if (tmp.exists()) tmp.delete()
+            val cut = if (isMp3) trimMp3Bytes(inputFile, tmp, startMs, endMs)
+                      else trimWithMuxer(path, tmp, startMs, endMs)
+            if (!cut || tmp.length() == 0L) return "fail"
+
+            // 파일 이름에 못 쓰는 글자는 _ 로
+            val safe = inputFile.nameWithoutExtension.replace(Regex("[\\\\/:*?\"<>|]"), "_")
+            val displayName = "${safe}_벨소리.$ext"
+            // 같은 노래로 다시 지정하면 예전 벨소리 파일은 지우기 (못 지워도 괜찮음)
+            try {
+                contentResolver.delete(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    "${MediaStore.MediaColumns.DISPLAY_NAME}=?",
+                    arrayOf(displayName)
+                )
+            } catch (_: Exception) {}
+            val values = ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
+                put(MediaStore.MediaColumns.MIME_TYPE, if (isMp3) "audio/mpeg" else "audio/mp4")
+                put(MediaStore.Audio.Media.IS_RINGTONE, true)
+                put(MediaStore.Audio.Media.IS_MUSIC, false)
+                put(MediaStore.MediaColumns.RELATIVE_PATH, "Ringtones/")
+            }
+            val uri = contentResolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values)
+                ?: return "fail"
+            contentResolver.openOutputStream(uri)?.use { os -> tmp.inputStream().use { it.copyTo(os) } }
+            android.media.RingtoneManager.setActualDefaultRingtoneUri(
+                this, android.media.RingtoneManager.TYPE_RINGTONE, uri)
+            android.util.Log.d("Ringtone", "벨소리 지정 완료: $displayName")
+            return "ok"
+        } catch (e: Exception) {
+            android.util.Log.e("Ringtone", "Error: ${e.message}", e)
+            "fail"
+        }
+    }
+
+    private fun oldTrimAndSetRingtone(path: String, startMs: Long, endMs: Long): Boolean {
         return try {
             val inputFile = File(path)
             if (!inputFile.exists()) return false

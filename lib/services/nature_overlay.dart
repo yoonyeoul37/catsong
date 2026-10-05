@@ -5,6 +5,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/player_provider.dart';
 import '../providers/sound_mix_provider.dart';
+import 'cast_service.dart';
 
 /// 음악 위에 자연소리(빗소리·파도 등)를 살짝 깔아서 같이 듣기
 /// - 음악이 재생될 때만 같이 나오고, 음악을 멈추면 같이 멈춤
@@ -77,7 +78,8 @@ class NatureOverlay extends ChangeNotifier {
       _lastSongUri = uri;
       notifyListeners();
     }
-    final playing = _music?.isPlaying ?? false;
+    // TV로 듣는 중엔 폰에서 자연소리 안 나게
+    final playing = (_music?.isPlaying ?? false) && !CastService.instance.isConnected;
     if (playing == _musicPlaying) return;
     _musicPlaying = playing;
     notifyListeners();

@@ -771,22 +771,7 @@ class _PlayerScreenState extends State<PlayerScreen>
       );
     }
 
-    // TV로 듣는 중이면: 폰 소리는 멈추고, 곡이 바뀌면 TV로 새 곡을 보냄
-    final cast = CastService.instance;
-    if (cast.isConnected) {
-      final needNew = cast.currentUri != song.uri;
-      final localPlaying = playerProvider.isPlaying;
-      if (needNew || localPlaying) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          playerProvider.player.pause();
-          if (needNew) {
-            cast.castSong(song);
-          } else if (!cast.tvPlaying) {
-            cast.play(); // 앱의 재생 버튼 → TV 재생
-          }
-        });
-      }
-    }
+    // (TV로 보내기·TV 재생/일시정지는 player_provider가 알아서 처리)
 
     final lyricsProvider = context.read<LyricsProvider>();
     final currentKey = '${song.titleDisplay}-${song.artistDisplay}';

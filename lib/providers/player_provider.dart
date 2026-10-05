@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/song.dart';
 import '../services/nature_overlay.dart';
 import '../services/sound_effects.dart';
+import '../services/cast_service.dart';
 
 class PlayerProvider extends ChangeNotifier {
   final AudioPlayer _player = AudioPlayer(handleInterruptions: false);
@@ -35,7 +36,8 @@ class PlayerProvider extends ChangeNotifier {
       (_currentIndex >= 0 && _currentIndex < _queue.length)
           ? _queue[_currentIndex]
           : null;
-  bool get isPlaying => _isPlaying;
+  // TV로 보내는 중이면 TV 상태를 따라감 (재생 버튼·미니플레이어 모양)
+  bool get isPlaying => CastService.instance.isConnected ? CastService.instance.tvPlaying : _isPlaying;
   bool get isLoading => _isLoading;
   Duration get position => _position;
   Duration get duration => _duration;
@@ -61,6 +63,9 @@ class PlayerProvider extends ChangeNotifier {
     _loadLoopMode();
     NatureOverlay.instance.attach(this); // 음악 + 자연소리 섞기
     SoundEffects.instance.attach(this); // 이퀄라이저 · 울림 (저장된 값 자동 적용)
+    // TV: TV 상태가 바뀌면 화면도 같이 바뀌고, TV에서 곡이 끝나면 다음 곡
+    CastService.instance.addListener(notifyListeners);
+    CastService.instance.onTrackEnded = () => playNext();
   }
 
   Future<void> _loadLoopMode() async {
@@ -148,6 +153,11 @@ class PlayerProvider extends ChangeNotifier {
 
   void _initStreams() {
     _player.playingStream.listen((playing) {
+      // TV로 보내는 중이면 폰에서는 소리 안 내고, 그 곡을 TV로 (다음 곡·목록에서 고른 곡도)
+      if (playing && CastService.instance.isConnected) {
+        _player.pause();
+        _sendToTv();
+      }
       _isPlaying = playing;
       if (playing) {
         _startPositionTimer();
@@ -399,7 +409,25 @@ class PlayerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// 지금 곡을 TV로 (이미 보낸 곡이면 이어서 재생만)
+  void _sendToTv() {
+    final cast = CastService.instance;
+    final s = currentSong;
+    if (s == null) return;
+    if (cast.currentUri != s.uri) {
+      cast.castSong(s);
+    } else if (!cast.tvPlaying) {
+      cast.play();
+    }
+  }
+
   Future<void> togglePlayPause() async {
+    // TV로 보내는 중이면 TV를 재생/일시정지
+    final cast = CastService.instance;
+    if (cast.isConnected) {
+      cast.tvPlaying ? await cast.pause() : await cast.play();
+      return;
+    }
     if (_player.playing) {
       await _player.pause();
       await WakelockPlus.disable();

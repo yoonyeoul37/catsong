@@ -12,6 +12,7 @@ import '../screens/player_screen.dart';
 import 'equalizer_animation.dart';
 import 'album_eq_overlay.dart';
 import '../providers/theme_provider.dart';
+import '../services/cast_service.dart';
 
 class MiniPlayer extends StatelessWidget {
   const MiniPlayer({super.key});
@@ -169,11 +170,20 @@ class MiniPlayer extends StatelessWidget {
                               const SizedBox(height: 2),
                               Row(
                                 children: [
+                                  // TV로 듣는 중이면 가수 대신 📺 TV 이름
+                                  if (CastService.instance.isConnected) ...[
+                                    const Icon(Icons.cast_connected, size: 13, color: Color(0xFF2589E8)),
+                                    const SizedBox(width: 4),
+                                  ],
                                   Expanded(
                                     child: Text(
-                                      song.artistDisplay,
+                                      CastService.instance.isConnected
+                                          ? '${CastService.instance.device?.name ?? 'TV'}에서 재생'
+                                          : song.artistDisplay,
                                       style: TextStyle(
-                                          color: baseColor.withOpacity(0.6),
+                                          color: CastService.instance.isConnected
+                                              ? const Color(0xFF2589E8)
+                                              : baseColor.withOpacity(0.6),
                                           fontSize: 12),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,

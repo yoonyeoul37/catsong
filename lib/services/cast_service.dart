@@ -44,6 +44,9 @@ class CastService extends ChangeNotifier {
   String? _servingPath;
   Timer? _poll; // DLNA 상태 확인용
   bool _wasPlaying = false;
+  DateTime _cmdAt = DateTime(2000); // 마지막으로 재생/일시정지 누른 시각
+  // 누른 직후 2초는 TV가 보내는 예전 상태를 무시 (아이콘이 되돌아가는 것 방지)
+  bool get _justCommanded => DateTime.now().difference(_cmdAt) < const Duration(seconds: 2);
   _GoogleCast? _gc; // 구글 캐스트 연결
 Uint8List? _artBytes; // TV 화면에 보여줄 앨범 사진
 bool _isRadio = false; // 라디오를 보내는 중인지 (라디오는 "곡 끝"이 없음)
@@ -284,6 +287,7 @@ final artUrl = url.replaceFirst(RegExp(r'/song/.*$'), '/art/${song.uri.hashCode.
   // ───────────────── 3) TV 조작 ─────────────────
   Future<void> play() async {
     if (_device == null) return;
+    _cmdAt = DateTime.now();
     try {
       if (_device!.kind == CastKind.google) {
         _gc?.play();
@@ -298,6 +302,7 @@ final artUrl = url.replaceFirst(RegExp(r'/song/.*$'), '/art/${song.uri.hashCode.
 
   Future<void> pause() async {
     if (_device == null) return;
+    _cmdAt = DateTime.now();
     try {
       if (_device!.kind == CastKind.google) {
         _gc?.pause();
@@ -337,6 +342,7 @@ final artUrl = url.replaceFirst(RegExp(r'/song/.*$'), '/art/${song.uri.hashCode.
   // ───────────────── 4) TV에서 곡이 끝났는지 확인 ─────────────────
   /// 구글 캐스트: TV가 상태를 알려줌
   void _onGoogleStatus(String state, String? idleReason) {
+    if (_justCommanded && state != 'IDLE') return; // 방금 누른 거면 예전 상태 무시
     if (state == 'PLAYING' || state == 'BUFFERING') {
       if (!_tvPlaying) {
         _tvPlaying = true;
@@ -362,10 +368,17 @@ final artUrl = url.replaceFirst(RegExp(r'/song/.*$'), '/art/${song.uri.hashCode.
       try {
         final xml = await _soap('GetTransportInfo', '<InstanceID>0</InstanceID>');
         final state = RegExp(r'<CurrentTransportState>(.*?)</CurrentTransportState>').firstMatch(xml)?.group(1) ?? '';
+        if (_justCommanded) return; // 방금 누른 거면 예전 상태 무시
         if (state == 'PLAYING') {
           _wasPlaying = true;
           if (!_tvPlaying) {
             _tvPlaying = true;
+            notifyListeners();
+          }
+        } else if (state == 'PAUSED_PLAYBACK') {
+          // TV 리모컨으로 멈춘 경우도 아이콘 맞추기
+          if (_tvPlaying) {
+            _tvPlaying = false;
             notifyListeners();
           }
         } else if (state == 'STOPPED' && _wasPlaying && _tvPlaying) {

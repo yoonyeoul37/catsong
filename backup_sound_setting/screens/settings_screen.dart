@@ -127,23 +127,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
           ),
-          // 완료 효과음: 수정·삭제·저장할 때 물방울 소리 (진동 모드면 진동)
-          Consumer<ThemeProvider>(
-            builder: (context, themeProvider, _) => _buildTile(
-              context,
-              icon: themeProvider.feedbackSoundEnabled ? Icons.water_drop : Icons.water_drop_outlined,
-              title: '효과음',
-              subtitle: themeProvider.feedbackSoundEnabled ? l.darkModeOn : l.darkModeOff,
-              onTap: () => themeProvider.setFeedbackSoundEnabled(!themeProvider.feedbackSoundEnabled),
-              primaryColor: primaryColor,
-              trailing: Switch(
-                value: themeProvider.feedbackSoundEnabled,
-                onChanged: (v) => themeProvider.setFeedbackSoundEnabled(v),
-                activeColor: primaryColor,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-            ),
-          ),
           _buildTile(context, icon: Icons.palette_outlined, title: l.themeColor, onTap: () => _showColorPicker(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.text_fields, title: l.textSize, onTap: () => _showTextSizeDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.font_download_outlined, title: l.fontChange, onTap: () => _showFontDialog(context), primaryColor: primaryColor),

@@ -21,10 +21,8 @@ void showActionFeedback(BuildContext context,
       Overlay.maybeOf(context, rootOverlay: true);
   if (overlay == null) return;
   var isDark = false;
-  var soundOn = true; // 설정 → 효과음
   try {
     isDark = context.read<ThemeProvider>().isDarkMode;
-    soundOn = context.read<ThemeProvider>().feedbackSoundEnabled;
   } catch (_) {}
 
   // 이전 피드백이 아직 있으면 바로 치우기 (겹치지 않게)
@@ -48,12 +46,10 @@ void showActionFeedback(BuildContext context,
   overlay.insert(entry);
 
   // 소리 모드면 물방울 "똑" (삭제는 "똑똑"), 진동 모드면 진동, 무음이면 없음
-  if (soundOn) {
-    try {
-      const MethodChannel('kr.ssing.catsong/media')
-          .invokeMethod('feedbackSound', {'low': type == ActionFeedbackType.deleted});
-    } catch (_) {}
-  }
+  try {
+    const MethodChannel('kr.ssing.catsong/media')
+        .invokeMethod('feedbackSound', {'low': type == ActionFeedbackType.deleted});
+  } catch (_) {}
 }
 
 class _ActionFeedback extends StatefulWidget {

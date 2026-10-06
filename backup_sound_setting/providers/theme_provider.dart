@@ -10,7 +10,6 @@ class ThemeProvider extends ChangeNotifier {
   bool _isDarkMode = false;
   bool _seasonalEffectEnabled = true;
   bool _voiceGreetingEnabled = true;
-  bool _feedbackSoundEnabled = true; // 완료 효과음 (물방울 소리·진동)
 
   Color get primaryColor => _primaryColor;
   double get textScale => _textScale;
@@ -18,14 +17,6 @@ class ThemeProvider extends ChangeNotifier {
   bool get isDarkMode => _isDarkMode;
   bool get seasonalEffectEnabled => _seasonalEffectEnabled;
   bool get voiceGreetingEnabled => _voiceGreetingEnabled;
-  bool get feedbackSoundEnabled => _feedbackSoundEnabled;
-
-  Future<void> setFeedbackSoundEnabled(bool value) async {
-    _feedbackSoundEnabled = value;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('feedbackSoundEnabled', value);
-    notifyListeners();
-  }
 
   Future<void> setVoiceGreetingEnabled(bool value) async {
     _voiceGreetingEnabled = value;
@@ -121,7 +112,6 @@ class ThemeProvider extends ChangeNotifier {
     final isDarkMode = prefs.getBool('isDarkMode');
     final seasonalEffectEnabled = prefs.getBool('seasonalEffectEnabled');
     final voiceGreetingEnabled = prefs.getBool('voiceGreetingEnabled');
-    final feedbackSoundEnabled = prefs.getBool('feedbackSoundEnabled');
     if (colorValue != null) {
       _primaryColor = Color(colorValue);
     }
@@ -139,9 +129,6 @@ class ThemeProvider extends ChangeNotifier {
     }
     if (voiceGreetingEnabled != null) {
       _voiceGreetingEnabled = voiceGreetingEnabled;
-    }
-    if (feedbackSoundEnabled != null) {
-      _feedbackSoundEnabled = feedbackSoundEnabled;
     }
     _applySystemBars();
     notifyListeners();

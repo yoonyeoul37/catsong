@@ -13,15 +13,13 @@ import 'ringtone_screen.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/paran_toast.dart';
 import '../widgets/paran_dialog.dart';
-import 'player_screen.dart' show showPlayerStyleMenu;
 
-// 화면 공통 색 (베이지 바탕 · 흰 카드 · 먹색 글자)
-Color _sBg(bool d) => d ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
-Color _sCard(bool d) => d ? const Color(0xFF26221C) : const Color(0xFFFFFFFF);
-Color _sText(bool d) => d ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-Color _sTextSub(bool d) => d ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
-Color _sTextHint(bool d) => d ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-Color _sBorder(bool d) => d ? const Color(0xFF3A342B) : const Color(0xFFEEE9DF);
+Color _sBg(bool d) => d ? const Color(0xFF17140F) : const Color(0xFFF7F5F0);
+Color _sCard(bool d) => d ? const Color(0xFF1E1B15) : const Color(0xFFFFFFFF);
+Color _sText(bool d) => d ? Colors.white : const Color(0xFF111111);
+Color _sTextSub(bool d) => d ? Colors.white70 : const Color(0xFF666666);
+Color _sTextHint(bool d) => d ? Colors.white38 : const Color(0xFF999999);
+Color _sBorder(bool d) => d ? Colors.white.withOpacity(0.12) : const Color(0xFFE8E4DA);
 Color _sInputBg(bool d) => d ? Colors.white.withOpacity(0.06) : const Color(0xFFEEEAE0);
 
 class SettingsScreen extends StatefulWidget {
@@ -187,11 +185,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildSection(String title) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
-    // 작은 회색 소제목 (다른 화면과 같은 모양)
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 22, 24, 8),
-      child: Text(title,
-          style: TextStyle(color: _sTextHint(isDarkMode), fontSize: 12, fontWeight: FontWeight.w600)),
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
+      child: Text(title.toUpperCase(),
+          style: TextStyle(
+              color: isDarkMode ? Colors.white70 : const Color(0xFF232016),
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 1.2)),
     );
   }
 
@@ -201,50 +202,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Widget? trailing, bool isFirst = false, bool isLast = false,
   }) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
-    // 같은 묶음은 흰 카드 하나로 (위·아래 끝만 둥글게)
-    const r = Radius.circular(16);
-    final radius = BorderRadius.vertical(top: isFirst ? r : Radius.zero, bottom: isLast ? r : Radius.zero);
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(color: _sCard(isDarkMode), borderRadius: radius),
-      child: Material(
-        type: MaterialType.transparency,
-        child: InkWell(
-          borderRadius: radius,
-          onTap: onTap,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (!isFirst)
-                Container(height: 0.5, margin: const EdgeInsets.only(left: 50), color: _sBorder(isDarkMode)),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                // 한 줄로: 아이콘 · 이름 ········ 작은 회색 글자 · 스위치/›
-                child: Row(children: [
-                  Icon(icon, color: _sTextHint(isDarkMode), size: 20),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Text(title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: _sText(isDarkMode), fontSize: 14.5)),
-                  ),
-                  if (subtitle != null) ...[
-                    const SizedBox(width: 8),
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 150),
-                      child: Text(subtitle,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: _sTextHint(isDarkMode), fontSize: 12.5)),
-                    ),
-                  ],
-                  const SizedBox(width: 6),
-                  trailing ?? Icon(Icons.chevron_right_rounded, color: _sTextHint(isDarkMode), size: 20),
-                ]),
-              ),
-            ],
-          ),
+      decoration: BoxDecoration(
+        color: _sCard(isDarkMode),
+        border: Border(
+          top: isFirst ? BorderSide(color: _sBorder(isDarkMode)) : BorderSide.none,
+          bottom: BorderSide(color: _sBorder(isDarkMode)),
+        ),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
+          child: Row(children: [
+            Icon(icon, color: const Color(0xFFAAAAAA), size: 20),
+            const SizedBox(width: 14),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(title, style: TextStyle(color: _sText(isDarkMode), fontSize: 14)),
+              if (subtitle != null) ...[
+                const SizedBox(height: 2),
+                Text(subtitle, style: TextStyle(color: _sTextHint(isDarkMode), fontSize: 12)),
+              ],
+            ])),
+            trailing ?? const Icon(Icons.chevron_right, color: Color(0xFFCCCCCC), size: 20),
+          ]),
         ),
       ),
     );
@@ -370,8 +351,64 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  void _showPlayerStyleDialog(BuildContext context) {
-    showPlayerStyleMenu(context); // 재생화면 ⋮ 메뉴와 같은 스타일 창 (시디롬·파란포토·앨범)
+  void _showPlayerStyleDialog(BuildContext context) async {
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    final prefs = await SharedPreferences.getInstance();
+    int currentStyle = prefs.getInt('albumArtStyle') ?? 1;
+    const accent = AppTheme.fixedAccent;
+    final l = AppLocalizations.of(context)!;
+    final styles = [
+      {'id': 1, 'name': l.styleCD, 'icon': Icons.album, 'desc': l.styleCDDesc},
+      {'id': 2, 'name': l.styleCassette, 'icon': Icons.settings_input_composite, 'desc': l.styleCassetteDesc},
+      {'id': 3, 'name': l.styleCard, 'icon': Icons.image, 'desc': l.styleCardDesc},
+      {'id': 4, 'name': l.styleVisualizer, 'icon': Icons.graphic_eq, 'desc': l.styleVisualizerDesc},
+      {'id': 5, 'name': l.styleGradient, 'icon': Icons.gradient, 'desc': l.styleGradientDesc},
+    ];
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: _sBg(isDarkMode),
+          title: Row(children: [
+            const Icon(Icons.style, color: accent, size: 20), const SizedBox(width: 8),
+            Text(l.playerStyle, style: TextStyle(color: _sText(isDarkMode), fontSize: 16, fontWeight: FontWeight.bold)),
+          ]),
+          content: SizedBox(width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: styles.length,
+              itemBuilder: (context, index) {
+                final style = styles[index];
+                final isSelected = currentStyle == style['id'];
+                return InkWell(
+                  onTap: () async { currentStyle = style['id'] as int; await prefs.setInt('albumArtStyle', currentStyle); setDialogState(() {}); Navigator.pop(ctx); },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: isSelected ? accent.withOpacity(0.1) : _sInputBg(isDarkMode),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: isSelected ? accent : Colors.transparent),
+                    ),
+                    child: Row(children: [
+                      Icon(style['icon'] as IconData, color: isSelected ? accent : _sTextHint(isDarkMode), size: 24),
+                      const SizedBox(width: 12),
+                      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Text(style['name'] as String, style: TextStyle(color: isSelected ? accent : _sText(isDarkMode), fontSize: 14, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+                        Text(style['desc'] as String, style: TextStyle(color: _sTextSub(isDarkMode), fontSize: 11)),
+                      ])),
+                      if (isSelected) const Icon(Icons.check_circle, color: accent, size: 20),
+                    ]),
+                  ),
+                );
+              },
+            ),
+          ),
+          actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l.close, style: const TextStyle(color: accent)))],
+        ),
+      ),
+    );
   }
 
   void _showFontDialog(BuildContext context) {

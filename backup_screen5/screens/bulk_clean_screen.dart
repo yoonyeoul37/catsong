@@ -141,7 +141,7 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
           ),
           TextButton(
             onPressed: _working ? null : _undo,
-            style: TextButton.styleFrom(foregroundColor: ink),
+            style: TextButton.styleFrom(foregroundColor: _blue),
             child: const Text('되돌리기', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
           ),
         ],
@@ -175,10 +175,10 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(
+              const SizedBox(
                 width: 28,
                 height: 28,
-                child: CircularProgressIndicator(strokeWidth: 2.5, color: ink),
+                child: CircularProgressIndicator(strokeWidth: 2.5, color: _blue),
               ),
               const SizedBox(height: 16),
               Text('곡 정보를 읽는 중이에요', style: TextStyle(color: ink, fontSize: 15, fontWeight: FontWeight.w600)),
@@ -211,7 +211,7 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
                   e.checked = !allChecked;
                 }
               }),
-              style: TextButton.styleFrom(foregroundColor: ink),
+              style: TextButton.styleFrom(foregroundColor: _blue),
               child: Text(allChecked ? '전체 해제' : '전체 선택',
                   style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
             ),
@@ -222,7 +222,7 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.auto_awesome_rounded, color: sub, size: 40),
+            const Icon(Icons.auto_awesome, color: _blue, size: 40),
             const SizedBox(height: 14),
             Text('정리할 곡이 없어요',
                 style: TextStyle(color: ink, fontSize: 16, fontWeight: FontWeight.w700)),
@@ -242,7 +242,7 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
             padding: const EdgeInsets.fromLTRB(20, 4, 20, 10),
             child: Row(
               children: [
-                Icon(Icons.auto_awesome_rounded, color: sub, size: 16),
+                const Icon(Icons.auto_awesome, color: _blue, size: 16),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text('정리할 수 있는 곡 ${_items.length}개 · 체크한 곡만 바꿔요',
@@ -271,8 +271,7 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
                         children: [
                           Checkbox(
                             value: it.checked,
-                            activeColor: ink,
-                            checkColor: bg,
+                            activeColor: _blue,
                             onChanged: _working ? null : (v) => setState(() => it.checked = v ?? false),
                           ),
                           Expanded(
@@ -323,13 +322,12 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
             child: ElevatedButton(
               onPressed: (_checkedCount == 0 || _working) ? null : _apply,
               style: ElevatedButton.styleFrom(
-                // 큰 버튼: 먹색 (다크 모드는 크림색)
-                backgroundColor: ink,
-                foregroundColor: bg,
-                disabledBackgroundColor: ink.withOpacity(0.35),
-                disabledForegroundColor: bg,
+                backgroundColor: _blue,
+                foregroundColor: Colors.white,
+                disabledBackgroundColor: _blue.withOpacity(0.4),
+                disabledForegroundColor: Colors.white,
                 elevation: 6,
-                shadowColor: Colors.black.withOpacity(0.25),
+                shadowColor: _blue.withOpacity(0.45),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               ),
               child: Text(

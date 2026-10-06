@@ -20,7 +20,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
 
   @override
   Widget build(BuildContext context) {
-    const primaryColor = Color(0xFF17140F); // 먹색 (다른 창과 통일)
+    final primaryColor = AppTheme.fixedAccent;
     final radioProvider = context.watch<RadioProvider>();
     final schedules = radioProvider.schedules;
     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
@@ -31,7 +31,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
 
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFFF4EFE5), // 베이지 (다른 고르는 창과 같게)
+        color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.fromLTRB(24, 16, 24, 24 + bottomPadding),
@@ -42,7 +42,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: const Color(0xFFE2DACB),
+              color: Colors.black12,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -92,12 +92,12 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                 decoration: BoxDecoration(
                   color: s.triggered
                       ? primaryColor.withOpacity(0.10)
-                      : Colors.white,
+                      : const Color(0xFFF5F5F5),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: s.triggered
                         ? primaryColor.withOpacity(0.4)
-                        : const Color(0xFFE2DACB),
+                        : const Color(0xFFE5E5E5),
                   ),
                 ),
                 child: Row(
@@ -170,7 +170,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: const Color(0xFFF5F5F5),
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
                       color: primaryColor.withOpacity(0.15)),
@@ -208,7 +208,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color(0xFFF5F5F5),
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
                     color: primaryColor.withOpacity(0.15)),
@@ -342,10 +342,8 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                     : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primaryColor,
-                  foregroundColor: const Color(0xFFF4EFE5),
-                  elevation: 6,
-                  shadowColor: Colors.black.withOpacity(0.25),
-                  disabledBackgroundColor: const Color(0xFFE2DACB),
+                  foregroundColor: Colors.white,
+                  disabledBackgroundColor: const Color(0xFFE5E5E5),
                   disabledForegroundColor: Colors.black38,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
@@ -396,13 +394,13 @@ class _ScheduleListBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const primaryColor = Color(0xFF17140F); // 먹색 (다른 창과 통일)
+    final primaryColor = AppTheme.fixedAccent;
     final radioProvider = context.watch<RadioProvider>();
     final schedules = radioProvider.scheduleList;
 
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFFF4EFE5), // 베이지 (다른 고르는 창과 같게)
+        color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.fromLTRB(20, 16, 20, 32 + MediaQuery.of(context).viewPadding.bottom),
@@ -412,7 +410,7 @@ class _ScheduleListBottomSheet extends StatelessWidget {
           Container(
             width: 40, height: 4,
             decoration: BoxDecoration(
-              color: const Color(0xFFE2DACB),
+              color: Colors.black12,
               borderRadius: BorderRadius.circular(2),
             ),
           ),

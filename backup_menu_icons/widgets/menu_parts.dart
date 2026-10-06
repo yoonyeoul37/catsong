@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import '../models/song.dart';
 import '../utils/no_album_helper.dart';
 
@@ -81,10 +80,7 @@ class MenuSongCard extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          // 차분한 회색 (즐겨찾기 눌러져 있으면 ♥만 빨강)
-                          Icon(actions[i].icon,
-                              color: actions[i].icon == CupertinoIcons.heart_fill ? const Color(0xFFE05A4F) : labelColor,
-                              size: 21),
+                          Icon(actions[i].icon, color: kMenuBlue, size: 21),
                           const SizedBox(height: 4),
                           Text(actions[i].label, style: TextStyle(color: labelColor, fontSize: 11)),
                         ],

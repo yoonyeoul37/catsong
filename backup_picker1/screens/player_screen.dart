@@ -32,9 +32,7 @@ import '../widgets/exit_confirm_dialog.dart';
 import 'package:share_plus/share_plus.dart';
 import '../widgets/menu_parts.dart';
 import '../widgets/action_feedback.dart';
-import '../widgets/playlist_pick_sheet.dart';
 import '../widgets/paran_toast.dart';
-import '../widgets/paran_dialog.dart';
 import '../services/cast_service.dart';
 import '../services/nature_overlay.dart';
 import '../l10n/app_localizations.dart';
@@ -1663,7 +1661,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     final sheetColor = isDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
     final baseColor = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF1A1A1A);
     final descColor = isDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-    const accent = Color(0xFF8A8378); // 메뉴 아이콘은 차분한 회색 (곡 목록 메뉴와 통일)
+    const accent = Color(0xFF2589E8); // 파란소리 포인트 블루 (메뉴 아이콘 통일)
 
     showModalBottomSheet(
       context: context,
@@ -3322,28 +3320,68 @@ class _PlayerScreenState extends State<PlayerScreen>
   }
 
   void _showAddToPlaylistDialog(BuildContext context, Song song, Color primaryColor) {
-    showAddToPlaylistSheet(context, song); // 공통 고르는 창
+    final playlistProvider = context.read<PlaylistProvider>();
+    const accent = AppTheme.fixedAccent;
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Colors.white,
+        title: Text(AppLocalizations.of(context)!.addToPlaylist,
+            style: const TextStyle(color: Colors.black)),
+        content: playlistProvider.playlists.isEmpty
+            ? Text(AppLocalizations.of(context)!.noPlaylists,
+            style: const TextStyle(color: Colors.black54))
+            : SizedBox(
+          width: double.maxFinite,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: playlistProvider.playlists.length,
+            itemBuilder: (context, index) {
+              final playlist = playlistProvider.playlists[index];
+              return ListTile(
+                leading: const Icon(Icons.playlist_play, color: accent),
+                title: Text(playlist.name,
+                    style: const TextStyle(color: Colors.black)),
+                subtitle: Text('${playlist.songCount} songs',
+                    style: const TextStyle(color: Colors.black54)),
+                onTap: () {
+                  playlistProvider.addSongToPlaylist(playlist.id, song);
+                  Navigator.pop(ctx);
+                  showActionFeedback(context, type: ActionFeedbackType.added, message: '재생목록에 추가했어요');
+                },
+              );
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(AppLocalizations.of(context)!.close, style: const TextStyle(color: accent)),
+          ),
+        ],
+      ),
+    );
   }
 
   static void _showSleepTimerDialog(BuildContext context, PlayerProvider playerProvider, Color primaryColor) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       isScrollControlled: true,
-      builder: (ctx) => ParanSheetFrame(
-        child: _SleepTimerDialog(playerProvider: playerProvider, primaryColor: const Color(0xFF2589E8)),
-      ),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => _SleepTimerDialog(playerProvider: playerProvider, primaryColor: AppTheme.fixedAccent),
     );
   }
 
   static void _showSleepWheelPickerDirect(BuildContext context, PlayerProvider playerProvider, Color _unusedColor) {
-    const primaryColor = Color(0xFF2589E8);
+    final primaryColor = AppTheme.fixedAccent;
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     final textColor = isDarkMode ? Colors.white : Colors.black;
     Duration picked = const Duration(minutes: 30);
     showModalBottomSheet(
       context: context,
-      backgroundColor: isDarkMode ? const Color(0xFF26221C) : const Color(0xFFF4EFE5),
+      backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
@@ -3407,11 +3445,11 @@ class _PlayerScreenState extends State<PlayerScreen>
   static void _showSpeedDialog(BuildContext context, PlayerProvider playerProvider, Color primaryColor) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       isScrollControlled: true,
-      builder: (ctx) => ParanSheetFrame(
-        child: _SpeedDialog(playerProvider: playerProvider, primaryColor: const Color(0xFF2589E8)),
-      ),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => _SpeedDialog(playerProvider: playerProvider, primaryColor: AppTheme.fixedAccent),
     );
   }
 
@@ -3638,65 +3676,147 @@ class _PlayerScreenState extends State<PlayerScreen>
   /// 재생화면 스타일 선택 창 (재생화면 메뉴 · 곡 목록 메뉴 같이 씀)
   static Future<void> _styleDialog(BuildContext context, int current, ValueChanged<int> onPick,
       {int printStyle = 0, ValueChanged<int>? onPrintPick}) {
-    const blue = Color(0xFF2589E8);
-    final l = AppLocalizations.of(context)!;
+    const accent = AppTheme.fixedAccent;
     final styles = [
-      (1, l.styleCD, Icons.album_outlined),
-      (6, '파란포토', Icons.photo_outlined),
-      (3, l.styleCard, Icons.image_outlined),
+      {'id': 1, 'name': AppLocalizations.of(context)!.styleCD, 'icon': Icons.album, 'desc': AppLocalizations.of(context)!.styleCDDesc},
+      {'id': 6, 'name': '파란포토', 'icon': Icons.photo_outlined, 'desc': '좋아하는 사진을 배경으로 골라보세요'},
+      {'id': 3, 'name': AppLocalizations.of(context)!.styleCard, 'icon': Icons.image, 'desc': AppLocalizations.of(context)!.styleCardDesc},
     ];
-    return showParanSheet(
-      context,
-      title: l.playerStyle,
-      builder: (ctx, setSheet) => ParanCard(
-        children: [
-          for (final st in styles) ...[
-            ParanRow(
-              icon: st.$3,
-              title: st.$2,
-              trailingText: st.$1 == 6 ? '추천' : null,
-              selected: current == st.$1,
-              onTap: () {
-                current = st.$1;
-                onPick(current);
-                setSheet(() {});
-                // 앨범은 바로 닫지 않고 아래에서 인화 모양을 고르게
-                if (current != 3 || onPrintPick == null) Navigator.pop(ctx);
+
+    return showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: Colors.white,
+          title: Row(
+            children: [
+              const Icon(Icons.style, color: accent, size: 20),
+              const SizedBox(width: 8),
+              Text(AppLocalizations.of(context)!.playerStyle,
+                  style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          contentPadding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+          actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: styles.length,
+              itemBuilder: (context, index) {
+                final style = styles[index];
+                final isSelected = current == style['id'];
+                return InkWell(
+                  onTap: () {
+                    current = style['id'] as int;
+                    onPick(current);
+                    setDialogState(() {});
+                    // 앨범은 바로 닫지 않고 아래에서 인화 모양을 고르게
+                    if (current != 3 || onPrintPick == null) Navigator.pop(ctx);
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: isSelected ? accent.withOpacity(0.10) : const Color(0xFFF5F5F5),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isSelected ? accent : Colors.transparent,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    Row(
+                      children: [
+                        Icon(style['icon'] as IconData,
+                            color: isSelected ? accent : Colors.black38, size: 24),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(style['name'] as String,
+                                      style: TextStyle(
+                                          color: isSelected ? accent : Colors.black87,
+                                          fontSize: 14,
+                                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+                                  if (style['id'] == 6) ...[
+                                    const SizedBox(width: 6),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF2589E8),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: const Text(
+                                        '추천',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                              Text(style['desc'] as String,
+                                  style: const TextStyle(color: Colors.black45, fontSize: 11)),
+                            ],
+                          ),
+                        ),
+                        if (isSelected)
+                          const Icon(Icons.check_circle, color: accent, size: 20),
+                      ],
+                    ),
+                        // 앨범을 골랐을 때: 인화 모양 고르기
+                        if (style['id'] == 3 && isSelected && onPrintPick != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, left: 36),
+                            child: Wrap(
+                              spacing: 6,
+                              runSpacing: 6,
+                              children: [
+                                for (final e in const ['기본', '폴라로이드', '테이프', '겹친 사진', '둥근 테두리'].asMap().entries)
+                                  GestureDetector(
+                                    onTap: () {
+                                      printStyle = e.key;
+                                      onPrintPick(e.key);
+                                      Navigator.pop(ctx);
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                      decoration: BoxDecoration(
+                                        color: printStyle == e.key ? accent : Colors.white,
+                                        borderRadius: BorderRadius.circular(14),
+                                        border: Border.all(
+                                            color: printStyle == e.key ? accent : Colors.black12),
+                                      ),
+                                      child: Text(e.value,
+                                          style: TextStyle(
+                                            color: printStyle == e.key ? Colors.white : Colors.black87,
+                                            fontSize: 12,
+                                          )),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                );
               },
             ),
-            if (st.$1 == 3 && current == 3 && onPrintPick != null)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(46, 0, 14, 14),
-                child: Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: [
-                    for (final e in const ['기본', '폴라로이드', '테이프', '겹친 사진', '둥근 테두리'].asMap().entries)
-                      GestureDetector(
-                        onTap: () {
-                          printStyle = e.key;
-                          onPrintPick(e.key);
-                          Navigator.pop(ctx);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: printStyle == e.key ? blue : Colors.transparent,
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: printStyle == e.key ? blue : const Color(0x33888888)),
-                          ),
-                          child: Text(e.value,
-                              style: TextStyle(
-                                  color: printStyle == e.key ? Colors.white : const Color(0xFF8A8378),
-                                  fontSize: 12.5,
-                                  fontWeight: FontWeight.w600)),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(AppLocalizations.of(context)!.close, style: const TextStyle(color: accent)),
+            ),
           ],
-        ],
+        ),
       ),
     );
   }
@@ -3716,7 +3836,7 @@ List<Widget> playerSettingRows(
   bool showNew = false,
 }) {
   final p = context.watch<PlayerProvider>();
-  const accent = Color(0xFF8A8378); // 메뉴 아이콘은 차분한 회색
+  const accent = Color(0xFF2589E8);
   void vib() => const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
   return [
     _PlayerScreenState._playerSheetItem(
@@ -4290,7 +4410,7 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
     Duration picked = const Duration(minutes: 30);
     showModalBottomSheet(
       context: context,
-      backgroundColor: isDarkMode ? const Color(0xFF26221C) : const Color(0xFFF4EFE5),
+      backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) {
@@ -4359,7 +4479,7 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
     final primaryColor = widget.primaryColor;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
+      padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + MediaQuery.of(context).viewPadding.bottom),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -4491,21 +4611,27 @@ class _SpeedDialogState extends State<_SpeedDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = AppTheme.fixedAccent;
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
-    const primaryColor = Color(0xFF2589E8);
-    final textColor = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final textColor = isDarkMode ? Colors.white : Colors.black;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
+      padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + MediaQuery.of(context).viewPadding.bottom),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(AppLocalizations.of(context)!.playbackSpeed,
-                style: TextStyle(color: textColor, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
+          Row(
+            children: [
+              Icon(Icons.speed, color: primaryColor, size: 20),
+              const SizedBox(width: 8),
+              Text(AppLocalizations.of(context)!.playbackSpeed,
+                  style: TextStyle(
+                      color: textColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold)),
+            ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           SizedBox(
             height: 180,
             child: Stack(

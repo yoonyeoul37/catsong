@@ -341,7 +341,7 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light.copyWith(
           statusBarColor: Colors.transparent,
-          systemNavigationBarColor: const Color(0xFF17140F), // 따뜻한 먹색 밤
+          systemNavigationBarColor: const Color(0xFF0B1622),
         ),
         child: Scaffold(
           body: Container(
@@ -349,7 +349,7 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFF2A241C), Color(0xFF17140F)], // 남색 → 따뜻한 먹색
+                colors: [Color(0xFF12263D), Color(0xFF0B1622)],
               ),
             ),
             child: SafeArea(
@@ -480,7 +480,7 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
             margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
             decoration: BoxDecoration(
-              color: const Color(0xFF26221C), // 다른 고르는 창(다크)과 같은 색
+              color: const Color(0xFF18304B),
               borderRadius: BorderRadius.circular(22),
             ),
             child: Column(
@@ -548,8 +548,8 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
                       child: ElevatedButton(
                         onPressed: () => apply(ctx, picked.inMinutes == 0 ? null : picked),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFF3EFE7), // 어두운 화면의 큰 버튼은 크림색
-                          foregroundColor: const Color(0xFF17140F),
+                          backgroundColor: _blue,
+                          foregroundColor: Colors.white,
                           elevation: 0,
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -660,9 +660,9 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
               height: 56,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: highlight && enabled ? const Color(0xFFF3EFE7) : Colors.white.withOpacity(0.1),
+                color: highlight && enabled ? _blue : Colors.white.withOpacity(0.1),
               ),
-              child: Icon(icon, color: highlight && enabled ? const Color(0xFF17140F) : Colors.white, size: 24),
+              child: Icon(icon, color: Colors.white, size: 24),
             ),
             const SizedBox(height: 6),
             Text(label, style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12)),

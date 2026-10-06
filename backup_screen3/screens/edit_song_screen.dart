@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../models/song.dart';
 import '../providers/music_provider.dart';
@@ -88,7 +87,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
           constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.7),
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5), // 다른 고르는 창과 같은 베이지
+            color: isDark ? const Color(0xFF26221C) : Colors.white,
             borderRadius: BorderRadius.circular(22),
           ),
           child: Column(
@@ -177,148 +176,134 @@ class _EditSongScreenState extends State<EditSongScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = context.watch<ThemeProvider>().isDarkMode;
-    // ── 화면 공통 모양 (베이지 바탕 · 흰 카드 · 먹색 큰 버튼) ──
-    final bg = isDark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
-    final card = isDark ? const Color(0xFF26221C) : Colors.white;
-    final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final sub = isDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-    final line = isDark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
-
-    Widget section(String text) => Padding(
-          padding: const EdgeInsets.fromLTRB(4, 16, 4, 8),
-          child: Text(text, style: TextStyle(color: sub, fontSize: 12, fontWeight: FontWeight.w600)),
-        );
-
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final bgColor = isDarkMode ? const Color(0xFF17140F) : Colors.white;
     return Scaffold(
-      backgroundColor: bg,
+      backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor: bg,
+        backgroundColor: bgColor,
         elevation: 0,
-        scrolledUnderElevation: 0,
-        titleSpacing: 0,
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-          statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
-          systemNavigationBarColor: bg,
-          systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-        ),
         title: Text(AppLocalizations.of(context)!.editSong,
-            style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
+            style: TextStyle(color: baseColor, fontSize: 17, fontWeight: FontWeight.w600)),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back_ios_new_rounded, color: ink, size: 20),
+          icon: const Icon(Icons.arrow_back_ios, color: _accent, size: 20),
         ),
-      ),
-      // 버튼은 맨 아래에 모아서: 인터넷에서 찾기(흰) · 저장(먹색)
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: OutlinedButton.icon(
-                  onPressed: _searching ? null : _lookup,
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: card,
-                    foregroundColor: ink,
-                    side: BorderSide(color: line),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                  ),
-                  icon: _searching
-                      ? SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: ink))
-                      : const Icon(Icons.travel_explore_rounded, size: 20),
-                  label: Text(_searching ? '찾는 중…' : '인터넷에서 정확한 정보 찾기',
-                      style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600)),
-                ),
-              ),
-              const SizedBox(height: 8),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () => _saveSong(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ink,
-                    foregroundColor: bg,
-                    elevation: 6,
-                    shadowColor: Colors.black.withOpacity(0.25),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                  ),
-                  child: Text(AppLocalizations.of(context)!.save,
-                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
-                ),
-              ),
-            ],
+        actions: [
+          TextButton(
+            onPressed: () => _saveSong(context),
+            child: Text(AppLocalizations.of(context)!.save,
+                style: const TextStyle(
+                    color: _accent,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16)),
           ),
-        ),
+        ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+        padding: const EdgeInsets.all(24),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 앨범 사진: 고른 사진 → 원래 앨범 사진 → 없으면 음표
-            Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: SizedBox(
-                  width: 120,
-                  height: 120,
-                  child: _pickedArt != null
-                      ? Image.network(_pickedArt!, fit: BoxFit.cover)
-                      : widget.song.albumArt != null
-                          ? Image.memory(Uint8List.fromList(widget.song.albumArt!), fit: BoxFit.cover)
-                          : Container(
-                              color: card,
-                              child: Icon(Icons.music_note_rounded, color: sub, size: 46),
-                            ),
+            if (_pickedArt != null || widget.song.albumArt != null)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: _pickedArt != null
+                    ? Image.network(_pickedArt!, width: 120, height: 120, fit: BoxFit.cover)
+                    : Image.memory(Uint8List.fromList(widget.song.albumArt!),
+                    width: 120, height: 120, fit: BoxFit.cover),
+              )
+            else
+              Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      isDarkMode ? const Color(0xFF2A2A2A) : const Color(0xFFF5F5F5),
+                      _accent.withOpacity(0.15),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Center(
+                  child: Icon(Icons.music_note, color: _accent, size: 50),
                 ),
               ),
-            ),
+            const SizedBox(height: 24),
             // ✨ 자동 정리 안내 (정리할 게 있을 때만)
             if (_canClean) ...[
-              const SizedBox(height: 16),
               Container(
-                padding: const EdgeInsets.fromLTRB(14, 4, 4, 4),
-                decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(14)),
+                padding: const EdgeInsets.fromLTRB(14, 6, 6, 6),
+                decoration: BoxDecoration(
+                  color: _accent.withOpacity(isDarkMode ? 0.18 : 0.08),
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: Row(
                   children: [
-                    Icon(Icons.auto_awesome_rounded, color: sub, size: 18),
+                    const Icon(Icons.auto_awesome, color: _accent, size: 18),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         _cleanedOn ? '제목·가수를 자동으로 정리했어요' : '원래 제목·가수예요',
-                        style: TextStyle(color: ink, fontSize: 13),
+                        style: TextStyle(color: baseColor.withOpacity(0.8), fontSize: 13),
                       ),
                     ),
                     TextButton(
                       onPressed: _toggleClean,
-                      style: TextButton.styleFrom(foregroundColor: ink),
+                      style: TextButton.styleFrom(foregroundColor: _accent),
                       child: Text(_cleanedOn ? '원래대로' : '다시 정리',
                           style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
                     ),
                   ],
                 ),
               ),
-            ],
-            section('곡 정보'),
-            // 제목 · 아티스트 · 앨범을 흰 카드 하나에
-            Container(
-              decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(16)),
-              child: Column(
-                children: [
-                  _field('제목', _titleController, ink, sub),
-                  Divider(height: 1, thickness: 0.5, indent: 16, color: line),
-                  _field('아티스트', _artistController, ink, sub),
-                  Divider(height: 1, thickness: 0.5, indent: 16, color: line),
-                  _field('앨범', _albumController, ink, sub),
-                ],
+              const SizedBox(height: 16),
+            ] else
+              const SizedBox(height: 8),
+            _buildTextField('제목', _titleController, Icons.title, baseColor, isDarkMode),
+            const SizedBox(height: 16),
+            _buildTextField('아티스트', _artistController, Icons.person, baseColor, isDarkMode),
+            const SizedBox(height: 16),
+            _buildTextField('앨범', _albumController, Icons.album, baseColor, isDarkMode),
+            const SizedBox(height: 24),
+            // 🔍 인터넷에서 정확한 정보·앨범 사진 찾기
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: _searching ? null : _lookup,
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: _accent,
+                  side: BorderSide(color: _accent.withOpacity(0.5)),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                ),
+                icon: _searching
+                    ? const SizedBox(
+                    width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: _accent))
+                    : const Icon(Icons.travel_explore, size: 20),
+                label: Text(_searching ? '찾는 중…' : '인터넷에서 정확한 정보 찾기',
+                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => _saveSong(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _accent,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                ),
+                child: Text(AppLocalizations.of(context)!.save,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16)),
               ),
             ),
           ],
@@ -327,25 +312,26 @@ class _EditSongScreenState extends State<EditSongScreen> {
     );
   }
 
-  /// 흰 카드 안 한 줄: 위에 작은 이름, 아래에 고칠 글자
-  Widget _field(String label, TextEditingController controller, Color ink, Color sub) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: TextStyle(color: sub, fontSize: 12)),
-          TextField(
-            controller: controller,
-            style: TextStyle(color: ink, fontSize: 15.5, fontWeight: FontWeight.w600),
-            cursorColor: ink,
-            decoration: const InputDecoration(
-              isDense: true,
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(vertical: 8),
-            ),
-          ),
-        ],
+  Widget _buildTextField(
+      String label, TextEditingController controller, IconData icon,
+      Color baseColor, bool isDarkMode) {
+    return TextField(
+      controller: controller,
+      style: TextStyle(color: baseColor),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: baseColor.withOpacity(0.54)),
+        prefixIcon: Icon(icon, color: _accent),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: isDarkMode ? Colors.white24 : const Color(0xFFE5E5E5)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: _accent),
+        ),
+        filled: true,
+        fillColor: isDarkMode ? const Color(0xFF2A2A2A) : const Color(0xFFF5F5F5),
       ),
     );
   }

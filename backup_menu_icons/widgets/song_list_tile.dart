@@ -249,7 +249,7 @@ class SongListTile extends StatelessWidget {
     final sheetColor = isDarkMode ? const Color(0xFF2A251D) : const Color(0xFFF4EFE5);
     final baseColor = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF1A1A1A);
     final descColor = isDarkMode ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-    const accent = Color(0xFF8A8378); // 메뉴 아이콘은 차분한 회색 (재생화면 메뉴와 통일)
+    const accent = Color(0xFF2589E8); // 파란소리 포인트 블루 (재생화면 메뉴와 통일)
 
     showModalBottomSheet(
       context: context,

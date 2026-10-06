@@ -1663,7 +1663,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     final sheetColor = isDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
     final baseColor = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF1A1A1A);
     final descColor = isDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-    const accent = Color(0xFF8A8378); // 메뉴 아이콘은 차분한 회색 (곡 목록 메뉴와 통일)
+    const accent = Color(0xFF2589E8); // 파란소리 포인트 블루 (메뉴 아이콘 통일)
 
     showModalBottomSheet(
       context: context,
@@ -3716,7 +3716,7 @@ List<Widget> playerSettingRows(
   bool showNew = false,
 }) {
   final p = context.watch<PlayerProvider>();
-  const accent = Color(0xFF8A8378); // 메뉴 아이콘은 차분한 회색
+  const accent = Color(0xFF2589E8);
   void vib() => const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
   return [
     _PlayerScreenState._playerSheetItem(

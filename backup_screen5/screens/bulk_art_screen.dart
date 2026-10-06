@@ -101,7 +101,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
           constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.7),
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5), // 다른 고르는 창과 같은 베이지
+            color: isDark ? const Color(0xFF26221C) : Colors.white,
             borderRadius: BorderRadius.circular(22),
           ),
           child: Column(
@@ -241,7 +241,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(width: 28, height: 28, child: CircularProgressIndicator(strokeWidth: 2.5, color: ink)),
+              const SizedBox(width: 28, height: 28, child: CircularProgressIndicator(strokeWidth: 2.5, color: _blue)),
               const SizedBox(height: 16),
               Text('곡 정보를 읽는 중이에요', style: TextStyle(color: ink, fontSize: 15, fontWeight: FontWeight.w600)),
               const SizedBox(height: 4),
@@ -266,7 +266,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
                 e.checked = !allChecked;
               }
             }),
-            style: TextButton.styleFrom(foregroundColor: ink),
+            style: TextButton.styleFrom(foregroundColor: _blue),
             child: Text(allChecked ? '전체 해제' : '전체 선택',
                 style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           ),
@@ -276,7 +276,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.photo_library_outlined, color: sub, size: 40),
+            const Icon(Icons.photo_library_outlined, color: _blue, size: 40),
             const SizedBox(height: 14),
             Text('앨범 사진이 없는 곡이 없어요',
                 style: TextStyle(color: ink, fontSize: 16, fontWeight: FontWeight.w700)),
@@ -292,10 +292,10 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
             child: Row(
               children: [
                 if (_searchingAll)
-                  SizedBox(
-                      width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2, color: sub))
+                  const SizedBox(
+                      width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2, color: _blue))
                 else
-                  Icon(Icons.travel_explore_rounded, color: sub, size: 16),
+                  const Icon(Icons.travel_explore, color: _blue, size: 16),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -328,8 +328,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
                         children: [
                           Checkbox(
                             value: it.checked,
-                            activeColor: ink,
-                                  checkColor: bg,
+                            activeColor: _blue,
                             onChanged: (_working || p == null)
                                 ? null
                                 : (v) => setState(() => it.checked = v ?? false),
@@ -348,10 +347,10 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
                                 alignment: Alignment.center,
                                 child: it.searched
                                     ? Icon(Icons.music_off_outlined, color: sub, size: 20)
-                                    : SizedBox(
+                                    : const SizedBox(
                                     width: 16,
                                     height: 16,
-                                    child: CircularProgressIndicator(strokeWidth: 2, color: sub)),
+                                    child: CircularProgressIndicator(strokeWidth: 2, color: _blue)),
                               ),
                             ),
                           ),
@@ -404,13 +403,12 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
             child: ElevatedButton(
               onPressed: (_checkedCount == 0 || _working) ? null : _apply,
               style: ElevatedButton.styleFrom(
-                // 큰 버튼: 먹색 (다크 모드는 크림색)
-                backgroundColor: ink,
-                foregroundColor: bg,
-                disabledBackgroundColor: ink.withOpacity(0.35),
-                disabledForegroundColor: bg,
+                backgroundColor: _blue,
+                foregroundColor: Colors.white,
+                disabledBackgroundColor: _blue.withOpacity(0.4),
+                disabledForegroundColor: Colors.white,
                 elevation: 6,
-                shadowColor: Colors.black.withOpacity(0.25),
+                shadowColor: _blue.withOpacity(0.45),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               ),
               child: Text(

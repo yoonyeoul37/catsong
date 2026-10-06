@@ -20,7 +20,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    const primaryColor = Color(0xFF17140F); // 먹색 (다른 창과 통일)
+    final primaryColor = AppTheme.fixedAccent;
     final radioProvider = context.watch<RadioProvider>();
     final sleep = radioProvider.sleepRemaining;
     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
@@ -38,7 +38,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
 
     return Container(
         decoration: const BoxDecoration(
-          color: Color(0xFFF4EFE5), // 베이지 (다른 고르는 창과 같게)
+          color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         padding: EdgeInsets.fromLTRB(24, 16, 24, 24 + bottomPadding),
@@ -49,7 +49,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: const Color(0xFFE2DACB),
+                color: Colors.black12,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -61,11 +61,11 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                   width: 36,
                   height: 36,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: primaryColor.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Icon(Icons.bedtime_outlined,
-                      color: Color(0xFF8A8378), size: 20),
+                  child: Icon(Icons.bedtime_outlined,
+                      color: primaryColor, size: 20),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -125,7 +125,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 ),
               ),
               const SizedBox(height: 20),
-              const Divider(color: Color(0xFFE2DACB)),
+              const Divider(color: Color(0xFFE5E5E5)),
               const SizedBox(height: 12),
               GestureDetector(
                 onTap: () {
@@ -181,9 +181,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
-                    foregroundColor: const Color(0xFFF4EFE5),
-                    elevation: 6,
-                    shadowColor: Colors.black.withOpacity(0.25),
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                   ),

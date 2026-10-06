@@ -4,8 +4,6 @@ import '../models/radio_station.dart';
 import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
-import 'action_feedback.dart';
-import 'paran_toast.dart';
 
 class ScheduleSheet extends StatefulWidget {
   const ScheduleSheet({super.key});
@@ -337,7 +335,60 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                     _selectedStation = null;
                   });
 
-                  showActionFeedback(context, type: ActionFeedbackType.saved, message: '예약했어요', icon: Icons.schedule_rounded);
+                  final overlay = Overlay.of(context);
+                  final entry = OverlayEntry(
+                    builder: (_) => Positioned(
+                      bottom: 120,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: TweenAnimationBuilder<double>(
+                          tween: Tween(begin: 0.0, end: 1.0),
+                          duration:
+                          const Duration(milliseconds: 300),
+                          builder: (_, value, child) => Opacity(
+                            opacity: value,
+                            child: Transform.scale(
+                              scale: 0.8 + (0.2 * value),
+                              child: child,
+                            ),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF2A2A2A),
+                              borderRadius:
+                              BorderRadius.circular(30),
+                              border: Border.all(
+                                  color: primaryColor
+                                      .withOpacity(0.3)),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.schedule,
+                                    color: primaryColor,
+                                    size: 18),
+                                const SizedBox(width: 8),
+                                Text(
+                                  AppLocalizations.of(context)!.radioScheduleSetToast,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      decoration:
+                                      TextDecoration.none),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                  overlay.insert(entry);
+                  Future.delayed(const Duration(seconds: 2),
+                          () => entry.remove());
                 }
                     : null,
                 style: ElevatedButton.styleFrom(
@@ -481,7 +532,10 @@ class _ScheduleListBottomSheet extends StatelessWidget {
                     final station = radioProvider.recentlyListened
                         .firstWhere((s) => s.name == stationName, orElse: () => radioProvider.currentStation!);
                     radioProvider.addSchedule(TimeOfDay(hour: h, minute: m), station);
-                    showParanToast(context, AppLocalizations.of(context)!.radioScheduleCompleteToast(title, fmt(start)));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(AppLocalizations.of(context)!.radioScheduleCompleteToast(title, fmt(start))),
+                      backgroundColor: primaryColor,
+                    ));
                   },
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 4),

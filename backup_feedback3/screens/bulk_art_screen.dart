@@ -5,7 +5,6 @@ import '../models/song.dart';
 import '../providers/music_provider.dart';
 import '../providers/theme_provider.dart';
 import '../services/music_lookup.dart';
-import '../widgets/action_feedback.dart';
 
 /// 앨범 사진 한꺼번에 찾기: 앨범 사진 없는 곡마다 인터넷에서 후보를 찾아 보여주고, 체크한 곡만 넣음
 class BulkArtScreen extends StatefulWidget {
@@ -207,8 +206,8 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
       if (!mounted) return;
       setState(() => _done++);
     }
-    showActionFeedback(context, type: ActionFeedbackType.saved, message: '$ok곡에 사진을 넣었어요');
     navigator.pop();
+    messenger.showSnackBar(SnackBar(content: Text('$ok곡에 앨범 사진을 넣었어요')));
   }
 
   @override

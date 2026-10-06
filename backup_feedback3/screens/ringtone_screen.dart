@@ -6,8 +6,6 @@ import '../providers/music_provider.dart';
 import '../models/song.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
-import '../widgets/action_feedback.dart';
-import '../widgets/paran_toast.dart';
 
 class RingtoneScreen extends StatefulWidget {
   final Song? initialSong;
@@ -320,7 +318,10 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
     if (uri == null) return;
     final ext = uri.split('.').last.toLowerCase();
     if (!['mp3', 'm4a', 'aac', 'mp4'].contains(ext)) {
-      showParanToast(context, 'mp3, m4a 파일만 자를 수 있어요');
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('mp3, m4a 파일만 자를 수 있어요'),
+        backgroundColor: Colors.redAccent,
+      ));
       return;
     }
     await _previewPlayer.stop();
@@ -348,13 +349,24 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
       if (!context.mounted) return;
       if (saved != null) {
         context.read<MusicProvider>().loadSongs(); // 목록에 새 파일이 보이게
-        showActionFeedback(context, type: ActionFeedbackType.saved, message: '잘랐어요', icon: Icons.content_cut_rounded);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('저장했어요: ${saved.split('/').last}'),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 3),
+        ));
       } else {
-        showParanToast(context, '자르기에 실패했어요', error: true);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('자르기에 실패했어요'),
+          backgroundColor: Colors.redAccent,
+          duration: Duration(seconds: 3),
+        ));
       }
     } catch (e) {
       if (!context.mounted) return;
-      showParanToast(context, '자르기에 실패했어요', error: true);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error: $e'),
+        backgroundColor: Colors.redAccent,
+      ));
     } finally {
       if (mounted) setState(() => _isProcessing = false);
     }
@@ -374,17 +386,39 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
         'endMs': (_endValue * 1000).toInt(),
       });
       if (result == 'ok' || result == true) {
-        showActionFeedback(context,
-            type: ActionFeedbackType.saved, message: '벨소리로 지정했어요', icon: Icons.notifications_active_rounded);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.ringtoneSet),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 3),
+          ),
+        );
       } else if (result == 'permission') {
         // 허용 화면이 열렸어요 → 켜고 돌아와서 다시 누르면 됨
-        showParanToast(context, '"시스템 설정 변경"을 허용으로 켜고 돌아와서 다시 눌러주세요',
-            duration: const Duration(seconds: 5));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('"시스템 설정 변경"을 허용으로 켜고 돌아와서 다시 눌러주세요'),
+            backgroundColor: Color(0xFFE09A2B),
+            duration: Duration(seconds: 5),
+          ),
+        );
       } else {
-        showParanToast(context, AppLocalizations.of(context)!.ringtoneFailed, error: true);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.ringtoneFailed),
+            backgroundColor: Colors.redAccent,
+            duration: const Duration(seconds: 3),
+          ),
+        );
       }
     } catch (e) {
-      showParanToast(context, '벨소리를 지정하지 못했어요', error: true);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: Colors.redAccent,
+          duration: const Duration(seconds: 3),
+        ),
+      );
     } finally {
       setState(() => _isProcessing = false);
     }

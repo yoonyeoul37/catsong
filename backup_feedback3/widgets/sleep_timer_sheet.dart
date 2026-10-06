@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
-import 'paran_toast.dart';
 
 class SleepTimerSheet extends StatefulWidget {
   const SleepTimerSheet({super.key});
@@ -177,7 +176,43 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                       _wheelDuration,
                     );
                     Navigator.pop(context);
-                    showParanToast(context, l.sleepAutoStopToast(_formatSelected(l, _selectedMinutes)));
+                    final overlay = Overlay.of(context);
+                    final entry = OverlayEntry(
+                      builder: (_) => Positioned(
+                        bottom: 120, left: 0, right: 0,
+                        child: Center(
+                          child: TweenAnimationBuilder<double>(
+                            tween: Tween(begin: 0.0, end: 1.0),
+                            duration: const Duration(milliseconds: 300),
+                            builder: (_, value, child) => Opacity(
+                              opacity: value,
+                              child: Transform.scale(scale: 0.8 + 0.2 * value, child: child),
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: primaryColor,
+                                borderRadius: BorderRadius.circular(30),
+                                boxShadow: [BoxShadow(color: primaryColor.withOpacity(0.4), blurRadius: 12)],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.bedtime, color: Colors.white, size: 18),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    l.sleepAutoStopToast(_formatSelected(l, _selectedMinutes)),
+                                    style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold, decoration: TextDecoration.none),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                    overlay.insert(entry);
+                    Future.delayed(const Duration(seconds: 2), () => entry.remove());
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,

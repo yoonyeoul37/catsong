@@ -6,8 +6,6 @@ import '../models/song.dart';
 import '../providers/music_provider.dart';
 import '../providers/theme_provider.dart';
 import '../utils/song_title_cleaner.dart';
-import '../widgets/action_feedback.dart';
-import '../widgets/paran_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const _kBackupKey = 'bulk_clean_backup'; // 마지막으로 한꺼번에 정리하기 전의 원래 제목·가수
@@ -84,12 +82,13 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
     if (_working) return;
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
     final music = context.read<MusicProvider>();
+    final messenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
     setState(() => _working = true);
     final n = await undoBulkClean(music);
     if (!mounted) return;
-    showActionFeedback(context, type: ActionFeedbackType.edited, message: '$n곡을 되돌렸어요');
     navigator.pop();
+    messenger.showSnackBar(SnackBar(content: Text('$n곡을 원래대로 되돌렸어요')));
   }
 
   int get _checkedCount => _items.where((e) => e.checked).length;
@@ -99,6 +98,7 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
     if (targets.isEmpty || _working) return;
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
     final music = context.read<MusicProvider>();
+    final messenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
     setState(() {
       _working = true;
@@ -116,13 +116,18 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
       if (!mounted) return;
       setState(() => _done++);
     }
-    final appCtx = Navigator.of(context, rootNavigator: true).context;
     navigator.pop();
-    // 되돌리기 버튼이 있어서 하단 알림으로
-    showParanToast(appCtx, '${targets.length}곡을 깔끔하게 정리했어요', actionLabel: '되돌리기', onAction: () async {
-      final n = await undoBulkClean(music);
-      showActionFeedback(appCtx, type: ActionFeedbackType.edited, message: '$n곡을 되돌렸어요');
-    });
+    messenger.showSnackBar(SnackBar(
+      content: Text('${targets.length}곡을 깔끔하게 정리했어요'),
+      duration: const Duration(seconds: 8),
+      action: SnackBarAction(
+        label: '되돌리기',
+        onPressed: () async {
+          final n = await undoBulkClean(music);
+          messenger.showSnackBar(SnackBar(content: Text('$n곡을 원래대로 되돌렸어요')));
+        },
+      ),
+    ));
   }
 
   /// 마지막 정리 되돌리기 카드

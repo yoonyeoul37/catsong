@@ -1,0 +1,248 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/song.dart';
+import '../providers/music_provider.dart';
+import '../providers/player_provider.dart';
+import '../providers/theme_provider.dart';
+import '../theme/app_theme.dart';
+import '../widgets/song_list_tile.dart';
+import '../l10n/app_localizations.dart';
+
+String _formatPlayedAt(BuildContext context, DateTime dt) {
+  final now = DateTime.now();
+  final diff = now.difference(dt);
+  final l = AppLocalizations.of(context)!;
+  if (diff.inMinutes < 1) return l.justNow;
+  if (diff.inMinutes < 60) return l.minutesAgo(diff.inMinutes);
+  if (diff.inHours < 24) return l.hoursAgo(diff.inHours);
+  return l.dateFormat(dt.year, dt.month, dt.day);
+}
+
+class RecentScreen extends StatelessWidget {
+  const RecentScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final musicProvider = context.watch<MusicProvider>();
+    final recentSongs = musicProvider.recentSongs;
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 8, 8),
+            child: Row(
+              children: [
+                Text(AppLocalizations.of(context)!.recent,
+                    style: TextStyle(
+                        color: baseColor,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.5)),
+                const SizedBox(width: 8),
+                Text('(${recentSongs.length})',
+                    style: TextStyle(
+                        color: baseColor.withOpacity(0.38), fontSize: 13)),
+                const Spacer(),
+                if (recentSongs.isNotEmpty) ...[
+                  IconButton(
+                    onPressed: () {
+                      context.read<PlayerProvider>().playFromList(recentSongs, 0);
+                      final overlay = Overlay.of(context);
+                      final entry = OverlayEntry(
+                        builder: (_) => Positioned(
+                          top: 60, left: 0, right: 0,
+                          child: Center(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.7),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(AppLocalizations.of(context)!.playAll,
+                                  style: const TextStyle(color: Colors.white, fontSize: 13, decoration: TextDecoration.none)),
+                            ),
+                          ),
+                        ),
+                      );
+                      overlay.insert(entry);
+                      Future.delayed(const Duration(milliseconds: 800), () => entry.remove());
+                    },
+                    icon: Icon(Icons.play_arrow, color: baseColor.withOpacity(0.6), size: 24),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      final songs = List<Song>.from(recentSongs)..shuffle();
+                      context.read<PlayerProvider>().playFromList(songs, 0);
+                      final overlay = Overlay.of(context);
+                      final entry = OverlayEntry(
+                        builder: (_) => Positioned(
+                          top: 60, left: 0, right: 0,
+                          child: Center(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.7),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(AppLocalizations.of(context)!.shuffle,
+                                  style: const TextStyle(color: Colors.white, fontSize: 13, decoration: TextDecoration.none)),
+                            ),
+                          ),
+                        ),
+                      );
+                      overlay.insert(entry);
+                      Future.delayed(const Duration(milliseconds: 800), () => entry.remove());
+                    },
+                    icon: Icon(Icons.shuffle, color: baseColor.withOpacity(0.6), size: 20),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  ),
+                  IconButton(
+                    onPressed: () => _showClearAllDialog(context),
+                    icon: Icon(Icons.delete_sweep, color: baseColor.withOpacity(0.38), size: 24),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+
+        if (recentSongs.isEmpty)
+          SliverFillRemaining(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.history,
+                      size: 72, color: baseColor.withOpacity(0.4)),
+                  const SizedBox(height: 16),
+                  Text(AppLocalizations.of(context)!.noRecentSongs,
+                      style: TextStyle(
+                          color: baseColor.withOpacity(0.38), fontSize: 16)),
+                  const SizedBox(height: 8),
+                  Text(AppLocalizations.of(context)!.playMusic,
+                      style: TextStyle(color: baseColor.withOpacity(0.24), fontSize: 13)),
+                ],
+              ),
+            ),
+          )
+        else
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                  final song = recentSongs[index];
+                  return Dismissible(
+                    key: Key('recent_${song.id}_$index'),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.only(right: 20),
+                      color: Colors.redAccent,
+                      child: const Icon(Icons.delete, color: Colors.white),
+                    ),
+                    onDismissed: (_) {
+                      context.read<MusicProvider>().removeFromRecent(song);
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (song.lastPlayedAt != null)
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                            child: Text(
+                              _formatPlayedAt(context, song.lastPlayedAt!),
+                              style: TextStyle(
+                                  color: baseColor.withOpacity(0.24), fontSize: 11),
+                            ),
+                          ),
+                        SongListTile(
+                          song: song,
+                          index: index,
+                          songList: recentSongs,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                childCount: recentSongs.length,
+              ),
+            ),
+          ),
+        const SliverPadding(padding: EdgeInsets.only(bottom: 16)),
+      ],
+    );
+  }
+
+  void _showClearAllDialog(BuildContext context) {
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final dialogBg = isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0);
+    showDialog(
+      context: context,
+      builder: (ctx) => Dialog(
+        backgroundColor: dialogBg,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.delete_sweep, color: Colors.redAccent, size: 48),
+              const SizedBox(height: 16),
+              Text(AppLocalizations.of(context)!.clearRecent,
+                  style: TextStyle(color: baseColor, fontSize: 16, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text(AppLocalizations.of(context)!.clearRecentConfirm,
+                  style: TextStyle(color: baseColor.withOpacity(0.54), fontSize: 13),
+                  textAlign: TextAlign.center),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: baseColor.withOpacity(0.54),
+                        side: BorderSide(color: baseColor.withOpacity(0.24)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: Text(AppLocalizations.of(context)!.cancel),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.read<MusicProvider>().clearRecent();
+                        Navigator.pop(ctx);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.redAccent,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

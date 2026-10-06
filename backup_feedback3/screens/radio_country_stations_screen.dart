@@ -806,7 +806,62 @@ class _StationTile extends StatelessWidget {
                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate').catchError((_) {});
                     final radioProvider = context.read<RadioProvider>();
                     final wasFav = radioProvider.isFavorite(station.stationUuid);
-                    // (하트가 바로 바뀌어서 따로 알림 없음)
+                    final overlay = Overlay.of(context);
+                    final toastText = wasFav
+                        ? AppLocalizations.of(context)!.radioRemovedFromFavorites
+                        : AppLocalizations.of(context)!.radioAddedToFavoritesToast;
+                    late final OverlayEntry entry;
+                    entry = OverlayEntry(
+                      builder: (_) => Positioned(
+                        bottom: 500, left: 0, right: 0,
+                        child: Center(
+                          child: TweenAnimationBuilder<double>(
+                            tween: Tween(begin: 0.0, end: 1.0),
+                            duration: const Duration(milliseconds: 300),
+                            builder: (_, value, child) => Opacity(
+                              opacity: value,
+                              child: Transform.scale(scale: 0.85 + 0.15 * value, child: child),
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(30),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.15),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    wasFav ? CupertinoIcons.heart : CupertinoIcons.heart_fill,
+                                    color: wasFav ? Colors.black38 : Colors.redAccent,
+                                    size: 18,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    toastText,
+                                    style: const TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      decoration: TextDecoration.none,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                    overlay.insert(entry);
+                    Future.delayed(const Duration(seconds: 2), () => entry.remove());
                     Future.microtask(() => radioProvider.toggleFavorite(station));
                   },
                 ),

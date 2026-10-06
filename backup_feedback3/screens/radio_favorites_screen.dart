@@ -9,7 +9,6 @@ import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
 import '../widgets/station_tile.dart';
 import '../l10n/app_localizations.dart';
-import '../widgets/action_feedback.dart';
 
 class RadioFavoritesScreen extends StatelessWidget {
   const RadioFavoritesScreen({super.key});
@@ -102,7 +101,15 @@ class RadioFavoritesScreen extends StatelessWidget {
                   color: Colors.redAccent, size: 26),
             ),
             onDismissed: (_) {
-              showActionFeedback(context, type: ActionFeedbackType.deleted, message: '즐겨찾기에서 뺐어요');
+              final messenger = ScaffoldMessenger.of(context);
+              final removedText = AppLocalizations.of(context)!.radioRemovedFromFavorites;
+              messenger.showSnackBar(
+                SnackBar(
+                  content: Text(removedText),
+                  backgroundColor: AppTheme.surfaceVariant,
+                  duration: const Duration(seconds: 2),
+                ),
+              );
               Future.microtask(() => radioProvider.toggleFavorite(station));
             },
             child: Row(
@@ -111,7 +118,56 @@ class RadioFavoritesScreen extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.close, color: accent.withOpacity(0.38), size: 20),
                   onPressed: () {
-                    showActionFeedback(context, type: ActionFeedbackType.deleted, message: '즐겨찾기에서 뺐어요');
+                    final overlay = Overlay.of(context);
+                    final removedText = AppLocalizations.of(context)!.radioRemovedFromFavorites;
+                    late final OverlayEntry entry;
+                    entry = OverlayEntry(
+                      builder: (_) => Positioned(
+                        bottom: 180, left: 0, right: 0,
+                        child: Center(
+                          child: TweenAnimationBuilder<double>(
+                            tween: Tween(begin: 0.0, end: 1.0),
+                            duration: const Duration(milliseconds: 300),
+                            builder: (_, value, child) => Opacity(
+                              opacity: value,
+                              child: Transform.scale(scale: 0.85 + 0.15 * value, child: child),
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(30),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.15),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(CupertinoIcons.heart, color: Colors.black38, size: 18),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    removedText,
+                                    style: const TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      decoration: TextDecoration.none,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                    overlay.insert(entry);
+                    Future.delayed(const Duration(seconds: 2), () => entry.remove());
                     Future.microtask(() => radioProvider.toggleFavorite(station));
                   },
                 ),

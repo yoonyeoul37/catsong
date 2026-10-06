@@ -17,7 +17,6 @@ import 'radio_home_screen.dart';
 import '../widgets/equalizer_animation.dart';
 import '../widgets/logo_eq_bars.dart';
 import 'nature_sound_detail_screen.dart';
-import '../widgets/paran_toast.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
 import '../main.dart' show globalAudioHandler;
@@ -304,7 +303,9 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
     } catch (e) {
       debugPrint('=== 자연소리 재생 오류: $e ===');
       if (mounted) {
-        showParanToast(context, '소리를 재생하지 못했어요', error: true);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('재생 오류: $e')),
+        );
       }
     }
   }

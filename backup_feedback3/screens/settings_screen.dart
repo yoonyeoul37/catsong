@@ -11,7 +11,6 @@ import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import 'ringtone_screen.dart';
 import '../l10n/app_localizations.dart';
-import '../widgets/paran_toast.dart';
 
 Color _sBg(bool d) => d ? const Color(0xFF17140F) : const Color(0xFFF7F5F0);
 Color _sCard(bool d) => d ? const Color(0xFF1E1B15) : const Color(0xFFFFFFFF);
@@ -224,7 +223,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         setState(() => _isFlashlightOn = true);
       }
     } catch (e) {
-      showParanToast(context, AppLocalizations.of(context)!.flashlightError, error: true);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${AppLocalizations.of(context)!.flashlightError}: $e'), backgroundColor: Colors.grey[800], duration: const Duration(seconds: 2)));
     }
   }
 
@@ -317,9 +316,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     if (controller.text == '37258') {
                       await prefs.setBool('promo_unlocked', true);
                       Navigator.pop(ctx);
-                      showParanToast(context, AppLocalizations.of(context)!.promoUnlocked);
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.promoUnlocked), backgroundColor: accent, duration: const Duration(seconds: 3)));
                     } else {
-                      showParanToast(context, AppLocalizations.of(context)!.promoInvalid, error: true);
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.promoInvalid), backgroundColor: Colors.redAccent, duration: const Duration(seconds: 2)));
                     }
                   },
                   style: ElevatedButton.styleFrom(backgroundColor: accent, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),

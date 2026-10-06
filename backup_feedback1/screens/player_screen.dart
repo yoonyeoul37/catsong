@@ -31,8 +31,6 @@ import '../widgets/song_list_tile.dart';
 import '../widgets/exit_confirm_dialog.dart';
 import 'package:share_plus/share_plus.dart';
 import '../widgets/menu_parts.dart';
-import '../widgets/action_feedback.dart';
-import '../widgets/paran_toast.dart';
 import '../services/cast_service.dart';
 import '../services/nature_overlay.dart';
 import '../l10n/app_localizations.dart';
@@ -1444,7 +1442,9 @@ class _PlayerScreenState extends State<PlayerScreen>
                               if (ok) {
                                 playerProvider.player.pause();
                               } else if (mounted) {
-                                showParanToast(context, 'TV로 보내지 못했어요. 다시 시도해 주세요.', error: true);
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                  content: Text('TV로 보내지 못했어요. 다시 시도해 주세요.'),
+                                ));
                               }
                             },
                           ),
@@ -3212,7 +3212,59 @@ class _PlayerScreenState extends State<PlayerScreen>
                 onPressed: () {
                   const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                   musicProvider.toggleFavorite(song);
-                  // (하트가 바로 바뀌어서 따로 알림 없음)
+                  final isFavNow = musicProvider.isFavorite(song.id);
+                  final overlay = Overlay.of(context);
+                  final entry = OverlayEntry(
+                    builder: (context) => Positioned(
+                      bottom: 100,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: TweenAnimationBuilder<double>(
+                          tween: Tween(begin: 0.0, end: 1.0),
+                          duration: const Duration(milliseconds: 300),
+                          builder: (context, value, child) {
+                            return Opacity(
+                              opacity: value,
+                              child: Transform.scale(
+                                scale: 0.8 + (0.2 * value),
+                                child: child,
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF1A1A1A),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  isFavNow ? Icons.favorite : Icons.favorite_border,
+                                  color: isFavNow ? Colors.redAccent : Colors.white54,
+                                  size: 18,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  isFavNow
+                                      ? AppLocalizations.of(context)!.addedToFavorites
+                                      : AppLocalizations.of(context)!.removedFromFavorites,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      decoration: TextDecoration.none),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                  overlay.insert(entry);
+                  Future.delayed(const Duration(seconds: 2), () => entry.remove());
                 },
                 icon: Icon(
                   isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
@@ -3347,7 +3399,13 @@ class _PlayerScreenState extends State<PlayerScreen>
                 onTap: () {
                   playlistProvider.addSongToPlaylist(playlist.id, song);
                   Navigator.pop(ctx);
-                  showActionFeedback(context, type: ActionFeedbackType.added, message: '재생목록에 추가했어요');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${playlist.name} ${AppLocalizations.of(context)!.addedToPlaylist}'),
+                      backgroundColor: AppTheme.surfaceVariant,
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
                 },
               );
             },
@@ -3421,7 +3479,13 @@ class _PlayerScreenState extends State<PlayerScreen>
                           playerProvider.setSleepTimer(picked);
                           final timeLabel =
                               '${picked.inHours > 0 ? '${picked.inHours}${AppLocalizations.of(context)!.hourWord} ' : ''}${picked.inMinutes % 60}${AppLocalizations.of(context)!.minuteShort}';
-                          showParanToast(context, AppLocalizations.of(context)!.autoStopFormat(timeLabel));
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                AppLocalizations.of(context)!.autoStopFormat(timeLabel),
+                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                            backgroundColor: primaryColor,
+                            duration: const Duration(seconds: 2),
+                          ));
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -4452,7 +4516,13 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
                           setState(() {});
                           final timeLabel =
                               '${picked.inHours > 0 ? '${picked.inHours}${AppLocalizations.of(context)!.hourWord} ' : ''}${picked.inMinutes % 60}${AppLocalizations.of(context)!.minuteShort}';
-                          showParanToast(context, AppLocalizations.of(context)!.autoStopFormat(timeLabel));
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                AppLocalizations.of(context)!.autoStopFormat(timeLabel),
+                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                            backgroundColor: widget.primaryColor,
+                            duration: const Duration(seconds: 2),
+                          ));
                         }
                       },
                       style: ElevatedButton.styleFrom(

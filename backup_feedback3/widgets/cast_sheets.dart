@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../services/cast_service.dart';
-import 'paran_toast.dart';
 
 /// TV 찾아서 고르기 (라디오 화면에서 사용)
 /// onPick: 고른 TV로 보내기 → 성공하면 true
@@ -78,7 +77,9 @@ void showCastPickerSheet(BuildContext context, {required Future<bool> Function(C
                             Navigator.pop(ctx);
                             final ok = await onPick(d);
                             if (!ok && context.mounted) {
-                              showParanToast(context, 'TV로 보내지 못했어요. 다시 시도해 주세요.', error: true);
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                content: Text('TV로 보내지 못했어요. 다시 시도해 주세요.'),
+                              ));
                             }
                           },
                         ),

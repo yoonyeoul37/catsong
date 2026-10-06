@@ -39,7 +39,6 @@ import 'radio_home_screen.dart';
 import '../services/cast_service.dart';
 import '../widgets/cast_sheets.dart';
 import '../widgets/exit_confirm_dialog.dart';
-import '../widgets/paran_toast.dart';
 
 double? _parseFrequency(String? freq) {
   if (freq == null || freq.isEmpty) return null;
@@ -89,7 +88,9 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     }
     final url = radio.lastPlayStationId == station.stationUuid ? radio.lastPlayUrl : null;
     if (url == null) {
-      showParanToast(context, '방송이 나오고 있을 때 TV로 보낼 수 있어요');
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('방송이 나오고 있을 때 TV로 보낼 수 있어요'),
+      ));
       return;
     }
     showCastPickerSheet(context, onPick: (d) async {
@@ -729,7 +730,57 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                   onTap: () {
                                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                                     final wasFav = radioProvider.isFavorite(current.stationUuid);
-                                    // (하트가 바로 바뀌어서 따로 알림 없음)
+                                    final overlay = Overlay.of(context);
+                                    final toastText = wasFav
+                                        ? AppLocalizations.of(context)!.radioRemovedFromFavorites
+                                        : AppLocalizations.of(context)!.radioAddedToFavoritesToast;
+                                    late final OverlayEntry entry;
+                                    entry = OverlayEntry(
+                                      builder: (_) => Positioned(
+                                        top: 60, left: 0, right: 0,
+                                        child: Center(
+                                          child: TweenAnimationBuilder<double>(
+                                            tween: Tween(begin: 0.0, end: 1.0),
+                                            duration: const Duration(milliseconds: 300),
+                                            builder: (_, value, child) => Opacity(
+                                              opacity: value,
+                                              child: Transform.scale(scale: 0.8 + 0.2 * value, child: child),
+                                            ),
+                                            child: Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(30),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black.withOpacity(0.15),
+                                                    blurRadius: 12,
+                                                    offset: const Offset(0, 4),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(
+                                                    wasFav ? Icons.favorite_border : Icons.favorite,
+                                                    color: wasFav ? Colors.black38 : Colors.redAccent,
+                                                    size: 18,
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  Text(
+                                                    toastText,
+                                                    style: const TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.w600, decoration: TextDecoration.none),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                    overlay.insert(entry);
+                                    Future.delayed(const Duration(seconds: 2), () => entry.remove());
                                     Future.microtask(() => radioProvider.toggleFavorite(current));
                                   },
                                   child: Icon(

@@ -9,7 +9,6 @@ import '../providers/theme_provider.dart';
 import '../utils/song_title_cleaner.dart';
 import '../services/music_lookup.dart';
 import '../widgets/action_feedback.dart';
-import '../widgets/paran_toast.dart';
 
 class EditSongScreen extends StatefulWidget {
   final Song song;
@@ -70,7 +69,8 @@ class _EditSongScreenState extends State<EditSongScreen> {
     if (!mounted) return;
     setState(() => _searching = false);
     if (results.isEmpty) {
-      showParanToast(context, '인터넷에서 이 곡을 찾지 못했어요');
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('인터넷에서 이 곡을 찾지 못했어요')));
       return;
     }
     final isDark = context.read<ThemeProvider>().isDarkMode;

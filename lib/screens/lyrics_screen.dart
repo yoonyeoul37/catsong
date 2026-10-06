@@ -56,12 +56,12 @@ class _LyricsScreenState extends State<LyricsScreen> {
   /// 오른쪽 아래 워터마크 — 한국: 파란소리 | Paransori / 해외: ParanSori (한 줄, 은은하게)
   Widget _watermark(BuildContext context) {
     final ko = Localizations.localeOf(context).languageCode == 'ko';
-    final c = _ink.withOpacity(_light ? 0.5 : 0.62);
+    final c = _ink.withOpacity(_light ? 0.72 : 0.88); // 더 잘 보이게
     final shadow = _light ? const <Shadow>[] : [Shadow(color: Colors.black.withOpacity(0.3), blurRadius: 6)];
     final en = Text(
       ko ? 'Paransori' : 'ParanSori',
       style: GoogleFonts.quicksand(
-          color: c, fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 2.4, shadows: shadow),
+          color: c, fontSize: 15.5, fontWeight: FontWeight.w600, letterSpacing: 2.2, shadows: shadow),
     );
     if (!ko) return en;
     return Row(
@@ -69,8 +69,8 @@ class _LyricsScreenState extends State<LyricsScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text('파란소리',
-            style: TextStyle(color: c, fontSize: 11.5, fontWeight: FontWeight.w500, letterSpacing: 1.6, shadows: shadow)),
-        Container(width: 0.8, height: 10, margin: const EdgeInsets.symmetric(horizontal: 9), color: c),
+            style: TextStyle(color: c, fontSize: 15, fontWeight: FontWeight.w600, letterSpacing: 1.6, shadows: shadow)),
+        Container(width: 1, height: 13, margin: const EdgeInsets.symmetric(horizontal: 10), color: c),
         en,
       ],
     );
@@ -297,7 +297,17 @@ class _LyricsScreenState extends State<LyricsScreen> {
               Positioned(
                 right: 20,
                 bottom: MediaQuery.of(context).padding.bottom + 18,
-                child: IgnorePointer(child: _watermark(context)),
+                child: IgnorePointer(
+                  // 알록달록한 사진 위에서도 보이게 연한 알약 배경
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: _light ? Colors.white.withOpacity(0.55) : Colors.black.withOpacity(0.32),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: _watermark(context),
+                  ),
+                ),
               ),
           ],
         ),

@@ -64,6 +64,73 @@ class MainActivity : AudioServiceActivity() {
     private var presetReverb: android.media.audiofx.PresetReverb? = null // 울림
     private var virtualizer: android.media.audiofx.Virtualizer? = null
     private var deleteResult: MethodChannel.Result? = null
+
+    // ───── 완료 효과음 (소리 모드 = 물방울, 진동 모드 = 진동, 무음 = 없음) ─────
+    private var soundPool: android.media.SoundPool? = null
+    private var dropId = 0
+    private var dropLowId = 0
+    private var pendingLow: Boolean? = null // 처음 불러오는 중에 눌렸으면 다 불러온 뒤 재생
+
+    private fun ensureSoundPool() {
+        if (soundPool != null) return
+        val attrs = android.media.AudioAttributes.Builder()
+            .setUsage(android.media.AudioAttributes.USAGE_ASSISTANCE_SONIFICATION) // 음악을 멈추지 않고 살짝 겹쳐서
+            .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
+        val pool = android.media.SoundPool.Builder().setMaxStreams(2).setAudioAttributes(attrs).build()
+        pool.setOnLoadCompleteListener { sp, id, status ->
+            val want = pendingLow ?: return@setOnLoadCompleteListener
+            if (status == 0 && id == (if (want) dropLowId else dropId)) {
+                sp.play(id, 0.6f, 0.6f, 1, 0, 1f)
+                pendingLow = null
+            }
+        }
+        dropId = pool.load(this, resources.getIdentifier("water_drop", "raw", packageName), 1)
+        dropLowId = pool.load(this, resources.getIdentifier("water_drop_low", "raw", packageName), 1)
+        soundPool = pool
+    }
+
+    private fun shortVibrate(ms: Long, twice: Boolean = false) {
+        // 앱의 원래 터치 진동과 같은 방식·세기(최대)로 → 잘 느껴지게
+        @Suppress("DEPRECATION")
+        val v = getSystemService(android.content.Context.VIBRATOR_SERVICE) as android.os.Vibrator
+        if (android.os.Build.VERSION.SDK_INT >= 26) {
+            if (twice) {
+                // 삭제: "드드" 두 번
+                v.vibrate(android.os.VibrationEffect.createWaveform(
+                    longArrayOf(0, ms, 70, ms), intArrayOf(0, 255, 0, 255), -1))
+            } else {
+                v.vibrate(android.os.VibrationEffect.createOneShot(ms, 255))
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            v.vibrate(ms)
+        }
+    }
+        val v = if (android.os.Build.VERSION.SDK_INT >= 31) {
+            (getSystemService(android.os.VibratorManager::class.java)).defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            getSystemService(android.content.Context.VIBRATOR_SERVICE) as android.os.Vibrator
+        }
+        val effect = if (android.os.Build.VERSION.SDK_INT >= 26)
+            android.os.VibrationEffect.createOneShot(ms, android.os.VibrationEffect.DEFAULT_AMPLITUDE) else null
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
+            // "알림 진동"으로 알려줌 → 폰의 알림 진동 세기를 따름 (터치 진동 꺼져 있어도 울림)
+            v.vibrate(effect!!, android.os.VibrationAttributes.createForUsage(android.os.VibrationAttributes.USAGE_NOTIFICATION))
+        } else if (android.os.Build.VERSION.SDK_INT >= 26) {
+            @Suppress("DEPRECATION")
+            v.vibrate(
+                effect!!,
+                android.media.AudioAttributes.Builder()
+                    .setUsage(android.media.AudioAttributes.USAGE_NOTIFICATION)
+                    .build()
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            v.vibrate(ms)
+        }
+    }
     private var renameResult: MethodChannel.Result? = null
     private var pendingRenameName: String? = null
     private var pendingRenameUri: android.net.Uri? = null
@@ -394,6 +461,32 @@ class MainActivity : AudioServiceActivity() {
                             result.error("DELETE_FAIL", "${e.javaClass.simpleName}: ${e.message} (SDK ${android.os.Build.VERSION.SDK_INT})", null)
                         }
                     }
+                }
+                "feedbackSound" -> {
+                    // 폰 소리 모드를 보고: 소리 → 물방울 / 진동 → 진동 / 무음 → 아무것도 안 함
+                    val low = call.argument<Boolean>("low") ?: false
+                    val am = getSystemService(android.content.Context.AUDIO_SERVICE) as android.media.AudioManager
+                    android.util.Log.d("FeedbackSound", "폰 모드: ${am.ringerMode} (2=소리, 1=진동, 0=무음)")
+                    when (am.ringerMode) {
+                        android.media.AudioManager.RINGER_MODE_NORMAL -> {
+                            val first = soundPool == null
+                            ensureSoundPool()
+                            if (first) {
+                                pendingLow = low // 처음엔 불러오는 중이라, 다 불러오면 바로 재생
+                            } else {
+                                soundPool?.play(if (low) dropLowId else dropId, 0.6f, 0.6f, 1, 0, 1f)
+                            }
+                        }
+                        android.media.AudioManager.RINGER_MODE_VIBRATE -> {
+                            try {
+                                shortVibrate(90L, twice = low) // 수정·저장: "드" / 삭제: "드드" (더 또렷하게)
+                            } catch (e: Exception) {
+                                android.util.Log.e("FeedbackSound", "진동 오류: ${e.message}")
+                            }
+                        }
+                        else -> {}
+                    }
+                    result.success(null)
                 }
                 "trashFiles" -> {
                     // 녹음 삭제: 바로 지우지 않고 휴지통으로 (30일 동안 내 파일 → 휴지통에서 되살릴 수 있음)

@@ -8,6 +8,7 @@ import '../l10n/app_localizations.dart';
 import '../providers/theme_provider.dart';
 import '../utils/song_title_cleaner.dart';
 import '../services/music_lookup.dart';
+import '../widgets/action_feedback.dart';
 
 class EditSongScreen extends StatefulWidget {
   final Song song;
@@ -352,16 +353,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
       if (bytes != null) await musicProvider.setCustomArt(widget.song, bytes);
     }
     if (!context.mounted) return;
-    final messenger = ScaffoldMessenger.of(context);
-    final message = AppLocalizations.of(context)!.songSaved;
+    showActionFeedback(context, type: ActionFeedbackType.edited); // ✓ 수정했어요
     navigator.pop();
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text(message,
-            style: TextStyle(color: isDarkMode ? Colors.white : Colors.black87)),
-        backgroundColor: isDarkMode ? const Color(0xFF2A2A2A) : const Color(0xFFEDE7DA),
-        duration: const Duration(seconds: 2),
-      ),
-    );
   }
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../l10n/locale_holder.dart';
+import '../utils/song_title_cleaner.dart';
 
 class LyricsLine {
   final Duration time;
@@ -56,10 +57,37 @@ class LyricsProvider extends ChangeNotifier {
         }
       }
 
+      // [MV]·(Official…) 같은 군더더기를 떼고 검색
+      final c = SongTitleCleaner.clean(title, artist);
       final url = Uri.parse(
-          'https://lrclib.net/api/get?artist_name=${Uri.encodeComponent(artist)}&track_name=${Uri.encodeComponent(title)}');
+          'https://lrclib.net/api/get?artist_name=${Uri.encodeComponent(c.artist)}&track_name=${Uri.encodeComponent(c.title)}');
 
-      final response = await http.get(url).timeout(const Duration(seconds: 10));
+      var response = await http.get(url).timeout(const Duration(seconds: 10));
+
+      // 못 찾으면 제목만으로 한 번 더 (가수 이름이 비슷한 것 먼저, 없으면 가사 있는 첫 번째)
+      if (response.statusCode == 404) {
+        final s = await http
+            .get(Uri.parse('https://lrclib.net/api/search?track_name=${Uri.encodeComponent(c.title)}'))
+            .timeout(const Duration(seconds: 10));
+        if (s.statusCode == 200) {
+          final withLyrics = (jsonDecode(s.body) as List)
+              .cast<Map>()
+              .where((e) => ((e['syncedLyrics'] ?? e['plainLyrics']) ?? '').toString().isNotEmpty)
+              .toList();
+          final al = c.artist.toLowerCase();
+          final hit = withLyrics.firstWhere(
+            (e) {
+              final n = (e['artistName'] ?? '').toString().toLowerCase();
+              return n.isNotEmpty && (n.contains(al) || al.contains(n));
+            },
+            orElse: () => withLyrics.isNotEmpty ? withLyrics.first : <dynamic, dynamic>{},
+          );
+          if (hit.isNotEmpty) {
+            response = http.Response(jsonEncode(hit), 200,
+                headers: {'content-type': 'application/json; charset=utf-8'});
+          }
+        }
+      }
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

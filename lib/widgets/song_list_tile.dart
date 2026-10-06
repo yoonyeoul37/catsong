@@ -255,6 +255,8 @@ class SongListTile extends StatelessWidget {
         bool addedNext = false; // "다음에 재생" 눌렀는지 (메뉴 안에 표시)
         // 메뉴를 안 닫고 여러 개 할 수 있게: 즐겨찾기 등이 바로 다시 그려짐
         return StatefulBuilder(builder: (ctx, setSheet) {
+        // 메뉴 안에서는 메뉴 자신의 context를 씀 (곡 정보 편집으로 목록이 다시 그려져도 안전)
+        final context = ctx;
         final isFav = ctx.watch<MusicProvider>().isFavorite(song.id);
         return SafeArea(
           top: false,

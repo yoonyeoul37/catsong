@@ -5,6 +5,7 @@ import '../providers/music_provider.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/theme_provider.dart';
+import '../utils/song_title_cleaner.dart';
 
 class EditSongScreen extends StatefulWidget {
   final Song song;
@@ -20,12 +21,37 @@ class _EditSongScreenState extends State<EditSongScreen> {
   late TextEditingController _artistController;
   late TextEditingController _albumController;
 
+  // 자동 정리: 열자마자 제목·가수를 깨끗하게 채워두고, "원래대로"로 되돌릴 수 있게
+  late final String _origTitle = widget.song.titleDisplay;
+  late final String _origArtist = widget.song.artistDisplay;
+  late SongClean _cleaned;
+  bool _canClean = false; // 정리할 게 있었는지
+  bool _cleanedOn = false; // 지금 칸에 정리된 값이 들어가 있는지
+
   @override
   void initState() {
     super.initState();
-    _titleController = TextEditingController(text: widget.song.titleDisplay);
-    _artistController = TextEditingController(text: widget.song.artistDisplay);
+    // 내 노래 목록에 있는 가수 이름들 → "노래 - 가수" 순서도 알아봄
+    final known = context
+        .read<MusicProvider>()
+        .artists
+        .map((x) => x.name.toLowerCase().trim())
+        .where((n) => n.isNotEmpty && !n.contains('unknown') && n != '알 수 없는 아티스트')
+        .toSet();
+    _cleaned = SongTitleCleaner.clean(_origTitle, _origArtist, knownArtists: known);
+    _canClean = _cleaned.title != _origTitle || _cleaned.artist != _origArtist;
+    _cleanedOn = _canClean;
+    _titleController = TextEditingController(text: _canClean ? _cleaned.title : _origTitle);
+    _artistController = TextEditingController(text: _canClean ? _cleaned.artist : _origArtist);
     _albumController = TextEditingController(text: widget.song.albumDisplay);
+  }
+
+  void _toggleClean() {
+    setState(() {
+      _cleanedOn = !_cleanedOn;
+      _titleController.text = _cleanedOn ? _cleaned.title : _origTitle;
+      _artistController.text = _cleanedOn ? _cleaned.artist : _origArtist;
+    });
   }
 
   @override
@@ -85,7 +111,37 @@ class _EditSongScreenState extends State<EditSongScreen> {
                 child: Icon(Icons.music_note, color: _accent, size: 50),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
+            // ✨ 자동 정리 안내 (정리할 게 있을 때만)
+            if (_canClean) ...[
+              Container(
+                padding: const EdgeInsets.fromLTRB(14, 6, 6, 6),
+                decoration: BoxDecoration(
+                  color: _accent.withOpacity(isDarkMode ? 0.18 : 0.08),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.auto_awesome, color: _accent, size: 18),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        _cleanedOn ? '제목·가수를 자동으로 정리했어요' : '원래 제목·가수예요',
+                        style: TextStyle(color: baseColor.withOpacity(0.8), fontSize: 13),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: _toggleClean,
+                      style: TextButton.styleFrom(foregroundColor: _accent),
+                      child: Text(_cleanedOn ? '원래대로' : '다시 정리',
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+            ] else
+              const SizedBox(height: 8),
             _buildTextField('제목', _titleController, Icons.title, baseColor, isDarkMode),
             const SizedBox(height: 16),
             _buildTextField('아티스트', _artistController, Icons.person, baseColor, isDarkMode),

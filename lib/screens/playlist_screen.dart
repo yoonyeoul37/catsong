@@ -9,6 +9,8 @@ import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/song_list_tile.dart';
 import '../providers/theme_provider.dart';
+import '../widgets/paran_dialog.dart';
+import '../widgets/action_feedback.dart';
 
 class PlaylistScreen extends StatelessWidget {
   const PlaylistScreen({super.key});
@@ -162,111 +164,41 @@ class PlaylistScreen extends StatelessWidget {
     );
   }
 
-  void _showCreateDialog(BuildContext context) {
-    final controller = TextEditingController();
-    const accent = AppTheme.fixedAccent;
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
-        title: Text(AppLocalizations.of(context)!.newPlaylist,
-            style: const TextStyle(color: Colors.black)),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          style: const TextStyle(color: Colors.black),
-          decoration: InputDecoration(
-            hintText: AppLocalizations.of(context)!.playlistNameHint,
-            hintStyle: const TextStyle(color: Colors.black38),
-            enabledBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: accent)),
-            focusedBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: accent)),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.black38)),
-          ),
-          TextButton(
-            onPressed: () {
-              if (controller.text.isNotEmpty) {
-                context.read<PlaylistProvider>().createPlaylist(controller.text);
-                Navigator.pop(ctx);
-              }
-            },
-            child: Text(AppLocalizations.of(context)!.create, style: const TextStyle(color: accent)),
-          ),
-        ],
-      ),
+  void _showCreateDialog(BuildContext context) async {
+    final name = await showParanInput(
+      context,
+      title: '새 재생목록',
+      hint: AppLocalizations.of(context)!.playlistNameHint,
+      confirmLabel: '만들기',
     );
+    if (name == null || !context.mounted) return;
+    context.read<PlaylistProvider>().createPlaylist(name);
+    showActionFeedback(context, type: ActionFeedbackType.added, message: '재생목록을 만들었어요');
   }
 
-  void _showRenameDialog(BuildContext context, Playlist playlist) {
-    final controller = TextEditingController(text: playlist.name);
-    const accent = AppTheme.fixedAccent;
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
-        title: Text(AppLocalizations.of(context)!.renamePlaylistTitle,
-            style: const TextStyle(color: Colors.black)),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          style: const TextStyle(color: Colors.black),
-          decoration: const InputDecoration(
-            enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: accent)),
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: accent)),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.black38)),
-          ),
-          TextButton(
-            onPressed: () {
-              if (controller.text.isNotEmpty) {
-                context.read<PlaylistProvider>().renamePlaylist(
-                    playlist.id, controller.text);
-                Navigator.pop(ctx);
-              }
-            },
-            child: Text(AppLocalizations.of(context)!.change, style: const TextStyle(color: accent)),
-          ),
-        ],
-      ),
+  void _showRenameDialog(BuildContext context, Playlist playlist) async {
+    final name = await showParanInput(
+      context,
+      title: '재생목록 이름 바꾸기',
+      initial: playlist.name,
+      confirmLabel: '바꾸기',
     );
+    if (name == null || !context.mounted) return;
+    context.read<PlaylistProvider>().renamePlaylist(playlist.id, name);
+    showActionFeedback(context, type: ActionFeedbackType.edited, message: '이름을 바꿨어요');
   }
 
-  void _showDeleteDialog(BuildContext context, Playlist playlist) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
-        title: Text(AppLocalizations.of(context)!.deletePlaylistTitle,
-            style: const TextStyle(color: Colors.black)),
-        content: Text(AppLocalizations.of(context)!.deletePlaylistConfirm(playlist.name),
-            style: const TextStyle(color: Colors.black54)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.black38)),
-          ),
-          TextButton(
-            onPressed: () {
-              context.read<PlaylistProvider>().deletePlaylist(playlist.id);
-              Navigator.pop(ctx);
-            },
-            child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.redAccent)),
-          ),
-        ],
-      ),
+  void _showDeleteDialog(BuildContext context, Playlist playlist) async {
+    final ok = await showParanConfirm(
+      context,
+      title: '재생목록을 삭제할까요?',
+      message: "'${playlist.name}' 재생목록이 지워져요 (노래 파일은 그대로예요)",
+      confirmLabel: '삭제',
+      danger: true,
     );
+    if (!ok || !context.mounted) return;
+    context.read<PlaylistProvider>().deletePlaylist(playlist.id);
+    showActionFeedback(context, type: ActionFeedbackType.deleted);
   }
 }
 

@@ -13,8 +13,12 @@ OverlayEntry? _current; // 지금 떠 있는 피드백 (새 게 오면 바로 �
 /// - 화면을 어둡게 하지 않고, 터치도 막지 않음
 /// - 사용: showActionFeedback(context, type: ActionFeedbackType.deleted);
 /// - 문구를 바꾸고 싶으면 message: '재생목록에 추가했어요'
-void showActionFeedback(BuildContext context, {required ActionFeedbackType type, String? message}) {
-  final overlay = Overlay.maybeOf(context, rootOverlay: true);
+void showActionFeedback(BuildContext context,
+    {required ActionFeedbackType type, String? message, IconData? icon}) {
+  if (!context.mounted) return; // 화면이 이미 닫혔으면 안 띄움
+  // 앱 맨 위 화면 판에 띄우기 (메뉴·확인창이 먼저 닫혀도 확실하게)
+  final overlay = Navigator.maybeOf(context, rootNavigator: true)?.overlay ??
+      Overlay.maybeOf(context, rootOverlay: true);
   if (overlay == null) return;
   var isDark = false;
   try {
@@ -30,6 +34,7 @@ void showActionFeedback(BuildContext context, {required ActionFeedbackType type,
     builder: (_) => _ActionFeedback(
       type: type,
       message: message,
+      icon: icon,
       isDark: isDark,
       onDone: () {
         if (entry.mounted) entry.remove();
@@ -50,9 +55,11 @@ void showActionFeedback(BuildContext context, {required ActionFeedbackType type,
 class _ActionFeedback extends StatefulWidget {
   final ActionFeedbackType type;
   final String? message;
+  final IconData? icon; // 자르기·벨소리·잠금처럼 다른 아이콘이 필요할 때
   final bool isDark;
   final VoidCallback onDone;
-  const _ActionFeedback({required this.type, this.message, required this.isDark, required this.onDone});
+  const _ActionFeedback(
+      {required this.type, this.message, this.icon, required this.isDark, required this.onDone});
 
   @override
   State<_ActionFeedback> createState() => _ActionFeedbackState();
@@ -164,7 +171,7 @@ class _ActionFeedbackState extends State<_ActionFeedback> with SingleTickerProvi
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(icon, color: iconColor, size: 52),
+                        Icon(widget.icon ?? icon, color: iconColor, size: 52),
                         const SizedBox(height: 8),
                         Text(
                           widget.message ?? text,

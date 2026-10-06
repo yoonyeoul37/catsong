@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import '../services/sound_effects.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
+import '../widgets/paran_dialog.dart';
+import '../widgets/action_feedback.dart';
 
 /// 이퀄라이저 화면 — 값은 SoundEffects가 들고 있어서 화면을 닫아도 계속 적용·저장돼요
 class EqualizerScreen extends StatelessWidget {
@@ -246,49 +248,28 @@ class EqualizerScreen extends StatelessWidget {
   }
 
   /// 지금 설정을 이름 붙여 저장
-  void _askSave(BuildContext context, SoundEffects fx) {
-    final ctrl = TextEditingController(text: '내 설정 ${fx.custom.length + 1}');
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('지금 설정 저장', style: TextStyle(fontSize: 16)),
-        content: TextField(
-          controller: ctrl,
-          autofocus: true,
-          decoration: const InputDecoration(hintText: '예) 출근길, 잠잘 때'),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('취소')),
-          TextButton(
-            onPressed: () {
-              final name = ctrl.text.trim();
-              if (name.isNotEmpty) fx.saveCustom(name);
-              Navigator.pop(ctx);
-            },
-            child: const Text('저장', style: TextStyle(color: _accent)),
-          ),
-        ],
-      ),
+  void _askSave(BuildContext context, SoundEffects fx) async {
+    final name = await showParanInput(
+      context,
+      title: '지금 설정 저장',
+      initial: '내 설정 ${fx.custom.length + 1}',
+      hint: '예) 출근길, 잠잘 때',
     );
+    if (name == null || !context.mounted) return;
+    fx.saveCustom(name);
+    showActionFeedback(context, type: ActionFeedbackType.saved);
   }
 
-  void _askDelete(BuildContext context, SoundEffects fx, FxPreset p) {
+  void _askDelete(BuildContext context, SoundEffects fx, FxPreset p) async {
     HapticFeedback.mediumImpact();
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('"${p.name}"을 지울까요?', style: const TextStyle(fontSize: 16)),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('취소')),
-          TextButton(
-            onPressed: () {
-              fx.deleteCustom(p);
-              Navigator.pop(ctx);
-            },
-            child: const Text('지우기', style: TextStyle(color: Colors.redAccent)),
-          ),
-        ],
-      ),
+    final ok = await showParanConfirm(
+      context,
+      title: '"${p.name}"을 지울까요?',
+      confirmLabel: '지우기',
+      danger: true,
     );
+    if (!ok || !context.mounted) return;
+    fx.deleteCustom(p);
+    showActionFeedback(context, type: ActionFeedbackType.deleted);
   }
 }

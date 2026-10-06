@@ -11,6 +11,9 @@ import '../models/video.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/theme_provider.dart';
+import '../widgets/paran_dialog.dart';
+import '../widgets/action_feedback.dart';
+import '../widgets/paran_toast.dart';
 
 class VideoScreen extends StatefulWidget {
   const VideoScreen({super.key});
@@ -232,111 +235,41 @@ class _VideoTileState extends State<_VideoTile> {
   }
 
   Future<void> _renameVideo(BuildContext context) async {
-    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
-    final baseColor = isDarkMode ? Colors.white : Colors.black;
-    final dialogBg = isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0);
-    final controller = TextEditingController(text: widget.video.titleDisplay);
-    final newName = await showDialog<String>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: dialogBg,
-        title: Text(AppLocalizations.of(context)!.rename,
-            style: TextStyle(color: baseColor)),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          style: TextStyle(color: baseColor),
-          decoration: InputDecoration(
-            enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: baseColor.withOpacity(0.6))),
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: baseColor)),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(AppLocalizations.of(context)!.cancel,
-                style: TextStyle(color: baseColor.withOpacity(0.4))),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, controller.text),
-            child: Text(AppLocalizations.of(context)!.save,
-                style: TextStyle(color: baseColor.withOpacity(0.7))),
-          ),
-        ],
-      ),
+    final newName = await showParanInput(
+      context,
+      title: AppLocalizations.of(context)!.rename,
+      initial: widget.video.titleDisplay,
     );
-
-    if (newName != null && newName.isNotEmpty) {
-      try {
-        await _channel.invokeMethod('renameVideo', {
-          'uri': widget.video.uri,
-          'newName': newName,
-        });
-        context.read<VideoProvider>().loadVideos();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.nameChanged,
-                style: const TextStyle(color: Colors.white)),
-            backgroundColor: dialogBg,
-            duration: const Duration(seconds: 2),
-          ),
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.renameFailed(e.toString()),
-                style: const TextStyle(color: Colors.white)),
-          ),
-        );
-      }
+    if (newName == null || !context.mounted) return;
+    try {
+      await _channel.invokeMethod('renameVideo', {
+        'uri': widget.video.uri,
+        'newName': newName,
+      });
+      if (!context.mounted) return;
+      context.read<VideoProvider>().loadVideos();
+      showActionFeedback(context, type: ActionFeedbackType.edited, message: '이름을 바꿨어요');
+    } catch (e) {
+      showParanToast(context, '이름을 바꾸지 못했어요', error: true);
     }
   }
 
   Future<void> _deleteVideo(BuildContext context) async {
-    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
-    final baseColor = isDarkMode ? Colors.white : Colors.black;
-    final dialogBg = isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0);
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: dialogBg,
-        title: Text(AppLocalizations.of(context)!.deleteVideoTitle,
-            style: TextStyle(color: baseColor)),
-        content: Text(AppLocalizations.of(context)!.deleteVideoConfirm(widget.video.titleDisplay),
-            style: TextStyle(color: baseColor.withOpacity(0.7))),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(AppLocalizations.of(context)!.cancel,
-                style: TextStyle(color: baseColor.withOpacity(0.4))),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(AppLocalizations.of(context)!.delete,
-                style: const TextStyle(color: Colors.redAccent)),
-          ),
-        ],
-      ),
+    final ok = await showParanConfirm(
+      context,
+      title: '이 동영상을 삭제할까요?',
+      message: "'${widget.video.titleDisplay}'이(가) 폰에서 지워져요",
+      confirmLabel: '삭제',
+      danger: true,
     );
-
-    if (confirm == true) {
-      try {
-        await _channel.invokeMethod('deleteVideo', {'uri': widget.video.uri});
-        context.read<VideoProvider>().loadVideos();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.deleted),
-            backgroundColor: Colors.redAccent,
-            duration: const Duration(seconds: 2),
-          ),
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.deleteFailedWithError(e.toString()))),
-        );
-      }
+    if (!ok || !context.mounted) return;
+    try {
+      await _channel.invokeMethod('deleteVideo', {'uri': widget.video.uri});
+      if (!context.mounted) return;
+      context.read<VideoProvider>().loadVideos();
+      showActionFeedback(context, type: ActionFeedbackType.deleted);
+    } catch (e) {
+      showParanToast(context, '삭제하지 못했어요', error: true);
     }
   }
 
@@ -534,37 +467,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
             ],
             onSelected: (value) async {
               if (value == 'rename') {
-                final controller = TextEditingController(text: widget.video.titleDisplay);
-                final newName = await showDialog<String>(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    backgroundColor: AppTheme.surfaceVariant,
-                    title: Text(AppLocalizations.of(context)!.rename,
-                        style: const TextStyle(color: AppTheme.textPrimary)),
-                    content: TextField(
-                      controller: controller,
-                      autofocus: true,
-                      style: const TextStyle(color: AppTheme.textPrimary),
-                      decoration: const InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white60)),
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white)),
-                      ),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(ctx),
-                        child: Text(AppLocalizations.of(context)!.cancel,
-                            style: const TextStyle(color: AppTheme.textHint)),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(ctx, controller.text),
-                        child: Text(AppLocalizations.of(context)!.save,
-                            style: const TextStyle(color: Colors.white70)),
-                      ),
-                    ],
-                  ),
+                final newName = await showParanInput(
+                  context,
+                  title: AppLocalizations.of(context)!.rename,
+                  initial: widget.video.titleDisplay,
                 );
                 if (newName != null && newName.isNotEmpty) {
                   await const MethodChannel('kr.ssing.catsong/media')
@@ -575,28 +481,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   Navigator.pop(context);
                 }
               } else if (value == 'delete') {
-                final confirm = await showDialog<bool>(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    backgroundColor: AppTheme.surfaceVariant,
-                    title: Text(AppLocalizations.of(context)!.deleteVideoTitle,
-                        style: const TextStyle(color: AppTheme.textPrimary)),
-                    content: Text(
-                        AppLocalizations.of(context)!.deleteVideoConfirm(widget.video.titleDisplay),
-                        style: const TextStyle(color: AppTheme.textSecondary)),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(ctx, false),
-                        child: Text(AppLocalizations.of(context)!.cancel,
-                            style: const TextStyle(color: AppTheme.textHint)),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(ctx, true),
-                        child: Text(AppLocalizations.of(context)!.delete,
-                            style: const TextStyle(color: Colors.redAccent)),
-                      ),
-                    ],
-                  ),
+                final confirm = await showParanConfirm(
+                  context,
+                  title: '이 동영상을 삭제할까요?',
+                  message: "'${widget.video.titleDisplay}'이(가) 폰에서 지워져요",
+                  confirmLabel: '삭제',
+                  danger: true,
                 );
                 if (confirm == true) {
                   await const MethodChannel('kr.ssing.catsong/media')

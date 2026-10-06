@@ -7,6 +7,8 @@ import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/song_list_tile.dart';
 import '../l10n/app_localizations.dart';
+import '../widgets/paran_dialog.dart';
+import '../widgets/action_feedback.dart';
 
 String _formatPlayedAt(BuildContext context, DateTime dt) {
   final now = DateTime.now();
@@ -183,66 +185,16 @@ class RecentScreen extends StatelessWidget {
     );
   }
 
-  void _showClearAllDialog(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
-    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
-    final baseColor = isDarkMode ? Colors.white : Colors.black;
-    final dialogBg = isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0);
-    showDialog(
-      context: context,
-      builder: (ctx) => Dialog(
-        backgroundColor: dialogBg,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.delete_sweep, color: Colors.redAccent, size: 48),
-              const SizedBox(height: 16),
-              Text(AppLocalizations.of(context)!.clearRecent,
-                  style: TextStyle(color: baseColor, fontSize: 16, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              Text(AppLocalizations.of(context)!.clearRecentConfirm,
-                  style: TextStyle(color: baseColor.withOpacity(0.54), fontSize: 13),
-                  textAlign: TextAlign.center),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(ctx),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: baseColor.withOpacity(0.54),
-                        side: BorderSide(color: baseColor.withOpacity(0.24)),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: Text(AppLocalizations.of(context)!.cancel),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        context.read<MusicProvider>().clearRecent();
-                        Navigator.pop(ctx);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.redAccent,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+  void _showClearAllDialog(BuildContext context) async {
+    final ok = await showParanConfirm(
+      context,
+      title: AppLocalizations.of(context)!.clearRecent,
+      message: AppLocalizations.of(context)!.clearRecentConfirm,
+      confirmLabel: '지우기',
+      danger: true,
     );
+    if (!ok || !context.mounted) return;
+    context.read<MusicProvider>().clearRecent();
+    showActionFeedback(context, type: ActionFeedbackType.deleted, message: '기록을 지웠어요');
   }
 }

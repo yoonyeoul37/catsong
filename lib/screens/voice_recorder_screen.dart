@@ -11,6 +11,8 @@ import 'package:record/record.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import '../providers/player_provider.dart';
+import '../widgets/paran_dialog.dart';
+import '../widgets/paran_toast.dart';
 
 /// 지금 녹음 중인 파일 (되살리기에서 건드리지 않게)
 String? activeRecordingPath;
@@ -135,18 +137,14 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
     HapticFeedback.mediumImpact();
     if (!await _rec.hasPermission()) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('녹음하려면 마이크 권한이 필요해요')),
-      );
+      showParanToast(context, '녹음하려면 마이크 권한이 필요해요');
       return;
     }
     // 알림창에 "녹음 중"을 보여주려면 알림 권한이 필요해요 (안드로이드 13+)
     try {
       final st = await Permission.notification.request();
       if (!st.isGranted && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('알림을 허용하면 알림창에서 녹음 중인 걸 볼 수 있어요'),
-        ));
+        showParanToast(context, '알림을 허용하면 알림창에서 녹음 중인 걸 볼 수 있어요');
       }
     } catch (_) {}
     // 음악이 나오고 있으면 잠깐 멈추기
@@ -280,19 +278,13 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
     final wasRecording = _state == _RecState.recording;
     if (wasRecording) await _togglePause();
     if (!mounted) return;
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('녹음을 지울까요?', style: TextStyle(fontSize: 16)),
-        content: const Text('지금까지 녹음한 내용이 저장되지 않아요.', style: TextStyle(fontSize: 13.5)),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('계속 녹음')),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('지우기', style: TextStyle(color: Colors.redAccent)),
-          ),
-        ],
-      ),
+    final ok = await showParanConfirm(
+      context,
+      title: '녹음을 지울까요?',
+      message: '지금까지 녹음한 내용이 저장되지 않아요.',
+      confirmLabel: '지우기',
+      cancelLabel: '계속 녹음',
+      danger: true,
     );
     if (ok != true) {
       if (wasRecording) await _togglePause();
@@ -472,9 +464,7 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
       Navigator.pop(ctx);
       // 이미 지난 시간을 고르면 바로 저장되지 않게
       if (d != null && _watch.elapsed >= d) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('이미 그보다 오래 녹음했어요')),
-        );
+        showParanToast(context, '이미 그보다 오래 녹음했어요');
         return;
       }
       setState(() => _limit = d);

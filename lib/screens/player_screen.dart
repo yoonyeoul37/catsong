@@ -31,6 +31,7 @@ import '../widgets/song_list_tile.dart';
 import '../widgets/exit_confirm_dialog.dart';
 import 'package:share_plus/share_plus.dart';
 import '../widgets/menu_parts.dart';
+import '../widgets/action_feedback.dart';
 import '../services/cast_service.dart';
 import '../services/nature_overlay.dart';
 import '../l10n/app_localizations.dart';
@@ -3399,13 +3400,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 onTap: () {
                   playlistProvider.addSongToPlaylist(playlist.id, song);
                   Navigator.pop(ctx);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${playlist.name} ${AppLocalizations.of(context)!.addedToPlaylist}'),
-                      backgroundColor: AppTheme.surfaceVariant,
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
+                  showActionFeedback(context, type: ActionFeedbackType.added, message: '재생목록에 추가했어요');
                 },
               );
             },

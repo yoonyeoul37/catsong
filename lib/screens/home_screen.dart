@@ -53,6 +53,9 @@ import '../utils/nature_sound_catalog.dart';
 import '../utils/paran_photo.dart';
 import '../utils/index_letter.dart';
 import '../widgets/index_bar.dart';
+import '../widgets/action_feedback.dart';
+import '../widgets/paran_toast.dart';
+import '../widgets/paran_dialog.dart';
 import 'sleep_focus_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -705,57 +708,37 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _showMultiDeleteDialog(BuildContext context, MusicProvider musicProvider) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
-        title: Text(AppLocalizations.of(context)!.deleteSelected, style: const TextStyle(color: Colors.black)),
-        content: Text(AppLocalizations.of(context)!.deleteSelectedConfirm(_selectedSongIds.length),
-            style: const TextStyle(color: Colors.black54)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.black38)),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(ctx);
-              const platform = MethodChannel('kr.ssing.catsong/media');
-              final selectedSongs = musicProvider.songs
-                  .where((s) => _selectedSongIds.contains(s.id))
-                  .toList();
-              final paths = selectedSongs
-                  .where((s) => s.uri != null)
-                  .map((s) => s.uri!)
-                  .toList();
-              int successCount = 0;
-              try {
-                final result = await platform.invokeMethod('deleteSongs', {'paths': paths});
-                if (result == true) successCount = paths.length;
-              } catch (e) {
-                debugPrint('일괄 삭제 실패: $e');
-              }
-              setState(() {
-                _isSelectionMode = false;
-                _selectedSongIds.clear();
-              });
-              musicProvider.loadSongs();
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(AppLocalizations.of(context)!.deletedCount(successCount)),
-                    backgroundColor: Colors.redAccent,
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-              }
-            },
-            child: Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.redAccent)),
-          ),
-        ],
-      ),
+  void _showMultiDeleteDialog(BuildContext context, MusicProvider musicProvider) async {
+    final ok = await showParanConfirm(
+      context,
+      title: '${_selectedSongIds.length}곡을 삭제할까요?',
+      message: '선택한 곡이 폰에서 지워져요',
+      confirmLabel: '삭제',
+      danger: true,
     );
+    if (!ok || !context.mounted) return;
+    const platform = MethodChannel('kr.ssing.catsong/media');
+    final selectedSongs = musicProvider.songs.where((s) => _selectedSongIds.contains(s.id)).toList();
+    final paths = selectedSongs.where((s) => s.uri != null).map((s) => s.uri!).toList();
+    int successCount = 0;
+    try {
+      final result = await platform.invokeMethod('deleteSongs', {'paths': paths});
+      if (result == true) successCount = paths.length;
+    } catch (e) {
+      debugPrint('일괄 삭제 실패: $e');
+    }
+    setState(() {
+      _isSelectionMode = false;
+      _selectedSongIds.clear();
+    });
+    musicProvider.loadSongs();
+    if (context.mounted) {
+      if (successCount > 0) {
+        showActionFeedback(context, type: ActionFeedbackType.deleted, message: '$successCount곡을 삭제했어요');
+      } else {
+        showParanToast(context, '삭제하지 못했어요', error: true);
+      }
+    }
   }
 
   @override
@@ -2094,12 +2077,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                       final next = !_byArtist;
                       _setSortByArtist(next);
-                      ScaffoldMessenger.of(context)
-                        ..hideCurrentSnackBar()
-                        ..showSnackBar(SnackBar(
-                          content: Text(next ? '가수 이름순으로 정렬했어요' : '제목순으로 정렬했어요'),
-                          duration: const Duration(milliseconds: 1200),
-                        ));
+                      showParanToast(context, next ? '가수 이름순으로 정렬했어요' : '제목순으로 정렬했어요',
+                          duration: const Duration(milliseconds: 1500));
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),

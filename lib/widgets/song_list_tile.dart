@@ -13,6 +13,9 @@ import '../l10n/app_localizations.dart';
 import '../screens/player_screen.dart';
 import 'album_eq_overlay.dart';
 import 'menu_parts.dart';
+import 'action_feedback.dart';
+import 'paran_toast.dart';
+import 'paran_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/edit_song_screen.dart';
 import '../screens/ringtone_screen.dart';
@@ -413,31 +416,13 @@ class SongListTile extends StatelessWidget {
         playerProvider.playFromList(songList, index);
         break;
       case 'play_next':
-        playerProvider.addToPlayNext(song);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.addedToQueue),
-            backgroundColor: AppTheme.surfaceVariant,
-            duration: const Duration(seconds: 2),
-          ),
-        );
+        playerProvider.addToPlayNext(song); // (메뉴 안에 "추가됨 ✓"가 떠서 따로 알림 없음)
         break;
       case 'playlist':
         _showAddToPlaylistDialog(context, song);
         break;
       case 'favorite':
-        musicProvider.toggleFavorite(song);
-        final isFav = musicProvider.isFavorite(song.id);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              isFav ? '즐겨찾기에 추가됐습니다' : '즐겨찾기에서 제거됐습니다',
-              style: const TextStyle(color: Colors.white),
-            ),
-            backgroundColor: AppTheme.surfaceVariant,
-            duration: const Duration(seconds: 2),
-          ),
-        );
+        musicProvider.toggleFavorite(song); // (하트가 바로 바뀌어서 따로 알림 없음)
         break;
       case 'ringtone':
         Navigator.push(
@@ -512,13 +497,7 @@ class SongListTile extends StatelessWidget {
                 onTap: () {
                   playlistProvider.addSongToPlaylist(playlist.id, song);
                   Navigator.pop(ctx);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${playlist.name} ${AppLocalizations.of(context)!.addedToPlaylist}'),
-                      backgroundColor: AppTheme.surfaceVariant,
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
+                  showActionFeedback(context, type: ActionFeedbackType.added, message: '재생목록에 추가했어요');
                 },
               );
             },
@@ -576,64 +555,33 @@ class SongListTile extends StatelessWidget {
     );
   }
 
-  void _showDeleteDialog(BuildContext context, Song song) {
-    final primaryColor = AppTheme.fixedAccent;
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
-        title: Text(AppLocalizations.of(context)!.deleteSong,
-            style: const TextStyle(color: Colors.black)),
-        content: Text(AppLocalizations.of(context)!.deleteSongConfirmFormat(song.titleDisplay),
-            style: const TextStyle(color: Colors.black54)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(AppLocalizations.of(context)!.cancel,
-                style: const TextStyle(color: Colors.black38)),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(ctx);
-              try {
-                if (song.uri != null) {
-                  const platform = MethodChannel('kr.ssing.catsong/media');
-                  final result = await platform.invokeMethod('deleteSong', {'uri': song.uri});
-                  if (result == true) {
-                    context.read<MusicProvider>().loadSongs();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(AppLocalizations.of(context)!.deleted),
-                        backgroundColor: Colors.redAccent,
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(AppLocalizations.of(context)!.deleteFailed),
-                        backgroundColor: Colors.redAccent,
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
-                  }
-                }
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('삭제 실패: $e'),
-                    backgroundColor: Colors.redAccent,
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-              }
-            },
-            child: Text(AppLocalizations.of(context)!.delete,
-                style: const TextStyle(color: Colors.redAccent)),
-          ),
-        ],
-      ),
+  void _showDeleteDialog(BuildContext context, Song song) async {
+    // 메뉴가 먼저 닫혀도 괜찮게, 지금 미리 붙잡아 두기
+    final appCtx = Navigator.of(context, rootNavigator: true).context;
+    final music = context.read<MusicProvider>();
+    final failText = AppLocalizations.of(context)!.deleteFailed;
+    final ok = await showParanConfirm(
+      appCtx,
+      title: '이 곡을 삭제할까요?',
+      message: "'${song.titleDisplay}'이(가) 폰에서 지워져요",
+      confirmLabel: '삭제',
+      danger: true,
     );
+    if (!ok) return;
+    try {
+      if (song.uri != null) {
+        const platform = MethodChannel('kr.ssing.catsong/media');
+        final result = await platform.invokeMethod('deleteSong', {'uri': song.uri});
+        if (result == true) {
+          showActionFeedback(appCtx, type: ActionFeedbackType.deleted); // 🗑 삭제했어요
+          music.loadSongs();
+        } else {
+          showParanToast(appCtx, failText, error: true);
+        }
+      }
+    } catch (e) {
+      showParanToast(appCtx, '삭제하지 못했어요', error: true);
+    }
   }
 
   Widget _infoRow(String label, String value, Color primaryColor) {

@@ -9,6 +9,9 @@ import '../providers/theme_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'ringtone_screen.dart';
 import 'voice_recorder_screen.dart';
+import '../widgets/paran_dialog.dart';
+import '../widgets/action_feedback.dart';
+import '../widgets/paran_toast.dart';
 
 /// 통화 녹음 화면 (일반 음악과 따로)
 class CallRecordingsScreen extends StatefulWidget {
@@ -46,9 +49,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
       if (!mounted) return;
       music.loadCallRecordings();
       if (n > 0) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('중간에 끊긴 녹음 $n개를 되살렸어요')),
-        );
+        showParanToast(context, '중간에 끊긴 녹음 $n개를 되살렸어요');
       }
     });
   }
@@ -439,7 +440,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
         if (!mounted) return;
         context.read<MusicProvider>().loadCallRecordings();
         if (saved != null) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('녹음을 저장했어요')));
+          showActionFeedback(context, type: ActionFeedbackType.saved, message: '녹음을 저장했어요');
         }
       },
       child: Container(
@@ -656,107 +657,66 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
   }
 
   /// 제목 바꾸기 (앱 안에서만 바뀜, 원래 파일 이름은 그대로)
-  void _renameDialog(CallRecording r) {
+  void _renameDialog(CallRecording r) async {
     final music = context.read<MusicProvider>();
-    final ctrl = TextEditingController(text: music.recordingTitle(r));
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('제목 바꾸기', style: TextStyle(fontSize: 16)),
-        content: TextField(
-          controller: ctrl,
-          autofocus: true,
-          decoration: const InputDecoration(hintText: '예) 엄마랑 통화'),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('취소')),
-          TextButton(
-            onPressed: () {
-              music.setRecordingTitle(r, ctrl.text.trim());
-              // 지금 듣고 있는 녹음이면 미니플레이어·재생화면 제목도 바로 바꾸기
-              final cur = context.read<PlayerProvider>().currentSong;
-              if (cur != null && cur.uri == r.path) cur.title = music.recordingTitle(r);
-              Navigator.pop(ctx);
-            },
-            child: const Text('저장', style: TextStyle(color: _blue)),
-          ),
-        ],
-      ),
+    final name = await showParanInput(
+      context,
+      title: '제목 바꾸기',
+      initial: music.recordingTitle(r),
+      hint: '예) 엄마랑 통화',
     );
+    if (name == null || !mounted) return;
+    await music.setRecordingTitle(r, name);
+    if (!mounted) return;
+    // 지금 듣고 있는 녹음이면 미니플레이어·재생화면 제목도 바로 바꾸기
+    final cur = context.read<PlayerProvider>().currentSong;
+    if (cur != null && cur.uri == r.path) cur.title = music.recordingTitle(r);
+    showActionFeedback(context, type: ActionFeedbackType.edited, message: '이름을 바꿨어요');
   }
 
   /// 삭제 확인 → 휴지통으로 (잠근 건 빼고)
-  void _confirmTrash(List<CallRecording> targets, {bool isAll = false}) {
+  void _confirmTrash(List<CallRecording> targets, {bool isAll = false}) async {
     final music = context.read<MusicProvider>();
     final lockedCount = targets.where((r) => music.isRecordingLocked(r.path)).length;
     final count = targets.length - lockedCount;
     if (count == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('잠긴 녹음은 삭제할 수 없어요')));
+      showParanToast(context, '잠긴 녹음은 삭제할 수 없어요');
       return;
     }
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(isAll ? '녹음 $count개를 삭제할까요?' : '이 녹음을 삭제할까요?', style: const TextStyle(fontSize: 16)),
-        content: Text(
-          [
-            '휴지통으로 옮겨져요. 30일 안에는 ⋮ → 지운 녹음 되살리기로 되살릴 수 있어요.',
-            if (lockedCount > 0) '잠긴 녹음 $lockedCount개는 남겨둬요.',
-          ].join('\n\n'),
-          style: const TextStyle(fontSize: 13.5, height: 1.5),
-        ),
-        // 왼쪽: 작은 빨간 "영구 삭제" / 오른쪽: 취소 · 휴지통으로
-        actionsAlignment: MainAxisAlignment.spaceBetween,
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              _confirmForever(targets, count);
-            },
-            child: const Text('영구 삭제', style: TextStyle(color: Colors.redAccent, fontSize: 13)),
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('취소')),
-              TextButton(
-                onPressed: () async {
-                  Navigator.pop(ctx);
-                  final n = await music.trashRecordings(targets);
-                  _afterDelete(n, '$n개를 휴지통으로 옮겼어요');
-                },
-                child: const Text('휴지통으로', style: TextStyle(fontWeight: FontWeight.w600)),
-              ),
-            ],
-          ),
-        ],
-      ),
+    // 큰 버튼: 휴지통으로 / 작은 빨간 글씨: 영구 삭제
+    final pick = await showParanChoice(
+      context,
+      title: isAll ? '녹음 $count개를 삭제할까요?' : '이 녹음을 삭제할까요?',
+      message: [
+        '휴지통으로 옮겨져요. 30일 뒤에 완전히 지워져요.',
+        if (lockedCount > 0) '잠긴 녹음 $lockedCount개는 남겨둬요.',
+      ].join('\n'),
+      confirmLabel: '휴지통으로',
+      extraLabel: '영구 삭제',
+      danger: true,
     );
+    if (!mounted) return;
+    if (pick == 1) {
+      final n = await music.trashRecordings(targets);
+      _afterDelete(n, '삭제했어요');
+    } else if (pick == 2) {
+      _confirmForever(targets, count);
+    }
   }
 
   /// 영구 삭제: 되살릴 수 없다고 한 번 더 확인
-  void _confirmForever(List<CallRecording> targets, int count) {
+  void _confirmForever(List<CallRecording> targets, int count) async {
     final music = context.read<MusicProvider>();
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('영구 삭제할까요?', style: TextStyle(fontSize: 16)),
-        content: Text('녹음 $count개를 영구 삭제하면 되살릴 수 없어요.',
-            style: const TextStyle(fontSize: 13.5, height: 1.5)),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('취소')),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(ctx);
-              final n = await music.deleteRecordingsForever(targets);
-              _afterDelete(n, '$n개를 영구 삭제했어요');
-            },
-            child: const Text('영구 삭제',
-                style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w600)),
-          ),
-        ],
-      ),
+    final ok = await showParanConfirm(
+      context,
+      title: '영구 삭제할까요?',
+      message: '녹음 $count개를 영구 삭제하면 되살릴 수 없어요.',
+      confirmLabel: '영구 삭제',
+      danger: true,
     );
+    if (!ok) return;
+    final n = await music.deleteRecordingsForever(targets);
+    _afterDelete(n, '영구 삭제했어요');
   }
 
   void _afterDelete(int n, String msg) {
@@ -765,7 +725,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
       _selected.clear();
       _selectMode = false;
     });
-    if (n > 0) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    if (n > 0) showActionFeedback(context, type: ActionFeedbackType.deleted, message: msg);
   }
 
   /// 통화 녹음 | 음성 녹음 고르는 칸

@@ -107,30 +107,7 @@ class MainActivity : AudioServiceActivity() {
             v.vibrate(ms)
         }
     }
-        val v = if (android.os.Build.VERSION.SDK_INT >= 31) {
-            (getSystemService(android.os.VibratorManager::class.java)).defaultVibrator
-        } else {
-            @Suppress("DEPRECATION")
-            getSystemService(android.content.Context.VIBRATOR_SERVICE) as android.os.Vibrator
-        }
-        val effect = if (android.os.Build.VERSION.SDK_INT >= 26)
-            android.os.VibrationEffect.createOneShot(ms, android.os.VibrationEffect.DEFAULT_AMPLITUDE) else null
-        if (android.os.Build.VERSION.SDK_INT >= 33) {
-            // "알림 진동"으로 알려줌 → 폰의 알림 진동 세기를 따름 (터치 진동 꺼져 있어도 울림)
-            v.vibrate(effect!!, android.os.VibrationAttributes.createForUsage(android.os.VibrationAttributes.USAGE_NOTIFICATION))
-        } else if (android.os.Build.VERSION.SDK_INT >= 26) {
-            @Suppress("DEPRECATION")
-            v.vibrate(
-                effect!!,
-                android.media.AudioAttributes.Builder()
-                    .setUsage(android.media.AudioAttributes.USAGE_NOTIFICATION)
-                    .build()
-            )
-        } else {
-            @Suppress("DEPRECATION")
-            v.vibrate(ms)
-        }
-    }
+
     private var renameResult: MethodChannel.Result? = null
     private var pendingRenameName: String? = null
     private var pendingRenameUri: android.net.Uri? = null

@@ -47,6 +47,7 @@ class MusicProvider extends ChangeNotifier {
       await _loadFavorites();
       await _loadPlayCounts();
       await _loadEditedSongs();
+      await _loadCustomArt();
       await _loadRecentSongsUris();
       final granted = await _requestPermissions();
       if (granted) {
@@ -63,6 +64,50 @@ class MusicProvider extends ChangeNotifier {
   }
 
   Map<String, Map<String, String>> _editedSongs = {};
+
+  // 인터넷에서 찾아 넣은 앨범 사진 (곡 파일 경로 → 앱 폴더에 저장한 사진 이름)
+  Map<String, String> _customArt = {};
+
+  Future<void> _loadCustomArt() async {
+    final prefs = await SharedPreferences.getInstance();
+    try {
+      final raw = prefs.getString('custom_art');
+      if (raw != null) _customArt = Map<String, String>.from(jsonDecode(raw));
+    } catch (_) {}
+  }
+
+  Future<List<int>?> _readCustomArt(String uri) async {
+    final name = _customArt[uri];
+    if (name == null) return null;
+    try {
+      final dir = await _channel.invokeMethod<String>('appFilesDir');
+      if (dir == null) return null;
+      final f = File('$dir/album_art/$name');
+      return await f.exists() ? await f.readAsBytes() : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// 인터넷에서 받은 앨범 사진을 이 곡에 넣기 (앱 폴더에 저장 → 다음에 켜도 그대로)
+  Future<void> setCustomArt(Song song, List<int> bytes) async {
+    if (song.uri == null) return;
+    try {
+      final dir = await _channel.invokeMethod<String>('appFilesDir');
+      if (dir == null) return;
+      final folder = Directory('$dir/album_art');
+      if (!await folder.exists()) await folder.create(recursive: true);
+      final name = '${song.uri.hashCode.abs()}.jpg';
+      await File('${folder.path}/$name').writeAsBytes(bytes);
+      _customArt[song.uri!] = name;
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('custom_art', jsonEncode(_customArt));
+      song.albumArt = bytes;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('앨범 사진 저장 오류: $e');
+    }
+  }
 
   Future<void> _loadEditedSongs() async {
     final prefs = await SharedPreferences.getInstance();
@@ -501,6 +546,11 @@ class MusicProvider extends ChangeNotifier {
           song.artist = edited['artist'] ?? song.artist;
           song.album = edited['album'] ?? song.album;
           song.isEdited = true;
+        }
+        // 인터넷에서 찾아 넣은 앨범 사진이 있으면 그걸로
+        if (song.uri != null && _customArt.containsKey(song.uri)) {
+          final art = await _readCustomArt(song.uri!);
+          if (art != null) song.albumArt = art;
         }
         updateCount++;
         // 10개마다 한 번씩 업데이트

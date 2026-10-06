@@ -974,7 +974,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _AppBarCircleButton(
             onTap: () {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              showMoreMenuSheet(context);
+              showMoreMenuSheet(context, showSongTools: true);
               return;
               showModalBottomSheet(
                 context: context,

@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/theme_provider.dart';
 import '../screens/settings_screen.dart';
+import '../screens/bulk_clean_screen.dart';
 
 const String _kStoreUrl =
     'https://play.google.com/store/apps/details?id=kr.ssing.catsong';
@@ -31,6 +32,9 @@ const String _kIconGlobe =
     '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>'
     '<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>';
 const String _kIconChevron = '<polyline points="9 18 15 12 9 6"/>';
+const String _kIconSparkle =
+    '<path d="M12 3l1.9 5.8L20 10.7l-5.8 1.9L12 18.4l-1.9-5.8L4 10.7l6.1-1.9z"/>'
+    '<path d="M19 3v4M17 5h4"/>';
 const String _kIconClose =
     '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
 
@@ -71,6 +75,7 @@ void showMoreMenuSheet(
       String shareText = '파란소리 앱으로 음악 들어요! 🎧',
       String shareSubtitle = '파란소리를 소개해보세요.',
       String? stationHomepage,
+      bool showSongTools = false, // 홈에서만: 곡 정보 한꺼번에 정리
     }) {
   final isDarkMode = context.read<ThemeProvider>().isDarkMode;
   showModalBottomSheet(
@@ -90,6 +95,11 @@ void showMoreMenuSheet(
       isDarkMode: isDarkMode,
       shareSubtitle: shareSubtitle,
       hasHomepage: stationHomepage != null && stationHomepage.isNotEmpty,
+      showSongTools: showSongTools,
+      onCleanSongs: () {
+        Navigator.pop(ctx);
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const BulkCleanScreen()));
+      },
       onShare: () {
         Navigator.pop(ctx);
         Share.share('$shareText\n$_kStoreUrl');
@@ -212,8 +222,12 @@ class _MoreMenuSheet extends StatelessWidget {
   final VoidCallback onRate;
   final VoidCallback onSettings;
   final VoidCallback onHomepage;
+  final bool showSongTools;
+  final VoidCallback onCleanSongs;
 
   const _MoreMenuSheet({
+    required this.showSongTools,
+    required this.onCleanSongs,
     required this.isDarkMode,
     required this.shareSubtitle,
     required this.hasHomepage,
@@ -245,6 +259,16 @@ class _MoreMenuSheet extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 _TopBar(p: p),
+                if (showSongTools) ...[
+                  _MenuCard(
+                    p: p,
+                    icon: _kIconSparkle,
+                    title: '곡 정보 한꺼번에 정리',
+                    subtitle: '지저분한 제목·가수를 깔끔하게 정리해요.',
+                    onTap: onCleanSongs,
+                  ),
+                  const SizedBox(height: 12),
+                ],
                 _MenuCard(
                   p: p,
                   icon: _kIconShare,

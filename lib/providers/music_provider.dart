@@ -21,6 +21,8 @@ class MusicProvider extends ChangeNotifier {
   List<MusicFolder> _folders = [];
   static const _channel = MethodChannel('kr.ssing.catsong/media');
   bool _isLoading = true;
+  bool _metaLoading = false; // 2단계: 곡 정보(제목·가수)를 뒤에서 읽는 중
+  bool get metaLoading => _metaLoading;
   bool _hasPermission = false;
   String _errorMessage = '';
 
@@ -462,6 +464,7 @@ class MusicProvider extends ChangeNotifier {
       notifyListeners();
 
       // 2단계: 백그라운드에서 메타데이터 읽기
+      _metaLoading = true;
       int updateCount = 0;
       for (final song in _songs) {
         if (song.uri == null) continue;
@@ -511,11 +514,13 @@ class MusicProvider extends ChangeNotifier {
       notifyListeners();
 
       await _loadRecentSongs();
+      _metaLoading = false; // 곡 정보 다 읽음
       debugPrint('스캔 완료: ${_songs.length}개 곡 발견');
     } catch (e) {
       _errorMessage = '음악 스캔 오류: $e';
     } finally {
       _isLoading = false;
+      _metaLoading = false;
       notifyListeners();
     }
   }

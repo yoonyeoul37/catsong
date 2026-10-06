@@ -26,8 +26,19 @@ class SongTitleCleaner {
   );
 
   static bool _looksUnknown(String a) {
-    final l = a.toLowerCase();
-    return a.isEmpty || l.contains('unknown') || a == '알 수 없는 아티스트' || a == '알 수 없음';
+    final l = a.toLowerCase().trim();
+    return a.isEmpty ||
+        l.contains('unknown') ||
+        a == '알 수 없는 아티스트' ||
+        a == '알 수 없음' ||
+        // 여러 가수 모음 앨범 표시 → 진짜 가수가 아님
+        l.contains('various') ||
+        l == 'va' ||
+        l == 'v.a.' ||
+        l == 'v.a' ||
+        a.contains('여러 아티스트') ||
+        a.contains('다양한 아티스트') ||
+        a.contains('옴니버스');
   }
 
   static String _tidy(String s) => s

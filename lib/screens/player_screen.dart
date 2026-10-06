@@ -220,15 +220,170 @@ class _PlayerScreenState extends State<PlayerScreen>
       }
       playerProvider.onSongChanged = (song) {
         _extractColor(song);
+        _countCdPlay(); // 시디롬·앨범으로 10곡 들으면 파란포토 권하기 (한 번만)
       };
     });
+  }
+
+  // ───── 파란포토 권하기 (시디롬·앨범 쓰는 사람에게 한 번만) ─────
+  bool _showParanSuggest = false;
+  Timer? _suggestTimer;
+
+  Future<void> _countCdPlay() async {
+    if (_albumArtStyle == 6) return; // 이미 파란포토
+    final prefs = await SharedPreferences.getInstance();
+
+    if (prefs.getBool('paranSuggestDone') ?? false) return; // 이미 한 번 보여줌
+    final n = (prefs.getInt('cdPlayCount') ?? 0) + 1;
+    await prefs.setInt('cdPlayCount', n);
+    if (n >= 10 && mounted) {
+      await prefs.setBool('paranSuggestDone', true);
+      setState(() => _showParanSuggest = true); // 괜찮아요 / 구경하기 누를 때까지 그대로
+    }
+  }
+
+  /// 구경하기: 파란포토로 바꾸고, 잠깐 "시디롬으로 되돌리기" 버튼
+  void _tryParanPhoto() {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    final prev = _albumArtStyle;
+    _suggestTimer?.cancel();
+    setState(() {
+      _showParanSuggest = false;
+      _albumArtStyle = 6;
+      _hasSeenParanPhoto = true;
+    });
+    _saveStyle(6);
+    SharedPreferences.getInstance().then((p) => p.setBool('hasSeenParanPhoto', true));
+    final messenger = ScaffoldMessenger.of(context);
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        duration: const Duration(seconds: 10),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.white,
+        elevation: 10,
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+        padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle_rounded, color: Color(0xFF2589E8), size: 22),
+            const SizedBox(width: 10),
+            const Expanded(
+              child: Text('파란포토로 바꿨어요',
+                  style: TextStyle(color: Color(0xFF17140F), fontSize: 14.5, fontWeight: FontWeight.w700)),
+            ),
+            TextButton(
+              onPressed: () {
+                messenger.hideCurrentSnackBar();
+                if (!mounted) return;
+                setState(() => _albumArtStyle = prev);
+                _saveStyle(prev);
+              },
+              style: TextButton.styleFrom(foregroundColor: const Color(0xFF2589E8)),
+              child: Text(prev == 3 ? '앨범으로 되돌리기' : '시디롬으로 되돌리기',
+                  style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
+            ),
+          ],
+        ),
+      ));
+  }
+
+  /// 시디·앨범 아래쪽에 잠깐 떠오르는 권하기 카드
+  Widget _withParanSuggest(Widget child) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        child,
+        Positioned(
+          left: 20,
+          right: 20,
+          bottom: 0,
+          child: IgnorePointer(
+            ignoring: !_showParanSuggest,
+            child: AnimatedSlide(
+              offset: _showParanSuggest ? Offset.zero : const Offset(0, 0.2),
+              duration: const Duration(milliseconds: 350),
+              curve: Curves.easeOutCubic,
+              child: AnimatedOpacity(
+                opacity: _showParanSuggest ? 1 : 0,
+                duration: const Duration(milliseconds: 350),
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 12, 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.96),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(color: Colors.black.withOpacity(0.35), blurRadius: 20, offset: const Offset(0, 8)),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: paranPhoto(_nightBgPath, thumb: true, width: 56, height: 56, fit: BoxFit.cover),
+                          ),
+                          const SizedBox(width: 14),
+                          const Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('파란포토로 들어볼까요?',
+                                    style: TextStyle(
+                                        color: Color(0xFF17140F), fontSize: 15.5, fontWeight: FontWeight.w800)),
+                                SizedBox(height: 4),
+                                Text('예쁜 사진 위로 음악이 흘러요',
+                                    style: TextStyle(color: Color(0xFF8A857B), fontSize: 12.5)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              _suggestTimer?.cancel();
+                              setState(() => _showParanSuggest = false);
+                            },
+                            style: TextButton.styleFrom(foregroundColor: const Color(0xFF8A857B)),
+                            child: const Text('괜찮아요', style: TextStyle(fontSize: 13.5)),
+                          ),
+                          const SizedBox(width: 6),
+                          ElevatedButton(
+                            onPressed: _tryParanPhoto,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF2589E8),
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              minimumSize: const Size(0, 42),
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                            child: const Text('구경하기', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Future<void> _loadStyle() async {
     final prefs = await SharedPreferences.getInstance();
     final shown = false;
     setState(() {
-      _albumArtStyle = prefs.getInt('albumArtStyle') ?? 1;
+      _albumArtStyle = prefs.getInt('albumArtStyle') ?? 6; // 처음엔 파란포토로 시작
       _nightBgPath = prefs.getString('nightBgPath') ?? 'assets/spring_photo1.png';
       _nightFavPaths = (prefs.getStringList('nightFavPaths') ?? []).toSet();
       _nightBgIsFile = prefs.getBool('nightBgIsFile') ?? false;
@@ -821,6 +976,7 @@ class _PlayerScreenState extends State<PlayerScreen>
   void dispose() {
     _autoBgTimer?.cancel();
     _tvArtTimer?.cancel();
+    _suggestTimer?.cancel();
     CastService.instance.cardArt = null; // 재생화면이 없으면 카드를 못 찍으니 앨범 사진으로
     _rotationController.dispose();
     _equalizerController.dispose();
@@ -1944,9 +2100,9 @@ class _PlayerScreenState extends State<PlayerScreen>
   }
   Widget _buildAlbumArt(Song song, Color primaryColor) {
     switch (_albumArtStyle) {
-      case 3: return _buildCardStyle(song, primaryColor);
+      case 3: return _withParanSuggest(_buildCardStyle(song, primaryColor));
       case 6: return _buildNightPhotoArea(song);
-      default: return _buildCDStyle(song, primaryColor);
+      default: return _withParanSuggest(_buildCDStyle(song, primaryColor));
     }
   }
 
@@ -3657,11 +3813,11 @@ class _PlayerScreenState extends State<PlayerScreen>
                                     Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                                       decoration: BoxDecoration(
-                                        color: Colors.redAccent,
+                                        color: const Color(0xFF2589E8),
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: const Text(
-                                        'NEW',
+                                        '추천',
                                         style: TextStyle(
                                             color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold),
                                       ),
@@ -3793,7 +3949,7 @@ void showPlayerSpeedMenu(BuildContext context) =>
 Future<void> showPlayerStyleMenu(BuildContext context) async {
   final prefs = await SharedPreferences.getInstance();
   if (!context.mounted) return;
-  final current = prefs.getInt('albumArtStyle') ?? 1;
+  final current = prefs.getInt('albumArtStyle') ?? 6; // 처음엔 파란포토
   await prefs.setBool('hasSeenParanPhoto', true);
   await _PlayerScreenState._styleDialog(context, current, (id) => prefs.setInt('albumArtStyle', id),
       printStyle: prefs.getInt('printStyle') ?? 0,

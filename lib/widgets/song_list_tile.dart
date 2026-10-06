@@ -236,7 +236,7 @@ class SongListTile extends StatelessWidget {
   Future<void> _showOptionsSheet(BuildContext context, bool isFav) async {
     // 재생화면 스타일 썸네일용 (지금 고른 스타일 · 파란포토 사진)
     final prefs = await SharedPreferences.getInstance();
-    int style = prefs.getInt('albumArtStyle') ?? 1;
+    int style = prefs.getInt('albumArtStyle') ?? 6; // 처음엔 파란포토
     final bgPath = prefs.getString('nightBgPath') ?? 'assets/spring_photo1.png';
     final bgIsFile = prefs.getBool('nightBgIsFile') ?? false;
     bool showNew = !(prefs.getBool('hasSeenParanPhoto') ?? false);
@@ -340,7 +340,7 @@ class SongListTile extends StatelessWidget {
                   textColor: baseColor,
                   onStyleChanged: () async {
                     final p2 = await SharedPreferences.getInstance();
-                    style = p2.getInt('albumArtStyle') ?? 1;
+                    style = p2.getInt('albumArtStyle') ?? 6;
                     showNew = false;
                     if (ctx.mounted) setSheet(() {});
                   },

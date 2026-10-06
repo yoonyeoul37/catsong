@@ -207,8 +207,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                 ),
               ),
             // 지금 재생 중인 녹음: 10초 앞뒤 · 배속
-            if (playing != null && !_selecting)
-              SliverToBoxAdapter(child: _miniBar(playing, player, music, baseColor)),
+            // (재생 막대는 목록이 안 밀리게 화면 아래에 떠 있게 옮김)
             // 통화 녹음 | 음성 녹음 (선택 중엔 숨김)
             if (!_selecting)
             SliverToBoxAdapter(
@@ -260,7 +259,8 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
               )
             else
               SliverPadding(
-                padding: EdgeInsets.fromLTRB(8, 4, 8, (_voice || _selecting) ? 100 : 16), // 녹음 버튼에 안 가리게
+                padding: EdgeInsets.fromLTRB(
+                    8, 4, 8, (_voice || _selecting) ? 100 : 16), // 녹음 버튼에 안 가리게
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                         (context, i) {
@@ -356,6 +356,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
         // 음성 녹음 칸에서만: 새로 녹음하기 버튼
         if (_voice && !_selecting)
           Positioned(right: 20, bottom: 24, child: _recordFab()),
+        // (재생 막대는 맨 아래 미니플레이어에 합침)
         // 여러 개 선택 중: 아래 고정 버튼 (공유 · 잠금 · 삭제)
         if (_selecting)
           Positioned(left: 0, right: 0, bottom: 0, child: _selectBar(list, music, baseColor, isDark)),
@@ -483,8 +484,11 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
       margin: const EdgeInsets.fromLTRB(16, 2, 16, 8),
       padding: const EdgeInsets.fromLTRB(14, 10, 8, 8),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.06) : Colors.white, // 흰 카드
+        color: isDark ? const Color(0xFF2A251E) : Colors.white, // 떠 있는 카드
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(isDark ? 0.4 : 0.12), blurRadius: 16, offset: const Offset(0, 4)),
+        ],
       ),
       child: Column(
         children: [
@@ -696,31 +700,72 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
         title: Text(isAll ? '녹음 $count개를 삭제할까요?' : '이 녹음을 삭제할까요?', style: const TextStyle(fontSize: 16)),
         content: Text(
           [
-            '휴지통으로 옮겨져요. 30일 안에는 갤럭시 내 파일 → 휴지통에서 되살릴 수 있어요.',
+            '휴지통으로 옮겨져요. 30일 안에는 ⋮ → 지운 녹음 되살리기로 되살릴 수 있어요.',
             if (lockedCount > 0) '잠긴 녹음 $lockedCount개는 남겨둬요.',
           ].join('\n\n'),
           style: const TextStyle(fontSize: 13.5, height: 1.5),
         ),
+        // 왼쪽: 작은 빨간 "영구 삭제" / 오른쪽: 취소 · 휴지통으로
+        actionsAlignment: MainAxisAlignment.spaceBetween,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              _confirmForever(targets, count);
+            },
+            child: const Text('영구 삭제', style: TextStyle(color: Colors.redAccent, fontSize: 13)),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('취소')),
+              TextButton(
+                onPressed: () async {
+                  Navigator.pop(ctx);
+                  final n = await music.trashRecordings(targets);
+                  _afterDelete(n, '$n개를 휴지통으로 옮겼어요');
+                },
+                child: const Text('휴지통으로', style: TextStyle(fontWeight: FontWeight.w600)),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 영구 삭제: 되살릴 수 없다고 한 번 더 확인
+  void _confirmForever(List<CallRecording> targets, int count) {
+    final music = context.read<MusicProvider>();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('영구 삭제할까요?', style: TextStyle(fontSize: 16)),
+        content: Text('녹음 $count개를 영구 삭제하면 되살릴 수 없어요.',
+            style: const TextStyle(fontSize: 13.5, height: 1.5)),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('취소')),
           TextButton(
             onPressed: () async {
               Navigator.pop(ctx);
-              final n = await music.trashRecordings(targets);
-              if (!mounted) return;
-              setState(() {
-                _selected.clear();
-                _selectMode = false;
-              });
-              if (n > 0) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$n개를 휴지통으로 옮겼어요')));
-              }
+              final n = await music.deleteRecordingsForever(targets);
+              _afterDelete(n, '$n개를 영구 삭제했어요');
             },
-            child: const Text('삭제', style: TextStyle(color: Colors.redAccent)),
+            child: const Text('영구 삭제',
+                style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w600)),
           ),
         ],
       ),
     );
+  }
+
+  void _afterDelete(int n, String msg) {
+    if (!mounted) return;
+    setState(() {
+      _selected.clear();
+      _selectMode = false;
+    });
+    if (n > 0) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   /// 통화 녹음 | 음성 녹음 고르는 칸

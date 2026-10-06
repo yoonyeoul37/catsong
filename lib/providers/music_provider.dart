@@ -9,6 +9,7 @@ import '../models/album.dart';
 import '../models/artist.dart';
 import '../models/folder.dart';
 import '../models/call_recording.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 class MusicProvider extends ChangeNotifier {
   List<Song> _songs = [];
@@ -235,7 +236,16 @@ class MusicProvider extends ChangeNotifier {
     '/storage/emulated/0/Recordings/Voice Recorder',
     '/storage/emulated/0/Recordings/Paransori', // 파란소리에서 녹음한 것
     '/storage/emulated/0/Voice Recorder',
+    '/storage/emulated/0/Podcasts/Paransori', // 안드로이드 11 이하에서 녹음한 것
   ];
+
+  // 안드로이드 11 이하에서 예전에 Music/Paransori에 저장된 녹음 → 음악 목록에서 빼고 녹음 화면에 보이게
+  static const _legacyRecDir = '/storage/emulated/0/Music/Paransori';
+  static bool _isLegacyRecording(String path) {
+    if (!path.startsWith('$_legacyRecDir/')) return false;
+    final n = path.split('/').last;
+    return n.startsWith('녹음 ') || n.startsWith('통화 녹음') || n.startsWith('음성 ');
+  }
   List<CallRecording> _callRecordings = [];
   bool _callLoading = false;
   List<CallRecording> get callRecordings => _callRecordings;
@@ -291,15 +301,39 @@ class MusicProvider extends ChangeNotifier {
         notifyListeners();
         return targets.length;
       }
-    } catch (e) {
+    } catch (e, st) {
       debugPrint('녹음 삭제 오류: $e');
+      // 삭제 실패 이유를 Crashlytics에 남기기 (스토어 버전에서도 원인 확인용)
+      FirebaseCrashlytics.instance.recordError(e, st, reason: '녹음 삭제 실패');
+    }
+    return 0;
+  }
+
+  /// 녹음 영구 삭제 (되살릴 수 없음, 잠근 건 빼고). 지운 개수, 취소·실패면 0
+  Future<int> deleteRecordingsForever(List<CallRecording> list) async {
+    final targets = list.where((r) => !_recLocked.contains(r.path)).toList();
+    if (targets.isEmpty) return 0;
+    try {
+      final ok = await _channel.invokeMethod('deleteFilesForever', {
+        'paths': targets.map((r) => r.path).toList(),
+      });
+      if (ok == true) {
+        final gone = targets.map((r) => r.path).toSet();
+        _callRecordings.removeWhere((r) => gone.contains(r.path));
+        notifyListeners();
+        return targets.length;
+      }
+    } catch (e, st) {
+      debugPrint('녹음 영구 삭제 오류: $e');
+      FirebaseCrashlytics.instance.recordError(e, st, reason: '녹음 영구 삭제 실패');
     }
     return 0;
   }
 
   /// 통화 녹음 폴더에 있는 파일인지
   bool isCallRecordingPath(String? path) =>
-      path != null && [..._callDirs, ..._voiceDirs].any((d) => path.startsWith('$d/'));
+      path != null &&
+          ([..._callDirs, ..._voiceDirs].any((d) => path.startsWith('$d/')) || _isLegacyRecording(path));
 
   /// 통화 녹음 불러오기 (최신순) → 통화 길이는 뒤에서 천천히 채움
   Future<void> loadCallRecordings() async {
@@ -307,12 +341,15 @@ class MusicProvider extends ChangeNotifier {
     await _loadRecMeta(); // 내가 붙인 제목·잠금
     notifyListeners();
     final found = <CallRecording>[];
-    for (final d in [..._callDirs, ..._voiceDirs]) {
-      final isVoice = _voiceDirs.contains(d);
+    for (final d in [..._callDirs, ..._voiceDirs, _legacyRecDir]) {
+      final legacy = d == _legacyRecDir; // 예전에 음악 폴더에 들어간 녹음
+      final isVoice = _voiceDirs.contains(d) || legacy;
       final dir = Directory(d);
       if (!await dir.exists()) continue;
       await for (final e in dir.list()) {
         if (e is! File) continue;
+        if (e.path.split('/').last.startsWith('.')) continue; // 휴지통(.trashed-)·숨김 파일은 빼기
+        if (legacy && !_isLegacyRecording(e.path)) continue; // 음악 폴더에선 녹음만 골라오기
         final lower = e.path.toLowerCase();
         if (!(lower.endsWith('.m4a') || lower.endsWith('.mp3') || lower.endsWith('.amr') || lower.endsWith('.3gp'))) {
           continue;
@@ -323,7 +360,9 @@ class MusicProvider extends ChangeNotifier {
         } catch (_) {
           modified = DateTime.now();
         }
-        found.add(CallRecording.fromPath(e.path, modified, isVoice: isVoice));
+        // 자른 통화 녹음("통화 녹음 …")은 음성 폴더에 있어도 통화 녹음 칸으로
+        final fileVoice = isVoice && !e.path.split('/').last.startsWith('통화 녹음');
+        found.add(CallRecording.fromPath(e.path, modified, isVoice: fileVoice));
       }
     }
     found.sort((a, b) => b.dateTime.compareTo(a.dateTime));
@@ -391,11 +430,13 @@ class MusicProvider extends ChangeNotifier {
 
         await for (final entity in dir.list(recursive: true)) {
           if (entity is File) {
+            if (entity.path.split('/').last.startsWith('.')) continue; // 휴지통(.trashed-)·숨김 파일은 빼기
             final ext = entity.path.toLowerCase();
-            if (ext.endsWith('.mp3') ||
+            if ((ext.endsWith('.mp3') ||
                 ext.endsWith('.m4a') ||
                 ext.endsWith('.flac') ||
-                ext.endsWith('.wav')) {
+                ext.endsWith('.wav')) &&
+                !_isLegacyRecording(entity.path)) { // 음악 폴더에 들어간 녹음은 음악 목록에서 빼기
               foundSongs.add(Song(
                 id: idCounter++,
                 title: _getFileName(entity.path),

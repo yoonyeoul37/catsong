@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import '../providers/player_provider.dart';
 
 /// 지금 녹음 중인 파일 (되살리기에서 건드리지 않게)
@@ -254,7 +255,10 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
     String? saved;
     try {
       saved = await _channel.invokeMethod<String>('saveRecording', {'path': path, 'name': name});
-    } catch (_) {}
+    } catch (e, st) {
+      // 저장 실패 이유를 Crashlytics에 남기기 (스토어 버전에서도 원인 확인용)
+      FirebaseCrashlytics.instance.recordError(e, st, reason: '녹음 저장 실패');
+    }
     // 저장에 성공했을 때만 지움 (실패하면 남겨뒀다가 다음에 되살림)
     if (saved != null) {
       try {

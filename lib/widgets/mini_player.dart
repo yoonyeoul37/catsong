@@ -13,6 +13,7 @@ import 'equalizer_animation.dart';
 import 'album_eq_overlay.dart';
 import '../providers/theme_provider.dart';
 import '../services/cast_service.dart';
+import '../providers/music_provider.dart';
 
 class MiniPlayer extends StatelessWidget {
   const MiniPlayer({super.key});
@@ -27,6 +28,16 @@ class MiniPlayer extends StatelessWidget {
     final baseColor = isDarkMode ? Colors.white : Colors.black;
 
     if (song == null) return const SizedBox.shrink();
+
+    // 녹음을 듣는 중이면 ⏮⏭ 대신 10초 앞뒤 + 배속 (녹음 화면 재생 막대를 여기로 합침)
+    final isRec = context.read<MusicProvider>().isCallRecordingPath(song.uri);
+    void jump(int sec) {
+      var to = playerProvider.position + Duration(seconds: sec);
+      if (to < Duration.zero) to = Duration.zero;
+      final dur = playerProvider.duration;
+      if (dur > Duration.zero && to > dur) to = dur;
+      playerProvider.seekTo(to);
+    }
 
     return GestureDetector(
       // 아래로 휙 쓸어내리면 미니플레이어 닫기
@@ -205,13 +216,13 @@ class MiniPlayer extends StatelessWidget {
                             ],
                           ),
                         ),
-                        // 이전 버튼
+                        // 이전 버튼 (녹음이면 10초 뒤로)
                         IconButton(
                           onPressed: () {
                             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                            playerProvider.playPrevious();
+                            isRec ? jump(-10) : playerProvider.playPrevious();
                           },
-                          icon: Icon(Icons.skip_previous,
+                          icon: Icon(isRec ? Icons.replay_10 : Icons.skip_previous,
                               color: baseColor.withOpacity(0.7)),
                           iconSize: 26,
                           padding: const EdgeInsets.all(4),
@@ -247,19 +258,43 @@ class MiniPlayer extends StatelessWidget {
                             ),
                           ),
                         ),
-                        // 다음 버튼
+                        // 다음 버튼 (녹음이면 10초 앞으로)
                         IconButton(
                           onPressed: () {
                             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                            playerProvider.playNext();
+                            isRec ? jump(10) : playerProvider.playNext();
                           },
-                          icon: Icon(Icons.skip_next,
+                          icon: Icon(isRec ? Icons.forward_10 : Icons.skip_next,
                               color: baseColor.withOpacity(0.7)),
                           iconSize: 26,
                           padding: const EdgeInsets.all(4),
                           constraints: const BoxConstraints(
                               minWidth: 36, minHeight: 36),
                         ),
+                        // 녹음이면 배속 (누를 때마다 1.0 → 1.25 → 1.5 → 2.0)
+                        if (isRec)
+                          GestureDetector(
+                            onTap: () {
+                              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                              const speeds = [1.0, 1.25, 1.5, 2.0];
+                              final s = playerProvider.playbackSpeed;
+                              final i = speeds.indexWhere((x) => (x - s).abs() < 0.01);
+                              playerProvider.setPlaybackSpeed(speeds[(i + 1) % speeds.length]);
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(left: 2),
+                              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: baseColor.withOpacity(0.2)),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                '${playerProvider.playbackSpeed == playerProvider.playbackSpeed.roundToDouble() ? playerProvider.playbackSpeed.toStringAsFixed(1) : playerProvider.playbackSpeed}×',
+                                style: TextStyle(
+                                    color: baseColor.withOpacity(0.6), fontSize: 11, fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                          ),
                         // × (닫기): 재생 중에도 누르면 바로 멈추고 닫힘
                         IconButton(
                             onPressed: () => _close(context),

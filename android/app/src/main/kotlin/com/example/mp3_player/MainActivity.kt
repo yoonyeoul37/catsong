@@ -184,7 +184,7 @@ class MainActivity : AudioServiceActivity() {
                                 if (trimWithMuxer(path, m4a, 0L, 24L * 3600 * 1000)) src = m4a
                             }
                             val relDir = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S)
-                                "Recordings/Paransori" else "Music/Paransori"
+                                "Recordings/Paransori" else "Podcasts/Paransori" // 안드로이드 11 이하: 음악 목록에 안 섞이는 곳
                             val values = ContentValues().apply {
                                 put(MediaStore.MediaColumns.DISPLAY_NAME, "$name.m4a")
                                 put(MediaStore.MediaColumns.MIME_TYPE, "audio/mp4")
@@ -205,7 +205,8 @@ class MainActivity : AudioServiceActivity() {
                             }
                         } catch (e: Exception) {
                             android.util.Log.e("SaveRecording", "Error: ${e.message}", e)
-                            result.success(null)
+                            // 실패 이유를 앱으로 보내서 Crashlytics에 남기기
+                            result.error("SAVE_FAIL", "${e.javaClass.simpleName}: ${e.message} (SDK ${android.os.Build.VERSION.SDK_INT})", null)
                         }
                     }
                 }
@@ -355,6 +356,45 @@ class MainActivity : AudioServiceActivity() {
                     )
                     result.success(true)
                 }
+                "deleteFilesForever" -> {
+                    // 녹음 영구 삭제 (휴지통 안 거치고 바로, 되살릴 수 없음)
+                    val paths = call.argument<List<String>>("paths")
+                    if (paths.isNullOrEmpty()) {
+                        result.success(false)
+                    } else {
+                        try {
+                            val uris = mutableListOf<android.net.Uri>()
+                            for (path in paths) {
+                                contentResolver.query(
+                                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                                    arrayOf(MediaStore.Audio.Media._ID),
+                                    "${MediaStore.Audio.Media.DATA}=?",
+                                    arrayOf(path), null
+                                )?.use {
+                                    if (it.moveToFirst()) {
+                                        val id = it.getLong(it.getColumnIndexOrThrow(MediaStore.Audio.Media._ID))
+                                        uris.add(android.net.Uri.withAppendedPath(
+                                            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id.toString()))
+                                    }
+                                }
+                            }
+                            if (uris.isEmpty()) {
+                                result.error("NOT_FOUND", "MediaStore에서 못 찾음: ${paths.size}개 (SDK ${android.os.Build.VERSION.SDK_INT})", null)
+                            } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                                deleteResult = result
+                                val pendingIntent = MediaStore.createDeleteRequest(contentResolver, uris)
+                                startIntentSenderForResult(pendingIntent.intentSender, 102, null, 0, 0, 0)
+                            } else {
+                                var count = 0
+                                for (uri in uris) count += contentResolver.delete(uri, null, null)
+                                result.success(count > 0)
+                            }
+                        } catch (e: Exception) {
+                            android.util.Log.e("DeleteForever", "Error: ${e.message}", e)
+                            result.error("DELETE_FAIL", "${e.javaClass.simpleName}: ${e.message} (SDK ${android.os.Build.VERSION.SDK_INT})", null)
+                        }
+                    }
+                }
                 "trashFiles" -> {
                     // 녹음 삭제: 바로 지우지 않고 휴지통으로 (30일 동안 내 파일 → 휴지통에서 되살릴 수 있음)
                     val paths = call.argument<List<String>>("paths")
@@ -379,7 +419,8 @@ class MainActivity : AudioServiceActivity() {
                                 }
                             }
                             if (uris.isEmpty()) {
-                                result.success(false)
+                                // 음악 목록에서 녹음 파일을 하나도 못 찾음 → 이유를 앱으로 보내기
+                                result.error("NOT_FOUND", "MediaStore에서 못 찾음: ${paths.size}개 (예: ${paths.first()}) (SDK ${android.os.Build.VERSION.SDK_INT})", null)
                             } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
                                 deleteResult = result
                                 val pendingIntent = MediaStore.createTrashRequest(contentResolver, uris, true)
@@ -391,7 +432,7 @@ class MainActivity : AudioServiceActivity() {
                             }
                         } catch (e: Exception) {
                             android.util.Log.e("TrashFiles", "Error: ${e.message}", e)
-                            result.success(false)
+                            result.error("TRASH_FAIL", "${e.javaClass.simpleName}: ${e.message} (SDK ${android.os.Build.VERSION.SDK_INT})", null)
                         }
                     }
                 }
@@ -805,8 +846,11 @@ class MainActivity : AudioServiceActivity() {
             if (!ok) return null
 
             // 녹음 자르기는 원래 녹음 폴더에 (Recordings 폴더는 안드로이드 12 이상만 가능)
-            val relDir = if (relDirArg != null &&
-                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) relDirArg else "Music/Paransori"
+            val relDir = when {
+                relDirArg == null -> "Music/Paransori" // 일반 음악 자르기
+                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S -> relDirArg
+                else -> "Podcasts/Paransori" // 안드로이드 11 이하: 녹음은 음악 목록에 안 섞이는 곳으로
+            }
             val outName = (outBase ?: "${inputFile.nameWithoutExtension}_자름") + ".$outExt"
             val values = ContentValues().apply {
                 put(MediaStore.MediaColumns.DISPLAY_NAME, outName)

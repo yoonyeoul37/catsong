@@ -1570,14 +1570,13 @@ class _PlayerScreenState extends State<PlayerScreen>
                         MenuQuickAction(Icons.playlist_add, '재생목록', () {
                           _showAddToPlaylistDialog(context, song, primaryColor);
                         }),
+                        // 공유·편집: 메뉴는 그대로 두고 위에 띄움 → 돌아오면 메뉴가 그대로
                         MenuQuickAction(Icons.share, '공유', () async {
-                          Navigator.pop(ctx);
                           if (song.uri != null) {
                             await Share.shareXFiles([XFile(song.uri!)], text: song.titleDisplay);
                           }
                         }),
                         MenuQuickAction(Icons.edit, '편집', () {
-                          Navigator.pop(ctx);
                           Navigator.push(context, MaterialPageRoute(builder: (context) => EditSongScreen(song: song)));
                         }),
                       ],
@@ -1641,7 +1640,6 @@ class _PlayerScreenState extends State<PlayerScreen>
                     _showSpeedDialog(context, context.read<PlayerProvider>(), primaryColor);
                   }, trailing: _sheetValue(_sheetSpeedLabel(playerProvider.playbackSpeed)), arrow: true),
                   _playerSheetItem(ctx, Icons.lyrics_outlined, AppLocalizations.of(context)!.lyrics, accent, baseColor, () {
-                    Navigator.pop(ctx);
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const LyricsScreen()));
                   }, arrow: true),
                   // 🌿 자연소리 섞기 (음악 위에 빗소리·파도 등을 깔기)
@@ -1654,7 +1652,6 @@ class _PlayerScreenState extends State<PlayerScreen>
                       accent,
                       baseColor,
                       () {
-                        Navigator.pop(ctx);
                         showNatureOverlaySheet(context);
                       },
                       trailing: _sheetValue(NatureOverlay.instance.summary),
@@ -1663,21 +1660,18 @@ class _PlayerScreenState extends State<PlayerScreen>
                   ),
                   ]),
                   MenuCard(isDark: isDark, children: [
+                  // 들어갔다 나오면 메뉴가 그대로 있게 (메뉴를 닫지 않고 위에 띄움)
                   _playerSheetItem(ctx, Icons.music_note, AppLocalizations.of(context)!.setRingtone, accent, baseColor, () {
-                    Navigator.pop(ctx);
                     Navigator.push(context, MaterialPageRoute(builder: (context) => RingtoneScreen(initialSong: song)));
                   }, arrow: true),
                   _playerSheetItem(ctx, Icons.content_cut, '자르기', accent, baseColor, () {
-                    Navigator.pop(ctx);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => RingtoneScreen(initialSong: song, trimMode: true)));
                   }, arrow: true),
                   _playerSheetItem(ctx, Icons.info_outline, AppLocalizations.of(context)!.songInfo, accent, baseColor, () {
-                    Navigator.pop(ctx);
                     SongListTile.showInfo(context, song);
                   }, arrow: true),
                   _playerSheetItem(ctx, Icons.equalizer, AppLocalizations.of(context)!.equalizer, accent, baseColor, () {
-                    Navigator.pop(ctx);
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const EqualizerScreen()));
                   }, arrow: true),
                   ]),
@@ -2292,7 +2286,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.only(left: 20, right: 10),
-                  itemCount: _nightSelectedCategory == '전체' ? photos.length + 2 : photos.length + 1,
+                  itemCount: _nightSelectedCategory == '전체' ? photos.length + 4 : photos.length + 1,
                   separatorBuilder: (_, __) => const SizedBox(width: 10),
                   itemBuilder: (context, index) {
                     if (index == 0) {
@@ -2359,7 +2353,34 @@ class _PlayerScreenState extends State<PlayerScreen>
                         ),
                       );
                     }
-                    final photoIndex = _nightSelectedCategory == '전체' ? index - 2 : index - 1;
+                    // 전체보기에서도 "내 사진" 추가 · "관리" (전체 선택 버튼과 같은 모양)
+                    if (_nightSelectedCategory == '전체' && (index == 2 || index == 3)) {
+                      final isAdd = index == 2;
+                      return GestureDetector(
+                        onTap: isAdd ? _pickFromGallery : () => _showGalleryFavManager(context),
+                        child: Container(
+                          width: 56,
+                          height: 56,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.black.withOpacity(0.35),
+                            border: Border.all(color: Colors.white.withOpacity(0.25)),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(isAdd ? Icons.add_photo_alternate_outlined : Icons.tune_rounded,
+                                  color: Colors.white, size: 20),
+                              const SizedBox(height: 4),
+                              Text(isAdd ? '내 사진' : '관리',
+                                  style: const TextStyle(color: Colors.white, fontSize: 9)),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+                    final photoIndex = _nightSelectedCategory == '전체' ? index - 4 : index - 1;
 
                     final path = photos[photoIndex];
                     final isFav = _nightFavPaths.contains(path);
@@ -2406,14 +2427,21 @@ class _PlayerScreenState extends State<PlayerScreen>
                       },
                       child: Container(
                         width: 56,
-                        height: 64,
+                        height: 56, // 옆 버튼들과 같은 크기
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           color: Colors.black.withOpacity(0.35),
                           border: Border.all(color: Colors.white.withOpacity(0.25)),
                         ),
-                        child: const Icon(Icons.check, color: Colors.white, size: 22),
+                        child: const Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.close, color: Colors.white, size: 20),
+                            SizedBox(height: 4),
+                            Text('닫기', style: TextStyle(color: Colors.white, fontSize: 9)),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(width: 20),

@@ -30,13 +30,17 @@ import 'package:in_app_update/in_app_update.dart';
 import 'package:just_audio/just_audio.dart';
 import 'dart:ui' show PlatformDispatcher;
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 late AudioHandler globalAudioHandler;
 late BaseAudioHandler radioAudioHandler;
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final binding = WidgetsFlutterBinding.ensureInitialized();
+  // 시작 화면을 최소 1.2초는 보여주기 (너무 빨리 지나가지 않게)
+  FlutterNativeSplash.preserve(widgetsBinding: binding);
+  Future.delayed(const Duration(milliseconds: 1200), FlutterNativeSplash.remove);
   MediaKit.ensureInitialized();
 
   // 오류 기록 (Firebase Crashlytics): 앱이 튕기거나 빨간 오류 화면이 뜨면 자동으로 기록

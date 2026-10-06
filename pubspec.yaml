@@ -1,7 +1,7 @@
 name: mp3_player
 description: Local MP3 Player App
 publish_to: 'none'
-version: 1.0.0+121
+version: 1.0.0+122
 environment:
   sdk: ^3.12.0
 
@@ -117,4 +117,6 @@ flutter_native_splash:
   android_12:
     color: "#17140F"
     color_dark: "#17140F"
-    image: assets/app_icon.png      # 안드로이드 12 이상: 폰이 동그랗게 잘라서 보여줌
+    image: assets/splash_logo.png   # 안드로이드 12 이상도 둥근 네모 아이콘 (동그라미 안에 쏙 → 안 잘림)
+    icon_background_color: "#17140F"       # 동그라미 배경을 바탕색과 같게 (잘린 티 안 나게)
+    icon_background_color_dark: "#17140F"

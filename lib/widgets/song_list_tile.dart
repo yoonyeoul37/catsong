@@ -309,12 +309,11 @@ class SongListTile extends StatelessWidget {
                     MenuQuickAction(Icons.playlist_add, '재생목록', () {
                       _handleMenuAction(context, 'playlist');
                     }),
+                    // 공유·편집: 메뉴는 그대로 두고 위에 띄움 → 돌아오면 메뉴가 그대로
                     MenuQuickAction(Icons.share, '공유', () {
-                      Navigator.pop(ctx);
                       _handleMenuAction(context, 'share');
                     }),
                     MenuQuickAction(Icons.edit, '편집', () {
-                      Navigator.pop(ctx);
                       _handleMenuAction(context, 'edit');
                     }),
                   ],
@@ -348,10 +347,11 @@ class SongListTile extends StatelessWidget {
                 ),
                 ]),
                 MenuCard(isDark: isDarkMode, children: [
-                  _sheetItem(context, Icons.music_note, AppLocalizations.of(context)!.setRingtone, 'ringtone', accent, baseColor, isDarkMode, arrow: true),
-                  _sheetItem(context, Icons.content_cut, '자르기', 'trim', accent, baseColor, isDarkMode, arrow: true),
-                  _sheetItem(context, Icons.info_outline, AppLocalizations.of(context)!.songInfo, 'info', accent, baseColor, isDarkMode, arrow: true),
-                  _sheetItem(context, Icons.equalizer, AppLocalizations.of(context)!.equalizer, 'equalizer', accent, baseColor, isDarkMode, arrow: true),
+                  // 들어갔다 나오면 메뉴가 그대로 있게 (keepOpen)
+                  _sheetItem(context, Icons.music_note, AppLocalizations.of(context)!.setRingtone, 'ringtone', accent, baseColor, isDarkMode, arrow: true, keepOpen: true),
+                  _sheetItem(context, Icons.content_cut, '자르기', 'trim', accent, baseColor, isDarkMode, arrow: true, keepOpen: true),
+                  _sheetItem(context, Icons.info_outline, AppLocalizations.of(context)!.songInfo, 'info', accent, baseColor, isDarkMode, arrow: true, keepOpen: true),
+                  _sheetItem(context, Icons.equalizer, AppLocalizations.of(context)!.equalizer, 'equalizer', accent, baseColor, isDarkMode, arrow: true, keepOpen: true),
                 ]),
                 MenuCard(isDark: isDarkMode, children: [
                   _sheetItem(context, Icons.delete_outline, AppLocalizations.of(context)!.delete, 'delete', Colors.redAccent, Colors.redAccent, isDarkMode),

@@ -465,73 +465,16 @@ class _HomeScreenState extends State<HomeScreen> {
     _showSetStartScreenDialog(context, type, label);
   }
 
-  void _showSetStartScreenDialog(BuildContext context, StartScreenType type, String label) {
-    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
-    showDialog(
-      context: context,
-      builder: (ctx) => Dialog(
-        backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '앱 시작 화면으로 설정할까요?',
-                style: TextStyle(
-                    color: isDarkMode ? Colors.white : Colors.black87,
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 10),
-              Text(
-                '파란소리를 실행할 때 이 화면을 가장 먼저 보여드립니다.',
-                style: TextStyle(
-                    color: isDarkMode ? Colors.white60 : Colors.black54, fontSize: 14),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                        Navigator.pop(ctx);
-                      },
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: isDarkMode ? Colors.white60 : Colors.black54,
-                        side: BorderSide(color: isDarkMode ? Colors.white24 : Colors.black26),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: const Text('취소'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                        context.read<StartScreenProvider>().setStartScreen(type);
-                        Navigator.pop(ctx);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF6FA8DC),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: const Text('설정하기', style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+  void _showSetStartScreenDialog(BuildContext context, StartScreenType type, String label) async {
+    final ok = await showParanConfirm(
+      context,
+      title: '앱 시작 화면으로 설정할까요?',
+      message: '파란소리를 실행할 때 이 화면을 가장 먼저 보여드려요.',
+      confirmLabel: '설정하기',
     );
+    if (!ok || !context.mounted) return;
+    context.read<StartScreenProvider>().setStartScreen(type);
+    showActionFeedback(context, type: ActionFeedbackType.saved);
   }
 
   void _showExitConfirmDialog(BuildContext context) async {

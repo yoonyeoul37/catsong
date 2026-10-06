@@ -12,6 +12,8 @@ import '../theme/app_theme.dart';
 import 'ringtone_screen.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/paran_toast.dart';
+import '../widgets/paran_dialog.dart';
+import 'player_screen.dart' show showPlayerStyleMenu;
 
 Color _sBg(bool d) => d ? const Color(0xFF17140F) : const Color(0xFFF7F5F0);
 Color _sCard(bool d) => d ? const Color(0xFF1E1B15) : const Color(0xFFFFFFFF);
@@ -350,110 +352,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  void _showPlayerStyleDialog(BuildContext context) async {
-    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
-    final prefs = await SharedPreferences.getInstance();
-    int currentStyle = prefs.getInt('albumArtStyle') ?? 1;
-    const accent = AppTheme.fixedAccent;
-    final l = AppLocalizations.of(context)!;
-    final styles = [
-      {'id': 1, 'name': l.styleCD, 'icon': Icons.album, 'desc': l.styleCDDesc},
-      {'id': 2, 'name': l.styleCassette, 'icon': Icons.settings_input_composite, 'desc': l.styleCassetteDesc},
-      {'id': 3, 'name': l.styleCard, 'icon': Icons.image, 'desc': l.styleCardDesc},
-      {'id': 4, 'name': l.styleVisualizer, 'icon': Icons.graphic_eq, 'desc': l.styleVisualizerDesc},
-      {'id': 5, 'name': l.styleGradient, 'icon': Icons.gradient, 'desc': l.styleGradientDesc},
-    ];
-    showDialog(
-      context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          backgroundColor: _sBg(isDarkMode),
-          title: Row(children: [
-            const Icon(Icons.style, color: accent, size: 20), const SizedBox(width: 8),
-            Text(l.playerStyle, style: TextStyle(color: _sText(isDarkMode), fontSize: 16, fontWeight: FontWeight.bold)),
-          ]),
-          content: SizedBox(width: double.maxFinite,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: styles.length,
-              itemBuilder: (context, index) {
-                final style = styles[index];
-                final isSelected = currentStyle == style['id'];
-                return InkWell(
-                  onTap: () async { currentStyle = style['id'] as int; await prefs.setInt('albumArtStyle', currentStyle); setDialogState(() {}); Navigator.pop(ctx); },
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: isSelected ? accent.withOpacity(0.1) : _sInputBg(isDarkMode),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: isSelected ? accent : Colors.transparent),
-                    ),
-                    child: Row(children: [
-                      Icon(style['icon'] as IconData, color: isSelected ? accent : _sTextHint(isDarkMode), size: 24),
-                      const SizedBox(width: 12),
-                      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Text(style['name'] as String, style: TextStyle(color: isSelected ? accent : _sText(isDarkMode), fontSize: 14, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
-                        Text(style['desc'] as String, style: TextStyle(color: _sTextSub(isDarkMode), fontSize: 11)),
-                      ])),
-                      if (isSelected) const Icon(Icons.check_circle, color: accent, size: 20),
-                    ]),
-                  ),
-                );
-              },
-            ),
-          ),
-          actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l.close, style: const TextStyle(color: accent)))],
-        ),
-      ),
-    );
+  void _showPlayerStyleDialog(BuildContext context) {
+    showPlayerStyleMenu(context); // 재생화면 ⋮ 메뉴와 같은 스타일 창 (시디롬·파란포토·앨범)
   }
 
   void _showFontDialog(BuildContext context) {
-    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
-    const accent = AppTheme.fixedAccent;
     final themeProvider = context.read<ThemeProvider>();
-    showDialog(
-      context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          backgroundColor: _sBg(isDarkMode),
-          title: Row(children: [
-            const Icon(Icons.font_download, color: accent, size: 20), const SizedBox(width: 8),
-            Text(AppLocalizations.of(context)!.fontChange, style: TextStyle(color: _sText(isDarkMode), fontSize: 16, fontWeight: FontWeight.bold)),
-          ]),
-          content: SizedBox(width: double.maxFinite,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: ThemeProvider.availableFonts.length,
-              itemBuilder: (context, index) {
-                final font = ThemeProvider.availableFonts[index];
-                final isSelected = themeProvider.fontFamily == font['key'];
-                return InkWell(
-                  onTap: () { themeProvider.setFontFamily(font['key']!); setDialogState(() {}); Navigator.pop(ctx); },
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: isSelected ? accent.withOpacity(0.1) : _sInputBg(isDarkMode),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: isSelected ? accent : Colors.transparent),
-                    ),
-                    child: Row(children: [
-                      Icon(Icons.font_download, color: isSelected ? accent : _sTextHint(isDarkMode), size: 22),
-                      const SizedBox(width: 12),
-                      Expanded(child: Text(_getFontName(context, font['key']!), style: TextStyle(color: isSelected ? accent : _sText(isDarkMode), fontSize: 14, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal))),
-                      if (isSelected) const Icon(Icons.check_circle, color: accent, size: 20),
-                    ]),
-                  ),
-                );
+    showParanSheet(
+      context,
+      title: AppLocalizations.of(context)!.fontChange,
+      builder: (ctx, setSheet) => ParanCard(
+        children: [
+          for (final font in ThemeProvider.availableFonts)
+            ParanRow(
+              icon: Icons.font_download_outlined,
+              title: _getFontName(context, font['key']!),
+              selected: themeProvider.fontFamily == font['key'],
+              onTap: () {
+                themeProvider.setFontFamily(font['key']!);
+                Navigator.pop(ctx);
               },
             ),
-          ),
-          actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: Text(AppLocalizations.of(context)!.close, style: const TextStyle(color: accent)))],
-        ),
+        ],
       ),
     );
   }
@@ -601,26 +521,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     final themeProvider = context.read<ThemeProvider>();
     const accent = AppTheme.fixedAccent;
-    showDialog(
-      context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (context, setDialogState) => Dialog(
-          backgroundColor: _sBg(isDarkMode),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Row(children: [
-                const Icon(Icons.text_fields, color: accent, size: 20), const SizedBox(width: 8),
-                Text(AppLocalizations.of(context)!.textSize, style: TextStyle(color: _sText(isDarkMode), fontSize: 16, fontWeight: FontWeight.bold)),
-              ]),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(color: _sInputBg(isDarkMode), borderRadius: BorderRadius.circular(12)),
-                child: Text(AppLocalizations.of(context)!.preview, style: TextStyle(color: _sText(isDarkMode), fontSize: 16 * themeProvider.textScale)),
-              ),
-              const SizedBox(height: 16),
+    showParanSheet(
+      context,
+      title: AppLocalizations.of(context)!.textSize,
+      builder: (ctx, setSheet) => Column(
+        children: [
+          // 미리보기
+          ParanCard(
+            padding: const EdgeInsets.all(16),
+            children: [
+              Text(AppLocalizations.of(context)!.preview,
+                  style: TextStyle(color: _sText(isDarkMode), fontSize: 16 * themeProvider.textScale)),
+            ],
+          ),
+          ParanCard(
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 12),
+            children: [
               SliderTheme(
                 data: SliderTheme.of(context).copyWith(
                   activeTrackColor: accent,
@@ -628,37 +544,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   thumbColor: accent,
                 ),
                 child: Slider(
-                  value: themeProvider.textScale.clamp(1.0, 1.5), min: 1.0, max: 1.5, divisions: 10,
+                  value: themeProvider.textScale.clamp(1.0, 1.5),
+                  min: 1.0,
+                  max: 1.5,
+                  divisions: 10,
                   label: '${(themeProvider.textScale * 100).toInt()}%',
-                  onChanged: (value) { themeProvider.setTextScale(value); setDialogState(() {}); },
+                  onChanged: (value) {
+                    themeProvider.setTextScale(value);
+                    setSheet(() {});
+                  },
                 ),
               ),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Text(AppLocalizations.of(context)!.small, style: TextStyle(color: _sTextSub(isDarkMode), fontSize: 12)),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(color: accent.withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
-                  child: Text('${(themeProvider.textScale * 100).toInt()}%', style: const TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.bold)),
-                ),
-                Text(AppLocalizations.of(context)!.large, style: TextStyle(color: _sTextSub(isDarkMode), fontSize: 12)),
-              ]),
-              const SizedBox(height: 16),
-              Row(children: [
-                Expanded(child: OutlinedButton(
-                  onPressed: () { themeProvider.setTextScale(1.13); setDialogState(() {}); },
-                  style: OutlinedButton.styleFrom(foregroundColor: _sTextSub(isDarkMode), side: BorderSide(color: _sBorder(isDarkMode)), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                  child: Text(AppLocalizations.of(context)!.defaultValue),
-                )),
-                const SizedBox(width: 8),
-                Expanded(child: ElevatedButton(
-                  onPressed: () => Navigator.pop(ctx),
-                  style: ElevatedButton.styleFrom(backgroundColor: accent, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                  child: Text(AppLocalizations.of(context)!.close),
-                )),
-              ]),
-            ]),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  Text(AppLocalizations.of(context)!.small, style: TextStyle(color: _sTextSub(isDarkMode), fontSize: 12)),
+                  Text('${(themeProvider.textScale * 100).toInt()}%',
+                      style: const TextStyle(color: accent, fontSize: 13, fontWeight: FontWeight.bold)),
+                  Text(AppLocalizations.of(context)!.large, style: TextStyle(color: _sTextSub(isDarkMode), fontSize: 12)),
+                ]),
+              ),
+            ],
           ),
-        ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () {
+                themeProvider.setTextScale(1.13);
+                setSheet(() {});
+              },
+              style: TextButton.styleFrom(foregroundColor: accent),
+              child: Text(AppLocalizations.of(context)!.defaultValue,
+                  style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600)),
+            ),
+          ),
+        ],
       ),
     );
   }

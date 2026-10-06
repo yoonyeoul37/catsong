@@ -16,6 +16,7 @@ import 'menu_parts.dart';
 import 'action_feedback.dart';
 import 'paran_toast.dart';
 import 'paran_dialog.dart';
+import 'playlist_pick_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/edit_song_screen.dart';
 import '../screens/ringtone_screen.dart';
@@ -470,85 +471,29 @@ class SongListTile extends StatelessWidget {
   }
 
   void _showAddToPlaylistDialog(BuildContext context, song) {
-    final playlistProvider = context.read<PlaylistProvider>();
-    final primaryColor = AppTheme.fixedAccent;
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
-        title: Text(AppLocalizations.of(context)!.addToPlaylist,
-            style: const TextStyle(color: Colors.black)),
-        content: playlistProvider.playlists.isEmpty
-            ? Text(AppLocalizations.of(context)!.noPlaylists,
-            style: const TextStyle(color: Colors.black54))
-            : SizedBox(
-          width: double.maxFinite,
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: playlistProvider.playlists.length,
-            itemBuilder: (context, index) {
-              final playlist = playlistProvider.playlists[index];
-              return ListTile(
-                leading: Icon(Icons.playlist_play, color: primaryColor),
-                title: Text(playlist.name,
-                    style: const TextStyle(color: Colors.black)),
-                subtitle: Text('${playlist.songCount}곡',
-                    style: const TextStyle(color: Colors.black54)),
-                onTap: () {
-                  playlistProvider.addSongToPlaylist(playlist.id, song);
-                  Navigator.pop(ctx);
-                  showActionFeedback(context, type: ActionFeedbackType.added, message: '재생목록에 추가했어요');
-                },
-              );
-            },
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(AppLocalizations.of(context)!.close, style: TextStyle(color: primaryColor)),
-          ),
-        ],
-      ),
-    );
+    showAddToPlaylistSheet(context, song); // 공통 고르는 창
   }
 
   void _showSongInfo(BuildContext context) {
-    final primaryColor = AppTheme.fixedAccent;
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
-        title: Text(AppLocalizations.of(context)!.songInfo,
-            style: const TextStyle(color: Colors.black)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _infoRow(AppLocalizations.of(context)!.title, song.titleDisplay, primaryColor),
-            _infoRow(AppLocalizations.of(context)!.artist, song.artistDisplay, primaryColor),
-            _infoRow(AppLocalizations.of(context)!.album, song.albumDisplay, primaryColor),
-            _infoRow(AppLocalizations.of(context)!.playTime, song.durationFormatted, primaryColor),
-            if (song.uri != null) _infoRow(AppLocalizations.of(context)!.path, song.uri!, primaryColor),
-          ],
-        ),
-        actions: [
-          TextButton(
+    final l = AppLocalizations.of(context)!;
+    final nav = Navigator.of(context, rootNavigator: true);
+    showParanSheet(
+      context,
+      title: l.songInfo,
+      header: ParanSongHeader(art: song.albumArt, title: song.titleDisplay, subtitle: song.artistDisplay),
+      builder: (ctx, setSheet) => Column(
+        children: [
+          ParanCard(children: [
+            ParanInfoRow(label: l.album, value: song.albumDisplay),
+            ParanInfoRow(label: l.playTime, value: song.durationFormatted),
+            if (song.uri != null) ParanInfoRow(label: l.path, value: song.uri!),
+          ]),
+          ParanBigButton(
+            label: l.editSong,
             onPressed: () {
               Navigator.pop(ctx);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditSongScreen(song: song),
-                ),
-              );
+              nav.push(MaterialPageRoute(builder: (_) => EditSongScreen(song: song)));
             },
-            child: Text(AppLocalizations.of(context)!.editSong, style: TextStyle(color: primaryColor)),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(AppLocalizations.of(context)!.close,
-                style: const TextStyle(color: Colors.black38)),
           ),
         ],
       ),

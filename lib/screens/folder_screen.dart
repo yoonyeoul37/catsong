@@ -142,7 +142,9 @@ class FolderDetailScreen extends StatelessWidget {
     final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
     return Scaffold(
       backgroundColor: bgColor,
-      body: CustomScrollView(
+      body: SafeArea(
+        top: false, // 아래 시스템 아이콘과 안 겹치게
+        child: CustomScrollView(
         slivers: [
           SliverAppBar(
             expandedHeight: 220,
@@ -253,8 +255,9 @@ class FolderDetailScreen extends StatelessWidget {
               ),
             ),
           ),
-          const SliverPadding(padding: EdgeInsets.only(bottom: 80)),
+          const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
         ],
+      ),
       ),
     );
   }

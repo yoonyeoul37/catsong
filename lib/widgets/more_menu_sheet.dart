@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../providers/theme_provider.dart';
 import '../screens/settings_screen.dart';
 import '../screens/bulk_clean_screen.dart';
+import '../screens/bulk_art_screen.dart';
 
 const String _kStoreUrl =
     'https://play.google.com/store/apps/details?id=kr.ssing.catsong';
@@ -32,6 +33,9 @@ const String _kIconGlobe =
     '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>'
     '<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>';
 const String _kIconChevron = '<polyline points="9 18 15 12 9 6"/>';
+const String _kIconImage =
+    '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>'
+    '<polyline points="21 15 16 10 5 21"/>';
 const String _kIconSparkle =
     '<path d="M12 3l1.9 5.8L20 10.7l-5.8 1.9L12 18.4l-1.9-5.8L4 10.7l6.1-1.9z"/>'
     '<path d="M19 3v4M17 5h4"/>';
@@ -99,6 +103,10 @@ void showMoreMenuSheet(
       onCleanSongs: () {
         Navigator.pop(ctx);
         Navigator.push(context, MaterialPageRoute(builder: (_) => const BulkCleanScreen()));
+      },
+      onFindArt: () {
+        Navigator.pop(ctx);
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const BulkArtScreen()));
       },
       onShare: () {
         Navigator.pop(ctx);
@@ -224,10 +232,12 @@ class _MoreMenuSheet extends StatelessWidget {
   final VoidCallback onHomepage;
   final bool showSongTools;
   final VoidCallback onCleanSongs;
+  final VoidCallback onFindArt;
 
   const _MoreMenuSheet({
     required this.showSongTools,
     required this.onCleanSongs,
+    required this.onFindArt,
     required this.isDarkMode,
     required this.shareSubtitle,
     required this.hasHomepage,
@@ -266,6 +276,14 @@ class _MoreMenuSheet extends StatelessWidget {
                     title: '곡 정보 한꺼번에 정리',
                     subtitle: '지저분한 제목·가수를 깔끔하게 정리해요.',
                     onTap: onCleanSongs,
+                  ),
+                  const SizedBox(height: 12),
+                  _MenuCard(
+                    p: p,
+                    icon: _kIconImage,
+                    title: '앨범 사진 한꺼번에 찾기',
+                    subtitle: '앨범 사진 없는 곡에 사진을 넣어요.',
+                    onTap: onFindArt,
                   ),
                   const SizedBox(height: 12),
                 ],

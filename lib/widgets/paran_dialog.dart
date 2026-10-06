@@ -287,7 +287,8 @@ class ParanRow extends StatelessWidget {
   final String? trailingText;
   final bool selected;
   final bool accent; // 글자를 파랗게 (예: 새로 만들기)
-  final VoidCallback? onTap;
+  final bool danger; // 빨갛게 (예: 삭제)
+  final VoidCallback? onTap; // 없으면 흐리게 (누를 수 없음)
   const ParanRow({
     super.key,
     this.icon,
@@ -295,13 +296,16 @@ class ParanRow extends StatelessWidget {
     this.trailingText,
     this.selected = false,
     this.accent = false,
+    this.danger = false,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final p = _Pal.of(context);
-    return InkWell(
+    return Opacity(
+      opacity: onTap == null ? 0.4 : 1,
+      child: InkWell(
       onTap: onTap == null
           ? null
           : () {
@@ -313,7 +317,8 @@ class ParanRow extends StatelessWidget {
         child: Row(
           children: [
             if (icon != null) ...[
-              SizedBox(width: 22, child: Icon(icon, color: _kBlue, size: 20)),
+              // 아이콘은 차분한 회색 (새로 만들기만 파랑, 삭제는 빨강)
+              SizedBox(width: 22, child: Icon(icon, color: danger ? _kRed : (accent ? _kBlue : p.sub), size: 20)),
               const SizedBox(width: 10),
             ],
             Expanded(
@@ -321,7 +326,7 @@ class ParanRow extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: accent || selected ? _kBlue : p.ink,
+                    color: danger ? _kRed : (accent || selected ? _kBlue : p.ink),
                     fontSize: 14,
                     fontWeight: accent || selected ? FontWeight.w700 : FontWeight.w500,
                   )),
@@ -336,6 +341,7 @@ class ParanRow extends StatelessWidget {
             ],
           ],
         ),
+      ),
       ),
     );
   }

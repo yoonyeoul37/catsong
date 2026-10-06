@@ -8,6 +8,7 @@ import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/action_feedback.dart';
 import '../widgets/paran_toast.dart';
+import '../providers/theme_provider.dart';
 
 class RingtoneScreen extends StatefulWidget {
   final Song? initialSong;
@@ -79,58 +80,162 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
   @override
   Widget build(BuildContext context) {
     final musicProvider = context.watch<MusicProvider>();
+    final isDark = context.watch<ThemeProvider>().isDarkMode;
+    // ── 화면 공통 모양 (베이지 바탕 · 흰 카드 · 먹색 큰 버튼) ──
+    final bg = isDark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
+    final card = isDark ? const Color(0xFF26221C) : Colors.white;
+    final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final sub = isDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
+    final line = isDark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
+    const point = Color(0xFF2589E8); // 작은 포인트에만
     // 녹음처럼 음악 목록에 없는 곡을 자를 때도 선택 칸에 보이게 같이 넣기
     final songs = [
       ...musicProvider.allSongs,
       if (_selectedSong != null && !musicProvider.allSongs.contains(_selectedSong)) _selectedSong!,
     ];
 
+    Widget section(String text) => Padding(
+          padding: const EdgeInsets.fromLTRB(4, 14, 4, 8),
+          child: Text(text, style: TextStyle(color: sub, fontSize: 12, fontWeight: FontWeight.w600)),
+        );
+    Widget whiteCard(Widget child, {EdgeInsets padding = const EdgeInsets.all(14)}) => Container(
+          width: double.infinity,
+          padding: padding,
+          decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(16)),
+          child: child,
+        );
+    Widget timeChip(String t) => Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(color: point.withOpacity(isDark ? 0.18 : 0.08), borderRadius: BorderRadius.circular(12)),
+          child: Text(t, style: const TextStyle(color: point, fontSize: 12.5, fontWeight: FontWeight.w700)),
+        );
+    final sliderTheme = SliderTheme.of(context).copyWith(
+      activeTrackColor: point,
+      inactiveTrackColor: line,
+      thumbColor: point,
+      overlayColor: point.withOpacity(0.1),
+      trackHeight: 3,
+    );
+    Widget rangeRow(String label, double value, ValueChanged<double> onChanged) => Row(
+          children: [
+            SizedBox(width: 40, child: Text(label, style: TextStyle(color: sub, fontSize: 13))),
+            Expanded(
+              child: SliderTheme(
+                data: sliderTheme,
+                child: Slider(
+                  value: value,
+                  min: 0,
+                  max: (_selectedSong!.duration / 1000).toDouble(),
+                  onChanged: onChanged,
+                ),
+              ),
+            ),
+            SizedBox(
+                width: 44,
+                child: Text(_formatTime(value.toInt()),
+                    textAlign: TextAlign.right, style: TextStyle(color: ink, fontSize: 13))),
+          ],
+        );
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: bg,
         elevation: 0,
+        scrolledUnderElevation: 0,
+        titleSpacing: 0,
+        // 위 시계·배터리 + 아래 시스템 아이콘이 바탕색에서도 잘 보이게
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+          statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+          systemNavigationBarColor: bg,
+          systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        ),
         title: Text(widget.trimMode ? '자르기' : AppLocalizations.of(context)!.ringtone,
-            style: const TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w600)),
+            style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios, color: _accent, size: 20),
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: ink, size: 20),
         ),
       ),
+      // 버튼은 맨 아래에 모아서 (시스템 아이콘 위)
+      bottomNavigationBar: _selectedSong == null
+          ? null
+          : SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 미리 듣기 (흰 버튼)
+                    SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: OutlinedButton.icon(
+                        onPressed: _togglePreview,
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: card,
+                          foregroundColor: ink,
+                          side: BorderSide(color: line),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        ),
+                        icon: Icon(_isPlaying ? Icons.stop_rounded : Icons.play_arrow_rounded, size: 22),
+                        label: Text(_isPlaying ? AppLocalizations.of(context)!.playing : '미리 듣기',
+                            style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600)),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    // 잘라서 저장 / 벨소리로 지정 (먹색 큰 버튼)
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton.icon(
+                        onPressed: _isProcessing
+                            ? null
+                            : () => widget.trimMode ? _trimAndSave(context) : _setRingtone(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: ink,
+                          foregroundColor: bg,
+                          disabledBackgroundColor: ink.withOpacity(0.5),
+                          elevation: 6,
+                          shadowColor: Colors.black.withOpacity(0.25),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        ),
+                        icon: _isProcessing
+                            ? SizedBox(
+                                width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: bg))
+                            : Icon(widget.trimMode ? Icons.content_cut_rounded : Icons.notifications_active_rounded,
+                                size: 20),
+                        label: Text(widget.trimMode ? '잘라서 저장' : '벨소리로 지정',
+                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(AppLocalizations.of(context)!.selectSong,
-                style: const TextStyle(
-                    color: _accent,
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2)),
-            const SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFF5F5F5),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFE5E5E5)),
-              ),
-              child: DropdownButtonHideUnderline(
+            section(AppLocalizations.of(context)!.selectSong),
+            whiteCard(
+              DropdownButtonHideUnderline(
                 child: DropdownButton<Song>(
                   value: _selectedSong,
-                  hint: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(AppLocalizations.of(context)!.searchHint,
-                        style: const TextStyle(color: Colors.black38)),
-                  ),
+                  hint: Text(AppLocalizations.of(context)!.searchHint, style: TextStyle(color: sub)),
                   isExpanded: true,
-                  dropdownColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  dropdownColor: card,
+                  borderRadius: BorderRadius.circular(14),
+                  icon: Icon(Icons.expand_more_rounded, color: sub),
                   items: songs.map((song) {
                     return DropdownMenuItem<Song>(
                       value: song,
                       child: Text(song.titleDisplay,
-                          style: const TextStyle(color: Colors.black87),
+                          style: TextStyle(color: ink, fontSize: 14.5, fontWeight: FontWeight.w600),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis),
                     );
@@ -150,156 +255,44 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                   },
                 ),
               ),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
             ),
-            const SizedBox(height: 24),
-
             if (_selectedSong != null) ...[
-              Text(AppLocalizations.of(context)!.selectRange,
-                  style: const TextStyle(
-                      color: _accent,
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2)),
-              const SizedBox(height: 8),
-
-              Row(
-                children: [
-                  SizedBox(
-                      width: 50,
-                      child: Text(AppLocalizations.of(context)!.start,
-                          style: const TextStyle(color: Colors.black54))),
-                  Expanded(
-                    child: SliderTheme(
-                      data: SliderTheme.of(context).copyWith(
-                        activeTrackColor: _accent,
-                        inactiveTrackColor: _accent.withOpacity(0.15),
-                        thumbColor: _accent,
-                        overlayColor: _accent.withOpacity(0.1),
-                      ),
-                      child: Slider(
-                        value: _startValue,
-                        min: 0,
-                        max: (_selectedSong!.duration / 1000).toDouble(),
-                        onChanged: (value) {
-                          if (value < _endValue) {
-                            setState(() => _startValue = value);
-                            _previewPlayer.stop();
-                            setState(() => _isPlaying = false);
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                      width: 50,
-                      child: Text(_formatTime(_startValue.toInt()),
-                          style: const TextStyle(color: Colors.black54))),
-                ],
-              ),
-
-              Row(
-                children: [
-                  SizedBox(
-                      width: 50,
-                      child: Text(AppLocalizations.of(context)!.end,
-                          style: const TextStyle(color: Colors.black54))),
-                  Expanded(
-                    child: SliderTheme(
-                      data: SliderTheme.of(context).copyWith(
-                        activeTrackColor: _accent,
-                        inactiveTrackColor: _accent.withOpacity(0.15),
-                        thumbColor: _accent,
-                        overlayColor: _accent.withOpacity(0.1),
-                      ),
-                      child: Slider(
-                        value: _endValue,
-                        min: 0,
-                        max: (_selectedSong!.duration / 1000).toDouble(),
-                        onChanged: (value) {
-                          if (value > _startValue) {
-                            setState(() => _endValue = value);
-                            _previewPlayer.stop();
-                            setState(() => _isPlaying = false);
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                      width: 50,
-                      child: Text(_formatTime(_endValue.toInt()),
-                          style: const TextStyle(color: Colors.black54))),
-                ],
-              ),
-
-              const SizedBox(height: 8),
-              Center(
-                child: Text(
-                  AppLocalizations.of(context)!.rangeFormat(
-                    _formatTime(_startValue.toInt()),
-                    _formatTime(_endValue.toInt()),
-                    (_endValue - _startValue).toInt(),
-                  ),
-                  style: const TextStyle(color: _accent, fontSize: 14),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              Center(
-                child: GestureDetector(
-                  onTap: _togglePreview,
-                  child: Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: _accent,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: _accent.withOpacity(0.3),
-                          blurRadius: 15,
-                          spreadRadius: 2,
-                        ),
+              section(AppLocalizations.of(context)!.selectRange),
+              whiteCard(
+                Column(
+                  children: [
+                    rangeRow(AppLocalizations.of(context)!.start, _startValue, (value) {
+                      if (value < _endValue) {
+                        setState(() {
+                          _startValue = value;
+                          _isPlaying = false;
+                        });
+                        _previewPlayer.stop();
+                      }
+                    }),
+                    rangeRow(AppLocalizations.of(context)!.end, _endValue, (value) {
+                      if (value > _startValue) {
+                        setState(() {
+                          _endValue = value;
+                          _isPlaying = false;
+                        });
+                        _previewPlayer.stop();
+                      }
+                    }),
+                    const SizedBox(height: 6),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        timeChip(_formatTime(_startValue.toInt())),
+                        Text('${(_endValue - _startValue).toInt()}초',
+                            style: TextStyle(color: sub, fontSize: 12.5)),
+                        timeChip(_formatTime(_endValue.toInt())),
                       ],
                     ),
-                    child: Icon(
-                      _isPlaying ? Icons.stop : Icons.play_arrow,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ),
+                  ],
                 ),
-              ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Text(
-                    _isPlaying ? AppLocalizations.of(context)!.playing : AppLocalizations.of(context)!.preview,
-                    style: const TextStyle(color: _accent, fontSize: 12),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isProcessing
-                      ? null
-                      : () => widget.trimMode ? _trimAndSave(context) : _setRingtone(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _accent,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                  ),
-                  child: _isProcessing
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : Text(widget.trimMode ? '잘라서 저장' : AppLocalizations.of(context)!.setRingtone,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16)),
-                ),
+                padding: const EdgeInsets.fromLTRB(10, 10, 14, 14),
               ),
             ],
           ],

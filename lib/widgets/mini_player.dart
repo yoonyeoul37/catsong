@@ -204,12 +204,18 @@ class MiniPlayer extends StatelessWidget {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    '${playerProvider.formatDuration(playerProvider.position)} / ${playerProvider.formatDuration(playerProvider.duration)}',
-                                    style: TextStyle(
-                                        color: baseColor.withOpacity(0.38),
-                                        fontSize: 11),
+                                  const SizedBox(width: 6),
+                                  // 녹음처럼 버튼이 많거나 작은 폰에서도 넘치지 않게
+                                  Flexible(
+                                    child: Text(
+                                      '${playerProvider.formatDuration(playerProvider.position)} / ${playerProvider.formatDuration(playerProvider.duration)}',
+                                      maxLines: 1,
+                                      softWrap: false,
+                                      overflow: TextOverflow.fade,
+                                      style: TextStyle(
+                                          color: baseColor.withOpacity(0.38),
+                                          fontSize: 11),
+                                    ),
                                   ),
                                 ],
                               ),

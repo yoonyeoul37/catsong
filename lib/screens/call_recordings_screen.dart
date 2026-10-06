@@ -588,60 +588,74 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
     final music = context.read<MusicProvider>();
     final isDark = context.read<ThemeProvider>().isDarkMode;
-    final baseColor = isDark ? Colors.white : Colors.black;
     final locked = music.isRecordingLocked(r.path);
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) => SafeArea(
-        top: false,
-        child: Container(
-          margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-          padding: const EdgeInsets.fromLTRB(8, 14, 8, 8),
-          decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5),
-            borderRadius: BorderRadius.circular(22),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(12, 0, 12, 4),
-                child: Text(music.recordingTitle(r),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: baseColor, fontSize: 15, fontWeight: FontWeight.w700)),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(r.dateLabel, style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 12)),
-              ),
-              _menuItem(Icons.share, '공유', baseColor, () {
+    showParanSheet(
+      context,
+      title: music.recordingTitle(r),
+      // 위: 녹음 제목 + 날짜
+      header: Padding(
+        padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(music.recordingTitle(r),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    color: isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F),
+                    fontSize: 17,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.3)),
+            const SizedBox(height: 3),
+            Text(r.dateLabel,
+                style: TextStyle(
+                    color: isDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378), fontSize: 12.5)),
+          ],
+        ),
+      ),
+      builder: (ctx, setSheet) => Column(
+        children: [
+          ParanCard(children: [
+            ParanRow(icon: Icons.share_outlined, title: '공유', onTap: () {
+              Navigator.pop(ctx);
+              _share([r]);
+            }),
+            ParanRow(icon: Icons.content_cut_rounded, title: '자르기', onTap: () {
+              Navigator.pop(ctx);
+              _trim(r);
+            }),
+            ParanRow(icon: Icons.edit_outlined, title: '제목 바꾸기', onTap: () {
+              Navigator.pop(ctx);
+              _renameDialog(r);
+            }),
+            ParanRow(
+              icon: locked ? Icons.lock_open_rounded : Icons.lock_outline_rounded,
+              title: locked ? '잠금 풀기' : '잠금 (삭제 안 되게)',
+              onTap: () async {
                 Navigator.pop(ctx);
-                _share([r]);
-              }),
-              _menuItem(Icons.content_cut, '자르기', baseColor, () {
-                Navigator.pop(ctx);
-                _trim(r);
-              }),
-              _menuItem(Icons.edit, '제목 바꾸기', baseColor, () {
-                Navigator.pop(ctx);
-                _renameDialog(r);
-              }),
-              _menuItem(locked ? Icons.lock_open : Icons.lock, locked ? '잠금 풀기' : '잠금 (삭제 안 되게)', baseColor,
-                      () {
-                    Navigator.pop(ctx);
-                    music.toggleRecordingLock(r);
-                  }),
-              _menuItem(Icons.delete_outline, locked ? '잠긴 녹음은 삭제할 수 없어요' : '삭제', Colors.redAccent, locked
+                await music.toggleRecordingLock(r);
+                if (!mounted) return;
+                showActionFeedback(context,
+                    type: ActionFeedbackType.saved,
+                    message: locked ? '잠금을 풀었어요' : '잠갔어요',
+                    icon: locked ? Icons.lock_open_rounded : Icons.lock_rounded);
+              },
+            ),
+          ]),
+          ParanCard(children: [
+            ParanRow(
+              icon: Icons.delete_outline_rounded,
+              title: locked ? '잠긴 녹음은 삭제할 수 없어요' : '삭제',
+              danger: true,
+              onTap: locked
                   ? null
                   : () {
-                Navigator.pop(ctx);
-                _confirmTrash([r]);
-              }),
-            ],
-          ),
-        ),
+                      Navigator.pop(ctx);
+                      _confirmTrash([r]);
+                    },
+            ),
+          ]),
+        ],
       ),
     );
   }

@@ -185,7 +185,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
     final textColor = isDarkMode ? Colors.white : Colors.black;
     showModalBottomSheet(
       context: context,
-      backgroundColor: isDarkMode ? const Color(0xFF26221C) : const Color(0xFFF4EFE5), // 다른 창과 같은 색
+      backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) {
@@ -226,13 +226,8 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        // 큰 버튼: 먹색 (다크는 크림색)
-                        backgroundColor: isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F),
-                        foregroundColor: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFF4EFE5),
-                        elevation: 6,
-                        shadowColor: Colors.black.withOpacity(0.25),
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       child: const Text('설정', style: TextStyle(fontWeight: FontWeight.bold)),
                     ),

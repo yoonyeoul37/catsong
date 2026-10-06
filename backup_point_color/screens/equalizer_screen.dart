@@ -12,7 +12,7 @@ import '../providers/theme_provider.dart';
 class EqualizerScreen extends StatelessWidget {
   const EqualizerScreen({super.key});
 
-  static Color _point = const Color(0xFF2589E8); // 포인트 색 (그릴 때마다 설정 색으로)
+  static const _point = Color(0xFF2589E8); // 작은 포인트에만 (막대·숫자)
 
   String _formatFreq(int mHz) {
     final hz = mHz ~/ 1000; // 안드로이드는 밀리헤르츠로 줌
@@ -25,7 +25,6 @@ class EqualizerScreen extends StatelessWidget {
     final fx = SoundEffects.instance;
     final l = AppLocalizations.of(context)!;
     final c = _EqPal.of(context);
-    _point = context.watch<ThemeProvider>().primaryColor;
 
     Widget card(Widget child, {EdgeInsets padding = const EdgeInsets.all(14)}) => Container(
           width: double.infinity,
@@ -166,7 +165,7 @@ class EqualizerScreen extends StatelessWidget {
                         return Column(
                           children: [
                             Text('${level > 0 ? '+' : ''}${(level / 100).toStringAsFixed(0)}',
-                                style: TextStyle(color: _point, fontSize: 11, fontWeight: FontWeight.w700)),
+                                style: const TextStyle(color: _point, fontSize: 11, fontWeight: FontWeight.w700)),
                             Expanded(
                               child: RotatedBox(
                                 quarterTurns: 3,
@@ -260,7 +259,7 @@ class EqualizerScreen extends StatelessWidget {
             Text(title, style: TextStyle(color: c.ink, fontSize: 14, fontWeight: FontWeight.w700)),
             const Spacer(),
             Text('${(value / 10).toStringAsFixed(0)}%',
-                style: TextStyle(color: _point, fontSize: 12.5, fontWeight: FontWeight.w700)),
+                style: const TextStyle(color: _point, fontSize: 12.5, fontWeight: FontWeight.w700)),
           ],
         ),
         const SizedBox(height: 3),

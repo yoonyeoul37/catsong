@@ -13,15 +13,6 @@ import '../providers/theme_provider.dart';
 const _kBlue = Color(0xFF2589E8);
 const _kRed = Color(0xFFE05A4F);
 
-/// 포인트 색 (설정에서 고른 색, 기본 파란소리)
-Color _point(BuildContext context) {
-  try {
-    return context.watch<ThemeProvider>().primaryColor;
-  } catch (_) {
-    return _kBlue;
-  }
-}
-
 class _Pal {
   final Color sheet, card, ink, sub, line;
   const _Pal(this.sheet, this.card, this.ink, this.sub, this.line);
@@ -315,7 +306,6 @@ class ParanRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = _Pal.of(context);
-    final pt = _point(context);
     return Opacity(
       opacity: onTap == null ? 0.4 : 1,
       child: InkWell(
@@ -331,7 +321,7 @@ class ParanRow extends StatelessWidget {
           children: [
             if (icon != null) ...[
               // 아이콘은 차분한 회색 (새로 만들기만 파랑, 삭제는 빨강)
-              SizedBox(width: 22, child: Icon(icon, color: danger ? _kRed : (accent ? pt : p.sub), size: 20)),
+              SizedBox(width: 22, child: Icon(icon, color: danger ? _kRed : (accent ? _kBlue : p.sub), size: 20)),
               const SizedBox(width: 10),
             ],
             Expanded(
@@ -339,7 +329,7 @@ class ParanRow extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: danger ? _kRed : (accent || selected ? pt : p.ink),
+                    color: danger ? _kRed : (accent || selected ? _kBlue : p.ink),
                     fontSize: 14,
                     fontWeight: accent || selected ? FontWeight.w700 : FontWeight.w500,
                   )),
@@ -350,7 +340,7 @@ class ParanRow extends StatelessWidget {
             ],
             if (selected) ...[
               const SizedBox(width: 8),
-              Icon(Icons.check_circle_rounded, color: pt, size: 20),
+              const Icon(Icons.check_circle_rounded, color: _kBlue, size: 20),
             ],
           ],
         ),

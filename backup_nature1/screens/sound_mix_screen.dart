@@ -13,7 +13,6 @@ import 'settings_screen.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/logo_eq_bars.dart';
-import '../widgets/exit_confirm_dialog.dart';
 
 class SoundMixScreen extends StatefulWidget {
   const SoundMixScreen({super.key});
@@ -56,7 +55,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
     Duration picked = const Duration(minutes: 30);
     showModalBottomSheet(
       context: context,
-      backgroundColor: isDarkMode ? const Color(0xFF26221C) : const Color(0xFFF4EFE5), // 다른 창과 같은 색
+      backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) {
@@ -97,13 +96,8 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        // 큰 버튼: 먹색 (다크는 크림색)
-                        backgroundColor: isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F),
-                        foregroundColor: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFF4EFE5),
-                        elevation: 6,
-                        shadowColor: Colors.black.withOpacity(0.25),
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       child: const Text('설정', style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
@@ -134,7 +128,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
     final searchController = TextEditingController();
     showModalBottomSheet(
       context: context,
-      backgroundColor: isDarkMode ? const Color(0xFF26221C) : const Color(0xFFF4EFE5), // 다른 창과 같은 색
+      backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
@@ -249,8 +243,8 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
-    final sheetBg = isDarkMode ? const Color(0xFF26221C) : const Color(0xFFF4EFE5); // 다른 창과 같은 색
-    final blue = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F); // 고른 것 표시: 먹색
+    final sheetBg = isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0);
+    const blue = Color(0xFF2F7DE8);
     final variants = SoundMixProvider.natureVariants[key]!.keys.toList();
     showModalBottomSheet(
       context: context,
@@ -296,7 +290,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                           SizedBox(
                             width: 24,
                             child: v == selected
-                                ? Icon(Icons.check_rounded, color: blue, size: 20)
+                                ? const Icon(Icons.check_rounded, color: blue, size: 20)
                                 : null,
                           ),
                           const SizedBox(width: 8),
@@ -730,9 +724,73 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
     );
   }
 
-  void _showExitConfirmDialog(BuildContext context) async {
-    // 새 종료창 (사진 + 큰 질문) — 홈·음악·라디오·자연소리 공통
-    if (await showExitConfirm(context) && context.mounted) _showFarewellAndExit(context);
+  void _showExitConfirmDialog(BuildContext context) {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    showDialog(
+      context: context,
+      builder: (ctx) => Dialog(
+        backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '파란소리를 종료하시겠어요?',
+                style: TextStyle(
+                    color: isDarkMode ? Colors.white : Colors.black87,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                '지금 나가면 소리가 멈춰요.',
+                style: TextStyle(
+                    color: isDarkMode ? Colors.white60 : Colors.black54, fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        Navigator.pop(ctx);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: isDarkMode ? Colors.white60 : Colors.black54,
+                        side: BorderSide(color: isDarkMode ? Colors.white24 : Colors.black26),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: const Text('계속 듣기'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        Navigator.pop(ctx);
+                        _showFarewellAndExit(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: const Text('종료', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   void _showFarewellAndExit(BuildContext context) {

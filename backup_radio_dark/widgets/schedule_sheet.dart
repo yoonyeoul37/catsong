@@ -8,16 +8,6 @@ import 'action_feedback.dart';
 import 'paran_toast.dart';
 import 'paran_dialog.dart';
 import 'package:flutter/services.dart';
-import '../providers/theme_provider.dart';
-
-// ── 라디오 창 색 (라이트: 베이지 · 다크: 어두운 갈색) — 창을 그릴 때마다 다크 모드인지 맞춤 ──
-bool _rdDark = false;
-Color get _rBg => _rdDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
-Color get _rCard => _rdDark ? const Color(0xFF332E26) : Colors.white;
-Color get _rInk => _rdDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-Color get _rSub => _rdDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-Color get _rMuted => _rdDark ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
-Color get _rLine => _rdDark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
 
 class ScheduleSheet extends StatefulWidget {
   const ScheduleSheet({super.key});
@@ -30,14 +20,19 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
   TimeOfDay? _selectedTime;
   RadioStation? _selectedStation;
 
-  
-  void _vib() => MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+  // 화면 공통 색
+  static const _bg = Color(0xFFF4EFE5);
+  static const _ink = Color(0xFF17140F);
+  static const _sub = Color(0xFF8A8378);
+  static const _line = Color(0xFFE2DACB);
+
+  void _vib() => const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
 
   /// 지금부터 그 시간까지 남은 시간 ("2시간 뒤", "35분 뒤")
   String _until(TimeOfDay t) {
     final now = DateTime.now();
     var target = DateTime(now.year, now.month, now.day, t.hour, t.minute);
-    if (!target.isAfter(now)) target = target.add(Duration(days: 1));
+    if (!target.isAfter(now)) target = target.add(const Duration(days: 1));
     final d = target.difference(now);
     if (d.inMinutes < 60) return '${d.inMinutes}분 뒤';
     final h = d.inHours;
@@ -57,7 +52,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
       initialTime: _selectedTime ?? TimeOfDay.now(),
       builder: (context, child) => Theme(
         data: Theme.of(context).copyWith(
-          colorScheme: ColorScheme.light(primary: _rInk, onPrimary: _rBg, surface: _rBg, onSurface: _rInk),
+          colorScheme: const ColorScheme.light(primary: _ink, onPrimary: _bg, surface: _bg, onSurface: _ink),
         ),
         child: child!,
       ),
@@ -66,18 +61,18 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
   }
 
   Widget _step(int n, String text) => Padding(
-        padding: EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.only(bottom: 8),
         child: Row(
           children: [
             Container(
               width: 18,
               height: 18,
               alignment: Alignment.center,
-              decoration: BoxDecoration(color: _rInk, shape: BoxShape.circle),
-              child: Text('$n', style: TextStyle(color: _rBg, fontSize: 10.5, fontWeight: FontWeight.w700)),
+              decoration: const BoxDecoration(color: _ink, shape: BoxShape.circle),
+              child: Text('$n', style: const TextStyle(color: _bg, fontSize: 10.5, fontWeight: FontWeight.w700)),
             ),
-            SizedBox(width: 8),
-            Text(text, style: TextStyle(color: _rInk, fontSize: 13, fontWeight: FontWeight.w700)),
+            const SizedBox(width: 8),
+            Text(text, style: const TextStyle(color: _ink, fontSize: 13, fontWeight: FontWeight.w700)),
           ],
         ),
       );
@@ -88,14 +83,14 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
       child: GestureDetector(
         onTap: () {
           _vib();
-          setState(() => _selectedTime = t);
+          setState(() => _selectedTime = on ? null : t); // 다시 누르면 선택 풀기
         },
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           alignment: Alignment.center,
-          decoration: BoxDecoration(color: on ? _rInk : _rBg, borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(color: on ? _ink : _bg, borderRadius: BorderRadius.circular(10)),
           child: Text(label,
-              style: TextStyle(color: on ? _rBg : _rMuted, fontSize: 12, fontWeight: FontWeight.w600)),
+              style: TextStyle(color: on ? _bg : const Color(0xFF5A5348), fontSize: 12, fontWeight: FontWeight.w600)),
         ),
       ),
     );
@@ -103,7 +98,6 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
 
   @override
   Widget build(BuildContext context) {
-    _rdDark = context.watch<ThemeProvider>().isDarkMode; // 다크 모드 맞추기
     final radioProvider = context.watch<RadioProvider>();
     final schedules = radioProvider.schedules;
     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
@@ -113,18 +107,18 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
     final canAdd = schedules.length < 5;
 
     Widget section(String text, {Widget? right}) => Padding(
-          padding: EdgeInsets.fromLTRB(4, 14, 4, 6),
+          padding: const EdgeInsets.fromLTRB(4, 14, 4, 6),
           child: Row(
             children: [
-              Expanded(child: Text(text, style: TextStyle(color: _rSub, fontSize: 12, fontWeight: FontWeight.w600))),
+              Expanded(child: Text(text, style: const TextStyle(color: _sub, fontSize: 12, fontWeight: FontWeight.w600))),
               if (right != null) right,
             ],
           ),
         );
 
     return Container(
-      decoration: BoxDecoration(
-        color: _rBg,
+      decoration: const BoxDecoration(
+        color: _bg,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.fromLTRB(16, 10, 16, 14 + bottomPadding),
@@ -137,27 +131,27 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
               child: Container(
                 width: 36,
                 height: 4,
-                decoration: BoxDecoration(color: _rLine, borderRadius: BorderRadius.circular(2)),
+                decoration: BoxDecoration(color: _line, borderRadius: BorderRadius.circular(2)),
               ),
             ),
-            SizedBox(height: 14),
+            const SizedBox(height: 14),
             // 위: 제목 · 개수
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Expanded(
+                  const Expanded(
                     child: Text('예약',
-                        style: TextStyle(color: _rInk, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
+                        style: TextStyle(color: _ink, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
                   ),
-                  Text('${schedules.length} / 5', style: TextStyle(color: _rSub, fontSize: 12.5)),
+                  Text('${schedules.length} / 5', style: const TextStyle(color: _sub, fontSize: 12.5)),
                 ],
               ),
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.fromLTRB(4, 4, 4, 0),
-              child: Text('정한 시간이 되면 그 방송으로 바꿔줘요', style: TextStyle(color: _rSub, fontSize: 12.5)),
+              child: Text('정한 시간이 되면 그 방송으로 바꿔줘요', style: TextStyle(color: _sub, fontSize: 12.5)),
             ),
 
             // ───── 내 예약 ─────
@@ -171,19 +165,19 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                       radioProvider.clearSchedules();
                       showActionFeedback(context, type: ActionFeedbackType.deleted, message: '예약을 취소했어요');
                     },
-                    child: Text('전체 취소',
+                    child: const Text('전체 취소',
                         style: TextStyle(color: Color(0xFFE05A4F), fontSize: 12, fontWeight: FontWeight.w600)),
                   )),
               Container(
-                decoration: BoxDecoration(color: _rCard, borderRadius: BorderRadius.circular(14)),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
                 child: Column(
                   children: [
                     for (var i = 0; i < schedules.length; i++) ...[
-                      if (i > 0) Container(height: 0.5, color: _rLine),
+                      if (i > 0) Container(height: 0.5, color: const Color(0xFFEEE9DF)),
                       Opacity(
                         opacity: schedules[i].triggered ? 0.45 : 1,
                         child: Padding(
-                          padding: EdgeInsets.fromLTRB(14, 10, 4, 10),
+                          padding: const EdgeInsets.fromLTRB(14, 10, 4, 10),
                           child: Row(
                             children: [
                               SizedBox(
@@ -192,10 +186,10 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(schedules[i].time.period == DayPeriod.am ? '오전' : '오후',
-                                        style: TextStyle(color: _rSub, fontSize: 10.5, fontWeight: FontWeight.w600)),
+                                        style: const TextStyle(color: _sub, fontSize: 10.5, fontWeight: FontWeight.w600)),
                                     Text(
                                         '${schedules[i].time.hourOfPeriod == 0 ? 12 : schedules[i].time.hourOfPeriod}:${schedules[i].time.minute.toString().padLeft(2, '0')}',
-                                        style: TextStyle(color: _rInk, fontSize: 18, fontWeight: FontWeight.w800)),
+                                        style: const TextStyle(color: _ink, fontSize: 18, fontWeight: FontWeight.w800)),
                                   ],
                                 ),
                               ),
@@ -206,10 +200,10 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                                     Text(schedules[i].station.name,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: _rInk, fontSize: 14, fontWeight: FontWeight.w600)),
-                                    SizedBox(height: 2),
+                                        style: const TextStyle(color: _ink, fontSize: 14, fontWeight: FontWeight.w600)),
+                                    const SizedBox(height: 2),
                                     Text(schedules[i].triggered ? '바꿨어요 ✓' : _until(schedules[i].time),
-                                        style: TextStyle(color: _rSub, fontSize: 11.5)),
+                                        style: const TextStyle(color: _sub, fontSize: 11.5)),
                                   ],
                                 ),
                               ),
@@ -218,7 +212,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                                   _vib();
                                   radioProvider.removeSchedule(i);
                                 },
-                                icon: Icon(Icons.close_rounded, color: Color(0xFFB5AC9C), size: 20),
+                                icon: const Icon(Icons.close_rounded, color: Color(0xFFB5AC9C), size: 20),
                               ),
                             ],
                           ),
@@ -234,8 +228,8 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
             if (canAdd) ...[
               section('새 예약'),
               Container(
-                padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(color: _rCard, borderRadius: BorderRadius.circular(14)),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -244,42 +238,42 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                     GestureDetector(
                       onTap: _pickTime,
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                        decoration: BoxDecoration(color: _rBg, borderRadius: BorderRadius.circular(12)),
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                        decoration: BoxDecoration(color: _bg, borderRadius: BorderRadius.circular(12)),
                         child: Row(
                           children: [
                             Expanded(
                               child: Text(
                                 _selectedTime != null ? _formatTime(_selectedTime!) : '시간 고르기',
                                 style: TextStyle(
-                                  color: _selectedTime != null ? _rInk : _rSub,
+                                  color: _selectedTime != null ? _ink : _sub,
                                   fontSize: _selectedTime != null ? 22 : 15,
                                   fontWeight: _selectedTime != null ? FontWeight.w800 : FontWeight.w500,
                                 ),
                               ),
                             ),
-                            Icon(Icons.schedule_rounded, color: _rSub, size: 20),
+                            const Icon(Icons.schedule_rounded, color: _sub, size: 20),
                           ],
                         ),
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Row(
                       children: [
                         _quick('30분 뒤', _after(30)),
-                        SizedBox(width: 6),
+                        const SizedBox(width: 6),
                         _quick('1시간 뒤', _after(60)),
-                        SizedBox(width: 6),
-                        _quick('아침 7시', TimeOfDay(hour: 7, minute: 0)),
+                        const SizedBox(width: 6),
+                        _quick('아침 7시', const TimeOfDay(hour: 7, minute: 0)),
                       ],
                     ),
-                    SizedBox(height: 14),
+                    const SizedBox(height: 14),
                     _step(2, '어떤 방송?'),
                     if (stationList.isEmpty)
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8),
+                        padding: const EdgeInsets.symmetric(vertical: 8),
                         child: Text(AppLocalizations.of(context)!.radioPlayFirst,
-                            style: TextStyle(color: _rSub, fontSize: 12.5)),
+                            style: const TextStyle(color: _sub, fontSize: 12.5)),
                       )
                     else
                       SizedBox(
@@ -287,22 +281,22 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemCount: stationList.length,
-                          separatorBuilder: (_, __) => SizedBox(width: 6),
+                          separatorBuilder: (_, __) => const SizedBox(width: 6),
                           itemBuilder: (_, i) {
                             final st = stationList[i];
                             final on = _selectedStation?.name == st.name;
                             return GestureDetector(
                               onTap: () {
                                 _vib();
-                                setState(() => _selectedStation = st);
+                                setState(() => _selectedStation = on ? null : st); // 다시 누르면 선택 풀기
                               },
                               child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                padding: const EdgeInsets.symmetric(horizontal: 12),
                                 alignment: Alignment.center,
-                                decoration: BoxDecoration(color: on ? _rInk : _rBg, borderRadius: BorderRadius.circular(12)),
+                                decoration: BoxDecoration(color: on ? _ink : _bg, borderRadius: BorderRadius.circular(12)),
                                 child: Text(st.name,
                                     style: TextStyle(
-                                        color: on ? _rBg : _rMuted,
+                                        color: on ? Colors.white : const Color(0xFF5A5348),
                                         fontSize: 12.5,
                                         fontWeight: on ? FontWeight.w700 : FontWeight.w500)),
                               ),
@@ -322,14 +316,14 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                             builder: (_) => _ScheduleListBottomSheet(stationName: st.name),
                           );
                         },
-                        child: Padding(
+                        child: const Padding(
                           padding: EdgeInsets.only(top: 10),
                           child: Row(
                             children: [
-                              Icon(Icons.format_list_bulleted_rounded, color: _rSub, size: 16),
+                              Icon(Icons.format_list_bulleted_rounded, color: _sub, size: 16),
                               SizedBox(width: 5),
                               Text('편성표에서 프로그램으로 고르기',
-                                  style: TextStyle(color: _rSub, fontSize: 12, decoration: TextDecoration.underline)),
+                                  style: TextStyle(color: _sub, fontSize: 12, decoration: TextDecoration.underline)),
                             ],
                           ),
                         ),
@@ -337,7 +331,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                   ],
                 ),
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -355,22 +349,22 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _rInk,
-                    foregroundColor: _rBg,
-                    disabledBackgroundColor: _rInk.withOpacity(0.25),
-                    disabledForegroundColor: _rBg,
+                    backgroundColor: _ink,
+                    foregroundColor: _bg,
+                    disabledBackgroundColor: _ink.withOpacity(0.25),
+                    disabledForegroundColor: _bg,
                     elevation: 6,
                     shadowColor: Colors.black.withOpacity(0.25),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                   ),
-                  child: Text('예약하기', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                  child: const Text('예약하기', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
                 ),
               ),
             ] else
-              Padding(
+              const Padding(
                 padding: EdgeInsets.fromLTRB(4, 14, 4, 0),
                 child: Text('예약은 5개까지예요. 지난 예약을 지우면 새로 넣을 수 있어요',
-                    style: TextStyle(color: _rSub, fontSize: 12.5)),
+                    style: TextStyle(color: _sub, fontSize: 12.5)),
               ),
           ],
         ),
@@ -387,18 +381,17 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
 }
 class _ScheduleListBottomSheet extends StatelessWidget {
   final String stationName;
-  _ScheduleListBottomSheet({required this.stationName});
+  const _ScheduleListBottomSheet({required this.stationName});
 
   @override
   Widget build(BuildContext context) {
-    _rdDark = context.watch<ThemeProvider>().isDarkMode; // 다크 모드 맞추기
-    final primaryColor = _rInk; // 먹색 (다크는 크림색)
+    const primaryColor = Color(0xFF17140F); // 먹색 (다른 창과 통일)
     final radioProvider = context.watch<RadioProvider>();
     final schedules = radioProvider.scheduleList;
 
     return Container(
-      decoration: BoxDecoration(
-        color: _rBg, // 베이지 (다른 고르는 창과 같게)
+      decoration: const BoxDecoration(
+        color: Color(0xFFF4EFE5), // 베이지 (다른 고르는 창과 같게)
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.fromLTRB(20, 16, 20, 32 + MediaQuery.of(context).viewPadding.bottom),
@@ -408,21 +401,21 @@ class _ScheduleListBottomSheet extends StatelessWidget {
           Container(
             width: 40, height: 4,
             decoration: BoxDecoration(
-              color: _rLine,
+              color: const Color(0xFFE2DACB),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Row(
             children: [
               Icon(Icons.format_list_bulleted, color: primaryColor, size: 20),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(AppLocalizations.of(context)!.radioScheduleTitle(stationName),
-                  style: TextStyle(
-                      color: _rInk, fontSize: 16, fontWeight: FontWeight.bold)),
+                  style: const TextStyle(
+                      color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
             ],
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           ConstrainedBox(
             constraints: BoxConstraints(
               maxHeight: MediaQuery.of(context).size.height * 0.5,
@@ -430,9 +423,9 @@ class _ScheduleListBottomSheet extends StatelessWidget {
             child: schedules.isEmpty
                 ? Center(
               child: Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Text(AppLocalizations.of(context)!.radioLoadingSchedule,
-                    style: TextStyle(color: _rSub)),
+                    style: const TextStyle(color: Colors.black45)),
               ),
             )
                 : ListView.builder(
@@ -482,8 +475,8 @@ class _ScheduleListBottomSheet extends StatelessWidget {
                     showParanToast(context, AppLocalizations.of(context)!.radioScheduleCompleteToast(title, fmt(start)));
                   },
                   child: Container(
-                    margin: EdgeInsets.only(bottom: 4),
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    margin: const EdgeInsets.only(bottom: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -492,12 +485,12 @@ class _ScheduleListBottomSheet extends StatelessWidget {
                         SizedBox(
                           width: 60,
                           child: Text(fmt(start),
-                              style: TextStyle(color: _rSub, fontSize: 13)),
+                              style: const TextStyle(color: Colors.black45, fontSize: 13)),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Expanded(
                           child: Text(title,
-                              style: TextStyle(color: _rInk, fontSize: 14),
+                              style: const TextStyle(color: Colors.black87, fontSize: 14),
                               maxLines: 1, overflow: TextOverflow.ellipsis),
                         ),
                         Icon(Icons.alarm_add, color: primaryColor.withOpacity(0.6), size: 18),

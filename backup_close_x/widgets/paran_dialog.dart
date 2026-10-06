@@ -13,15 +13,6 @@ import '../providers/theme_provider.dart';
 const _kBlue = Color(0xFF2589E8);
 const _kRed = Color(0xFFE05A4F);
 
-/// 포인트 색 (설정에서 고른 색, 기본 파란소리)
-Color _point(BuildContext context) {
-  try {
-    return context.watch<ThemeProvider>().primaryColor;
-  } catch (_) {
-    return _kBlue;
-  }
-}
-
 class _Pal {
   final Color sheet, card, ink, sub, line;
   const _Pal(this.sheet, this.card, this.ink, this.sub, this.line);
@@ -240,24 +231,21 @@ Future<T?> showParanSheet<T>(
                 ),
               ),
               const SizedBox(height: 14),
-              // 제목(또는 머리) + 오른쪽 끝 ✕ (아래 "닫기" 글자 대신)
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: header ??
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-                          child: Text(title,
-                              style: TextStyle(
-                                  color: p.ink, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
-                        ),
+              header ??
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
+                    child: Text(title,
+                        style: TextStyle(color: p.ink, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
                   ),
-                  ParanCloseX(onTap: () => Navigator.pop(ctx)),
-                ],
-              ),
               Flexible(child: SingleChildScrollView(child: builder(ctx, setSheet))),
-              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  style: TextButton.styleFrom(foregroundColor: p.sub),
+                  child: Text(closeLabel, style: const TextStyle(fontSize: 14)),
+                ),
+              ),
             ],
           ),
         ),
@@ -315,7 +303,6 @@ class ParanRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = _Pal.of(context);
-    final pt = _point(context);
     return Opacity(
       opacity: onTap == null ? 0.4 : 1,
       child: InkWell(
@@ -331,7 +318,7 @@ class ParanRow extends StatelessWidget {
           children: [
             if (icon != null) ...[
               // 아이콘은 차분한 회색 (새로 만들기만 파랑, 삭제는 빨강)
-              SizedBox(width: 22, child: Icon(icon, color: danger ? _kRed : (accent ? pt : p.sub), size: 20)),
+              SizedBox(width: 22, child: Icon(icon, color: danger ? _kRed : (accent ? _kBlue : p.sub), size: 20)),
               const SizedBox(width: 10),
             ],
             Expanded(
@@ -339,7 +326,7 @@ class ParanRow extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: danger ? _kRed : (accent || selected ? pt : p.ink),
+                    color: danger ? _kRed : (accent || selected ? _kBlue : p.ink),
                     fontSize: 14,
                     fontWeight: accent || selected ? FontWeight.w700 : FontWeight.w500,
                   )),
@@ -350,7 +337,7 @@ class ParanRow extends StatelessWidget {
             ],
             if (selected) ...[
               const SizedBox(width: 8),
-              Icon(Icons.check_circle_rounded, color: pt, size: 20),
+              const Icon(Icons.check_circle_rounded, color: _kBlue, size: 20),
             ],
           ],
         ),
@@ -430,52 +417,17 @@ class ParanSheetFrame extends StatelessWidget {
         margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
         padding: const EdgeInsets.fromLTRB(16, 10, 16, 8),
         decoration: BoxDecoration(color: p.sheet, borderRadius: BorderRadius.circular(22)),
-        child: Stack(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 36,
-                  height: 4,
-                  decoration: BoxDecoration(color: p.line, borderRadius: BorderRadius.circular(2)),
-                ),
-                const SizedBox(height: 10),
-                child,
-              ],
+            Container(
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(color: p.line, borderRadius: BorderRadius.circular(2)),
             ),
-            // 오른쪽 위 ✕ (제목 줄과 같은 높이)
-            Positioned(top: 16, right: 0, child: ParanCloseX(onTap: () => Navigator.pop(context))),
+            const SizedBox(height: 10),
+            child,
           ],
-        ),
-      ),
-    );
-  }
-}
-
-/// 창 닫기 ✕ — 배경 없이 ✕만 (누르는 자리는 손가락에 맞게 넉넉하게)
-class ParanCloseX extends StatelessWidget {
-  final VoidCallback onTap;
-  const ParanCloseX({super.key, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final p = _Pal.of(context);
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () {
-        _vib();
-        onTap();
-      },
-      child: SizedBox(
-        width: 40,
-        height: 32,
-        child: Align(
-          alignment: Alignment.topRight,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 2, right: 2),
-            child: Icon(Icons.close_rounded, color: p.sub, size: 21),
-          ),
         ),
       ),
     );

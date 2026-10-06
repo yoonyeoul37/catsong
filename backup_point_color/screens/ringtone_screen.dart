@@ -87,7 +87,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
     final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final sub = isDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
     final line = isDark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
-    final point = context.watch<ThemeProvider>().primaryColor; // 포인트 색 (설정에서 고름)
+    const point = Color(0xFF2589E8); // 작은 포인트에만
     // 녹음처럼 음악 목록에 없는 곡을 자를 때도 선택 칸에 보이게 같이 넣기
     final songs = [
       ...musicProvider.allSongs,
@@ -107,7 +107,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
     Widget timeChip(String t) => Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(color: point.withOpacity(isDark ? 0.18 : 0.08), borderRadius: BorderRadius.circular(12)),
-          child: Text(t, style: TextStyle(color: point, fontSize: 12.5, fontWeight: FontWeight.w700)),
+          child: Text(t, style: const TextStyle(color: point, fontSize: 12.5, fontWeight: FontWeight.w700)),
         );
     final sliderTheme = SliderTheme.of(context).copyWith(
       activeTrackColor: point,

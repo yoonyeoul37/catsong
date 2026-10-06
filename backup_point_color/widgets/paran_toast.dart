@@ -21,10 +21,7 @@ void showParanToast(
   try {
     isDark = context.read<ThemeProvider>().isDarkMode;
   } catch (_) {}
-  var blue = const Color(0xFF2589E8);
-  try {
-    blue = context.read<ThemeProvider>().primaryColor; // 포인트 색
-  } catch (_) {}
+  const blue = Color(0xFF2589E8);
   const red = Color(0xFFE05A4F);
   final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
 

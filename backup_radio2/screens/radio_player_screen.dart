@@ -40,7 +40,6 @@ import '../services/cast_service.dart';
 import '../widgets/cast_sheets.dart';
 import '../widgets/exit_confirm_dialog.dart';
 import '../widgets/paran_toast.dart';
-import '../widgets/action_feedback.dart';
 
 double? _parseFrequency(String? freq) {
   if (freq == null || freq.isEmpty) return null;
@@ -50,15 +49,6 @@ double? _parseFrequency(String? freq) {
 }
 
 bool _isKoreanStation(String countryCode) => countryCode == 'KR';
-
-// ── 라디오 창 색 (라이트: 베이지 · 다크: 어두운 갈색) — 창을 그릴 때마다 다크 모드인지 맞춤 ──
-bool _rdDark = false;
-Color get _rBg => _rdDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
-Color get _rCard => _rdDark ? const Color(0xFF332E26) : Colors.white;
-Color get _rInk => _rdDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-Color get _rSub => _rdDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-Color get _rMuted => _rdDark ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
-Color get _rLine => _rdDark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
 
 class RadioPlayerScreen extends StatefulWidget {
   final RadioStation station;
@@ -503,22 +493,20 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 하단바: 바닥에 붙은 미니멀 (베이지 · 얇은 선)
+            Container(
+              height: 2.5,
+              color: baseColor.withOpacity(0.20),
+            ),
             Container(
               decoration: BoxDecoration(
-                color: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFF4EFE5),
-                border: Border(
-                    top: BorderSide(
-                        color: isDarkMode ? const Color(0xFF3A342B) : const Color(0xFFE2DACB), width: 0.5)),
+                color: baseColor.withOpacity(0.03),
+                border: Border(top: BorderSide(color: baseColor.withOpacity(0.06))),
               ),
               child: SafeArea(
                 top: false,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 2, 0, 4),
-                  child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  // 지금 프로그램 한 줄 (한국 방송일 때)
-                  if (_isKoreanBroadcast(current.name)) const _NowProgramStrip(),
-                  Row(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Row(
                     children: [
                       Expanded(
                         child: Row(
@@ -528,7 +516,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                               _BottomBarItem(
                                 icon: Icons.format_list_bulleted,
                                 label: AppLocalizations.of(context)!.radioBroadcastSchedule,
-                                hasIndicator: false,
+                                hasIndicator: radioProvider.scheduleList.isNotEmpty,
                                 primaryColor: primaryColor,
                                 onTap: () {
                                   const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -542,10 +530,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                               ),
                             _BottomBarItem(
                               icon: Icons.bedtime_outlined,
-                              // 켜져 있으면 "수면" 대신 남은 시간 (예: 28분)
-                              label: radioProvider.isSleepTimerActive && radioProvider.sleepRemaining != null
-                                  ? '${radioProvider.sleepRemaining!.inMinutes + 1}분'
-                                  : AppLocalizations.of(context)!.radioSleep,
+                              label: AppLocalizations.of(context)!.radioSleep,
                               hasIndicator: radioProvider.isSleepTimerActive,
                               primaryColor: primaryColor,
                               onTap: () {
@@ -563,8 +548,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                             _BottomBarItem(
                               icon: Icons.schedule,
                               label: AppLocalizations.of(context)!.radioSchedule,
-                              hasIndicator: false,
-                              badge: radioProvider.schedules.where((s) => !s.triggered).length, // 예약 개수
+                              hasIndicator: radioProvider.schedules.isNotEmpty,
                               primaryColor: primaryColor,
                               onTap: () {
                                 const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -677,11 +661,11 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.power_settings_new_rounded, color: baseColor.withOpacity(0.55), size: 22),
+                              const Icon(Icons.power_settings_new, color: Color(0xFFE8877E), size: 22),
                               const SizedBox(height: 3),
                               Text(
                                 AppLocalizations.of(context)!.exit,
-                                style: TextStyle(color: baseColor.withOpacity(0.55), fontSize: 10.5, fontWeight: FontWeight.w500),
+                                style: const TextStyle(color: Color(0xFFE8877E), fontSize: 10, fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
@@ -689,7 +673,6 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                       ),
                     ],
                   ),
-                  ]),
                 ),
               ),
             ),
@@ -2075,10 +2058,9 @@ class _FloatButton extends StatelessWidget {
 class _BottomBarItem extends StatelessWidget {
   final IconData icon;
   final String label;
-  final bool hasIndicator; // 켜져 있으면 진하게 (예: 수면 타이머)
+  final bool hasIndicator;
   final Color primaryColor;
   final VoidCallback onTap;
-  final int badge; // 작은 숫자 (예: 예약 2개)
 
   const _BottomBarItem({
     required this.icon,
@@ -2086,149 +2068,50 @@ class _BottomBarItem extends StatelessWidget {
     required this.hasIndicator,
     required this.primaryColor,
     required this.onTap,
-    this.badge = 0,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isDark = context.watch<ThemeProvider>().isDarkMode;
-    final strong = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final muted = isDark ? const Color(0xFFA29A8B) : const Color(0xFF5A5348);
-    final on = hasIndicator;
+    final baseColor = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Stack(
           clipBehavior: Clip.none,
           children: [
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(icon, color: on ? strong : muted, size: 22),
+                Icon(
+                  icon,
+                  color: baseColor.withOpacity(0.7),
+                  size: 22,
+                ),
                 const SizedBox(height: 4),
-                Text(label,
-                    style: TextStyle(
-                      color: on ? strong : muted,
-                      fontSize: 10.5,
-                      fontWeight: on ? FontWeight.w700 : FontWeight.w500,
-                    )),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: baseColor.withOpacity(0.7),
+                    fontSize: 10,
+                  ),
+                ),
               ],
             ),
-            if (badge > 0)
+            if (hasIndicator)
               Positioned(
-                right: -7,
-                top: -4,
+                right: -4, top: -2,
                 child: Container(
-                  constraints: const BoxConstraints(minWidth: 15),
-                  height: 15,
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(color: strong, borderRadius: BorderRadius.circular(8)),
-                  child: Text('$badge',
-                      style: TextStyle(
-                          color: isDark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5),
-                          fontSize: 9.5,
-                          fontWeight: FontWeight.w700)),
+                  width: 6, height: 6,
+                  decoration: BoxDecoration(
+                    color: baseColor,
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-/// 하단바 위: 지금 프로그램 한 줄 (● 이름 · N분 남음 + 얇은 진행 막대)
-class _NowProgramStrip extends StatefulWidget {
-  const _NowProgramStrip();
-
-  @override
-  State<_NowProgramStrip> createState() => _NowProgramStripState();
-}
-
-class _NowProgramStripState extends State<_NowProgramStrip> {
-  Timer? _tick;
-
-  @override
-  void initState() {
-    super.initState();
-    // 남은 시간이 맞게 30초마다 다시 그리기
-    _tick = Timer.periodic(const Duration(seconds: 30), (_) {
-      if (mounted) setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    _tick?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final radioProvider = context.watch<RadioProvider>();
-    final isDark = context.watch<ThemeProvider>().isDarkMode;
-    final strong = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final muted = isDark ? const Color(0xFFA29A8B) : const Color(0xFF5A5348);
-    final line = isDark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
-
-    final now = DateTime.now();
-    final nowM = _ScheduleListSheet._wrap(now.hour * 60 + now.minute);
-    String? title;
-    int? start, end;
-    for (final s in radioProvider.scheduleList) {
-      final t = (s['program_title'] ?? s['Title'] ?? s['title'] ?? '').toString();
-      final a = _ScheduleListSheet._mins((s['program_planned_start_time'] ?? s['StartTime'] ?? s['start_time'] ?? '').toString());
-      if (t.isEmpty || a == null) continue;
-      final b = _ScheduleListSheet._mins((s['program_planned_end_time'] ?? s['EndTime'] ?? s['end_time'] ?? '').toString()) ?? a + 60;
-      final ws = _ScheduleListSheet._wrap(a);
-      var we = _ScheduleListSheet._wrap(b);
-      if (we <= ws) we += 1440;
-      if (ws <= nowM && nowM < we) {
-        title = t;
-        start = ws;
-        end = we;
-        break;
-      }
-    }
-    if (title == null || start == null || end == null) return const SizedBox(height: 4);
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(18, 8, 18, 2),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 6,
-                height: 6,
-                decoration: const BoxDecoration(color: Color(0xFFFF6B5E), shape: BoxShape.circle),
-              ),
-              const SizedBox(width: 7),
-              Expanded(
-                child: Text(title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: strong, fontSize: 12, fontWeight: FontWeight.w700)),
-              ),
-              const SizedBox(width: 8),
-              Text('${end - nowM}분 남음', style: TextStyle(color: muted, fontSize: 11.5)),
-            ],
-          ),
-          const SizedBox(height: 7),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(1),
-            child: LinearProgressIndicator(
-              value: ((nowM - start) / (end - start)).clamp(0.0, 1.0),
-              minHeight: 2,
-              backgroundColor: line,
-              color: strong,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -2266,227 +2149,189 @@ class _NeuButton extends StatelessWidget {
 // ══════════════════════════════════════════
 class _FavoritesSheet extends StatelessWidget {
   final Color primaryColor;
-  _FavoritesSheet({required this.primaryColor});
-
-  
-  /// 방송국 로고 (없으면 이름 앞 글자)
-  Widget _logo(RadioStation s, {required bool onDark}) {
-    final short = (s.broadcaster ?? s.name).replaceAll(' ', '');
-    final label = short.length > 4 ? short.substring(0, 4) : short;
-    return Container(
-      width: 44,
-      height: 44,
-      decoration: BoxDecoration(color: onDark ? Colors.white : _rBg, borderRadius: BorderRadius.circular(12)),
-      clipBehavior: Clip.antiAlias,
-      alignment: Alignment.center,
-      child: (s.logoUrl != null && s.logoUrl!.isNotEmpty)
-          ? Image.network(s.logoUrl!,
-              width: 44,
-              height: 44,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Text(label,
-                  style: TextStyle(color: _rInk, fontSize: 10.5, fontWeight: FontWeight.w800)))
-          : Text(label, style: TextStyle(color: _rInk, fontSize: 10.5, fontWeight: FontWeight.w800)),
-    );
-  }
+  const _FavoritesSheet({required this.primaryColor});
 
   @override
   Widget build(BuildContext context) {
-    _rdDark = context.watch<ThemeProvider>().isDarkMode; // 다크 모드 맞추기
+    final accent = AppTheme.fixedAccent;
     final radioProvider = context.watch<RadioProvider>();
     final favorites = radioProvider.favorites;
     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
-    final curId = radioProvider.currentStation?.stationUuid;
-    final current = favorites.where((s) => s.stationUuid == curId).toList();
-    final others = favorites.where((s) => s.stationUuid != curId).toList();
-
-    void vib() => MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
 
     return Container(
-      decoration: BoxDecoration(
-        color: _rBg,
+      decoration: const BoxDecoration(
+        color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      padding: EdgeInsets.fromLTRB(16, 10, 16, 14 + bottomPadding),
+      padding: EdgeInsets.fromLTRB(20, 16, 20, 16 + bottomPadding),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(
-            child: Container(
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(color: _rLine, borderRadius: BorderRadius.circular(2)),
+          Container(
+            width: 40, height: 4,
+            decoration: BoxDecoration(
+              color: Colors.black12,
+              borderRadius: BorderRadius.circular(2),
             ),
           ),
-          SizedBox(height: 14),
-          // 위: 제목 · 개수
-          Padding(
-            padding: EdgeInsets.fromLTRB(4, 0, 4, 10),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: Text(AppLocalizations.of(context)!.favorites,
-                      style: TextStyle(color: _rInk, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Icon(CupertinoIcons.heart_fill, color: accent, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                '${AppLocalizations.of(context)!.favorites} (${favorites.length})',
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text('${favorites.length}개', style: TextStyle(color: _rSub, fontSize: 12.5)),
-              ],
-            ),
+              ),
+            ],
           ),
+          const SizedBox(height: 12),
           if (favorites.isEmpty)
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 32),
-              child: Center(
-                child: Column(
-                  children: [
-                    Icon(CupertinoIcons.heart, size: 40, color: _rSub.withOpacity(0.5)),
-                    SizedBox(height: 12),
-                    Text(AppLocalizations.of(context)!.radioNoFavorites,
-                        style: TextStyle(color: _rInk, fontSize: 14, fontWeight: FontWeight.w600)),
-                    SizedBox(height: 4),
-                    Text(AppLocalizations.of(context)!.radioNoFavoritesDesc,
-                        textAlign: TextAlign.center, style: TextStyle(color: _rSub, fontSize: 12.5)),
-                  ],
-                ),
+              padding: const EdgeInsets.symmetric(vertical: 32),
+              child: Column(
+                children: [
+                  Icon(CupertinoIcons.heart,
+                      size: 48, color: accent.withOpacity(0.3)),
+                  const SizedBox(height: 12),
+                  Text(
+                    AppLocalizations.of(context)!.radioNoFavorites,
+                    style: const TextStyle(color: Colors.black54, fontSize: 14),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    AppLocalizations.of(context)!.radioNoFavoritesDesc,
+                    style: const TextStyle(color: Colors.black38, fontSize: 12),
+                  ),
+                ],
               ),
             )
           else
             ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.55),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 지금 듣는 방송 (먹색 카드)
-                    for (final s in current)
-                      Container(
-                        margin: EdgeInsets.only(bottom: 12),
-                        padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(color: _rInk, borderRadius: BorderRadius.circular(16)),
-                        child: Row(
-                          children: [
-                            _logo(s, onDark: true),
-                            SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.12), borderRadius: BorderRadius.circular(8)),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                            width: 6,
-                                            height: 6,
-                                            decoration:
-                                                BoxDecoration(color: Color(0xFFFF6B5E), shape: BoxShape.circle)),
-                                        SizedBox(width: 5),
-                                        Text('듣는 중',
-                                            style: TextStyle(color: _rBg, fontSize: 10, fontWeight: FontWeight.w700)),
-                                      ],
-                                    ),
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.5,
+              ),
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: favorites.length,
+                separatorBuilder: (_, __) => const Divider(
+                  color: Color(0xFFE5E5E5), height: 1,
+                ),
+                itemBuilder: (context, index) {
+                  final station = favorites[index];
+                  final isCurrent = radioProvider.currentStation?.stationUuid == station.stationUuid;
+                  return ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                    leading: Container(
+                      width: 44, height: 44,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isCurrent
+                            ? accent.withOpacity(0.10)
+                            : const Color(0xFFF5F5F5),
+                        border: Border.all(
+                          color: isCurrent
+                              ? accent.withOpacity(0.4)
+                              : const Color(0xFFE5E5E5),
+                        ),
+                      ),
+                      child: Icon(Icons.radio,
+                          color: isCurrent ? accent : Colors.black38,
+                          size: 20),
+                    ),
+                    title: Text(
+                      station.name,
+                      style: TextStyle(
+                        color: isCurrent ? accent : Colors.black87,
+                        fontSize: 14,
+                        fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w500,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    subtitle: Builder(builder: (ctx) {
+                      final nowPlaying = radioProvider.nowPlayingFor(station.name);
+                      if (nowPlaying != null && nowPlaying.isNotEmpty) {
+                        return Text(
+                          nowPlaying,
+                          style: TextStyle(
+                            color: accent.withOpacity(0.7),
+                            fontSize: 11,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    }),
+                    trailing: isCurrent
+                        ? Icon(Icons.graphic_eq, color: accent, size: 20)
+                        : IconButton(
+                      icon: const Icon(Icons.close, color: Colors.black38, size: 20),
+                      onPressed: () {
+                        final overlay = Overlay.of(context);
+                        final removedText = AppLocalizations.of(context)!.radioRemovedFromFavorites;
+                        late final OverlayEntry entry;
+                        entry = OverlayEntry(
+                          builder: (_) => Positioned(
+                            bottom: 180, left: 0, right: 0,
+                            child: Center(
+                              child: TweenAnimationBuilder<double>(
+                                tween: Tween(begin: 0.0, end: 1.0),
+                                duration: const Duration(milliseconds: 300),
+                                builder: (_, value, child) => Opacity(
+                                  opacity: value,
+                                  child: Transform.scale(scale: 0.85 + 0.15 * value, child: child),
+                                ),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(30),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.15),
+                                        blurRadius: 12,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(height: 5),
-                                  Text(s.name,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: _rBg, fontSize: 15, fontWeight: FontWeight.w700)),
-                                  if ((radioProvider.nowPlayingFor(s.name) ?? '').isNotEmpty)
-                                    Text(radioProvider.nowPlayingFor(s.name)!,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: _rBg.withOpacity(0.65), fontSize: 11.5)),
-                                ],
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(CupertinoIcons.heart, color: Colors.black38, size: 18),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        removedText,
+                                        style: const TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          decoration: TextDecoration.none,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
-                            Icon(Icons.graphic_eq_rounded, color: Color(0xFF7FB8F0), size: 22),
-                          ],
-                        ),
-                      ),
-                    if (others.isNotEmpty) ...[
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(4, 0, 4, 6),
-                        child: Text('눌러서 바로 듣기',
-                            style: TextStyle(color: _rSub, fontSize: 12, fontWeight: FontWeight.w600)),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(color: _rCard, borderRadius: BorderRadius.circular(14)),
-                        clipBehavior: Clip.antiAlias,
-                        child: Column(
-                          children: [
-                            for (var i = 0; i < others.length; i++) ...[
-                              if (i > 0) Container(height: 0.5, margin: EdgeInsets.only(left: 68), color: _rLine),
-                              // 왼쪽으로 밀면 즐겨찾기에서 빼기
-                              Dismissible(
-                                key: ValueKey('fav_${others[i].stationUuid}'),
-                                direction: DismissDirection.endToStart,
-                                background: Container(
-                                  color: Color(0xFFE05A4F),
-                                  alignment: Alignment.centerRight,
-                                  padding: EdgeInsets.only(right: 20),
-                                  child: Icon(Icons.delete_outline_rounded, color: Colors.white),
-                                ),
-                                onDismissed: (_) {
-                                  final st = others[i];
-                                  showActionFeedback(context, type: ActionFeedbackType.deleted, message: '즐겨찾기에서 뺐어요');
-                                  Future.microtask(() => radioProvider.toggleFavorite(st));
-                                },
-                                child: InkWell(
-                                  onTap: () {
-                                    vib();
-                                    Navigator.pop(context);
-                                    radioProvider.playStation(others[i]);
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(12, 10, 12, 10),
-                                    child: Row(
-                                      children: [
-                                        _logo(others[i], onDark: false),
-                                        SizedBox(width: 12),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(others[i].name,
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(color: _rInk, fontSize: 14, fontWeight: FontWeight.w600)),
-                                              if ((radioProvider.nowPlayingFor(others[i].name) ?? '').isNotEmpty)
-                                                Text(radioProvider.nowPlayingFor(others[i].name)!,
-                                                    maxLines: 1,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: TextStyle(color: _rSub, fontSize: 11.5)),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          width: 32,
-                                          height: 32,
-                                          decoration: BoxDecoration(color: _rBg, shape: BoxShape.circle),
-                                          child: Icon(Icons.play_arrow_rounded, color: _rInk, size: 20),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 8),
-                        child: Center(
-                          child: Text('왼쪽으로 밀면 즐겨찾기에서 빼요', style: TextStyle(color: _rSub, fontSize: 11.5)),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
+                          ),
+                        );
+                        overlay.insert(entry);
+                        Future.delayed(const Duration(seconds: 2), () => entry.remove());
+                        Future.microtask(() => radioProvider.toggleFavorite(station));
+                      },
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      radioProvider.playStation(station);
+                    },
+                  );
+                },
               ),
             ),
         ],
@@ -2536,305 +2381,151 @@ class _SleepTimerBadge extends StatelessWidget {
 // ══════════════════════════════════════════
 class _ScheduleListSheet extends StatelessWidget {
   final String stationName;
-  _ScheduleListSheet({required this.stationName});
-
-  
-  /// 시간 글자 → 하루 중 몇 분 (14:00 → 840). 못 읽으면 null
-  static int? _mins(String t) {
-    t = t.trim();
-    if (t.isEmpty) return null;
-    int h, m;
-    if (t.contains(':')) {
-      final p = t.split(':');
-      h = int.tryParse(p[0]) ?? -1;
-      m = int.tryParse(p.length > 1 ? p[1] : '0') ?? 0;
-    } else {
-      final d = t.replaceAll(RegExp(r'[^0-9]'), '');
-      if (d.length >= 12 && d.startsWith('20')) {
-        // 20231015160000 처럼 날짜가 붙은 것
-        h = int.tryParse(d.substring(8, 10)) ?? -1;
-        m = int.tryParse(d.substring(10, 12)) ?? 0;
-      } else if (d.length >= 4) {
-        h = int.tryParse(d.substring(0, 2)) ?? -1;
-        m = int.tryParse(d.substring(2, 4)) ?? 0;
-      } else {
-        return null;
-      }
-    }
-    if (h < 0) return null;
-    if (h >= 24) h -= 24;
-    return h * 60 + m;
-  }
-
-  static String _hm(int mins) {
-    final x = mins % 1440;
-    return '${(x ~/ 60).toString().padLeft(2, '0')}:${(x % 60).toString().padLeft(2, '0')}';
-  }
-
-  /// 새벽(0~6시)은 하루의 맨 끝으로 (편성표 순서)
-  static int _wrap(int mins) => mins < 360 ? mins + 1440 : mins;
-
-  static String _part(int mins) {
-    final h = (mins % 1440) ~/ 60;
-    if (h < 6) return '새벽';
-    if (h < 12) return '아침';
-    if (h < 18) return '오후';
-    return '저녁 · 밤';
-  }
+  const _ScheduleListSheet({required this.stationName});
 
   @override
   Widget build(BuildContext context) {
-    _rdDark = context.watch<ThemeProvider>().isDarkMode; // 다크 모드 맞추기
+    final primaryColor = AppTheme.fixedAccent;
     final radioProvider = context.watch<RadioProvider>();
-    final station = radioProvider.currentStation;
+    final schedules = radioProvider.scheduleList;
+    final currentProgram = radioProvider.currentProgram;
+
     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
-
-    // 편성표 정리: 제목 · 시작 · 끝
-    final items = <({String title, int start, int end})>[];
-    for (final s in radioProvider.scheduleList) {
-      String title = (s['program_title'] ?? s['Title'] ?? s['title'] ?? '').toString();
-      String st = (s['program_planned_start_time'] ?? s['StartTime'] ?? s['start_time'] ?? '').toString();
-      String en = (s['program_planned_end_time'] ?? s['EndTime'] ?? s['end_time'] ?? '').toString();
-      final a = _mins(st);
-      if (title.isEmpty || a == null) continue;
-      var b = _mins(en) ?? (a + 60);
-      var ws = _wrap(a);
-      var we = _wrap(b);
-      if (we <= ws) we += 1440;
-      items.add((title: title, start: ws, end: we));
-    }
-    items.sort((x, y) => x.start.compareTo(y.start));
-
-    final now = DateTime.now();
-    final nowM = _wrap(now.hour * 60 + now.minute);
-    final current = items.where((e) => e.start <= nowM && nowM < e.end).toList();
-    final cur = current.isEmpty ? null : current.first;
-    final upcoming = items.where((e) => e.start > nowM).toList();
-    final nextStart = upcoming.isEmpty ? null : upcoming.first.start;
-
-    bool reserved(int mins) =>
-        station != null &&
-        radioProvider.schedules.any((s) =>
-            s.time.hour == (mins % 1440) ~/ 60 &&
-            s.time.minute == (mins % 1440) % 60 &&
-            s.station.stationUuid == station.stationUuid);
-
-    void reserve(int mins) {
-      if (station == null || reserved(mins)) return;
-      final before = radioProvider.schedules.length;
-      radioProvider.addSchedule(TimeOfDay(hour: (mins % 1440) ~/ 60, minute: (mins % 1440) % 60), station);
-      if (radioProvider.schedules.length > before) {
-        showActionFeedback(context, type: ActionFeedbackType.saved, message: '예약했어요', icon: Icons.notifications_active_rounded);
-      } else {
-        showParanToast(context, '예약을 더 넣을 수 없어요. 예약 창에서 지난 예약을 지워주세요');
-      }
-    }
-
-    // 목록: 시간대(아침·오후…)마다 작은 제목
-    final rows = <Widget>[];
-    String? lastPart;
-    for (final e in items) {
-      if (cur != null && e == cur) continue; // 지금 방송은 위 먹색 카드에
-      final part = _part(e.start);
-      if (part != lastPart) {
-        rows.add(Padding(
-          padding: EdgeInsets.fromLTRB(4, 12, 4, 4),
-          child: Text(part, style: TextStyle(color: _rSub, fontSize: 11.5, fontWeight: FontWeight.w600)),
-        ));
-        lastPart = part;
-      }
-      final past = e.end <= nowM;
-      final isNext = e.start == nextStart;
-      final done = reserved(e.start);
-      rows.add(Opacity(
-        opacity: past ? 0.45 : 1,
-        child: IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // 세로 줄 + 점 (타임라인)
-              SizedBox(
-                width: 16,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(width: 1.5, color: _rLine),
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(color: isNext ? _rInk : _rLine, shape: BoxShape.circle),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(width: 8),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 9),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 46,
-                        child: Text(_hm(e.start),
-                            style: TextStyle(
-                                color: _rSub, fontSize: 12.5, fontFeatures: [FontFeature.tabularFigures()])),
-                      ),
-                      Expanded(
-                        child: Text(e.title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                color: _rInk, fontSize: 14, fontWeight: isNext ? FontWeight.w700 : FontWeight.w500)),
-                      ),
-                      if (isNext) ...[
-                        SizedBox(width: 6),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: _rCard,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: _rLine),
-                          ),
-                          child: Text('다음',
-                              style: TextStyle(color: _rInk, fontSize: 10.5, fontWeight: FontWeight.w700)),
-                        ),
-                      ],
-                      // 🔔 이 시간에 예약 (지난 방송은 없음)
-                      if (!past)
-                        IconButton(
-                          onPressed: () {
-                            MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                            reserve(e.start);
-                          },
-                          visualDensity: VisualDensity.compact,
-                          icon: Icon(
-                            done ? Icons.notifications_active_rounded : Icons.notifications_none_rounded,
-                            color: done ? _rInk : _rSub,
-                            size: 20,
-                          ),
-                        )
-                      else
-                        SizedBox(width: 40),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ));
-    }
-
     return Container(
-      decoration: BoxDecoration(
-        color: _rBg,
+      decoration: const BoxDecoration(
+        color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      padding: EdgeInsets.fromLTRB(16, 10, 16, 12 + bottomPadding),
+      padding: EdgeInsets.fromLTRB(20, 16, 20, 16 + bottomPadding),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(
-            child: Container(
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(color: _rLine, borderRadius: BorderRadius.circular(2)),
-            ),
+          Container(
+            width: 40, height: 4,
+            decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.circular(2)),
           ),
-          SizedBox(height: 14),
-          // 위: 방송국 + 오늘 날짜
+          const SizedBox(height: 16),
           Row(
             children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(color: _rCard, borderRadius: BorderRadius.circular(12)),
-                child: Icon(Icons.radio_rounded, color: _rSub, size: 22),
-              ),
-              SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(AppLocalizations.of(context)!.radioScheduleTitle(stationName),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: _rInk, fontSize: 16.5, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
-                    SizedBox(height: 2),
-                    Text('오늘 · ${now.month}월 ${now.day}일 ${['월', '화', '수', '목', '금', '토', '일'][now.weekday - 1]}요일',
-                        style: TextStyle(color: _rSub, fontSize: 12)),
-                  ],
-                ),
-              ),
+              Icon(Icons.format_list_bulleted, color: primaryColor, size: 20),
+              const SizedBox(width: 8),
+              Text(AppLocalizations.of(context)!.radioScheduleTitle(stationName),
+                  style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
             ],
           ),
-          SizedBox(height: 12),
-          if (items.isEmpty)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 36),
-              child: Center(
-                child: Text(AppLocalizations.of(context)!.radioLoadingSchedule,
-                    style: TextStyle(color: _rSub, fontSize: 13)),
+          const SizedBox(height: 12),
+          ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.6),
+            child: schedules.isEmpty
+                ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Text(AppLocalizations.of(context)!.radioLoadingSchedule, style: const TextStyle(color: Colors.black45)),
               ),
             )
-          else ...[
-            // 지금 방송 중 (먹색 카드)
-            if (cur != null)
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.fromLTRB(14, 12, 14, 14),
-                decoration: BoxDecoration(color: _rInk, borderRadius: BorderRadius.circular(16)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.12), borderRadius: BorderRadius.circular(9)),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                              width: 6,
-                              height: 6,
-                              decoration: BoxDecoration(color: Color(0xFFFF6B5E), shape: BoxShape.circle)),
-                          SizedBox(width: 5),
-                          Text('지금 방송 중',
-                              style: TextStyle(color: _rBg, fontSize: 10.5, fontWeight: FontWeight.w700)),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(cur.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: _rBg, fontSize: 16, fontWeight: FontWeight.w800)),
-                    SizedBox(height: 3),
-                    Text('${_hm(cur.start)} – ${_hm(cur.end)} · ${cur.end - nowM}분 남음',
-                        style: TextStyle(color: _rBg.withOpacity(0.7), fontSize: 12)),
-                    SizedBox(height: 10),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(2),
-                      child: LinearProgressIndicator(
-                        value: ((nowM - cur.start) / (cur.end - cur.start)).clamp(0.0, 1.0),
-                        minHeight: 4,
-                        backgroundColor: Colors.white.withOpacity(0.15),
-                        color: Color(0xFF7FB8F0),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.45),
-              child: ListView(
+                : Builder(builder: (ctx) {
+              // 새벽 방송(0000~0559)을 맨 아래로 정렬
+              final sorted = List<Map<String, dynamic>>.from(schedules);
+              sorted.sort((a, b) {
+                String sa = (a['StartTime'] as String? ?? a['program_planned_start_time'] as String? ?? a['start_time'] as String? ?? '');
+                String sb = (b['StartTime'] as String? ?? b['program_planned_start_time'] as String? ?? b['start_time'] as String? ?? '');
+                // 4자리로 통일 (KBS는 8자리라 앞 4자리만)
+                if (sa.length > 4) sa = sa.substring(0, 4);
+                if (sb.length > 4) sb = sb.substring(0, 4);
+                // 새벽(0000~0559)은 2400 이후로 취급
+                final ia = int.tryParse(sa) ?? 0;
+                final ib = int.tryParse(sb) ?? 0;
+                final wa = ia < 600 ? ia + 2400 : ia;
+                final wb = ib < 600 ? ib + 2400 : ib;
+                return wa.compareTo(wb);
+              });
+              return ListView.builder(
                 shrinkWrap: true,
-                padding: EdgeInsets.only(top: 2),
-                children: rows,
-              ),
-            ),
-          ],
+                itemCount: sorted.length,
+                itemBuilder: (context, index) {
+                  final s = sorted[index];
+                  String title = s['program_title'] as String? ?? '';
+                  String start = s['program_planned_start_time'] as String? ?? '';
+                  String end = s['program_planned_end_time'] as String? ?? '';
+                  if (title.isEmpty) title = (s['Title'] ?? '').toString();
+                  if (start.isEmpty) start = (s['StartTime'] ?? '').toString();
+                  if (end.isEmpty) end = (s['EndTime'] ?? '').toString();
+                  if (title.isEmpty) title = s['title'] as String? ?? '';
+                  if (start.isEmpty) {
+                    start = s['start_time'] as String? ?? '';
+                    end = s['end_time'] as String? ?? '';
+                  }
+
+                  String fmt(String t) {
+                    if (t.length >= 8) {
+                      // KBS: 20231015160000 형식 → 8~12번째 자리가 HHMM
+                      return radioProvider.formatScheduleTime(t);
+                    }
+                    if (t.contains(':')) {
+                      final parts = t.split(':');
+                      int h = int.tryParse(parts[0]) ?? 0;
+                      if (h >= 24) h -= 24;
+                      return '${h.toString().padLeft(2, '0')}:${parts[1]}';
+                    }
+                    if (t.length < 4) return t;
+                    int h = int.tryParse(t.substring(0, 2)) ?? 0;
+                    final m = t.substring(2, 4);
+                    if (h >= 24) h -= 24;
+                    return '${h.toString().padLeft(2, '0')}:$m';
+                  }
+
+                  final isCurrent = currentProgram != null &&
+                      (currentProgram['program_planned_start_time'] == start ||
+                          currentProgram['StartTime'] == start ||
+                          currentProgram['start_time'] == start) &&
+                      (currentProgram['program_title'] == title ||
+                          currentProgram['Title'] == title ||
+                          currentProgram['title'] == title);
+
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: isCurrent ? primaryColor.withOpacity(0.10) : Colors.transparent,
+                      borderRadius: BorderRadius.circular(10),
+                      border: isCurrent ? Border.all(color: primaryColor.withOpacity(0.4)) : null,
+                    ),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 60,
+                          child: Text(fmt(start),
+                              style: TextStyle(
+                                color: isCurrent ? primaryColor : Colors.black45,
+                                fontSize: 13,
+                                fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
+                              )),
+                        ),
+                        if (isCurrent)
+                          Container(
+                            width: 6, height: 6,
+                            margin: const EdgeInsets.only(right: 8),
+                            decoration: BoxDecoration(color: primaryColor, shape: BoxShape.circle),
+                          )
+                        else
+                          const SizedBox(width: 14),
+                        Expanded(
+                          child: Text(title,
+                              style: TextStyle(
+                                color: isCurrent ? Colors.black : Colors.black87,
+                                fontSize: 14,
+                                fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            }),
+          ),
         ],
       ),
     );

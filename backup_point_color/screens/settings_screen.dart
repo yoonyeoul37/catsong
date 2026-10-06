@@ -147,7 +147,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
           ),
-          _buildTile(context, icon: Icons.palette_outlined, title: '포인트 색', subtitle: context.watch<ThemeProvider>().pointColorName, onTap: () => _showColorPicker(context), primaryColor: primaryColor),
+          _buildTile(context, icon: Icons.palette_outlined, title: l.themeColor, onTap: () => _showColorPicker(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.text_fields, title: l.textSize, onTap: () => _showTextSizeDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.font_download_outlined, title: l.fontChange, onTap: () => _showFontDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.style, title: l.playerStyle, onTap: () => _showPlayerStyleDialog(context), primaryColor: primaryColor, isLast: true),
@@ -402,53 +402,135 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showColorPicker(BuildContext context) {
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     final themeProvider = context.read<ThemeProvider>();
-    final isDarkMode = themeProvider.isDarkMode;
-    showParanSheet(
-      context,
-      title: '포인트 색',
-      builder: (ctx, setSheet) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(4, 0, 4, 10),
-            child: Text('체크·스위치·막대 같은 작은 곳의 색이 바뀌어요',
-                style: TextStyle(color: _sTextHint(isDarkMode), fontSize: 12.5)),
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    Color pickerColor = themeProvider.primaryColor;
+    final hexController = TextEditingController(
+      text: '#${pickerColor.value.toRadixString(16).substring(2).toUpperCase()}',
+    );
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: _sBg(isDarkMode),
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setDialogState) => Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).viewPadding.bottom,
           ),
-          ParanCard(
-            children: [
-              for (final c in ThemeProvider.pointColors)
-                InkWell(
-                  onTap: () {
-                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                    themeProvider.setPrimaryColor(c.$2);
-                    Navigator.pop(ctx);
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.circular(2))),
+                const SizedBox(height: 16),
+                Row(children: [
+                  Icon(Icons.palette, color: primaryColor, size: 20), const SizedBox(width: 8),
+                  Text(AppLocalizations.of(context)!.themeColor, style: TextStyle(color: _sText(isDarkMode), fontSize: 16, fontWeight: FontWeight.bold)),
+                ]),
+                const SizedBox(height: 16),
+                ColorPicker(
+                  pickerColor: pickerColor,
+                  onColorChanged: (color) {
+                    setDialogState(() {
+                      pickerColor = color;
+                      hexController.text = '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
+                    });
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
-                    child: Row(
-                      children: [
-                        Container(width: 22, height: 22, decoration: BoxDecoration(color: c.$2, shape: BoxShape.circle)),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(c.$1,
-                              style: TextStyle(
-                                color: _sText(isDarkMode),
-                                fontSize: 14.5,
-                                fontWeight: themeProvider.primaryColor.value == c.$2.value
-                                    ? FontWeight.w700
-                                    : FontWeight.w500,
-                              )),
+                  colorPickerWidth: 280, pickerAreaHeightPercent: 0.7,
+                  enableAlpha: false, displayThumbColor: true,
+                  paletteType: PaletteType.hsvWithHue, labelTypes: const [],
+                  pickerAreaBorderRadius: BorderRadius.circular(12),
+                ),
+                const SizedBox(height: 8),
+                GestureDetector(
+                  onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(color: _sInputBg(isDarkMode), borderRadius: BorderRadius.circular(10)),
+                    child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Container(width: 20, height: 20, decoration: BoxDecoration(color: pickerColor, shape: BoxShape.circle, border: Border.all(color: Colors.black12))),
+                      const SizedBox(width: 8),
+                      SizedBox(width: 110,
+                        child: TextField(
+                          controller: hexController,
+                          style: TextStyle(color: _sText(isDarkMode), fontSize: 14, fontWeight: FontWeight.bold, letterSpacing: 2),
+                          cursorColor: _sText(isDarkMode),
+                          decoration: const InputDecoration(border: InputBorder.none, isDense: true, contentPadding: EdgeInsets.zero),
+                          onSubmitted: (value) {
+                            try {
+                              final hex = value.replaceAll('#', '').trim();
+                              if (hex.length == 6) {
+                                final color = Color(int.parse('FF$hex', radix: 16));
+                                setDialogState(() { pickerColor = color; hexController.text = '#${color.value.toRadixString(16).substring(2).toUpperCase()}'; });
+                              }
+                            } catch (e) {}
+                          },
                         ),
-                        if (themeProvider.primaryColor.value == c.$2.value)
-                          Icon(Icons.check_circle_rounded, color: c.$2, size: 20),
-                      ],
-                    ),
+                      ),
+                    ]),
                   ),
                 ),
-            ],
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 10, runSpacing: 10,
+                  children: [
+                    const Color(0xFFD4AF37), const Color(0xFFB76E79), const Color(0xFF2196F3),
+                    const Color(0xFF9C27B0), const Color(0xFF4CAF50), const Color(0xFFF44336),
+                    const Color(0xFFFF9800), const Color(0xFF00BCD4), const Color(0xFFFFFFFF),
+                    const Color(0xFFFF69B4),
+                  ].map((color) {
+                    final isSelected = pickerColor == color;
+                    return GestureDetector(
+                      onTap: () { setDialogState(() { pickerColor = color; hexController.text = '#${color.value.toRadixString(16).substring(2).toUpperCase()}'; }); },
+                      child: Container(
+                        width: 36, height: 36,
+                        decoration: BoxDecoration(
+                          color: color, shape: BoxShape.circle,
+                          border: Border.all(color: isSelected ? const Color(0xFF888888) : _sBorder(isDarkMode), width: isSelected ? 3 : 1),
+                          boxShadow: isSelected ? [BoxShadow(color: color.withOpacity(0.4), blurRadius: 6)] : null,
+                        ),
+                        child: isSelected ? Icon(Icons.check, color: color.computeLuminance() > 0.5 ? Colors.black : Colors.white, size: 16) : null,
+                      ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 16),
+                Row(children: [
+                  Expanded(child: OutlinedButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    style: OutlinedButton.styleFrom(foregroundColor: _sTextSub(isDarkMode), side: BorderSide(color: _sBorder(isDarkMode)), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                    child: Text(AppLocalizations.of(context)!.cancel),
+                  )),
+                  const SizedBox(width: 8),
+                  Expanded(child: ElevatedButton(
+                    onPressed: () {
+                      try {
+                        final hex = hexController.text.replaceAll('#', '').trim();
+                        if (hex.length == 6) {
+                          pickerColor = Color(int.parse('FF$hex', radix: 16));
+                        }
+                      } catch (e) {}
+                      themeProvider.setPrimaryColor(pickerColor);
+                      Navigator.pop(ctx);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: pickerColor,
+                      foregroundColor: pickerColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: Text(AppLocalizations.of(context)!.apply, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  )),
+                ]),
+                const SizedBox(height: 8),
+              ]),
+            ),
           ),
-        ],
+        ),
       ),
     );
   }

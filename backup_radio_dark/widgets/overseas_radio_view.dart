@@ -13,7 +13,6 @@ import 'more_menu_sheet.dart';
 import '../screens/radio_country_stations_screen.dart';
 import '../screens/radio_home_screen.dart';
 import '../services/cast_service.dart';
-import '../providers/theme_provider.dart';
 
 /// 해외 라디오 상세화면 (애플뮤직 스타일)
 /// 큰 로고 + 이름 + 장르·국가 + LIVE + 흰색 이퀄라이저 + 조작 버튼
@@ -111,8 +110,7 @@ class OverseasRadioView extends StatelessWidget {
                 ),
               ),
             ),
-            // 다크 모드면 색을 살짝 더 어둡게 (밤에 눈부시지 않게)
-            Container(color: Colors.black.withOpacity(context.watch<ThemeProvider>().isDarkMode ? 0.62 : 0.45)),
+            Container(color: Colors.black.withOpacity(0.45)),
             GestureDetector(
               // 화면을 옆으로 밀면 이전/다음 방송국
               behavior: HitTestBehavior.translucent,

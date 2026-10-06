@@ -51,15 +51,6 @@ double? _parseFrequency(String? freq) {
 
 bool _isKoreanStation(String countryCode) => countryCode == 'KR';
 
-// ── 라디오 창 색 (라이트: 베이지 · 다크: 어두운 갈색) — 창을 그릴 때마다 다크 모드인지 맞춤 ──
-bool _rdDark = false;
-Color get _rBg => _rdDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
-Color get _rCard => _rdDark ? const Color(0xFF332E26) : Colors.white;
-Color get _rInk => _rdDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-Color get _rSub => _rdDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-Color get _rMuted => _rdDark ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
-Color get _rLine => _rdDark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
-
 class RadioPlayerScreen extends StatefulWidget {
   final RadioStation station;
   final List<RadioStation>? stationList;
@@ -503,22 +494,20 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 하단바: 바닥에 붙은 미니멀 (베이지 · 얇은 선)
+            Container(
+              height: 2.5,
+              color: baseColor.withOpacity(0.20),
+            ),
             Container(
               decoration: BoxDecoration(
-                color: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFF4EFE5),
-                border: Border(
-                    top: BorderSide(
-                        color: isDarkMode ? const Color(0xFF3A342B) : const Color(0xFFE2DACB), width: 0.5)),
+                color: baseColor.withOpacity(0.03),
+                border: Border(top: BorderSide(color: baseColor.withOpacity(0.06))),
               ),
               child: SafeArea(
                 top: false,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 2, 0, 4),
-                  child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  // 지금 프로그램 한 줄 (한국 방송일 때)
-                  if (_isKoreanBroadcast(current.name)) const _NowProgramStrip(),
-                  Row(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Row(
                     children: [
                       Expanded(
                         child: Row(
@@ -528,7 +517,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                               _BottomBarItem(
                                 icon: Icons.format_list_bulleted,
                                 label: AppLocalizations.of(context)!.radioBroadcastSchedule,
-                                hasIndicator: false,
+                                hasIndicator: radioProvider.scheduleList.isNotEmpty,
                                 primaryColor: primaryColor,
                                 onTap: () {
                                   const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -542,10 +531,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                               ),
                             _BottomBarItem(
                               icon: Icons.bedtime_outlined,
-                              // 켜져 있으면 "수면" 대신 남은 시간 (예: 28분)
-                              label: radioProvider.isSleepTimerActive && radioProvider.sleepRemaining != null
-                                  ? '${radioProvider.sleepRemaining!.inMinutes + 1}분'
-                                  : AppLocalizations.of(context)!.radioSleep,
+                              label: AppLocalizations.of(context)!.radioSleep,
                               hasIndicator: radioProvider.isSleepTimerActive,
                               primaryColor: primaryColor,
                               onTap: () {
@@ -563,8 +549,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                             _BottomBarItem(
                               icon: Icons.schedule,
                               label: AppLocalizations.of(context)!.radioSchedule,
-                              hasIndicator: false,
-                              badge: radioProvider.schedules.where((s) => !s.triggered).length, // 예약 개수
+                              hasIndicator: radioProvider.schedules.isNotEmpty,
                               primaryColor: primaryColor,
                               onTap: () {
                                 const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -677,11 +662,11 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.power_settings_new_rounded, color: baseColor.withOpacity(0.55), size: 22),
+                              const Icon(Icons.power_settings_new, color: Color(0xFFE8877E), size: 22),
                               const SizedBox(height: 3),
                               Text(
                                 AppLocalizations.of(context)!.exit,
-                                style: TextStyle(color: baseColor.withOpacity(0.55), fontSize: 10.5, fontWeight: FontWeight.w500),
+                                style: const TextStyle(color: Color(0xFFE8877E), fontSize: 10, fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
@@ -689,7 +674,6 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                       ),
                     ],
                   ),
-                  ]),
                 ),
               ),
             ),
@@ -2075,10 +2059,9 @@ class _FloatButton extends StatelessWidget {
 class _BottomBarItem extends StatelessWidget {
   final IconData icon;
   final String label;
-  final bool hasIndicator; // 켜져 있으면 진하게 (예: 수면 타이머)
+  final bool hasIndicator;
   final Color primaryColor;
   final VoidCallback onTap;
-  final int badge; // 작은 숫자 (예: 예약 2개)
 
   const _BottomBarItem({
     required this.icon,
@@ -2086,149 +2069,50 @@ class _BottomBarItem extends StatelessWidget {
     required this.hasIndicator,
     required this.primaryColor,
     required this.onTap,
-    this.badge = 0,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isDark = context.watch<ThemeProvider>().isDarkMode;
-    final strong = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final muted = isDark ? const Color(0xFFA29A8B) : const Color(0xFF5A5348);
-    final on = hasIndicator;
+    final baseColor = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Stack(
           clipBehavior: Clip.none,
           children: [
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(icon, color: on ? strong : muted, size: 22),
+                Icon(
+                  icon,
+                  color: baseColor.withOpacity(0.7),
+                  size: 22,
+                ),
                 const SizedBox(height: 4),
-                Text(label,
-                    style: TextStyle(
-                      color: on ? strong : muted,
-                      fontSize: 10.5,
-                      fontWeight: on ? FontWeight.w700 : FontWeight.w500,
-                    )),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: baseColor.withOpacity(0.7),
+                    fontSize: 10,
+                  ),
+                ),
               ],
             ),
-            if (badge > 0)
+            if (hasIndicator)
               Positioned(
-                right: -7,
-                top: -4,
+                right: -4, top: -2,
                 child: Container(
-                  constraints: const BoxConstraints(minWidth: 15),
-                  height: 15,
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(color: strong, borderRadius: BorderRadius.circular(8)),
-                  child: Text('$badge',
-                      style: TextStyle(
-                          color: isDark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5),
-                          fontSize: 9.5,
-                          fontWeight: FontWeight.w700)),
+                  width: 6, height: 6,
+                  decoration: BoxDecoration(
+                    color: baseColor,
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-/// 하단바 위: 지금 프로그램 한 줄 (● 이름 · N분 남음 + 얇은 진행 막대)
-class _NowProgramStrip extends StatefulWidget {
-  const _NowProgramStrip();
-
-  @override
-  State<_NowProgramStrip> createState() => _NowProgramStripState();
-}
-
-class _NowProgramStripState extends State<_NowProgramStrip> {
-  Timer? _tick;
-
-  @override
-  void initState() {
-    super.initState();
-    // 남은 시간이 맞게 30초마다 다시 그리기
-    _tick = Timer.periodic(const Duration(seconds: 30), (_) {
-      if (mounted) setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    _tick?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final radioProvider = context.watch<RadioProvider>();
-    final isDark = context.watch<ThemeProvider>().isDarkMode;
-    final strong = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final muted = isDark ? const Color(0xFFA29A8B) : const Color(0xFF5A5348);
-    final line = isDark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
-
-    final now = DateTime.now();
-    final nowM = _ScheduleListSheet._wrap(now.hour * 60 + now.minute);
-    String? title;
-    int? start, end;
-    for (final s in radioProvider.scheduleList) {
-      final t = (s['program_title'] ?? s['Title'] ?? s['title'] ?? '').toString();
-      final a = _ScheduleListSheet._mins((s['program_planned_start_time'] ?? s['StartTime'] ?? s['start_time'] ?? '').toString());
-      if (t.isEmpty || a == null) continue;
-      final b = _ScheduleListSheet._mins((s['program_planned_end_time'] ?? s['EndTime'] ?? s['end_time'] ?? '').toString()) ?? a + 60;
-      final ws = _ScheduleListSheet._wrap(a);
-      var we = _ScheduleListSheet._wrap(b);
-      if (we <= ws) we += 1440;
-      if (ws <= nowM && nowM < we) {
-        title = t;
-        start = ws;
-        end = we;
-        break;
-      }
-    }
-    if (title == null || start == null || end == null) return const SizedBox(height: 4);
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(18, 8, 18, 2),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 6,
-                height: 6,
-                decoration: const BoxDecoration(color: Color(0xFFFF6B5E), shape: BoxShape.circle),
-              ),
-              const SizedBox(width: 7),
-              Expanded(
-                child: Text(title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: strong, fontSize: 12, fontWeight: FontWeight.w700)),
-              ),
-              const SizedBox(width: 8),
-              Text('${end - nowM}분 남음', style: TextStyle(color: muted, fontSize: 11.5)),
-            ],
-          ),
-          const SizedBox(height: 7),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(1),
-            child: LinearProgressIndicator(
-              value: ((nowM - start) / (end - start)).clamp(0.0, 1.0),
-              minHeight: 2,
-              backgroundColor: line,
-              color: strong,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -2266,9 +2150,14 @@ class _NeuButton extends StatelessWidget {
 // ══════════════════════════════════════════
 class _FavoritesSheet extends StatelessWidget {
   final Color primaryColor;
-  _FavoritesSheet({required this.primaryColor});
+  const _FavoritesSheet({required this.primaryColor});
 
-  
+  // 화면 공통 색
+  static const _bg = Color(0xFFF4EFE5);
+  static const _ink = Color(0xFF17140F);
+  static const _sub = Color(0xFF8A8378);
+  static const _line = Color(0xFFE2DACB);
+
   /// 방송국 로고 (없으면 이름 앞 글자)
   Widget _logo(RadioStation s, {required bool onDark}) {
     final short = (s.broadcaster ?? s.name).replaceAll(' ', '');
@@ -2276,7 +2165,7 @@ class _FavoritesSheet extends StatelessWidget {
     return Container(
       width: 44,
       height: 44,
-      decoration: BoxDecoration(color: onDark ? Colors.white : _rBg, borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(color: onDark ? Colors.white : _bg, borderRadius: BorderRadius.circular(12)),
       clipBehavior: Clip.antiAlias,
       alignment: Alignment.center,
       child: (s.logoUrl != null && s.logoUrl!.isNotEmpty)
@@ -2285,14 +2174,13 @@ class _FavoritesSheet extends StatelessWidget {
               height: 44,
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) => Text(label,
-                  style: TextStyle(color: _rInk, fontSize: 10.5, fontWeight: FontWeight.w800)))
-          : Text(label, style: TextStyle(color: _rInk, fontSize: 10.5, fontWeight: FontWeight.w800)),
+                  style: const TextStyle(color: _ink, fontSize: 10.5, fontWeight: FontWeight.w800)))
+          : Text(label, style: const TextStyle(color: _ink, fontSize: 10.5, fontWeight: FontWeight.w800)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    _rdDark = context.watch<ThemeProvider>().isDarkMode; // 다크 모드 맞추기
     final radioProvider = context.watch<RadioProvider>();
     final favorites = radioProvider.favorites;
     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
@@ -2300,11 +2188,11 @@ class _FavoritesSheet extends StatelessWidget {
     final current = favorites.where((s) => s.stationUuid == curId).toList();
     final others = favorites.where((s) => s.stationUuid != curId).toList();
 
-    void vib() => MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    void vib() => const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
 
     return Container(
-      decoration: BoxDecoration(
-        color: _rBg,
+      decoration: const BoxDecoration(
+        color: _bg,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.fromLTRB(16, 10, 16, 14 + bottomPadding),
@@ -2316,37 +2204,37 @@ class _FavoritesSheet extends StatelessWidget {
             child: Container(
               width: 36,
               height: 4,
-              decoration: BoxDecoration(color: _rLine, borderRadius: BorderRadius.circular(2)),
+              decoration: BoxDecoration(color: _line, borderRadius: BorderRadius.circular(2)),
             ),
           ),
-          SizedBox(height: 14),
+          const SizedBox(height: 14),
           // 위: 제목 · 개수
           Padding(
-            padding: EdgeInsets.fromLTRB(4, 0, 4, 10),
+            padding: const EdgeInsets.fromLTRB(4, 0, 4, 10),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Expanded(
                   child: Text(AppLocalizations.of(context)!.favorites,
-                      style: TextStyle(color: _rInk, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
+                      style: const TextStyle(color: _ink, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
                 ),
-                Text('${favorites.length}개', style: TextStyle(color: _rSub, fontSize: 12.5)),
+                Text('${favorites.length}개', style: const TextStyle(color: _sub, fontSize: 12.5)),
               ],
             ),
           ),
           if (favorites.isEmpty)
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 32),
+              padding: const EdgeInsets.symmetric(vertical: 32),
               child: Center(
                 child: Column(
                   children: [
-                    Icon(CupertinoIcons.heart, size: 40, color: _rSub.withOpacity(0.5)),
-                    SizedBox(height: 12),
+                    Icon(CupertinoIcons.heart, size: 40, color: _sub.withOpacity(0.5)),
+                    const SizedBox(height: 12),
                     Text(AppLocalizations.of(context)!.radioNoFavorites,
-                        style: TextStyle(color: _rInk, fontSize: 14, fontWeight: FontWeight.w600)),
-                    SizedBox(height: 4),
+                        style: const TextStyle(color: _ink, fontSize: 14, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 4),
                     Text(AppLocalizations.of(context)!.radioNoFavoritesDesc,
-                        textAlign: TextAlign.center, style: TextStyle(color: _rSub, fontSize: 12.5)),
+                        textAlign: TextAlign.center, style: const TextStyle(color: _sub, fontSize: 12.5)),
                   ],
                 ),
               ),
@@ -2361,19 +2249,19 @@ class _FavoritesSheet extends StatelessWidget {
                     // 지금 듣는 방송 (먹색 카드)
                     for (final s in current)
                       Container(
-                        margin: EdgeInsets.only(bottom: 12),
-                        padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(color: _rInk, borderRadius: BorderRadius.circular(16)),
+                        margin: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(color: _ink, borderRadius: BorderRadius.circular(16)),
                         child: Row(
                           children: [
                             _logo(s, onDark: true),
-                            SizedBox(width: 12),
+                            const SizedBox(width: 12),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                                     decoration: BoxDecoration(
                                         color: Colors.white.withOpacity(0.12), borderRadius: BorderRadius.circular(8)),
                                     child: Row(
@@ -2383,52 +2271,52 @@ class _FavoritesSheet extends StatelessWidget {
                                             width: 6,
                                             height: 6,
                                             decoration:
-                                                BoxDecoration(color: Color(0xFFFF6B5E), shape: BoxShape.circle)),
-                                        SizedBox(width: 5),
-                                        Text('듣는 중',
-                                            style: TextStyle(color: _rBg, fontSize: 10, fontWeight: FontWeight.w700)),
+                                                const BoxDecoration(color: Color(0xFFFF6B5E), shape: BoxShape.circle)),
+                                        const SizedBox(width: 5),
+                                        const Text('듣는 중',
+                                            style: TextStyle(color: _bg, fontSize: 10, fontWeight: FontWeight.w700)),
                                       ],
                                     ),
                                   ),
-                                  SizedBox(height: 5),
+                                  const SizedBox(height: 5),
                                   Text(s.name,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: _rBg, fontSize: 15, fontWeight: FontWeight.w700)),
+                                      style: const TextStyle(color: _bg, fontSize: 15, fontWeight: FontWeight.w700)),
                                   if ((radioProvider.nowPlayingFor(s.name) ?? '').isNotEmpty)
                                     Text(radioProvider.nowPlayingFor(s.name)!,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: _rBg.withOpacity(0.65), fontSize: 11.5)),
+                                        style: TextStyle(color: _bg.withOpacity(0.65), fontSize: 11.5)),
                                 ],
                               ),
                             ),
-                            Icon(Icons.graphic_eq_rounded, color: Color(0xFF7FB8F0), size: 22),
+                            const Icon(Icons.graphic_eq_rounded, color: Color(0xFF7FB8F0), size: 22),
                           ],
                         ),
                       ),
                     if (others.isNotEmpty) ...[
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.fromLTRB(4, 0, 4, 6),
                         child: Text('눌러서 바로 듣기',
-                            style: TextStyle(color: _rSub, fontSize: 12, fontWeight: FontWeight.w600)),
+                            style: TextStyle(color: _sub, fontSize: 12, fontWeight: FontWeight.w600)),
                       ),
                       Container(
-                        decoration: BoxDecoration(color: _rCard, borderRadius: BorderRadius.circular(14)),
+                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
                         clipBehavior: Clip.antiAlias,
                         child: Column(
                           children: [
                             for (var i = 0; i < others.length; i++) ...[
-                              if (i > 0) Container(height: 0.5, margin: EdgeInsets.only(left: 68), color: _rLine),
+                              if (i > 0) Container(height: 0.5, margin: const EdgeInsets.only(left: 68), color: const Color(0xFFEEE9DF)),
                               // 왼쪽으로 밀면 즐겨찾기에서 빼기
                               Dismissible(
                                 key: ValueKey('fav_${others[i].stationUuid}'),
                                 direction: DismissDirection.endToStart,
                                 background: Container(
-                                  color: Color(0xFFE05A4F),
+                                  color: const Color(0xFFE05A4F),
                                   alignment: Alignment.centerRight,
-                                  padding: EdgeInsets.only(right: 20),
-                                  child: Icon(Icons.delete_outline_rounded, color: Colors.white),
+                                  padding: const EdgeInsets.only(right: 20),
+                                  child: const Icon(Icons.delete_outline_rounded, color: Colors.white),
                                 ),
                                 onDismissed: (_) {
                                   final st = others[i];
@@ -2442,11 +2330,11 @@ class _FavoritesSheet extends StatelessWidget {
                                     radioProvider.playStation(others[i]);
                                   },
                                   child: Padding(
-                                    padding: EdgeInsets.fromLTRB(12, 10, 12, 10),
+                                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
                                     child: Row(
                                       children: [
                                         _logo(others[i], onDark: false),
-                                        SizedBox(width: 12),
+                                        const SizedBox(width: 12),
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2454,20 +2342,20 @@ class _FavoritesSheet extends StatelessWidget {
                                               Text(others[i].name,
                                                   maxLines: 1,
                                                   overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(color: _rInk, fontSize: 14, fontWeight: FontWeight.w600)),
+                                                  style: const TextStyle(color: _ink, fontSize: 14, fontWeight: FontWeight.w600)),
                                               if ((radioProvider.nowPlayingFor(others[i].name) ?? '').isNotEmpty)
                                                 Text(radioProvider.nowPlayingFor(others[i].name)!,
                                                     maxLines: 1,
                                                     overflow: TextOverflow.ellipsis,
-                                                    style: TextStyle(color: _rSub, fontSize: 11.5)),
+                                                    style: const TextStyle(color: _sub, fontSize: 11.5)),
                                             ],
                                           ),
                                         ),
                                         Container(
                                           width: 32,
                                           height: 32,
-                                          decoration: BoxDecoration(color: _rBg, shape: BoxShape.circle),
-                                          child: Icon(Icons.play_arrow_rounded, color: _rInk, size: 20),
+                                          decoration: const BoxDecoration(color: _bg, shape: BoxShape.circle),
+                                          child: const Icon(Icons.play_arrow_rounded, color: _ink, size: 20),
                                         ),
                                       ],
                                     ),
@@ -2478,10 +2366,10 @@ class _FavoritesSheet extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.only(top: 8),
                         child: Center(
-                          child: Text('왼쪽으로 밀면 즐겨찾기에서 빼요', style: TextStyle(color: _rSub, fontSize: 11.5)),
+                          child: Text('왼쪽으로 밀면 즐겨찾기에서 빼요', style: TextStyle(color: _sub, fontSize: 11.5)),
                         ),
                       ),
                     ],
@@ -2536,9 +2424,14 @@ class _SleepTimerBadge extends StatelessWidget {
 // ══════════════════════════════════════════
 class _ScheduleListSheet extends StatelessWidget {
   final String stationName;
-  _ScheduleListSheet({required this.stationName});
+  const _ScheduleListSheet({required this.stationName});
 
-  
+  // 화면 공통 색
+  static const _bg = Color(0xFFF4EFE5);
+  static const _ink = Color(0xFF17140F);
+  static const _sub = Color(0xFF8A8378);
+  static const _line = Color(0xFFE2DACB);
+
   /// 시간 글자 → 하루 중 몇 분 (14:00 → 840). 못 읽으면 null
   static int? _mins(String t) {
     t = t.trim();
@@ -2584,7 +2477,6 @@ class _ScheduleListSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _rdDark = context.watch<ThemeProvider>().isDarkMode; // 다크 모드 맞추기
     final radioProvider = context.watch<RadioProvider>();
     final station = radioProvider.currentStation;
     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
@@ -2638,8 +2530,8 @@ class _ScheduleListSheet extends StatelessWidget {
       final part = _part(e.start);
       if (part != lastPart) {
         rows.add(Padding(
-          padding: EdgeInsets.fromLTRB(4, 12, 4, 4),
-          child: Text(part, style: TextStyle(color: _rSub, fontSize: 11.5, fontWeight: FontWeight.w600)),
+          padding: const EdgeInsets.fromLTRB(4, 12, 4, 4),
+          child: Text(part, style: const TextStyle(color: _sub, fontSize: 11.5, fontWeight: FontWeight.w600)),
         ));
         lastPart = part;
       }
@@ -2658,63 +2550,63 @@ class _ScheduleListSheet extends StatelessWidget {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    Container(width: 1.5, color: _rLine),
+                    Container(width: 1.5, color: _line),
                     Container(
                       width: 8,
                       height: 8,
-                      decoration: BoxDecoration(color: isNext ? _rInk : _rLine, shape: BoxShape.circle),
+                      decoration: BoxDecoration(color: isNext ? _ink : _line, shape: BoxShape.circle),
                     ),
                   ],
                 ),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 9),
+                  padding: const EdgeInsets.symmetric(vertical: 9),
                   child: Row(
                     children: [
                       SizedBox(
                         width: 46,
                         child: Text(_hm(e.start),
-                            style: TextStyle(
-                                color: _rSub, fontSize: 12.5, fontFeatures: [FontFeature.tabularFigures()])),
+                            style: const TextStyle(
+                                color: _sub, fontSize: 12.5, fontFeatures: [FontFeature.tabularFigures()])),
                       ),
                       Expanded(
                         child: Text(e.title,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                                color: _rInk, fontSize: 14, fontWeight: isNext ? FontWeight.w700 : FontWeight.w500)),
+                                color: _ink, fontSize: 14, fontWeight: isNext ? FontWeight.w700 : FontWeight.w500)),
                       ),
                       if (isNext) ...[
-                        SizedBox(width: 6),
+                        const SizedBox(width: 6),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                           decoration: BoxDecoration(
-                            color: _rCard,
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: _rLine),
+                            border: Border.all(color: _line),
                           ),
-                          child: Text('다음',
-                              style: TextStyle(color: _rInk, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                          child: const Text('다음',
+                              style: TextStyle(color: _ink, fontSize: 10.5, fontWeight: FontWeight.w700)),
                         ),
                       ],
                       // 🔔 이 시간에 예약 (지난 방송은 없음)
                       if (!past)
                         IconButton(
                           onPressed: () {
-                            MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                             reserve(e.start);
                           },
                           visualDensity: VisualDensity.compact,
                           icon: Icon(
                             done ? Icons.notifications_active_rounded : Icons.notifications_none_rounded,
-                            color: done ? _rInk : _rSub,
+                            color: done ? _ink : _sub,
                             size: 20,
                           ),
                         )
                       else
-                        SizedBox(width: 40),
+                        const SizedBox(width: 40),
                     ],
                   ),
                 ),
@@ -2726,8 +2618,8 @@ class _ScheduleListSheet extends StatelessWidget {
     }
 
     return Container(
-      decoration: BoxDecoration(
-        color: _rBg,
+      decoration: const BoxDecoration(
+        color: _bg,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.fromLTRB(16, 10, 16, 12 + bottomPadding),
@@ -2739,20 +2631,20 @@ class _ScheduleListSheet extends StatelessWidget {
             child: Container(
               width: 36,
               height: 4,
-              decoration: BoxDecoration(color: _rLine, borderRadius: BorderRadius.circular(2)),
+              decoration: BoxDecoration(color: _line, borderRadius: BorderRadius.circular(2)),
             ),
           ),
-          SizedBox(height: 14),
+          const SizedBox(height: 14),
           // 위: 방송국 + 오늘 날짜
           Row(
             children: [
               Container(
                 width: 40,
                 height: 40,
-                decoration: BoxDecoration(color: _rCard, borderRadius: BorderRadius.circular(12)),
-                child: Icon(Icons.radio_rounded, color: _rSub, size: 22),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+                child: const Icon(Icons.radio_rounded, color: _sub, size: 22),
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -2760,22 +2652,22 @@ class _ScheduleListSheet extends StatelessWidget {
                     Text(AppLocalizations.of(context)!.radioScheduleTitle(stationName),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: _rInk, fontSize: 16.5, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
-                    SizedBox(height: 2),
-                    Text('오늘 · ${now.month}월 ${now.day}일 ${['월', '화', '수', '목', '금', '토', '일'][now.weekday - 1]}요일',
-                        style: TextStyle(color: _rSub, fontSize: 12)),
+                        style: const TextStyle(color: _ink, fontSize: 16.5, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
+                    const SizedBox(height: 2),
+                    Text('오늘 · ${now.month}월 ${now.day}일 ${const ['월', '화', '수', '목', '금', '토', '일'][now.weekday - 1]}요일',
+                        style: const TextStyle(color: _sub, fontSize: 12)),
                   ],
                 ),
               ),
             ],
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           if (items.isEmpty)
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 36),
+              padding: const EdgeInsets.symmetric(vertical: 36),
               child: Center(
                 child: Text(AppLocalizations.of(context)!.radioLoadingSchedule,
-                    style: TextStyle(color: _rSub, fontSize: 13)),
+                    style: const TextStyle(color: _sub, fontSize: 13)),
               ),
             )
           else ...[
@@ -2783,13 +2675,13 @@ class _ScheduleListSheet extends StatelessWidget {
             if (cur != null)
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.fromLTRB(14, 12, 14, 14),
-                decoration: BoxDecoration(color: _rInk, borderRadius: BorderRadius.circular(16)),
+                padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+                decoration: BoxDecoration(color: _ink, borderRadius: BorderRadius.circular(16)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.12), borderRadius: BorderRadius.circular(9)),
                       child: Row(
@@ -2798,29 +2690,29 @@ class _ScheduleListSheet extends StatelessWidget {
                           Container(
                               width: 6,
                               height: 6,
-                              decoration: BoxDecoration(color: Color(0xFFFF6B5E), shape: BoxShape.circle)),
-                          SizedBox(width: 5),
-                          Text('지금 방송 중',
-                              style: TextStyle(color: _rBg, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                              decoration: const BoxDecoration(color: Color(0xFFFF6B5E), shape: BoxShape.circle)),
+                          const SizedBox(width: 5),
+                          const Text('지금 방송 중',
+                              style: TextStyle(color: _bg, fontSize: 10.5, fontWeight: FontWeight.w700)),
                         ],
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(cur.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: _rBg, fontSize: 16, fontWeight: FontWeight.w800)),
-                    SizedBox(height: 3),
+                        style: const TextStyle(color: _bg, fontSize: 16, fontWeight: FontWeight.w800)),
+                    const SizedBox(height: 3),
                     Text('${_hm(cur.start)} – ${_hm(cur.end)} · ${cur.end - nowM}분 남음',
-                        style: TextStyle(color: _rBg.withOpacity(0.7), fontSize: 12)),
-                    SizedBox(height: 10),
+                        style: TextStyle(color: _bg.withOpacity(0.7), fontSize: 12)),
+                    const SizedBox(height: 10),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(2),
                       child: LinearProgressIndicator(
                         value: ((nowM - cur.start) / (cur.end - cur.start)).clamp(0.0, 1.0),
                         minHeight: 4,
                         backgroundColor: Colors.white.withOpacity(0.15),
-                        color: Color(0xFF7FB8F0),
+                        color: const Color(0xFF7FB8F0),
                       ),
                     ),
                   ],
@@ -2830,7 +2722,7 @@ class _ScheduleListSheet extends StatelessWidget {
               constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.45),
               child: ListView(
                 shrinkWrap: true,
-                padding: EdgeInsets.only(top: 2),
+                padding: const EdgeInsets.only(top: 2),
                 children: rows,
               ),
             ),

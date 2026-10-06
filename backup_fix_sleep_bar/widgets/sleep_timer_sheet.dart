@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import 'paran_toast.dart';
-import '../providers/theme_provider.dart';
-
-// ── 라디오 창 색 (라이트: 베이지 · 다크: 어두운 갈색) — 창을 그릴 때마다 다크 모드인지 맞춤 ──
-bool _rdDark = false;
-Color get _rBg => _rdDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
-Color get _rCard => _rdDark ? const Color(0xFF332E26) : Colors.white;
-Color get _rInk => _rdDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-Color get _rSub => _rdDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-Color get _rMuted => _rdDark ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
-Color get _rLine => _rdDark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
 
 class SleepTimerSheet extends StatefulWidget {
   const SleepTimerSheet({super.key});
@@ -26,13 +15,12 @@ class SleepTimerSheet extends StatefulWidget {
 
 class _SleepTimerSheetState extends State<SleepTimerSheet> {
   int _selectedMinutes = 30;
-  Duration _wheelDuration = Duration(minutes: 30);
+  Duration _wheelDuration = const Duration(minutes: 30);
 
   @override
   Widget build(BuildContext context) {
-    _rdDark = context.watch<ThemeProvider>().isDarkMode; // 다크 모드 맞추기
     final l = AppLocalizations.of(context)!;
-    final primaryColor = _rInk; // 먹색 (다크는 크림색)
+    const primaryColor = Color(0xFF17140F); // 먹색 (다른 창과 통일)
     final radioProvider = context.watch<RadioProvider>();
     final sleep = radioProvider.sleepRemaining;
     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
@@ -48,15 +36,9 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
       _QuickOption(l.sleepHourUnit(6), 360),
     ];
 
-    // 창이 떠 있는 동안 아래 시스템 아이콘을 베이지 바탕에 맞게 (어두운 화면 위에서도 보이게)
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        systemNavigationBarColor: _rBg,
-        systemNavigationBarIconBrightness: _rdDark ? Brightness.light : Brightness.dark,
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          color: _rBg, // 베이지 (다른 고르는 창과 같게)
+    return Container(
+        decoration: const BoxDecoration(
+          color: Color(0xFFF4EFE5), // 베이지 (다른 고르는 창과 같게)
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         padding: EdgeInsets.fromLTRB(24, 16, 24, 24 + bottomPadding),
@@ -67,11 +49,11 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: _rLine,
+                color: const Color(0xFFE2DACB),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             Row(
               children: [
@@ -79,30 +61,30 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                   width: 36,
                   height: 36,
                   decoration: BoxDecoration(
-                    color: _rCard,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(Icons.bedtime_outlined,
-                      color: _rSub, size: 20),
+                  child: const Icon(Icons.bedtime_outlined,
+                      color: Color(0xFF8A8378), size: 20),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(l.sleepTimer,
-                          style: TextStyle(
-                            color: _rInk,
+                          style: const TextStyle(
+                            color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           )),
-                      SizedBox(height: 2),
+                      const SizedBox(height: 2),
                       Text(
                         radioProvider.isSleepTimerActive
                             ? l.sleepTimerActiveDesc
                             : l.sleepTimerDesc,
-                        style: TextStyle(
-                            color: _rSub, fontSize: 12),
+                        style: const TextStyle(
+                            color: Colors.black54, fontSize: 12),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -111,19 +93,19 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             if (radioProvider.isSleepTimerActive && sleep != null) ...[
               Text(
                 l.remainingTime,
-                style: TextStyle(
-                  color: _rSub,
+                style: const TextStyle(
+                  color: Colors.black45,
                   fontSize: 10,
                   letterSpacing: 2,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(
                 _formatCountdown(sleep),
                 style: TextStyle(
@@ -133,18 +115,18 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                   letterSpacing: -2,
                 ),
               ),
-              SizedBox(height: 6),
-              Text('', style: TextStyle(fontSize: 0)),
+              const SizedBox(height: 6),
+              const Text('', style: TextStyle(fontSize: 0)),
               Text(
                 l.radioAfterEnd,
-                style: TextStyle(
-                  color: _rSub,
+                style: const TextStyle(
+                  color: Colors.black45,
                   fontSize: 13,
                 ),
               ),
-              SizedBox(height: 20),
-              Divider(color: _rLine),
-              SizedBox(height: 12),
+              const SizedBox(height: 20),
+              const Divider(color: Color(0xFFE2DACB)),
+              const SizedBox(height: 12),
               GestureDetector(
                 onTap: () {
                   context.read<RadioProvider>().cancelSleepTimer();
@@ -153,7 +135,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 child: Center(
                   child: Text(
                     l.cancelTimerX,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.redAccent,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -163,14 +145,14 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
               ),
             ] else ...[
               Text('몇 시간 몇 분 후 정지할까요?',
-                  style: TextStyle(color: _rInk, fontSize: 15, fontWeight: FontWeight.w600)),
+                  style: TextStyle(color: Colors.black87, fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(
                 height: 180,
                 child: CupertinoTheme(
-                  data: CupertinoThemeData(
-                    brightness: _rdDark ? Brightness.dark : Brightness.light,
+                  data: const CupertinoThemeData(
+                    brightness: Brightness.light,
                     textTheme: CupertinoTextThemeData(
-                      pickerTextStyle: TextStyle(color: _rInk, fontSize: 20),
+                      pickerTextStyle: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                   ),
                   child: CupertinoTimerPicker(
@@ -183,7 +165,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               SizedBox(
                 width: double.infinity,
@@ -199,19 +181,18 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
-                    foregroundColor: _rBg,
+                    foregroundColor: const Color(0xFFF4EFE5),
                     elevation: 6,
                     shadowColor: Colors.black.withOpacity(0.25),
-                    padding: EdgeInsets.symmetric(vertical: 14),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                   ),
-                  child: Text(l.set, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  child: Text(l.set, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                 ),
               ),
             ],
           ],
         ),
-      ),
     );
   }
 

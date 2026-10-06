@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  Color _primaryColor = const Color(0xFF2589E8); // 포인트 색 (기본: 파란소리)
+  Color _primaryColor = const Color(0xFF078CF6);
   double _textScale = 1.12;
   String _fontFamily = 'default';
   bool _isDarkMode = false;
@@ -13,23 +13,6 @@ class ThemeProvider extends ChangeNotifier {
   bool _feedbackSoundEnabled = true; // 완료 효과음 (물방울 소리·진동)
 
   Color get primaryColor => _primaryColor;
-
-  /// 포인트 색 5가지 (설정 → 포인트 색) — 체크·스위치·막대 같은 작은 곳의 색
-  static const pointColors = <(String, Color)>[
-    ('파란소리', Color(0xFF2589E8)),
-    ('숲', Color(0xFF3E8E6A)),
-    ('노을', Color(0xFFE07A4F)),
-    ('라벤더', Color(0xFF8A6FD1)),
-    ('먹색', Color(0xFF4A4038)),
-  ];
-
-  /// 지금 포인트 색 이름 (예전에 고른 다른 색이면 null)
-  String? get pointColorName {
-    for (final c in pointColors) {
-      if (c.$2.value == _primaryColor.value) return c.$1;
-    }
-    return null;
-  }
   double get textScale => _textScale;
   String get fontFamily => _fontFamily;
   bool get isDarkMode => _isDarkMode;

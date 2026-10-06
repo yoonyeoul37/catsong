@@ -27,6 +27,15 @@ import 'package:audio_service/audio_service.dart';
 import '../main.dart' show globalAudioHandler;
 import '../providers/player_provider.dart' show SimpleAudioHandler;
 import '../providers/theme_provider.dart';
+
+// ── 라디오 창 색 (라이트: 베이지 · 다크: 어두운 갈색) — 창을 그릴 때마다 다크 모드인지 맞춤 ──
+bool _rdDark = false;
+Color get _rBg => _rdDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
+Color get _rCard => _rdDark ? const Color(0xFF332E26) : Colors.white;
+Color get _rInk => _rdDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+Color get _rSub => _rdDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
+Color get _rMuted => _rdDark ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
+Color get _rLine => _rdDark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
 import 'package:just_audio/just_audio.dart';
 import 'nature_sounds_screen.dart';
 import 'settings_screen.dart';
@@ -50,15 +59,6 @@ double? _parseFrequency(String? freq) {
 }
 
 bool _isKoreanStation(String countryCode) => countryCode == 'KR';
-
-// ── 라디오 창 색 (라이트: 베이지 · 다크: 어두운 갈색) — 창을 그릴 때마다 다크 모드인지 맞춤 ──
-bool _rdDark = false;
-Color get _rBg => _rdDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
-Color get _rCard => _rdDark ? const Color(0xFF332E26) : Colors.white;
-Color get _rInk => _rdDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-Color get _rSub => _rdDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-Color get _rMuted => _rdDark ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
-Color get _rLine => _rdDark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
 
 class RadioPlayerScreen extends StatefulWidget {
   final RadioStation station;

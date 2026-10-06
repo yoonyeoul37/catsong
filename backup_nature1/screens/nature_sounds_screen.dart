@@ -706,10 +706,8 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                 final soundColor = soundColors[primary.category] ?? primaryColor;
                 final isGroupPlaying = variants.any((v) => playerProvider.natureSoundName == v.name) &&
                     playerProvider.isPlaying;
-                final displayTitle = isMulti ? categoryName : primary.name;
-                // 설명은 짧게: "3가지 버전" (듣는 중이면 뒤에 붙이기)
-                final baseDesc = isMulti ? '${variants.length}가지 버전' : primary.description;
-                final displayDescription = isGroupPlaying ? '$baseDesc · 듣는 중' : baseDesc;
+                final displayTitle = isMulti ? '$categoryName (${variants.length})' : primary.name;
+                final displayDescription = isMulti ? '${variants.length}가지 버전 중 골라보세요' : primary.description;
 
                 return GestureDetector(
                   onTap: variants.every((v) => !v.isReady)
@@ -737,10 +735,9 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                     );
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                    // 듣는 중: 파란 배경 대신 연한 베이지
+                    padding: const EdgeInsets.symmetric(vertical: 13),
                     color: isGroupPlaying
-                        ? (isDarkMode ? const Color(0xFF332E26) : const Color(0xFFF7F3EB))
+                        ? (isDarkMode ? const Color(0x262F7DE8) : const Color(0x142F7DE8))
                         : Colors.transparent,
                     child: Row(
                       children: [
@@ -770,9 +767,11 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                             children: [
                               Text(displayTitle,
                                   style: TextStyle(
-                                      color: baseColor,
+                                      color: isGroupPlaying
+                                          ? (isDarkMode ? const Color(0xFF6FB0FF) : const Color(0xFF2F7DE8))
+                                          : baseColor,
                                       fontSize: 14.5,
-                                      fontWeight: isGroupPlaying ? FontWeight.w800 : FontWeight.w600)),
+                                      fontWeight: FontWeight.w600)),
                               const SizedBox(height: 2),
                               Text(displayDescription,
                                   maxLines: 1,
@@ -800,7 +799,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                                       ? CupertinoIcons.heart_fill
                                       : CupertinoIcons.heart,
                                   color: _favoriteNames.contains(primary.name)
-                                      ? const Color(0xFFE05A4F)
+                                      ? const Color(0xFFF0506E)
                                       : baseColor.withOpacity(0.3),
                                   size: 22,
                                 ),
@@ -812,27 +811,12 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                   ),
                 );
               }).toList();
-              // 흰 카드 하나에 묶기 (설정·즐겨찾기 창과 같은 모양)
               return [
-                Container(
-                  decoration: BoxDecoration(
-                    color: isDarkMode ? const Color(0xFF26221C) : Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    children: [
-                      for (var i = 0; i < _natureCards.length; i++) ...[
-                        if (i > 0)
-                          Container(
-                              height: 0.5,
-                              margin: const EdgeInsets.only(left: 78),
-                              color: baseColor.withOpacity(0.08)),
-                        _natureCards[i],
-                      ],
-                    ],
-                  ),
-                ),
+                for (var i = 0; i < _natureCards.length; i++) ...[
+                  _natureCards[i],
+                  if (i != _natureCards.length - 1)
+                    Divider(height: 1, color: baseColor.withOpacity(0.12)),
+                ],
               ];
             })(),
           ],
@@ -865,7 +849,7 @@ class _VariantPickerSheet extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
       decoration: BoxDecoration(
-        color: baseColor == Colors.white ? const Color(0xFF26221C) : const Color(0xFFF4EFE5), // 다른 창과 같은 색
+        color: baseColor == Colors.white ? const Color(0xFF17140F) : const Color(0xFFF7F5F0),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(

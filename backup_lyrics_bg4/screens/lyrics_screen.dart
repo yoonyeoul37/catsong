@@ -53,29 +53,37 @@ class _LyricsScreenState extends State<LyricsScreen> {
 
   bool get _light => _bg != 0 && _kLightBgs.contains(_bg);
 
-  /// 오른쪽 아래 워터마크 — 한국: 파란소리 | Paransori / 해외: ParanSori (한 줄, 은은하게)
+  /// 오른쪽 아래 워터마크 — 한국: 파란소리 + Paransori / 해외: ParanSori
   Widget _watermark(BuildContext context) {
     final ko = Localizations.localeOf(context).languageCode == 'ko';
-    final c = _ink.withOpacity(_light ? 0.5 : 0.62);
+    final c = _ink;
     final shadow = _light ? const <Shadow>[] : [Shadow(color: Colors.black.withOpacity(0.3), blurRadius: 6)];
-    final en = Text(
-      ko ? 'Paransori' : 'ParanSori',
-      style: GoogleFonts.quicksand(
-          color: c, fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 2.4, shadows: shadow),
+    final en = RichText(
+      text: TextSpan(children: [
+        TextSpan(
+          text: 'Paran',
+          style: GoogleFonts.quicksand(
+              color: c.withOpacity(0.75), fontSize: 17, fontWeight: FontWeight.w700, letterSpacing: 0.3, shadows: shadow),
+        ),
+        TextSpan(
+          text: ko ? 'sori' : 'Sori',
+          style: GoogleFonts.quicksand(
+              color: c.withOpacity(0.5), fontSize: 17, fontWeight: FontWeight.w600, letterSpacing: 0.3, shadows: shadow),
+        ),
+      ]),
     );
     if (!ko) return en;
-    return Row(
+    return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text('파란소리',
-            style: TextStyle(color: c, fontSize: 11.5, fontWeight: FontWeight.w500, letterSpacing: 1.6, shadows: shadow)),
-        Container(width: 0.8, height: 10, margin: const EdgeInsets.symmetric(horizontal: 9), color: c),
+            style: GoogleFonts.doHyeon(color: c.withOpacity(0.6), fontSize: 14, height: 1.0, shadows: shadow)),
+        const SizedBox(height: 1),
         en,
       ],
     );
   }
-
   Color get _ink => _light ? const Color(0xFF17140F) : Colors.white;
 
   /// 🖼 배경 고르기 창
@@ -193,28 +201,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
           elevation: 0,
           scrolledUnderElevation: 0,
           surfaceTintColor: Colors.transparent,
-          titleSpacing: 0,
-          // "가사" 대신 노래 제목 + 가수 (캡처해서 공유할 때 무슨 노래인지 보이게)
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(playerProvider.currentSong?.titleDisplay ?? AppLocalizations.of(context)!.lyrics,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      color: _ink,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -0.3,
-                      shadows: _light ? null : [Shadow(color: Colors.black.withOpacity(0.3), blurRadius: 6)])),
-              if (playerProvider.currentSong != null)
-                Text(playerProvider.currentSong!.artistDisplay,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: _ink.withOpacity(0.65), fontSize: 12.5)),
-            ],
-          ),
+          title: Text(AppLocalizations.of(context)!.lyrics, style: TextStyle(color: _ink)),
           leading: IconButton(
             onPressed: () => Navigator.pop(context),
             icon: Icon(Icons.arrow_back_ios, color: _ink),
@@ -229,7 +216,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
               onPressed: () {
                 final song = playerProvider.currentSong;
                 if (song != null) {
-                  lyricsProvider.fetchLyrics(song.titleDisplay, song.artistDisplay, force: true);
+                  lyricsProvider.fetchLyrics(song.titleDisplay, song.artistDisplay);
                 }
               },
               icon: Icon(Icons.refresh, color: _ink.withOpacity(0.7)),

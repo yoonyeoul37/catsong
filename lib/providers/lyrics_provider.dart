@@ -29,9 +29,10 @@ class LyricsProvider extends ChangeNotifier {
   int get currentLineIndex => _currentLineIndex;
   String get currentSongKey => _currentSongKey;
 
-  Future<void> fetchLyrics(String title, String artist, {String? filePath}) async {
+  Future<void> fetchLyrics(String title, String artist, {String? filePath, bool force = false}) async {
     final songKey = '$title-$artist';
-    if (songKey == _currentSongKey && (_hasLyrics || _isLoading)) return;
+    // ↻ 다시 찾기(force)면 이미 가져온 가사가 있어도 다시 찾기
+    if (!force && songKey == _currentSongKey && (_hasLyrics || _isLoading)) return;
     _currentSongKey = songKey;
     _isLoading = true;
     _hasLyrics = false;

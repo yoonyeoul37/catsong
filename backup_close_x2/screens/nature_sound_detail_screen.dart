@@ -18,7 +18,6 @@ import 'package:just_audio/just_audio.dart';
 import '../widgets/more_menu_sheet.dart';
 import '../widgets/exit_confirm_dialog.dart';
 import 'nature_sounds_screen.dart';
-import '../widgets/paran_dialog.dart';
 
 class NatureSoundDetailScreen extends StatefulWidget {
   final String name;
@@ -196,21 +195,8 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // 제목 가운데 + 오른쪽 ✕
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 40),
-                      Expanded(
-                        child: Text('몇 시간 몇 분 후 정지할까요?',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
-                      ),
-                      ParanCloseX(onTap: () => Navigator.pop(ctx)),
-                    ],
-                  ),
-                ),
+                Text('몇 시간 몇 분 후 정지할까요?',
+                    style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
                 SizedBox(
                   height: 216,
                   child: CupertinoTheme(

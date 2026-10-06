@@ -17,7 +17,6 @@ import 'radio_home_screen.dart';
 import '../widgets/equalizer_animation.dart';
 import '../widgets/logo_eq_bars.dart';
 import 'nature_sound_detail_screen.dart';
-import '../widgets/paran_dialog.dart';
 import '../widgets/paran_toast.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
@@ -884,15 +883,8 @@ class _VariantPickerSheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 18),
-          Row(
-            children: [
-              Expanded(
-                child: Text('$categoryName 버전 고르기',
-                    style: TextStyle(color: baseColor, fontSize: 17, fontWeight: FontWeight.bold)),
-              ),
-              ParanCloseX(onTap: () => Navigator.pop(context)), // 닫기
-            ],
-          ),
+          Text('$categoryName 버전 고르기',
+              style: TextStyle(color: baseColor, fontSize: 17, fontWeight: FontWeight.bold)),
           const SizedBox(height: 14),
           ...variants.map((v) => GestureDetector(
                 onTap: v.isReady ? () => onPick(v) : null,

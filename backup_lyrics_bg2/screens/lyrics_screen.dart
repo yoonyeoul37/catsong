@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../providers/lyrics_provider.dart';
 import '../providers/player_provider.dart';
 import '../theme/app_theme.dart';
@@ -33,8 +32,6 @@ class LyricsScreen extends StatefulWidget {
 class _LyricsScreenState extends State<LyricsScreen> {
   final ScrollController _scrollController = ScrollController();
   int _bg = 1; // 0 = 사진 없이(기본), 1~11 = 사진
-  final Map<int, GlobalKey> _lineKeys = {}; // 줄마다 위치 (지금 줄로 부드럽게 이동)
-  int _lastLine = -1;
 
   @override
   void initState() {
@@ -52,30 +49,6 @@ class _LyricsScreenState extends State<LyricsScreen> {
   }
 
   bool get _light => _bg != 0 && _kLightBgs.contains(_bg);
-
-  /// 오른쪽 아래 워터마크 — 한국: 파란소리 | Paransori / 해외: ParanSori (한 줄, 은은하게)
-  Widget _watermark(BuildContext context) {
-    final ko = Localizations.localeOf(context).languageCode == 'ko';
-    final c = _ink.withOpacity(_light ? 0.5 : 0.62);
-    final shadow = _light ? const <Shadow>[] : [Shadow(color: Colors.black.withOpacity(0.3), blurRadius: 6)];
-    final en = Text(
-      ko ? 'Paransori' : 'ParanSori',
-      style: GoogleFonts.quicksand(
-          color: c, fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 2.4, shadows: shadow),
-    );
-    if (!ko) return en;
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text('파란소리',
-            style: TextStyle(color: c, fontSize: 11.5, fontWeight: FontWeight.w500, letterSpacing: 1.6, shadows: shadow)),
-        Container(width: 0.8, height: 10, margin: const EdgeInsets.symmetric(horizontal: 9), color: c),
-        en,
-      ],
-    );
-  }
-
   Color get _ink => _light ? const Color(0xFF17140F) : Colors.white;
 
   /// 🖼 배경 고르기 창
@@ -161,19 +134,19 @@ class _LyricsScreenState extends State<LyricsScreen> {
 
     lyricsProvider.updateCurrentLine(playerProvider.position);
 
-    // 지금 부르는 줄이 바뀔 때만, 가사 칸의 위쪽 1/3 자리로 부드럽게 옮기기
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final index = lyricsProvider.currentLineIndex;
-      if (lyricsProvider.lyrics.isEmpty || index == _lastLine) return;
-      final ctx = _lineKeys[index]?.currentContext;
-      if (ctx == null) return;
-      _lastLine = index;
-      Scrollable.ensureVisible(
-        ctx,
-        alignment: 0.35,
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeOutCubic,
-      );
+      if (lyricsProvider.lyrics.isNotEmpty && _scrollController.hasClients) {
+        final index = lyricsProvider.currentLineIndex;
+        const itemHeight = 56.0;
+        final offset = (index * itemHeight) -
+            (_scrollController.position.viewportDimension / 2) +
+            itemHeight / 2;
+        _scrollController.animateTo(
+          offset.clamp(0, _scrollController.position.maxScrollExtent),
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
     });
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -193,28 +166,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
           elevation: 0,
           scrolledUnderElevation: 0,
           surfaceTintColor: Colors.transparent,
-          titleSpacing: 0,
-          // "가사" 대신 노래 제목 + 가수 (캡처해서 공유할 때 무슨 노래인지 보이게)
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(playerProvider.currentSong?.titleDisplay ?? AppLocalizations.of(context)!.lyrics,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      color: _ink,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -0.3,
-                      shadows: _light ? null : [Shadow(color: Colors.black.withOpacity(0.3), blurRadius: 6)])),
-              if (playerProvider.currentSong != null)
-                Text(playerProvider.currentSong!.artistDisplay,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: _ink.withOpacity(0.65), fontSize: 12.5)),
-            ],
-          ),
+          title: Text(AppLocalizations.of(context)!.lyrics, style: TextStyle(color: _ink)),
           leading: IconButton(
             onPressed: () => Navigator.pop(context),
             icon: Icon(Icons.arrow_back_ios, color: _ink),
@@ -229,7 +181,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
               onPressed: () {
                 final song = playerProvider.currentSong;
                 if (song != null) {
-                  lyricsProvider.fetchLyrics(song.titleDisplay, song.artistDisplay, force: true);
+                  lyricsProvider.fetchLyrics(song.titleDisplay, song.artistDisplay);
                 }
               },
               icon: Icon(Icons.refresh, color: _ink.withOpacity(0.7)),
@@ -270,35 +222,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                   ),
                 ),
               ),
-            // 가사는 화면 위쪽 약 60%에만 (아래 사진 속 고양이·헤드폰을 가리지 않게)
-            SafeArea(
-              child: Column(
-                children: [
-                  Expanded(
-                    flex: 62,
-                    child: ShaderMask(
-                      // 위·아래 끝은 살짝 흐려지게
-                      shaderCallback: (r) => const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, Colors.black, Colors.black, Colors.transparent],
-                        stops: [0.0, 0.08, 0.88, 1.0],
-                      ).createShader(r),
-                      blendMode: BlendMode.dstIn,
-                      child: _buildBody(lyricsProvider, playerProvider, primaryColor),
-                    ),
-                  ),
-                  const Spacer(flex: 38),
-                ],
-              ),
-            ),
-            // 워터마크 (캡처해서 공유할 때 파란소리가 보이게)
-            if (_bg != 0)
-              Positioned(
-                right: 20,
-                bottom: MediaQuery.of(context).padding.bottom + 18,
-                child: IgnorePointer(child: _watermark(context)),
-              ),
+            SafeArea(child: _buildBody(lyricsProvider, playerProvider, primaryColor)),
           ],
         ),
       ),
@@ -366,55 +290,42 @@ class _LyricsScreenState extends State<LyricsScreen> {
     }
 
     if (lyricsProvider.lyrics.isNotEmpty) {
-      // 모든 줄을 같은 간격으로 (긴 줄은 두 줄로 내려가도 간격은 일정하게)
-      return SingleChildScrollView(
+      return ListView.builder(
         controller: _scrollController,
-        padding: const EdgeInsets.fromLTRB(24, 30, 24, 120),
-        child: Column(
-          children: [
-            for (var index = 0; index < lyricsProvider.lyrics.length; index++)
-              GestureDetector(
-                key: _lineKeys.putIfAbsent(index, () => GlobalKey()),
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  playerProvider.seekTo(lyricsProvider.lyrics[index].time);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: AnimatedDefaultTextStyle(
-                      duration: const Duration(milliseconds: 250),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: index == lyricsProvider.currentLineIndex ? ink : ink.withOpacity(0.5),
-                        fontSize: index == lyricsProvider.currentLineIndex ? 19 : 15.5,
-                        height: 1.4,
-                        fontWeight:
-                            index == lyricsProvider.currentLineIndex ? FontWeight.w800 : FontWeight.w500,
-                        shadows: shadow,
-                      ),
-                      child: Text(lyricsProvider.lyrics[index].text.trim(), textAlign: TextAlign.center),
-                    ),
-                  ),
+        padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
+        itemCount: lyricsProvider.lyrics.length,
+        itemBuilder: (context, index) {
+          final isCurrentLine = index == lyricsProvider.currentLineIndex;
+          return GestureDetector(
+            onTap: () {
+              playerProvider.seekTo(lyricsProvider.lyrics[index].time);
+            },
+            child: Container(
+              height: 56,
+              alignment: Alignment.center,
+              child: AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 250),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: isCurrentLine ? ink : ink.withOpacity(0.5),
+                  fontSize: isCurrentLine ? 19 : 15,
+                  fontWeight: isCurrentLine ? FontWeight.w800 : FontWeight.w500,
+                  shadows: shadow,
                 ),
+                child: Text(lyricsProvider.lyrics[index].text, textAlign: TextAlign.center),
               ),
-          ],
-        ),
+            ),
+          );
+        },
       );
     }
 
-    // 시간 없는 가사: 빈 줄이 여러 개 겹친 건 하나로 정리해서 고른 간격으로
-    final plain = lyricsProvider.plainLyrics.replaceAll('\r', '').replaceAll(RegExp(r'\n\s*\n\s*\n+'), '\n\n').trim();
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(24, 30, 24, 120),
-      child: SizedBox(
-        width: double.infinity,
-        child: Text(
-          plain,
-          style: TextStyle(color: ink, fontSize: 15.5, height: 1.8, shadows: shadow),
-          textAlign: TextAlign.center,
-        ),
+      padding: const EdgeInsets.all(24),
+      child: Text(
+        lyricsProvider.plainLyrics,
+        style: TextStyle(color: ink, fontSize: 16, height: 2, shadows: shadow),
+        textAlign: TextAlign.center,
       ),
     );
   }

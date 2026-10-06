@@ -1,9 +1,29 @@
-import 'package:flutter/material.dart';
+# 파란소리: 가사 배경 사진 고르기 + 가사를 위쪽에 고른 간격으로
+# 실행: C:\apps\mp3_player_new 에서  python apply_lyrics_bg2.py
+# - 원래 가사 화면은 backup_lyrics_bg2 폴더에 저장돼요
+import os, sys, shutil
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+ROOT = os.path.dirname(os.path.abspath(__file__))
+P = os.path.join(ROOT, "lib", "screens", "lyrics_screen.dart")
+if not os.path.exists(P):
+    print("[실패] lib/screens/lyrics_screen.dart 를 못 찾았어요. 이 파일을 mp3_player_new 폴더에 두고 실행해 주세요.")
+    sys.exit(1)
+with open(P, "r", encoding="utf-8", newline="") as f:
+    old = f.read()
+if "_lineKeys" in old:
+    print("[참고] 이미 바뀌어 있어요. 그대로 둘게요.")
+    sys.exit(0)
+B = os.path.join(ROOT, "backup_lyrics_bg2", "screens")
+os.makedirs(B, exist_ok=True)
+shutil.copy2(P, os.path.join(B, "lyrics_screen.dart"))
+NEW = r"""import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../providers/lyrics_provider.dart';
 import '../providers/player_provider.dart';
 import '../theme/app_theme.dart';
@@ -52,30 +72,6 @@ class _LyricsScreenState extends State<LyricsScreen> {
   }
 
   bool get _light => _bg != 0 && _kLightBgs.contains(_bg);
-
-  /// 오른쪽 아래 워터마크 — 한국: 파란소리 | Paransori / 해외: ParanSori (한 줄, 은은하게)
-  Widget _watermark(BuildContext context) {
-    final ko = Localizations.localeOf(context).languageCode == 'ko';
-    final c = _ink.withOpacity(_light ? 0.5 : 0.62);
-    final shadow = _light ? const <Shadow>[] : [Shadow(color: Colors.black.withOpacity(0.3), blurRadius: 6)];
-    final en = Text(
-      ko ? 'Paransori' : 'ParanSori',
-      style: GoogleFonts.quicksand(
-          color: c, fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 2.4, shadows: shadow),
-    );
-    if (!ko) return en;
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text('파란소리',
-            style: TextStyle(color: c, fontSize: 11.5, fontWeight: FontWeight.w500, letterSpacing: 1.6, shadows: shadow)),
-        Container(width: 0.8, height: 10, margin: const EdgeInsets.symmetric(horizontal: 9), color: c),
-        en,
-      ],
-    );
-  }
-
   Color get _ink => _light ? const Color(0xFF17140F) : Colors.white;
 
   /// 🖼 배경 고르기 창
@@ -193,28 +189,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
           elevation: 0,
           scrolledUnderElevation: 0,
           surfaceTintColor: Colors.transparent,
-          titleSpacing: 0,
-          // "가사" 대신 노래 제목 + 가수 (캡처해서 공유할 때 무슨 노래인지 보이게)
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(playerProvider.currentSong?.titleDisplay ?? AppLocalizations.of(context)!.lyrics,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      color: _ink,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -0.3,
-                      shadows: _light ? null : [Shadow(color: Colors.black.withOpacity(0.3), blurRadius: 6)])),
-              if (playerProvider.currentSong != null)
-                Text(playerProvider.currentSong!.artistDisplay,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: _ink.withOpacity(0.65), fontSize: 12.5)),
-            ],
-          ),
+          title: Text(AppLocalizations.of(context)!.lyrics, style: TextStyle(color: _ink)),
           leading: IconButton(
             onPressed: () => Navigator.pop(context),
             icon: Icon(Icons.arrow_back_ios, color: _ink),
@@ -229,7 +204,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
               onPressed: () {
                 final song = playerProvider.currentSong;
                 if (song != null) {
-                  lyricsProvider.fetchLyrics(song.titleDisplay, song.artistDisplay, force: true);
+                  lyricsProvider.fetchLyrics(song.titleDisplay, song.artistDisplay);
                 }
               },
               icon: Icon(Icons.refresh, color: _ink.withOpacity(0.7)),
@@ -292,13 +267,6 @@ class _LyricsScreenState extends State<LyricsScreen> {
                 ],
               ),
             ),
-            // 워터마크 (캡처해서 공유할 때 파란소리가 보이게)
-            if (_bg != 0)
-              Positioned(
-                right: 20,
-                bottom: MediaQuery.of(context).padding.bottom + 18,
-                child: IgnorePointer(child: _watermark(context)),
-              ),
           ],
         ),
       ),
@@ -419,3 +387,10 @@ class _LyricsScreenState extends State<LyricsScreen> {
     );
   }
 }
+"""
+nl = "\r\n" if "\r\n" in old else "\n"
+with open(P, "w", encoding="utf-8", newline="") as f:
+    f.write(NEW.replace("\n", nl) if nl == "\r\n" else NEW)
+print("[완료] 바꿨어요: screens/lyrics_screen.dart")
+print("\n[끝] 끝! 이제  flutter run  으로 확인해 주세요.")
+print("   문제가 있으면 backup_lyrics_bg2 폴더의 원본으로 되돌릴 수 있어요.")

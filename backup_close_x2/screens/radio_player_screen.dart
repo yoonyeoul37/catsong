@@ -41,7 +41,6 @@ import '../widgets/cast_sheets.dart';
 import '../widgets/exit_confirm_dialog.dart';
 import '../widgets/paran_toast.dart';
 import '../widgets/action_feedback.dart';
-import '../widgets/paran_dialog.dart';
 
 double? _parseFrequency(String? freq) {
   if (freq == null || freq.isEmpty) return null;
@@ -2332,8 +2331,6 @@ class _FavoritesSheet extends StatelessWidget {
                       style: TextStyle(color: _rInk, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
                 ),
                 Text('${favorites.length}개', style: TextStyle(color: _rSub, fontSize: 12.5)),
-                const SizedBox(width: 6),
-                ParanCloseX(onTap: () => Navigator.pop(context)), // 닫기
               ],
             ),
           ),
@@ -2770,7 +2767,6 @@ class _ScheduleListSheet extends StatelessWidget {
                   ],
                 ),
               ),
-              ParanCloseX(onTap: () => Navigator.pop(context)), // 닫기
             ],
           ),
           SizedBox(height: 12),

@@ -14,7 +14,6 @@ import 'package:just_audio/just_audio.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/logo_eq_bars.dart';
 import '../widgets/exit_confirm_dialog.dart';
-import '../widgets/paran_dialog.dart';
 
 class SoundMixScreen extends StatefulWidget {
   const SoundMixScreen({super.key});
@@ -67,21 +66,8 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // 제목 가운데 + 오른쪽 ✕
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 40),
-                      Expanded(
-                        child: Text('몇 시간 몇 분 후 정지할까요?',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
-                      ),
-                      ParanCloseX(onTap: () => Navigator.pop(ctx)),
-                    ],
-                  ),
-                ),
+                Text('몇 시간 몇 분 후 정지할까요?',
+                    style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
                 SizedBox(
                   height: 216,
                   child: CupertinoTheme(
@@ -292,15 +278,8 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text('$key 고르기',
-                          style: TextStyle(color: baseColor, fontSize: 16, fontWeight: FontWeight.w700)),
-                    ),
-                    ParanCloseX(onTap: () => Navigator.pop(ctx)), // 닫기
-                  ],
-                ),
+                Text('$key 고르기',
+                    style: TextStyle(color: baseColor, fontSize: 16, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 8),
                 for (final v in variants)
                   InkWell(

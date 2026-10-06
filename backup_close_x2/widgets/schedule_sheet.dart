@@ -152,8 +152,6 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                         style: TextStyle(color: _rInk, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
                   ),
                   Text('${schedules.length} / 5', style: TextStyle(color: _rSub, fontSize: 12.5)),
-                  const SizedBox(width: 6),
-                  ParanCloseX(onTap: () => Navigator.pop(context)), // 닫기
                 ],
               ),
             ),
@@ -419,14 +417,9 @@ class _ScheduleListBottomSheet extends StatelessWidget {
             children: [
               Icon(Icons.format_list_bulleted, color: primaryColor, size: 20),
               SizedBox(width: 8),
-              Expanded(
-                child: Text(AppLocalizations.of(context)!.radioScheduleTitle(stationName),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: _rInk, fontSize: 16, fontWeight: FontWeight.bold)),
-              ),
-              ParanCloseX(onTap: () => Navigator.pop(context)), // 닫기
+              Text(AppLocalizations.of(context)!.radioScheduleTitle(stationName),
+                  style: TextStyle(
+                      color: _rInk, fontSize: 16, fontWeight: FontWeight.bold)),
             ],
           ),
           SizedBox(height: 12),

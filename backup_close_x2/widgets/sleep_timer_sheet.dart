@@ -6,7 +6,6 @@ import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import 'paran_toast.dart';
-import 'paran_dialog.dart';
 import '../providers/theme_provider.dart';
 
 // ── 라디오 창 색 (라이트: 베이지 · 다크: 어두운 갈색) — 창을 그릴 때마다 다크 모드인지 맞춤 ──
@@ -110,7 +109,6 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                     ],
                   ),
                 ),
-                ParanCloseX(onTap: () => Navigator.pop(context)), // 닫기
               ],
             ),
             SizedBox(height: 20),

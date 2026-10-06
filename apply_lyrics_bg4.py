@@ -1,4 +1,25 @@
-import 'package:flutter/material.dart';
+# 파란소리: 가사 배경 사진 + 위쪽 고른 간격 + 워터마크(한 줄) + 제목·가수
+# 실행: C:\apps\mp3_player_new 에서  python apply_lyrics_bg4.py
+# - 원래 가사 화면은 backup_lyrics_bg4 폴더에 저장돼요
+import os, sys, shutil
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+ROOT = os.path.dirname(os.path.abspath(__file__))
+P = os.path.join(ROOT, "lib", "screens", "lyrics_screen.dart")
+if not os.path.exists(P):
+    print("[실패] lib/screens/lyrics_screen.dart 를 못 찾았어요. 이 파일을 mp3_player_new 폴더에 두고 실행해 주세요.")
+    sys.exit(1)
+with open(P, "r", encoding="utf-8", newline="") as f:
+    old = f.read()
+if "titleSpacing: 0," in old and "_watermark" in old:
+    print("[참고] 이미 바뀌어 있어요. 그대로 둘게요.")
+    sys.exit(0)
+B = os.path.join(ROOT, "backup_lyrics_bg4", "screens")
+os.makedirs(B, exist_ok=True)
+shutil.copy2(P, os.path.join(B, "lyrics_screen.dart"))
+NEW = r"""import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -229,7 +250,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
               onPressed: () {
                 final song = playerProvider.currentSong;
                 if (song != null) {
-                  lyricsProvider.fetchLyrics(song.titleDisplay, song.artistDisplay, force: true);
+                  lyricsProvider.fetchLyrics(song.titleDisplay, song.artistDisplay);
                 }
               },
               icon: Icon(Icons.refresh, color: _ink.withOpacity(0.7)),
@@ -419,3 +440,10 @@ class _LyricsScreenState extends State<LyricsScreen> {
     );
   }
 }
+"""
+nl = "\r\n" if "\r\n" in old else "\n"
+with open(P, "w", encoding="utf-8", newline="") as f:
+    f.write(NEW.replace("\n", nl) if nl == "\r\n" else NEW)
+print("[완료] 바꿨어요: screens/lyrics_screen.dart")
+print("\n[끝] 끝! 이제  flutter run  으로 확인해 주세요.")
+print("   문제가 있으면 backup_lyrics_bg4 폴더의 원본으로 되돌릴 수 있어요.")

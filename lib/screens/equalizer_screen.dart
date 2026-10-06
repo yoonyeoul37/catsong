@@ -25,6 +25,12 @@ class EqualizerScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        // 흰 바탕이라 위쪽 시계·배터리 아이콘을 검은색으로
+        systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
+          statusBarColor: Colors.transparent,
+          systemNavigationBarColor: Colors.white,
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
         title: Text(l.equalizer,
             style: const TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w600)),
         leading: IconButton(
@@ -152,36 +158,7 @@ class EqualizerScreen extends StatelessWidget {
                 _strength(context, Icons.speaker, l.bassBooster, l.enhancesBass, fx.bass, fx.setBass),
                 _strength(context, Icons.surround_sound, l.virtualizer, l.surroundEffect, fx.virt, fx.setVirt),
 
-                // ───── 울림 (리버브) ─────
-                if (fx.reverbSupported) ...[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 2),
-                    child: Row(
-                      children: const [
-                        Icon(Icons.account_balance_outlined, color: _accent, size: 16),
-                        SizedBox(width: 6),
-                        Text('울림',
-                            style: TextStyle(color: _accent, fontSize: 13, fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
-                    child: Text('방이나 공연장에서 듣는 것처럼 소리가 퍼져요',
-                        style: TextStyle(color: Colors.black45, fontSize: 11)),
-                  ),
-                  SizedBox(
-                    height: 40,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      children: [
-                        for (var i = 0; i < SoundEffects.reverbNames.length; i++)
-                          _chip(SoundEffects.reverbNames[i], fx.reverb == i, () => fx.setReverb(i)),
-                      ],
-                    ),
-                  ),
-                ],
+                // (울림은 폰마다 효과가 없거나 달라서 뺌 — 공간감으로 대신)
 
                 // (초기화 버튼은 화면 맨 아래에 고정)
               ],

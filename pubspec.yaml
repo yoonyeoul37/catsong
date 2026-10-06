@@ -111,8 +111,10 @@ flutter:
     - assets/review_banner.jpg
 
 flutter_native_splash:
-  color: "#F7F5F0"
+  color: "#17140F"                  # 다크/라이트 상관없이 어두운 바탕 (첫인사 사진과 자연스럽게)
   color_dark: "#17140F"
+  image: assets/splash_logo.png     # 오래된 폰(안드로이드 11 이하): 가운데 둥근 아이콘
   android_12:
-    color: "#F7F5F0"
+    color: "#17140F"
     color_dark: "#17140F"
+    image: assets/app_icon.png      # 안드로이드 12 이상: 폰이 동그랗게 잘라서 보여줌

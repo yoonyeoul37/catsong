@@ -693,7 +693,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
             children: [
               Image.asset(
                 introAssetPath(context),
-                fit: BoxFit.contain,
+                fit: BoxFit.cover, // 화면 꽉 채우기 (위아래 검은 칸 없애기)
               ),
             ],
           ),

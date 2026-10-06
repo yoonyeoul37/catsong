@@ -89,7 +89,7 @@ class SoundEffects extends ChangeNotifier {
     } catch (_) {}
     try {
       reverbSupported = (await _ch.invokeMethod('initReverb', {'audioSessionId': session})) == true;
-      if (reverbSupported) await _ch.invokeMethod('setReverb', {'preset': reverb});
+      if (reverbSupported) await _ch.invokeMethod('setReverb', {'preset': 0}); // 울림 칸 뺐으니 항상 끄기
     } catch (_) {
       reverbSupported = false;
     }

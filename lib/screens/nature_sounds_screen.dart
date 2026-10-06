@@ -578,7 +578,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                             color: const Color(0xFF2F7DE8), fontSize: 20),
                       ),
                       TextSpan(
-                        text: '소리',
+                        text: ' 휴식',
                         style: GoogleFonts.doHyeon(
                             color: baseColor, fontSize: 20),
                       ),

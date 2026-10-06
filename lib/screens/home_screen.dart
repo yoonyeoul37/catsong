@@ -1225,7 +1225,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _DashboardCategory('라디오', '국내외 라디오 · 즐겨찾기', 'assets/radio_bg.jpg', StartScreenType.radio, () {
         pushRadioEntry(context);
       }),
-      _DashboardCategory('자연소리', '비 · 바람 · 숲 · 파도', 'assets/nature_bg.jpg', StartScreenType.nature, () {
+      _DashboardCategory('자연', '비 · 바람 · 숲 · 파도', 'assets/nature_bg.jpg', StartScreenType.nature, () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         Navigator.push(
           context,

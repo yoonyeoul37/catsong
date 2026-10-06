@@ -292,6 +292,27 @@ class _LyricsScreenState extends State<LyricsScreen> {
                 ],
               ),
             ),
+            // 맨 아래 시스템 아이콘 자리만 살짝 막 깔기 (사진마다 아래 밝기가 달라서)
+            if (_bg != 0)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                height: MediaQuery.of(context).padding.bottom + 56,
+                child: IgnorePointer(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: _light
+                            ? [const Color(0x00F4EFE5), const Color(0xB3F4EFE5)]
+                            : [Colors.black.withOpacity(0), Colors.black.withOpacity(0.45)],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             // 워터마크 (캡처해서 공유할 때 파란소리가 보이게)
             if (_bg != 0)
               Positioned(

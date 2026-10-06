@@ -1144,6 +1144,18 @@ class _PlayerScreenState extends State<PlayerScreen>
                             }
                           },
                         ),
+                        // 가사 (왼쪽 글줄 + 오른쪽 음표)
+                        _buildBottomBarItem(
+                          context,
+                          icon: null,
+                          customIcon: '<path d="M4 7h11" stroke-linecap="round"/><path d="M4 12h8" stroke-linecap="round"/><path d="M4 17h6" stroke-linecap="round"/><path d="M18 6v10" stroke-linecap="round"/><circle cx="16.2" cy="16.3" r="1.9"/><path d="M18 6l2.6 1" stroke-linecap="round" stroke-linejoin="round"/>',
+                          label: AppLocalizations.of(context)!.lyrics,
+                          isActive: false,
+                          onTap: () {
+                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const LyricsScreen()));
+                          },
+                        ),
                         ],
                     ),
                   ),

@@ -262,14 +262,52 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
   bool _showWelcome = false;
   bool _showIntro = true;
 
+  AudioPlayer? _welcomePlayer; // 첫인사 전용 작은 재생기
+  VoidCallback? _welcomeCleanup;
+
   Future<void> _checkAndShowWelcome() async {
     if (!context.read<ThemeProvider>().voiceGreetingEnabled) return;
     final langCode = Localizations.localeOf(context).languageCode;
     final welcomeAsset = langCode == 'ko' ? 'assets/welcome_ko_v4.mp3' : null;
-    if (welcomeAsset != null) {
-      final welcomePlayer = AudioPlayer();
-      welcomePlayer.setAsset(welcomeAsset).then((_) => welcomePlayer.play());
+    if (welcomeAsset == null) return;
+
+    // 소리 주도권(오디오 포커스)은 안 가져감 → 라디오·음악과 부딪히지 않게
+    final p = AudioPlayer(handleInterruptions: false, handleAudioSessionActivation: false);
+    _welcomePlayer = p;
+
+    // 인삿말 도중에 라디오나 음악을 틀면 → 인삿말 바로 멈추고 정리
+    final radio = context.read<RadioProvider>();
+    final music = context.read<PlayerProvider>();
+    void stopIfOther() {
+      if (radio.isPlaying || radio.isLoading || music.isPlaying) _stopWelcome();
     }
+    radio.addListener(stopIfOther);
+    music.addListener(stopIfOther);
+    _welcomeCleanup = () {
+      radio.removeListener(stopIfOther);
+      music.removeListener(stopIfOther);
+    };
+
+    // 인삿말이 끝나면 바로 정리
+    p.processingStateStream.listen((s) {
+      if (s == ProcessingState.completed) _stopWelcome();
+    });
+    try {
+      await p.setAsset(welcomeAsset);
+      if (_welcomePlayer == p) p.play(); // 준비하는 사이에 멈췄으면 재생 안 함
+    } catch (_) {
+      _stopWelcome();
+    }
+  }
+
+  /// 첫인사 멈추고 재생기 정리
+  void _stopWelcome() {
+    final p = _welcomePlayer;
+    if (p == null) return;
+    _welcomePlayer = null;
+    _welcomeCleanup?.call();
+    _welcomeCleanup = null;
+    p.stop().whenComplete(() => p.dispose());
   }
 
   @override
@@ -339,6 +377,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _stopWelcome();
     super.dispose();
   }
 

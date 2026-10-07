@@ -11,6 +11,8 @@ import '../providers/player_provider.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/paran_dialog.dart';
+import '../widgets/paran_toast.dart';
+import '../widgets/lyrics_card_sheet.dart';
 
 /// 가사 배경 사진 (수파베이스 app-images/lyrics) — 목록은 list.json 으로 앱 업데이트 없이 바꿀 수 있어요
 const _kLyricsBgBase =
@@ -73,6 +75,15 @@ class _LyricsScreenState extends State<LyricsScreen> {
   void initState() {
     super.initState();
     _loadBgList(); // 인터넷 목록 받기 (못 받으면 기본 목록)
+    // 처음 한 번만: 가사를 꾹 누르면 카드로 공유된다고 알려주기
+    SharedPreferences.getInstance().then((p) {
+      if (p.getBool('lyricsCardHint') == true) return;
+      Future.delayed(const Duration(milliseconds: 1500), () {
+        if (!mounted) return;
+        p.setBool('lyricsCardHint', true);
+        showParanToast(context, '가사를 꾹 누르면 카드로 만들어 공유할 수 있어요');
+      });
+    });
     SharedPreferences.getInstance().then((p) {
       // 고른 사진은 파일 이름으로 기억 (예전 번호로 저장한 것도 알아보기)
       final old = p.getInt('lyricsBg');
@@ -119,6 +130,21 @@ class _LyricsScreenState extends State<LyricsScreen> {
   }
 
   Color get _ink => _light ? const Color(0xFF17140F) : Colors.white;
+
+  /// 🎴 가사 한 줄 꾹 → 카드 공유 창
+  void _openCard(String line, PlayerProvider playerProvider) {
+    final text = line.trim();
+    final song = playerProvider.currentSong;
+    if (text.isEmpty || song == null) return;
+    showLyricsCardSheet(
+      context,
+      line: text,
+      title: song.titleDisplay,
+      artist: song.artistDisplay,
+      photos: [for (final b in _bgs) LyricsCardPhoto('$_kLyricsBgBase/${b.file}', light: b.light)],
+      startPhoto: _bg > 0 ? _bg - 1 : 0, // 지금 가사 배경부터
+    );
+  }
 
   /// ⏱ 박자 맞추기 창 (누를 때마다 바로 적용, 창은 안 닫힘)
   void _pickOffset(LyricsProvider lp) {
@@ -615,6 +641,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                 onTap: () {
                   playerProvider.seekTo(lyricsProvider.lyrics[index].time);
                 },
+                onLongPress: () => _openCard(lyricsProvider.lyrics[index].text, playerProvider),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: SizedBox(
@@ -651,13 +678,23 @@ class _LyricsScreenState extends State<LyricsScreen> {
       child: SingleChildScrollView(
       controller: _plainController,
       padding: const EdgeInsets.fromLTRB(24, 30, 24, 120),
-      child: SizedBox(
-        width: double.infinity,
-        child: Text(
-          plain,
-          style: TextStyle(color: ink, fontSize: 15.5, height: 1.8, shadows: shadow),
-          textAlign: TextAlign.center,
-        ),
+      child: Column(
+        children: [
+          // 한 줄씩 나눠서 그리기 → 꾹 누르면 그 줄로 카드 (보이는 모양은 그대로)
+          for (final l in plain.split('\n'))
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onLongPress: l.trim().isEmpty ? null : () => _openCard(l, playerProvider),
+              child: SizedBox(
+                width: double.infinity,
+                child: Text(
+                  l,
+                  style: TextStyle(color: ink, fontSize: 15.5, height: 1.8, shadows: shadow),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+        ],
       ),
     ),
     );

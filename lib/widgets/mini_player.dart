@@ -108,8 +108,7 @@ class MiniPlayer extends StatelessWidget {
                     child: LinearProgressIndicator(
                       value: playerProvider.progress,
                       backgroundColor: baseColor.withOpacity(0.12),
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          baseColor.withOpacity(0.4)),
+                      valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
                     ),
                   ),
                 ),

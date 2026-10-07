@@ -14,7 +14,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import '../models/radio_station.dart';
 import '../models/radio_country.dart';
-import 'player_provider.dart' show SimpleAudioHandler;
+import 'player_provider.dart' show SimpleAudioHandler, PlayerProvider;
 import '../services/schedule_service.dart';
 
 enum RadioPlayerState { idle, loading, playing, paused, error }
@@ -178,8 +178,8 @@ class RadioProvider extends ChangeNotifier {
   bool _pausedByFocusLoss = false;
 
   void _listenNativeAudioFocus() {
-    const platform = MethodChannel('kr.ssing.catsong/media');
-    platform.setMethodCallHandler((call) async {
+    // 신호 받는 곳은 음악 쪽 하나로 합치고, 라디오는 넘겨받기만
+    PlayerProvider.extraHandler = (call) async {
       if (call.method == 'onAudioFocusLost') {
         // 이미 완전히 꺼진(idle) 상태거나, 사용자가 이미 직접 정지해둔 상태라면 건드리지 않음
         if (_playerState == RadioPlayerState.idle) return;
@@ -199,7 +199,7 @@ class RadioProvider extends ChangeNotifier {
           await playStation(_currentStation!);
         }
       }
-    });
+    };
   }
 
   Future<void> _listenAudioFocus() async {

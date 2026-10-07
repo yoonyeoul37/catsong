@@ -80,6 +80,9 @@ class PlayerProvider extends ChangeNotifier {
     await prefs.setInt('loop_mode', _loopMode.index);
   }
 
+  // 라디오도 같은 통로로 신호를 받아서, 받는 곳을 하나로 합침 (둘이 따로 받으면 하나가 묻힘)
+  static Future<void> Function(MethodCall call)? extraHandler;
+
   void _initWidgetChannel() {
     _channel.setMethodCallHandler((call) async {
       switch (call.method) {
@@ -103,6 +106,7 @@ class PlayerProvider extends ChangeNotifier {
           }
           break;
       }
+      await extraHandler?.call(call); // 라디오에도 전달
       return null;
     });
   }

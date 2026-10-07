@@ -102,6 +102,10 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2"/>
+        <!-- 플러터 3.41~3.44 화면 엔진(Impeller) 버그로 '영수증(sync_file)'이 쌓여 멈춤 → 예전 엔진으로 -->
+        <meta-data
+            android:name="io.flutter.embedding.android.EnableImpeller"
+            android:value="false"/>
 
         <receiver
             android:name=".PlayerWidget"

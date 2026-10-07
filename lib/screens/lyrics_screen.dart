@@ -413,6 +413,76 @@ class _LyricsScreenState extends State<LyricsScreen> {
     );
   }
 
+  // 오른쪽 위 버튼 묶음: 자주 쓰는 것만 밖에, 나머지는 ⋮ 안으로 (유리 알약 하나에)
+  Widget _topButtons(LyricsProvider lp, PlayerProvider pp) {
+    final c = _ink.withOpacity(0.85);
+    Widget btn(IconData icon, VoidCallback onTap) => InkResponse(
+          onTap: onTap,
+          radius: 20,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
+            child: Icon(icon, size: 20, color: c),
+          ),
+        );
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          decoration: BoxDecoration(
+            color: _light ? Colors.white.withOpacity(0.38) : Colors.black.withOpacity(0.28),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: _ink.withOpacity(0.08)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (lp.hasLyrics) btn(Icons.ios_share_rounded, () => _shareNow(lp, pp)),
+              btn(Icons.wallpaper_rounded, _pickBackground),
+              PopupMenuButton<String>(
+                tooltip: '',
+                padding: EdgeInsets.zero,
+                color: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                offset: const Offset(0, 40),
+                onSelected: (v) {
+                  if (v == 'offset') _pickOffset(lp);
+                  if (v == 'refresh') {
+                    final song = pp.currentSong;
+                    if (song != null) {
+                      lp.fetchLyrics(song.titleDisplay, song.artistDisplay, force: true);
+                    }
+                  }
+                },
+                itemBuilder: (_) => [
+                  if (lp.lyrics.isNotEmpty) _menuItem(Icons.timer_outlined, '박자 맞추기', 'offset'),
+                  _menuItem(Icons.refresh, '가사 다시 찾기', 'refresh'),
+                ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
+                  child: Icon(Icons.more_vert_rounded, size: 20, color: c),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  PopupMenuItem<String> _menuItem(IconData icon, String label, String value) => PopupMenuItem(
+        value: value,
+        height: 44,
+        child: Row(
+          children: [
+            Icon(icon, size: 18, color: AppTheme.fixedAccent),
+            const SizedBox(width: 10),
+            Text(label, style: const TextStyle(color: Colors.black87, fontSize: 14)),
+          ],
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     final lyricsProvider = context.watch<LyricsProvider>();
@@ -498,31 +568,10 @@ class _LyricsScreenState extends State<LyricsScreen> {
             icon: Icon(Icons.keyboard_arrow_down_rounded, color: _ink, size: 30),
           ),
           actions: [
-            // 📤 가사 카드 공유 (가사가 있을 때만)
-            if (lyricsProvider.hasLyrics)
-              IconButton(
-                onPressed: () => _shareNow(lyricsProvider, playerProvider),
-                icon: Icon(Icons.ios_share_rounded, color: _ink.withOpacity(0.85)),
-              ),
-            // ⏱ 박자 맞추기 (시간 있는 가사일 때만)
-            if (lyricsProvider.lyrics.isNotEmpty)
-              IconButton(
-                onPressed: () => _pickOffset(lyricsProvider),
-                icon: Icon(Icons.timer_outlined, color: _ink.withOpacity(0.85)),
-              ),
-            // 🖼 배경 사진 고르기
-            IconButton(
-              onPressed: _pickBackground,
-              icon: Icon(Icons.wallpaper_rounded, color: _ink.withOpacity(0.85)),
-            ),
-            IconButton(
-              onPressed: () {
-                final song = playerProvider.currentSong;
-                if (song != null) {
-                  lyricsProvider.fetchLyrics(song.titleDisplay, song.artistDisplay, force: true);
-                }
-              },
-              icon: Icon(Icons.refresh, color: _ink.withOpacity(0.7)),
+            // 공유 · 배경 · ⋮(박자 맞추기 · 가사 다시 찾기)
+            Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: Center(child: _topButtons(lyricsProvider, playerProvider)),
             ),
           ],
         ),

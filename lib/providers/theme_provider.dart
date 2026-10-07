@@ -14,13 +14,16 @@ class ThemeProvider extends ChangeNotifier {
 
   Color get primaryColor => _primaryColor;
 
-  /// 포인트 색 5가지 (설정 → 포인트 색) — 체크·스위치·막대 같은 작은 곳의 색
+  /// 포인트 색 8가지 (설정 → 포인트 색) — 체크·스위치·막대 같은 작은 곳의 색
   static const pointColors = <(String, Color)>[
     ('파란소리', Color(0xFF2589E8)),
     ('숲', Color(0xFF3E8E6A)),
     ('노을', Color(0xFFE07A4F)),
     ('라벤더', Color(0xFF8A6FD1)),
     ('먹색', Color(0xFF4A4038)),
+    ('벚꽃', Color(0xFFD46A8C)),
+    ('바다', Color(0xFF1F9AA0)),
+    ('햇살', Color(0xFFC4962C)),
   ];
 
   /// 지금 포인트 색 이름 (예전에 고른 다른 색이면 null)

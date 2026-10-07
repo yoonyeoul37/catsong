@@ -13,6 +13,8 @@ import 'ringtone_screen.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/paran_toast.dart';
 import '../widgets/paran_dialog.dart';
+import 'bulk_clean_screen.dart';
+import 'bulk_art_screen.dart';
 import 'player_screen.dart' show showPlayerStyleMenu;
 
 // 화면 공통 색 (베이지 바탕 · 흰 카드 · 먹색 글자)
@@ -151,6 +153,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildTile(context, icon: Icons.text_fields, title: l.textSize, onTap: () => _showTextSizeDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.font_download_outlined, title: l.fontChange, onTap: () => _showFontDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.style, title: l.playerStyle, onTap: () => _showPlayerStyleDialog(context), primaryColor: primaryColor, isLast: true),
+          // ───── 음악 관리 (홈 ⋮ 메뉴에서 옮겨옴) ─────
+          _buildSection('음악 관리'),
+          _buildTile(context, icon: Icons.auto_awesome_outlined, title: '곡 정보 한꺼번에 정리',
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BulkCleanScreen())),
+              primaryColor: primaryColor, isFirst: true),
+          _buildTile(context, icon: Icons.photo_library_outlined, title: '앨범 사진 한꺼번에 찾기',
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BulkArtScreen())),
+              primaryColor: primaryColor, isLast: true),
           _buildSection(l.equalizer),
           _buildTile(context, icon: Icons.equalizer, title: l.equalizer, onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const EqualizerScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor, isFirst: true),
           _buildTile(context, icon: _isFlashlightOn ? Icons.flashlight_on : Icons.flashlight_off, title: l.flashlight, subtitle: _isFlashlightOn ? l.on : l.off, onTap: () => _toggleFlashlight(context), primaryColor: primaryColor,

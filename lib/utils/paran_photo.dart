@@ -31,6 +31,7 @@ Widget paranPhoto(String path,
       width: width,
       height: height,
       useOldImageOnUrlChange: true,
+      memCacheWidth: thumb ? 400 : 1080, // 화면 크기만큼만 램에 올리기 (모양은 그대로)
       fadeInDuration: const Duration(milliseconds: 200),
       placeholder: (_, __) =>
           fallback ?? Container(width: width, height: height, color: const Color(0xFF2A2A2A)),
@@ -39,7 +40,8 @@ Widget paranPhoto(String path,
       errorListener: (_) {}, // 서버가 잠깐 늦어도 오류로 보고하지 않기 (회색 칸 → 다음에 다시 받음)
     );
   }
-  return Image.asset(path, fit: fit, width: width, height: height);
+  return Image.asset(path, fit: fit, width: width, height: height,
+      cacheWidth: thumb ? 400 : 1080); // 화면 크기만큼만
 }
 
 /// 앱 켤 때 미리 꺼내두기 (재생화면 들어갈 때 바로 뜨게)

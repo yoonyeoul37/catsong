@@ -24,6 +24,8 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/music_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/song_title_cleaner.dart';
+import 'bulk_clean_screen.dart';
 import '../providers/playlist_provider.dart';
 import '../models/song.dart';
 import '../providers/player_provider.dart';
@@ -900,7 +902,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _AppBarCircleButton(
             onTap: () {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              showMoreMenuSheet(context, showSongTools: true);
+              showMoreMenuSheet(context);
               return;
               showModalBottomSheet(
                 context: context,
@@ -1405,6 +1407,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Image.asset(
                           c.imageAsset,
                           fit: BoxFit.cover,
+                          cacheWidth: 600, // 화면 크기만큼만 불러오기 (램 아끼기)
                           errorBuilder: (context, error, stackTrace) => Container(
                             color: baseColor.withOpacity(0.08),
                           ),
@@ -1427,8 +1430,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           right: 0,
                           bottom: 0,
                           child: ClipRRect(
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                            child: RepaintBoundary( // 흐림 효과 빼기 (폰이 버벅이고 사진이 회색으로 나오던 원인)
+                              
                               child: Container(
                                 padding: const EdgeInsets.fromLTRB(12, 6, 12, 8),
                                 decoration: BoxDecoration(
@@ -1590,8 +1593,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               right: 0,
                               bottom: 0,
                               child: ClipRRect(
-                                child: BackdropFilter(
-                                  filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                                child: RepaintBoundary( // 흐림 효과 빼기 (폰이 버벅이고 사진이 회색으로 나오던 원인)
+                                  
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                     decoration: BoxDecoration(
@@ -1742,6 +1745,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 72,
                           fit: BoxFit.cover,
                           gaplessPlayback: true,
+                          cacheWidth: 216, // 화면 크기만큼만
                         )
                             : Container(
                           width: 72,
@@ -1866,6 +1870,99 @@ class _HomeScreenState extends State<HomeScreen> {
               );
               }),
           ],
+        ],
+      ),
+    );
+  }
+
+  // ───── 곡 목록 맨 위 "정리 알려주기" 카드 ─────
+  int? _messyCount; // 정리할 곡 수 (한 번만 세기)
+  bool _cleanHintHidden = false;
+  bool _cleanHintLoaded = false;
+
+  int _countMessy(MusicProvider music) {
+    final known = music.artists
+        .map((x) => x.name.toLowerCase().trim())
+        .where((n) => n.isNotEmpty && !n.contains('unknown') && n != '알 수 없는 아티스트')
+        .toSet();
+    var n = 0;
+    for (final s in music.allSongs) {
+      if (music.isCallRecordingPath(s.uri)) continue;
+      final c = SongTitleCleaner.clean(s.titleDisplay, s.artistDisplay, knownArtists: known);
+      if (c.title != s.titleDisplay || c.artist != s.artistDisplay) n++;
+    }
+    return n;
+  }
+
+  Widget _buildCleanHint(MusicProvider music, bool isDark) {
+    if (!_cleanHintLoaded) {
+      _cleanHintLoaded = true;
+      SharedPreferences.getInstance().then((p) {
+        final until = p.getInt('cleanHintHideUntil') ?? 0;
+        if (mounted && DateTime.now().millisecondsSinceEpoch < until) setState(() => _cleanHintHidden = true);
+      });
+    }
+    if (_cleanHintHidden || music.metaLoading || _showFavorites || _showRecent || _isSelectionMode) {
+      return const SizedBox.shrink();
+    }
+    _messyCount ??= _countMessy(music);
+    final n = _messyCount!;
+    if (n < 3) return const SizedBox.shrink(); // 몇 곡 안 되면 안 띄움
+    // 밝은 화면: 먹색 바 / 다크 화면: 크림색 바 (배경과 반대라 또렷하게)
+    final card = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final ink = isDark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
+    final sub = isDark ? const Color(0xFF8A8378) : const Color(0xFFA29A8B);
+    final bg = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 10, 16, 4),
+      padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+      decoration: BoxDecoration(
+        color: card,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDark ? 0.25 : 0.14),
+            blurRadius: 14,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text('정리할 곡이 $n개 있어요',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w600)),
+          ),
+          // 나중에 → 일주일 동안 안 띄움
+          TextButton(
+            onPressed: () async {
+              setState(() => _cleanHintHidden = true);
+              final p = await SharedPreferences.getInstance();
+              await p.setInt('cleanHintHideUntil',
+                  DateTime.now().add(const Duration(days: 7)).millisecondsSinceEpoch);
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: sub,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              minimumSize: const Size(0, 32),
+            ),
+            child: const Text('나중에', style: TextStyle(fontSize: 12.5)),
+          ),
+          const SizedBox(width: 2),
+          GestureDetector(
+            onTap: () async {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              await Navigator.push(context, MaterialPageRoute(builder: (_) => const BulkCleanScreen()));
+              if (mounted) setState(() => _messyCount = null); // 돌아오면 다시 세기
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(color: ink, borderRadius: BorderRadius.circular(14)),
+              child: Text('정리하기', style: TextStyle(color: bg, fontSize: 12.5, fontWeight: FontWeight.w700)),
+            ),
+          ),
         ],
       ),
     );
@@ -2005,6 +2102,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 1,
               color: baseColor.withOpacity(0.06),
             ),
+            _buildCleanHint(musicProvider, isDarkMode), // 정리할 곡이 있으면 알려주기
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 12, 8),
               child: Row(
@@ -2394,7 +2492,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Icon(
                         items[index]['icon'] as IconData,
-                        color: isSelected ? const Color(0xFF2F7DE8) : baseColor.withOpacity(0.6),
+                        color: isSelected
+                            ? context.watch<ThemeProvider>().primaryColor // 지금 탭 = 포인트 색
+                            : baseColor.withOpacity(0.6),
                         size: 24,
                       ),
                       const SizedBox(height: 3),

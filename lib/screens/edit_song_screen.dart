@@ -63,7 +63,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
     });
   }
 
-  /// 🔍 인터넷에서 정확한 정보 찾기 → 후보 중에서 고르기
+  /// 🔍 인터넷에서 정확한 정보 찾기 → 후보 중에서 고르기 (영어 제목·가수는 한글로 바꿔서 보여줌)
   Future<void> _lookup() async {
     FocusManager.instance.primaryFocus?.unfocus();
     setState(() => _searching = true);
@@ -77,94 +77,142 @@ class _EditSongScreenState extends State<EditSongScreen> {
     final isDark = context.read<ThemeProvider>().isDarkMode;
     final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final sub = isDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
+    final hangul = RegExp(r'[가-힣]');
+
+    // 위에서 4개까지 한글로 바꿔서 보여주기 (1초에 하나씩 쓱 바뀜)
+    final shown = List<LookupResult>.from(results);
+    StateSetter? sheetSet;
+    var open = true;
+    () async {
+      for (var i = 0; i < shown.length && i < 4; i++) {
+        if (!open) return;
+        final k = await koreanize(shown[i]);
+        if (!open) return;
+        if (!identical(k, shown[i])) {
+          shown[i] = k;
+          try {
+            sheetSet?.call(() {});
+          } catch (_) {}
+        }
+      }
+    }();
+
     final picked = await showModalBottomSheet<LookupResult>(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (ctx) => SafeArea(
-        top: false,
-        child: Container(
-          margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-          constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.7),
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-          decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5), // 다른 고르는 창과 같은 베이지
-            borderRadius: BorderRadius.circular(22),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('이 곡이 맞나요?', style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w800)),
-              const SizedBox(height: 4),
-              Text('맞는 곡을 고르면 제목·가수·앨범·앨범 사진이 채워져요',
-                  style: TextStyle(color: sub, fontSize: 12.5)),
-              const SizedBox(height: 12),
-              Flexible(
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: results.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 4),
-                  itemBuilder: (_, i) {
-                    final r = results[i];
-                    return InkWell(
-                      borderRadius: BorderRadius.circular(12),
-                      onTap: () => Navigator.pop(ctx, r),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-                        child: Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.network(r.thumbUrl,
-                                  width: 52, height: 52, fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) =>
-                                      Container(width: 52, height: 52, color: sub.withOpacity(0.2))),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(r.title,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: ink, fontSize: 14.5, fontWeight: FontWeight.w700)),
-                                  const SizedBox(height: 2),
-                                  Text('${r.artist} · ${r.album}',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: sub, fontSize: 12.5)),
-                                ],
+      builder: (ctx) => StatefulBuilder(builder: (ctx, setSheet) {
+        sheetSet = setSheet;
+        return SafeArea(
+          top: false,
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+            constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.7),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5), // 다른 고르는 창과 같은 베이지
+              borderRadius: BorderRadius.circular(22),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('이 곡이 맞나요?', style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w800)),
+                const SizedBox(height: 4),
+                Text('맞는 곡을 고르면 제목·가수·앨범·앨범 사진이 채워져요',
+                    style: TextStyle(color: sub, fontSize: 12.5)),
+                const SizedBox(height: 12),
+                Flexible(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: shown.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 4),
+                    itemBuilder: (_, i) {
+                      final r = shown[i];
+                      return InkWell(
+                        borderRadius: BorderRadius.circular(12),
+                        onTap: () => Navigator.pop(ctx, r),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                          child: Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(r.thumbUrl,
+                                    width: 52, height: 52, fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) =>
+                                        Container(width: 52, height: 52, color: sub.withOpacity(0.2))),
                               ),
-                            ),
-                          ],
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(r.title,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(color: ink, fontSize: 14.5, fontWeight: FontWeight.w700)),
+                                    const SizedBox(height: 2),
+                                    Text('${r.artist} · ${r.album}',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(color: sub, fontSize: 12.5)),
+                                    // 한글로 바꿨으면 원래 영어는 작게
+                                    if (r.koreanized)
+                                      Text('${r.origTitle ?? r.title} · ${r.origArtist ?? r.artist}',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(color: sub.withOpacity(0.7), fontSize: 11)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () => Navigator.pop(ctx),
-                  style: TextButton.styleFrom(foregroundColor: sub),
-                  child: const Text('맞는 곡이 없어요'),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    style: TextButton.styleFrom(foregroundColor: sub),
+                    child: const Text('맞는 곡이 없어요'),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
+    open = false;
+    sheetSet = null;
     if (picked == null || !mounted) return;
     setState(() {
-      _titleController.text = picked.title;
-      _artistController.text = picked.artist;
+      // 제목: 지금 한글인데 고른 게 영어면 한글 그대로
+      final curTitle = _titleController.text.trim();
+      _titleController.text =
+          (hangul.hasMatch(curTitle) && !hangul.hasMatch(picked.title)) ? curTitle : picked.title;
+      // 가수: 지금 한글인데 고른 게 영어면 한글 그대로 (아이유 → IU 방지)
+      final curArtist = _artistController.text.trim();
+      final keepKorean =
+          hangul.hasMatch(curArtist) && !hangul.hasMatch(picked.artist) && !curArtist.contains('알 수 없');
+      _artistController.text = keepKorean ? curArtist : picked.artist;
       _albumController.text = picked.album;
       _pickedArt = picked.artUrl;
     });
+    // 아래쪽 후보라 목록에서 못 바꿨으면 → 고른 다음 한글로 한 번 더 (Kim Hyun Sik → 김현식)
+    if (!picked.koreanized &&
+        (!hangul.hasMatch(_artistController.text) || !hangul.hasMatch(_titleController.text))) {
+      final k = await koreanize(picked);
+      if (!mounted || identical(k, picked)) return;
+      setState(() {
+        if (!hangul.hasMatch(_artistController.text)) _artistController.text = k.artist;
+        if (!hangul.hasMatch(_titleController.text)) _titleController.text = k.title;
+      });
+    }
   }
 
   @override

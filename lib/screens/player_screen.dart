@@ -1609,7 +1609,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                             await Share.shareXFiles([XFile(song.uri!)], text: song.titleDisplay);
                           }
                         }),
-                        MenuQuickAction(Icons.edit, '편집', () {
+                        MenuQuickAction(Icons.edit, '정보 수정', () {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => EditSongScreen(song: song)));
                         }),
                       ],
@@ -1701,7 +1701,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => RingtoneScreen(initialSong: song, trimMode: true)));
                   }, arrow: true),
-                  _playerSheetItem(ctx, Icons.info_outline, AppLocalizations.of(context)!.songInfo, accent, baseColor, () {
+                  _playerSheetItem(ctx, Icons.info_outline, '파일 정보', accent, baseColor, () {
                     SongListTile.showInfo(context, song);
                   }, arrow: true),
                   _playerSheetItem(ctx, Icons.equalizer, AppLocalizations.of(context)!.equalizer, accent, baseColor, () {
@@ -1770,7 +1770,7 @@ class _PlayerScreenState extends State<PlayerScreen>
   }
 
   // ── 더보기 메뉴 오른쪽 상태 표시용 ──
-  static const _sheetBlue = Color(0xFF2589E8);
+  static Color _sheetBlue = const Color(0xFF2589E8); // 포인트 색 (메뉴 열 때마다 설정 색으로)
   static const _sheetSub = Color(0xFF8A8378);
 
   static Widget _sheetValue(String text) => Text(text,
@@ -3028,10 +3028,40 @@ class _PlayerScreenState extends State<PlayerScreen>
 
   Widget _buildCurrentLyrics(PlayerProvider playerProvider, Color primaryColor) {
     final lyricsProvider = context.watch<LyricsProvider>();
-    if (!lyricsProvider.hasLyrics || lyricsProvider.lyrics.isEmpty) {
+
+    if (!lyricsProvider.hasLyrics) {
       return const SizedBox(height: 36);
     }
+    // 시간 없는 가사: 지금 부르는 줄을 알 수 없어서 → "가사 보기 ›" (누르면 가사 화면)
+    if (lyricsProvider.lyrics.isEmpty) {
+      return SizedBox(
+        height: 36,
+        child: Center(
+          child: GestureDetector(
+            onTap: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const LyricsScreen()));
+            },
+            behavior: HitTestBehavior.opaque,
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // 누르기 쉽게 자리만 넓게
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('가사 보기',
+                      style: TextStyle(
+                          color: Colors.white60, fontSize: 13, fontWeight: FontWeight.w500, letterSpacing: 0.3)),
+                  SizedBox(width: 1),
+                  Icon(Icons.chevron_right_rounded, color: Colors.white54, size: 17),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
     lyricsProvider.updateCurrentLine(playerProvider.position);
+    if (lyricsProvider.currentLineIndex < 0) return const SizedBox(height: 36); // 전주
     final currentLine = lyricsProvider.lyrics[lyricsProvider.currentLineIndex];
     return SizedBox(
       height: 36,
@@ -3206,13 +3236,13 @@ class _PlayerScreenState extends State<PlayerScreen>
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (ctx) => ParanSheetFrame(
-        child: _SleepTimerDialog(playerProvider: playerProvider, primaryColor: const Color(0xFF2589E8)),
+        child: _SleepTimerDialog(playerProvider: playerProvider, primaryColor: context.read<ThemeProvider>().primaryColor),
       ),
     );
   }
 
   static void _showSleepWheelPickerDirect(BuildContext context, PlayerProvider playerProvider, Color _unusedColor) {
-    const primaryColor = Color(0xFF2589E8);
+    final primaryColor = context.read<ThemeProvider>().primaryColor; // 포인트 색
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     final textColor = isDarkMode ? Colors.white : Colors.black;
     Duration picked = const Duration(minutes: 30);
@@ -3604,6 +3634,7 @@ List<Widget> playerSettingRows(
   bool showNew = false,
 }) {
   final p = context.watch<PlayerProvider>();
+  _PlayerScreenState._sheetBlue = context.watch<ThemeProvider>().primaryColor; // 셔플·반복·스타일 표시 = 포인트 색
   const accent = Color(0xFF8A8378); // 메뉴 아이콘은 차분한 회색
   void vib() => const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
   return [
@@ -4393,7 +4424,7 @@ class _SpeedDialogState extends State<_SpeedDialog> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
-    const primaryColor = Color(0xFF2589E8);
+    final primaryColor = context.watch<ThemeProvider>().primaryColor; // 포인트 색 (설정에서 고름)
     final textColor = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
 
     return Padding(

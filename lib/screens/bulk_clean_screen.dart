@@ -119,7 +119,7 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
     final appCtx = Navigator.of(context, rootNavigator: true).context;
     navigator.pop();
     // 되돌리기 버튼이 있어서 하단 알림으로
-    showParanToast(appCtx, '${targets.length}곡을 깔끔하게 정리했어요', actionLabel: '되돌리기', onAction: () async {
+    showActionFeedbackWithUndo(appCtx, message: '${targets.length}곡을 정리했어요', onUndo: () async {
       final n = await undoBulkClean(music);
       showActionFeedback(appCtx, type: ActionFeedbackType.edited, message: '$n곡을 되돌렸어요');
     });

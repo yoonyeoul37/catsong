@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../utils/index_letter.dart';
+import 'package:provider/provider.dart';
+import '../providers/theme_provider.dart';
 
 /// 파란소리 포인트 블루 / 연한 배경
-const kIndexBlue = Color(0xFF2589E8);
+Color kIndexBlue = const Color(0xFF2589E8); // 포인트 색 (그릴 때마다 설정 색으로)
 const kIndexBg = Color(0xFFEDF4F8);
 /// 평소 글자색: 차분한 회갈색 (라이트 / 다크)
 const kIndexMuted = Color(0xFF8A857B);
@@ -105,6 +107,7 @@ class _IndexBarState extends State<IndexBar> {
 
   @override
   Widget build(BuildContext context) {
+    kIndexBlue = context.watch<ThemeProvider>().primaryColor; // 초성 표시 = 포인트 색
     return LayoutBuilder(builder: (context, cons) {
       final h = cons.maxHeight;
       return GestureDetector(

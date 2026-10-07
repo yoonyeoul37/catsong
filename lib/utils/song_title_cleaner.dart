@@ -159,6 +159,21 @@ class SongTitleCleaner {
 
     // 맨 앞 트랙 번호 "01. 노래", "03 - 노래" 떼기
     t = t.replaceFirst(RegExp(r'^\d{1,3}\s*[.\-_)]\s*'), '');
+    // "01밤편지"처럼 0으로 시작하는 두 자리 번호가 글자에 딱 붙은 것도 떼기 (1994년 같은 진짜 제목은 그대로)
+    t = t.replaceFirst(RegExp(r'^0\d(?=[가-힣A-Za-z])'), '');
+
+    // 한글 제목 뒤 영어 제목 괄호 빼기: "밤편지 (Through the Night)" → "밤편지"
+    // (Live·Remix·feat·Ver 같은 건 그대로, 괄호 안에 한글·숫자만 있는 것도 그대로)
+    final hangul = RegExp(r'[가-힣]');
+    t = t.replaceAllMapped(RegExp(r'\s*[\(\[（]([^\)\]）]*)[\)\]）]'), (m) {
+      final inside = m.group(1)!;
+      final outside = t.replaceFirst(m.group(0)!, '');
+      if (_keep.hasMatch(inside)) return m.group(0)!; // 다른 버전 표시는 남기기
+      if (hangul.hasMatch(inside)) return m.group(0)!; // 괄호 안에 한글이 있으면 그대로
+      if (!RegExp(r'[A-Za-z]').hasMatch(inside)) return m.group(0)!; // 숫자만 있으면 그대로
+      if (!hangul.hasMatch(outside)) return m.group(0)!; // 밖이 한글 제목일 때만
+      return '';
+    });
 
     t = _tidy(t);
     a = _tidy(a);

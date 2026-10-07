@@ -32,6 +32,7 @@ void showParanToast(
     ..hideCurrentSnackBar()
     ..showSnackBar(SnackBar(
       behavior: SnackBarBehavior.floating,
+      persist: false, // 되돌리기 버튼이 있어도 시간 지나면 사라지게
       margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       padding: EdgeInsets.fromLTRB(16, 12, actionLabel != null ? 6 : 16, 12),
       elevation: 6,

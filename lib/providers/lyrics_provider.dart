@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../l10n/locale_holder.dart';
 import '../utils/song_title_cleaner.dart';
 
@@ -29,8 +30,69 @@ class LyricsProvider extends ChangeNotifier {
   int get currentLineIndex => _currentLineIndex;
   String get currentSongKey => _currentSongKey;
 
+  // ───── 시간 없는 가사 → 노래 길이로 시간표를 짐작해서 만들기 (대충 맞춤) ─────
+  String _estimatedFor = '';
+  bool get isEstimated => _estimatedFor.isNotEmpty && _estimatedFor == _currentSongKey;
+
+  void ensureEstimated(Duration duration) {
+    if (_lyrics.isNotEmpty || _plainLyrics.trim().isEmpty) return;
+    final total = duration.inMilliseconds;
+    if (total < 20000) return; // 노래 길이를 아직 모르면 다음에
+    // 줄 나누기 (빈 줄 여러 개는 하나로)
+    final lines = <String>[];
+    for (final l in _plainLyrics.replaceAll('\r', '').split('\n').map((s) => s.trim())) {
+      if (l.isEmpty && (lines.isEmpty || lines.last.isEmpty)) continue;
+      lines.add(l);
+    }
+    while (lines.isNotEmpty && lines.last.isEmpty) {
+      lines.removeLast();
+    }
+    if (lines.isEmpty) return;
+    // 전주(앞 10%)·끝(8%) 빼고, 글자 수 비율대로 나누기 (빈 줄은 간주로 조금 쉼)
+    final start = (total * 0.10).clamp(5000, 25000).toDouble();
+    final end = total * 0.92;
+    final weights = [for (final l in lines) l.isEmpty ? 6.0 : (l.length < 4 ? 4.0 : l.length.toDouble())];
+    final sum = weights.fold<double>(0, (a, b) => a + b);
+    var t = start;
+    final out = <LyricsLine>[];
+    for (var i = 0; i < lines.length; i++) {
+      out.add(LyricsLine(time: Duration(milliseconds: t.round()), text: lines[i]));
+      t += (end - start) * weights[i] / sum;
+    }
+    _lyrics = out;
+    _estimatedFor = _currentSongKey;
+  }
+
+  // ───── 박자 맞추기 (노래마다 기억, +면 가사가 빨리 나옴) ─────
+  int _offsetMs = 0;
+  int get offsetMs => _offsetMs;
+
+  Future<void> _loadOffset(String key) async {
+    final p = await SharedPreferences.getInstance();
+    final v = p.getInt('lyricsOffset_$key') ?? 0;
+    if (v != _offsetMs) {
+      _offsetMs = v;
+      notifyListeners();
+    }
+  }
+
+  Future<void> nudgeOffset(int ms) async {
+    _offsetMs = (_offsetMs + ms).clamp(-10000, 10000);
+    notifyListeners();
+    final p = await SharedPreferences.getInstance();
+    await p.setInt('lyricsOffset_$_currentSongKey', _offsetMs);
+  }
+
+  Future<void> resetOffset() async {
+    _offsetMs = 0;
+    notifyListeners();
+    final p = await SharedPreferences.getInstance();
+    await p.remove('lyricsOffset_$_currentSongKey');
+  }
+
   Future<void> fetchLyrics(String title, String artist, {String? filePath, bool force = false}) async {
     final songKey = '$title-$artist';
+    _loadOffset(songKey); // 이 노래에 맞춰둔 박자 불러오기
     // ↻ 다시 찾기(force)면 이미 가져온 가사가 있어도 다시 찾기
     if (!force && songKey == _currentSongKey && (_hasLyrics || _isLoading)) return;
     _currentSongKey = songKey;
@@ -60,54 +122,35 @@ class LyricsProvider extends ChangeNotifier {
 
       // [MV]·(Official…) 같은 군더더기를 떼고 검색
       final c = SongTitleCleaner.clean(title, artist);
-      final url = Uri.parse(
-          'https://lrclib.net/api/get?artist_name=${Uri.encodeComponent(c.artist)}&track_name=${Uri.encodeComponent(c.title)}');
 
-      var response = await http.get(url).timeout(const Duration(seconds: 10));
-
-      // 못 찾으면 제목만으로 한 번 더 (가수 이름이 비슷한 것 먼저, 없으면 가사 있는 첫 번째)
-      if (response.statusCode == 404) {
-        final s = await http
-            .get(Uri.parse('https://lrclib.net/api/search?track_name=${Uri.encodeComponent(c.title)}'))
-            .timeout(const Duration(seconds: 10));
-        if (s.statusCode == 200) {
-          final withLyrics = (jsonDecode(s.body) as List)
-              .cast<Map>()
-              .where((e) => ((e['syncedLyrics'] ?? e['plainLyrics']) ?? '').toString().isNotEmpty)
-              .toList();
-          final al = c.artist.toLowerCase();
-          final hit = withLyrics.firstWhere(
-            (e) {
-              final n = (e['artistName'] ?? '').toString().toLowerCase();
-              return n.isNotEmpty && (n.contains(al) || al.contains(n));
-            },
-            orElse: () => withLyrics.isNotEmpty ? withLyrics.first : <dynamic, dynamic>{},
-          );
-          if (hit.isNotEmpty) {
-            response = http.Response(jsonEncode(hit), 200,
-                headers: {'content-type': 'application/json; charset=utf-8'});
-          }
-        }
+      // ① 전에 찾아둔 가사가 있으면 인터넷 없이 바로 (↻ 다시 찾기면 새로 찾기)
+      if (!force) {
+        final cached = await _readCache(songKey);
+        if (cached != null && _applyFound(cached)) return;
       }
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final syncedLyrics = data['syncedLyrics'] as String?;
-        final plainLyrics = data['plainLyrics'] as String?;
+      // ② 세 가지 방법을 동시에 찾기 (느리거나 서버가 아프면 알아서 한 번 더)
+      final t = Uri.encodeComponent(c.title);
+      final a = Uri.encodeComponent(c.artist);
+      final res = await Future.wait([
+        _getJson('https://lrclib.net/api/get?artist_name=$a&track_name=$t'),
+        _getJson('https://lrclib.net/api/search?track_name=$t&artist_name=$a'),
+        _getJson('https://lrclib.net/api/search?track_name=$t'),
+      ]);
+      final cands = <Map>[];
+      if (res[0] is Map) cands.add({...(res[0] as Map), '_exact': true}); // 가수+제목이 정확히 맞은 것
+      for (final r in res.skip(1)) {
+        if (r is List) cands.addAll(r.whereType<Map>());
+      }
 
-        if (syncedLyrics != null && syncedLyrics.isNotEmpty) {
-          _lyrics = _parseLrc(syncedLyrics);
-          _hasLyrics = true;
-        } else if (plainLyrics != null && plainLyrics.isNotEmpty) {
-          _plainLyrics = plainLyrics;
-          _hasLyrics = true;
-        } else {
-          _errorMessage = AppLocale.current?.lyricsErrorNotFound ?? '가사를 찾을 수 없습니다';
-        }
-      } else if (response.statusCode == 404) {
-        _errorMessage = AppLocale.current?.lyricsErrorNotFound ?? '가사를 찾을 수 없습니다';
+      // ③ 맞는 노래만 골라서 제일 잘 맞는 것 (엉뚱한 노래 막기 · 한글 노래는 한글 가사 먼저)
+      final best = _pickBest(c.title, c.artist, cands);
+      if (best != null && _applyFound(best)) {
+        _saveCache(songKey, best);
+      } else if (res.every((r) => r == null)) {
+        _errorMessage = AppLocale.current?.lyricsErrorNetwork ?? '인터넷 연결을 확인해주세요';
       } else {
-        _errorMessage = AppLocale.current?.lyricsErrorLoadFailed ?? '가사 로딩 실패';
+        _errorMessage = AppLocale.current?.lyricsErrorNotFound ?? '가사를 찾을 수 없습니다';
       }
     } catch (e) {
       _errorMessage = AppLocale.current?.lyricsErrorNetwork ?? '인터넷 연결을 확인해주세요';
@@ -115,6 +158,112 @@ class LyricsProvider extends ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  // ───────── 가사 찾기 도우미 ─────────
+  static final _hangul = RegExp(r'[가-힣]');
+
+  /// 비교용: 소문자 + 괄호 내용·기호·띄어쓰기 빼기
+  String _norm(String s) => s
+      .toLowerCase()
+      .replaceAll(RegExp(r'[\(\[].*?[\)\]]'), '')
+      .replaceAll(RegExp(r'[^0-9a-z가-힣ぁ-んァ-ン一-龥]'), '');
+
+  /// 인터넷에서 받아오기 — 실패하면 1초 쉬고 한 번 더. 못 받으면 null, 없으면 빈 목록
+  Future<dynamic> _getJson(String url) async {
+    for (var attempt = 0; attempt < 2; attempt++) {
+      try {
+        final r = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 8));
+        if (r.statusCode == 200) return jsonDecode(utf8.decode(r.bodyBytes));
+        if (r.statusCode == 404) return <dynamic>[];
+      } catch (_) {}
+      await Future.delayed(const Duration(seconds: 1));
+    }
+    return null;
+  }
+
+  /// 후보 중에서 제일 잘 맞는 가사 고르기 (맞는 게 없으면 null — 엉뚱한 가사보다 "못 찾음"이 나아서)
+  Map? _pickBest(String title, String artist, List<Map> cands) {
+    final nt = _norm(title), na = _norm(artist);
+    final artistUnknown =
+        na.isEmpty || artist.contains('알 수 없') || na.contains('unknown') || na.contains('various');
+    final wantHangul = _hangul.hasMatch(title) || _hangul.hasMatch(artist);
+    Map? best;
+    var bestScore = -999999;
+    // 제목이 똑같은 후보들의 가수 목록 (한 명뿐이면 그 노래가 거의 확실)
+    final exactArtists = <String>{
+      for (final m in cands)
+        if (_norm((m['trackName'] ?? '').toString()) == nt &&
+            ((m['syncedLyrics'] ?? m['plainLyrics'] ?? '').toString().trim().isNotEmpty))
+          _norm((m['artistName'] ?? '').toString()),
+    };
+    final seen = <String>{};
+    for (final m in cands) {
+      final synced = (m['syncedLyrics'] ?? '').toString();
+      final plain = (m['plainLyrics'] ?? '').toString();
+      final text = synced.trim().isNotEmpty ? synced : plain;
+      if (text.trim().isEmpty) continue;
+      if (!seen.add('${m['id']}|${m['trackName']}|${m['artistName']}')) continue;
+      final ct = _norm((m['trackName'] ?? '').toString());
+      final ca = _norm((m['artistName'] ?? '').toString());
+      final exact = m['_exact'] == true;
+      final artistOk = exact || (!artistUnknown && ca.isNotEmpty && (ca.contains(na) || na.contains(ca)));
+      final titleOk = exact || (ct.isNotEmpty && (ct == nt || ct.contains(nt) || nt.contains(ct)));
+      // 엉뚱한 노래 막기: 가수·제목이 맞아야 함 (가수를 모르면 제목이 똑같아야)
+      // 유튜브 곡처럼 가수 칸이 채널 이름이어도: 제목이 똑같은 노래가 한 가수 것뿐이면 인정
+      final onlyOneSong = ct == nt && exactArtists.length == 1;
+      if (!(artistOk && titleOk) && !(artistUnknown && ct == nt) && !onlyOneSong) continue;
+      var score = 0;
+      if (exact) score += 20;
+      if (artistOk) score += 50;
+      if (ct == nt) score += 20;
+      if (synced.trim().isNotEmpty) score += 45; // 시간 있는 가사를 훨씬 먼저 (지금 부르는 줄 보여주기)
+      if (wantHangul) score += _hangul.hasMatch(text) ? 30 : -40; // 한글 노래는 한글 가사 먼저 (로마자 피하기)
+      if (score > bestScore) {
+        bestScore = score;
+        best = m;
+      }
+    }
+    return best;
+  }
+
+  /// 고른 가사를 화면용으로 넣기
+  bool _applyFound(Map m) {
+    final synced = (m['syncedLyrics'] ?? '').toString();
+    final plain = (m['plainLyrics'] ?? '').toString();
+    if (synced.trim().isNotEmpty) {
+      final parsed = _parseLrc(synced);
+      if (parsed.isNotEmpty) {
+        _lyrics = parsed;
+        _hasLyrics = true;
+        return true;
+      }
+    }
+    if (plain.trim().isNotEmpty) {
+      _plainLyrics = plain;
+      _hasLyrics = true;
+      return true;
+    }
+    return false;
+  }
+
+  /// 찾은 가사는 폰에 저장 → 다음엔 인터넷 없이 바로
+  Future<void> _saveCache(String key, Map m) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setString('lyricsCache2_$key',
+          jsonEncode({'syncedLyrics': m['syncedLyrics'], 'plainLyrics': m['plainLyrics']}));
+    } catch (_) {}
+  }
+
+  Future<Map?> _readCache(String key) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      final s = p.getString('lyricsCache2_$key');
+      return s == null ? null : jsonDecode(s) as Map;
+    } catch (_) {
+      return null;
     }
   }
 
@@ -143,9 +292,11 @@ class LyricsProvider extends ChangeNotifier {
 
   void updateCurrentLine(Duration position) {
     if (_lyrics.isEmpty) return;
-    int newIndex = 0;
+    // 화면이 바뀌는 데 걸리는 만큼 0.4초 미리 + 사용자가 맞춘 만큼
+    final pos = position + Duration(milliseconds: 400 + _offsetMs);
+    int newIndex = -1; // 첫 줄 시간 전(전주)에는 아무 줄도 아님
     for (int i = 0; i < _lyrics.length; i++) {
-      if (_lyrics[i].time <= position) {
+      if (_lyrics[i].time <= pos) {
         newIndex = i;
       } else {
         break;

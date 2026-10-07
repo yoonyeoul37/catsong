@@ -123,10 +123,15 @@ class LyricsProvider extends ChangeNotifier {
       // [MV]·(Official…) 같은 군더더기를 떼고 검색
       final c = SongTitleCleaner.clean(title, artist);
 
+      // 한국 가수·한글 제목이면 한글 가사만 (로마자 발음 가사는 안 씀)
+      final wantHangul = _hangul.hasMatch(c.title) || _hangul.hasMatch(c.artist);
+
       // ① 전에 찾아둔 가사가 있으면 인터넷 없이 바로 (↻ 다시 찾기면 새로 찾기)
       if (!force) {
         final cached = await _readCache(songKey);
-        if (cached != null && _applyFound(cached)) return;
+        final cachedText = (cached?['syncedLyrics'] ?? cached?['plainLyrics'] ?? '').toString();
+        // 예전에 저장된 로마자 가사는 버리고 새로 찾기
+        if (cached != null && !(wantHangul && _looksRomanized(cachedText)) && _applyFound(cached)) return;
       }
 
       // ② 세 가지 방법을 동시에 찾기 (느리거나 서버가 아프면 알아서 한 번 더)
@@ -136,6 +141,8 @@ class LyricsProvider extends ChangeNotifier {
         _getJson('https://lrclib.net/api/get?artist_name=$a&track_name=$t'),
         _getJson('https://lrclib.net/api/search?track_name=$t&artist_name=$a'),
         _getJson('https://lrclib.net/api/search?track_name=$t'),
+        // 가수+제목을 통째로 검색 (영어 제목인 한국 노래도 한글 가사가 걸리게)
+        _getJson('https://lrclib.net/api/search?q=${Uri.encodeComponent('${c.artist} ${c.title}')}'),
       ]);
       final cands = <Map>[];
       if (res[0] is Map) cands.add({...(res[0] as Map), '_exact': true}); // 가수+제목이 정확히 맞은 것
@@ -163,6 +170,22 @@ class LyricsProvider extends ChangeNotifier {
 
   // ───────── 가사 찾기 도우미 ─────────
   static final _hangul = RegExp(r'[가-힣]');
+
+  /// 한국 노래를 영어 발음으로 적은 가사인지 ("nan haengbok-hae" 같은)
+  /// 로마자 한국어는 eo·eu·ae가 아주 많이 나오고, 진짜 영어 가사는 거의 안 나와요
+  static final _romaHint = RegExp(r'eo|eu|ae');
+  static const _romaWords = {
+    'nan', 'neol', 'nae', 'neo', 'naega', 'geu', 'uri', 'sarang', 'maeum', 'haengbok',
+    'dasi', 'hana', 'ani', 'gatchi', 'neoui', 'naui', 'eopseo', 'isseo', 'jigeum', 'oneul',
+  };
+  bool _looksRomanized(String text) {
+    if (text.isEmpty || _hangul.hasMatch(text)) return false;
+    final body = text.replaceAll(RegExp(r'\[[^\]]*\]'), ' ').toLowerCase(); // [00:12.34] 시간 빼기
+    final words = RegExp(r'[a-z]+').allMatches(body).map((m) => m.group(0)!).toList();
+    if (words.length < 20) return false;
+    final hits = words.where((w) => _romaWords.contains(w) || _romaHint.hasMatch(w)).length;
+    return hits / words.length >= 0.15;
+  }
 
   /// 비교용: 소문자 + 괄호 내용·기호·띄어쓰기 빼기
   String _norm(String s) => s
@@ -214,6 +237,8 @@ class LyricsProvider extends ChangeNotifier {
       // 유튜브 곡처럼 가수 칸이 채널 이름이어도: 제목이 똑같은 노래가 한 가수 것뿐이면 인정
       final onlyOneSong = ct == nt && exactArtists.length == 1;
       if (!(artistOk && titleOk) && !(artistUnknown && ct == nt) && !onlyOneSong) continue;
+      // 한국 노래인데 영어 발음(로마자)으로 적은 가사면 아예 안 씀
+      if (wantHangul && _looksRomanized(text)) continue;
       var score = 0;
       if (exact) score += 20;
       if (artistOk) score += 50;

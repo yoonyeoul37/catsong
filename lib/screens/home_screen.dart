@@ -1877,6 +1877,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ───── 곡 목록 맨 위 "정리 알려주기" 카드 ─────
   int? _messyCount; // 정리할 곡 수 (한 번만 세기)
+  String _messyFrom = '', _messyTo = ''; // 예시로 보여줄 곡 (바뀌기 전 → 후)
   bool _cleanHintHidden = false;
   bool _cleanHintLoaded = false;
 
@@ -1886,10 +1887,22 @@ class _HomeScreenState extends State<HomeScreen> {
         .where((n) => n.isNotEmpty && !n.contains('unknown') && n != '알 수 없는 아티스트')
         .toSet();
     var n = 0;
+    var bestCut = 0;
+    _messyFrom = '';
+    _messyTo = '';
     for (final s in music.allSongs) {
       if (music.isCallRecordingPath(s.uri)) continue;
       final c = SongTitleCleaner.clean(s.titleDisplay, s.artistDisplay, knownArtists: known);
-      if (c.title != s.titleDisplay || c.artist != s.artistDisplay) n++;
+      if (c.title != s.titleDisplay || c.artist != s.artistDisplay) {
+        n++;
+        // 제일 많이 깔끔해지는 곡을 예시로
+        final cut = s.titleDisplay.length - c.title.length;
+        if (_messyFrom.isEmpty || cut > bestCut) {
+          bestCut = cut;
+          _messyFrom = s.titleDisplay;
+          _messyTo = c.artist != s.artistDisplay ? '${c.title} · ${c.artist}' : c.title;
+        }
+      }
     }
     return n;
   }
@@ -1930,10 +1943,31 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Row(
         children: [
           Expanded(
-            child: Text('정리할 곡이 $n개 있어요',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w600)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('곡 제목 $n개를 깔끔하게',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w600)),
+                if (_messyFrom.isNotEmpty) ...[
+                  const SizedBox(height: 3),
+                  // 내 곡 하나로 예시: 01밤편지 (Through the Night) → 밤편지
+                  Text.rich(
+                    TextSpan(children: [
+                      TextSpan(text: '$_messyFrom → '),
+                      TextSpan(
+                          text: _messyTo,
+                          style: TextStyle(color: ink, fontWeight: FontWeight.w600)),
+                    ]),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: sub, fontSize: 11.5),
+                  ),
+                ],
+              ],
+            ),
           ),
           // 나중에 → 일주일 동안 안 띄움
           TextButton(

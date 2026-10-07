@@ -46,7 +46,9 @@ void showActionFeedbackWithUndo(
   overlay.insert(entry);
   if (soundOn) {
     try {
-      const MethodChannel('kr.ssing.catsong/media').invokeMethod('feedbackSound', {'low': false});
+      const MethodChannel('kr.ssing.catsong/media')
+          .invokeMethod('feedbackSound', {'low': false})
+          .catchError((Object _) => null); // 효과음 실패해도 조용히
     } catch (_) {}
   }
 }
@@ -273,7 +275,8 @@ void showActionFeedback(BuildContext context,
   if (soundOn) {
     try {
       const MethodChannel('kr.ssing.catsong/media')
-          .invokeMethod('feedbackSound', {'low': type == ActionFeedbackType.deleted});
+          .invokeMethod('feedbackSound', {'low': type == ActionFeedbackType.deleted})
+          .catchError((Object _) => null); // 효과음 실패해도 조용히
     } catch (_) {}
   }
 }

@@ -64,6 +64,8 @@ class MainActivity : AudioServiceActivity() {
     private var presetReverb: android.media.audiofx.PresetReverb? = null // 울림
     private var virtualizer: android.media.audiofx.Virtualizer? = null
     private var deleteResult: MethodChannel.Result? = null
+    // 노래·영상 정보 읽기는 뒤에서 하나씩 (화면·터치 담당 일꾼이 멈추지 않게)
+    private val metaExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
 
     // ───── 완료 효과음 (소리 모드 = 물방울, 진동 모드 = 진동, 무음 = 없음) ─────
     private var soundPool: android.media.SoundPool? = null
@@ -85,9 +87,14 @@ class MainActivity : AudioServiceActivity() {
                 pendingLow = null
             }
         }
-        dropId = pool.load(this, resources.getIdentifier("water_drop", "raw", packageName), 1)
-        dropLowId = pool.load(this, resources.getIdentifier("water_drop_low", "raw", packageName), 1)
-        soundPool = pool
+        try {
+            // R.raw 로 직접 가리켜야 앱 크기 줄이기(R8)가 소리 파일을 안 빼요
+            dropId = pool.load(this, R.raw.water_drop, 1)
+            dropLowId = pool.load(this, R.raw.water_drop_low, 1)
+        } catch (e: Exception) {
+            android.util.Log.e("FeedbackSound", "소리 파일 못 불러옴: ${e.message}")
+        }
+        soundPool = pool // 실패해도 하나만 만들고 다시 안 만들기 (쌓이지 않게)
     }
 
     private fun shortVibrate(ms: Long, twice: Boolean = false) {
@@ -154,13 +161,25 @@ class MainActivity : AudioServiceActivity() {
             when (call.method) {
                 "getAlbumArt" -> {
                     val path = call.argument<String>("path")
-                    if (path != null) result.success(getAlbumArt(path))
-                    else result.success(null)
+                    if (path == null) {
+                        result.success(null)
+                    } else {
+                        metaExecutor.execute {
+                            val art = getAlbumArt(path)
+                            runOnUiThread { result.success(art) }
+                        }
+                    }
                 }
                 "getSongMetadata" -> {
                     val path = call.argument<String>("path")
-                    if (path != null) result.success(getSongMetadata(path))
-                    else result.success(null)
+                    if (path == null) {
+                        result.success(null)
+                    } else {
+                        metaExecutor.execute {
+                            val meta = getSongMetadata(path)
+                            runOnUiThread { result.success(meta) }
+                        }
+                    }
                 }
                 "trimAndSetRingtone" -> {
                     val path = call.argument<String>("path")
@@ -383,8 +402,14 @@ class MainActivity : AudioServiceActivity() {
                 }
                 "getVideoThumbnail" -> {
                     val path = call.argument<String>("path")
-                    if (path != null) result.success(getVideoThumbnail(path))
-                    else result.success(null)
+                    if (path == null) {
+                        result.success(null)
+                    } else {
+                        metaExecutor.execute {
+                            val thumb = getVideoThumbnail(path)
+                            runOnUiThread { result.success(thumb) }
+                        }
+                    }
                 }
                 "renameVideo" -> {
                     val uri = call.argument<String>("uri")
@@ -446,12 +471,17 @@ class MainActivity : AudioServiceActivity() {
                     android.util.Log.d("FeedbackSound", "폰 모드: ${am.ringerMode} (2=소리, 1=진동, 0=무음)")
                     when (am.ringerMode) {
                         android.media.AudioManager.RINGER_MODE_NORMAL -> {
-                            val first = soundPool == null
-                            ensureSoundPool()
-                            if (first) {
-                                pendingLow = low // 처음엔 불러오는 중이라, 다 불러오면 바로 재생
-                            } else {
-                                soundPool?.play(if (low) dropLowId else dropId, 0.6f, 0.6f, 1, 0, 1f)
+                            try {
+                                val first = soundPool == null
+                                ensureSoundPool()
+                                val id = if (low) dropLowId else dropId
+                                if (first) {
+                                    pendingLow = low // 처음엔 불러오는 중이라, 다 불러오면 바로 재생
+                                } else if (id != 0) {
+                                    soundPool?.play(id, 0.6f, 0.6f, 1, 0, 1f)
+                                }
+                            } catch (e: Exception) {
+                                android.util.Log.e("FeedbackSound", "소리 오류: ${e.message}")
                             }
                         }
                         android.media.AudioManager.RINGER_MODE_VIBRATE -> {

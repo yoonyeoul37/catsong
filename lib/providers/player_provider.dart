@@ -181,12 +181,59 @@ class PlayerProvider extends ChangeNotifier {
     });
 
     _player.playerStateStream.listen((state) {
-      _isLoading = state.processingState == ProcessingState.loading ||
+      final loading = state.processingState == ProcessingState.loading ||
           state.processingState == ProcessingState.buffering;
+      _checkStall(state.processingState); // 같은 자리에서 계속 걸리면 건너뛰기
       if (state.processingState == ProcessingState.completed) {
         _onSongCompleted();
       }
-      notifyListeners();
+      // 진짜 바뀔 때만 화면 다시 그리기 (걸림 반복 때 화면이 멈추지 않게)
+      if (loading != _isLoading) {
+        _isLoading = loading;
+        notifyListeners();
+      }
+    });
+  }
+
+  // ───── 걸림 지킴이: 같은 자리에서 '불러오는 중'이 계속 반복되면 ─────
+  // 1~2번은 2초 건너뛰고, 그래도 걸리면 다음 곡으로 (깨진 파일에서 앱이 멈추지 않게)
+  int _stallCount = 0;
+  int _stallPosMs = -1;
+  DateTime _stallAt = DateTime.now();
+  bool _stallFixing = false;
+  String _stallSong = '';
+  int _stallSkips = 0;
+
+  void _checkStall(ProcessingState ps) {
+    if (ps != ProcessingState.buffering || !_player.playing || _stallFixing) return;
+    final pos = _player.position.inMilliseconds;
+    final now = DateTime.now();
+    // 자리가 달라졌거나 5초 지났으면 새로 세기
+    if ((pos - _stallPosMs).abs() > 1500 || now.difference(_stallAt).inSeconds > 5) {
+      _stallPosMs = pos;
+      _stallAt = now;
+      _stallCount = 0;
+    }
+    if (++_stallCount < 15) return;
+    _stallCount = 0;
+    _stallFixing = true;
+    final song = currentSong?.uri ?? '';
+    if (song != _stallSong) {
+      _stallSong = song;
+      _stallSkips = 0;
+    }
+    final dur = _player.duration ?? Duration.zero;
+    final to = Duration(milliseconds: pos + 2000);
+    Future(() async {
+      try {
+        if (_stallSkips < 2 && to < dur - const Duration(seconds: 3)) {
+          _stallSkips++;
+          await _player.seek(to);
+        } else {
+          await playNext();
+        }
+      } catch (_) {}
+      _stallFixing = false;
     });
   }
 

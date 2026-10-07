@@ -34,9 +34,12 @@ Future<bool> showExitConfirm(BuildContext context) async {
                 fit: StackFit.expand,
                 children: [
                   Image.asset(
-                    'assets/exit_banner.jpg',
+                    // 다크 모드면 밤 그림
+isDark
+    ? 'assets/exit_banner_night.jpg'
+    : 'assets/exit_banner.jpg',
                     fit: BoxFit.cover,
-                    alignment: const Alignment(-0.2, 0),
+                    alignment: Alignment.center, // 새 그림은 가운데에 있어서
                   ),
                   // 왼쪽 위 하늘에 작은 워터마크 (재생화면과 같은 모양)
                   Positioned(
@@ -44,21 +47,24 @@ Future<bool> showExitConfirm(BuildContext context) async {
                     bottom: 10,
                     child: Builder(builder: (_) {
                       final isKo = Localizations.localeOf(context).languageCode == 'ko';
-                      const shadow = [Shadow(color: Color(0x88000000), blurRadius: 8)];
+                      // 낮(베이지 그림): 파랑+먹색 / 밤(어두운 그림): 밝은 하늘색+흰색
+                      final shadow = isDark
+                          ? const [Shadow(color: Color(0x88000000), blurRadius: 8)]
+                          : const <Shadow>[];
                       return Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text('Paran',
                               style: GoogleFonts.quicksand(
-                                  color: const Color(0xFF9FD3FF), // 어두운 배경에서 또렷한 밝은 하늘색
-                                  fontSize: 22,
+                                  color: isDark ? const Color(0xFF9FD3FF) : const Color(0xFF2589E8),
+                                  fontSize: 15,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: 0.3,
                                   shadows: shadow)),
                           Text(isKo ? 'sori' : 'Sori',
                               style: GoogleFonts.quicksand(
-                                  color: Colors.white,
-                                  fontSize: 22,
+                                  color: isDark ? Colors.white : const Color(0xFF17140F).withOpacity(0.75),
+                                  fontSize: 15,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: 0.3,
                                   shadows: shadow)),

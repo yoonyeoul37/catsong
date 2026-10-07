@@ -114,23 +114,14 @@ class ParanBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isKo = Localizations.localeOf(context).languageCode == 'ko';
-    const shadow = [Shadow(color: Color(0x88000000), blurRadius: 8)];
     return AspectRatio(
       aspectRatio: 2.2,
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(image, fit: BoxFit.cover, alignment: const Alignment(-0.2, 0)),
-          // 오른쪽 아래 구석만 살짝 어둡게 → 밝은 사진에서도 워터마크가 잘 보이게
-          const DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: RadialGradient(
-                center: Alignment.bottomRight,
-                radius: 0.9,
-                colors: [Color(0x66000000), Color(0x00000000)],
-              ),
-            ),
-          ),
+          // 새 그림은 가운데에 있어서 가운데 기준
+          Image.asset(image, fit: BoxFit.cover, alignment: Alignment.center),
+          // 베이지 그림 위라서 파랑+먹색 (종료 창 낮 모양과 똑같이)
           Positioned(
             right: 14,
             bottom: 10,
@@ -139,18 +130,16 @@ class ParanBanner extends StatelessWidget {
               children: [
                 Text('Paran',
                     style: GoogleFonts.quicksand(
-                        color: const Color(0xFF9FD3FF),
-                        fontSize: 22,
+                        color: const Color(0xFF2589E8),
+                        fontSize: 15,
                         fontWeight: FontWeight.w700,
-                        letterSpacing: 0.3,
-                        shadows: shadow)),
+                        letterSpacing: 0.3)),
                 Text(isKo ? 'sori' : 'Sori',
                     style: GoogleFonts.quicksand(
-                        color: Colors.white,
-                        fontSize: 22,
+                        color: const Color(0xFF17140F).withOpacity(0.75),
+                        fontSize: 15,
                         fontWeight: FontWeight.w700,
-                        letterSpacing: 0.3,
-                        shadows: shadow)),
+                        letterSpacing: 0.3)),
               ],
             ),
           ),

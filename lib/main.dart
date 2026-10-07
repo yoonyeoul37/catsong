@@ -38,6 +38,8 @@ late BaseAudioHandler radioAudioHandler;
 
 void main() async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
+  // 사진 기억 창고: 기본 100MB → 50MB (램이 적은 폰에서 꺼지는 것 줄이기)
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 50 << 20;
   // 시작 화면을 최소 1.2초는 보여주기 (너무 빨리 지나가지 않게)
   FlutterNativeSplash.preserve(widgetsBinding: binding);
   Future.delayed(const Duration(milliseconds: 1200), FlutterNativeSplash.remove);
@@ -265,6 +267,7 @@ class AppInitializer extends StatefulWidget {
 class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObserver {
   bool _showWelcome = false;
   bool _showIntro = true;
+  bool _introCleared = false; // 첫인사 사진을 램에서 비웠는지
 
   AudioPlayer? _welcomePlayer; // 첫인사 전용 작은 재생기
   VoidCallback? _welcomeCleanup;
@@ -330,9 +333,6 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
         'assets/radio_bg.jpg',
         'assets/nature_bg.jpg',
         'assets/sleep_bg.jpg',
-        'assets/sound_rain.jpg',
-        'assets/sound_wave.jpg',
-        'assets/sound_fire.jpg',
       ]) {
         precacheImage(AssetImage(path), context);
       }
@@ -703,6 +703,12 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
           ),
         ),
       );
+    }
+    // 첫인사가 끝나면 사진은 다시 안 쓰니까 램에서만 비우기 (화면이 바뀐 뒤에)
+    if (!_introCleared) {
+      _introCleared = true;
+      final introPath = introAssetPath(context);
+      WidgetsBinding.instance.addPostFrameCallback((_) => AssetImage(introPath).evict());
     }
     return const HomeScreen();
   }

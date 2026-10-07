@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/paran_photo.dart';
 
 class RadioMoodPlaceholder extends StatelessWidget {
   final double height;
@@ -12,6 +13,7 @@ class RadioMoodPlaceholder extends StatelessWidget {
       child: Image.asset(
         'assets/radio_mood_bg.jpg',
         fit: BoxFit.cover,
+        cacheWidth: screenPhotoWidth(context), // 화면 크기만큼만 풀기 (화질은 그대로)
       ),
     );
   }

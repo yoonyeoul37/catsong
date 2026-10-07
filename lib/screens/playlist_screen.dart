@@ -11,6 +11,22 @@ import '../widgets/song_list_tile.dart';
 import '../providers/theme_provider.dart';
 import '../widgets/paran_dialog.dart';
 import '../widgets/action_feedback.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
+// 재생목록 위쪽 그림 (수파베이스 app-images/covers 폴더)
+const _kCoverBase =
+    'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/app-images/covers';
+const _kCoverCount = 5; // 그림 수 (더 올리면 여기만 바꾸기)
+
+// 같은 재생목록이면 항상 같은 그림 (5장 중 하나)
+String _coverUrl(String key) {
+  var h = 0;
+  for (final c in key.codeUnits) {
+    h = (h * 31 + c) & 0x7fffffff;
+  }
+  final n = h % _kCoverCount + 1;
+  return '$_kCoverBase/cover_${n.toString().padLeft(2, '0')}.webp';
+}
 
 class PlaylistScreen extends StatelessWidget {
   const PlaylistScreen({super.key});
@@ -206,6 +222,18 @@ class PlaylistDetailScreen extends StatelessWidget {
   final Playlist playlist;
   const PlaylistDetailScreen({super.key, required this.playlist});
 
+  // 그림 불러오는 동안·못 불러오면 원래 색 배경
+  Widget _fallbackBg(Color primaryColor, Color bgColor) => DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [primaryColor.withOpacity(0.6), primaryColor.withOpacity(0.2), bgColor],
+            stops: const [0.0, 0.5, 1.0],
+          ),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
@@ -225,23 +253,38 @@ class PlaylistDetailScreen extends StatelessWidget {
                 const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                 Navigator.pop(context);
               },
-              icon: Icon(Icons.arrow_back_ios, color: baseColor),
+              icon: Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(color: bgColor.withOpacity(0.55), shape: BoxShape.circle),
+                child: Icon(Icons.arrow_back_ios_new, color: baseColor, size: 18),
+              ),
             ),
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Container(
+                  CachedNetworkImage(
+                    imageUrl: _coverUrl(playlist.id),
+                    fit: BoxFit.cover,
+                    alignment: const Alignment(0.3, 0),
+                    fadeInDuration: const Duration(milliseconds: 250),
+                    placeholder: (_, __) => _fallbackBg(primaryColor, bgColor),
+                    errorWidget: (_, __, ___) => _fallbackBg(primaryColor, bgColor),
+                  ),
+                  // 아래로 갈수록 배경색으로 → 글자가 잘 보이고 목록과 자연스럽게 이어지게
+                  DecoratedBox(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
                         colors: [
-                          primaryColor.withOpacity(0.6),
-                          primaryColor.withOpacity(0.2),
+                          bgColor.withOpacity(0),
+                          bgColor.withOpacity(0),
+                          bgColor.withOpacity(0.7),
                           bgColor,
                         ],
-                        stops: const [0.0, 0.5, 1.0],
+                        stops: const [0.0, 0.55, 0.88, 1.0],
                       ),
                     ),
                   ),
@@ -252,21 +295,10 @@ class PlaylistDetailScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: baseColor.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Icon(Icons.playlist_play,
-                              color: baseColor.withOpacity(0.7), size: 44),
-                        ),
-                        const SizedBox(height: 12),
                         Text(playlist.name,
                             style: TextStyle(
                                 color: baseColor,
-                                fontSize: 15,
+                                fontSize: 20,
                                 fontWeight: FontWeight.w900,
                                 letterSpacing: -0.5)),
                         const SizedBox(height: 4),

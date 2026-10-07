@@ -116,25 +116,19 @@ class _LyricsScreenState extends State<LyricsScreen> {
   bool get _light => _bg != 0 && _kLightBgs.contains(_bg);
 
   /// 오른쪽 아래 워터마크 — 한국: 파란소리 | Paransori / 해외: ParanSori (한 줄, 은은하게)
-  Widget _watermark(BuildContext context) {
-    final ko = Localizations.localeOf(context).languageCode == 'ko';
+  Widget _watermark(BuildContext context, {double scale = 1}) {
     final c = _ink.withOpacity(_light ? 0.72 : 0.88); // 더 잘 보이게
     final shadow = _light ? const <Shadow>[] : [Shadow(color: Colors.black.withOpacity(0.3), blurRadius: 6)];
-    final en = Text(
-      ko ? 'Paransori' : 'ParanSori',
-      style: GoogleFonts.quicksand(
-          color: c, fontSize: 15.5, fontWeight: FontWeight.w600, letterSpacing: 2.2, shadows: shadow),
-    );
-    if (!ko) return en;
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text('파란소리',
-            style: TextStyle(color: c, fontSize: 15, fontWeight: FontWeight.w600, letterSpacing: 1.6, shadows: shadow)),
-        Container(width: 1, height: 13, margin: const EdgeInsets.symmetric(horizontal: 10), color: c),
-        en,
-      ],
+    // 영어만, 우아한 기울임 세리프체 (로고처럼)
+    return Text(
+      'Paransori',
+      style: GoogleFonts.playfairDisplay(
+          color: c,
+          fontSize: 17 * scale,
+          fontStyle: FontStyle.italic,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.6 * scale,
+          shadows: shadow),
     );
   }
 
@@ -655,7 +649,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
               Positioned(
                 left: 12,
                 right: 12,
-                bottom: MediaQuery.of(context).padding.bottom + 64,
+                bottom: MediaQuery.of(context).padding.bottom + 16,
                 child: IgnorePointer(
                   child: Builder(builder: (_) {
                     final song = playerProvider.currentSong!;
@@ -668,14 +662,14 @@ class _LyricsScreenState extends State<LyricsScreen> {
                         : 0.0;
                     // 반투명 유리 카드: 뒤 사진을 살짝 흐리게 → 어떤 사진이어도 글자가 또렷하게
                     return ClipRRect(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(18),
                       child: BackdropFilter(
-                        filter: ui.ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+                        filter: ui.ImageFilter.blur(sigmaX: 16, sigmaY: 16),
                         child: Container(
-                          padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+                          padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
                           decoration: BoxDecoration(
                             color: _light ? Colors.white.withOpacity(0.38) : Colors.black.withOpacity(0.28),
-                            borderRadius: BorderRadius.circular(14),
+                            borderRadius: BorderRadius.circular(18),
                             border: Border.all(color: _ink.withOpacity(0.08)),
                           ),
                           child: Column(
@@ -687,11 +681,11 @@ class _LyricsScreenState extends State<LyricsScreen> {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 color: _ink,
-                                fontSize: 19,
+                                fontSize: 21,
                                 fontWeight: FontWeight.w800,
                                 letterSpacing: -0.3,
                                 shadows: shadow)),
-                        const SizedBox(height: 3),
+                        const SizedBox(height: 5),
                         Row(
                           children: [
                             // 포인트색 점 (미니플레이어 진행 바와 같은 색)
@@ -707,13 +701,13 @@ class _LyricsScreenState extends State<LyricsScreen> {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       color: _ink.withOpacity(_light ? 0.85 : 0.72),
-                                      fontSize: 13,
+                                      fontSize: 14,
                                       fontWeight: _light ? FontWeight.w600 : FontWeight.w500,
                                       shadows: shadow)),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 14),
                         // 노래가 어디쯤인지 (얇은 막대)
                         ClipRRect(
                           borderRadius: BorderRadius.circular(2),
@@ -727,6 +721,12 @@ class _LyricsScreenState extends State<LyricsScreen> {
                             ],
                           ),
                         ),
+                        // 파란소리 워터마크 (카드 안 오른쪽 아래, 캡처해서 공유할 때 보이게)
+                        const SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Opacity(opacity: 0.85, child: _watermark(context, scale: 0.78)),
+                        ),
                       ],
                           ),
                         ),
@@ -735,23 +735,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                   }),
                 ),
               ),
-            // 워터마크 (캡처해서 공유할 때 파란소리가 보이게)
-            if (_bg != 0)
-              Positioned(
-                right: 20,
-                bottom: MediaQuery.of(context).padding.bottom + 18,
-                child: IgnorePointer(
-                  // 알록달록한 사진 위에서도 보이게 연한 알약 배경
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: _light ? Colors.white.withOpacity(0.55) : Colors.black.withOpacity(0.32),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: _watermark(context),
-                  ),
-                ),
-              ),
+
           ],
         ),
       ),

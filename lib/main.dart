@@ -231,6 +231,18 @@ class MyApp extends StatelessWidget {
               appBarTheme: AppTheme.buildTheme(themeProvider.primaryColor)
                   .appBarTheme
                   .copyWith(systemOverlayStyle: themeProvider.systemBarStyle),
+              // ⋮ 메뉴 공통 모양: 둥근 카드 + 부드러운 그림자 (다크면 어두운 카드)
+              popupMenuTheme: PopupMenuThemeData(
+                color: themeProvider.isDarkMode ? const Color(0xFF26221C) : Colors.white,
+                surfaceTintColor: Colors.transparent,
+                elevation: 10,
+                shadowColor: Colors.black.withOpacity(themeProvider.isDarkMode ? 0.5 : 0.18),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                textStyle: TextStyle(
+                  color: themeProvider.isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F),
+                  fontSize: 14,
+                ),
+              ),
             ),
             builder: (context, child) {
               AppLocale.current = AppLocalizations.of(context);

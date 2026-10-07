@@ -1441,14 +1441,14 @@ class _PlayerScreenState extends State<PlayerScreen>
                         // "파란"만 숨쉬기 (재생 중일 때만)
                         _BreathingText(
                           text: 'Paran',
-                          style: GoogleFonts.quicksand(
-    color: sky.withOpacity(0.8), fontSize: 21, fontWeight: FontWeight.w600, height: 1.0, letterSpacing: 0.3),
+                          style: GoogleFonts.playfairDisplay(
+    color: sky.withOpacity(0.8), fontSize: 22, fontStyle: FontStyle.italic, fontWeight: FontWeight.w500, height: 1.0, letterSpacing: 0.4),
                           moving: playerProvider.isPlaying,
                         ),
                         Text(
                           isKo ? 'sori' : 'Sori', // 한국은 Paransori, 해외는 발음 때문에 ParanSori
-                          style: GoogleFonts.quicksand(
-                              color: baseColor.withOpacity(0.42), fontSize: 21, fontWeight: FontWeight.w600, height: 1.0, letterSpacing: 0.3),
+                          style: GoogleFonts.playfairDisplay(
+                              color: baseColor.withOpacity(0.42), fontSize: 22, fontStyle: FontStyle.italic, fontWeight: FontWeight.w500, height: 1.0, letterSpacing: 0.4),
                         ),
                       ],
                     ),
@@ -2029,38 +2029,69 @@ class _PlayerScreenState extends State<PlayerScreen>
           child: Stack(
             clipBehavior: Clip.none,
             children: [
+          // 반투명 유리 카드 (가사 화면과 같은 모양, 재생 막대는 아래에 있으니 빼기)
           Container(
             width: MediaQuery.of(context).size.width - 90,
             margin: const EdgeInsets.symmetric(horizontal: 20),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.32),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white.withOpacity(0.15)),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  song.titleDisplay,
-                  maxLines: 1,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(18),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.28),
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: Colors.white.withOpacity(0.10)),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        song.titleDisplay,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 19,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.3),
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // 포인트색 점 (가사 화면·미니플레이어와 같은 색)
+                          Container(
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: 7),
+                          Flexible(
+                            child: Text(
+                              song.artistDisplay,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: Colors.white.withOpacity(0.75),
+                                  fontSize: 13.5,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
+                      // 자연소리 같이 듣는 중이면 가는 선 아래에 표시
+                      _natureBadge(const EdgeInsets.only(top: 0), withLine: true),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 3),
-                Text(
-                  song.artistDisplay,
-                  maxLines: 1,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12),
-                ),
-                // 자연소리 같이 듣는 중이면 가는 선 아래에 표시
-                _natureBadge(const EdgeInsets.only(top: 0), withLine: true),
-              ],
+              ),
             ),
           ),
             ],

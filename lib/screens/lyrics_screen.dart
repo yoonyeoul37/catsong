@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -603,9 +604,9 @@ class _LyricsScreenState extends State<LyricsScreen> {
             // 아래 왼쪽: 제목 · 가수 · 진행 막대 (워터마크 위에)
             if (playerProvider.currentSong != null)
               Positioned(
-                left: 24,
-                right: 24,
-                bottom: MediaQuery.of(context).padding.bottom + 70,
+                left: 12,
+                right: 12,
+                bottom: MediaQuery.of(context).padding.bottom + 64,
                 child: IgnorePointer(
                   child: Builder(builder: (_) {
                     final song = playerProvider.currentSong!;
@@ -616,7 +617,19 @@ class _LyricsScreenState extends State<LyricsScreen> {
                     final f = dur > 0
                         ? (playerProvider.position.inMilliseconds / dur).clamp(0.0, 1.0)
                         : 0.0;
-                    return Column(
+                    // 반투명 유리 카드: 뒤 사진을 살짝 흐리게 → 어떤 사진이어도 글자가 또렷하게
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(14),
+                      child: BackdropFilter(
+                        filter: ui.ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+                        child: Container(
+                          padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+                          decoration: BoxDecoration(
+                            color: _light ? Colors.white.withOpacity(0.38) : Colors.black.withOpacity(0.28),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: _ink.withOpacity(0.08)),
+                          ),
+                          child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -630,17 +643,27 @@ class _LyricsScreenState extends State<LyricsScreen> {
                                 letterSpacing: -0.3,
                                 shadows: shadow)),
                         const SizedBox(height: 3),
-                        Text(song.artistDisplay,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                // 밝은 사진: 더 진하고 살짝 굵게 + 흰 빛 테두리
-                                color: _ink.withOpacity(_light ? 0.85 : 0.68),
-                                fontSize: 13,
-                                fontWeight: _light ? FontWeight.w600 : FontWeight.w400,
-                                shadows: _light
-                                    ? [Shadow(color: Colors.white.withOpacity(0.9), blurRadius: 6)]
-                                    : shadow)),
+                        Row(
+                          children: [
+                            // 포인트색 점 (미니플레이어 진행 바와 같은 색)
+                            Container(
+                              width: 6,
+                              height: 6,
+                              decoration: BoxDecoration(color: primaryColor, shape: BoxShape.circle),
+                            ),
+                            const SizedBox(width: 7),
+                            Flexible(
+                              child: Text(song.artistDisplay,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: _ink.withOpacity(_light ? 0.85 : 0.72),
+                                      fontSize: 13,
+                                      fontWeight: _light ? FontWeight.w600 : FontWeight.w500,
+                                      shadows: shadow)),
+                            ),
+                          ],
+                        ),
                         const SizedBox(height: 12),
                         // 노래가 어디쯤인지 (얇은 막대)
                         ClipRRect(
@@ -650,12 +673,15 @@ class _LyricsScreenState extends State<LyricsScreen> {
                               Container(height: 2.5, color: _ink.withOpacity(0.2)),
                               FractionallySizedBox(
                                 widthFactor: f,
-                                child: Container(height: 2.5, color: _ink.withOpacity(0.85)),
+                                child: Container(height: 2.5, color: primaryColor),
                               ),
                             ],
                           ),
                         ),
                       ],
+                          ),
+                        ),
+                      ),
                     );
                   }),
                 ),

@@ -414,6 +414,12 @@ style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w800, letterSp
 ParanCloseX(onTap: () => Navigator.pop(context)),
 ],
 ),
+const SizedBox(height: 4),
+// 안내: 다른 줄 고르는 법
+Align(
+  alignment: Alignment.centerLeft,
+  child: Text('다른 줄은 가사를 꾹 눌러 고를 수 있어요', style: TextStyle(color: sub, fontSize: 12)),
+),
 const SizedBox(height: 12),
   // 카드 미리보기
   Center(

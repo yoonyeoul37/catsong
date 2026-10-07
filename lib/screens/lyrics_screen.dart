@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,7 @@ import '../providers/player_provider.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/paran_dialog.dart';
+import '../providers/theme_provider.dart';
 import '../widgets/paran_toast.dart';
 import '../widgets/lyrics_card_sheet.dart';
 
@@ -66,6 +68,8 @@ class _LyricsScreenState extends State<LyricsScreen> {
   final ScrollController _scrollController = ScrollController();
   static int? _lastBg; // 한 번 읽은 배경 번호 기억 (다음에 열 때 바로)
   int _bg = _lastBg ?? 1; // 1~11 = 사진
+  static bool _random = false; // 🔀 랜덤: 노래가 바뀔 때마다 다른 사진
+  static String _randomSongKey = ''; // 랜덤 사진을 고른 노래 (같은 노래 동안은 그대로)
   final Map<int, GlobalKey> _lineKeys = {}; // 줄마다 위치 (지금 줄로 부드럽게 이동)
   int _lastLine = -1;
   final ScrollController _plainController = ScrollController(); // 시간 없는 가사용
@@ -86,6 +90,10 @@ class _LyricsScreenState extends State<LyricsScreen> {
     });
     SharedPreferences.getInstance().then((p) {
       // 고른 사진은 파일 이름으로 기억 (예전 번호로 저장한 것도 알아보기)
+      // 🔀 랜덤을 골라뒀으면 사진 고정 대신 랜덤 (노래마다 바뀜)
+      final random = p.getBool('lyricsBgRandom') ?? false;
+      if (random != _random && mounted) setState(() => _random = random);
+      if (random) return;
       final old = p.getInt('lyricsBg');
       final f = p.getString('lyricsBgFile') ?? (old != null ? 'lyrics_bg_$old.jpg' : null);
       if (f == null || !mounted) return;
@@ -130,6 +138,59 @@ class _LyricsScreenState extends State<LyricsScreen> {
   }
 
   Color get _ink => _light ? const Color(0xFF17140F) : Colors.white;
+
+  /// 🔀 지금 사진과 다른 사진 하나 고르기
+  int _randomIndex() {
+    final n = _kLyricsBgCount;
+    if (n <= 1) return 1;
+    var i = _bg;
+    while (i == _bg) {
+      i = 1 + math.Random().nextInt(n);
+    }
+    return i;
+  }
+
+  /// 🔀 노래마다 바꾸기 켜기·끄기 (창은 열어둔 채로)
+  Future<void> _setRandom(bool on, StateSetter setSheet) async {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    if (on) {
+      final song = context.read<PlayerProvider>().currentSong;
+      final next = _randomIndex(); // 켜자마자 사진이 바뀌는 게 보이게
+      setState(() {
+        _random = true;
+        _randomSongKey = song?.uri ?? song?.title ?? ''; // 지금 노래는 이 사진으로
+        _bg = next;
+      });
+      _lastBg = next;
+    } else {
+      setState(() => _random = false); // 지금 보이는 사진으로 고정
+    }
+    setSheet(() {});
+    final p = await SharedPreferences.getInstance();
+    await p.setBool('lyricsBgRandom', on);
+    if (!on) await p.setString('lyricsBgFile', _bgs[(_bg - 1).clamp(0, _bgs.length - 1)].file);
+  }
+
+  /// 📤 공유 버튼: 지금 부르는 줄로 카드 (전주라 아직 없으면 앞 줄 → 첫 줄)
+  void _shareNow(LyricsProvider lp, PlayerProvider pp) {
+    var line = '';
+    if (lp.lyrics.isNotEmpty) {
+      for (var j = lp.currentLineIndex; j >= 0 && j < lp.lyrics.length; j--) {
+        line = lp.lyrics[j].text.trim();
+        if (line.isNotEmpty) break;
+      }
+      if (line.isEmpty) {
+        line = lp.lyrics.map((l) => l.text.trim()).firstWhere((t) => t.isNotEmpty, orElse: () => '');
+      }
+    } else {
+      line = lp.plainLyrics.split('\n').map((l) => l.trim()).firstWhere((t) => t.isNotEmpty, orElse: () => '');
+    }
+    if (line.isEmpty) {
+      showParanToast(context, '가사가 있어야 카드를 만들 수 있어요');
+      return;
+    }
+    _openCard(line, pp);
+  }
 
   /// 🎴 가사 한 줄 꾹 → 카드 공유 창
   void _openCard(String line, PlayerProvider playerProvider) {
@@ -237,15 +298,19 @@ class _LyricsScreenState extends State<LyricsScreen> {
       title: '가사 배경',
       builder: (ctx, setSheet) {
         Widget tile(int i) {
-          final selected = _bg == i;
+          final selected = !_random && _bg == i;
           return GestureDetector(
             onTap: () async {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              setState(() => _bg = i);
+              setState(() {
+                _bg = i;
+                _random = false; // 사진을 하나 고르면 랜덤은 끄고 이 사진으로 고정
+              });
               _lastBg = i;
               setSheet(() {});
               final p = await SharedPreferences.getInstance();
               await p.setString('lyricsBgFile', _bgs[(i - 1).clamp(0, _bgs.length - 1)].file);
+              await p.setBool('lyricsBgRandom', false);
               if (ctx.mounted) Navigator.pop(ctx);
             },
             child: AspectRatio(
@@ -292,14 +357,56 @@ class _LyricsScreenState extends State<LyricsScreen> {
           );
         }
 
-        return GridView.count(
-          crossAxisCount: 3,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
-          childAspectRatio: 9 / 16,
-          children: [for (var i = 1; i <= _kLyricsBgCount; i++) tile(i)], // 사진만 (단색 칸 뺌)
+        final dark = context.read<ThemeProvider>().isDarkMode;
+        final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+        final sub = dark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // 🔀 노래마다 바꾸기 (스위치 — 설정 화면 스위치와 같은 모양)
+            ParanCard(
+              children: [
+                InkWell(
+                  onTap: () => _setRandom(!_random, setSheet),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(14, 10, 8, 10),
+                    child: Row(
+                      children: [
+                        SizedBox(width: 22, child: Icon(Icons.shuffle_rounded, color: sub, size: 20)),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('노래마다 바꾸기',
+                                  style: TextStyle(color: ink, fontSize: 14, fontWeight: FontWeight.w500)),
+                              const SizedBox(height: 2),
+                              Text('노래가 바뀔 때마다 다른 사진', style: TextStyle(color: sub, fontSize: 11.5)),
+                            ],
+                          ),
+                        ),
+                        Switch(
+                          value: _random,
+                          onChanged: (v) => _setRandom(v, setSheet),
+                          activeColor: Theme.of(ctx).colorScheme.primary,
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            GridView.count(
+              crossAxisCount: 3,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+              childAspectRatio: 9 / 16,
+              children: [for (var i = 1; i <= _kLyricsBgCount; i++) tile(i)],
+            ),
+          ],
         );
       },
     );
@@ -311,6 +418,14 @@ class _LyricsScreenState extends State<LyricsScreen> {
     final playerProvider = context.watch<PlayerProvider>();
     final primaryColor = Theme.of(context).colorScheme.primary;
 
+
+    // 🔀 랜덤: 노래가 바뀌면 다른 사진으로 (같은 노래 듣는 동안은 그대로)
+    final songKey = playerProvider.currentSong?.uri ?? playerProvider.currentSong?.title ?? '';
+    if (_random && songKey.isNotEmpty && songKey != _randomSongKey) {
+      _randomSongKey = songKey;
+      _bg = _randomIndex();
+      _lastBg = _bg;
+    }
 
     lyricsProvider.updateCurrentLine(playerProvider.position);
 
@@ -382,6 +497,12 @@ class _LyricsScreenState extends State<LyricsScreen> {
             icon: Icon(Icons.keyboard_arrow_down_rounded, color: _ink, size: 30),
           ),
           actions: [
+            // 📤 가사 카드 공유 (가사가 있을 때만)
+            if (lyricsProvider.hasLyrics)
+              IconButton(
+                onPressed: () => _shareNow(lyricsProvider, playerProvider),
+                icon: Icon(Icons.ios_share_rounded, color: _ink.withOpacity(0.85)),
+              ),
             // ⏱ 박자 맞추기 (시간 있는 가사일 때만)
             if (lyricsProvider.lyrics.isNotEmpty)
               IconButton(

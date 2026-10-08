@@ -1626,16 +1626,17 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
                   initial: widget.video.titleDisplay,
                 );
                 if (newName != null && newName.isNotEmpty) {
-                  await const MethodChannel('kr.ssing.catsong/media')
-                      .invokeMethod('renameVideo', {
+                  final ok = await const MethodChannel('kr.ssing.catsong/media')
+                      .invokeMethod<bool>('renameVideo', {
                     'uri': widget.video.uri,
                     'newName': newName,
                   });
-                  if (!context.mounted) return;
+                  if (ok != true || !context.mounted) return; // 폰 확인 창에서 취소하면 그대로
                   final vp = context.read<VideoProvider>();
                   await vp.carrySeen(widget.video.uri, newName); // 이름 바꿔도 NEW 안 붙게
                   vp.loadVideos(quiet: true);
                   if (!context.mounted) return;
+                  showActionFeedback(context, type: ActionFeedbackType.edited, message: '이름을 바꿨어요');
                   Navigator.pop(context);
                 }
               } else if (value == 'delete') {

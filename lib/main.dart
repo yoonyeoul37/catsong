@@ -242,6 +242,11 @@ class MyApp extends StatelessWidget {
                   color: themeProvider.isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F),
                   fontSize: 14,
                 ),
+                // 새 방식 메뉴도 글자색이 배경과 겹치지 않게
+                labelTextStyle: WidgetStatePropertyAll(TextStyle(
+                  color: themeProvider.isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F),
+                  fontSize: 14,
+                )),
               ),
             ),
             builder: (context, child) {

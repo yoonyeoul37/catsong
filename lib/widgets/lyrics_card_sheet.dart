@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/theme_provider.dart';
 import 'paran_dialog.dart';
 import 'paran_toast.dart';
@@ -55,6 +56,15 @@ const _kCardColors = <(String, Color, bool)>[
   ('라벤더', Color(0xFF8A6FD1), false),
 ];
 
+/// 그라데이션 배경 (요즘 인기 있는 스타일)
+const _kCardGradients = <(String, List<Color>)>[
+  ('밤하늘', [Color(0xFF232A4D), Color(0xFF5B4A7A)]),
+  ('노을', [Color(0xFF6B4A3A), Color(0xFFE0915F)]),
+  ('바다', [Color(0xFF1F4E6B), Color(0xFF6FB3C9)]),
+  ('라벤더', [Color(0xFF4A3F7A), Color(0xFFC79ACF)]),
+  ('숲', [Color(0xFF233D32), Color(0xFF7FA77A)]),
+];
+
 class _LyricsCardSheet extends StatefulWidget {
   final String line;
   final String title;
@@ -81,6 +91,180 @@ int _color = 0;
 String? _mine; // 내 사진 경로
 bool _busy = false;
 
+// ── 3단계 ──
+String? _text; // 고친 가사 (없으면 처음 고른 그대로)
+String get _line => _text ?? widget.line;
+List<String> _myList = []; // 내 사진 목록 (가사 배경 '내 사진'과 같이 씀)
+bool _mineLight = false; // 내 사진이 밝은지
+
+@override
+void initState() {
+  super.initState();
+  SharedPreferences.getInstance().then((p) {
+    final l = (p.getStringList('lyricsMyPhotos') ?? []).where((f) => File(f).existsSync()).toList();
+    if (mounted) setState(() => _myList = l);
+  });
+}
+
+/// 사진 위쪽 60%가 밝은지 재보기 → 글자색 자동
+Future<bool> _isBright(String path) async {
+  try {
+    final bytes = await File(path).readAsBytes();
+    final codec = await ui.instantiateImageCodec(bytes, targetWidth: 40);
+    final frame = await codec.getNextFrame();
+    final img = frame.image;
+    final data = await img.toByteData(format: ui.ImageByteFormat.rawRgba);
+    if (data == null) return false;
+    final w = img.width, rows = (img.height * 0.6).round();
+    var sum = 0.0;
+    var n = 0;
+    for (var y = 0; y < rows; y++) {
+      for (var x = 0; x < w; x++) {
+        final i = (y * w + x) * 4;
+        sum += 0.299 * data.getUint8(i) + 0.587 * data.getUint8(i + 1) + 0.114 * data.getUint8(i + 2);
+        n++;
+      }
+    }
+    img.dispose();
+    return n > 0 && sum / n > 150;
+  } catch (_) {
+    return false;
+  }
+}
+
+/// 내 사진 하나로 배경 바꾸기
+Future<void> _useMine(String path) async {
+  final light = await _isBright(path);
+  if (!mounted) return;
+  setState(() {
+    _mine = path;
+    _mineLight = light;
+    _kind = _BgKind.mine;
+  });
+}
+
+/// ✏️ 글자 고치기 (엔터로 줄 바꾸기 · 오타 고치기)
+Future<void> _editText() async {
+  _vib();
+  final dark = context.read<ThemeProvider>().isDarkMode;
+  final bg = dark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
+  final card = dark ? const Color(0xFF332E26) : Colors.white;
+  final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+  final sub = dark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
+  final line = dark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
+  final ctrl = TextEditingController(text: _line);
+  final result = await showDialog<String>(
+    context: context,
+    builder: (ctx) => Dialog(
+      backgroundColor: bg,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 18, 20, 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text('글자 고치기',
+                      style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
+                ),
+                ParanCloseX(onTap: () => Navigator.pop(ctx)),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text('엔터로 줄을 바꿀 수 있어요', style: TextStyle(color: sub, fontSize: 12)),
+            const SizedBox(height: 12),
+            Container(
+              decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(14)),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+              child: TextField(
+                controller: ctrl,
+                autofocus: true,
+                minLines: 3,
+                maxLines: 8,
+                keyboardType: TextInputType.multiline,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: ink, fontSize: 16, height: 1.5, fontWeight: FontWeight.w600),
+                decoration: const InputDecoration(border: InputBorder.none),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 48,
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(ctx, widget.line), // 처음 고른 가사로
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: ink,
+                        side: BorderSide(color: line),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      ),
+                      child: const Text('원래대로', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: SizedBox(
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(ctx, ctrl.text),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ink,
+                        foregroundColor: bg,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      ),
+                      child: const Text('적용', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+  // 창이 다 사라진 뒤에 치우기 (바로 치우면 오류)
+  Future.delayed(const Duration(milliseconds: 400), ctrl.dispose);
+  if (result == null || !mounted) return;
+  // 앞뒤 빈 줄 정리 (비우면 처음 가사로)
+  final t = result.split('\n').map((l) => l.trimRight()).join('\n').trim();
+  setState(() => _text = (t.isEmpty || t == widget.line) ? null : t);
+}
+
+// ── 꾸미기 (2단계) ──
+int _tab = 0; // 0 배경 · 1 글꼴 · 2 비율 · 3 제목
+int _font = 0; // 글꼴
+bool _left = false; // 왼쪽 정렬
+double _scale = 1.0; // 글자 크기 (작게 0.85 · 보통 1 · 크게 1.15)
+int _ratio = 2; // 비율 (기본 4:5)
+int _titlePos = 1; // 제목·가수: 0 위 · 1 아래 · 2 숨기기
+
+static const _fonts = ['깔끔', '편지', '손글씨', '귀여움'];
+static const _ratios = <(String, double)>[('스토리 9:16', 9 / 16), ('피드 1:1', 1.0), ('4:5', 4 / 5)];
+
+/// 고른 글꼴로 바꾸기 (f를 주면 그 글꼴로 — 글꼴 고르는 칸 미리보기용)
+TextStyle _fontStyle(TextStyle s, [int? f]) {
+  switch (f ?? _font) {
+    case 1:
+      return GoogleFonts.gowunBatang(textStyle: s.copyWith(fontWeight: FontWeight.w700));
+    case 2:
+      return GoogleFonts.nanumPenScript(
+          textStyle: s.copyWith(fontSize: (s.fontSize ?? 20) * 1.3, fontWeight: FontWeight.w400, height: 1.25));
+    case 3:
+      return GoogleFonts.gaegu(textStyle: s.copyWith(fontWeight: FontWeight.w700));
+    default:
+      return s;
+  }
+}
+
 static void _vib() => const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
 
 /// 지금 배경이 밝은지 (밝으면 글자 먹색)
@@ -89,9 +273,9 @@ switch (_kind) {
 case _BgKind.photo:
 return widget.photos.isNotEmpty && widget.photos[_photo].light;
 case _BgKind.color:
-return _kCardColors[_color].$3;
+return _color < _kCardColors.length && _kCardColors[_color].$3; // 그라데이션은 어두운 색이라 흰 글자
 case _BgKind.mine:
-return false; // 내 사진은 어둡게 막을 깔고 흰 글자
+return _mineLight; // 내 사진은 밝기 재서 자동
 }
 }
 
@@ -101,8 +285,26 @@ Color get _ink => _light ? const Color(0xFF17140F) : Colors.white;
 Widget _card() {
 final ink = _ink;
 final shadow = _light ? const <Shadow>[] : [Shadow(color: Colors.black.withOpacity(0.35), blurRadius: 10)];
-final len = widget.line.length;
-final size = len <= 14 ? 25.0 : (len <= 28 ? 22.0 : 19.0); // 긴 줄은 조금 작게
+// 여러 줄이면 줄 수·가장 긴 줄에 맞춰 글자 크기
+final lines = _line.split('\n');
+var longest = 0;
+for (final l in lines) {
+  if (l.length > longest) longest = l.length;
+}
+final n = lines.length;
+final size = (n >= 4 ? 17.0 : (n == 3 ? 19.0 : (longest <= 14 ? 25.0 : (longest <= 28 ? 22.0 : 19.0)))) * _scale;
+final align = _left ? TextAlign.left : TextAlign.center;
+// 노래 제목 · 가수 (위·아래·숨기기)
+final titleText = SizedBox(
+  width: double.infinity,
+  child: Text(
+    '${widget.title} · ${widget.artist}',
+    textAlign: align,
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
+    style: TextStyle(color: ink.withOpacity(0.75), fontSize: 12.5, fontWeight: FontWeight.w600, shadows: shadow),
+  ),
+);
 
 Widget bg;
 switch (_kind) {
@@ -116,7 +318,17 @@ errorWidget: (_, __, ___) => Container(color: const Color(0xFF14110C)),
 );
 break;
 case _BgKind.color:
-bg = Container(color: _kCardColors[_color].$2);
+bg = _color < _kCardColors.length
+    ? Container(color: _kCardColors[_color].$2)
+    : DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: _kCardGradients[_color - _kCardColors.length].$2,
+          ),
+        ),
+      );
 break;
 case _BgKind.mine:
 bg = _mine == null
@@ -136,7 +348,7 @@ borderRadius: BorderRadius.circular(18),
 child: RepaintBoundary(
 key: _cardKey,
 child: AspectRatio(
-aspectRatio: 4 / 5, // 인스타·카톡에 잘 맞는 크기
+aspectRatio: _ratios[_ratio].$2, // 스토리 9:16 · 피드 1:1 · 4:5
 child: Stack(
 fit: StackFit.expand,
 children: [
@@ -149,42 +361,28 @@ crossAxisAlignment: CrossAxisAlignment.start,
 children: [
 Icon(Icons.format_quote_rounded, color: ink.withOpacity(0.55), size: 30),
 const Spacer(),
-// 가사 한 줄 (가운데 크게)
+if (_titlePos == 0) ...[titleText, const SizedBox(height: 14)],
+// 고른 가사 (가운데 크게)
 SizedBox(
 width: double.infinity,
 child: Text(
-widget.line,
-textAlign: TextAlign.center,
-maxLines: 5,
+_line,
+textAlign: align,
+maxLines: 10,
 overflow: TextOverflow.ellipsis,
-style: TextStyle(
+style: _fontStyle(TextStyle(
 color: ink,
 fontSize: size,
 height: 1.45,
 fontWeight: FontWeight.w800,
 letterSpacing: -0.3,
 shadows: shadow,
+)),
 ),
 ),
-),
-const SizedBox(height: 16),
-// 노래 제목 · 가수
-SizedBox(
-width: double.infinity,
-child: Text(
-'${widget.title} · ${widget.artist}',
-textAlign: TextAlign.center,
-maxLines: 1,
-overflow: TextOverflow.ellipsis,
-style: TextStyle(
-color: ink.withOpacity(0.75),
-fontSize: 12.5,
-fontWeight: FontWeight.w600,
-shadows: shadow,
-),
-),
-),
+if (_titlePos == 1) ...[const SizedBox(height: 16), titleText],
 const Spacer(),
+// 오른쪽 아래 Paransori (항상)
 Align(alignment: Alignment.bottomRight, child: _watermark(ink, shadow)),
 ],
 ),
@@ -238,16 +436,18 @@ if (mounted) setState(() => _busy = false);
 }
 }
 
-/// 내 사진 고르기
+/// 내 사진 고르기 → 가사 배경 '내 사진' 목록에도 같이 넣기
 Future<void> _pickMine() async {
 _vib();
 try {
 final x = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 1600, imageQuality: 90);
 if (x == null || !mounted) return;
-setState(() {
-_mine = x.path;
-_kind = _BgKind.mine;
-});
+if (!_myList.contains(x.path)) {
+setState(() => _myList.insert(0, x.path));
+final p = await SharedPreferences.getInstance();
+await p.setStringList('lyricsMyPhotos', _myList);
+}
+await _useMine(x.path);
 } catch (e) {
 debugPrint('사진 고르기 오류: $e');
 if (mounted) showParanToast(context, '사진을 불러오지 못했어요', error: true);
@@ -262,7 +462,22 @@ final card = dark ? const Color(0xFF332E26) : Colors.white;
 final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
 final sub = dark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
 final line = dark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
-final maxCardW = (MediaQuery.sizeOf(context).height * 0.42) * 4 / 5; // 작은 폰에서도 아래 버튼이 보이게
+final maxCardW = (MediaQuery.sizeOf(context).height * 0.42) * _ratios[_ratio].$2; // 작은 폰에서도 아래 버튼이 보이게
+
+// 작은 알약 버튼 (고르면 먹색)
+Widget pill(String label, bool on, VoidCallback onTap) => GestureDetector(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        onTap();
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 9),
+        decoration: BoxDecoration(color: on ? ink : card, borderRadius: BorderRadius.circular(12)),
+        child: Text(label,
+            style: TextStyle(
+                color: on ? bg : sub, fontSize: 13, fontWeight: on ? FontWeight.w700 : FontWeight.w500)),
+      ),
+    );
 
 // 고르는 칸 (사진 · 색 · 내 사진) — 고르면 먹색으로 채움 (이퀄라이저 칸과 같은 모양)
 Widget chip(String label, _BgKind k, VoidCallback onTap) {
@@ -325,7 +540,7 @@ break;
 case _BgKind.color:
 options = ListView.separated(
 scrollDirection: Axis.horizontal,
-itemCount: _kCardColors.length,
+itemCount: _kCardColors.length + _kCardGradients.length,
 separatorBuilder: (_, __) => const SizedBox(width: 10),
 itemBuilder: (_, i) => GestureDetector(
 onTap: () {
@@ -338,7 +553,14 @@ padding: const EdgeInsets.all(3),
 decoration: pickBorder(_color == i, circle: true),
 child: Container(
 decoration: BoxDecoration(
-color: _kCardColors[i].$2,
+color: i < _kCardColors.length ? _kCardColors[i].$2 : null,
+gradient: i < _kCardColors.length
+    ? null
+    : LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: _kCardGradients[i - _kCardColors.length].$2,
+      ),
 shape: BoxShape.circle,
 border: Border.all(color: line), // 크림색도 바탕과 구분되게
 ),
@@ -348,37 +570,37 @@ border: Border.all(color: line), // 크림색도 바탕과 구분되게
 );
 break;
 case _BgKind.mine:
-options = Row(
-crossAxisAlignment: CrossAxisAlignment.stretch,
+options = ListView(
+scrollDirection: Axis.horizontal,
 children: [
-if (_mine != null) ...[
-Container(
-width: 52,
-padding: const EdgeInsets.all(2),
-decoration: pickBorder(true),
-child: ClipRRect(
-borderRadius: BorderRadius.circular(9),
-child: Image.file(File(_mine!), fit: BoxFit.cover, cacheWidth: 160),
-),
-),
-const SizedBox(width: 10),
-],
+// + 추가
 GestureDetector(
 onTap: _pickMine,
 child: Container(
-padding: const EdgeInsets.symmetric(horizontal: 16),
+width: 52,
 decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(12)),
-child: Row(
-mainAxisSize: MainAxisSize.min,
-children: [
-Icon(Icons.add_photo_alternate_outlined, color: sub, size: 20),
+child: Icon(Icons.add_rounded, color: sub, size: 24),
+),
+),
+for (final f in _myList) ...[
 const SizedBox(width: 8),
-Text(_mine == null ? '사진 고르기' : '다른 사진',
-style: TextStyle(color: ink, fontSize: 13.5, fontWeight: FontWeight.w600)),
+GestureDetector(
+onTap: () {
+HapticFeedback.selectionClick();
+_useMine(f);
+},
+child: Container(
+width: 52,
+padding: const EdgeInsets.all(2),
+decoration: pickBorder(_kind == _BgKind.mine && _mine == f),
+child: ClipRRect(
+borderRadius: BorderRadius.circular(9),
+child: Image.file(File(f), fit: BoxFit.cover, cacheWidth: 160,
+errorBuilder: (_, __, ___) => Container(color: line)),
+),
+),
+),
 ],
-),
-),
-),
 ],
 );
 break;
@@ -418,37 +640,169 @@ const SizedBox(height: 4),
 // 안내: 다른 줄 고르는 법
 Align(
   alignment: Alignment.centerLeft,
-  child: Text('다른 줄은 가사를 꾹 눌러 고를 수 있어요', style: TextStyle(color: sub, fontSize: 12)),
+  child: Text('가사를 꾹 누르고 다른 줄을 누르면 여러 줄을 고를 수 있어요', style: TextStyle(color: sub, fontSize: 12)),
 ),
 const SizedBox(height: 12),
   // 카드 미리보기
   Center(
     child: ConstrainedBox(
       constraints: BoxConstraints(maxWidth: maxCardW),
-      child: _card(),
+      // 카드 글자를 누르면 고치기
+      child: GestureDetector(onTap: _editText, child: _card()),
     ),
   ),
   const SizedBox(height: 16),
-  // 배경 종류
+  // 탭: 배경 · 글꼴 · 비율 · 제목
   Row(
     children: [
-      if (widget.photos.isNotEmpty) ...[
-        chip('사진', _BgKind.photo, () => setState(() => _kind = _BgKind.photo)),
-        const SizedBox(width: 6),
-      ],
-      chip('색', _BgKind.color, () => setState(() => _kind = _BgKind.color)),
-      const SizedBox(width: 6),
-      chip('내 사진', _BgKind.mine, () {
-        if (_mine == null) {
-          _pickMine();
-        } else {
-          setState(() => _kind = _BgKind.mine);
-        }
-      }),
+      for (final (i, label, icon) in const [
+        (0, '배경', Icons.photo_outlined),
+        (1, '글꼴', Icons.text_fields_rounded),
+        (2, '비율', Icons.crop_rounded),
+        (3, '제목', Icons.title_rounded),
+        (4, '글자', Icons.edit_rounded),
+      ])
+        Expanded(
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              HapticFeedback.selectionClick();
+              if (i == 4) {
+                _editText(); // 글자는 바로 고치는 창
+                return;
+              }
+              setState(() => _tab = i);
+            },
+            child: Column(
+              children: [
+                Icon(icon, size: 20, color: _tab == i ? ink : sub),
+                const SizedBox(height: 3),
+                Text(label,
+                    style: TextStyle(
+                        color: _tab == i ? ink : sub,
+                        fontSize: 11.5,
+                        fontWeight: _tab == i ? FontWeight.w700 : FontWeight.w500)),
+                const SizedBox(height: 6),
+                Container(
+                  height: 2.5,
+                  width: 22,
+                  decoration: BoxDecoration(
+                      color: _tab == i ? ink : Colors.transparent, borderRadius: BorderRadius.circular(2)),
+                ),
+              ],
+            ),
+          ),
+        ),
     ],
   ),
-  const SizedBox(height: 10),
-  SizedBox(height: 56, child: options),
+  const SizedBox(height: 12),
+  SizedBox(
+    height: 104,
+    child: _tab == 1
+        // 글꼴 4종 + 정렬 + 크기
+        ? Column(
+            children: [
+              Row(
+                children: [
+                  for (var i = 0; i < _fonts.length; i++) ...[
+                    if (i > 0) const SizedBox(width: 8),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          HapticFeedback.selectionClick();
+                          setState(() => _font = i);
+                        },
+                        child: Container(
+                          height: 54,
+                          decoration: BoxDecoration(
+                            color: card,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: _font == i ? ink : Colors.transparent, width: 2),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('가나다',
+                                  style: _fontStyle(
+                                      TextStyle(color: ink, fontSize: 15, fontWeight: FontWeight.w700), i)),
+                              const SizedBox(height: 2),
+                              Text(_fonts[i], style: TextStyle(color: sub, fontSize: 10.5)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  pill('가운데', !_left, () => setState(() => _left = false)),
+                  const SizedBox(width: 6),
+                  pill('왼쪽', _left, () => setState(() => _left = true)),
+                  const Spacer(),
+                  pill('A-', _scale < 1, () => setState(() => _scale = 0.85)),
+                  const SizedBox(width: 6),
+                  pill('A', _scale == 1, () => setState(() => _scale = 1.0)),
+                  const SizedBox(width: 6),
+                  pill('A+', _scale > 1, () => setState(() => _scale = 1.15)),
+                ],
+              ),
+            ],
+          )
+        : _tab == 2
+            // 비율
+            ? Align(
+                alignment: Alignment.topLeft,
+                child: Wrap(
+                  spacing: 6,
+                  children: [
+                    for (var i = 0; i < _ratios.length; i++)
+                      pill(_ratios[i].$1, _ratio == i, () => setState(() => _ratio = i)),
+                  ],
+                ),
+              )
+            : _tab == 3
+                // 제목·가수 위치
+                ? Align(
+                    alignment: Alignment.topLeft,
+                    child: Wrap(
+                      spacing: 6,
+                      children: [
+                        pill('위', _titlePos == 0, () => setState(() => _titlePos = 0)),
+                        pill('아래', _titlePos == 1, () => setState(() => _titlePos = 1)),
+                        pill('숨기기', _titlePos == 2, () => setState(() => _titlePos = 2)),
+                      ],
+                    ),
+                  )
+                // 배경 (사진 · 색 · 내 사진)
+                : Column(
+                    children: [
+                      Row(
+                        children: [
+                          if (widget.photos.isNotEmpty) ...[
+                            chip('사진', _BgKind.photo, () => setState(() => _kind = _BgKind.photo)),
+                            const SizedBox(width: 6),
+                          ],
+                          chip('색', _BgKind.color, () => setState(() => _kind = _BgKind.color)),
+                          const SizedBox(width: 6),
+                          chip('내 사진', _BgKind.mine, () {
+                            if (_mine != null) {
+                              setState(() => _kind = _BgKind.mine);
+                            } else if (_myList.isNotEmpty) {
+                              _useMine(_myList.first);
+                            } else {
+                              _pickMine();
+                            }
+                          }),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(height: 56, child: options),
+                    ],
+                  ),
+  ),
   const SizedBox(height: 16),
   // 큰 버튼: 먹색 (다크 모드는 크림색)
   SizedBox(

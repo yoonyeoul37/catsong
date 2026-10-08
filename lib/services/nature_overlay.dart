@@ -223,6 +223,12 @@ void showNatureOverlaySheet(BuildContext context) {
                       },
                       child: const Text('모두 끄기', style: TextStyle(color: Color(0xFF8A857B))),
                     ),
+                  // ✕ 닫기 (다른 창들과 같은 자리)
+                  IconButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    visualDensity: VisualDensity.compact,
+                    icon: const Icon(Icons.close_rounded, color: Color(0xFF8A857B), size: 22),
+                  ),
                 ],
               ),
               Padding(
@@ -278,12 +284,31 @@ void showNatureOverlaySheet(BuildContext context) {
                                         PopupMenuButton<String>(
                                           tooltip: '종류 고르기',
                                           onSelected: (v) => o.setVariant(k, v),
+                                          // 자연소리 창은 항상 베이지라서 메뉴도 흰 카드 + 먹색 글자로 고정
+                                          color: Colors.white,
                                           itemBuilder: (_) => [
                                             for (final name in NatureOverlay.variants[k]!.keys)
-                                              CheckedPopupMenuItem(
+                                              PopupMenuItem(
                                                 value: name,
-                                                checked: o.variantOf(k) == name,
-                                                child: Text(name),
+                                                height: 44,
+                                                child: Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 24,
+                                                      child: o.variantOf(k) == name
+                                                          ? const Icon(Icons.check_rounded, size: 18, color: blue)
+                                                          : null,
+                                                    ),
+                                                    const SizedBox(width: 6),
+                                                    Text(name,
+                                                        style: TextStyle(
+                                                            color: const Color(0xFF17140F),
+                                                            fontSize: 14,
+                                                            fontWeight: o.variantOf(k) == name
+                                                                ? FontWeight.w700
+                                                                : FontWeight.w400)),
+                                                  ],
+                                                ),
                                               ),
                                           ],
                                           child: Container(

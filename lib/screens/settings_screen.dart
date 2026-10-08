@@ -312,7 +312,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final ink = _sText(isDarkMode);
     final btnText = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
     const red = Color(0xFFD84A3A);
-    const blue = Color(0xFF2589E8);
+
 
     await showModalBottomSheet(
       context: context,
@@ -384,45 +384,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
               if (unlocked) ...[
-                // ── 성공 ──
-                Center(
-                  child: Container(
-                    width: 56,
-                    height: 56,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: blue.withOpacity(0.12)),
-                    child: const Icon(Icons.card_giftcard_rounded, color: blue, size: 28),
-                  ),
+                // ── 성공 (잡지 느낌: 작은 PARANSORI + 큰 글씨 두 줄) ──
+                Text('PARANSORI',
+                    style: TextStyle(
+                        color: _sTextHint(isDarkMode),
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 1.8)),
+                const SizedBox(height: 8),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: Text('광고 없이\n듣고 계세요',
+                          style: TextStyle(
+                              color: ink,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w800,
+                              height: 1.3,
+                              letterSpacing: -0.5)),
+                    ),
+                    // 오른쪽 작은 그림 (리본 레코드판 = 선물)
+                    Image.asset('assets/promo_thumb.webp', width: 116, height: 116, cacheWidth: 348),
+                  ],
                 ),
-                const SizedBox(height: 12),
-                Text('혜택이 적용됐어요',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: ink, fontSize: 18, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
-                const SizedBox(height: 4),
-                Text('파란소리와 즐거운 시간 보내세요',
-                    textAlign: TextAlign.center,
+                const SizedBox(height: 10),
+                Text('프로모션 코드 혜택이 계속 적용돼요',
                     style: TextStyle(color: _sTextHint(isDarkMode), fontSize: 12.5)),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
-                  decoration: BoxDecoration(color: _sCard(isDarkMode), borderRadius: BorderRadius.circular(14)),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.workspace_premium_rounded, color: Color(0xFFC4962C), size: 22),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('광고 없이 듣기',
-                                style: TextStyle(color: ink, fontSize: 14, fontWeight: FontWeight.w700)),
-                            const SizedBox(height: 2),
-                            Text('계속 적용돼요', style: TextStyle(color: _sTextHint(isDarkMode), fontSize: 11.5)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                const SizedBox(height: 20),
+                Divider(height: 1, thickness: 1, color: _sBorder(isDarkMode)),
                 const SizedBox(height: 16),
                 bigButton(l.confirm, () => Navigator.pop(ctx)),
               ] else ...[

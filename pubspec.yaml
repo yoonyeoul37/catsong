@@ -108,6 +108,7 @@ flutter:
     - assets/sound_fire.jpg
     - assets/exit_banner.jpg
     - assets/exit_banner_night.jpg
+    - assets/promo_thumb.webp
     - assets/update_banner.jpg
     - assets/review_banner.jpg
 

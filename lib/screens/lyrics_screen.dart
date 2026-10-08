@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -71,10 +73,50 @@ class _LyricsScreenState extends State<LyricsScreen> {
   int _bg = _lastBg ?? 1; // 1~11 = 사진
   static bool _random = false; // 🔀 랜덤: 노래가 바뀔 때마다 다른 사진
   static String _randomSongKey = ''; // 랜덤 사진을 고른 노래 (같은 노래 동안은 그대로)
+  static String? _myBg; // 내 사진 배경 (파일 경로) — 있으면 이게 먼저
+  static bool _myLight = false; // 내 사진이 밝은지 (밝으면 먹색 글자, 어두우면 흰 글자)
+  List<String> _myPhotos = []; // 가사 배경용 내 사진 목록
+  bool _manageMy = false; // 내 사진 관리(✕) 모드
   final Map<int, GlobalKey> _lineKeys = {}; // 줄마다 위치 (지금 줄로 부드럽게 이동)
   int _lastLine = -1;
   final ScrollController _plainController = ScrollController(); // 시간 없는 가사용
   DateTime _userScrolledAt = DateTime(2000); // 손으로 움직이면 잠깐 자동 멈춤
+
+  // ── 여러 줄 고르기 (가사 카드) ──
+  int? _selAnchor; // 처음 꾹 누른 줄
+  int? _selOther; // 마지막으로 누른 줄 (여기까지)
+  List<String> _visibleLines = const []; // 지금 화면에 그린 가사 줄들
+  int get _selLo => _selAnchor! < _selOther! ? _selAnchor! : _selOther!;
+  int get _selHi => _selAnchor! > _selOther! ? _selAnchor! : _selOther!;
+  bool _isSel(int i) => _selAnchor != null && i >= _selLo && i <= _selHi;
+  List<String> get _selTexts => _selAnchor == null
+      ? const []
+      : [
+          for (var i = _selLo; i <= _selHi && i < _visibleLines.length; i++)
+            if (_visibleLines[i].trim().isNotEmpty) _visibleLines[i].trim()
+        ];
+
+  /// 꾹 → 이 줄부터 고르기 시작
+  void _startSel(int i) {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    setState(() {
+      _selAnchor = i;
+      _selOther = i;
+    });
+  }
+
+  /// 고르는 중 다른 줄 누르기 → 거기까지 (최대 5줄)
+  void _extendSel(int i) {
+    HapticFeedback.selectionClick();
+    var o = i;
+    if ((o - _selAnchor!).abs() > 4) o = _selAnchor! + (o > _selAnchor! ? 4 : -4);
+    setState(() => _selOther = o);
+  }
+
+  void _cancelSel() => setState(() {
+        _selAnchor = null;
+        _selOther = null;
+      });
 
   @override
   void initState() {
@@ -94,6 +136,15 @@ class _LyricsScreenState extends State<LyricsScreen> {
       // 🔀 랜덤을 골라뒀으면 사진 고정 대신 랜덤 (노래마다 바뀜)
       final random = p.getBool('lyricsBgRandom') ?? false;
       if (random != _random && mounted) setState(() => _random = random);
+      // 내 사진 목록 (지워진 파일은 빼기)
+      _myPhotos = (p.getStringList('lyricsMyPhotos') ?? []).where((f) => File(f).existsSync()).toList();
+      final my = p.getString('lyricsBgMy');
+      if (!random && my != null && File(my).existsSync()) {
+        _myLight = p.getBool('lyricsBgMyLight') ?? false;
+        if (mounted) setState(() => _myBg = my);
+        return;
+      }
+      if (_myBg != null && mounted) setState(() => _myBg = null);
       if (random) return;
       final old = p.getInt('lyricsBg');
       final f = p.getString('lyricsBgFile') ?? (old != null ? 'lyrics_bg_$old.jpg' : null);
@@ -113,7 +164,79 @@ class _LyricsScreenState extends State<LyricsScreen> {
     super.dispose();
   }
 
-  bool get _light => _bg != 0 && _kLightBgs.contains(_bg);
+  bool get _light => _myBg != null ? _myLight : (_bg != 0 && _kLightBgs.contains(_bg));
+  bool get _hasPhoto => _myBg != null || _bg != 0;
+  bool get _busy => _myBg != null || _kBusyBgs.contains(_bg); // 내 사진은 글자가 잘 보이게 막을 조금 진하게
+
+  /// 사진 위쪽 60%(가사 자리)가 밝은지 재보기 → 글자색 자동
+  Future<bool> _isBright(String path) async {
+    try {
+      final bytes = await File(path).readAsBytes();
+      final codec = await ui.instantiateImageCodec(bytes, targetWidth: 40);
+      final frame = await codec.getNextFrame();
+      final img = frame.image;
+      final data = await img.toByteData(format: ui.ImageByteFormat.rawRgba);
+      if (data == null) return false;
+      final w = img.width, rows = (img.height * 0.6).round();
+      var sum = 0.0;
+      var n = 0;
+      for (var y = 0; y < rows; y++) {
+        for (var x = 0; x < w; x++) {
+          final i = (y * w + x) * 4;
+          sum += 0.299 * data.getUint8(i) + 0.587 * data.getUint8(i + 1) + 0.114 * data.getUint8(i + 2);
+          n++;
+        }
+      }
+      img.dispose();
+      return n > 0 && sum / n > 150;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// 내 사진으로 배경 바꾸기
+  Future<void> _useMyPhoto(String path) async {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    final light = await _isBright(path);
+    if (!mounted) return;
+    setState(() {
+      _myBg = path;
+      _myLight = light;
+      _random = false;
+    });
+    final p = await SharedPreferences.getInstance();
+    await p.setString('lyricsBgMy', path);
+    await p.setBool('lyricsBgMyLight', light);
+    await p.setBool('lyricsBgRandom', false);
+  }
+
+  /// + 사진 추가 (여러 장 한 번에, 넣자마자 첫 장으로)
+  Future<void> _addMyPhotos(StateSetter setSheet) async {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    final picked = await ImagePicker().pickMultiImage(imageQuality: 90, maxWidth: 1440);
+    if (picked.isEmpty || !mounted) return;
+    for (final f in picked.reversed) {
+      if (!_myPhotos.contains(f.path)) _myPhotos.insert(0, f.path);
+    }
+    setSheet(() {});
+    final p = await SharedPreferences.getInstance();
+    await p.setStringList('lyricsMyPhotos', _myPhotos);
+    await _useMyPhoto(picked.first.path);
+    setSheet(() {});
+  }
+
+  /// 관리 ✕: 목록에서 빼기 (지금 배경이면 파란소리 사진으로 돌아가기)
+  Future<void> _removeMyPhoto(String path, StateSetter setSheet) async {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    _myPhotos.remove(path);
+    final wasCurrent = _myBg == path;
+    if (wasCurrent) setState(() => _myBg = null);
+    if (_myPhotos.isEmpty) _manageMy = false;
+    setSheet(() {});
+    final p = await SharedPreferences.getInstance();
+    await p.setStringList('lyricsMyPhotos', _myPhotos);
+    if (wasCurrent) await p.remove('lyricsBgMy');
+  }
 
   /// 오른쪽 아래 워터마크 — 한국: 파란소리 | Paransori / 해외: ParanSori (한 줄, 은은하게)
   Widget _watermark(BuildContext context, {double scale = 1}) {
@@ -155,6 +278,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
         _random = true;
         _randomSongKey = song?.uri ?? song?.title ?? ''; // 지금 노래는 이 사진으로
         _bg = next;
+        _myBg = null; // 랜덤은 파란소리 사진 중에서
       });
       _lastBg = next;
     } else {
@@ -288,17 +412,19 @@ class _LyricsScreenState extends State<LyricsScreen> {
   /// 🖼 배경 고르기 창
   void _pickBackground() {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    _manageMy = false;
     showParanSheet(
       context,
       title: '가사 배경',
       builder: (ctx, setSheet) {
         Widget tile(int i) {
-          final selected = !_random && _bg == i;
+          final selected = !_random && _myBg == null && _bg == i;
           return GestureDetector(
             onTap: () async {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
               setState(() {
                 _bg = i;
+                _myBg = null; // 파란소리 사진을 고르면 내 사진은 끄기
                 _random = false; // 사진을 하나 고르면 랜덤은 끄고 이 사진으로 고정
               });
               _lastBg = i;
@@ -306,6 +432,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
               final p = await SharedPreferences.getInstance();
               await p.setString('lyricsBgFile', _bgs[(i - 1).clamp(0, _bgs.length - 1)].file);
               await p.setBool('lyricsBgRandom', false);
+              await p.remove('lyricsBgMy');
               if (ctx.mounted) Navigator.pop(ctx);
             },
             child: AspectRatio(
@@ -355,6 +482,92 @@ class _LyricsScreenState extends State<LyricsScreen> {
         final dark = context.read<ThemeProvider>().isDarkMode;
         final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
         final sub = dark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
+
+        // + 사진 추가
+        Widget addTile() => GestureDetector(
+              onTap: () => _addMyPhotos(setSheet),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: dark ? const Color(0xFF26221C) : Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: dark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB), width: 1.2),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add_rounded, color: sub, size: 26),
+                    const SizedBox(height: 4),
+                    Text('사진 추가', style: TextStyle(color: sub, fontSize: 11.5, fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ),
+            );
+
+        // 내 사진 한 장 (관리 모드면 ✕)
+        Widget myTile(String f) {
+          final selected = !_random && _myBg == f;
+          return GestureDetector(
+            onTap: _manageMy
+                ? null
+                : () async {
+                    await _useMyPhoto(f);
+                    setSheet(() {});
+                    if (ctx.mounted) Navigator.pop(ctx);
+                  },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                    color: selected && !_manageMy ? const Color(0xFF17140F) : Colors.transparent, width: 2.5),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image.file(File(f),
+                        fit: BoxFit.cover,
+                        cacheWidth: 270, // 작게 미리보기
+                        errorBuilder: (_, __, ___) => Container(color: const Color(0x22000000))),
+                    if (selected && !_manageMy)
+                      const Positioned(
+                        right: 6,
+                        top: 6,
+                        child: Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
+                      ),
+                    if (_manageMy)
+                      Positioned(
+                        right: 5,
+                        top: 5,
+                        child: GestureDetector(
+                          onTap: () => _removeMyPhoto(f, setSheet),
+                          child: Container(
+                            width: 26,
+                            height: 26,
+                            decoration: const BoxDecoration(color: Color(0xB317140F), shape: BoxShape.circle),
+                            child: const Icon(Icons.close_rounded, size: 16, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        // 칸 제목 (내 사진 · 파란소리 사진)
+        Widget header(String t, {Widget? trailing}) => Padding(
+              padding: const EdgeInsets.fromLTRB(4, 16, 4, 8),
+              child: Row(
+                children: [
+                  Text(t, style: TextStyle(color: ink, fontSize: 13.5, fontWeight: FontWeight.w700)),
+                  const Spacer(),
+                  if (trailing != null) trailing,
+                ],
+              ),
+            );
+
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -392,6 +605,29 @@ class _LyricsScreenState extends State<LyricsScreen> {
                 ),
               ],
             ),
+            // ── 내 사진 ──
+            header('내 사진',
+                trailing: _myPhotos.isEmpty
+                    ? null
+                    : GestureDetector(
+                        onTap: () => setSheet(() => _manageMy = !_manageMy),
+                        child: Text(_manageMy ? '완료' : '관리',
+                            style: TextStyle(
+                                color: _manageMy ? Theme.of(ctx).colorScheme.primary : sub,
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.w600)),
+                      )),
+            GridView.count(
+              crossAxisCount: 3,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+              childAspectRatio: 9 / 16,
+              children: [if (!_manageMy) addTile(), for (final f in _myPhotos) myTile(f)],
+            ),
+            // ── 파란소리 사진 ──
+            header('파란소리 사진'),
             GridView.count(
               crossAxisCount: 3,
               shrinkWrap: true,
@@ -498,6 +734,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // 손으로 움직인 지 4초 안 됐으면 자동으로 안 움직이기
       if (DateTime.now().difference(_userScrolledAt).inSeconds < 4) return;
+      if (_selAnchor != null) return; // 줄 고르는 중엔 자동으로 안 움직이기
       // 시간 없는 가사: 노래 진행만큼 천천히 자동으로 내려가기
       if (lyricsProvider.hasLyrics && lyricsProvider.lyrics.isEmpty && _plainController.hasClients) {
         final dur = playerProvider.duration.inMilliseconds;
@@ -573,7 +810,16 @@ class _LyricsScreenState extends State<LyricsScreen> {
           fit: StackFit.expand,
           children: [
             // 배경 사진
-            if (_bg != 0)
+            if (_myBg != null)
+              // 내 사진 배경 (화면 크기만큼만 풀기)
+              RepaintBoundary(
+                child: Image.file(File(_myBg!),
+                    fit: BoxFit.cover,
+                    cacheWidth: 1080,
+                    gaplessPlayback: true,
+                    errorBuilder: (_, __, ___) => Container(color: const Color(0xFF14110C))),
+              )
+            else if (_bg != 0)
               // 배경 사진은 한 번만 그리고 고정 (가사가 바뀔 때마다 다시 안 그리게)
               RepaintBoundary(
                 child: CachedNetworkImage(
@@ -587,7 +833,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                 ),
               ),
             // 글자가 잘 보이게 얇은 막 (밝은 사진은 크림색, 어두운 사진은 검은색)
-            if (_bg != 0)
+            if (_hasPhoto)
               DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -595,8 +841,8 @@ class _LyricsScreenState extends State<LyricsScreen> {
                     end: Alignment.bottomCenter,
                     colors: _light
                         ? [
-                            const Color(0xFFF4EFE5).withOpacity(_kBusyBgs.contains(_bg) ? 0.72 : 0.55),
-                            const Color(0xFFF4EFE5).withOpacity(_kBusyBgs.contains(_bg) ? 0.5 : 0.3),
+                            const Color(0xFFF4EFE5).withOpacity(_busy ? 0.72 : 0.55),
+                            const Color(0xFFF4EFE5).withOpacity(_busy ? 0.5 : 0.3),
                             const Color(0xFFF4EFE5).withOpacity(0.05),
                           ]
                         : [
@@ -624,7 +870,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
               ),
             ),
             // 맨 아래 시스템 아이콘 자리만 살짝 막 깔기 (사진마다 아래 밝기가 달라서)
-            if (_bg != 0)
+            if (_hasPhoto)
               Positioned(
                 left: 0,
                 right: 0,
@@ -735,6 +981,68 @@ class _LyricsScreenState extends State<LyricsScreen> {
                   }),
                 ),
               ),
+            // 여러 줄 고르는 중: 아래 바 (✕ · N줄 골랐어요 · 카드 만들기)
+            if (_selAnchor != null)
+              Positioned(
+                left: 12,
+                right: 12,
+                bottom: MediaQuery.of(context).padding.bottom + 12,
+                child: Material(
+                  color: Colors.transparent,
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF4EFE5),
+                      borderRadius: BorderRadius.circular(18),
+                      boxShadow: [
+                        BoxShadow(color: Colors.black.withOpacity(0.22), blurRadius: 18, offset: const Offset(0, 6)),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: _cancelSel,
+                          visualDensity: VisualDensity.compact,
+                          icon: const Icon(Icons.close_rounded, color: Color(0xFF8A8378), size: 22),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('${_selTexts.length}줄 골랐어요',
+                                  style: const TextStyle(
+                                      color: Color(0xFF17140F), fontSize: 14, fontWeight: FontWeight.w700)),
+                              const SizedBox(height: 2),
+                              const Text('다른 줄을 누르면 거기까지 · 최대 5줄',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: Color(0xFF8A8378), fontSize: 11)),
+                            ],
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: _selTexts.isEmpty
+                              ? null
+                              : () {
+                                  final text = _selTexts.join('\n');
+                                  _cancelSel();
+                                  _openCard(text, playerProvider);
+                                },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF17140F),
+                            foregroundColor: const Color(0xFFF4EFE5),
+                            elevation: 0,
+                            padding: const EdgeInsets.symmetric(horizontal: 14),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          child: const Text('카드 만들기', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
 
           ],
         ),
@@ -803,6 +1111,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
     }
 
     if (lyricsProvider.lyrics.isNotEmpty) {
+      _visibleLines = [for (final l in lyricsProvider.lyrics) l.text];
       // 모든 줄을 같은 간격으로 (긴 줄은 두 줄로 내려가도 간격은 일정하게)
       return NotificationListener<UserScrollNotification>(
         onNotification: (_) {
@@ -819,10 +1128,20 @@ class _LyricsScreenState extends State<LyricsScreen> {
                 key: _lineKeys.putIfAbsent(index, () => GlobalKey()),
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
+                  if (_selAnchor != null) {
+                    _extendSel(index); // 고르는 중이면 여기까지 고르기
+                    return;
+                  }
                   playerProvider.seekTo(lyricsProvider.lyrics[index].time);
                 },
-                onLongPress: () => _openCard(lyricsProvider.lyrics[index].text, playerProvider),
-                child: Padding(
+                onLongPress: () => _startSel(index),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  decoration: BoxDecoration(
+                    color: _isSel(index) ? ink.withOpacity(0.14) : Colors.transparent,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: SizedBox(
                     width: double.infinity,
@@ -830,7 +1149,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                       duration: const Duration(milliseconds: 250),
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: index == lyricsProvider.currentLineIndex ? ink : ink.withOpacity(0.5),
+                        color: (index == lyricsProvider.currentLineIndex || _isSel(index)) ? ink : ink.withOpacity(0.5),
                         fontSize: index == lyricsProvider.currentLineIndex ? 19 : 15.5,
                         height: 1.4,
                         fontWeight:
@@ -841,6 +1160,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                     ),
                   ),
                 ),
+                ),
               ),
           ],
         ),
@@ -850,6 +1170,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
 
     // 시간 없는 가사: 빈 줄이 여러 개 겹친 건 하나로 정리해서 고른 간격으로
     final plain = lyricsProvider.plainLyrics.replaceAll('\r', '').replaceAll(RegExp(r'\n\s*\n\s*\n+'), '\n\n').trim();
+    _visibleLines = plain.split('\n');
     return NotificationListener<UserScrollNotification>(
       onNotification: (_) {
         _userScrolledAt = DateTime.now();
@@ -861,15 +1182,26 @@ class _LyricsScreenState extends State<LyricsScreen> {
       child: Column(
         children: [
           // 한 줄씩 나눠서 그리기 → 꾹 누르면 그 줄로 카드 (보이는 모양은 그대로)
-          for (final l in plain.split('\n'))
+          for (var i = 0; i < _visibleLines.length; i++)
             GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onLongPress: l.trim().isEmpty ? null : () => _openCard(l, playerProvider),
-              child: SizedBox(
+              onTap: _selAnchor != null ? () => _extendSel(i) : null,
+              onLongPress: _visibleLines[i].trim().isEmpty ? null : () => _startSel(i),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 150),
                 width: double.infinity,
+                decoration: BoxDecoration(
+                  color: _isSel(i) ? ink.withOpacity(0.14) : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Text(
-                  l,
-                  style: TextStyle(color: ink, fontSize: 15.5, height: 1.8, shadows: shadow),
+                  _visibleLines[i],
+                  style: TextStyle(
+                      color: ink,
+                      fontSize: 15.5,
+                      height: 1.8,
+                      fontWeight: _isSel(i) ? FontWeight.w700 : FontWeight.w400,
+                      shadows: shadow),
                   textAlign: TextAlign.center,
                 ),
               ),

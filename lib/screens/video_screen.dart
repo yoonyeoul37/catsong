@@ -115,7 +115,7 @@ const Map<String, String> _kSortLabels = {
   'short': '짧은 영상순',
 };
 
-// 날짜 제목: 오늘 / 어제 / 10월 3일 (금) / 2025년 10월 3일 (금)
+// 묶음 제목: 오늘 / 어제는 날짜별, 그 전은 월별 (10월 / 2025년 10월) → 한 칸만 남는 줄이 거의 없게
 String _dayLabel(int ms) {
   if (ms <= 0) return '날짜 모름';
   final d = DateTime.fromMillisecondsSinceEpoch(ms);
@@ -125,10 +125,8 @@ String _dayLabel(int ms) {
   final diff = today.difference(day).inDays;
   if (diff == 0) return '오늘';
   if (diff == 1) return '어제';
-  const week = ['월', '화', '수', '목', '금', '토', '일'];
-  final wd = week[d.weekday - 1];
-  if (d.year == now.year) return '${d.month}월 ${d.day}일 ($wd)';
-  return '${d.year}년 ${d.month}월 ${d.day}일 ($wd)';
+  if (d.year == now.year) return '${d.month}월';
+  return '${d.year}년 ${d.month}월';
 }
 
 class VideoScreen extends StatefulWidget {
@@ -461,7 +459,7 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
 
   // 영상 칸들 (최신순·오래된순이면 날짜마다 작은 제목)
   List<Widget> _videoSlivers(VideoProvider p, Color baseColor) {
-    Widget grid(List<Video> list, double top) => SliverPadding(
+    Widget grid(List<Video> list, double top, {String dateMode = 'full'}) => SliverPadding(
           padding: EdgeInsets.fromLTRB(12, top, 12, 8),
           sliver: SliverGrid(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -477,6 +475,7 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
                 return _VideoTile(
                   key: ValueKey(v.uri),
                   video: v,
+                  dateMode: dateMode,
                   selecting: _selecting,
                   selected: _selected.contains(v.uri),
                   onSelect: () => setState(() {
@@ -505,7 +504,7 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
                   color: baseColor.withOpacity(0.75), fontSize: 13, fontWeight: FontWeight.w800, letterSpacing: -0.2)),
         ),
       ));
-      out.add(grid(bucket, 0));
+      out.add(grid(bucket, 0, dateMode: (cur == '오늘' || cur == '어제') ? 'time' : 'day'));
     }
 
     for (final v in p.videos) {
@@ -690,7 +689,7 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
 }
 
 // 카메라로 찍은 영상 이름(20261008_160312)을 날짜·시간으로 바꿔 보여주기
-({String date, String time})? _cameraDate(String title) {
+({String date, String time, String day})? _cameraDate(String title) {
   final m = RegExp(r'(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})').firstMatch(title);
   if (m == null) return null;
   final y = int.parse(m[1]!), mo = int.parse(m[2]!), d = int.parse(m[3]!);
@@ -703,6 +702,7 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
   return (
     date: '$y년 $mo월 $d일 ($wd)',
     time: '$ampm $h12:${mi.toString().padLeft(2, '0')}',
+    day: '$d일 ($wd)',
   );
 }
 
@@ -711,8 +711,10 @@ class _VideoTile extends StatefulWidget {
   final bool selecting; // 여러 개 선택 중
   final bool selected; // 이 영상을 골랐는지
   final VoidCallback? onSelect;
+  final String dateMode; // full 날짜까지 · day 일(요일)+시간 (월별 묶음) · time 시간만 (오늘·어제)
 
-  const _VideoTile({super.key, required this.video, this.selecting = false, this.selected = false, this.onSelect});
+  const _VideoTile(
+      {super.key, required this.video, this.selecting = false, this.selected = false, this.onSelect, this.dateMode = 'full'});
 
   @override
   State<_VideoTile> createState() => _VideoTileState();
@@ -1083,7 +1085,14 @@ class _VideoTileState extends State<_VideoTile> {
                     final day = d.year == DateTime.now().year
                         ? '${d.month}월 ${d.day}일'
                         : '${d.year}.${d.month}.${d.day}';
-                    when = '$day (${week[d.weekday - 1]}) $ampm $h12:${d.minute.toString().padLeft(2, '0')}';
+                    final hm = '$ampm $h12:${d.minute.toString().padLeft(2, '0')}';
+                    final wd = week[d.weekday - 1];
+                    // 위 묶음 제목과 겹치는 건 빼기
+                    when = widget.dateMode == 'time'
+                        ? hm
+                        : widget.dateMode == 'day'
+                            ? '${d.day}일 ($wd) $hm'
+                            : '$day ($wd) $hm';
                   }
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1105,12 +1114,21 @@ class _VideoTileState extends State<_VideoTile> {
                     ],
                   );
                 }
+                // 오늘·어제 묶음: 시간만 (진하게)
+                if (widget.dateMode == 'time') {
+                  return Text(
+                    cd.time,
+                    maxLines: 1,
+                    style: TextStyle(color: baseColor, fontSize: 12.5, fontWeight: FontWeight.w600, height: 1.3),
+                  );
+                }
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      cd.date,
+                      // 월별 묶음이면 "5일 (월)", 아니면 "2026년 10월 5일 (월)"
+                      widget.dateMode == 'day' ? cd.day : cd.date,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: baseColor, fontSize: 12.5, fontWeight: FontWeight.w600, height: 1.3),

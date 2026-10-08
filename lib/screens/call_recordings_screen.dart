@@ -105,25 +105,31 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                     ? Row(
                   children: [
                     IconButton(
-                      onPressed: () => setState(() {
-                        _selected.clear();
-                        _selectMode = false;
-                      }),
+                      onPressed: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        setState(() {
+                          _selected.clear();
+                          _selectMode = false;
+                        });
+                      },
                       icon: Icon(Icons.close, color: baseColor),
                     ),
                     Text('${_selected.length}개 선택',
                         style: TextStyle(color: baseColor, fontSize: 15, fontWeight: FontWeight.w700)),
                     const Spacer(),
                     TextButton(
-                      onPressed: () => setState(() {
-                        if (_selected.length == list.length) {
-                          _selected.clear();
-                        } else {
-                          _selected
-                            ..clear()
-                            ..addAll(list.map((r) => r.path));
-                        }
-                      }),
+                      onPressed: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        setState(() {
+                          if (_selected.length == list.length) {
+                            _selected.clear();
+                          } else {
+                            _selected
+                              ..clear()
+                              ..addAll(list.map((r) => r.path));
+                          }
+                        });
+                      },
                       child: Text(_selected.length == list.length ? '선택 해제' : '전체 선택',
                           style: TextStyle(color: baseColor.withOpacity(0.75))),
                     ),
@@ -141,6 +147,44 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                     Text('(${everything.length})',
                         style: TextStyle(color: baseColor.withOpacity(0.38), fontSize: 13)),
                     const Spacer(),
+                    // 지금 정렬 (누르면 바로 아래 작은 카드)
+                    PopupMenuButton<int>(
+                      tooltip: '정렬',
+                      position: PopupMenuPosition.under,
+                      onSelected: (v) {
+                        HapticFeedback.selectionClick();
+                        setState(() => _sort = v);
+                      },
+                      itemBuilder: (_) => [
+                        for (final (v, label) in const [(0, '최신순'), (1, '오래된순'), (2, '긴 통화순')])
+                          PopupMenuItem<int>(
+                            value: v,
+                            height: 42,
+                            child: Row(
+                              children: [
+                                Text(label,
+                                    style: TextStyle(fontWeight: _sort == v ? FontWeight.w700 : FontWeight.w400)),
+                                const Spacer(),
+                                if (_sort == v)
+                                  const Icon(Icons.check_rounded, size: 17, color: Color(0xFF2589E8)),
+                              ],
+                            ),
+                          ),
+                      ],
+                      // 바탕 없이 회색 글씨 + ▾ 만
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(const ['최신순', '오래된순', '긴 통화순'][_sort],
+                                style: TextStyle(
+                                    color: baseColor.withOpacity(0.5), fontSize: 12.5, fontWeight: FontWeight.w600)),
+                            Icon(Icons.keyboard_arrow_down_rounded, color: baseColor.withOpacity(0.5), size: 16),
+                          ],
+                        ),
+                      ),
+                    ),
                     // 검색
                     IconButton(
                       onPressed: () => setState(() {
@@ -155,31 +199,12 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(minWidth: 34, minHeight: 34),
                     ),
-                    // ⋮ 정렬 · 선택하기 · 전체 삭제 (자주 안 쓰는 건 안으로)
-                    PopupMenuButton<String>(
+                    // ⋮ 정렬 · 선택하기 · 전체 삭제 → 아래에서 올라오는 창
+                    IconButton(
+                      onPressed: () => _showMoreSheet(list, isDark),
                       icon: Icon(Icons.more_vert, color: baseColor.withOpacity(0.55), size: 21),
                       padding: EdgeInsets.zero,
-                      onSelected: (v) {
-                        if (v == 'select') {
-                          setState(() => _selectMode = true);
-                        } else if (v == 'trashAll') {
-                          _confirmTrash(list, isAll: true);
-                        } else {
-                          setState(() => _sort = int.parse(v));
-                        }
-                      },
-                      itemBuilder: (_) => [
-                        CheckedPopupMenuItem(value: '0', checked: _sort == 0, child: const Text('최신순')),
-                        CheckedPopupMenuItem(value: '1', checked: _sort == 1, child: const Text('오래된순')),
-                        CheckedPopupMenuItem(value: '2', checked: _sort == 2, child: const Text('긴 통화순')),
-                        const PopupMenuDivider(),
-                        if (list.isNotEmpty) const PopupMenuItem(value: 'select', child: Text('선택하기')),
-                        if (list.isNotEmpty)
-                          const PopupMenuItem(
-                            value: 'trashAll',
-                            child: Text('전체 삭제', style: TextStyle(color: Colors.redAccent)),
-                          ),
-                      ],
+                      constraints: const BoxConstraints(minWidth: 34, minHeight: 34),
                     ),
                   ],
                 ),
@@ -366,13 +391,114 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
   }
 
   /// 여러 개 선택했을 때 아래 버튼: 공유 · 잠금 · 삭제
+  /// ⋮ 창: 정렬(한 줄 버튼) + 여러 개 선택하기 · 전체 삭제(빨강)
+  void _showMoreSheet(List<CallRecording> list, bool isDark) {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    final bg = isDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
+    final card = isDark ? const Color(0xFF332E26) : Colors.white;
+    final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final sub = isDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
+    final line = isDark ? const Color(0xFF3A342B) : const Color(0xFFEFE9DE);
+    const red = Color(0xFFD84A3A);
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+
+
+
+        // 동작 한 줄 (아이콘 칸 + 글자)
+        Widget action(IconData icon, String label, Color color, Color iconBg, VoidCallback onTap) => InkWell(
+              onTap: () {
+                Navigator.pop(ctx);
+                onTap();
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(color: iconBg, borderRadius: BorderRadius.circular(9)),
+                      child: Icon(icon, color: color, size: 17),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(label, style: TextStyle(color: color, fontSize: 14.5, fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ),
+            );
+
+        return SafeArea(
+          top: false,
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
+            decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(22)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Center(
+                  child: Container(
+                    width: 36,
+                    height: 4,
+                    decoration: BoxDecoration(color: line, borderRadius: BorderRadius.circular(2)),
+                  ),
+                ),
+                // 제목 + ✕
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4),
+                      child: Text('녹음 관리', style: TextStyle(color: sub, fontSize: 12, fontWeight: FontWeight.w600)),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      visualDensity: VisualDensity.compact,
+                      icon: Icon(Icons.close_rounded, color: sub, size: 22),
+                    ),
+                  ],
+                ),
+                if (list.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Container(
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(14)),
+                    child: Column(
+                      children: [
+                        action(Icons.check_box_outlined, '여러 개 선택하기', ink, bg,
+                            () => setState(() => _selectMode = true)),
+                        Divider(height: 1, thickness: 1, color: line),
+                        action(Icons.delete_outline_rounded, '전체 삭제', red, red.withOpacity(0.1),
+                            () => _confirmTrash(list, isAll: true)),
+                      ],
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _selectBar(List<CallRecording> list, MusicProvider music, Color baseColor, bool isDark) {
     final picked = list.where((r) => _selected.contains(r.path)).toList();
     final enabled = picked.isNotEmpty;
     final allLocked = enabled && picked.every((r) => music.isRecordingLocked(r.path));
 
+    // 먹색 바 (다크 모드는 크림색 바) — 정리 알림 바와 같은 식구
+    final barBg = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final barFg = isDark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
+    final barRed = isDark ? const Color(0xFFD84A3A) : const Color(0xFFFF8A7A);
+
     Widget btn(IconData icon, String label, VoidCallback onTap, {Color? color}) {
-      final c = enabled ? (color ?? baseColor.withOpacity(0.75)) : baseColor.withOpacity(0.25);
+      final c = enabled ? (color ?? barFg) : barFg.withOpacity(0.35);
       return Expanded(
         child: InkWell(
           onTap: enabled
@@ -396,10 +522,18 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
       );
     }
 
-    return Container(
+    return SafeArea(
+      top: false,
+      child: Container(
+      margin: const EdgeInsets.fromLTRB(12, 0, 12, 14),
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF26221C) : Colors.white,
-        border: Border(top: BorderSide(color: baseColor.withOpacity(0.08))),
+        color: barBg,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(isDark ? 0.4 : 0.25), blurRadius: 20, offset: const Offset(0, 8)),
+        ],
       ),
       child: Row(
         children: [
@@ -415,8 +549,9 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
               _selectMode = false;
             });
           }),
-          btn(Icons.delete_outline, '삭제', () => _confirmTrash(picked, isAll: true), color: Colors.redAccent),
+          btn(Icons.delete_outline, '삭제', () => _confirmTrash(picked, isAll: true), color: barRed),
         ],
+      ),
       ),
     );
   }

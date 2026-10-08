@@ -99,23 +99,8 @@ class ArtistScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           children: [
-            ClipOval(
-              child: SizedBox(
-                width: 56,
-                height: 56,
-                child: artist.songs.first.albumArt != null
-                    ? Image.memory(
-                  Uint8List.fromList(artist.songs.first.albumArt!),
-                  fit: BoxFit.cover,
-                  gaplessPlayback: true,
-                )
-                    : Container(
-                  color: baseColor.withOpacity(0.15),
-                  child: Icon(Icons.person,
-                      color: baseColor.withOpacity(0.6), size: 28),
-                ),
-              ),
-            ),
+            // 가수 얼굴 칸: 앨범 사진 있는 노래 → 없으면 그라데이션 + 첫 글자
+            _ArtistAvatar(artist: artist, size: 56),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -217,15 +202,17 @@ class ArtistDetailScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(artist.displayName,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                     color: Colors.white,
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.w900,
-                                    letterSpacing: -0.5)),
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: -0.4)),
                             const SizedBox(height: 4),
                             Text('${artist.songCount} ${AppLocalizations.of(context)!.songCount} • ${artist.albumCount} ${AppLocalizations.of(context)!.albums}',
                                 style: const TextStyle(
-                                    color: Colors.white60, fontSize: 14)),
+                                    color: Colors.white60, fontSize: 12.5)),
                           ],
                         ),
                       ),
@@ -285,5 +272,72 @@ class ArtistDetailScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// 가수 동그라미 — 그 가수 노래 중 앨범 사진 있는 것, 없으면 그라데이션 + 첫 글자
+class _ArtistAvatar extends StatelessWidget {
+  final dynamic artist;
+  final double size;
+  const _ArtistAvatar({required this.artist, this.size = 56});
+
+  // 재생목록 표지와 같은 색 세트 (가수 이름으로 골라서 늘 같은 색)
+  static const _grads = <List<Color>>[
+    [Color(0xFF3A3550), Color(0xFF6B4A3A)],
+    [Color(0xFF1F4E6B), Color(0xFF6FB3C9)],
+    [Color(0xFF6B4A3A), Color(0xFFE0915F)],
+    [Color(0xFF4A3F7A), Color(0xFFC79ACF)],
+    [Color(0xFF233D32), Color(0xFF7FA77A)],
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    List<int>? art;
+    for (final s in (artist.songs as List)) {
+      final a = s.albumArt as List<int>?;
+      if (a != null && a.isNotEmpty) {
+        art = a;
+        break;
+      }
+    }
+    final px = (size * MediaQuery.devicePixelRatioOf(context)).round(); // 동그라미 크기만큼만 풀기
+
+    Widget child;
+    if (art != null) {
+      child = Image.memory(
+        Uint8List.fromList(art),
+        fit: BoxFit.cover,
+        cacheWidth: px,
+        gaplessPlayback: true,
+        errorBuilder: (_, __, ___) => const ColoredBox(color: Color(0xFFE3DCCD)),
+      );
+    } else {
+      final name = (artist.displayName as String).trim();
+      var h = 0;
+      for (final c in name.codeUnits) {
+        h = (h * 31 + c) & 0x7fffffff;
+      }
+      child = DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: _grads[h % _grads.length],
+          ),
+        ),
+        child: Center(
+          child: Text(
+            name.isEmpty ? '♪' : name.characters.first.toUpperCase(),
+            style: TextStyle(
+              color: const Color(0xFFF4EFE5),
+              fontSize: size * 0.38,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+      );
+    }
+
+    return ClipOval(child: SizedBox(width: size, height: size, child: child));
   }
 }

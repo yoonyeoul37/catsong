@@ -66,6 +66,8 @@ class MainActivity : AudioServiceActivity() {
     private var deleteResult: MethodChannel.Result? = null
     // 노래·영상 정보 읽기는 뒤에서 하나씩 (화면·터치 담당 일꾼이 멈추지 않게)
     private val metaExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
+    // 영상 찍은 곳 찾기는 따로 (주소 바꾸느라 느려도 썸네일은 안 막히게)
+    private val placeExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
 
     // ───── 완료 효과음 (소리 모드 = 물방울, 진동 모드 = 진동, 무음 = 없음) ─────
     private var soundPool: android.media.SoundPool? = null
@@ -400,6 +402,18 @@ class MainActivity : AudioServiceActivity() {
                     android.util.Log.d("RenameVideo", "getVideoList 결과: $list")
                     result.success(list)
                 }
+                "getVideoPlace" -> {
+                    // 영상 속 찍은 곳(위치 태그) → "서울 중구" (뒤에서 하나씩, 화면 안 멈추게)
+                    val path = call.argument<String>("path")
+                    if (path == null) {
+                        result.success(null)
+                    } else {
+                        placeExecutor.execute {
+                            val r = getVideoPlace(path)
+                            runOnUiThread { result.success(r) }
+                        }
+                    }
+                }
                 "getVideoThumbnail" -> {
                     val path = call.argument<String>("path")
                     if (path == null) {
@@ -614,6 +628,48 @@ class MainActivity : AudioServiceActivity() {
                             result.success(false)
                         }
                     } else result.success(false)
+                }
+                "trashVideos", "deleteVideosForever" -> {
+                    // 동영상 여러 개 삭제: 휴지통(30일 뒤 완전 삭제) 또는 영구 삭제 — 폰 확인 창은 한 번만
+                    val paths = call.argument<List<String>>("paths")
+                    if (paths.isNullOrEmpty()) {
+                        result.success(false)
+                    } else {
+                        try {
+                            val uris = mutableListOf<android.net.Uri>()
+                            for (path in paths) {
+                                contentResolver.query(
+                                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                                    arrayOf(MediaStore.Video.Media._ID),
+                                    "${MediaStore.Video.Media.DATA}=?",
+                                    arrayOf(path), null
+                                )?.use {
+                                    if (it.moveToFirst()) {
+                                        val id = it.getLong(it.getColumnIndexOrThrow(MediaStore.Video.Media._ID))
+                                        uris.add(android.net.Uri.withAppendedPath(
+                                            MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id.toString()))
+                                    }
+                                }
+                            }
+                            if (uris.isEmpty()) {
+                                result.success(false)
+                            } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                                deleteResult = result
+                                val pendingIntent = if (call.method == "trashVideos")
+                                    MediaStore.createTrashRequest(contentResolver, uris, true)
+                                else
+                                    MediaStore.createDeleteRequest(contentResolver, uris)
+                                startIntentSenderForResult(pendingIntent.intentSender, 101, null, 0, 0, 0)
+                            } else {
+                                var count = 0
+                                for (uri in uris) count += contentResolver.delete(uri, null, null)
+                                result.success(count > 0)
+                            }
+                        } catch (e: Exception) {
+                            android.util.Log.e("DeleteVideos", "Error: ${e.message}", e)
+                            result.success(false)
+                        }
+                    }
                 }
                 "deleteVideo" -> {
                     val uri = call.argument<String>("uri")
@@ -1217,17 +1273,21 @@ class MainActivity : AudioServiceActivity() {
             MediaStore.Video.Media._ID,
             MediaStore.Video.Media.DISPLAY_NAME,
             MediaStore.Video.Media.DURATION,
-            MediaStore.Video.Media.DATA
+            MediaStore.Video.Media.DATA,
+            MediaStore.Video.Media.DATE_TAKEN, // 찍은 날짜 (밀리초)
+            MediaStore.Video.Media.DATE_ADDED  // 폰에 들어온 날짜 (초)
         )
         val cursor = contentResolver.query(
             MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
             projection, null, null,
-            MediaStore.Video.Media.DISPLAY_NAME + " ASC"
+            MediaStore.Video.Media.DATE_ADDED + " DESC" // 최신 영상이 맨 위
         )
         cursor?.use {
             val nameColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
             val durationColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION)
             val dataColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
+            val takenColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_TAKEN)
+            val addedColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_ADDED)
             while (it.moveToNext()) {
                 val path = it.getString(dataColumn)
                 val displayName = it.getString(nameColumn) ?: ""
@@ -1235,7 +1295,9 @@ class MainActivity : AudioServiceActivity() {
                 videos.add(mapOf(
                     "title" to titleWithoutExt,
                     "duration" to it.getLong(durationColumn),
-                    "uri" to path
+                    "uri" to path,
+                    // 찍은 날짜 (없으면 폰에 들어온 날짜) — 밀리초
+                    "date" to (it.getLong(takenColumn).takeIf { t -> t > 0 } ?: (it.getLong(addedColumn) * 1000))
                 ))
             }
         }
@@ -1254,6 +1316,84 @@ class MainActivity : AudioServiceActivity() {
                 stream.toByteArray()
             } else null
         } catch (e: Exception) { null }
+    }
+
+    /// 영상 속 위치 태그 → 주소 짧게 ("서울 중구"). 위치 없으면 null, 주소를 못 바꾸면 place 없이 좌표만
+    private fun getVideoPlace(path: String): Map<String, Any?>? {
+        val retriever = MediaMetadataRetriever()
+        try {
+            // 안드로이드 10 이상은 위치가 가려진 채로 읽혀서 '원본'으로 열기 (ACCESS_MEDIA_LOCATION)
+            var opened = false
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                try {
+                    contentResolver.query(
+                        MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                        arrayOf(MediaStore.Video.Media._ID),
+                        "${MediaStore.Video.Media.DATA}=?", arrayOf(path), null
+                    )?.use {
+                        if (it.moveToFirst()) {
+                            val id = it.getLong(0)
+                            val uri = MediaStore.setRequireOriginal(
+                                android.net.Uri.withAppendedPath(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id.toString()))
+                            retriever.setDataSource(this, uri)
+                            opened = true
+                        }
+                    }
+                } catch (_: Exception) {}
+            }
+            if (!opened) retriever.setDataSource(path)
+            val loc = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_LOCATION)
+            android.util.Log.d("VideoPlace", "원본으로 열림=$opened | 위치=$loc | 파일=$path")
+            if (loc == null) return null
+            val m = Regex("([+-]\\d+(?:\\.\\d+)?)([+-]\\d+(?:\\.\\d+)?)").find(loc) ?: return null
+            val lat = m.groupValues[1].toDouble()
+            val lng = m.groupValues[2].toDouble()
+            if (lat == 0.0 && lng == 0.0) return null
+            var place: String? = null
+            try {
+                if (android.location.Geocoder.isPresent()) {
+                    @Suppress("DEPRECATION")
+                    val all = android.location.Geocoder(this, java.util.Locale.getDefault())
+                        .getFromLocation(lat, lng, 5) ?: emptyList()
+                    val a = all.firstOrNull()
+                    all.forEachIndexed { i, x ->
+                        android.util.Log.d("VideoPlace", "후보$i=${x.getAddressLine(0)} | subLoc=${x.subLocality} | road=${x.thoroughfare} | feat=${x.featureName}")
+                    }
+                    if (a != null) {
+                        android.util.Log.d("VideoPlace", "주소=${a.getAddressLine(0)} | admin=${a.adminArea} | subAdmin=${a.subAdminArea} | loc=${a.locality} | subLoc=${a.subLocality} | road=${a.thoroughfare} | feat=${a.featureName}")
+                        // 짧게: 서울특별시 → 서울, 경기도 → 경기
+                        val short = mapOf(
+                            "서울특별시" to "서울", "부산광역시" to "부산", "대구광역시" to "대구", "인천광역시" to "인천",
+                            "광주광역시" to "광주", "대전광역시" to "대전", "울산광역시" to "울산", "세종특별자치시" to "세종",
+                            "경기도" to "경기", "강원도" to "강원", "강원특별자치도" to "강원", "충청북도" to "충북",
+                            "충청남도" to "충남", "전라북도" to "전북", "전북특별자치도" to "전북", "전라남도" to "전남",
+                            "경상북도" to "경북", "경상남도" to "경남", "제주특별자치도" to "제주"
+                        )
+                        val parts = listOf(a.adminArea, a.subAdminArea, a.locality, a.subLocality)
+                            .mapNotNull { it?.trim()?.takeIf { s -> s.isNotEmpty() } }
+                            .map { short[it] ?: it }
+                            .distinct()
+                            .take(2)
+                        // 동·읍·면까지 (예: 명동, 정자동, 기장읍) — 도로 이름(○○로)만 있는 주소면 구까지만
+                        val dongRule = Regex("^[가-힣0-9.]+(동|읍|면|가|리)$")
+                        // 첫 주소가 도로명이면 동이 없어서, 다른 후보 주소들에서도 찾기
+                        val candidates = all.flatMap { x ->
+                            listOfNotNull(x.subLocality, x.thoroughfare, x.featureName) +
+                                (x.getAddressLine(0) ?: "").split(" ")
+                        }
+                        val dong = candidates.map { it.trim() }
+                            .firstOrNull { it.isNotEmpty() && dongRule.matches(it) && it !in parts }
+                        val base = if (parts.isNotEmpty()) parts else listOfNotNull(a.countryName)
+                        place = (base + listOfNotNull(dong)).joinToString(" ").ifBlank { null }
+                    }
+                }
+            } catch (_: Exception) {}
+            return mapOf("lat" to lat, "lng" to lng, "place" to place)
+        } catch (e: Exception) {
+            return null
+        } finally {
+            try { retriever.release() } catch (_: Exception) {}
+        }
     }
 
     private fun doRenameVideo(videoUri: android.net.Uri, newName: String): Boolean {

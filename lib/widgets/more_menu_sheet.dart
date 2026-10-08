@@ -197,7 +197,7 @@ class _Pal {
     chevron: Color(0xFFB9B2A5),
     handle: Color(0x2E3C2D14),
     closeBg: Color(0x123C2D14),
-    closeIcon: Color(0xFF6E675B),
+    closeIcon: Color(0xFF3A342B),
     brandBg: Color(0xFFF8F4EC),
     bars: Color(0x802F7DE8),
   );
@@ -214,7 +214,7 @@ class _Pal {
     chevron: Color(0xFF786F61),
     handle: Color(0x33FFFFFF),
     closeBg: Color(0x14FFFFFF),
-    closeIcon: Color(0xFFB9B1A3),
+    closeIcon: Color(0xFFE8E2D6),
     brandBg: Color(0xFF26221A),
     bars: Color(0x856FB0FF),
   );
@@ -363,11 +363,8 @@ class _TopBar extends StatelessWidget {
                 width: 30,
                 height: 30,
                 alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: p.closeBg,
-                ),
-                child: _LineIcon(_kIconClose, size: 15, color: p.closeIcon, stroke: 2.2),
+                // 배경 동그라미 없이 ✕만 (조금 크고 진하게)
+                child: _LineIcon(_kIconClose, size: 19, color: p.closeIcon, stroke: 2.6),
               ),
             ),
           ),

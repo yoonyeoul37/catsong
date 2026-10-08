@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.MANAGE_MEDIA"/>
     
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+    <!-- 영상에 저장된 찍은 곳 읽기 (지금 위치 추적 아님) -->
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
     <!-- 사진 권한은 안 씀 (플러그인이 몰래 넣어도 빼기) -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" tools:node="remove"/>
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>

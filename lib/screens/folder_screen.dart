@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -111,15 +112,8 @@ class FolderScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           children: [
-            Container(
-              width: 56,
-              height: 56,
-              decoration: BoxDecoration(
-                color: baseColor.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Icon(Icons.folder, color: baseColor.withOpacity(0.7), size: 28),
-            ),
+            // 폴더 표지: 앨범 사진 + 작은 아이콘 → 없으면 크림색 칸 + 아이콘
+            _FolderCover(folder: folder, size: 56),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -291,6 +285,95 @@ class FolderDetailScreen extends StatelessWidget {
         ],
       ),
       ),
+    );
+  }
+}
+
+/// 폴더 표지 — 재생목록·아티스트와 같은 규칙
+/// 앨범 사진 4장 이상: 2×2 / 1~3장: 첫 사진 / 없으면: 크림색 칸 + 아이콘
+/// 사진 위엔 오른쪽 아래 작은 아이콘 (폴더 이름 보고 자동: 메신저·다운로드·음악·녹음…)
+class _FolderCover extends StatelessWidget {
+  final MusicFolder folder;
+  final double size;
+  const _FolderCover({required this.folder, this.size = 56});
+
+  /// 폴더 이름으로 어울리는 아이콘 고르기 (나라마다 메신저가 달라도 다 말풍선)
+  static IconData iconFor(String name) {
+    final n = name.toLowerCase();
+    bool has(List<String> ks) => ks.any((k) => n.contains(k));
+    if (has(['kakao', '카카오', 'whatsapp', 'telegram', 'messenger', 'wechat', 'viber', 'signal']) ||
+        n == 'line') {
+      return Icons.chat_bubble_outline_rounded;
+    }
+    if (has(['download', '다운로드'])) return Icons.download_rounded;
+    if (has(['record', 'call', '녹음', '통화', 'voice'])) return Icons.mic_none_rounded;
+    if (has(['bluetooth', '블루투스'])) return Icons.bluetooth_rounded;
+    if (has(['music', '음악', 'song', 'audio', 'mp3'])) return Icons.music_note_rounded;
+    return Icons.folder_outlined;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = context.watch<ThemeProvider>().isDarkMode;
+    final arts = <List<int>>[
+      for (final s in folder.songs)
+        if (s.albumArt != null && s.albumArt!.isNotEmpty) s.albumArt!,
+    ].take(4).toList();
+    final px = (size * MediaQuery.devicePixelRatioOf(context)).round(); // 칸 크기만큼만 풀기
+    final icon = iconFor(folder.name);
+
+    Widget img(List<int> b, int w) => Image.memory(
+      Uint8List.fromList(b),
+      fit: BoxFit.cover,
+      cacheWidth: w,
+      gaplessPlayback: true,
+      errorBuilder: (_, __, ___) => const ColoredBox(color: Color(0xFFE3DCCD)),
+    );
+
+    Widget child;
+    if (arts.isEmpty) {
+      // 사진 없음: 크림색 칸 + 아이콘
+      child = ColoredBox(
+        color: isDark ? Colors.white.withOpacity(0.08) : const Color(0xFFF4EFE5),
+        child: Center(
+          child: Icon(icon, size: size * 0.42, color: isDark ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348)),
+        ),
+      );
+    } else {
+      child = Stack(
+        fit: StackFit.expand,
+        children: [
+          if (arts.length >= 4)
+            GridView.count(
+              crossAxisCount: 2,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
+              children: [for (final a in arts) img(a, px ~/ 2)],
+            )
+          else
+            img(arts.first, px),
+          // 오른쪽 아래 작은 아이콘 (폴더라는 표시)
+          Positioned(
+            right: 3,
+            bottom: 3,
+            child: Container(
+              width: size * 0.32,
+              height: size * 0.32,
+              decoration: BoxDecoration(
+                color: const Color(0xFF17140F).withOpacity(0.65),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Icon(icon, size: size * 0.2, color: const Color(0xFFF4EFE5)),
+            ),
+          ),
+        ],
+      );
+    }
+
+    return SizedBox(
+      width: size,
+      height: size,
+      child: ClipRRect(borderRadius: BorderRadius.circular(size * 0.2), child: child),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'equalizer_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:torch_light/torch_light.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,14 @@ Color _sText(bool d) => d ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
 Color _sTextSub(bool d) => d ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
 Color _sTextHint(bool d) => d ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
 Color _sBorder(bool d) => d ? const Color(0xFF3A342B) : const Color(0xFFEEE9DF);
+Color _sIconBg(bool d) => d ? Colors.white.withOpacity(0.08) : const Color(0xFFF4EFE5);
+/// 메뉴와 같은 아이콘 베이지 칸
+Widget _iconBox(IconData icon, bool d) => Container(
+      width: 30,
+      height: 30,
+      decoration: BoxDecoration(color: _sIconBg(d), borderRadius: BorderRadius.circular(9)),
+      child: Icon(icon, size: 17, color: _sTextSub(d)),
+    );
 Color _sInputBg(bool d) => d ? Colors.white.withOpacity(0.06) : const Color(0xFFEEEAE0);
 
 class SettingsScreen extends StatefulWidget {
@@ -99,62 +108,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: ListView(
         padding: const EdgeInsets.only(bottom: 16),
         children: [
-          _buildSection(l.themeColor),
-          Consumer<ThemeProvider>(
-            builder: (context, themeProvider, _) => _buildTile(
-              context,
-              icon: themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode,
-              title: l.darkMode,
-              subtitle: themeProvider.isDarkMode ? l.darkModeOn : l.darkModeOff,
-              onTap: () => themeProvider.setDarkMode(!themeProvider.isDarkMode),
-              primaryColor: primaryColor,
-              isFirst: true,
-              trailing: Switch(
-                value: themeProvider.isDarkMode,
-                onChanged: (v) => themeProvider.setDarkMode(v),
-                activeColor: primaryColor,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-            ),
-          ),
-          Consumer<ThemeProvider>(
-            builder: (context, themeProvider, _) => _buildTile(
-              context,
-              icon: themeProvider.voiceGreetingEnabled ? Icons.record_voice_over : Icons.voice_over_off,
-              title: '음성 안내',
-              subtitle: themeProvider.voiceGreetingEnabled ? l.darkModeOn : l.darkModeOff,
-              onTap: () => themeProvider.setVoiceGreetingEnabled(!themeProvider.voiceGreetingEnabled),
-              primaryColor: primaryColor,
-              trailing: Switch(
-                value: themeProvider.voiceGreetingEnabled,
-                onChanged: (v) => themeProvider.setVoiceGreetingEnabled(v),
-                activeColor: primaryColor,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-            ),
-          ),
-          // 완료 효과음: 수정·삭제·저장할 때 물방울 소리 (진동 모드면 진동)
-          Consumer<ThemeProvider>(
-            builder: (context, themeProvider, _) => _buildTile(
-              context,
-              icon: themeProvider.feedbackSoundEnabled ? Icons.water_drop : Icons.water_drop_outlined,
-              title: '효과음',
-              subtitle: themeProvider.feedbackSoundEnabled ? l.darkModeOn : l.darkModeOff,
-              onTap: () => themeProvider.setFeedbackSoundEnabled(!themeProvider.feedbackSoundEnabled),
-              primaryColor: primaryColor,
-              trailing: Switch(
-                value: themeProvider.feedbackSoundEnabled,
-                onChanged: (v) => themeProvider.setFeedbackSoundEnabled(v),
-                activeColor: primaryColor,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-            ),
-          ),
-          _buildTile(context, icon: Icons.palette_outlined, title: '포인트 색', subtitle: context.watch<ThemeProvider>().pointColorName, onTap: () => _showColorPicker(context), primaryColor: primaryColor),
-          _buildTile(context, icon: Icons.text_fields, title: l.textSize, onTap: () => _showTextSizeDialog(context), primaryColor: primaryColor),
+          // ── 맨 위: Paransori 카드 + 자주 켜고 끄는 3칸 ──
+          _heroCard(isDarkMode),
+          Consumer<ThemeProvider>(builder: (context, t, _) => _quickTiles(t)),
+          // ── 꾸미기 ──
+          _buildSection('꾸미기'),
+          Consumer<ThemeProvider>(builder: (context, t, _) => _pointColorTile(t)),
+          _buildTile(context, icon: Icons.style_outlined, title: l.playerStyle, onTap: () => _showPlayerStyleDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.font_download_outlined, title: l.fontChange, onTap: () => _showFontDialog(context), primaryColor: primaryColor),
-          _buildTile(context, icon: Icons.style, title: l.playerStyle, onTap: () => _showPlayerStyleDialog(context), primaryColor: primaryColor, isLast: true),
-          // ───── 음악 관리 (홈 ⋮ 메뉴에서 옮겨옴) ─────
+          _buildTile(context, icon: Icons.text_fields, title: l.textSize, onTap: () => _showTextSizeDialog(context), primaryColor: primaryColor, isLast: true),
+          // ── 음악 관리 ──
           _buildSection('음악 관리'),
           _buildTile(context, icon: Icons.auto_awesome_outlined, title: '곡 정보 한꺼번에 정리',
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BulkCleanScreen())),
@@ -162,28 +125,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildTile(context, icon: Icons.photo_library_outlined, title: '앨범 사진 한꺼번에 찾기',
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BulkArtScreen())),
               primaryColor: primaryColor, isLast: true),
-          _buildSection(l.equalizer),
+          // ── 도구 ──
+          _buildSection('도구'),
           _buildTile(context, icon: Icons.equalizer, title: l.equalizer, onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const EqualizerScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor, isFirst: true),
+          _buildTile(context, icon: Icons.music_note_outlined, title: l.ringtone, onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const RingtoneScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor),
           _buildTile(context, icon: _isFlashlightOn ? Icons.flashlight_on : Icons.flashlight_off, title: l.flashlight, subtitle: _isFlashlightOn ? l.on : l.off, onTap: () => _toggleFlashlight(context), primaryColor: primaryColor,
               trailing: Switch(value: _isFlashlightOn, onChanged: (_) => _toggleFlashlight(context), activeColor: primaryColor, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
           _buildTile(context, icon: Icons.emergency, title: l.sos, subtitle: _isSosOn ? l.sosWorking : l.sos, onTap: () => _toggleSOS(context), primaryColor: primaryColor,
               trailing: Switch(value: _isSosOn, onChanged: (_) => _toggleSOS(context), activeColor: Colors.redAccent, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
-          _buildTile(context, icon: Icons.music_note_outlined, title: l.ringtone, onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const RingtoneScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor, isLast: true),
-          _buildSection(l.widget),
           _buildTile(context, icon: Icons.widgets_outlined, title: l.widget, onTap: () async {
             const platform = MethodChannel('kr.ssing.catsong/media');
             try { await platform.invokeMethod('requestWidgetAdd'); } catch (e) {}
-          }, primaryColor: primaryColor, isFirst: true, isLast: true),
-          _buildSection(l.version),
-          FutureBuilder<String>(
-            future: _getAppVersion(),
-            builder: (context, snapshot) {
-              final version = snapshot.data ?? '';
-              return _buildTile(context, icon: Icons.verified_outlined, title: l.version, onTap: () {}, primaryColor: primaryColor, isFirst: true,
-                  trailing: Text(version, style: const TextStyle(color: AppTheme.fixedAccent, fontSize: 12, fontWeight: FontWeight.w600)));
-            },
-          ),
-          _buildTile(context, icon: Icons.card_giftcard_outlined, title: l.promoCode, onTap: () => _showPromoCodeDialog(context), primaryColor: primaryColor),
+          }, primaryColor: primaryColor, isLast: true),
+          // ── 기타 ──
+          _buildSection('기타'),
+          _buildTile(context, icon: Icons.card_giftcard_outlined, title: l.promoCode, onTap: () async {
+            await _showPromoCodeDialog(context);
+            if (mounted) setState(() {}); // 맨 위 카드 글자도 바로 바뀌게
+          }, primaryColor: primaryColor, isFirst: true),
           _buildTile(context, icon: Icons.star_outline, title: l.rateApp, onTap: () => _launchUrl('https://play.google.com/store/apps/details?id=kr.ssing.catsong'), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.privacy_tip_outlined, title: l.privacyPolicy, onTap: () => _launchUrl(l.privacyPolicyUrl), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.description_outlined, title: l.termsOfService, onTap: () => _launchUrl(l.termsOfServiceUrl), primaryColor: primaryColor, isLast: true),
@@ -192,6 +151,192 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 8),
         ],
       ),
+      ),
+    );
+  }
+
+  // ───────── B안 부품 ─────────
+
+  /// 버전 + 광고 제거 여부
+  Future<(String, bool)> _heroInfo() async {
+    final v = await _getAppVersion();
+    final p = await SharedPreferences.getInstance();
+    return (v, p.getBool('promo_unlocked') ?? false);
+  }
+
+  /// 맨 위 먹색 Paransori 카드 (다크 모드는 크림색) — 누르면 프로모션 코드
+  Widget _heroCard(bool isDark) {
+    final bg = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final fg = isDark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
+    return FutureBuilder<(String, bool)>(
+      future: _heroInfo(),
+      builder: (context, snap) {
+        final v = snap.data?.$1 ?? '';
+        final noAd = snap.data?.$2 ?? false;
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+          child: Material(
+            color: bg,
+            borderRadius: BorderRadius.circular(18),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(18),
+              onTap: () async {
+                await _showPromoCodeDialog(context);
+                if (mounted) setState(() {});
+              },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(18, 16, 12, 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text.rich(
+                            TextSpan(children: [
+                              TextSpan(
+                                  text: 'Paran',
+                                  style: TextStyle(color: isDark ? const Color(0xFF2589E8) : const Color(0xFF7FB8F0))),
+                              const TextSpan(text: 'sori'),
+                            ]),
+                            style: GoogleFonts.quicksand(
+                                color: fg, fontSize: 19, fontWeight: FontWeight.w700, letterSpacing: 0.4),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${noAd ? '광고 없이 듣고 계세요' : '음악 · 라디오 · 자연'}${v.isEmpty ? '' : '  ·  $v'}',
+                            style: TextStyle(color: fg.withOpacity(0.65), fontSize: 11.5),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(Icons.chevron_right_rounded, color: fg.withOpacity(0.5)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// 자주 켜고 끄는 3칸 (누르면 바로 켜짐/꺼짐)
+  Widget _quickTiles(ThemeProvider t) {
+    final d = t.isDarkMode;
+    Widget tile(IconData icon, String label, bool on, VoidCallback onTap) => Expanded(
+          child: GestureDetector(
+            onTap: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              onTap();
+            },
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 11),
+              decoration: BoxDecoration(color: _sCard(d), borderRadius: BorderRadius.circular(16)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 180),
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: on ? _sText(d) : _sIconBg(d),
+                      borderRadius: BorderRadius.circular(9),
+                    ),
+                    child: Icon(icon, size: 16, color: on ? _sBg(d) : _sTextSub(d)),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: _sText(d), fontSize: 13, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 2),
+                  Text(on ? '켜짐' : '꺼짐', style: TextStyle(color: _sTextHint(d), fontSize: 11)),
+                ],
+              ),
+            ),
+          ),
+        );
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+      child: Row(
+        children: [
+          tile(Icons.dark_mode_outlined, '다크 모드', t.isDarkMode, () => t.setDarkMode(!t.isDarkMode)),
+          const SizedBox(width: 8),
+          tile(Icons.water_drop_outlined, '효과음', t.feedbackSoundEnabled,
+              () => t.setFeedbackSoundEnabled(!t.feedbackSoundEnabled)),
+          const SizedBox(width: 8),
+          tile(Icons.record_voice_over_outlined, '음성 안내', t.voiceGreetingEnabled,
+              () => t.setVoiceGreetingEnabled(!t.voiceGreetingEnabled)),
+        ],
+      ),
+    );
+  }
+
+  /// 포인트 색: 이름 + 아래 동그라미 10개 (누르면 바로 바뀜, 폰 크기에 맞춰 한 줄)
+  Widget _pointColorTile(ThemeProvider t) {
+    final d = t.isDarkMode;
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.fromLTRB(16, 13, 16, 14),
+      decoration: BoxDecoration(
+        color: _sCard(d),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              _iconBox(Icons.palette_outlined, d),
+              const SizedBox(width: 12),
+              Expanded(child: Text('포인트 색', style: TextStyle(color: _sText(d), fontSize: 14.5))),
+              Text(t.pointColorName ?? '', style: TextStyle(color: _sTextHint(d), fontSize: 12.5)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.only(left: 42),
+            child: Row(
+              children: [
+                for (var i = 0; i < ThemeProvider.pointColors.length; i++) ...[
+                  if (i > 0) const SizedBox(width: 6),
+                  Expanded(
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 28),
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: GestureDetector(
+                            onTap: () {
+                              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                              t.setPrimaryColor(ThemeProvider.pointColors[i].$2);
+                            },
+                            child: Builder(builder: (_) {
+                              final c = ThemeProvider.pointColors[i].$2;
+                              final on = t.primaryColor.value == c.value;
+                              return Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: on ? _sCard(d) : c,
+                                  border: on ? Border.all(color: _sText(d), width: 2) : null,
+                                ),
+                                padding: on ? const EdgeInsets.all(3) : EdgeInsets.zero,
+                                child: on
+                                    ? DecoratedBox(decoration: BoxDecoration(shape: BoxShape.circle, color: c))
+                                    : null,
+                              );
+                            }),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -227,13 +372,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (!isFirst)
-                Container(height: 0.5, margin: const EdgeInsets.only(left: 50), color: _sBorder(isDarkMode)),
+                Container(height: 0.5, margin: const EdgeInsets.only(left: 58), color: _sBorder(isDarkMode)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 // 한 줄로: 아이콘 · 이름 ········ 작은 회색 글자 · 스위치/›
                 child: Row(children: [
-                  Icon(icon, color: _sTextHint(isDarkMode), size: 20),
-                  const SizedBox(width: 14),
+                  _iconBox(icon, isDarkMode),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(title,
                         maxLines: 1,

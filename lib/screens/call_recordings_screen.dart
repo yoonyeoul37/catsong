@@ -123,6 +123,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                         setState(() {
                           if (_selected.length == list.length) {
                             _selected.clear();
+                            _selectMode = false; // 다 풀면 선택 끝
                           } else {
                             _selected
                               ..clear()
@@ -272,10 +273,21 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                         Text(_voice ? '음성 녹음이 없어요' : '통화 녹음이 없어요',
                             style: TextStyle(color: baseColor.withOpacity(0.45), fontSize: 15)),
                         const SizedBox(height: 6),
-                        Text(
-                            _voice
-                                ? '오른쪽 아래 🎙 버튼으로\n바로 녹음할 수 있어요'
-                                : '전화 앱 설정에서 통화 녹음을 켜면\n녹음된 통화가 여기에 모여요',
+                        // 안내 문구 (이모지 대신 앱 선 아이콘을 글자 사이에)
+                        Text.rich(
+                            TextSpan(
+                              children: _voice
+                                  ? [
+                                      const TextSpan(text: '오른쪽 아래 '),
+                                      WidgetSpan(
+                                        alignment: PlaceholderAlignment.middle,
+                                        child: Icon(Icons.mic_none_rounded,
+                                            size: 15, color: baseColor.withOpacity(0.3)),
+                                      ),
+                                      const TextSpan(text: ' 버튼으로\n바로 녹음할 수 있어요'),
+                                    ]
+                                  : const [TextSpan(text: '전화 앱 설정에서 통화 녹음을 켜면\n녹음된 통화가 여기에 모여요')],
+                            ),
                             textAlign: TextAlign.center,
                             style: TextStyle(color: baseColor.withOpacity(0.3), fontSize: 12.5, height: 1.5)),
                       ],
@@ -298,7 +310,10 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                         onTap: () {
                           const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                           if (_selecting) {
-                            setState(() => _selected.contains(r.path) ? _selected.remove(r.path) : _selected.add(r.path));
+                            setState(() {
+                              _selected.contains(r.path) ? _selected.remove(r.path) : _selected.add(r.path);
+                              if (_selected.isEmpty) _selectMode = false; // 다 풀면 선택 끝 (아래 막대도 사라짐)
+                            });
                             return;
                           }
                           context.read<PlayerProvider>().playFromList(songs, i);
@@ -384,7 +399,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
           Positioned(right: 20, bottom: 24, child: _recordFab()),
         // (재생 막대는 맨 아래 미니플레이어에 합침)
         // 여러 개 선택 중: 아래 고정 버튼 (공유 · 잠금 · 삭제)
-        if (_selecting)
+        if (_selected.isNotEmpty)
           Positioned(left: 0, right: 0, bottom: 0, child: _selectBar(list, music, baseColor, isDark)),
       ],
     );
@@ -537,6 +552,11 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
       ),
       child: Row(
         children: [
+          // 고른 걸 한 번에 다 풀기 (동영상 화면과 같게)
+          btn(Icons.remove_done_rounded, '선택 해제', () => setState(() {
+                _selected.clear();
+                _selectMode = false;
+              })),
           btn(Icons.share_outlined, '공유', () => _share(picked)),
           btn(allLocked ? Icons.lock_open : Icons.lock_outline, allLocked ? '잠금 풀기' : '잠금', () async {
             // 다 잠겨 있으면 다 풀고, 아니면 안 잠긴 것만 잠그기

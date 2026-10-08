@@ -246,6 +246,9 @@ class PlayerProvider extends ChangeNotifier {
       case LoopMode.one:
         _player.seek(Duration.zero);
         _player.play();
+        // 한 곡 반복도 끝까지 한 번 들을 때마다 재생 횟수 +1
+        final song = currentSong;
+        if (song != null) onSongPlayed?.call(song);
         break;
       case LoopMode.all:
         if (hasNext) {

@@ -275,6 +275,23 @@ class MainActivity : AudioServiceActivity() {
                         }
                     }
                 }
+                "trimVideo", "extractAudio" -> {
+                    // 동영상 잘라서 저장(영상) / 소리만 뽑아 음악으로 저장 — 다시 압축 안 해서 빠르고 화질 그대로
+                    val path = call.argument<String>("path")
+                    val startMs = (call.argument<Any>("startMs") as? Number)?.toLong() ?: 0L
+                    val endMs = (call.argument<Any>("endMs") as? Number)?.toLong() ?: 0L
+                    val outBase = (call.argument<String>("outBase") ?: "동영상").replace(Regex("[\\\\/:*?\"<>|]"), "_")
+                    if (path == null || endMs <= startMs) {
+                        result.success(null)
+                    } else {
+                        val audio = call.method == "extractAudio"
+                        Thread {
+                            val saved = if (audio) saveVideoAudio(path, startMs, endMs, outBase)
+                                        else saveTrimmedVideo(path, startMs, endMs, outBase)
+                            runOnUiThread { result.success(saved) }
+                        }.start()
+                    }
+                }
                 "trimAndSave" -> {
                     // 자르기: 원본은 그대로 두고 잘라낸 부분을 새 파일로 저장 (오래 걸릴 수 있어 따로 실행)
                     val path = call.argument<String>("path")
@@ -1304,6 +1321,161 @@ class MainActivity : AudioServiceActivity() {
         return videos
     }
 
+    /// 동영상 잘라서 Movies/Paransori 에 새로 저장 (원본 그대로). 저장된 경로, 실패면 null
+    private fun saveTrimmedVideo(path: String, startMs: Long, endMs: Long, outBase: String): String? {
+        val tmp = File(cacheDir, "video_trim_tmp.mp4")
+        return try {
+            if (tmp.exists()) tmp.delete()
+            if (!trimVideoWithMuxer(path, tmp, startMs, endMs)) return null
+            saveToMediaStore(tmp, MediaStore.Video.Media.EXTERNAL_CONTENT_URI, "Movies/Paransori", "$outBase.mp4", "video/mp4")
+        } catch (e: Exception) {
+            android.util.Log.e("TrimVideo", "Error: ${e.message}", e)
+            null
+        } finally {
+            tmp.delete()
+        }
+    }
+
+    /// 동영상 소리만 뽑아서 Music/Paransori 에 m4a로 저장. 저장된 경로, 실패면 null
+    private fun saveVideoAudio(path: String, startMs: Long, endMs: Long, outBase: String): String? {
+        val tmp = File(cacheDir, "video_audio_tmp.m4a")
+        return try {
+            if (tmp.exists()) tmp.delete()
+            if (!trimWithMuxer(path, tmp, startMs, endMs)) return null // 노래 자르기와 같은 방식
+            saveToMediaStore(tmp, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, "Music/Paransori", "$outBase.m4a", "audio/mp4", music = true)
+        } catch (e: Exception) {
+            android.util.Log.e("VideoAudio", "Error: ${e.message}", e)
+            null
+        } finally {
+            tmp.delete()
+        }
+    }
+
+    /// 만든 파일을 폰 갤러리·음악 폴더에 넣기 (같은 이름이 있으면 폰이 (1) 등을 붙임 → 실제 경로 돌려줌)
+    private fun saveToMediaStore(
+        src: File, collection: android.net.Uri, relDir: String, name: String, mime: String, music: Boolean = false
+    ): String? {
+        val values = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+            put(MediaStore.MediaColumns.MIME_TYPE, mime)
+            put(MediaStore.MediaColumns.RELATIVE_PATH, "$relDir/")
+            if (music) put(MediaStore.Audio.Media.IS_MUSIC, true)
+        }
+        val uri = contentResolver.insert(collection, values) ?: return null
+        contentResolver.openOutputStream(uri)?.use { os -> src.inputStream().use { it.copyTo(os) } }
+        var savedName = name
+        contentResolver.query(uri, arrayOf(MediaStore.MediaColumns.DISPLAY_NAME), null, null, null)?.use { c ->
+            if (c.moveToFirst()) savedName = c.getString(0) ?: savedName
+        }
+        val outPath = File(android.os.Environment.getExternalStorageDirectory(), "$relDir/$savedName").absolutePath
+        android.media.MediaScannerConnection.scanFile(this, arrayOf(outPath), null, null)
+        return outPath
+    }
+
+    /// 영상(화면+소리)을 다시 압축하지 않고 구간만 옮겨 담기 — 시작은 가장 가까운 앞 장면 경계부터
+    private fun trimVideoWithMuxer(src: String, out: File, startMs: Long, endMs: Long): Boolean {
+        val ex = android.media.MediaExtractor()
+        var muxer: android.media.MediaMuxer? = null
+        try {
+            ex.setDataSource(src)
+            val mx = android.media.MediaMuxer(out.absolutePath, android.media.MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
+            muxer = mx
+            val dst = HashMap<Int, Int>()
+            var maxSize = 1024 * 1024
+            for (i in 0 until ex.trackCount) {
+                val f = ex.getTrackFormat(i)
+                val mime = f.getString(android.media.MediaFormat.KEY_MIME) ?: continue
+                val isVideo = mime.startsWith("video/")
+                if (!isVideo && !mime.startsWith("audio/")) continue
+                ex.selectTrack(i)
+                dst[i] = mx.addTrack(f)
+                if (f.containsKey(android.media.MediaFormat.KEY_MAX_INPUT_SIZE)) {
+                    maxSize = maxOf(maxSize, f.getInteger(android.media.MediaFormat.KEY_MAX_INPUT_SIZE))
+                }
+                // 세로로 찍은 영상이 눕지 않게 방향 그대로
+                if (isVideo && f.containsKey("rotation-degrees")) mx.setOrientationHint(f.getInteger("rotation-degrees"))
+            }
+            if (dst.isEmpty()) return false
+            // 찍은 곳(위치 태그)도 그대로 옮기기
+            readVideoLocation(src)?.let { (lat, lng) ->
+                try { mx.setLocation(lat, lng) } catch (_: Exception) {}
+            }
+            mx.start()
+            val startUs = startMs * 1000
+            val endUs = endMs * 1000
+            ex.seekTo(startUs, android.media.MediaExtractor.SEEK_TO_PREVIOUS_SYNC)
+            val buf = java.nio.ByteBuffer.allocate(maxSize)
+            val info = android.media.MediaCodec.BufferInfo()
+            val ended = HashSet<Int>()
+            var base = -1L
+            var wrote = false
+            while (true) {
+                val track = ex.sampleTrackIndex
+                if (track < 0) break
+                info.offset = 0
+                info.size = ex.readSampleData(buf, 0)
+                if (info.size < 0) break
+                val t = ex.sampleTime
+                if (t > endUs) {
+                    ended.add(track)
+                    if (ended.size >= dst.size) break
+                    ex.advance()
+                    continue
+                }
+                if (base < 0) base = t
+                if (t < base) {
+                    ex.advance()
+                    continue
+                }
+                info.presentationTimeUs = t - base
+                info.flags = ex.sampleFlags
+                mx.writeSampleData(dst[track]!!, buf, info)
+                wrote = true
+                ex.advance()
+            }
+            if (wrote) mx.stop()
+            return wrote
+        } catch (e: Exception) {
+            android.util.Log.e("TrimVideo", "Error: ${e.message}", e)
+            return false
+        } finally {
+            try { muxer?.release() } catch (_: Exception) {}
+            ex.release()
+        }
+    }
+
+    /// 영상 속 위치 태그 (위도, 경도) — 없으면 null
+    private fun readVideoLocation(path: String): Pair<Float, Float>? {
+        val r = MediaMetadataRetriever()
+        try {
+            var opened = false
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                try {
+                    contentResolver.query(
+                        MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                        arrayOf(MediaStore.Video.Media._ID),
+                        "${MediaStore.Video.Media.DATA}=?", arrayOf(path), null
+                    )?.use {
+                        if (it.moveToFirst()) {
+                            val uri = MediaStore.setRequireOriginal(
+                                android.net.Uri.withAppendedPath(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, it.getLong(0).toString()))
+                            r.setDataSource(this, uri)
+                            opened = true
+                        }
+                    }
+                } catch (_: Exception) {}
+            }
+            if (!opened) r.setDataSource(path)
+            val loc = r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_LOCATION) ?: return null
+            val m = Regex("([+-]\\d+(?:\\.\\d+)?)([+-]\\d+(?:\\.\\d+)?)").find(loc) ?: return null
+            return Pair(m.groupValues[1].toFloat(), m.groupValues[2].toFloat())
+        } catch (_: Exception) {
+            return null
+        } finally {
+            try { r.release() } catch (_: Exception) {}
+        }
+    }
+
     private fun getVideoThumbnail(path: String): ByteArray? {
         return try {
             val retriever = MediaMetadataRetriever()
@@ -1343,7 +1515,6 @@ class MainActivity : AudioServiceActivity() {
             }
             if (!opened) retriever.setDataSource(path)
             val loc = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_LOCATION)
-            android.util.Log.d("VideoPlace", "원본으로 열림=$opened | 위치=$loc | 파일=$path")
             if (loc == null) return null
             val m = Regex("([+-]\\d+(?:\\.\\d+)?)([+-]\\d+(?:\\.\\d+)?)").find(loc) ?: return null
             val lat = m.groupValues[1].toDouble()
@@ -1356,11 +1527,7 @@ class MainActivity : AudioServiceActivity() {
                     val all = android.location.Geocoder(this, java.util.Locale.getDefault())
                         .getFromLocation(lat, lng, 5) ?: emptyList()
                     val a = all.firstOrNull()
-                    all.forEachIndexed { i, x ->
-                        android.util.Log.d("VideoPlace", "후보$i=${x.getAddressLine(0)} | subLoc=${x.subLocality} | road=${x.thoroughfare} | feat=${x.featureName}")
-                    }
                     if (a != null) {
-                        android.util.Log.d("VideoPlace", "주소=${a.getAddressLine(0)} | admin=${a.adminArea} | subAdmin=${a.subAdminArea} | loc=${a.locality} | subLoc=${a.subLocality} | road=${a.thoroughfare} | feat=${a.featureName}")
                         // 짧게: 서울특별시 → 서울, 경기도 → 경기
                         val short = mapOf(
                             "서울특별시" to "서울", "부산광역시" to "부산", "대구광역시" to "대구", "인천광역시" to "인천",

@@ -17,6 +17,7 @@ import '../providers/theme_provider.dart';
 import '../widgets/paran_dialog.dart';
 import '../widgets/action_feedback.dart';
 import '../widgets/paran_toast.dart';
+import 'video_trim_screen.dart';
 
 // 이어보기: 동영상마다 멈춘 곳 기억 (폰에 저장 + 바로 쓰게 메모리에도)
 class VideoResume {
@@ -382,6 +383,7 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
             setState(() {
               if (all) {
                 _selected.clear();
+                _selectMode = false; // 다 풀면 선택 끝
               } else {
                 _selected
                   ..clear()
@@ -443,6 +445,8 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
         ),
         child: Row(
           children: [
+            // 고른 걸 한 번에 다 풀기 (막대·동그라미도 같이 사라짐)
+            btn(Icons.remove_done_rounded, '선택 해제', _endSelect),
             btn(Icons.share_outlined, '공유', () async {
               await Share.shareXFiles([for (final v in picked) XFile(v.uri)]);
             }),
@@ -475,8 +479,10 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
                   video: v,
                   selecting: _selecting,
                   selected: _selected.contains(v.uri),
-                  onSelect: () => setState(
-                      () => _selected.contains(v.uri) ? _selected.remove(v.uri) : _selected.add(v.uri)),
+                  onSelect: () => setState(() {
+                    _selected.contains(v.uri) ? _selected.remove(v.uri) : _selected.add(v.uri);
+                    if (_selected.isEmpty) _selectMode = false; // 다 풀면 선택 끝 (아래 버튼도 사라짐)
+                  }),
                 );
               },
               childCount: list.length,
@@ -675,7 +681,7 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
         ],
       ),
           // 여러 개 선택 중: 아래 고정 버튼 (공유 · 삭제)
-          if (_selecting)
+          if (_selected.isNotEmpty)
             Positioned(left: 0, right: 0, bottom: 0, child: _selectBar(videoProvider.videos, isDarkMode)),
         ],
       ),
@@ -853,6 +859,15 @@ class _VideoTileState extends State<_VideoTile> {
                       action(Icons.ios_share_rounded, '공유하기', ink, bg,
                           isDarkMode ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348),
                           () => shareVideo(context, widget.video)),
+                      Divider(height: 1, thickness: 1, color: line),
+                      action(Icons.content_cut_rounded, '잘라서 보내기', ink, bg,
+                          isDarkMode ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348),
+                          () => Navigator.push(
+                              context, MaterialPageRoute(builder: (_) => VideoTrimScreen(video: widget.video)))),
+                      Divider(height: 1, thickness: 1, color: line),
+                      action(Icons.music_note_rounded, '음악으로 저장', ink, bg,
+                          isDarkMode ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348),
+                          () => showSaveAudioSheet(context, widget.video)),
                       Divider(height: 1, thickness: 1, color: line),
                       action(Icons.edit_outlined, AppLocalizations.of(context)!.rename, ink, bg,
                           isDarkMode ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348), () => _renameVideo(context)),
@@ -1290,6 +1305,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
               return [
                 item(Icons.ios_share_rounded, '공유하기', 'share'),
                 item(Icons.headphones_rounded, '소리만 듣기', 'audioOnly', on: _audioOnly),
+                item(Icons.content_cut_rounded, '잘라서 보내기', 'trim'),
+                item(Icons.music_note_rounded, '음악으로 저장', 'toMusic'),
                 item(Icons.edit_outlined, AppLocalizations.of(context)!.rename, 'rename'),
                 item(Icons.delete_outline_rounded, AppLocalizations.of(context)!.delete, 'delete', danger: true),
               ];
@@ -1304,6 +1321,16 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
                 (await SharedPreferences.getInstance()).setBool('videoAudioOnly', _audioOnly);
                 if (context.mounted) {
                   showParanToast(context, _audioOnly ? '화면을 꺼도 소리가 계속 나와요' : '앱을 나가면 멈춰요');
+                }
+                return;
+              }
+              if (value == 'trim' || value == 'toMusic') {
+                _videoPlayerController.pause(); // 자르는 동안 멈추기
+                if (value == 'trim') {
+                  await Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => VideoTrimScreen(video: widget.video)));
+                } else {
+                  await showSaveAudioSheet(context, widget.video);
                 }
                 return;
               }

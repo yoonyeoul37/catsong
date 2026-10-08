@@ -105,8 +105,7 @@ class VideoProvider extends ChangeNotifier {
       if (!_mediaLocAsked) {
         _mediaLocAsked = true;
         try {
-          final st = await Permission.accessMediaLocation.request();
-          debugPrint('VideoPlace 권한: $st');
+          await Permission.accessMediaLocation.request();
         } catch (_) {}
       }
       final r = await _channel.invokeMethod('getVideoPlace', {'path': uri});
@@ -208,7 +207,6 @@ class VideoProvider extends ChangeNotifier {
         _seen = saved.toSet();
       }
       debugPrint('비디오 스캔 완료: ${_videos.length}개');
-      debugPrint('NEW 확인: 본 영상 ${_seen?.length}개 기억 / NEW = ${_videos.where((v) => isNew(v.uri)).map((v) => v.title).toList()}');
       debugPrint('비디오 목록: ${foundVideos.map((v) => v.title).toList()}');
     } catch (e) {
       _errorMessage = '비디오 스캔 오류: $e';

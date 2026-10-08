@@ -2518,7 +2518,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: GestureDetector(
                   onTap: () {
                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                    setState(() => _currentTabIndex = index);
+                    setState(() {
+                      // "곡"을 누르면 즐겨찾기·최근·통화녹음에서 전체 곡 목록으로 바로 돌아오기
+                      if (index == 0) {
+                        _showFavorites = false;
+                        _showRecent = false;
+                        _showCalls = false;
+                      }
+                      _currentTabIndex = index;
+                    });
                   },
                   behavior: HitTestBehavior.opaque,
                   child: Column(

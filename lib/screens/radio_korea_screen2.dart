@@ -366,11 +366,14 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                 letterSpacing: 1,
               ),
             ),
-            const SizedBox(width: 6),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 3),
-              child: _LogoEqBars(),
-            ),
+            // 라디오를 틀면(미니플레이어가 뜨면) 막대는 미니플레이어 하나만 → 여기선 숨기기
+            if (radioProvider.currentStation == null) ...[
+              const SizedBox(width: 6),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 3),
+                child: _LogoEqBars(),
+              ),
+            ],
           ],
         ),
         bottom: PreferredSize(

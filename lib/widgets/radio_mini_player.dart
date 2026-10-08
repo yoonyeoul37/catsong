@@ -115,7 +115,7 @@ class RadioMiniPlayer extends StatelessWidget {
                           ),
                           alignment: Alignment.center,
                           child: isPlaying
-                              ? const _MiniEqualizerBars(color: Color(0xFFE8877E))
+                              ? _MiniEqualizerBars(color: Theme.of(context).colorScheme.primary) // 포인트 색
                               : Icon(Icons.radio, color: baseColor.withOpacity(0.6), size: 22),
                         ),
                         const SizedBox(width: 12),
@@ -144,9 +144,11 @@ class RadioMiniPlayer extends StatelessWidget {
                                         ? '● LIVE'
                                         : '일시정지',
                                     style: TextStyle(
+                                      // LIVE는 어디서나 빨강 (생방송 표시)
                                       color: isPlaying
-                                          ? const Color(0xFFE8877E)
+                                          ? const Color(0xFFD84A3A)
                                           : baseColor.withOpacity(0.6),
+                                      fontWeight: isPlaying ? FontWeight.w600 : FontWeight.w400,
                                       fontSize: 12,
                                     ),
                                   ),

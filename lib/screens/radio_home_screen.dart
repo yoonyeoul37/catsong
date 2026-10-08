@@ -108,9 +108,38 @@ class RadioHomeScreen extends StatelessWidget {
       sorted.insert(0, userContinent);
     }
 
+    // 한국어 화면이면 대륙 이름도 한글로
+    const continentLabelsKo = {
+      'ASIA': '아시아',
+      'EUROPE': '유럽',
+      'NORTH_AMERICA': '북아메리카',
+      'SOUTH_AMERICA': '남아메리카',
+      'MIDDLE_EAST': '중동',
+      'AFRICA': '아프리카',
+      'OCEANIA': '오세아니아',
+    };
+    final isKo = Localizations.localeOf(context).languageCode == 'ko';
+
     final widgets = <Widget>[];
+
+    // 맨 위: 내 나라 먹색 카드 (아래 목록에선 빼서 두 번 안 나오게)
+    RadioCountry? myCountry;
+    for (final c in countries) {
+      if (c.code == deviceCountryCode) {
+        myCountry = c;
+        break;
+      }
+    }
+    if (myCountry != null) {
+      final mine = myCountry;
+      widgets.add(Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: _MyCountryCard(country: mine, onTap: () => _onCountryTap(context, mine)),
+      ));
+    }
+
     for (final continent in sorted) {
-      final group = countries.where((c) => c.continent == continent).toList();
+      final group = countries.where((c) => c.continent == continent && c.code != myCountry?.code).toList();
       if (group.isEmpty) continue;
 
       // 유저 나라를 해당 대륙 맨 위로
@@ -128,20 +157,13 @@ class RadioHomeScreen extends StatelessWidget {
           padding: const EdgeInsets.only(top: 24, bottom: 8),
           child: Row(
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.08),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  continentLabels[continent] ?? continent,
-                  style: TextStyle(
-                    color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.5),
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1.5,
-                  ),
+              Text(
+                (isKo ? continentLabelsKo[continent] : continentLabels[continent]) ?? continent,
+                style: TextStyle(
+                  color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.45),
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: isKo ? 0 : 1.2,
                 ),
               ),
               const SizedBox(width: 10),
@@ -167,7 +189,7 @@ class RadioHomeScreen extends StatelessWidget {
                 onTap: () => _onCountryTap(context, country),
               ),
               if (i != group.length - 1)
-                Divider(height: 1, color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.16), indent: 48),
+                Divider(height: 1, thickness: 0.6, color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.07), indent: 48),
             ],
           ),
         );
@@ -262,11 +284,14 @@ class RadioHomeScreen extends StatelessWidget {
                 letterSpacing: 1,
               ),
             ),
-            const SizedBox(width: 6),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 3),
-              child: _LogoEqBars(),
-            ),
+            // 라디오를 틀면(미니플레이어가 뜨면) 여기 막대는 숨기기
+            if (radioProvider.currentStation == null) ...[
+              const SizedBox(width: 6),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 3),
+                child: _LogoEqBars(),
+              ),
+            ],
           ],
         ),
         actions: [
@@ -296,6 +321,63 @@ class RadioHomeScreen extends StatelessWidget {
       bottomNavigationBar: radioProvider.currentStation != null
           ? const SafeArea(top: false, child: RadioMiniPlayer())
           : null,
+    );
+  }
+}
+
+/// 맨 위 "내 나라" 먹색 카드 (다크 모드는 크림색) — 설정 화면 맨 위 카드와 한 세트
+class _MyCountryCard extends StatelessWidget {
+  final RadioCountry country;
+  final VoidCallback onTap;
+  const _MyCountryCard({required this.country, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = context.watch<ThemeProvider>().isDarkMode;
+    final bg = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final fg = isDark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
+    final l = AppLocalizations.of(context)!;
+    final isKo = Localizations.localeOf(context).languageCode == 'ko';
+    String count;
+    if (country.code == 'KR') {
+      count = '${koreanStations.length}${l.radioChannelCount}';
+    } else {
+      final n = context.watch<RadioProvider>().getCountryStationCount(country.code);
+      count = n != null ? '$n${l.radioChannelCount}' : l.radioPopular200;
+    }
+    return Material(
+      color: bg,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 14, 12, 14),
+          child: Row(
+            children: [
+              Text(country.flag, style: const TextStyle(fontSize: 32)),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(isKo ? '내 나라' : 'My country',
+                        style: TextStyle(color: fg.withOpacity(0.6), fontSize: 11)),
+                    const SizedBox(height: 2),
+                    Text(country.displayName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: fg, fontSize: 16, fontWeight: FontWeight.w700, letterSpacing: -0.2)),
+                    const SizedBox(height: 1),
+                    Text(count, style: TextStyle(color: fg.withOpacity(0.6), fontSize: 12)),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right_rounded, color: fg.withOpacity(0.5)),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

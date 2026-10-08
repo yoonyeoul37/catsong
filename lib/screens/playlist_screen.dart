@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -117,15 +118,8 @@ class PlaylistScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           children: [
-            Container(
-              width: 56,
-              height: 56,
-              decoration: BoxDecoration(
-                color: baseColor.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Icon(Icons.playlist_play, color: baseColor.withOpacity(0.7), size: 28),
-            ),
+            // 표지: 앨범 사진 4장 → 1장 → 그라데이션 + 첫 글자
+            _PlaylistCover(playlist: playlist, size: 56),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -143,14 +137,14 @@ class PlaylistScreen extends StatelessWidget {
                 ],
               ),
             ),
+            // ⋮ 이름 바꾸기 · 삭제 (앱 공통 둥근 카드, 다크 모드 자동)
             PopupMenuButton<String>(
               icon: Icon(Icons.more_vert, color: baseColor.withOpacity(0.38), size: 20),
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+              position: PopupMenuPosition.under,
               itemBuilder: (context) => [
-                _buildPopupItem(Icons.edit, AppLocalizations.of(context)!.rename, 'rename', AppTheme.fixedAccent),
-                _buildPopupItem(Icons.delete, AppLocalizations.of(context)!.delete, 'delete', Colors.redAccent),
+                _buildPopupItem(context, Icons.edit_outlined, AppLocalizations.of(context)!.rename, 'rename'),
+                _buildPopupItem(context, Icons.delete_outline_rounded, AppLocalizations.of(context)!.delete, 'delete',
+                    danger: true),
               ],
               onSelected: (value) {
                 if (value == 'rename') {
@@ -166,15 +160,30 @@ class PlaylistScreen extends StatelessWidget {
     );
   }
 
-  PopupMenuItem<String> _buildPopupItem(
-      IconData icon, String label, String value, Color color) {
+  /// 메뉴 한 줄: 아이콘 베이지 칸 + 글자 (삭제는 빨강)
+  PopupMenuItem<String> _buildPopupItem(BuildContext context, IconData icon, String label, String value,
+      {bool danger = false}) {
+    final isDark = context.read<ThemeProvider>().isDarkMode;
+    const red = Color(0xFFD84A3A);
+    final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final color = danger ? red : ink;
+    final boxBg = danger
+        ? red.withOpacity(isDark ? 0.18 : 0.1)
+        : (isDark ? Colors.white.withOpacity(0.08) : const Color(0xFFF4EFE5));
+    final iconColor = danger ? red : (isDark ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348));
     return PopupMenuItem(
       value: value,
+      height: 46,
       child: Row(
         children: [
-          Icon(icon, color: color, size: 18),
-          const SizedBox(width: 10),
-          Text(label, style: const TextStyle(color: Colors.black87)),
+          Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(color: boxBg, borderRadius: BorderRadius.circular(9)),
+            child: Icon(icon, color: iconColor, size: 17),
+          ),
+          const SizedBox(width: 12),
+          Text(label, style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.w600)),
         ],
       ),
     );
@@ -379,6 +388,83 @@ class PlaylistDetailScreen extends StatelessWidget {
           const SliverPadding(padding: EdgeInsets.only(bottom: 80)),
         ],
       ),
+    );
+  }
+}
+
+/// 재생목록 표지 — 회색 칸 대신
+/// 앨범 사진 있는 곡 4곡 이상: 2×2 / 1~3곡: 첫 사진 / 없으면: 그라데이션 + 첫 글자
+class _PlaylistCover extends StatelessWidget {
+  final Playlist playlist;
+  final double size;
+  const _PlaylistCover({required this.playlist, this.size = 56});
+
+  // 목록마다 늘 같은 색 (이름이 아니라 id로 골라서 이름 바꿔도 그대로)
+  static const _grads = <List<Color>>[
+    [Color(0xFF3A3550), Color(0xFF6B4A3A)],
+    [Color(0xFF1F4E6B), Color(0xFF6FB3C9)],
+    [Color(0xFF6B4A3A), Color(0xFFE0915F)],
+    [Color(0xFF4A3F7A), Color(0xFFC79ACF)],
+    [Color(0xFF233D32), Color(0xFF7FA77A)],
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final arts = <List<int>>[
+      for (final s in playlist.songs)
+        if (s.albumArt != null && s.albumArt!.isNotEmpty) s.albumArt!,
+    ].take(4).toList();
+    final px = (size * MediaQuery.devicePixelRatioOf(context)).round(); // 화면 크기만큼만 풀기
+
+    Widget img(List<int> b, int w) => Image.memory(
+      Uint8List.fromList(b),
+      fit: BoxFit.cover,
+      cacheWidth: w,
+      gaplessPlayback: true,
+      errorBuilder: (_, __, ___) => const ColoredBox(color: Color(0xFFE3DCCD)),
+    );
+
+    Widget child;
+    if (arts.length >= 4) {
+      child = GridView.count(
+        crossAxisCount: 2,
+        physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.zero,
+        children: [for (final a in arts) img(a, px ~/ 2)],
+      );
+    } else if (arts.isNotEmpty) {
+      child = img(arts.first, px);
+    } else {
+      var h = 0;
+      for (final c in playlist.id.codeUnits) {
+        h = (h * 31 + c) & 0x7fffffff;
+      }
+      final name = playlist.name.trim();
+      child = DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: _grads[h % _grads.length],
+          ),
+        ),
+        child: Center(
+          child: Text(
+            name.isEmpty ? '♪' : name.characters.first,
+            style: TextStyle(
+              color: const Color(0xFFF4EFE5),
+              fontSize: size * 0.38,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+      );
+    }
+
+    return SizedBox(
+      width: size,
+      height: size,
+      child: ClipRRect(borderRadius: BorderRadius.circular(size * 0.2), child: child),
     );
   }
 }

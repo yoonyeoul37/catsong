@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/theme_provider.dart';
 
-/// 위에 사진(+ Paransori 워터마크)이 들어간 알림창 (리뷰·업데이트 공통)
+/// 위에 사진(+ Paransori)이 들어간 알림창 (리뷰·업데이트 공통)
 /// 큰 버튼을 누르면 true, "나중에"를 누르면 false
 Future<bool> showPhotoDialog(
     BuildContext context, {
@@ -34,9 +34,9 @@ Future<bool> showPhotoDialog(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ParanBanner(image: image),
+            ParanBanner(image: image, bg: bg, isDark: isDark),
             Padding(
-              padding: const EdgeInsets.fromLTRB(22, 20, 22, 14),
+              padding: const EdgeInsets.fromLTRB(22, 10, 22, 14),
               child: Column(
                 children: [
                   Text(title,
@@ -106,45 +106,54 @@ Future<bool> showPhotoDialog(
   return ok == true;
 }
 
-/// 알림창 위 사진 + 오른쪽 아래 Paransori 워터마크 (종료·리뷰·업데이트 공통 모양)
+/// 알림창 위 그림 + 그림과 글 사이 가운데 Paransori (종료·리뷰·업데이트 공통)
+/// 그림 아래쪽이 창 바탕색으로 스며들어 경계가 안 보이고, 그 자리에 로고
 class ParanBanner extends StatelessWidget {
-  final String image;
-  const ParanBanner({super.key, required this.image});
+final String image;
+final Color bg; // 창 바탕색 (그림이 이 색으로 스며듦)
+final bool isDark;
+const ParanBanner({super.key, required this.image, required this.bg, this.isDark = false});
 
-  @override
-  Widget build(BuildContext context) {
-    final isKo = Localizations.localeOf(context).languageCode == 'ko';
-    return AspectRatio(
-      aspectRatio: 2.2,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // 새 그림은 가운데에 있어서 가운데 기준
-          Image.asset(image, fit: BoxFit.cover, alignment: Alignment.center),
-          // 베이지 그림 위라서 파랑+먹색 (종료 창 낮 모양과 똑같이)
-          Positioned(
-            right: 14,
-            bottom: 10,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Paran',
-                    style: GoogleFonts.quicksand(
-                        color: const Color(0xFF2589E8),
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.3)),
-                Text(isKo ? 'sori' : 'Sori',
-                    style: GoogleFonts.quicksand(
-                        color: const Color(0xFF17140F).withOpacity(0.75),
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.3)),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+@override
+Widget build(BuildContext context) {
+return Column(
+mainAxisSize: MainAxisSize.min,
+children: [
+AspectRatio(
+aspectRatio: 2.2,
+child: Stack(
+fit: StackFit.expand,
+children: [
+// 새 그림은 가운데에 있어서 가운데 기준
+Image.asset(image, fit: BoxFit.cover, alignment: Alignment.center),
+// 아래 40%가 창 바탕색으로 스르륵
+DecoratedBox(
+decoration: BoxDecoration(
+gradient: LinearGradient(
+begin: Alignment.topCenter,
+end: Alignment.bottomCenter,
+colors: [bg.withOpacity(0), bg.withOpacity(0), bg],
+stops: const [0.0, 0.6, 1.0],
+),
+),
+),
+],
+),
+),
+// 경계 가운데 Paransori (그림 끝에 살짝 걸치게)
+Transform.translate(
+offset: const Offset(0, -8),
+child: Text(
+'Paransori',
+style: GoogleFonts.quicksand(
+color: isDark ? const Color(0xFF8A8378) : const Color(0xFFA39C90),
+  fontSize: 12.5,
+  fontWeight: FontWeight.w700,
+  letterSpacing: 1.2,
+),
+),
+),
+],
+);
+}
 }

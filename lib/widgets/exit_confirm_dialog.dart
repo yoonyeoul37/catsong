@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../providers/theme_provider.dart';
 import '../l10n/app_localizations.dart';
+import 'photo_dialog.dart' show ParanBanner;
 
 /// 종료 확인창 (홈·음악·라디오·자연소리 공통)
-/// 위: 노을 사진 / 가운데: "종료하시겠어요?" 크게 + 인사 작게 / 아래: 계속 듣기 · 종료
+/// 위: 그림(아래로 스며듦) + 경계 가운데 Paransori / 가운데: "종료하시겠어요?" / 아래: 계속 듣기 · 종료
 /// 종료를 누르면 true
 Future<bool> showExitConfirm(BuildContext context) async {
   const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -27,56 +27,14 @@ Future<bool> showExitConfirm(BuildContext context) async {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 노을 사진 (사람·고양이가 안 잘리게 살짝 왼쪽 기준)
-            AspectRatio(
-              aspectRatio: 2.2,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.asset(
-                    // 다크 모드면 밤 그림
-isDark
-    ? 'assets/exit_banner_night.jpg'
-    : 'assets/exit_banner.jpg',
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center, // 새 그림은 가운데에 있어서
-                  ),
-                  // 왼쪽 위 하늘에 작은 워터마크 (재생화면과 같은 모양)
-                  Positioned(
-                    right: 14,
-                    bottom: 10,
-                    child: Builder(builder: (_) {
-                      final isKo = Localizations.localeOf(context).languageCode == 'ko';
-                      // 낮(베이지 그림): 파랑+먹색 / 밤(어두운 그림): 밝은 하늘색+흰색
-                      final shadow = isDark
-                          ? const [Shadow(color: Color(0x88000000), blurRadius: 8)]
-                          : const <Shadow>[];
-                      return Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text('Paran',
-                              style: GoogleFonts.quicksand(
-                                  color: isDark ? const Color(0xFF9FD3FF) : const Color(0xFF2589E8),
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 0.3,
-                                  shadows: shadow)),
-                          Text(isKo ? 'sori' : 'Sori',
-                              style: GoogleFonts.quicksand(
-                                  color: isDark ? Colors.white : const Color(0xFF17140F).withOpacity(0.75),
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 0.3,
-                                  shadows: shadow)),
-                        ],
-                      );
-                    }),
-                  ),
-                ],
-              ),
+            // 그림 + 경계 가운데 Paransori (업데이트·리뷰 창과 같은 부품)
+            ParanBanner(
+              image: isDark ? 'assets/exit_banner_night.jpg' : 'assets/exit_banner.jpg',
+              bg: bg,
+              isDark: isDark,
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(22, 22, 22, 22),
+              padding: const EdgeInsets.fromLTRB(22, 10, 22, 22),
               child: Column(
                 children: [
                   // 질문은 크고 굵게

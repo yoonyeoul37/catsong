@@ -359,9 +359,13 @@ padding: const EdgeInsets.fromLTRB(28, 26, 28, 22),
 child: Column(
 crossAxisAlignment: CrossAxisAlignment.start,
 children: [
+// 제목 '위'면 유리 띠가 맨 위로, 아니면 따옴표
+if (_titlePos == 0)
+_glassBar(ink, shadow, withTitle: true)
+else
 Icon(Icons.format_quote_rounded, color: ink.withOpacity(0.55), size: 30),
 const Spacer(),
-if (_titlePos == 0) ...[titleText, const SizedBox(height: 14)],
+
 // 고른 가사 (가운데 크게)
 SizedBox(
 width: double.infinity,
@@ -380,10 +384,10 @@ shadows: shadow,
 )),
 ),
 ),
-if (_titlePos == 1) ...[const SizedBox(height: 16), titleText],
+// (제목 '아래'는 맨 아래 유리 띠 안으로)
 const Spacer(),
-// 오른쪽 아래 Paransori (항상)
-Align(alignment: Alignment.bottomRight, child: _watermark(ink, shadow)),
+// 맨 아래 유리 띠 (제목 '위'면 위로 올라가서 여기선 없음)
+if (_titlePos != 0) _glassBar(ink, shadow, withTitle: _titlePos == 1),
 ],
 ),
 ),
@@ -394,24 +398,57 @@ Align(alignment: Alignment.bottomRight, child: _watermark(ink, shadow)),
 );
 }
 
+/// 유리 띠: (제목 · 가수) + Paransori — 위·아래 어디든 같은 모양
+Widget _glassBar(Color ink, List<Shadow> shadow, {required bool withTitle}) {
+  // 제목이 없으면 긴 띠 대신 오른쪽 작은 알약
+  final bar = Container(
+    padding: withTitle
+        ? const EdgeInsets.symmetric(horizontal: 12, vertical: 9)
+        : const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+    decoration: BoxDecoration(
+      color: _light ? Colors.black.withOpacity(0.06) : Colors.white.withOpacity(0.16),
+      borderRadius: BorderRadius.circular(14),
+      border: Border.all(
+        color: _light ? Colors.black.withOpacity(0.10) : Colors.white.withOpacity(0.32),
+      ),
+    ),
+    child: Row(
+      mainAxisSize: withTitle ? MainAxisSize.max : MainAxisSize.min,
+      children: [
+        if (withTitle)
+          Expanded(
+            child: Text.rich(
+              TextSpan(children: [
+                TextSpan(text: widget.title, style: const TextStyle(fontWeight: FontWeight.w700)),
+                TextSpan(text: ' · ${widget.artist}', style: TextStyle(color: ink.withOpacity(0.75))),
+              ]),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: ink, fontSize: 11.5, shadows: shadow),
+            ),
+          ),
+        if (withTitle) const SizedBox(width: 10),
+        _watermark(ink, shadow),
+      ],
+    ),
+  );
+  return withTitle ? bar : Align(alignment: Alignment.centerRight, child: bar);
+}
+
 /// 오른쪽 아래 작은 워터마크 (가사 화면과 같은 모양)
 Widget _watermark(Color ink, List<Shadow> shadow) {
-final ko = Localizations.localeOf(context).languageCode == 'ko';
-final c = ink.withOpacity(_light ? 0.7 : 0.85);
-final en = Text(ko ? 'Paransori' : 'ParanSori',
-style: GoogleFonts.quicksand(
-color: c, fontSize: 11.5, fontWeight: FontWeight.w600, letterSpacing: 1.6, shadows: shadow));
-if (!ko) return en;
-return Row(
-mainAxisSize: MainAxisSize.min,
-children: [
-Text('파란소리',
-style: TextStyle(color: c, fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 1.2, shadows: shadow)),
-Container(width: 1, height: 10, margin: const EdgeInsets.symmetric(horizontal: 7), color: c),
-en,
-],
-);
+  return Text(
+    'Paransori',
+    style: GoogleFonts.quicksand(
+      color: ink.withOpacity(_light ? 0.75 : 0.9),
+      fontSize: 10.5,
+      fontWeight: FontWeight.w700,
+      letterSpacing: 0.8,
+      shadows: shadow,
+    ),
+  );
 }
+
 
 // ───────── 공유 ─────────
 Future<void> _share() async {

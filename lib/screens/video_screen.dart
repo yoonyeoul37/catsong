@@ -201,36 +201,95 @@ class _VideoTileState extends State<_VideoTile> {
   Future<void> _showOptions(BuildContext context) async {
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
+    // 아래에서 올라오는 창 (통화녹음 ⋮ 창과 같은 모양)
+    final bg = isDarkMode ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
+    final card = isDarkMode ? const Color(0xFF332E26) : Colors.white;
+    final ink = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final sub = isDarkMode ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
+    final line = isDarkMode ? const Color(0xFF3A342B) : const Color(0xFFEFE9DE);
+    const red = Color(0xFFD84A3A);
     showModalBottomSheet(
       context: context,
-      backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: Icon(Icons.edit, color: baseColor.withOpacity(0.7)),
-              title: Text(AppLocalizations.of(context)!.rename,
-                  style: TextStyle(color: baseColor)),
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        Widget action(IconData icon, String label, Color color, Color iconBg, Color iconColor, VoidCallback onTap) =>
+            InkWell(
               onTap: () {
+                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                 Navigator.pop(ctx);
-                _renameVideo(context);
+                onTap();
               },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(color: iconBg, borderRadius: BorderRadius.circular(9)),
+                      child: Icon(icon, color: iconColor, size: 17),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(label, style: TextStyle(color: color, fontSize: 14.5, fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ),
+            );
+        return SafeArea(
+          top: false,
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
+            decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(22)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Center(
+                  child: Container(
+                    width: 36,
+                    height: 4,
+                    decoration: BoxDecoration(color: line, borderRadius: BorderRadius.circular(2)),
+                  ),
+                ),
+                // 동영상 이름 + ✕
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4),
+                        child: Text(widget.video.titleDisplay,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: sub, fontSize: 12, fontWeight: FontWeight.w600)),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      visualDensity: VisualDensity.compact,
+                      icon: Icon(Icons.close_rounded, color: sub, size: 22),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(14)),
+                  child: Column(
+                    children: [
+                      action(Icons.edit_outlined, AppLocalizations.of(context)!.rename, ink, bg,
+                          isDarkMode ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348), () => _renameVideo(context)),
+                      Divider(height: 1, thickness: 1, color: line),
+                      action(Icons.delete_outline_rounded, AppLocalizations.of(context)!.delete, red,
+                          red.withOpacity(0.1), red, () => _deleteVideo(context)),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            ListTile(
-              leading: const Icon(Icons.delete, color: Colors.redAccent),
-              title: Text(AppLocalizations.of(context)!.delete,
-                  style: TextStyle(color: baseColor)),
-              onTap: () {
-                Navigator.pop(ctx);
-                _deleteVideo(context);
-              },
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -438,33 +497,40 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: Colors.white),
-            color: const Color(0xFF2A2A2A),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12)),
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'rename',
-                child: Row(
-                  children: [
-                    const Icon(Icons.edit, color: Colors.white, size: 18),
-                    const SizedBox(width: 10),
-                    Text(AppLocalizations.of(context)!.rename,
-                        style: const TextStyle(color: Colors.white)),
-                  ],
-                ),
-              ),
-              PopupMenuItem(
-                value: 'delete',
-                child: Row(
-                  children: [
-                    const Icon(Icons.delete, color: Colors.redAccent, size: 18),
-                    const SizedBox(width: 10),
-                    Text(AppLocalizations.of(context)!.delete,
-                        style: const TextStyle(color: Colors.white)),
-                  ],
-                ),
-              ),
-            ],
+            // 재생 화면은 늘 어두워서 어두운 둥근 카드 (재생목록 ⋮과 같은 모양)
+            color: const Color(0xFF26221C),
+            position: PopupMenuPosition.under,
+            itemBuilder: (context) {
+              const red = Color(0xFFD84A3A);
+              PopupMenuItem<String> item(IconData icon, String label, String value, {bool danger = false}) =>
+                  PopupMenuItem(
+                    value: value,
+                    height: 46,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: danger ? red.withOpacity(0.18) : Colors.white.withOpacity(0.08),
+                            borderRadius: BorderRadius.circular(9),
+                          ),
+                          child: Icon(icon, size: 17, color: danger ? red : const Color(0xFFCFC8BB)),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(label,
+                            style: TextStyle(
+                                color: danger ? red : const Color(0xFFF3EFE7),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                  );
+              return [
+                item(Icons.edit_outlined, AppLocalizations.of(context)!.rename, 'rename'),
+                item(Icons.delete_outline_rounded, AppLocalizations.of(context)!.delete, 'delete', danger: true),
+              ];
+            },
             onSelected: (value) async {
               if (value == 'rename') {
                 final newName = await showParanInput(

@@ -739,10 +739,13 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                    // 듣는 중: 파란 배경 대신 연한 베이지
-                    color: isGroupPlaying
-                        ? (isDarkMode ? const Color(0xFF332E26) : const Color(0xFFF7F3EB))
-                        : Colors.transparent,
+                    // 듣는 중: 바탕 위에 살짝 밝은 칸
+                    decoration: BoxDecoration(
+                      color: isGroupPlaying
+                          ? (isDarkMode ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.55))
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: Row(
                       children: [
                         ClipRRect(
@@ -813,26 +816,19 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                   ),
                 );
               }).toList();
-              // 흰 카드 하나에 묶기 (설정·즐겨찾기 창과 같은 모양)
+              // 흰 카드 없이 바탕 위에 줄만 (국가 목록과 같은 방식, 아주 연한 구분선)
               return [
-                Container(
-                  decoration: BoxDecoration(
-                    color: isDarkMode ? const Color(0xFF26221C) : Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    children: [
-                      for (var i = 0; i < _natureCards.length; i++) ...[
-                        if (i > 0)
-                          Container(
-                              height: 0.5,
-                              margin: const EdgeInsets.only(left: 78),
-                              color: baseColor.withOpacity(0.08)),
-                        _natureCards[i],
-                      ],
+                Column(
+                  children: [
+                    for (var i = 0; i < _natureCards.length; i++) ...[
+                      if (i > 0)
+                        Container(
+                            height: 0.6,
+                            margin: const EdgeInsets.only(left: 78, right: 12),
+                            color: baseColor.withOpacity(0.07)),
+                      _natureCards[i],
                     ],
-                  ),
+                  ],
                 ),
               ];
             })(),

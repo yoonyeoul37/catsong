@@ -701,8 +701,11 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         children: [
           LayoutBuilder(builder: (context, constraints) {
             final h = constraints.maxHeight;
-            return SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
+            final compact = h < 600; // 세로가 짧은 폰(엑스커버 등): 눈금자 숨기고 사진 자리 더 주기
+            // 스크롤 없이 한 화면에: 위 버튼은 상태바 아래 고정, 재생 버튼은 항상 화면 안
+            // (작은 폰에서는 사진만 남는 공간만큼 줄어듦 · 큰 폰은 그대로)
+            return SizedBox(
+              height: h,
               child: SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -1002,7 +1005,10 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                       SizedBox(height: (h * 0.02).clamp(10.0, 24.0)),
 
                       // ── 이미지(있으면) 또는 방송국명 박스, 채널명·시간 오버레이 ──
-                      Builder(builder: (ctx) {
+                      Flexible(child: LayoutBuilder(builder: (ctx, box) {
+                        // 큰 폰: 지금처럼 화면의 28% · 작은 폰: 남는 공간만큼 줄이기
+                        final cap = compact ? h * 0.36 : h * 0.28;
+                        final imgH = box.maxHeight < cap ? box.maxHeight : cap;
                         final programImage = radioProvider.currentProgram?['image'] as String?;
                         final hasImage = programImage != null && programImage.isNotEmpty;
                         final scheduleLoading = !_scheduleTimedOut &&
@@ -1018,7 +1024,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                               scheduleLoading
                                   ? Container(
                                 width: double.infinity,
-                                height: h * 0.28,
+                                height: imgH,
                                 color: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA),
                                 alignment: Alignment.center,
                                 child: SizedBox(
@@ -1031,12 +1037,11 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                   ? Image.network(
                                 programImage,
                                 width: double.infinity,
-                                height: h * 0.28,
+                                height: imgH,
                                 fit: BoxFit.cover,
-                                errorBuilder: (errCtx, err, stack) =>
-                                    RadioMoodPlaceholder(height: (h * 0.24).clamp(120.0, 220.0)),
+                                errorBuilder: (errCtx, err, stack) => RadioMoodPlaceholder(height: imgH),
                               )
-                                  : RadioMoodPlaceholder(height: h * 0.28),
+                                  : RadioMoodPlaceholder(height: imgH),
                               Positioned(
                                 left: 0,
                                 right: 0,
@@ -1102,7 +1107,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                             ],
                           ),
                         );
-                      }),
+                      })),
 
                       SizedBox(height: (h * 0.02).clamp(8.0, 16.0)),
 
@@ -1133,6 +1138,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                           radioProvider.scheduleList.isNotEmpty) ...[
                         SizedBox(height: (h * 0.005).clamp(2.0, 4.0)),
                         _NextProgramLine(
+                          compact: compact, // 짧은 폰은 작은 카드로
                           scheduleList: radioProvider.scheduleList,
                           currentProgram: radioProvider.currentProgram!,
                           radioProvider: radioProvider,
@@ -1162,6 +1168,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                               Expanded(
                                 child: Text(
                                   radioProvider.descriptionFor(current.name)!,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(color: baseColor.withOpacity(0.75), fontSize: 13, height: 1.5),
                                 ),
                               ),
@@ -1711,11 +1719,13 @@ class _NextProgramLine extends StatefulWidget {
   final List<Map<String, dynamic>> scheduleList;
   final Map<String, dynamic> currentProgram;
   final RadioProvider radioProvider;
+  final bool compact; // 세로가 짧은 폰이면 작은 카드
 
   const _NextProgramLine({
     required this.scheduleList,
     required this.currentProgram,
     required this.radioProvider,
+    this.compact = false,
   });
 
   @override
@@ -1810,10 +1820,12 @@ class _NextProgramLineState extends State<_NextProgramLine> {
 
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
+    final s = widget.compact ? 46.0 : 76.0; // 왼쪽 사진 크기
+    final iconS = widget.compact ? 20.0 : 28.0;
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(widget.compact ? 10 : 14),
       decoration: BoxDecoration(
         color: baseColor.withOpacity(0.05),
         borderRadius: BorderRadius.circular(18),
@@ -1821,25 +1833,25 @@ class _NextProgramLineState extends State<_NextProgramLine> {
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(widget.compact ? 10 : 14),
             child: (nextImage != null && nextImage.isNotEmpty)
                 ? Image.network(
               nextImage,
-              width: 76,
-              height: 76,
+              width: s,
+              height: s,
               fit: BoxFit.cover,
               errorBuilder: (errCtx, err, stack) => Container(
-                width: 76,
-                height: 76,
+                width: s,
+                height: s,
                 color: baseColor.withOpacity(0.08),
-                child: Icon(Icons.radio, color: baseColor.withOpacity(0.38), size: 28),
+                child: Icon(Icons.radio, color: baseColor.withOpacity(0.38), size: iconS),
               ),
             )
                 : Container(
-              width: 76,
-              height: 76,
+              width: s,
+              height: s,
               color: baseColor.withOpacity(0.08),
-              child: Icon(Icons.radio, color: baseColor.withOpacity(0.38), size: 28),
+              child: Icon(Icons.radio, color: baseColor.withOpacity(0.38), size: iconS),
             ),
           ),
           const SizedBox(width: 12),

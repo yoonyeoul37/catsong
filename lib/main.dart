@@ -252,9 +252,11 @@ class MyApp extends StatelessWidget {
             builder: (context, child) {
               AppLocale.current = AppLocalizations.of(context);
               debugPrint('=== 화면 크기: ${MediaQuery.of(context).size} ===');
+              // 폭이 좁은 폰(엑스커버 등)은 글자를 폭에 맞춰 살짝 줄이기 → A24와 같은 비율 (최대 15%)
+              final fit = (MediaQuery.of(context).size.width / 400).clamp(0.85, 1.0);
               return MediaQuery(
                 data: MediaQuery.of(context).copyWith(
-                  textScaler: TextScaler.linear(themeProvider.textScale),
+                  textScaler: TextScaler.linear(themeProvider.textScale * fit),
                   boldText: false,
                 ),
                 child: Container(

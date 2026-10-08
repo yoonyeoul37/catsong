@@ -96,7 +96,8 @@ class PlayerProvider extends ChangeNotifier {
           await playPrevious();
           break;
         case 'onAudioFocusLost':
-          if (_isPlaying) {
+          // 방금 곡을 틀었으면 무시 (라디오가 잡고 있던 소리 주도권이 넘어오면서 오는 신호라서)
+          if (_isPlaying && DateTime.now().difference(_startedAt).inSeconds >= 2) {
             await _player.pause();
           }
           break;
@@ -304,6 +305,7 @@ class PlayerProvider extends ChangeNotifier {
       await _player.setAudioSource(AudioSource.uri(Uri.parse(song.uri!)));
       // 자연소리가 남긴 "무한반복" 설정을 꺼준다 (반복은 앱이 직접 처리함)
       await _player.setLoopMode(LoopMode.off);
+      _startedAt = DateTime.now();
       await _player.play();
       await WakelockPlus.enable();
       _updateWidgetSongInfo(song);
@@ -508,6 +510,7 @@ class PlayerProvider extends ChangeNotifier {
   }
 
   bool _isChangingSong = false;
+  DateTime _startedAt = DateTime(2000); // 곡을 막 튼 시각
 
   Future<void> playNext() async {
     if (_isChangingSong) return;

@@ -1144,6 +1144,14 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
   ChewieController? _chewieController;
   Timer? _saveTimer; // 5초마다 어디까지 봤는지 저장
   bool _audioOnly = false; // 소리만 듣기 (화면 꺼도 계속)
+  double _speed = 1.0; // 재생 속도
+  bool _loopOn = false; // 구간 반복 막대 보이기
+  int? _loopA; // 구간 반복 시작 (밀리초)
+  int? _loopB; // 구간 반복 끝 (밀리초)
+  bool _loopSeeking = false;
+  int _seekSide = 0; // 두 번 탭 표시: -1 왼쪽 / 1 오른쪽 / 0 없음
+  int _seekSec = 0; // 두 번 탭으로 쌓인 초
+  Timer? _seekHide;
 
   @override
   void initState() {
@@ -1167,6 +1175,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
     );
 
     await _videoPlayerController.initialize();
+    _videoPlayerController.addListener(_loopTick); // 구간 반복: B에 닿으면 A로
     // 소리만 듣기 설정 불러오기 (한 번 켜면 다음 영상도 그대로)
     _audioOnly = (await SharedPreferences.getInstance()).getBool('videoAudioOnly') ?? false;
     // 이어보기: 멈췄던 곳부터
@@ -1207,6 +1216,242 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
     }
   }
 
+  // ───── 재생 화면 편의 기능: 두 번 탭 10초 · 재생 속도 · 구간 반복 ─────
+  void _vib() => const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+
+  String _speedLabel(double s) => s == s.roundToDouble() ? '${s.toStringAsFixed(1)}×' : '$s×';
+
+  String _fmtMs(int? ms) {
+    if (ms == null) return '--:--';
+    final s = ms ~/ 1000;
+    return '${s ~/ 60}:${(s % 60).toString().padLeft(2, '0')}';
+  }
+
+  // 구간 반복: B에 닿으면 A로
+  void _loopTick() {
+    final a = _loopA, b = _loopB;
+    if (a == null || b == null || b <= a || _loopSeeking) return;
+    final v = _videoPlayerController.value;
+    if (!v.isInitialized) return;
+    if (v.position.inMilliseconds >= b) {
+      _loopSeeking = true;
+      _videoPlayerController.seekTo(Duration(milliseconds: a)).whenComplete(() => _loopSeeking = false);
+    }
+  }
+
+  // 두 번 탭: -1 = 왼쪽 10초 뒤로 / 1 = 오른쪽 10초 앞으로 (연달아 누르면 20초, 30초…)
+  void _doubleTapSeek(int dir) {
+    final v = _videoPlayerController.value;
+    if (!v.isInitialized) return;
+    _vib();
+    var to = v.position + Duration(seconds: 10 * dir);
+    if (to < Duration.zero) to = Duration.zero;
+    if (to > v.duration) to = v.duration;
+    _videoPlayerController.seekTo(to);
+    setState(() {
+      if (_seekSide != dir) _seekSec = 0;
+      _seekSide = dir;
+      _seekSec += 10;
+    });
+    _seekHide?.cancel();
+    _seekHide = Timer(const Duration(milliseconds: 700), () {
+      if (mounted) {
+        setState(() {
+          _seekSide = 0;
+          _seekSec = 0;
+        });
+      }
+    });
+  }
+
+  void _setSpeed(double s) {
+    _videoPlayerController.setPlaybackSpeed(s);
+    setState(() => _speed = s);
+  }
+
+  // 재생 속도 고르는 창 (정렬 창과 같은 모양 · 재생 화면이라 어두운 색)
+  void _showSpeedSheet() {
+    const bg = Color(0xFF26221C);
+    const card = Color(0xFF332E26);
+    const ink = Color(0xFFF3EFE7);
+    const sub = Color(0xFFA29A8B);
+    const line = Color(0xFF3A342B);
+    final primary = Theme.of(context).colorScheme.primary;
+    const speeds = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => SafeArea(
+        top: false,
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+          padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
+          decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(22)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(color: line, borderRadius: BorderRadius.circular(2)),
+                ),
+              ),
+              // 제목 + ✕
+              Row(
+                children: [
+                  const Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 4),
+                      child: Text('재생 속도', style: TextStyle(color: sub, fontSize: 12, fontWeight: FontWeight.w600)),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    visualDensity: VisualDensity.compact,
+                    icon: const Icon(Icons.close_rounded, color: sub, size: 22),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Container(
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(14)),
+                child: Column(
+                  children: [
+                    for (var i = 0; i < speeds.length; i++) ...[
+                      if (i > 0) const Divider(height: 1, thickness: 1, color: line),
+                      InkWell(
+                        onTap: () {
+                          _vib();
+                          Navigator.pop(ctx);
+                          _setSpeed(speeds[i]);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  speeds[i] == 1.0 ? '${_speedLabel(speeds[i])}  보통' : _speedLabel(speeds[i]),
+                                  style: TextStyle(
+                                    color: _speed == speeds[i] ? primary : ink,
+                                    fontSize: 14.5,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              if (_speed == speeds[i]) Icon(Icons.check_rounded, size: 20, color: primary),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 구간 반복 A·B 정하기
+  void _setLoopA() {
+    _vib();
+    final pos = _videoPlayerController.value.position.inMilliseconds;
+    setState(() {
+      _loopA = pos;
+      if (_loopB != null && _loopB! <= pos + 500) _loopB = null; // B가 A보다 앞이면 B 다시 정하기
+    });
+  }
+
+  void _setLoopB() {
+    _vib();
+    final pos = _videoPlayerController.value.position.inMilliseconds;
+    if (_loopA == null || pos <= _loopA! + 500) {
+      showParanToast(context, _loopA == null ? 'A를 먼저 정해 주세요' : 'A보다 뒤에서 눌러 주세요');
+      return;
+    }
+    setState(() => _loopB = pos);
+    _videoPlayerController.seekTo(Duration(milliseconds: _loopA!));
+    _videoPlayerController.play();
+  }
+
+  void _loopOff() {
+    setState(() {
+      _loopOn = false;
+      _loopA = null;
+      _loopB = null;
+    });
+  }
+
+  // 구간 반복 막대 (영상 아래 · 어두운 둥근 카드)
+  Widget _loopBar() {
+    final primary = Theme.of(context).colorScheme.primary;
+    final hint = _loopA == null
+        ? 'A를 정해 주세요'
+        : (_loopB == null ? 'B를 정하면 반복돼요' : '반복 중');
+    Widget btn(String label, String sub, bool set, VoidCallback onTap) => Expanded(
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 9),
+              decoration: BoxDecoration(
+                color: set ? primary.withOpacity(0.22) : Colors.white.withOpacity(0.06),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: set ? primary.withOpacity(0.6) : Colors.white12),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(label,
+                      style: const TextStyle(color: Color(0xFFF3EFE7), fontSize: 13, fontWeight: FontWeight.w700)),
+                  const SizedBox(height: 2),
+                  Text(sub, style: const TextStyle(color: Colors.white54, fontSize: 11.5)),
+                ],
+              ),
+            ),
+          ),
+        );
+    return Container(
+      margin: const EdgeInsets.fromLTRB(12, 4, 12, 12),
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+      decoration: BoxDecoration(color: const Color(0xFF26221C), borderRadius: BorderRadius.circular(18)),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.repeat_rounded, size: 16, color: primary),
+              const SizedBox(width: 6),
+              const Text('구간 반복',
+                  style: TextStyle(color: Color(0xFFF3EFE7), fontSize: 13, fontWeight: FontWeight.w700)),
+              const Spacer(),
+              Text(hint, style: const TextStyle(color: Colors.white54, fontSize: 11.5)),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              btn('A 지정', _fmtMs(_loopA), _loopA != null, _setLoopA),
+              const SizedBox(width: 8),
+              btn('B 지정', _fmtMs(_loopB), _loopB != null, _setLoopB),
+              const SizedBox(width: 8),
+              btn('끄기', '반복 끝', false, () {
+                _vib();
+                _loopOff();
+              }),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   void _savePosition() {
     final v = _videoPlayerController.value;
     if (!v.isInitialized) return;
@@ -1217,6 +1462,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _saveTimer?.cancel();
+    _seekHide?.cancel();
+    _videoPlayerController.removeListener(_loopTick);
     try {
       _savePosition(); // 나갈 때 멈춘 곳 기억
     } catch (_) {}
@@ -1235,10 +1482,34 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(widget.video.titleDisplay,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: Colors.white)),
+            Row(
+              children: [
+                Flexible(
+                  child: Text(widget.video.titleDisplay,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.white)),
+                ),
+                // 속도가 보통이 아니면 작은 표
+                if (_speed != 1.0) ...[
+                  const SizedBox(width: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white38),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(_speedLabel(_speed),
+                        style: const TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.w700)),
+                  ),
+                ],
+                // 구간 반복 중이면 반복 아이콘
+                if (_loopA != null && _loopB != null) ...[
+                  const SizedBox(width: 6),
+                  Icon(Icons.repeat_rounded, size: 16, color: Theme.of(context).colorScheme.primary),
+                ],
+              ],
+            ),
             // 찍은 곳 (위치 태그 있으면) — 회색 작은 글씨
             if (context.watch<VideoProvider>().placeOf(widget.video.uri) case final place?)
               Padding(
@@ -1305,6 +1576,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
               return [
                 item(Icons.ios_share_rounded, '공유하기', 'share'),
                 item(Icons.headphones_rounded, '소리만 듣기', 'audioOnly', on: _audioOnly),
+                item(Icons.speed_rounded, '재생 속도 (${_speedLabel(_speed)})', 'speed'),
+                item(Icons.repeat_rounded, '구간 반복', 'loop', on: _loopOn),
                 item(Icons.content_cut_rounded, '잘라서 보내기', 'trim'),
                 item(Icons.music_note_rounded, '음악으로 저장', 'toMusic'),
                 item(Icons.edit_outlined, AppLocalizations.of(context)!.rename, 'rename'),
@@ -1321,6 +1594,18 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
                 (await SharedPreferences.getInstance()).setBool('videoAudioOnly', _audioOnly);
                 if (context.mounted) {
                   showParanToast(context, _audioOnly ? '화면을 꺼도 소리가 계속 나와요' : '앱을 나가면 멈춰요');
+                }
+                return;
+              }
+              if (value == 'speed') {
+                _showSpeedSheet();
+                return;
+              }
+              if (value == 'loop') {
+                if (_loopOn) {
+                  _loopOff();
+                } else {
+                  setState(() => _loopOn = true);
                 }
                 return;
               }
@@ -1364,10 +1649,73 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
         ],
       ),
       body: SafeArea(
-        child: Center(
-          child: _chewieController != null
-              ? Chewie(controller: _chewieController!)
-              : const CircularProgressIndicator(color: Colors.white),
+        child: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: _chewieController != null
+                    ? Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Chewie(controller: _chewieController!),
+                          // 두 번 탭: 왼쪽 10초 뒤로 · 오른쪽 10초 앞으로 (아래 조작 막대 자리는 비워둠)
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            top: 0,
+                            bottom: 56,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    behavior: HitTestBehavior.translucent,
+                                    onDoubleTap: () => _doubleTapSeek(-1),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: GestureDetector(
+                                    behavior: HitTestBehavior.translucent,
+                                    onDoubleTap: () => _doubleTapSeek(1),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // 누른 쪽에 잠깐: 동그라미 + 선 아이콘 + "10초"
+                          if (_seekSide != 0)
+                            Positioned(
+                              left: _seekSide < 0 ? 28 : null,
+                              right: _seekSide > 0 ? 28 : null,
+                              child: IgnorePointer(
+                                child: Container(
+                                  width: 76,
+                                  height: 76,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.45),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(_seekSide < 0 ? Icons.fast_rewind_rounded : Icons.fast_forward_rounded,
+                                          color: Colors.white, size: 26),
+                                      const SizedBox(height: 2),
+                                      Text('$_seekSec초',
+                                          style: const TextStyle(
+                                              color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700)),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      )
+                    : const CircularProgressIndicator(color: Colors.white),
+              ),
+            ),
+            // 구간 반복 막대 (⋮ → 구간 반복)
+            if (_loopOn) _loopBar(),
+          ],
         ),
       ),
     );

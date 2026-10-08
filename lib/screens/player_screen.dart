@@ -27,6 +27,7 @@ import 'edit_song_screen.dart';
 import 'lyrics_screen.dart';
 import 'ringtone_screen.dart';
 import 'equalizer_screen.dart';
+import 'settings_screen.dart';
 import '../widgets/song_list_tile.dart';
 import '../widgets/exit_confirm_dialog.dart';
 import 'package:share_plus/share_plus.dart';
@@ -1706,6 +1707,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                   }, arrow: true),
                   _playerSheetItem(ctx, Icons.equalizer, AppLocalizations.of(context)!.equalizer, accent, baseColor, () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const EqualizerScreen()));
+                  }, arrow: true),
+                  // 설정 바로가기 (뒤로가기 한 번이면 메뉴로 돌아옴)
+                  _playerSheetItem(ctx, Icons.settings_outlined, '설정', accent, baseColor, () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen()));
                   }, arrow: true),
                   ]),
                   const SizedBox(height: 4),

@@ -24,6 +24,8 @@ class ThemeProvider extends ChangeNotifier {
     ('벚꽃', Color(0xFFD46A8C)),
     ('바다', Color(0xFF1F9AA0)),
     ('햇살', Color(0xFFC4962C)),
+    ('와인', Color(0xFFA6474F)),
+    ('밤하늘', Color(0xFF3F51A3)),
   ];
 
   /// 지금 포인트 색 이름 (예전에 고른 다른 색이면 null)

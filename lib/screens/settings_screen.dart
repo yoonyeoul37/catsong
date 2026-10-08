@@ -13,6 +13,7 @@ import 'ringtone_screen.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/paran_toast.dart';
 import '../widgets/paran_dialog.dart';
+import '../widgets/action_feedback.dart';
 import 'bulk_clean_screen.dart';
 import 'bulk_art_screen.dart';
 import 'player_screen.dart' show showPlayerStyleMenu;
@@ -298,87 +299,207 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (mounted) await TorchLight.disableTorch();
   }
 
+  /// 프로모션 코드 — 아래에서 올라오는 베이지 카드 (입력 → 틀리면 빨간 안내 → 성공하면 혜택 카드)
   Future<void> _showPromoCodeDialog(BuildContext context) async {
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    final l = AppLocalizations.of(context)!;
     final controller = TextEditingController();
-    const accent = AppTheme.fixedAccent;
     final prefs = await SharedPreferences.getInstance();
-    final isUnlocked = prefs.getBool('promo_unlocked') ?? false;
-    showDialog(
+    var unlocked = prefs.getBool('promo_unlocked') ?? false;
+    var error = false;
+    if (!context.mounted) return;
+
+    final ink = _sText(isDarkMode);
+    final btnText = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
+    const red = Color(0xFFD84A3A);
+    const blue = Color(0xFF2589E8);
+
+    await showModalBottomSheet(
       context: context,
-      builder: (ctx) => Dialog(
-        backgroundColor: _sBg(isDarkMode),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            Row(children: [
-              const Icon(Icons.card_giftcard, color: accent, size: 20), const SizedBox(width: 8),
-              Text(AppLocalizations.of(context)!.promoCode, style: TextStyle(color: _sText(isDarkMode), fontSize: 16, fontWeight: FontWeight.bold)),
-            ]),
-            const SizedBox(height: 20),
-            if (isUnlocked) ...[
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(color: accent.withOpacity(0.08), borderRadius: BorderRadius.circular(14)),
-                child: Column(children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: accent.withOpacity(0.15),
-                    ),
-                    child: const Icon(Icons.verified, color: accent, size: 28),
+      isScrollControlled: true,
+      backgroundColor: _sBg(isDarkMode),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(22))),
+      builder: (ctx) => StatefulBuilder(builder: (ctx, setSheet) {
+        Future<void> apply() async {
+          if (controller.text.trim() == '37258') {
+            await prefs.setBool('promo_unlocked', true);
+            // 창 닫고 가운데 알림 (다른 알림처럼 팝 → 옆으로 슝)
+            if (ctx.mounted) Navigator.pop(ctx);
+            if (context.mounted) {
+              showActionFeedback(context, type: ActionFeedbackType.saved, message: '광고가 제거됐어요');
+            }
+          } else {
+            setSheet(() => error = true);
+          }
+        }
+
+        final empty = controller.text.trim().isEmpty;
+
+        // 먹색 큰 버튼 (비어 있으면 흐리게)
+        Widget bigButton(String label, VoidCallback? onTap) => SizedBox(
+              height: 50,
+              child: ElevatedButton(
+                onPressed: onTap,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: ink,
+                  foregroundColor: btnText,
+                  disabledBackgroundColor: _sBorder(isDarkMode),
+                  disabledForegroundColor: _sTextHint(isDarkMode),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                ),
+                child: Text(label, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700)),
+              ),
+            );
+
+        return Padding(
+          padding: EdgeInsets.fromLTRB(
+              20, 10, 20, 20 + MediaQuery.of(ctx).viewInsets.bottom + MediaQuery.of(ctx).padding.bottom),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // 손잡이
+              Center(
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(color: _sBorder(isDarkMode), borderRadius: BorderRadius.circular(2)),
+                ),
+              ),
+              // 제목 + ✕
+              Row(
+                children: [
+                  Expanded(
+                    child: unlocked
+                        ? const SizedBox.shrink()
+                        : Text(l.promoCode,
+                            style: TextStyle(
+                                color: ink, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
                   ),
-                  const SizedBox(height: 12),
-                  Text(AppLocalizations.of(context)!.promoUnlocked, style: TextStyle(color: _sText(isDarkMode), fontSize: 15, fontWeight: FontWeight.w600)),
-                ]),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(width: double.infinity,
-                  child: ElevatedButton(
+                  IconButton(
                     onPressed: () => Navigator.pop(ctx),
-                    style: ElevatedButton.styleFrom(backgroundColor: accent, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                    child: Text(AppLocalizations.of(context)!.close),
-                  )),
-            ] else ...[
-              Text(AppLocalizations.of(context)!.promoEnter, style: TextStyle(color: _sTextSub(isDarkMode), fontSize: 13)),
-              const SizedBox(height: 12),
-              TextField(
-                controller: controller, autofocus: true, textAlign: TextAlign.center,
-                style: TextStyle(color: _sText(isDarkMode), fontSize: 22, letterSpacing: 8, fontWeight: FontWeight.bold),
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(filled: true, fillColor: _sInputBg(isDarkMode), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)),
+                    icon: Icon(Icons.close_rounded, color: _sTextHint(isDarkMode), size: 22),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              Row(children: [
-                Expanded(child: OutlinedButton(
-                  onPressed: () => Navigator.pop(ctx),
-                  style: OutlinedButton.styleFrom(foregroundColor: _sTextHint(isDarkMode), side: BorderSide(color: _sBorder(isDarkMode)), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                  child: Text(AppLocalizations.of(context)!.cancel),
-                )),
-                const SizedBox(width: 8),
-                Expanded(child: ElevatedButton(
-                  onPressed: () async {
-                    if (controller.text == '37258') {
-                      await prefs.setBool('promo_unlocked', true);
-                      Navigator.pop(ctx);
-                      showParanToast(context, AppLocalizations.of(context)!.promoUnlocked);
-                    } else {
-                      showParanToast(context, AppLocalizations.of(context)!.promoInvalid, error: true);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(backgroundColor: accent, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                  child: Text(AppLocalizations.of(context)!.confirm, style: const TextStyle(fontWeight: FontWeight.bold)),
-                )),
-              ]),
+              if (unlocked) ...[
+                // ── 성공 ──
+                Center(
+                  child: Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: blue.withOpacity(0.12)),
+                    child: const Icon(Icons.card_giftcard_rounded, color: blue, size: 28),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text('혜택이 적용됐어요',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: ink, fontSize: 18, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
+                const SizedBox(height: 4),
+                Text('파란소리와 즐거운 시간 보내세요',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: _sTextHint(isDarkMode), fontSize: 12.5)),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+                  decoration: BoxDecoration(color: _sCard(isDarkMode), borderRadius: BorderRadius.circular(14)),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.workspace_premium_rounded, color: Color(0xFFC4962C), size: 22),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('광고 없이 듣기',
+                                style: TextStyle(color: ink, fontSize: 14, fontWeight: FontWeight.w700)),
+                            const SizedBox(height: 2),
+                            Text('계속 적용돼요', style: TextStyle(color: _sTextHint(isDarkMode), fontSize: 11.5)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                bigButton(l.confirm, () => Navigator.pop(ctx)),
+              ] else ...[
+                // ── 입력 ──
+                Text(l.promoEnter, style: TextStyle(color: _sTextHint(isDarkMode), fontSize: 12.5)),
+                const SizedBox(height: 14),
+                Container(
+                  decoration: BoxDecoration(
+                    color: _sCard(isDarkMode),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: error ? red : Colors.transparent, width: 1.5),
+                  ),
+                  padding: const EdgeInsets.fromLTRB(16, 4, 8, 4),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: controller,
+                          autofocus: true,
+                          keyboardType: TextInputType.number,
+                          onChanged: (_) => setSheet(() => error = false),
+                          onSubmitted: (_) => apply(),
+                          style: TextStyle(
+                              color: ink, fontSize: 17, fontWeight: FontWeight.w700, letterSpacing: 2),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: '코드 입력',
+                            hintStyle: TextStyle(
+                                color: _sTextHint(isDarkMode).withOpacity(0.6),
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 0),
+                          ),
+                        ),
+                      ),
+                      // 붙여넣기 (복사해서 오는 경우가 많아서)
+                      TextButton(
+                        onPressed: () async {
+                          final data = await Clipboard.getData(Clipboard.kTextPlain);
+                          final t = (data?.text ?? '').trim();
+                          if (t.isEmpty) return;
+                          controller.text = t;
+                          controller.selection = TextSelection.collapsed(offset: t.length);
+                          setSheet(() => error = false);
+                        },
+                        style: TextButton.styleFrom(
+                          backgroundColor: _sBg(isDarkMode),
+                          foregroundColor: _sTextSub(isDarkMode),
+                          minimumSize: const Size(0, 32),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9)),
+                        ),
+                        child: const Text('붙여넣기', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+                      ),
+                    ],
+                  ),
+                ),
+                if (error) ...[
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.error_outline_rounded, color: red, size: 15),
+                      const SizedBox(width: 5),
+                      Text(l.promoInvalid, style: const TextStyle(color: red, fontSize: 12)),
+                    ],
+                  ),
+                ],
+                const SizedBox(height: 16),
+                bigButton(l.confirm, empty ? null : apply),
+              ],
             ],
-          ]),
-        ),
-      ),
+          ),
+        );
+      }),
     );
   }
+
 
   void _showPlayerStyleDialog(BuildContext context) {
     showPlayerStyleMenu(context); // 재생화면 ⋮ 메뉴와 같은 스타일 창 (시디롬·파란포토·앨범)

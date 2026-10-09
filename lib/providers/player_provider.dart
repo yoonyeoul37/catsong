@@ -10,6 +10,7 @@ import '../services/nature_overlay.dart';
 import '../services/sound_effects.dart';
 import '../services/cast_service.dart';
 import '../services/loudness.dart';
+import '../services/headset_resume.dart';
 
 class PlayerProvider extends ChangeNotifier {
   final AudioPlayer _player = AudioPlayer(handleInterruptions: false);
@@ -137,6 +138,10 @@ class PlayerProvider extends ChangeNotifier {
           break;
         case 'widgetPrev':
           await playPrevious();
+          break;
+        case 'onHeadsetConnected':
+        case 'onHeadsetResume':
+          await HeadsetResume.onCall(call.method); // 이어폰 연결하면 이어서 듣기
           break;
         case 'onAudioFocusLost':
           // 방금 곡을 틀었으면 무시 (라디오가 잡고 있던 소리 주도권이 넘어오면서 오는 신호라서)

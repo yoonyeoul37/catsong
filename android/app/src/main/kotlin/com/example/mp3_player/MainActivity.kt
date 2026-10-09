@@ -9,6 +9,8 @@ import android.provider.MediaStore
 import android.provider.Settings
 import android.media.AudioManager
 import android.media.AudioFocusRequest
+import android.media.AudioDeviceCallback
+import android.media.AudioDeviceInfo
 import android.os.Build
 import com.ryanheise.audioservice.AudioServiceActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -52,12 +54,14 @@ class MainActivity : AudioServiceActivity() {
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
         handleAlarmIntent(intent)
+        handleHeadsetIntent(intent)
     }
 
     override fun onNewIntent(intent: android.content.Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
         handleAlarmIntent(intent)
+        handleHeadsetIntent(intent)
     }
 
     private fun handleAlarmIntent(i: android.content.Intent?) {
@@ -236,10 +240,59 @@ class MainActivity : AudioServiceActivity() {
         }
     }
 
+    // ───── 이어폰·블루투스 연결하면 "이어서 들을까요?" 알림 ─────
+    private val headsetNotiId = 4207
+
+    private fun showHeadsetAsk(title: String, text: String) {
+        try {
+            val nm = getSystemService(NOTIFICATION_SERVICE) as android.app.NotificationManager
+            if (Build.VERSION.SDK_INT >= 26 && nm.getNotificationChannel("paran_headset") == null) {
+                val ch = android.app.NotificationChannel(
+                    "paran_headset", "이어폰 연결 알림", android.app.NotificationManager.IMPORTANCE_HIGH)
+                ch.setSound(null, null) // 소리 없이 위에 살짝만
+                ch.enableVibration(false)
+                nm.createNotificationChannel(ch)
+            }
+            val open = android.content.Intent(this, MainActivity::class.java).apply {
+                putExtra("headsetResume", true)
+                addFlags(android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            }
+            val pi = android.app.PendingIntent.getActivity(
+                this, headsetNotiId, open,
+                android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE)
+            val b = if (Build.VERSION.SDK_INT >= 26) android.app.Notification.Builder(this, "paran_headset")
+                    else android.app.Notification.Builder(this)
+            b.setSmallIcon(applicationInfo.icon)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setContentIntent(pi)
+                .setAutoCancel(true)
+                .addAction(android.app.Notification.Action.Builder(
+                    null as android.graphics.drawable.Icon?, "재생", pi).build())
+            if (Build.VERSION.SDK_INT >= 26) b.setTimeoutAfter(5 * 60 * 1000L) // 5분 지나면 저절로 사라짐
+            nm.notify(headsetNotiId, b.build())
+        } catch (_: Exception) {}
+    }
+
+    private fun cancelHeadsetAsk() {
+        try {
+            (getSystemService(NOTIFICATION_SERVICE) as android.app.NotificationManager).cancel(headsetNotiId)
+        } catch (_: Exception) {}
+    }
+
+    /// 알림의 "재생"을 눌러서 열렸으면 → 앱에 이어서 재생하라고
+    private fun handleHeadsetIntent(i: android.content.Intent?) {
+        if (i == null || !i.getBooleanExtra("headsetResume", false)) return
+        i.removeExtra("headsetResume")
+        cancelHeadsetAsk()
+        flutterMethodChannel?.invokeMethod("onHeadsetResume", null)
+    }
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         val channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
         flutterMethodChannel = channel
+        HeadsetWatch.start(this, channel) // 이어폰·블루투스 연결 알아채기
         recordingChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "kr.ssing.catsong/recording")
         // 아침 알람 통로
         alarmChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "kr.ssing.catsong/alarm").apply {
@@ -923,6 +976,15 @@ class MainActivity : AudioServiceActivity() {
                     result.success(true)
                     finishAffinity()
                     android.os.Process.killProcess(android.os.Process.myPid())
+                }
+                "showHeadsetAsk" -> {
+                    showHeadsetAsk(call.argument<String>("title") ?: "이어서 들을까요?",
+                        call.argument<String>("text") ?: "")
+                    result.success(true)
+                }
+                "cancelHeadsetAsk" -> {
+                    cancelHeadsetAsk()
+                    result.success(true)
                 }
                 "vibrate" -> {
                     try {
@@ -1912,5 +1974,44 @@ class MainActivity : AudioServiceActivity() {
             android.util.Log.e("RenameVideo", "Error: ${e.message}", e)
             result.success(false)
         }
+    }
+}
+
+
+/// 이어폰·블루투스 연결 알아채기 (앱이 켜져 있거나 뒤에 있을 때)
+/// 소리 나가는 곳이 이어폰·블루투스로 바뀌는 것만 봐서 새 권한이 필요 없음
+object HeadsetWatch {
+    private var channel: MethodChannel? = null
+    private var registered = false
+    private var startedAt = 0L
+    private var lastAt = 0L
+
+    private fun isHeadset(t: Int): Boolean = when (t) {
+        AudioDeviceInfo.TYPE_WIRED_HEADSET,
+        AudioDeviceInfo.TYPE_WIRED_HEADPHONES,
+        AudioDeviceInfo.TYPE_BLUETOOTH_A2DP,
+        AudioDeviceInfo.TYPE_USB_HEADSET -> true
+        else -> Build.VERSION.SDK_INT >= 31 &&
+            (t == AudioDeviceInfo.TYPE_BLE_HEADSET || t == AudioDeviceInfo.TYPE_BLE_SPEAKER)
+    }
+
+    private val callback = object : AudioDeviceCallback() {
+        override fun onAudioDevicesAdded(added: Array<out AudioDeviceInfo>?) {
+            val now = System.currentTimeMillis()
+            if (now - startedAt < 2500) return // 처음 등록할 때 이미 연결돼 있던 건 무시
+            if (added == null || added.none { it.isSink && isHeadset(it.type) }) return
+            if (now - lastAt < 4000) return // 블루투스는 신호가 여러 번 와서 한 번만
+            lastAt = now
+            channel?.invokeMethod("onHeadsetConnected", null)
+        }
+    }
+
+    fun start(ctx: android.content.Context, ch: MethodChannel) {
+        channel = ch
+        if (registered) return
+        registered = true
+        startedAt = System.currentTimeMillis()
+        val am = ctx.applicationContext.getSystemService(android.content.Context.AUDIO_SERVICE) as AudioManager
+        am.registerAudioDeviceCallback(callback, android.os.Handler(android.os.Looper.getMainLooper()))
     }
 }

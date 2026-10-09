@@ -23,6 +23,7 @@ import 'providers/sound_mix_provider.dart';
 import 'providers/recent_content_provider.dart';
 import 'screens/home_screen.dart';
 import 'services/alarm_service.dart';
+import 'services/headset_resume.dart';
 import 'widgets/photo_dialog.dart';
 import 'theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
@@ -144,6 +145,8 @@ void main() async {
       radio.playStation(queue[queue.length - 1]);
     }
   };
+
+  HeadsetResume.init(playerProvider, radioProvider); // 이어폰 연결하면 이어서 듣기
 
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(

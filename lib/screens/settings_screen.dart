@@ -21,6 +21,7 @@ import 'player_screen.dart' show showPlayerStyleMenu;
 import '../utils/home_card_pref.dart';
 import 'settings_help_screen.dart';
 import '../services/loudness.dart';
+import '../services/headset_resume.dart';
 
 // 화면 공통 색 (베이지 바탕 · 흰 카드 · 먹색 글자)
 Color _sBg(bool d) => d ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
@@ -156,6 +157,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 onTap: () => Loudness.setEnabled(!on),
                 primaryColor: primaryColor,
                 trailing: Switch(value: on, onChanged: (v) => Loudness.setEnabled(v), activeColor: primaryColor, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
+          ),
+          // 이어폰·블루투스 연결하면 이어서 듣기 (끄기 · 알림으로 묻기 · 바로 재생)
+          ValueListenableBuilder<int>(
+            valueListenable: HeadsetResume.mode,
+            builder: (context, m, _) => _buildTile(context,
+                icon: Icons.headphones_outlined,
+                title: '이어폰 연결하면 이어서 듣기',
+                subtitle: HeadsetResume.names[m],
+                onTap: () => _showHeadsetResumeSheet(context),
+                primaryColor: primaryColor),
           ),
           _buildTile(context, icon: Icons.music_note_outlined, title: l.ringtone, onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const RingtoneScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor),
           _buildTile(context, icon: _isFlashlightOn ? Icons.flashlight_on : Icons.flashlight_off, title: l.flashlight, subtitle: _isFlashlightOn ? l.on : l.off, onTap: () => _toggleFlashlight(context), primaryColor: primaryColor,
@@ -667,6 +678,46 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+
+  /// 이어폰 연결하면 이어서 듣기: 끄기 · 알림으로 묻기 · 바로 재생
+  void _showHeadsetResumeSheet(BuildContext context) {
+    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+    const icons = [
+      Icons.do_not_disturb_on_outlined,
+      Icons.notifications_none_rounded,
+      Icons.play_circle_outline_rounded,
+    ];
+    showParanSheet(
+      context,
+      title: '이어폰 연결하면 이어서 듣기',
+      builder: (ctx, setSheet) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ParanCard(
+            children: [
+              for (var i = 0; i < HeadsetResume.names.length; i++)
+                ParanRow(
+                  icon: icons[i],
+                  title: HeadsetResume.names[i],
+                  selected: HeadsetResume.mode.value == i,
+                  onTap: () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    HeadsetResume.setMode(i);
+                    Navigator.pop(ctx);
+                  },
+                ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 2, 4, 4),
+            child: Text(
+                '듣다가 멈춘 곡·라디오·자연을 아주 작게 시작해서 천천히 키워요.\n앱을 완전히 끄면 동작하지 않아요.',
+                style: TextStyle(color: _sTextHint(isDarkMode), fontSize: 12.5, height: 1.5)),
+          ),
+        ],
+      ),
+    );
+  }
 
   void _showPlayerStyleDialog(BuildContext context) {
     showPlayerStyleMenu(context); // 재생화면 ⋮ 메뉴와 같은 스타일 창 (시디롬·파란포토·앨범)

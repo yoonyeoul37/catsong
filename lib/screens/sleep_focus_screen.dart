@@ -51,7 +51,8 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
                       TextSpan(
                         text: '수면',
                         style: GoogleFonts.doHyeon(
-                            color: const Color(0xFF2F7DE8), fontSize: 19),
+                            // 기본 포인트 색이면 파랑, 다른 색이면 먹색 (홈 로고와 같은 규칙)
+                            color: context.watch<ThemeProvider>().primaryColor.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : baseColor, fontSize: 19),
                       ),
                       TextSpan(
                         text: ' · 명상',

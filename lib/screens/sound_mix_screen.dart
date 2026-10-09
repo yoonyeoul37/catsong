@@ -463,7 +463,8 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                   TextSpan(
                     text: '나만의',
                     style: GoogleFonts.doHyeon(
-                        color: const Color(0xFF2F7DE8), fontSize: 20, letterSpacing: -0.5),
+                        // 기본 포인트 색이면 파랑, 다른 색이면 먹색 (홈 로고와 같은 규칙)
+                        color: context.watch<ThemeProvider>().primaryColor.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : baseColor, fontSize: 20, letterSpacing: -0.5),
                   ),
                   TextSpan(
                     text: ' 소리',

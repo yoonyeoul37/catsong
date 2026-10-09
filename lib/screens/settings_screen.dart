@@ -124,14 +124,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // ── 꾸미기 ──
           _buildSection('꾸미기'),
           Consumer<ThemeProvider>(builder: (context, t, _) => _pointColorTile(t)),
-          _buildTile(context, icon: Icons.style_outlined, title: l.playerStyle, onTap: () => _showPlayerStyleDialog(context), primaryColor: primaryColor),
-          _buildTile(context, icon: Icons.font_download_outlined, title: l.fontChange, onTap: () => _showFontDialog(context), primaryColor: primaryColor),
-          _buildTile(context, icon: Icons.text_fields, title: l.textSize, onTap: () => _showTextSizeDialog(context), primaryColor: primaryColor),
+          _buildTile(context, icon: Icons.style_outlined, title: l.playerStyle, desc: '시디롬·파란포토·앨범 중에서 골라요', onTap: () => _showPlayerStyleDialog(context), primaryColor: primaryColor),
+          _buildTile(context, icon: Icons.font_download_outlined, title: l.fontChange, desc: '앱 글꼴을 바꿔요', onTap: () => _showFontDialog(context), primaryColor: primaryColor),
+          _buildTile(context, icon: Icons.text_fields, title: l.textSize, desc: '앱 글자 크기를 키우거나 줄여요', onTap: () => _showTextSizeDialog(context), primaryColor: primaryColor),
           ValueListenableBuilder<bool>(
             valueListenable: HomeCardPref.on,
             builder: (context, on, _) => _buildTile(context,
                 icon: Icons.view_agenda_outlined,
                 title: '홈 추천 카드',
+                desc: '홈 맨 위에 날마다 바뀌는 카드',
                 onTap: () => HomeCardPref.setOn(!on),
                 primaryColor: primaryColor,
                 isLast: true,
@@ -139,21 +140,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           // ── 음악 관리 ──
           _buildSection('음악 관리'),
-          _buildTile(context, icon: Icons.auto_awesome_outlined, title: '곡 정보 한꺼번에 정리',
+          _buildTile(context, icon: Icons.auto_awesome_outlined, title: '곡 정보 한꺼번에 정리', desc: '제목·가수 이름을 깔끔하게 정리해요',
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BulkCleanScreen())),
               primaryColor: primaryColor, isFirst: true),
-          _buildTile(context, icon: Icons.photo_library_outlined, title: '앨범 사진 한꺼번에 찾기',
+          _buildTile(context, icon: Icons.photo_library_outlined, title: '앨범 사진 한꺼번에 찾기', desc: '사진 없는 곡에 앨범 사진을 찾아 넣어요',
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BulkArtScreen())),
               primaryColor: primaryColor, isLast: true),
           // ── 도구 ──
           _buildSection('도구'),
-          _buildTile(context, icon: Icons.equalizer, title: l.equalizer, onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const EqualizerScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor, isFirst: true),
+          _buildTile(context, icon: Icons.equalizer, title: l.equalizer, desc: '저음·고음 같은 소리 색을 맞춰요', onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const EqualizerScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor, isFirst: true),
           // 곡마다 소리 크기 맞추기 (큰 곡만 조금 줄여서 비슷하게)
           ValueListenableBuilder<bool>(
             valueListenable: Loudness.enabled,
             builder: (context, on, _) => _buildTile(context,
                 icon: Icons.graphic_eq_rounded,
                 title: '곡마다 소리 크기 맞추기',
+                desc: '유난히 큰 곡을 줄여 비슷하게 들려요',
                 onTap: () => Loudness.setEnabled(!on),
                 primaryColor: primaryColor,
                 trailing: Switch(value: on, onChanged: (v) => Loudness.setEnabled(v), activeColor: primaryColor, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
@@ -164,22 +166,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
             builder: (context, m, _) => _buildTile(context,
                 icon: Icons.headphones_outlined,
                 title: '이어폰 연결하면 이어서 듣기',
+                desc: '이어폰을 연결하면 듣던 걸 다시 틀어요',
                 subtitle: HeadsetResume.names[m],
                 onTap: () => _showHeadsetResumeSheet(context),
                 primaryColor: primaryColor),
           ),
-          _buildTile(context, icon: Icons.music_note_outlined, title: l.ringtone, onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const RingtoneScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor),
-          _buildTile(context, icon: _isFlashlightOn ? Icons.flashlight_on : Icons.flashlight_off, title: l.flashlight, subtitle: _isFlashlightOn ? l.on : l.off, onTap: () => _toggleFlashlight(context), primaryColor: primaryColor,
+          _buildTile(context, icon: Icons.music_note_outlined, title: l.ringtone, desc: '노래로 전화 벨소리를 만들어요', onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const RingtoneScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor),
+          _buildTile(context, icon: _isFlashlightOn ? Icons.flashlight_on : Icons.flashlight_off, title: l.flashlight, desc: '휴대폰 플래시를 켜요', subtitle: _isFlashlightOn ? l.on : l.off, onTap: () => _toggleFlashlight(context), primaryColor: primaryColor,
               trailing: Switch(value: _isFlashlightOn, onChanged: (_) => _toggleFlashlight(context), activeColor: primaryColor, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
-          _buildTile(context, icon: Icons.emergency, title: l.sos, subtitle: _isSosOn ? l.sosWorking : l.sos, onTap: () => _toggleSOS(context), primaryColor: primaryColor,
+          _buildTile(context, icon: Icons.emergency, title: l.sos, desc: '플래시로 구조 신호를 깜빡여요', subtitle: _isSosOn ? l.sosWorking : l.sos, onTap: () => _toggleSOS(context), primaryColor: primaryColor,
               trailing: Switch(value: _isSosOn, onChanged: (_) => _toggleSOS(context), activeColor: Colors.redAccent, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
-          _buildTile(context, icon: Icons.widgets_outlined, title: l.widget, onTap: () async {
+          _buildTile(context, icon: Icons.widgets_outlined, title: l.widget, desc: '홈 화면에 파란소리 위젯을 놓아요', onTap: () async {
             const platform = MethodChannel('kr.ssing.catsong/media');
             try { await platform.invokeMethod('requestWidgetAdd'); } catch (e) {}
           }, primaryColor: primaryColor, isLast: true),
           // ── 기타 ──
           _buildSection('기타'),
-          _buildTile(context, icon: Icons.help_outline_rounded, title: '설정 도움말',
+          _buildTile(context, icon: Icons.help_outline_rounded, title: '설정 도움말', desc: '권한·배터리·알림 설정 방법',
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsHelpScreen())),
               primaryColor: primaryColor, isFirst: true),
           _buildTile(context, icon: Icons.card_giftcard_outlined, title: l.promoCode, onTap: () async {
@@ -264,55 +267,98 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  /// 자주 켜고 끄는 3칸 (누르면 바로 켜짐/꺼짐)
+  /// 자주 켜고 끄는 3칸 (누르면 바로 켜짐/꺼짐, 켜지면 카드 전체 먹색 · ⓘ 누르면 설명)
   Widget _quickTiles(ThemeProvider t) {
     final d = t.isDarkMode;
-    Widget tile(IconData icon, String label, bool on, VoidCallback onTap) => Expanded(
-          child: GestureDetector(
-            onTap: () {
-              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              onTap();
-            },
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 11),
-              decoration: BoxDecoration(color: _sCard(d), borderRadius: BorderRadius.circular(16)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 180),
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: on ? _sText(d) : _sIconBg(d),
-                      borderRadius: BorderRadius.circular(9),
+    Widget tile(IconData icon, String label, String info, bool on, VoidCallback onTap) {
+      final bg = on ? _sText(d) : _sCard(d); // 켜지면 먹색 (다크 모드는 크림색)
+      final fg = on ? _sBg(d) : _sText(d);
+      final sub = on ? _sBg(d).withOpacity(0.7) : _sTextHint(d);
+      return Expanded(
+        child: GestureDetector(
+          onTap: () {
+            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+            onTap();
+          },
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            padding: const EdgeInsets.fromLTRB(12, 12, 6, 11),
+            decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(16)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: on ? _sBg(d).withOpacity(0.14) : _sIconBg(d),
+                        borderRadius: BorderRadius.circular(9),
+                      ),
+                      child: Icon(icon, size: 16, color: on ? fg : _sTextSub(d)),
                     ),
-                    child: Icon(icon, size: 16, color: on ? _sBg(d) : _sTextSub(d)),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(label,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: _sText(d), fontSize: 13, fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 2),
-                  Text(on ? '켜짐' : '꺼짐', style: TextStyle(color: _sTextHint(d), fontSize: 11)),
-                ],
-              ),
+                    const Spacer(),
+                    // ⓘ 누르면 무슨 기능인지 설명
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => _showQuickInfo(label, info, d),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 0, 4, 8),
+                        child: Icon(Icons.info_outline_rounded, size: 16, color: sub),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: fg, fontSize: 13, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 2),
+                Text(on ? '사용 중' : '꺼짐',
+                    style: TextStyle(
+                        color: on ? fg : _sTextHint(d),
+                        fontSize: 11,
+                        fontWeight: on ? FontWeight.w700 : FontWeight.w400)),
+              ],
             ),
           ),
-        );
+        ),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
       child: Row(
         children: [
-          tile(Icons.dark_mode_outlined, '다크 모드', t.isDarkMode, () => t.setDarkMode(!t.isDarkMode)),
+          tile(Icons.dark_mode_outlined, '다크 모드', '화면을 어둡게 바꿔요.\n밤에 눈이 편해요.', t.isDarkMode,
+              () => t.setDarkMode(!t.isDarkMode)),
           const SizedBox(width: 8),
-          tile(Icons.water_drop_outlined, '효과음', t.feedbackSoundEnabled,
+          tile(
+              Icons.water_drop_outlined,
+              '효과음',
+              '수정·저장·삭제가 끝나면 물방울 소리로 알려줘요.\n진동 모드면 진동, 무음이면 조용해요.',
+              t.feedbackSoundEnabled,
               () => t.setFeedbackSoundEnabled(!t.feedbackSoundEnabled)),
           const SizedBox(width: 8),
-          tile(Icons.record_voice_over_outlined, '음성 안내', t.voiceGreetingEnabled,
+          tile(Icons.record_voice_over_outlined, '음성 안내', '앱을 켜고 끌 때\n짧은 인사말이 나와요.', t.voiceGreetingEnabled,
               () => t.setVoiceGreetingEnabled(!t.voiceGreetingEnabled)),
         ],
+      ),
+    );
+  }
+
+  /// 카드 ⓘ: 기능 설명 창
+  void _showQuickInfo(String title, String info, bool d) {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    showParanSheet(
+      context,
+      title: title,
+      builder: (ctx, setSheet) => Padding(
+        padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
+        child: Text(info, style: TextStyle(color: _sTextSub(d), fontSize: 14, height: 1.6)),
       ),
     );
   }
@@ -395,7 +441,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildTile(BuildContext context, {
-    required IconData icon, required String title, String? subtitle,
+    required IconData icon, required String title, String? subtitle, String? desc,
     required VoidCallback onTap, required Color primaryColor,
     Widget? trailing, bool isFirst = false, bool isLast = false,
   }) {
@@ -417,16 +463,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
               if (!isFirst)
                 Container(height: 0.5, margin: const EdgeInsets.only(left: 58), color: _sBorder(isDarkMode)),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: desc != null ? 11 : 14),
                 // 한 줄로: 아이콘 · 이름 ········ 작은 회색 글자 · 스위치/›
                 child: Row(children: [
                   _iconBox(icon, isDarkMode),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: Text(title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: _sText(isDarkMode), fontSize: 14.5)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: _sText(isDarkMode), fontSize: 14.5)),
+                        if (desc != null) ...[
+                          const SizedBox(height: 2),
+                          Text(desc,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: _sTextHint(isDarkMode), fontSize: 11.5)),
+                        ],
+                      ],
+                    ),
                   ),
                   if (subtitle != null) ...[
                     const SizedBox(width: 8),

@@ -9,6 +9,7 @@ import '../models/song.dart';
 import '../services/nature_overlay.dart';
 import '../services/sound_effects.dart';
 import '../services/cast_service.dart';
+import '../services/loudness.dart';
 
 class PlayerProvider extends ChangeNotifier {
   final AudioPlayer _player = AudioPlayer(handleInterruptions: false);
@@ -66,6 +67,48 @@ class PlayerProvider extends ChangeNotifier {
     // TV: TV 상태가 바뀌면 화면도 같이 바뀌고, TV에서 곡이 끝나면 다음 곡
     CastService.instance.addListener(notifyListeners);
     CastService.instance.onTrackEnded = () => playNext();
+    Loudness.load(); // 곡마다 소리 크기 (기억해둔 것)
+    Loudness.enabled.addListener(() {
+      final s = currentSong;
+      if (s != null) _applyLoudness(s);
+    });
+  }
+
+  // ───── 곡마다 소리 크기 맞추기 ─────
+  double _normGain = 1.0; // 이 곡을 얼마나 줄일지 (1.0 = 그대로)
+  double get normGain => _normGain;
+
+  /// 알람이 소리 크기를 쥐고 있는 동안 true (그동안 맞추기 안 함)
+  bool volumeLocked = false;
+
+  void _setNorm(double g) {
+    _normGain = g;
+    if (!volumeLocked && _sleepFade == null) _player.setVolume(g);
+  }
+
+  /// 잰 적 있으면 바로 맞추고, 없으면 재서 곡 앞부분일 때 맞추기 + 다음 곡 미리 재기
+  void _applyLoudness(Song song) {
+    final uri = song.uri;
+    if (uri == null) return;
+    if (!Loudness.enabled.value) {
+      _setNorm(1.0);
+      return;
+    }
+    final db = Loudness.cached(uri);
+    if (db != null) {
+      _setNorm(Loudness.gainFor(db));
+    } else {
+      _setNorm(1.0);
+      Loudness.measure(uri).then((d) {
+        if (d == null || currentSong?.uri != uri) return;
+        // 곡 중간에 갑자기 바뀌면 어색해서, 앞부분일 때만 (다음부터는 처음부터 맞춰짐)
+        if (_player.position < const Duration(seconds: 4)) _setNorm(Loudness.gainFor(d));
+      });
+    }
+    if (hasNext) {
+      final next = _queue[_currentIndex + 1].uri;
+      if (next != null) Loudness.measure(next);
+    }
   }
 
   Future<void> _loadLoopMode() async {
@@ -306,6 +349,7 @@ class PlayerProvider extends ChangeNotifier {
       await _player.setAudioSource(AudioSource.uri(Uri.parse(song.uri!)));
       // 자연소리가 남긴 "무한반복" 설정을 꺼준다 (반복은 앱이 직접 처리함)
       await _player.setLoopMode(LoopMode.off);
+      _applyLoudness(song); // 곡마다 소리 크기 맞추기
       _startedAt = DateTime.now();
       await _player.play();
       await WakelockPlus.enable();
@@ -441,6 +485,7 @@ class PlayerProvider extends ChangeNotifier {
           : AudioSource.asset(assetPath);
       await _player.setAudioSource(source);
       await _player.setLoopMode(LoopMode.one);
+      _setNorm(1.0); // 자연은 크기 맞추기 안 함
       await _player.play();
       await WakelockPlus.enable();
     } catch (e) {
@@ -633,12 +678,43 @@ class PlayerProvider extends ChangeNotifier {
     return '$minutes:${seconds.toString().padLeft(2, '0')}';
   }
 
+  // ───── 수면 타이머: 끝나기 1분 전부터 천천히 작게 ─────
+  Timer? _sleepFadeStart; // 1분 전에 줄이기 시작
+  Timer? _sleepFade; // 1초마다 조금씩 작게
+
+  void _beginSleepFade() {
+    _sleepFade?.cancel();
+    _sleepFade = Timer.periodic(const Duration(seconds: 1), (t) {
+      final end = _sleepTimerEnd;
+      if (end == null) {
+        t.cancel();
+        return;
+      }
+      final left = end.difference(DateTime.now()).inMilliseconds / 60000.0;
+      _player.setVolume(left.clamp(0.0, 1.0) * _normGain);
+    });
+  }
+
+  /// 줄이던 걸 멈추고 소리 크기 원래대로
+  void _endSleepFade() {
+    _sleepFadeStart?.cancel();
+    _sleepFadeStart = null;
+    if (_sleepFade == null) return;
+    _sleepFade!.cancel();
+    _sleepFade = null;
+    _player.setVolume(_normGain);
+  }
+
   void setSleepTimer(Duration duration) {
     _sleepTimer?.cancel();
+    _endSleepFade();
     _sleepTimerDuration = duration;
     _sleepTimerEnd = DateTime.now().add(duration);
+    final fadeAt = duration - const Duration(minutes: 1);
+    _sleepFadeStart = Timer(fadeAt.isNegative ? Duration.zero : fadeAt, _beginSleepFade);
     _sleepTimer = Timer(duration, () {
-      _player.pause();
+      // 다 작아진 뒤 멈추고, 멈춘 다음 소리 크기 원래대로
+      _player.pause().then((_) => _endSleepFade());
       _sleepTimer = null;
       _sleepTimerDuration = null;
       _sleepTimerEnd = null;
@@ -649,6 +725,7 @@ class PlayerProvider extends ChangeNotifier {
 
   void cancelSleepTimer() {
     _sleepTimer?.cancel();
+    _endSleepFade();
     _sleepTimer = null;
     _sleepTimerDuration = null;
     _sleepTimerEnd = null;

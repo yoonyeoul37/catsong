@@ -345,7 +345,7 @@ class OverseasRadioView extends StatelessWidget {
                           },
                           icon: Icon(
                             isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                            color: isFav ? const Color(0xFFE8877E) : Colors.white70,
+                            color: isFav ? const Color(0xFFE05A4F) : Colors.white70,
                             size: 24,
                           ),
                         ),

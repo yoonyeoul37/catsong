@@ -326,7 +326,7 @@ class _FavoriteBtn extends StatelessWidget {
     return IconButton(
       icon: Icon(
         isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-        color: isFav ? primaryColor : baseColor.withOpacity(0.4),
+        color: isFav ? const Color(0xFFE05A4F) : baseColor.withOpacity(0.4),
         size: 22,
       ),
       onPressed: () =>

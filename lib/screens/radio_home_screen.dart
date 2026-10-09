@@ -604,6 +604,8 @@ class _LogoEqBarsState extends State<_LogoEqBars>
 
   @override
   Widget build(BuildContext context) {
+    final point = context.watch<ThemeProvider>().primaryColor;
+    final eqColor = point.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : point;
     return SizedBox(
       height: 14,
       child: AnimatedBuilder(
@@ -620,7 +622,7 @@ class _LogoEqBarsState extends State<_LogoEqBars>
                   width: 3,
                   height: 14 * v,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF2F7DE8),
+                    color: eqColor,
                     borderRadius: BorderRadius.circular(1.5),
                   ),
                 ),

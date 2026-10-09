@@ -20,6 +20,7 @@ import 'bulk_art_screen.dart';
 import 'player_screen.dart' show showPlayerStyleMenu;
 import '../utils/home_card_pref.dart';
 import 'settings_help_screen.dart';
+import '../services/loudness.dart';
 
 // 화면 공통 색 (베이지 바탕 · 흰 카드 · 먹색 글자)
 Color _sBg(bool d) => d ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
@@ -146,6 +147,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // ── 도구 ──
           _buildSection('도구'),
           _buildTile(context, icon: Icons.equalizer, title: l.equalizer, onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const EqualizerScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor, isFirst: true),
+          // 곡마다 소리 크기 맞추기 (큰 곡만 조금 줄여서 비슷하게)
+          ValueListenableBuilder<bool>(
+            valueListenable: Loudness.enabled,
+            builder: (context, on, _) => _buildTile(context,
+                icon: Icons.graphic_eq_rounded,
+                title: '곡마다 소리 크기 맞추기',
+                onTap: () => Loudness.setEnabled(!on),
+                primaryColor: primaryColor,
+                trailing: Switch(value: on, onChanged: (v) => Loudness.setEnabled(v), activeColor: primaryColor, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
+          ),
           _buildTile(context, icon: Icons.music_note_outlined, title: l.ringtone, onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const RingtoneScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor),
           _buildTile(context, icon: _isFlashlightOn ? Icons.flashlight_on : Icons.flashlight_off, title: l.flashlight, subtitle: _isFlashlightOn ? l.on : l.off, onTap: () => _toggleFlashlight(context), primaryColor: primaryColor,
               trailing: Switch(value: _isFlashlightOn, onChanged: (_) => _toggleFlashlight(context), activeColor: primaryColor, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),

@@ -1442,14 +1442,14 @@ class _PlayerScreenState extends State<PlayerScreen>
                         // "파란"만 숨쉬기 (재생 중일 때만)
                         _BreathingText(
                           text: 'Paran',
-                          style: GoogleFonts.playfairDisplay(
-    color: sky.withOpacity(0.8), fontSize: 22, fontStyle: FontStyle.italic, fontWeight: FontWeight.w500, height: 1.0, letterSpacing: 0.4),
+                          style: GoogleFonts.quicksand(
+    color: sky.withOpacity(0.8), fontSize: 19, fontWeight: FontWeight.w600, height: 1.0, letterSpacing: 0.2),
                           moving: playerProvider.isPlaying,
                         ),
                         Text(
                           isKo ? 'sori' : 'Sori', // 한국은 Paransori, 해외는 발음 때문에 ParanSori
-                          style: GoogleFonts.playfairDisplay(
-                              color: baseColor.withOpacity(0.42), fontSize: 22, fontStyle: FontStyle.italic, fontWeight: FontWeight.w500, height: 1.0, letterSpacing: 0.4),
+                          style: GoogleFonts.quicksand(
+                              color: baseColor.withOpacity(0.42), fontSize: 19, fontWeight: FontWeight.w600, height: 1.0, letterSpacing: 0.2),
                         ),
                       ],
                     ),
@@ -3160,7 +3160,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 },
                 icon: Icon(
                   isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                  color: isFav ? Colors.redAccent : baseColor.withOpacity(0.6),
+                  color: isFav ? const Color(0xFFE05A4F) : baseColor.withOpacity(0.6),
                 ),
               ),
             ],
@@ -3303,9 +3303,17 @@ class _PlayerScreenState extends State<PlayerScreen>
                     children: [
                       const SizedBox(width: 40),
                       Expanded(
-                        child: Text('몇 시간 몇 분 후 정지할까요?',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
+                        child: Column(
+                          children: [
+                            Text('몇 시간 몇 분 후 정지할까요?',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
+                            const SizedBox(height: 3),
+                            Text('끝나기 1분 전부터 천천히 작아져요',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: textColor.withOpacity(0.5), fontSize: 12)),
+                          ],
+                        ),
                       ),
                       ParanCloseX(onTap: () => Navigator.pop(ctx)),
                     ],
@@ -4279,9 +4287,17 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
                     children: [
                       const SizedBox(width: 40),
                       Expanded(
-                        child: Text('몇 시간 몇 분 후 정지할까요?',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
+                        child: Column(
+                          children: [
+                            Text('몇 시간 몇 분 후 정지할까요?',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
+                            const SizedBox(height: 3),
+                            Text('끝나기 1분 전부터 천천히 작아져요',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: textColor.withOpacity(0.5), fontSize: 12)),
+                          ],
+                        ),
                       ),
                       ParanCloseX(onTap: () => Navigator.pop(ctx)),
                     ],

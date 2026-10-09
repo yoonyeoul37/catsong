@@ -74,9 +74,17 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                     children: [
                       const SizedBox(width: 40),
                       Expanded(
-                        child: Text('몇 시간 몇 분 후 정지할까요?',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
+                        child: Column(
+                          children: [
+                            Text('몇 시간 몇 분 후 정지할까요?',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
+                            const SizedBox(height: 3),
+                            Text('끝나기 1분 전부터 천천히 작아져요',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: textColor.withOpacity(0.5), fontSize: 12)),
+                          ],
+                        ),
                       ),
                       ParanCloseX(onTap: () => Navigator.pop(ctx)),
                     ],

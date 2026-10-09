@@ -246,15 +246,14 @@ class _LyricsScreenState extends State<LyricsScreen> {
   Widget _watermark(BuildContext context, {double scale = 1}) {
     final c = _ink.withOpacity(_light ? 0.72 : 0.88); // 더 잘 보이게
     final shadow = _light ? const <Shadow>[] : [Shadow(color: Colors.black.withOpacity(0.3), blurRadius: 6)];
-    // 영어만, 우아한 기울임 세리프체 (로고처럼)
+    // 영어 이름은 앱 전체 Quicksand로 통일 (바로 세움)
     return Text(
       'Paransori',
-      style: GoogleFonts.playfairDisplay(
+      style: GoogleFonts.quicksand(
           color: c,
-          fontSize: 17 * scale,
-          fontStyle: FontStyle.italic,
-          fontWeight: FontWeight.w500,
-          letterSpacing: 0.6 * scale,
+          fontSize: 16 * scale,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.8 * scale,
           shadows: shadow),
     );
   }

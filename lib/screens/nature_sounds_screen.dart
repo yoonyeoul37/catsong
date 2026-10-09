@@ -927,7 +927,7 @@ class _VariantPickerSheet extends StatelessWidget {
                         ),
                       ),
                       if (favoriteNames.contains(v.name))
-                        Icon(CupertinoIcons.heart_fill, color: soundColor, size: 15),
+                        Icon(CupertinoIcons.heart_fill, color: const Color(0xFFE05A4F), size: 15),
                     ],
                   ),
                 ),

@@ -166,6 +166,8 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
             ] else ...[
               Text('몇 시간 몇 분 후 정지할까요?',
                   style: TextStyle(color: _rInk, fontSize: 15, fontWeight: FontWeight.w600)),
+              SizedBox(height: 3),
+              Text('끝나기 1분 전부터 천천히 작아져요', style: TextStyle(color: _rSub, fontSize: 12)),
               SizedBox(
                 height: 180,
                 child: CupertinoTheme(

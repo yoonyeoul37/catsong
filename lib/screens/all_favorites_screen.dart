@@ -202,7 +202,7 @@ class _AllFavoritesScreenState extends State<AllFavoritesScreen>
                           ],
                         ),
                       ),
-                      Icon(CupertinoIcons.heart_fill, color: primaryColor, size: 20),
+                      Icon(CupertinoIcons.heart_fill, color: const Color(0xFFE05A4F), size: 20),
                     ],
                   ),
                 ),

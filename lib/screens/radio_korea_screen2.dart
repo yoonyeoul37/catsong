@@ -429,9 +429,9 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                           child: Icon(
                             Icons.public,
                             size: 16,
-                            color: isDarkMode
-                                ? const Color(0xFF6FB0FF)
-                                : const Color(0xFF2F7DE8),
+                            color: context.watch<ThemeProvider>().primaryColor.value == 0xFF2589E8
+                                ? (isDarkMode ? const Color(0xFF6FB0FF) : const Color(0xFF2F7DE8))
+                                : context.watch<ThemeProvider>().primaryColor,
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -696,7 +696,7 @@ class _StationTile extends StatelessWidget {
                         ? CupertinoIcons.heart_fill
                         : CupertinoIcons.heart,
                     color: context.watch<RadioProvider>().isFavorite(radioStation.stationUuid)
-                        ? Colors.redAccent
+                        ? const Color(0xFFE05A4F)
                         : baseColor.withOpacity(0.35),
                     size: 22,
                   ),
@@ -1088,6 +1088,8 @@ class _LogoEqBarsState extends State<_LogoEqBars>
 
   @override
   Widget build(BuildContext context) {
+    final point = context.watch<ThemeProvider>().primaryColor;
+    final eqColor = point.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : point;
     return SizedBox(
       height: 14,
       child: AnimatedBuilder(
@@ -1104,7 +1106,7 @@ class _LogoEqBarsState extends State<_LogoEqBars>
                   width: 3,
                   height: 14 * v,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF2F7DE8),
+                    color: eqColor,
                     borderRadius: BorderRadius.circular(1.5),
                   ),
                 ),

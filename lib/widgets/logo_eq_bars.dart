@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/theme_provider.dart';
 
 /// 제목 옆에 붙는 작은 파란 이퀄라이저 (계속 움직임)
 class LogoEqBars extends StatefulWidget {
@@ -30,6 +32,9 @@ class _LogoEqBarsState extends State<LogoEqBars>
 
   @override
   Widget build(BuildContext context) {
+    // 포인트 색 (바꾸면 바로 따라감) — 기본 파란소리면 원래 파란색 그대로
+    final point = context.watch<ThemeProvider>().primaryColor;
+    final color = point.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : point;
     return SizedBox(
       height: 14,
       child: AnimatedBuilder(
@@ -47,7 +52,7 @@ class _LogoEqBarsState extends State<LogoEqBars>
                   width: 3,
                   height: 14 * v,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF2F7DE8),
+                    color: color,
                     borderRadius: BorderRadius.circular(1.5),
                   ),
                 ),

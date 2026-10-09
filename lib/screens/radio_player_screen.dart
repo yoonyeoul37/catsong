@@ -755,7 +755,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                   },
                                   child: Icon(
                                     radioProvider.isFavorite(current.stationUuid) ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                                    color: radioProvider.isFavorite(current.stationUuid) ? baseColor : baseColor.withOpacity(0.6),
+                                    color: radioProvider.isFavorite(current.stationUuid) ? const Color(0xFFE05A4F) : baseColor.withOpacity(0.6),
                                     size: 16,
                                   ),
                                 ),

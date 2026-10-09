@@ -99,8 +99,26 @@ class SoundMixProvider extends ChangeNotifier {
     return '$m분';
   }
 
+  // ───── 수면 타이머: 끝나기 1분 전부터 천천히 작게 ─────
+  bool _sleepFading = false;
+
+  void _applySleepFade(double f) {
+    _natureLayers.forEach((key, p) {
+      p.setVolume((_volumes[key] ?? 0.0) * f);
+    });
+    _songPlayer?.setVolume(_songVolume * f);
+  }
+
+  /// 소리 크기 원래대로 (다음에 틀 때 작게 나오지 않게)
+  void _restoreSleepFade() {
+    if (!_sleepFading) return;
+    _sleepFading = false;
+    _applySleepFade(1.0);
+  }
+
   void setSleepTimer(int? minutes) {
     _sleepTicker?.cancel();
+    _restoreSleepFade();
     if (minutes == null) {
       _sleepMinutes = null;
       _sleepEndTime = null;
@@ -114,9 +132,13 @@ class SoundMixProvider extends ChangeNotifier {
       final remaining = _sleepEndTime!.difference(DateTime.now());
       if (remaining.isNegative || remaining == Duration.zero) {
         timer.cancel();
-        stopAll();
+        stopAll().then((_) => _restoreSleepFade());
         _sleepMinutes = null;
         _sleepEndTime = null;
+      } else if (remaining.inSeconds < 60) {
+        // 끝나기 1분 전부터 천천히 작게
+        _sleepFading = true;
+        _applySleepFade(remaining.inMilliseconds / 60000.0);
       }
       notifyListeners();
     });
@@ -346,6 +368,7 @@ class SoundMixProvider extends ChangeNotifier {
     } catch (_) {}
     _songPlayer = null;
     _sleepTicker?.cancel();
+    _sleepFading = false;
     _sleepMinutes = null;
     _sleepEndTime = null;
     notifyListeners();

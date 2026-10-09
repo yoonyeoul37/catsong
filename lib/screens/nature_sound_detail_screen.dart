@@ -46,11 +46,21 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
   Timer? _sleepTicker;
   DateTime? _sleepEndTime;
   int? _sleepMinutes;
+  bool _sleepFading = false; // 수면 타이머 끝나기 1분 전부터 작게 하는 중
+  PlayerProvider? _pp; // 화면을 나갈 때도 소리 크기를 돌려놓으려고 미리 잡아둠
   Set<String> _favoriteNames = {};
+
+  /// 소리 크기 원래대로 (다음에 틀 때 작게 나오지 않게)
+  void _restoreSleepFade() {
+    if (!_sleepFading) return;
+    _sleepFading = false;
+    _pp?.player.setVolume(1.0);
+  }
 
   @override
   void initState() {
     super.initState();
+    _pp = context.read<PlayerProvider>();
     _loadFavorites();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final mix = context.read<SoundMixProvider>();
@@ -139,11 +149,13 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
   @override
   void dispose() {
     _sleepTicker?.cancel();
+    _restoreSleepFade();
     super.dispose();
   }
 
   void _setSleepTimer(int? minutes) {
     _sleepTicker?.cancel();
+    _restoreSleepFade();
     if (minutes == null) {
       setState(() {
         _sleepMinutes = null;
@@ -160,12 +172,19 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       final remaining = _sleepEndTime!.difference(DateTime.now());
       if (remaining.isNegative || remaining == Duration.zero) {
         timer.cancel();
-        context.read<PlayerProvider>().stopNatureSound();
+        context.read<PlayerProvider>().stopNatureSound().then((_) {
+          if (mounted) _restoreSleepFade();
+        });
         setState(() {
           _sleepMinutes = null;
           _sleepEndTime = null;
         });
       } else {
+        // 끝나기 1분 전부터 천천히 작게
+        if (remaining.inSeconds < 60) {
+          _sleepFading = true;
+          context.read<PlayerProvider>().player.setVolume(remaining.inMilliseconds / 60000.0);
+        }
         setState(() {});
       }
     });
@@ -203,9 +222,17 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                     children: [
                       const SizedBox(width: 40),
                       Expanded(
-                        child: Text('몇 시간 몇 분 후 정지할까요?',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
+                        child: Column(
+                          children: [
+                            Text('몇 시간 몇 분 후 정지할까요?',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
+                            const SizedBox(height: 3),
+                            Text('끝나기 1분 전부터 천천히 작아져요',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: textColor.withOpacity(0.5), fontSize: 12)),
+                          ],
+                        ),
                       ),
                       ParanCloseX(onTap: () => Navigator.pop(ctx)),
                     ],
@@ -719,7 +746,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                             height: 32,
                             decoration: BoxDecoration(color: Colors.black.withOpacity(0.38), shape: BoxShape.circle),
                             child: Icon(isFavorite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                                color: Colors.white, size: 16),
+                                color: isFavorite ? const Color(0xFFE05A4F) : Colors.white, size: 16),
                           ),
                         ),
                         const SizedBox(width: 8),

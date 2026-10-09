@@ -836,11 +836,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         offset: const Offset(0, -4),
                         child: Text(
                           'Paransori',
-                          style: TextStyle(
+                          style: GoogleFonts.quicksand(
                               color: baseColor.withOpacity(0.55),
                               fontSize: 13,
-                              fontStyle: FontStyle.italic,
-                              letterSpacing: 0.3),
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.6),
                         ),
                       ),
                     ],

@@ -82,7 +82,7 @@ class StationTile extends StatelessWidget {
               IconButton(
                 icon: Icon(
                   isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                  color: isFav ? accent : baseColor.withOpacity(0.3),
+                  color: isFav ? const Color(0xFFE05A4F) : baseColor.withOpacity(0.3),
                   size: 21,
                 ),
                 onPressed: () =>

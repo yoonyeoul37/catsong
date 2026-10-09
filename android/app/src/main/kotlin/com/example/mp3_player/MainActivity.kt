@@ -44,6 +44,86 @@ class MainActivity : AudioServiceActivity() {
         super.onResume()
     }
 
+    // ───── 아침 알람 ─────
+    // 폰의 알람 시계(setAlarmClock)에 예약 → 시간이 되면 이 화면이 잠금화면 위로 켜지고 앱에 "alarmFired"
+    private var alarmChannel: MethodChannel? = null
+    private var pendingAlarm = false // 알람 때문에 켜졌는지 (앱이 물어보면 알려주고 지움)
+
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+        super.onCreate(savedInstanceState)
+        handleAlarmIntent(intent)
+    }
+
+    override fun onNewIntent(intent: android.content.Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleAlarmIntent(intent)
+    }
+
+    private fun handleAlarmIntent(i: android.content.Intent?) {
+        if (i == null || !i.getBooleanExtra("paranAlarm", false)) return
+        i.removeExtra("paranAlarm") // 화면을 다시 그릴 때 또 울리지 않게
+        pendingAlarm = true
+        AlarmReceiver.cancelNotification(this) // 계속 울리던 알람 알림 끄기
+        AlarmReceiver.cancelBackup(this) // 1분 뒤 한 번 더도 취소
+        showOverLock(true)
+        alarmChannel?.invokeMethod("alarmFired", null)
+    }
+
+    /// 잠금화면 위로 보이기 + 화면 켜기 (알람 끄면 원래대로)
+    private fun showOverLock(on: Boolean) {
+        if (Build.VERSION.SDK_INT >= 27) {
+            setShowWhenLocked(on)
+            setTurnScreenOn(on)
+        } else {
+            @Suppress("DEPRECATION")
+            val f = android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                    android.view.WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+            if (on) window.addFlags(f) else window.clearFlags(f)
+        }
+    }
+
+    private fun alarmPendingIntent(): android.app.PendingIntent {
+        // 시간이 되면 AlarmReceiver가 받아서 알람 화면을 띄움 (꺼진 앱은 화면을 직접 못 띄워서)
+        val i = android.content.Intent(this, AlarmReceiver::class.java).apply {
+            action = "kr.ssing.catsong.ALARM_FIRE"
+        }
+        return android.app.PendingIntent.getBroadcast(
+            this, 7100, i,
+            android.app.PendingIntent.FLAG_IMMUTABLE or android.app.PendingIntent.FLAG_UPDATE_CURRENT
+        )
+    }
+
+    private fun canExactAlarm(): Boolean {
+        if (Build.VERSION.SDK_INT < 31) return true
+        val am = getSystemService(ALARM_SERVICE) as android.app.AlarmManager
+        return am.canScheduleExactAlarms()
+    }
+
+    private fun scheduleParanAlarm(at: Long): Boolean {
+        return try {
+            val am = getSystemService(ALARM_SERVICE) as android.app.AlarmManager
+            // 상태바 알람 아이콘을 누르면 앱이 열리게
+            val show = android.app.PendingIntent.getActivity(
+                this, 7101, android.content.Intent(this, MainActivity::class.java),
+                android.app.PendingIntent.FLAG_IMMUTABLE or android.app.PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            am.setAlarmClock(android.app.AlarmManager.AlarmClockInfo(at, show), alarmPendingIntent())
+            true
+        } catch (e: Exception) {
+            android.util.Log.e("ParanAlarm", "예약 실패: ${e.message}")
+            false
+        }
+    }
+
+    private fun cancelParanAlarm() {
+        try {
+            val am = getSystemService(ALARM_SERVICE) as android.app.AlarmManager
+            am.cancel(alarmPendingIntent())
+            am.cancel(AlarmReceiver.activityIntent(this)) // 처음 방식으로 걸어둔 예약
+        } catch (_: Exception) {}
+    }
+
     private fun requestAudioFocus() {
         val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -66,6 +146,8 @@ class MainActivity : AudioServiceActivity() {
     private var deleteResult: MethodChannel.Result? = null
     // 노래·영상 정보 읽기는 뒤에서 하나씩 (화면·터치 담당 일꾼이 멈추지 않게)
     private val metaExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
+    // 곡마다 소리 크기 재기는 따로 (재는 동안 앨범 사진 불러오기가 안 막히게)
+    private val loudExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
     // 영상 찍은 곳 찾기는 따로 (주소 바꾸느라 느려도 썸네일은 안 막히게)
     private val placeExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
 
@@ -159,6 +241,101 @@ class MainActivity : AudioServiceActivity() {
         val channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
         flutterMethodChannel = channel
         recordingChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "kr.ssing.catsong/recording")
+        // 아침 알람 통로
+        alarmChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "kr.ssing.catsong/alarm").apply {
+            setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "schedule" -> {
+                        val at = (call.argument<Any>("at") as? Number)?.toLong() ?: 0L
+                        val ok = at > 0 && scheduleParanAlarm(at)
+                        if (ok) {
+                            // 폰을 껐다 켜도 다시 예약할 수 있게 기억
+                            AlarmReceiver.saveAt(this@MainActivity, at)
+                            val h = (call.argument<Any>("hour") as? Number)?.toInt()
+                            val m = (call.argument<Any>("minute") as? Number)?.toInt()
+                            if (h != null && m != null) {
+                                AlarmReceiver.saveRule(this@MainActivity, h, m, call.argument<String>("days") ?: "")
+                            }
+                        }
+                        result.success(ok)
+                    }
+                    "cancel" -> {
+                        cancelParanAlarm()
+                        AlarmReceiver.clearRule(this@MainActivity)
+                        result.success(true)
+                    }
+                    "canExact" -> result.success(canExactAlarm())
+                    "openExactSettings" -> {
+                        try {
+                            if (Build.VERSION.SDK_INT >= 31) {
+                                startActivity(android.content.Intent(
+                                    Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                                    android.net.Uri.parse("package:$packageName")))
+                            }
+                        } catch (_: Exception) {}
+                        result.success(true)
+                    }
+                    "canFullScreen" -> {
+                        // 안드로이드 14 이상: 잠금화면 위로 알람 화면 띄우기 허용됐는지
+                        val ok = if (Build.VERSION.SDK_INT >= 34) {
+                            (getSystemService(NOTIFICATION_SERVICE) as android.app.NotificationManager)
+                                .canUseFullScreenIntent()
+                        } else true
+                        result.success(ok)
+                    }
+                    "openFullScreenSettings" -> {
+                        try {
+                            if (Build.VERSION.SDK_INT >= 34) {
+                                startActivity(android.content.Intent(
+                                    Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
+                                    android.net.Uri.parse("package:$packageName")))
+                            }
+                        } catch (_: Exception) {}
+                        result.success(true)
+                    }
+                    "getMusicVolume" -> {
+                        // 폰 미디어 볼륨 (0.0 ~ 1.0)
+                        val am = getSystemService(AUDIO_SERVICE) as AudioManager
+                        val max = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+                        result.success(if (max > 0) am.getStreamVolume(AudioManager.STREAM_MUSIC).toDouble() / max else 0.0)
+                    }
+                    "setMusicVolume" -> {
+                        val v = (call.argument<Any>("v") as? Number)?.toDouble() ?: 0.7
+                        try {
+                            val am = getSystemService(AUDIO_SERVICE) as AudioManager
+                            val max = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+                            am.setStreamVolume(AudioManager.STREAM_MUSIC, Math.round(v.coerceIn(0.0, 1.0) * max).toInt(), 0)
+                        } catch (_: Exception) {}
+                        result.success(true)
+                    }
+                    "playFallback" -> {
+                        AlarmReceiver.playFallback(this@MainActivity)
+                        result.success(true)
+                    }
+                    "stopFallback" -> {
+                        AlarmReceiver.stopFallback()
+                        result.success(true)
+                    }
+                    "isAlarmIntent" -> {
+                        // 지금 화면이 알람(전체 화면 알림)으로 열렸는지
+                        result.success(intent?.action == "kr.ssing.catsong.ALARM")
+                    }
+                    "takeLaunchAlarm" -> {
+                        val p = pendingAlarm
+                        pendingAlarm = false
+                        result.success(p)
+                    }
+                    "ringDone" -> {
+                        AlarmReceiver.cancelNotification(this@MainActivity)
+                        AlarmReceiver.stopFallback()
+                        intent?.setAction(android.content.Intent.ACTION_MAIN) // 알람 표시 지우기
+                        showOverLock(false)
+                        result.success(true)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
+        }
         channel.setMethodCallHandler { call, result ->
             when (call.method) {
                 "getAlbumArt" -> {
@@ -412,6 +589,18 @@ class MainActivity : AudioServiceActivity() {
                         result.success(updateSongMetadata(path, title, artist, album))
                     } else {
                         result.success(false)
+                    }
+                }
+                "measureLoudness" -> {
+                    // 곡마다 소리 크기 맞추기: 곡 가운데 몇 군데를 잠깐 풀어서 평균 소리 크기(dB)
+                    val path = call.argument<String>("path")
+                    if (path == null) {
+                        result.success(null)
+                    } else {
+                        loudExecutor.execute {
+                            val db = measureLoudness(path)
+                            runOnUiThread { result.success(db) }
+                        }
                     }
                 }
                 "getVideoList" -> {
@@ -814,6 +1003,98 @@ class MainActivity : AudioServiceActivity() {
                 }
                 else -> result.notImplemented()
             }
+        }
+    }
+
+    /// 곡마다 소리 크기 맞추기: 곡 가운데 몇 군데(각 8초)를 풀어서 평균 소리 크기(dB) 재기
+    /// 결과: -60 ~ 0 쯤 (클수록 큰 곡), 못 재면 null
+    private fun measureLoudness(path: String): Double? {
+        val ex = android.media.MediaExtractor()
+        var codec: android.media.MediaCodec? = null
+        try {
+            if (path.startsWith("content://")) {
+                ex.setDataSource(this, android.net.Uri.parse(path), null)
+            } else {
+                ex.setDataSource(path)
+            }
+            var track = -1
+            var fmt: android.media.MediaFormat? = null
+            for (i in 0 until ex.trackCount) {
+                val f = ex.getTrackFormat(i)
+                if ((f.getString(android.media.MediaFormat.KEY_MIME) ?: "").startsWith("audio/")) {
+                    track = i
+                    fmt = f
+                    break
+                }
+            }
+            if (track < 0 || fmt == null) return null
+            ex.selectTrack(track)
+            val durUs = if (fmt.containsKey(android.media.MediaFormat.KEY_DURATION))
+                fmt.getLong(android.media.MediaFormat.KEY_DURATION) else 0L
+            val c = android.media.MediaCodec.createDecoderByType(fmt.getString(android.media.MediaFormat.KEY_MIME)!!)
+            codec = c
+            c.configure(fmt, null, null, 0)
+            c.start()
+            var sumSq = 0.0
+            var count = 0L
+            // 1분 넘는 곡은 25% · 50% · 75% 지점, 짧은 곡은 처음부터
+            val starts = if (durUs > 60_000_000L) listOf(durUs / 4, durUs / 2, durUs * 3 / 4) else listOf(0L)
+            val segUs = 8_000_000L
+            val info = android.media.MediaCodec.BufferInfo()
+            for (s in starts) {
+                ex.seekTo(s, android.media.MediaExtractor.SEEK_TO_CLOSEST_SYNC)
+                c.flush()
+                val endUs = s + segUs
+                var inputDone = false
+                var outDone = false
+                var guard = 0
+                while (!outDone && guard++ < 4000) {
+                    if (!inputDone) {
+                        val ii = c.dequeueInputBuffer(10_000)
+                        if (ii >= 0) {
+                            val buf = c.getInputBuffer(ii)!!
+                            val n = ex.readSampleData(buf, 0)
+                            val t = ex.sampleTime
+                            if (n < 0 || t > endUs) {
+                                c.queueInputBuffer(ii, 0, 0, 0, android.media.MediaCodec.BUFFER_FLAG_END_OF_STREAM)
+                                inputDone = true
+                            } else {
+                                c.queueInputBuffer(ii, 0, n, t, 0)
+                                ex.advance()
+                            }
+                        }
+                    }
+                    val oi = c.dequeueOutputBuffer(info, 10_000)
+                    if (oi >= 0) {
+                        if (info.size > 0) {
+                            val ob = c.getOutputBuffer(oi)!!
+                            ob.position(info.offset)
+                            ob.limit(info.offset + info.size)
+                            val sb = ob.order(java.nio.ByteOrder.LITTLE_ENDIAN).asShortBuffer()
+                            while (sb.hasRemaining()) {
+                                val v = sb.get() / 32768.0
+                                sumSq += v * v
+                                count++
+                            }
+                        }
+                        c.releaseOutputBuffer(oi, false)
+                        if ((info.flags and android.media.MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) outDone = true
+                    }
+                }
+            }
+            if (count == 0L) return null
+            val rms = Math.sqrt(sumSq / count)
+            if (rms <= 0.0) return null
+            return 20 * Math.log10(rms)
+        } catch (e: Exception) {
+            android.util.Log.e("Loudness", "소리 크기 못 잼: ${e.message}")
+            return null
+        } finally {
+            try {
+                codec?.stop()
+                codec?.release()
+            } catch (_: Exception) {}
+            ex.release()
         }
     }
 

@@ -33,6 +33,10 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
     <uses-permission android:name="android.permission.ACCESS_VIBRATOR_STATE"/>
+    <!-- 아침 알람: 정해진 시간에 정확히 깨우기 -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <!-- 아침 알람: 잠금화면 위로 알람 화면 띄우기 -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
 
     <queries>
         <intent>
@@ -149,6 +153,20 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info3" />
+        </receiver>
+        <!-- 아침 알람: 시간이 되면 알람 화면 띄우기 -->
+        <receiver
+            android:name=".AlarmReceiver"
+            android:exported="false" />
+        <!-- 아침 알람: 폰을 껐다 켜거나 앱을 업데이트하면 다시 예약 -->
+        <receiver
+            android:name=".AlarmBootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+            </intent-filter>
         </receiver>
         <!-- 녹음 중 알림 (앱을 나가도 계속 녹음) -->
         <service

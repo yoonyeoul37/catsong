@@ -58,6 +58,8 @@ import '../widgets/index_bar.dart';
 import '../widgets/action_feedback.dart';
 import '../widgets/paran_toast.dart';
 import '../widgets/paran_dialog.dart';
+import '../services/alarm_service.dart';
+import 'alarm_screen.dart';
 import '../utils/home_card_pref.dart';
 import 'sleep_focus_screen.dart';
 import 'package:share_plus/share_plus.dart';
@@ -2066,6 +2068,10 @@ class _HomeScreenState extends State<HomeScreen> {
     if (kind == 0 && songs.isEmpty) kind = 3;
     if (kind == 1 && notPlayed.length < 3) kind = 3;
     if (kind == 2 && (weekCount == 0 || weekTop == null)) kind = 3;
+    // 아침 알람이 켜져 있으면 저녁 7시부터는 내일 알람 알려주기
+    final alarm = AlarmService.alarm.value;
+    final alarmNext = alarm != null && alarm.enabled && now.hour >= 19 ? AlarmService.nextLabel(alarm) : '';
+    if (alarmNext.isNotEmpty) kind = 5;
 
     late IconData icon;
     late String title;
@@ -2140,6 +2146,14 @@ class _HomeScreenState extends State<HomeScreen> {
         final url = found.first['assetPath']!;
         onAction = () => context.read<PlayerProvider>().playNatureSound(url, sound);
       }
+    } else if (kind == 5) {
+      // ⑥ 내일 아침 알람
+      icon = Icons.alarm_rounded;
+      title = '$alarmNext에 깨워 드릴게요';
+      subLine = Text(alarm!.label,
+          maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: sub, fontSize: 11.5));
+      action = '바꾸기';
+      onAction = () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AlarmScreen()));
     } else {
       // ③ 기능 알려주기 (돌아올 때마다 다른 팁)
       const tips = <(IconData, String, String)>[

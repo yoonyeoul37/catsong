@@ -29,6 +29,8 @@ class NatureOverlay extends ChangeNotifier {
   };
 
   final Map<String, double> _vol = {for (final k in SoundMixProvider.natureAssets.keys) k: 0.0};
+  // 지난번에 섞은 크기 (앱을 다시 켜면 _vol은 0으로 시작하고, 여기서 한 번에 다시 켜기)
+  final Map<String, double> _last = {};
   final Map<String, AudioPlayer> _players = {};
   // 칸 이름 → 고른 종류 이름 (처음엔 칸 이름과 같은 기본 종류)
   final Map<String, String> _variant = {for (final k in SoundMixProvider.natureAssets.keys) k: k};
@@ -50,6 +52,26 @@ class NatureOverlay extends ChangeNotifier {
     if (on.isEmpty) return '끔';
     if (on.length == 1) return on.first;
     return '${on.first} 외 ${on.length - 1}개';
+  }
+
+  /// 지금 꺼져 있고, 지난번에 섞은 게 있으면 true → 창에 [다시 켜기]
+  bool get hasLast => !anyOn && _last.values.any((v) => v > 0);
+
+  /// 예: "빗소리" / "빗소리 외 1개"
+  String get lastSummary {
+    final on = [for (final e in _last.entries) if (e.value > 0) variantOf(e.key)];
+    if (on.isEmpty) return '';
+    if (on.length == 1) return on.first;
+    return '${on.first} 외 ${on.length - 1}개';
+  }
+
+  /// 지난번 섞기 그대로 다시 켜기
+  Future<void> restoreLast() async {
+    _last.forEach((k, v) {
+      if (_vol.containsKey(k)) _vol[k] = v;
+    });
+    notifyListeners();
+    await _applyAll();
   }
 
   /// 받침 있으면 '과', 없으면 '와' (예: 빗소리와 / 모닥불과)
@@ -168,8 +190,9 @@ class NatureOverlay extends ChangeNotifier {
       final raw = prefs.getString('music_nature_volumes');
       if (raw != null) {
         final Map m = jsonDecode(raw);
+        // 앱을 다시 켜면 갑자기 소리가 나지 않게 꺼진 채로 시작 → 창에서 [다시 켜기]
         m.forEach((k, v) {
-          if (_vol.containsKey(k) && v is num) _vol[k] = v.toDouble();
+          if (_vol.containsKey(k) && v is num) _last[k] = v.toDouble();
         });
       }
       notifyListeners();
@@ -179,7 +202,13 @@ class NatureOverlay extends ChangeNotifier {
 
   Future<void> _save() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('music_nature_volumes', jsonEncode(_vol));
+    // 하나라도 켜져 있을 때만 "지난번 섞기"로 저장 (모두 끄기 해도 지난번은 남게)
+    if (anyOn) {
+      _last
+        ..clear()
+        ..addAll(_vol);
+      await prefs.setString('music_nature_volumes', jsonEncode(_vol));
+    }
     await prefs.setString('music_nature_variants', jsonEncode(_variant));
   }
 }
@@ -237,7 +266,6 @@ void showNatureOverlaySheet(BuildContext context) {
                     // 지금 섞는 중: 🎵 노래 제목 + 자연소리
                     ? Text.rich(
                         TextSpan(children: [
-                          const TextSpan(text: '🎵 '),
                           TextSpan(
                             text: o.songTitle ?? '음악',
                             style: const TextStyle(color: Color(0xFF17140F), fontWeight: FontWeight.w600),
@@ -253,6 +281,53 @@ void showNatureOverlaySheet(BuildContext context) {
                         style: const TextStyle(color: Color(0xFF8A857B), fontSize: 12.5),
                       ),
               ),
+              // 지난번 섞기 다시 켜기 (꺼져 있을 때만)
+              if (o.hasLast)
+                Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.fromLTRB(14, 10, 10, 10),
+                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.history_rounded, size: 20, color: Color(0xFF8A857B)),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('지난번 섞기',
+                                style: TextStyle(color: Color(0xFF8A857B), fontSize: 11.5)),
+                            const SizedBox(height: 2),
+                            Text(o.lastSummary,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    color: Color(0xFF17140F), fontSize: 14, fontWeight: FontWeight.w600)),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      SizedBox(
+                        height: 36,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            HapticFeedback.selectionClick();
+                            o.restoreLast();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF17140F),
+                            foregroundColor: const Color(0xFFF4EFE5),
+                            elevation: 0,
+                            padding: const EdgeInsets.symmetric(horizontal: 14),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          child: const Text('다시 켜기',
+                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),

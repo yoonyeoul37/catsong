@@ -48,6 +48,7 @@ class RadioProvider extends ChangeNotifier {
   Timer? _sleepTimer;
   Duration? _sleepRemaining;
   Timer? _sleepCountdown;
+  bool _sleepFading = false; // 수면 타이머 끝나기 1분 전부터 작게 하는 중
 
   static const _keyFavorites = 'radio_favorites';
   static const _keyRecent = 'radio_recent';
@@ -595,6 +596,13 @@ class RadioProvider extends ChangeNotifier {
     if (url.contains('cbs')) return 'https://www.cbs.co.kr';
     if (url.contains('tbn')) return 'https://tbn.or.kr';
     return '';
+  }
+
+  /// 아침 알람: 작게 시작해서 천천히 키우기 (0.0 ~ 1.0)
+  Future<void> setAlarmVolume(double v) async {
+    try {
+      await _player.setVolume(v.clamp(0.0, 1.0) * 100);
+    } catch (_) {}
   }
 
   Future<void> togglePlayPause() async {
@@ -1818,6 +1826,10 @@ class RadioProvider extends ChangeNotifier {
     _sleepRemaining = duration;
     _sleepTimer = Timer(duration, () async {
       await _player.stop();
+      if (_sleepFading) {
+        _sleepFading = false;
+        await setAlarmVolume(1.0);
+      }
       await WakelockPlus.disable();
       _isActuallyPlaying = false;
       _setPlayerState(RadioPlayerState.idle);
@@ -1830,12 +1842,22 @@ class RadioProvider extends ChangeNotifier {
         return;
       }
       _sleepRemaining = _sleepRemaining! - const Duration(seconds: 1);
+      // 끝나기 1분 전부터 천천히 작게 (뚝 끊겨서 잠이 깨지 않게)
+      final left = _sleepRemaining!.inSeconds;
+      if (left < 60) {
+        _sleepFading = true;
+        setAlarmVolume(left / 60);
+      }
       notifyListeners();
     });
     notifyListeners();
   }
 
   void cancelSleepTimer() {
+    if (_sleepFading) {
+      _sleepFading = false;
+      setAlarmVolume(1.0);
+    }
     _scheduleCheckTimer?.cancel();
     _sleepTimer?.cancel();
     _sleepCountdown?.cancel();

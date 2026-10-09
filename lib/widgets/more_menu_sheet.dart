@@ -13,6 +13,8 @@ import '../screens/settings_screen.dart';
 import '../screens/bulk_clean_screen.dart';
 import '../screens/bulk_art_screen.dart';
 import '../screens/settings_help_screen.dart';
+import '../screens/alarm_screen.dart';
+import '../services/alarm_service.dart';
 
 const String _kStoreUrl =
     'https://play.google.com/store/apps/details?id=kr.ssing.catsong';
@@ -44,6 +46,9 @@ const String _kIconSparkle =
 const String _kIconHelp =
     '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>'
     '<line x1="12" y1="17" x2="12.01" y2="17"/>';
+const String _kIconAlarm =
+    '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/>'
+    '<path d="M5 3 2 6"/><path d="M22 6l-3-3"/>';
 const String _kIconClose =
     '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
 
@@ -143,6 +148,10 @@ void showMoreMenuSheet(
         Navigator.pop(ctx);
         Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsHelpScreen()));
       },
+      onAlarm: () {
+        Navigator.pop(ctx);
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const AlarmScreen()));
+      },
       onHomepage: () async {
         Navigator.pop(ctx);
         final url = stationHomepage;
@@ -241,6 +250,7 @@ class _MoreMenuSheet extends StatelessWidget {
   final VoidCallback onSettings;
   final VoidCallback onHomepage;
   final VoidCallback onHelp;
+  final VoidCallback onAlarm;
   final bool showSongTools;
   final VoidCallback onCleanSongs;
   final VoidCallback onFindArt;
@@ -257,6 +267,7 @@ class _MoreMenuSheet extends StatelessWidget {
     required this.onSettings,
     required this.onHomepage,
     required this.onHelp,
+    required this.onAlarm,
   });
 
   @override
@@ -298,6 +309,19 @@ class _MoreMenuSheet extends StatelessWidget {
                       onTap: onFindArt,
                     ),
                   ],
+                  // 아침 알람 (켜져 있으면 다음 알람 시간)
+                  ValueListenableBuilder<ParanAlarm?>(
+                    valueListenable: AlarmService.alarm,
+                    builder: (context, a, _) => _MenuCard(
+                      p: p,
+                      icon: _kIconAlarm,
+                      title: '아침 알람',
+                      subtitle: a != null && a.enabled
+                          ? '${AlarmService.nextLabel(a)} · ${a.label}'
+                          : '좋아하는 노래·라디오·자연으로 깨워 드려요',
+                      onTap: onAlarm,
+                    ),
+                  ),
                   _MenuCard(
                     p: p,
                     icon: _kIconShare,

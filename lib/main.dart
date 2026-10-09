@@ -22,6 +22,7 @@ import 'providers/start_screen_provider.dart';
 import 'providers/sound_mix_provider.dart';
 import 'providers/recent_content_provider.dart';
 import 'screens/home_screen.dart';
+import 'services/alarm_service.dart';
 import 'widgets/photo_dialog.dart';
 import 'theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
@@ -163,6 +164,8 @@ void main() async {
     ..setOnStopRadio(() async => await radioProvider.stopRadio())
     ..setOnStopMusic(() async => await playerProvider.player.stop());
 
+  await AlarmService.init(); // 아침 알람 (알람 때문에 켜졌는지도 확인)
+
   runApp(MyApp(
     playerProvider: playerProvider,
     musicProvider: musicProvider,
@@ -208,6 +211,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           return MaterialApp(
+            navigatorKey: AlarmService.navKey, // 알람 화면 띄우기용
             title: '파란소리',
             debugShowCheckedModeBanner: false,
             localizationsDelegates: const [
@@ -288,13 +292,20 @@ class AppInitializer extends StatefulWidget {
 
 class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObserver {
   bool _showWelcome = false;
-  bool _showIntro = true;
+  bool _showIntro = !AlarmService.launchedByAlarm; // 알람으로 켜졌으면 인트로 없이 바로
   bool _introCleared = false; // 첫인사 사진을 램에서 비웠는지
 
   AudioPlayer? _welcomePlayer; // 첫인사 전용 작은 재생기
   VoidCallback? _welcomeCleanup;
 
   Future<void> _checkAndShowWelcome() async {
+    if (AlarmService.launchedByAlarm) return; // 알람 때는 첫인사 안 함
+    // 알람으로 열린 화면인지 폰에 한 번 더 확인 → 알람이면 인삿말 없이 바로 알람 화면
+    if (await AlarmService.isAlarmIntent()) {
+      AlarmService.showRing();
+      return;
+    }
+    if (!mounted || AlarmService.launchedByAlarm) return;
     if (!context.read<ThemeProvider>().voiceGreetingEnabled) return;
     final langCode = Localizations.localeOf(context).languageCode;
     final welcomeAsset = langCode == 'ko' ? 'assets/welcome_ko_v4.mp3' : null;
@@ -323,7 +334,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
     });
     try {
       await p.setAsset(welcomeAsset);
-      if (_welcomePlayer == p) p.play(); // 준비하는 사이에 멈췄으면 재생 안 함
+      if (_welcomePlayer == p && !AlarmService.launchedByAlarm) p.play(); // 준비하는 사이에 멈췄으면 재생 안 함
     } catch (_) {
       _stopWelcome();
     }
@@ -343,6 +354,10 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    AlarmService.onRingStart = _stopWelcome; // 알람이 울리면 첫인삿말 바로 멈춤
+    if (AlarmService.launchedByAlarm) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => AlarmService.showRing());
+    }
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) setState(() => _showIntro = false);
     });
@@ -395,14 +410,17 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
           }
         });
       }
-      await _checkAndRequestReview();
-      await _checkForUpdate();
+      if (!AlarmService.launchedByAlarm) {
+        await _checkAndRequestReview();
+        await _checkForUpdate();
+      }
     });
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    AlarmService.onRingStart = null;
     _stopWelcome();
     super.dispose();
   }

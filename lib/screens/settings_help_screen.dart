@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/theme_provider.dart';
+import '../services/alarm_service.dart';
 
 /// 설정 도움말을 한 번이라도 열어봤는지 (⋮ 메뉴의 작은 점 표시용)
 class HelpSeen {
@@ -35,8 +36,9 @@ class _HelpTopic {
   final String? note;
   final String path; // 직접 찾아갈 때 (안드로이드)
   final String? iosPath; // 직접 찾아갈 때 (아이폰)
+  final bool exactAlarm; // 설정 열기 → 알람 및 리마인더 화면으로 바로
   const _HelpTopic(this.icon, this.title, this.when, this.android,
-      {this.ios, this.note, required this.path, this.iosPath});
+      {this.ios, this.note, required this.path, this.iosPath, this.exactAlarm = false});
 }
 
 const _topics = <_HelpTopic>[
@@ -57,6 +59,15 @@ const _topics = <_HelpTopic>[
     ['아래 설정 열기 누르기', '배터리 누르기', '제한 없음 고르기'],
     note: '폰마다 "최적화 안 함"이라고 나올 수도 있어요',
     path: '설정 → 애플리케이션(앱) → 파란소리 → 배터리 → 제한 없음',
+  ),
+  _HelpTopic(
+    Icons.alarm_rounded,
+    '아침 알람',
+    '알람이 안 울리거나 늦게 울릴 때',
+    ['아래 설정 열기 누르기', '알람 및 리마인더 허용 켜기', '앱으로 돌아오기'],
+    note: '위 "화면 꺼도 안 끊기게"의 배터리 제한 없음도 같이 해두면 더 정확해요',
+    path: '설정 → 애플리케이션(앱) → 파란소리 → 알람 및 리마인더 → 허용',
+    exactAlarm: true,
   ),
   _HelpTopic(
     Icons.notifications_none_rounded,
@@ -210,7 +221,7 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                          openAppSettings();
+                          t.exactAlarm ? AlarmService.openExactSettings() : openAppSettings();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: ink,

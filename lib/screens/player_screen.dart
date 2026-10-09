@@ -1426,7 +1426,8 @@ class _PlayerScreenState extends State<PlayerScreen>
             icon: Icon(Icons.keyboard_arrow_down,
                 color: baseColor, size: 30),
           ),
-          const SizedBox(width: 40), // 오른쪽 TV 버튼 폭만큼 비워서 가운데 워터마크 정렬 유지
+          // 오른쪽 아이콘(36씩) 폭에 맞춰 비워서 가운데 워터마크가 화면 정중앙에 오게 (왼쪽 ⌄는 48)
+          SizedBox(width: (_albumArtStyle == 6 ? 36.0 * 3 : 36.0 * 2) - 48),
           Expanded(
             child: Center(
               // "재생 중" 대신 파란소리 워터마크 (홈 로고 스타일, 이퀄라이저 없이)
@@ -1472,6 +1473,26 @@ class _PlayerScreenState extends State<PlayerScreen>
             ),
           ),
           // TV로 듣기 (연결되면 하늘색 아이콘)
+          // 파란포토 사진 고르기 (파란포토 스타일일 때만, 열려 있으면 하늘색)
+          if (_albumArtStyle == 6)
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                final open = !_showNightPicker;
+                setState(() => _showNightPicker = open);
+                SharedPreferences.getInstance().then((p) => p.setBool('showNightPicker', open));
+              },
+              child: SizedBox(
+                width: 36,
+                height: 40,
+                child: Icon(
+                  Icons.photo_outlined,
+                  color: _showNightPicker ? const Color(0xFF7FB8F0) : baseColor,
+                  size: 20,
+                ),
+              ),
+            ),
           AnimatedBuilder(
             animation: CastService.instance,
             builder: (context, _) {
@@ -1488,12 +1509,12 @@ class _PlayerScreenState extends State<PlayerScreen>
                   }
                 },
                 child: SizedBox(
-                  width: 40,
+                  width: 36,
                   height: 40,
                   child: Icon(
                     cast.isConnected ? Icons.cast_connected : Icons.cast,
                     color: cast.isConnected ? const Color(0xFF7FB8F0) : baseColor,
-                    size: 22,
+                    size: 20,
                   ),
                 ),
               );
@@ -1502,13 +1523,15 @@ class _PlayerScreenState extends State<PlayerScreen>
           GestureDetector(
             onTap: () => _showPlayerOptionsSheet(context, song, primaryColor),
             behavior: HitTestBehavior.opaque,
-            child: Padding(
-              // 왼쪽 ⌄ 버튼과 폭을 똑같이(48) 맞춰서 가운데 워터마크가 화면 정중앙에 오게
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              child: Stack(
+            child: SizedBox(
+              // 사진·TV 아이콘과 같은 칸(36)
+              width: 36,
+              height: 40,
+              child: Center(
+                child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  Icon(Icons.more_vert, color: baseColor),
+                  Icon(Icons.more_vert, color: baseColor, size: 20),
                   if (!_hasSeenParanPhoto)
                     Positioned(
                       top: -1,
@@ -1523,6 +1546,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                       ),
                     ),
                 ],
+              ),
               ),
             ),
           ),
@@ -2110,30 +2134,8 @@ class _PlayerScreenState extends State<PlayerScreen>
   }
   Widget _buildNightBgPicker() {
 
-    if (!_showNightPicker) {
-      return Align(
-        alignment: Alignment.topCenter,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: GestureDetector(
-            onTap: () {
-              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              setState(() => _showNightPicker = true);
-              SharedPreferences.getInstance().then((p) => p.setBool('showNightPicker', true));
-            },
-            child: Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.black.withOpacity(0.35),
-              ),
-              child: const Icon(Icons.photo_outlined, color: Colors.white, size: 18),
-            ),
-          ),
-        ),
-      );
-    }
+    // 닫혀 있을 때: 아무것도 안 띄움 (위쪽 줄 사진 아이콘으로 열기)
+    if (!_showNightPicker) return const SizedBox.shrink();
 
     // 2단계: 카테고리를 아직 안 골랐으면 카테고리 목록을 보여준다.
     if (_nightSelectedCategory == null) {

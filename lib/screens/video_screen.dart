@@ -18,6 +18,9 @@ import '../widgets/paran_dialog.dart';
 import '../widgets/action_feedback.dart';
 import '../widgets/paran_toast.dart';
 import 'video_trim_screen.dart';
+import '../services/cast_service.dart';
+import '../widgets/cast_sheets.dart';
+import 'settings_help_screen.dart';
 
 // 이어보기: 동영상마다 멈춘 곳 기억 (폰에 저장 + 바로 쓰게 메모리에도)
 class VideoResume {
@@ -527,6 +530,11 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
     final provider = context.read<VideoProvider>();
     if (!provider.permissionDenied && !provider.isLoading) {
       provider.loadVideos(quiet: true);
+    } else if (provider.permissionDenied) {
+      // 설정에서 허용하고 돌아왔으면 바로 불러오기 (아직 안 했으면 창 안 띄움)
+      Permission.videos.status.then((s) {
+        if (s.isGranted || s.isLimited) provider.requestPermissionAndLoad();
+      });
     }
   }
 
@@ -538,40 +546,113 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
     final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
 
     if (videoProvider.permissionDenied) {
+      // 권한 안내: 작은 아이콘 + 부드러운 문구 + 1·2·3 순서 카드 + 먹색 버튼
+      final card = isDarkMode ? const Color(0xFF26221C) : Colors.white;
+      final ink = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+      final sub = isDarkMode ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
+      final hint = isDarkMode ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
+      Widget step(int n, String text, {String? note}) => Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(14)),
+            child: Row(
+              children: [
+                Container(
+                  width: 24,
+                  height: 24,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(color: ink, shape: BoxShape.circle),
+                  child: Text('$n', style: TextStyle(color: bgColor, fontSize: 12, fontWeight: FontWeight.w700)),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(text, style: TextStyle(color: ink, fontSize: 13.5)),
+                      if (note != null) ...[
+                        const SizedBox(height: 2),
+                        Text(note, style: TextStyle(color: hint, fontSize: 11.5)),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
       return Scaffold(
         backgroundColor: bgColor,
         body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.video_library_outlined,
-                    size: 72, color: baseColor.withOpacity(0.5)),
-                const SizedBox(height: 24),
-                Text(AppLocalizations.of(context)!.videoPermissionRequired,
-                    style: TextStyle(
-                        color: baseColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold)),
-                const SizedBox(height: 12),
-                Text(AppLocalizations.of(context)!.videoPermissionMessage,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: baseColor.withOpacity(0.7), fontSize: 14, height: 1.6)),
-                const SizedBox(height: 32),
-                ElevatedButton(
-                  onPressed: () => openAppSettings(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: baseColor.withOpacity(0.15),
-                    foregroundColor: baseColor,
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 360),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(color: card, shape: BoxShape.circle),
+                      child: Icon(Icons.movie_outlined, size: 26, color: sub),
+                    ),
                   ),
-                  child: Text(AppLocalizations.of(context)!.openSettings,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  Text('폰에 있는 동영상을 불러올게요',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: ink, fontSize: 16.5, fontWeight: FontWeight.w700, letterSpacing: -0.3)),
+                  const SizedBox(height: 6),
+                  Text('동영상 접근을 한 번만 허용해 주세요',
+                      textAlign: TextAlign.center, style: TextStyle(color: hint, fontSize: 13)),
+                  const SizedBox(height: 22),
+                  step(1, '아래 설정에서 허용하기 누르기', note: '파란소리 앱 설정이 바로 열려요'),
+                  step(2, '권한 → 사진 및 동영상 누르기'),
+                  step(3, '허용 고르고 돌아오기', note: '돌아오면 바로 목록이 나와요'),
+                  // 버튼 대신 직접 찾아갈 때 (폰 회사마다 메뉴 이름이 조금 달라요)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                    child: Text('직접 찾아갈 때: 설정 → 애플리케이션(앱) → 파란소리 → 권한 → 사진 및 동영상',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: hint, fontSize: 11.5, height: 1.5)),
+                  ),
+                  const SizedBox(height: 14),
+                  SizedBox(
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                        openAppSettings();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ink,
+                        foregroundColor: bgColor,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                      ),
+                      child: const Text('설정에서 허용하기',
+                          style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700)),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Center(
+                    child: TextButton(
+                      onPressed: () => Navigator.push(
+                          context, MaterialPageRoute(builder: (_) => const SettingsHelpScreen())),
+                      style: TextButton.styleFrom(foregroundColor: hint),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('다른 설정 도움말 보기', style: TextStyle(fontSize: 12.5)),
+                          SizedBox(width: 2),
+                          Icon(Icons.chevron_right_rounded, size: 16),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -1234,6 +1315,107 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
     }
   }
 
+  // ───── TV로 보기 (구글 캐스트 · 스마트 TV) ─────
+  bool get _castingHere {
+    final c = CastService.instance;
+    return c.isConnected && c.isVideo && c.currentUri == widget.video.uri;
+  }
+
+  Future<void> _openCast() async {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    final cast = CastService.instance;
+    if (_castingHere) {
+      showCastControlSheet(context, nowPlaying: widget.video.titleDisplay);
+      return;
+    }
+    // 폰은 멈추고, 보던 곳부터 TV로
+    Future<bool> send(Future<bool> Function(int startSec) go) async {
+      if (!_videoPlayerController.value.isInitialized) return false;
+      final pos = _videoPlayerController.value.position.inSeconds;
+      _videoPlayerController.pause();
+      final ok = await go(pos);
+      if (!ok && mounted) _videoPlayerController.play();
+      return ok;
+    }
+
+    if (cast.isConnected) {
+      // 이미 TV에 연결돼 있으면 (음악 보내던 중 등) 같은 TV로 바로
+      final ok = await send((s) =>
+          cast.castVideo(path: widget.video.uri, title: widget.video.titleDisplay, startSec: s));
+      if (!ok && mounted) showParanToast(context, 'TV로 보내지 못했어요. 다시 시도해 주세요.', error: true);
+      return;
+    }
+    showCastPickerSheet(
+      context,
+      title: 'TV로 보기',
+      onPick: (d) => send((s) =>
+          cast.connectVideo(d, path: widget.video.uri, title: widget.video.titleDisplay, startSec: s)),
+    );
+  }
+
+  /// TV → 폰으로 돌아오기 (TV에서 보던 곳부터 이어서)
+  Future<void> _backToPhone() async {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    final cast = CastService.instance;
+    final pos = cast.tvPosition;
+    await cast.disconnect();
+    if (!mounted) return;
+    await _videoPlayerController.seekTo(pos);
+    _videoPlayerController.play();
+  }
+
+  /// TV로 보는 동안 폰 화면
+  Widget _castPanel() {
+    final cast = CastService.instance;
+    return Container(
+      color: Colors.black,
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.tv_rounded, color: Colors.white70, size: 46),
+          const SizedBox(height: 12),
+          Text('${cast.device?.name ?? 'TV'}에서 보는 중',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
+          const SizedBox(height: 4),
+          Text(widget.video.titleDisplay,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white54, fontSize: 12.5)),
+          const SizedBox(height: 24),
+          GestureDetector(
+            onTap: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              cast.tvPlaying ? cast.pause() : cast.play();
+            },
+            child: Container(
+              width: 60,
+              height: 60,
+              decoration: const BoxDecoration(color: Color(0xFFF3EFE7), shape: BoxShape.circle),
+              child: Icon(cast.tvPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                  color: const Color(0xFF17140F), size: 32),
+            ),
+          ),
+          const SizedBox(height: 20),
+          GestureDetector(
+            onTap: _backToPhone,
+            child: const Text('폰에서 이어 보기',
+                style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 13,
+                    decoration: TextDecoration.underline,
+                    decorationColor: Colors.white38)),
+          ),
+        ],
+      ),
+    );
+  }
+
   // ───── 재생 화면 편의 기능: 두 번 탭 10초 · 재생 속도 · 구간 반복 ─────
   void _vib() => const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
 
@@ -1482,6 +1664,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
     _saveTimer?.cancel();
     _seekHide?.cancel();
     _videoPlayerController.removeListener(_loopTick);
+    if (_castingHere) CastService.instance.disconnect(); // 화면을 나가면 TV도 정지
     try {
       _savePosition(); // 나갈 때 멈춘 곳 기억
     } catch (_) {}
@@ -1556,6 +1739,15 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
         actions: [
+          // TV로 보기
+          AnimatedBuilder(
+            animation: CastService.instance,
+            builder: (context, _) => IconButton(
+              onPressed: _openCast,
+              icon: Icon(_castingHere ? Icons.cast_connected_rounded : Icons.cast_rounded,
+                  color: Colors.white, size: 22),
+            ),
+          ),
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: Colors.white),
             // 재생 화면은 늘 어두워서 어두운 둥근 카드 (재생목록 ⋮과 같은 모양)
@@ -1727,6 +1919,14 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
                                 ),
                               ),
                             ),
+                          // TV로 보는 중이면 화면을 가리고 TV 조작
+                          Positioned.fill(
+                            child: AnimatedBuilder(
+                              animation: CastService.instance,
+                              builder: (context, _) =>
+                                  _castingHere ? _castPanel() : const IgnorePointer(child: SizedBox.shrink()),
+                            ),
+                          ),
                         ],
                       )
                     : const CircularProgressIndicator(color: Colors.white),

@@ -3702,6 +3702,17 @@ List<Widget> playerSettingRows(
       trailing: _PlayerScreenState._sheetValue(_PlayerScreenState._sheetSpeedLabel(p.playbackSpeed)),
       arrow: true,
     ),
+    // 자연소리 섞기 (재생화면 메뉴와 같은 줄, 곡이 재생 중일 때만)
+    if (p.currentSong != null)
+      AnimatedBuilder(
+        animation: NatureOverlay.instance,
+        builder: (_, __) => _PlayerScreenState._playerSheetItem(
+          context, Icons.forest_outlined, '자연소리 섞기', accent, textColor,
+          () { showNatureOverlaySheet(context); },
+          trailing: _PlayerScreenState._sheetValue(NatureOverlay.instance.summary),
+          arrow: true,
+        ),
+      ),
   ];
 }
 

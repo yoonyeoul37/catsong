@@ -18,7 +18,8 @@ Color get _cLine => _tvDark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
 
 /// TV 찾아서 고르기 (라디오 화면에서 사용)
 /// onPick: 고른 TV로 보내기 → 성공하면 true
-void showCastPickerSheet(BuildContext context, {required Future<bool> Function(CastDevice) onPick}) {
+void showCastPickerSheet(BuildContext context,
+    {required Future<bool> Function(CastDevice) onPick, String title = 'TV로 듣기'}) {
   _tvDark = context.read<ThemeProvider>().isDarkMode; // 다크 모드 맞추기
   showModalBottomSheet(
     context: context,
@@ -48,7 +49,7 @@ void showCastPickerSheet(BuildContext context, {required Future<bool> Function(C
                 Row(
                   children: [
                     Expanded(
-                      child: Text('TV로 듣기',
+                      child: Text(title,
                           style: TextStyle(color: _cInk, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
                     ),
                     ParanCloseX(onTap: () => Navigator.pop(ctx)),

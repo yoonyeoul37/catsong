@@ -118,7 +118,23 @@ class ArtistScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(Icons.chevron_right, color: baseColor.withOpacity(0.24), size: 20),
+            // ▶ 바로 재생 (줄을 누르면 지금처럼 곡 목록, ▶는 그 가수 곡을 바로 전부 재생)
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                context.read<PlayerProvider>().playFromList(artist.songs, 0, isPlayAllAction: true);
+              },
+              child: Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: baseColor.withOpacity(0.07),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.play_arrow_rounded, size: 20, color: baseColor.withOpacity(0.6)),
+              ),
+            ),
           ],
         ),
       ),
@@ -281,15 +297,6 @@ class _ArtistAvatar extends StatelessWidget {
   final double size;
   const _ArtistAvatar({required this.artist, this.size = 56});
 
-  // 재생목록 표지와 같은 색 세트 (가수 이름으로 골라서 늘 같은 색)
-  static const _grads = <List<Color>>[
-    [Color(0xFF3A3550), Color(0xFF6B4A3A)],
-    [Color(0xFF1F4E6B), Color(0xFF6FB3C9)],
-    [Color(0xFF6B4A3A), Color(0xFFE0915F)],
-    [Color(0xFF4A3F7A), Color(0xFFC79ACF)],
-    [Color(0xFF233D32), Color(0xFF7FA77A)],
-  ];
-
   @override
   Widget build(BuildContext context) {
     List<int>? art;
@@ -312,29 +319,14 @@ class _ArtistAvatar extends StatelessWidget {
         errorBuilder: (_, __, ___) => const ColoredBox(color: Color(0xFFE3DCCD)),
       );
     } else {
+      // 곡 목록의 사진 없는 곡과 같은 색 세트 (가수 이름으로 골라서 늘 같은 색)
       final name = (artist.displayName as String).trim();
-      var h = 0;
-      for (final c in name.codeUnits) {
-        h = (h * 31 + c) & 0x7fffffff;
-      }
-      child = DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: _grads[h % _grads.length],
-          ),
-        ),
-        child: Center(
-          child: Text(
-            name.isEmpty ? '♪' : name.characters.first.toUpperCase(),
-            style: TextStyle(
-              color: const Color(0xFFF4EFE5),
-              fontSize: size * 0.38,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ),
+      child = NoArtTile(
+        title: name,
+        colorKey: name,
+        size: size,
+        radius: size / 2,
+        isDark: context.watch<ThemeProvider>().isDarkMode,
       );
     }
 

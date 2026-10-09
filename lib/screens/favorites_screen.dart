@@ -23,6 +23,9 @@ class FavoritesScreen extends StatelessWidget {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
+    // 큰 버튼은 먹색 (다크 모드는 크림색)
+    final inkFill = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final inkText = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
 
     return CustomScrollView(
       slivers: [
@@ -62,8 +65,8 @@ class FavoritesScreen extends StatelessWidget {
                             .playFromList(favorites, 0, isPlayAllAction: true);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: shuffleOn ? Colors.transparent : Color.lerp(primaryColor, Colors.black, 0.15),
-                        foregroundColor: shuffleOn ? baseColor : Colors.white,
+                        backgroundColor: shuffleOn ? Colors.transparent : inkFill,
+                        foregroundColor: shuffleOn ? baseColor : inkText,
                         side: shuffleOn ? BorderSide(color: baseColor.withOpacity(0.16)) : null,
                         elevation: 0,
                         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -84,14 +87,14 @@ class FavoritesScreen extends StatelessWidget {
                         context.read<PlayerProvider>().playFromList(songs, 0, isPlayAllAction: true);
                       },
                       style: OutlinedButton.styleFrom(
-                        backgroundColor: shuffleOn ? Color.lerp(primaryColor, Colors.black, 0.15) : null,
-                        foregroundColor: shuffleOn ? Colors.white : baseColor,
+                        backgroundColor: shuffleOn ? inkFill : null,
+                        foregroundColor: shuffleOn ? inkText : baseColor,
                         side: BorderSide(color: shuffleOn ? Colors.transparent : baseColor.withOpacity(0.16)),
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14)),
                       ),
-                      icon: const Icon(Icons.shuffle, size: 18),
+                      icon: const Icon(Icons.shuffle_rounded, size: 18),
                       label: Text(AppLocalizations.of(context)!.shuffle,
                           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
                     ),

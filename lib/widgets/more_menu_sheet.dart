@@ -12,6 +12,7 @@ import '../providers/theme_provider.dart';
 import '../screens/settings_screen.dart';
 import '../screens/bulk_clean_screen.dart';
 import '../screens/bulk_art_screen.dart';
+import '../screens/settings_help_screen.dart';
 
 const String _kStoreUrl =
     'https://play.google.com/store/apps/details?id=kr.ssing.catsong';
@@ -40,6 +41,9 @@ const String _kIconImage =
 const String _kIconSparkle =
     '<path d="M12 3l1.9 5.8L20 10.7l-5.8 1.9L12 18.4l-1.9-5.8L4 10.7l6.1-1.9z"/>'
     '<path d="M19 3v4M17 5h4"/>';
+const String _kIconHelp =
+    '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>'
+    '<line x1="12" y1="17" x2="12.01" y2="17"/>';
 const String _kIconClose =
     '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
 
@@ -83,6 +87,7 @@ void showMoreMenuSheet(
       bool showSongTools = false, // 홈에서만: 곡 정보 한꺼번에 정리
     }) {
   final isDarkMode = context.read<ThemeProvider>().isDarkMode;
+  HelpSeen.load();
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -133,6 +138,10 @@ void showMoreMenuSheet(
             transitionDuration: const Duration(milliseconds: 250),
           ),
         );
+      },
+      onHelp: () {
+        Navigator.pop(ctx);
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsHelpScreen()));
       },
       onHomepage: () async {
         Navigator.pop(ctx);
@@ -231,6 +240,7 @@ class _MoreMenuSheet extends StatelessWidget {
   final VoidCallback onRate;
   final VoidCallback onSettings;
   final VoidCallback onHomepage;
+  final VoidCallback onHelp;
   final bool showSongTools;
   final VoidCallback onCleanSongs;
   final VoidCallback onFindArt;
@@ -246,6 +256,7 @@ class _MoreMenuSheet extends StatelessWidget {
     required this.onRate,
     required this.onSettings,
     required this.onHomepage,
+    required this.onHelp,
   });
 
   @override
@@ -307,6 +318,18 @@ class _MoreMenuSheet extends StatelessWidget {
                     title: '설정',
                     subtitle: '앱 환경을 설정해요.',
                     onTap: onSettings,
+                  ),
+                  // 한 번도 안 열어봤으면 작은 점
+                  ValueListenableBuilder<bool>(
+                    valueListenable: HelpSeen.seen,
+                    builder: (context, seen, _) => _MenuCard(
+                      p: p,
+                      icon: _kIconHelp,
+                      title: '설정 도움말',
+                      subtitle: '권한·배터리·알림 설정 방법을 알려드려요.',
+                      onTap: onHelp,
+                      dot: !seen,
+                    ),
                   ),
                   if (hasHomepage)
                     _MenuCard(
@@ -381,6 +404,7 @@ class _MenuCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final VoidCallback onTap;
+  final bool dot; // 안 열어본 새 항목 표시
 
   const _MenuCard({
     required this.p,
@@ -388,6 +412,7 @@ class _MenuCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.onTap,
+    this.dot = false,
   });
 
   @override
@@ -444,6 +469,17 @@ class _MenuCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
+              if (dot) ...[
+                Container(
+                  width: 7,
+                  height: 7,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 6),
+              ],
               _LineIcon(_kIconChevron, size: 18, color: p.chevron, stroke: 2.0),
             ],
           ),

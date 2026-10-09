@@ -58,6 +58,7 @@ import '../widgets/index_bar.dart';
 import '../widgets/action_feedback.dart';
 import '../widgets/paran_toast.dart';
 import '../widgets/paran_dialog.dart';
+import '../utils/home_card_pref.dart';
 import 'sleep_focus_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -776,6 +777,10 @@ class _HomeScreenState extends State<HomeScreen> {
   PreferredSizeWidget _buildAppBar(Color primaryColor) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
+    // 로고: 기본 색(파란소리)일 땐 "파란"만 파랑, 다른 포인트 색이면 글씨는 전부 먹색 + 막대만 포인트 색
+    final pointColor = context.watch<ThemeProvider>().primaryColor;
+    final isBluePoint = pointColor.value == 0xFF2589E8;
+    final logoBarColor = isBluePoint ? const Color(0xFF2F7DE8) : pointColor;
     return AppBar(
       backgroundColor: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA),
       elevation: 0,
@@ -797,14 +802,26 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           // "파란"만 숨쉬듯 은은하게
-                          _LogoBreathe(
-                            child: Text('파란',
-                                textScaler: TextScaler.noScaling, // 로고는 텍스트 크기 설정과 상관없이 고정
-                                style: GoogleFonts.doHyeon(
-                                    color: const Color(0xFF2F7DE8),
-                                    fontSize: 22,
-                                    letterSpacing: -0.5)),
-                          ),
+                          if (isBluePoint)
+                            _LogoBreathe(
+                              child: Text('파란',
+                                  textScaler: TextScaler.noScaling, // 로고는 텍스트 크기 설정과 상관없이 고정
+                                  style: GoogleFonts.doHyeon(
+                                      color: const Color(0xFF2F7DE8),
+                                      fontSize: 22,
+                                      letterSpacing: -0.5)),
+                            )
+                          else
+                            _LogoBreathe(
+                              base: baseColor,
+                              glow: pointColor,
+                              child: Text('파란',
+                                  textScaler: TextScaler.noScaling,
+                                  style: GoogleFonts.doHyeon(
+                                      color: baseColor,
+                                      fontSize: 22,
+                                      letterSpacing: -0.5)),
+                            ),
                           Text('소리',
                               textScaler: TextScaler.noScaling,
                               style: GoogleFonts.doHyeon(
@@ -831,14 +848,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      _LogoBreathe(
-                        child: Text('Paran',
-                            style: GoogleFonts.doHyeon(
-                                color: const Color(0xFF2F7DE8),
-                                fontSize: 20,
-                                height: 1.0,
-                                letterSpacing: -0.3)),
-                      ),
+                      if (isBluePoint)
+                        _LogoBreathe(
+                          child: Text('Paran',
+                              style: GoogleFonts.doHyeon(
+                                  color: const Color(0xFF2F7DE8),
+                                  fontSize: 20,
+                                  height: 1.0,
+                                  letterSpacing: -0.3)),
+                        )
+                      else
+                        _LogoBreathe(
+                          base: baseColor,
+                          glow: pointColor,
+                          child: Text('Paran',
+                              style: GoogleFonts.doHyeon(
+                                  color: baseColor,
+                                  fontSize: 20,
+                                  height: 1.0,
+                                  letterSpacing: -0.3)),
+                        ),
                       Text('Sori',
                           style: GoogleFonts.doHyeon(
                               color: baseColor,
@@ -851,7 +880,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               // 해외는 아래 Sori 옆에 붙게 (파란 Paran과 안 겹치게)
               padding: EdgeInsets.only(top: isKorean ? 8 : 23, bottom: 4),
-              child: const _LogoEqBars(),
+              child: _LogoEqBars(color: logoBarColor),
             ),
           ],
         );
@@ -2002,6 +2031,171 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // ───── 정리할 곡이 없을 때: 하루에 하나씩 바뀌는 "오늘의 카드" ─────
+  Widget _buildTopCard(MusicProvider music, bool isDark) {
+    final clean = _buildCleanHint(music, isDark);
+    if (clean is! SizedBox) return clean; // 정리할 곡이 있으면 정리 카드가 먼저
+    if (music.metaLoading || _showFavorites || _showRecent || _isSelectionMode) return clean;
+    HomeCardPref.load();
+    return ValueListenableBuilder<bool>(
+      valueListenable: HomeCardPref.on,
+      builder: (context, on, _) => !on
+          ? const SizedBox.shrink()
+          : ValueListenableBuilder<bool>(
+              valueListenable: HomeCardPref.hiddenToday,
+              builder: (context, hidden, _) =>
+                  hidden ? const SizedBox.shrink() : _buildDailyCard(music, isDark),
+            ),
+    );
+  }
+
+  Widget _buildDailyCard(MusicProvider music, bool isDark) {
+    final card = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final ink = isDark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
+    final sub = isDark ? const Color(0xFF8A8378) : const Color(0xFFA29A8B);
+    final circle = isDark ? const Color(0xFFE4DCCD) : const Color(0xFF2A251D);
+
+    final now = DateTime.now();
+    final day = DateTime(now.year, now.month, now.day).difference(DateTime(2024, 1, 1)).inDays;
+    final songs = music.songs.where((s) => !music.isCallRecordingPath(s.uri)).toList();
+    var kind = day % 3; // 날짜 따라 순서대로 (같은 날은 같은 카드)
+    if (kind == 0 && songs.isEmpty) kind = 1;
+
+    late IconData icon;
+    late String title;
+    late Widget subLine;
+    String? action;
+    VoidCallback? onAction;
+
+    if (kind == 0) {
+      // ① 오늘의 한 곡 (같은 날은 같은 곡)
+      final i = math.Random(day).nextInt(songs.length);
+      final s = songs[i];
+      icon = Icons.album_outlined;
+      title = '오늘은 이 곡 어때요';
+      subLine = Text.rich(
+        TextSpan(children: [
+          TextSpan(text: s.titleDisplay, style: TextStyle(color: ink, fontWeight: FontWeight.w600)),
+          TextSpan(text: '  ·  ${s.artistDisplay}'),
+        ]),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(color: sub, fontSize: 11.5),
+      );
+      action = '듣기';
+      onAction = () => context.read<PlayerProvider>().playFromList(songs, i);
+    } else if (kind == 1) {
+      // ② 시간대 추천 (자연소리)
+      final h = now.hour;
+      final (IconData ic, String t, String sound, String line) = h >= 5 && h < 11
+          ? (Icons.wb_sunny_outlined, '상쾌한 아침이에요', '새소리', '새소리로 하루를 시작해요')
+          : h >= 11 && h < 17
+              ? (Icons.local_cafe_outlined, '잠깐 쉬어가요', '시냇물', '시냇물 소리 들으며 한숨 돌려요')
+              : h >= 17 && h < 21
+                  ? (Icons.waves_rounded, '오늘도 수고했어요', '파도소리', '파도소리 틀어놓고 쉬어요')
+                  : (Icons.bedtime_outlined, '늦은 밤엔 잔잔하게', '빗소리', '빗소리 틀어놓고 쉬어요');
+      icon = ic;
+      title = t;
+      subLine = Text(line,
+          maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: sub, fontSize: 11.5));
+      final found = PlayerProvider.natureSoundOrder.where((e) => e['name'] == sound);
+      if (found.isNotEmpty) {
+        action = '듣기';
+        final url = found.first['assetPath']!;
+        onAction = () => context.read<PlayerProvider>().playNatureSound(url, sound);
+      }
+    } else {
+      // ③ 기능 알려주기 (돌아올 때마다 다른 팁)
+      const tips = <(IconData, String, String)>[
+        (Icons.notifications_active_outlined, '좋아하는 곡을 벨소리로', '곡 ⋮ 메뉴에서 벨소리·알림음으로 만들 수 있어요'),
+        (Icons.movie_outlined, '동영상에서 음악만 저장', '동영상 ⋮ 메뉴 → 음악으로 저장'),
+        (Icons.battery_charging_full_rounded, '화면 꺼도 음악이 안 끊기게', '앱 정보 → 배터리 → 제한 없음'),
+        (Icons.water_drop_outlined, '음악에 빗소리 섞기', '재생화면 ⋮ 메뉴 → 자연소리 섞기'),
+        (Icons.format_quote_rounded, '가사 한 줄 공유', '가사를 꾹 누르면 카드로 보낼 수 있어요'),
+      ];
+      final tip = tips[(day ~/ 3) % tips.length];
+      icon = tip.$1;
+      title = tip.$2;
+      subLine = Text(tip.$3,
+          maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: sub, fontSize: 11.5));
+    }
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 10, 16, 4),
+      padding: const EdgeInsets.fromLTRB(12, 8, 4, 8),
+      decoration: BoxDecoration(
+        color: card,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDark ? 0.25 : 0.14),
+            blurRadius: 14,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(color: circle, shape: BoxShape.circle),
+            child: Icon(icon, size: 16, color: ink),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 3),
+                subLine,
+              ],
+            ),
+          ),
+          if (action != null) ...[
+            const SizedBox(width: 6),
+            GestureDetector(
+              onTap: () {
+                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                onAction?.call();
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                decoration: BoxDecoration(color: ink, borderRadius: BorderRadius.circular(14)),
+                child: Text(action, style: TextStyle(color: card, fontSize: 12.5, fontWeight: FontWeight.w700)),
+              ),
+            ),
+          ],
+          // ✕ = 오늘만 숨기기
+          IconButton(
+            onPressed: _closeDailyCard,
+            icon: Icon(Icons.close_rounded, color: sub, size: 17),
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(minWidth: 34, minHeight: 34),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _closeDailyCard() async {
+    final ask = await HomeCardPref.closeToday();
+    if (!ask || !mounted) return;
+    final off = await showParanConfirm(
+      context,
+      title: '오늘의 카드를 끌까요?',
+      message: '설정 → 홈 추천 카드에서 언제든 다시 켤 수 있어요',
+      confirmLabel: '끄기',
+      cancelLabel: '계속 볼래요',
+    );
+    if (off) HomeCardPref.setOn(false);
+  }
+
   Widget _buildSongsTab() {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
@@ -2136,7 +2330,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 1,
               color: baseColor.withOpacity(0.06),
             ),
-            _buildCleanHint(musicProvider, isDarkMode), // 정리할 곡이 있으면 알려주기
+            _buildTopCard(musicProvider, isDarkMode), // 정리할 곡 있으면 정리 카드, 없으면 오늘의 카드
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 12, 8),
               child: Row(
@@ -2189,7 +2383,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         context.read<PlayerProvider>().playFromList(songs, 0);
                       }
                     },
-                    icon: Icon(Icons.shuffle, color: baseColor.withOpacity(0.6), size: 20),
+                    icon: Icon(Icons.shuffle_rounded, color: baseColor.withOpacity(0.6), size: 21),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
@@ -2665,7 +2859,9 @@ class _DashboardCategory {
 /// 로고 "파란"이 숨쉬듯 은은하게 밝아졌다 연해졌다 (3.2초에 한 번)
 class _LogoBreathe extends StatefulWidget {
   final Widget child;
-  const _LogoBreathe({required this.child});
+  final Color? base; // 글자 색 (없으면 기본 파랑)
+  final Color? glow; // 지나가는 빛 색 (없으면 기본 하늘색)
+  const _LogoBreathe({required this.child, this.base, this.glow});
 
   @override
   State<_LogoBreathe> createState() => _LogoBreatheState();
@@ -2691,20 +2887,26 @@ class _LogoBreatheState extends State<_LogoBreathe> with SingleTickerProviderSta
       child: widget.child,
       builder: (_, child) {
         final x = -0.5 + _c.value * 2.0; // 빛 위치: 왼쪽 밖 → 오른쪽 밖 (쉬지 않고)
+        // 기본: 파랑 글자 + 하늘색 빛 / 포인트 색 바꾸면: 먹색 글자 + 포인트 색 빛
+        final base = widget.base ?? const Color(0xFF2F7DE8);
+        final glow = widget.glow ?? const Color(0xFFA9D3FF);
+        final mid = widget.glow == null
+            ? const Color(0xFF5FA6F2)
+            : Color.lerp(base, glow, 0.55)!;
         return ShaderMask(
           blendMode: BlendMode.srcIn,
           shaderCallback: (rect) => LinearGradient(
             begin: const Alignment(-1, -0.4), // 시안처럼 살짝 비스듬히
             end: const Alignment(1, 0.4),
             // 가운데만 밝고 양옆으로 부드럽게 번지는 넓은 빛
-            colors: const [
-              Color(0xFF2F7DE8),
-              Color(0xFF2F7DE8),
-              Color(0xFF5FA6F2), // 번짐 시작
-              Color(0xFFA9D3FF), // 가장 밝은 곳
-              Color(0xFF5FA6F2), // 번짐 끝
-              Color(0xFF2F7DE8),
-              Color(0xFF2F7DE8),
+            colors: [
+              base,
+              base,
+              mid, // 번짐 시작
+              glow, // 가장 밝은 곳
+              mid, // 번짐 끝
+              base,
+              base,
             ],
             stops: [
               0,
@@ -2724,7 +2926,8 @@ class _LogoBreatheState extends State<_LogoBreathe> with SingleTickerProviderSta
 }
 
 class _LogoEqBars extends StatefulWidget {
-  const _LogoEqBars();
+  final Color color;
+  const _LogoEqBars({required this.color});
 
   @override
   State<_LogoEqBars> createState() => _LogoEqBarsState();
@@ -2767,7 +2970,7 @@ class _LogoEqBarsState extends State<_LogoEqBars>
                   width: 3,
                   height: 14 * v,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF2F7DE8),
+                    color: widget.color,
                     borderRadius: BorderRadius.circular(1.5),
                   ),
                 ),

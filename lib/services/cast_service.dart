@@ -72,6 +72,7 @@ class CastService extends ChangeNotifier {
   _GoogleCast? _gc; // 구글 캐스트 연결
 Uint8List? _artBytes; // TV 화면에 보여줄 앨범 사진
 bool _isRadio = false; // 라디오를 보내는 중인지 (라디오는 "곡 끝"이 없음)
+bool _isVideo = false; // 동영상을 보내는 중인지 (끝나도 다음 곡으로 안 넘어감)
 Map<String, String> _proxyHeaders = const {}; // 라디오 방송국이 요구하는 헤더
 
   static const _channel = MethodChannel('kr.ssing.catsong/media');
@@ -193,6 +194,7 @@ Map<String, String> _proxyHeaders = const {}; // 라디오 방송국이 요구�
     if (_device == null || song.uri == null) return false;
     _currentUri = song.uri; // 먼저 적어둬서 같은 곡을 여러 번 보내지 않게
     _isRadio = false;
+    _isVideo = false;
     try {
       final url = await _serve(song.uri!);
       if (url == null) return false;
@@ -267,6 +269,7 @@ final artUrl = url.replaceFirst(RegExp(r'/song/.*$'), '/art/${song.uri.hashCode.
     if (_device == null) return false;
     _currentUri = key; // 먼저 적어둬서 같은 방송을 여러 번 보내지 않게
     _isRadio = true;
+    _isVideo = false;
     _proxyHeaders = headers;
     try {
       if (_server == null) {
@@ -310,11 +313,93 @@ final artUrl = url.replaceFirst(RegExp(r'/song/.*$'), '/art/${song.uri.hashCode.
     }
   }
 
+  // ───────────────── 동영상 보내기 ─────────────────
+  bool get isVideo => _isVideo;
+
+  /// 지금 TV 재생 위치 (어림값) — 폰으로 돌아올 때 이어 보기용
+  Duration get tvPosition => _tvPos;
+
+  /// 동영상: 처음 TV에 연결하면서 보내기
+  Future<bool> connectVideo(CastDevice device,
+      {required String path, required String title, int startSec = 0}) async {
+    _device = device;
+    try {
+      if (device.kind == CastKind.google) {
+        _gc = _GoogleCast(device.host);
+        _gc!.onMediaStatus = _onGoogleStatus;
+        await _gc!.connect();
+      }
+    } catch (e) {
+      debugPrint('구글 캐스트 연결 오류: $e');
+      _gc?.close();
+      _gc = null;
+      _device = null;
+      notifyListeners();
+      return false;
+    }
+    final ok = await castVideo(path: path, title: title, startSec: startSec);
+    if (!ok) {
+      await disconnect();
+      return false;
+    }
+    if (device.kind == CastKind.dlna) _startPolling();
+    return true;
+  }
+
+  /// 동영상 파일을 폰 서버로 TV에 보내기 (startSec부터)
+  Future<bool> castVideo({required String path, required String title, int startSec = 0}) async {
+    if (_device == null) return false;
+    _currentUri = path;
+    _isRadio = false;
+    _isVideo = true;
+    _song = null; // 파란포토 사진 다시 보내기 안 하게
+    try {
+      final url = await _serve(path);
+      if (url == null) return false;
+      _artBytes = null;
+      final mime = _mime(path);
+      _cmdAt = DateTime.now();
+      if (_device!.kind == CastKind.google) {
+        await _gc!.load(url, mime, title, '', '', startSec: startSec, metadataType: 0);
+      } else {
+        final meta = '<DIDL-Lite xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/" '
+            'xmlns:dc="http://purl.org/dc/elements/1.1/" '
+            'xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/">'
+            '<item id="1" parentID="0" restricted="1">'
+            '<dc:title>${_escape(title)}</dc:title>'
+            '<upnp:class>object.item.videoItem</upnp:class>'
+            '<res protocolInfo="http-get:*:$mime:*">${_escape(url)}</res>'
+            '</item></DIDL-Lite>';
+        await _soap('SetAVTransportURI',
+            '<InstanceID>0</InstanceID><CurrentURI>${_escape(url)}</CurrentURI>'
+                '<CurrentURIMetaData>${_escape(meta)}</CurrentURIMetaData>');
+        await _soap('Play', '<InstanceID>0</InstanceID><Speed>1</Speed>');
+        if (startSec > 0) {
+          final s = startSec;
+          final hms = '${s ~/ 3600}:${((s ~/ 60) % 60).toString().padLeft(2, '0')}:${(s % 60).toString().padLeft(2, '0')}';
+          try {
+            await _soap('Seek', '<InstanceID>0</InstanceID><Unit>REL_TIME</Unit><Target>$hms</Target>');
+          } catch (_) {}
+        }
+      }
+      _cmdAt = DateTime.now();
+      _tvPlaying = true;
+      _wasPlaying = true;
+      _posBase = Duration(seconds: startSec);
+      _posAt = DateTime.now();
+      notifyListeners();
+      return true;
+    } catch (e) {
+      debugPrint('동영상 TV로 보내기 오류: $e');
+      return false;
+    }
+  }
+
   /// 파란포토 사진 정하기 (null이면 곡 앨범 사진)
   /// TV로 듣는 중이면 지금 곡을 같은 위치에서 다시 보내서 TV 사진도 바꿈
   Future<void> setParanArt(Uint8List? bytes) async {
     _paranArt = bytes;
-    if (_device == null || _isRadio || _song == null || _song!.uri == null) return;
+    if (_device == null || _isRadio || _isVideo || _song == null || _song!.uri == null) return;
     try {
       final song = _song!;
       final pos = _tvPos;
@@ -403,6 +488,7 @@ final artUrl = url.replaceFirst(RegExp(r'/song/.*$'), '/art/${song.uri.hashCode.
     _tvPlaying = false;
     _wasPlaying = false;
     _currentUri = null;
+    _isVideo = false;
     await _server?.close(force: true);
     _server = null;
     notifyListeners();
@@ -425,7 +511,7 @@ final artUrl = url.replaceFirst(RegExp(r'/song/.*$'), '/art/${song.uri.hashCode.
     } else if (state == 'IDLE' && idleReason == 'FINISHED') {
       _tvPlaying = false;
       notifyListeners();
-      if (!_isRadio) onTrackEnded?.call(); // 곡 끝 → 다음 곡 (라디오는 제외)
+      if (!_isRadio && !_isVideo) onTrackEnded?.call(); // 곡 끝 → 다음 곡 (라디오는 제외)
     }
   }
 
@@ -455,7 +541,7 @@ final artUrl = url.replaceFirst(RegExp(r'/song/.*$'), '/art/${song.uri.hashCode.
           _wasPlaying = false;
           _tvPlaying = false;
           notifyListeners();
-          if (!_isRadio) onTrackEnded?.call();
+          if (!_isRadio && !_isVideo) onTrackEnded?.call();
         }
       } catch (_) {}
     });
@@ -665,6 +751,20 @@ return null;
 
 String _mime(String path) {
     final ext = path.split('.').last.toLowerCase();
+    if (_isVideo) {
+      switch (ext) {
+        case 'webm':
+          return 'video/webm';
+        case 'mkv':
+          return 'video/x-matroska';
+        case '3gp':
+          return 'video/3gpp';
+        case 'mov':
+          return 'video/quicktime';
+        default:
+          return 'video/mp4';
+      }
+    }
     switch (ext) {
       case 'm4a':
       case 'aac':
@@ -733,7 +833,7 @@ class _GoogleCast {
   }
 
   Future<void> load(String url, String contentType, String title, String artist, String artUrl,
-      {bool live = false, int startSec = 0}) async {
+      {bool live = false, int startSec = 0, int metadataType = 3}) async {
     if (_transportId == null) throw Exception('캐스트 앱이 준비 안 됨');
     _mediaReady = Completer<void>();
     _mediaSessionId = null;
@@ -748,7 +848,7 @@ class _GoogleCast {
         'contentType': contentType,
         'streamType': live ? 'LIVE' : 'BUFFERED',
         'metadata': {
-'metadataType': 3,
+'metadataType': metadataType,
 'title': title,
 'artist': artist,
 if (artUrl.isNotEmpty)

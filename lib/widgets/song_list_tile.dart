@@ -25,6 +25,7 @@ import 'equalizer_animation.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:io';
 import '../providers/theme_provider.dart';
+import '../utils/no_album_helper.dart';
 
 class SongListTile extends StatelessWidget {
   final Song song;
@@ -183,21 +184,11 @@ class SongListTile extends StatelessWidget {
             cacheWidth: 52,
             cacheHeight: 52,
           )
-              : Container(
-            width: 52,
-            height: 52,
-            decoration: BoxDecoration(
-              color: baseColor.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Center(
-              child: SvgPicture.asset(
-                'assets/no_album.svg',
-                width: 32,
-                height: 32,
-                fit: BoxFit.contain,
-              ),
-            ),
+              : NoArtTile(
+            title: song.titleDisplay,
+            colorKey: song.uri ?? song.titleDisplay,
+            size: 52,
+            isDark: baseColor == Colors.white,
           ),
         ),
         if (isCurrentSong)

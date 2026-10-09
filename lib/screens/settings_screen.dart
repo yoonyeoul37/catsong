@@ -18,6 +18,8 @@ import '../widgets/action_feedback.dart';
 import 'bulk_clean_screen.dart';
 import 'bulk_art_screen.dart';
 import 'player_screen.dart' show showPlayerStyleMenu;
+import '../utils/home_card_pref.dart';
+import 'settings_help_screen.dart';
 
 // 화면 공통 색 (베이지 바탕 · 흰 카드 · 먹색 글자)
 Color _sBg(bool d) => d ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
@@ -46,6 +48,12 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _isFlashlightOn = false;
   bool _isSosOn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    HomeCardPref.load();
+  }
 
   @override
   void dispose() {
@@ -116,7 +124,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Consumer<ThemeProvider>(builder: (context, t, _) => _pointColorTile(t)),
           _buildTile(context, icon: Icons.style_outlined, title: l.playerStyle, onTap: () => _showPlayerStyleDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.font_download_outlined, title: l.fontChange, onTap: () => _showFontDialog(context), primaryColor: primaryColor),
-          _buildTile(context, icon: Icons.text_fields, title: l.textSize, onTap: () => _showTextSizeDialog(context), primaryColor: primaryColor, isLast: true),
+          _buildTile(context, icon: Icons.text_fields, title: l.textSize, onTap: () => _showTextSizeDialog(context), primaryColor: primaryColor),
+          ValueListenableBuilder<bool>(
+            valueListenable: HomeCardPref.on,
+            builder: (context, on, _) => _buildTile(context,
+                icon: Icons.view_agenda_outlined,
+                title: '홈 추천 카드',
+                onTap: () => HomeCardPref.setOn(!on),
+                primaryColor: primaryColor,
+                isLast: true,
+                trailing: Switch(value: on, onChanged: (v) => HomeCardPref.setOn(v), activeColor: primaryColor, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
+          ),
           // ── 음악 관리 ──
           _buildSection('음악 관리'),
           _buildTile(context, icon: Icons.auto_awesome_outlined, title: '곡 정보 한꺼번에 정리',
@@ -139,10 +157,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           }, primaryColor: primaryColor, isLast: true),
           // ── 기타 ──
           _buildSection('기타'),
+          _buildTile(context, icon: Icons.help_outline_rounded, title: '설정 도움말',
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsHelpScreen())),
+              primaryColor: primaryColor, isFirst: true),
           _buildTile(context, icon: Icons.card_giftcard_outlined, title: l.promoCode, onTap: () async {
             await _showPromoCodeDialog(context);
             if (mounted) setState(() {}); // 맨 위 카드 글자도 바로 바뀌게
-          }, primaryColor: primaryColor, isFirst: true),
+          }, primaryColor: primaryColor),
           _buildTile(context, icon: Icons.star_outline, title: l.rateApp, onTap: () => _launchUrl('https://play.google.com/store/apps/details?id=kr.ssing.catsong'), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.privacy_tip_outlined, title: l.privacyPolicy, onTap: () => _launchUrl(l.privacyPolicyUrl), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.description_outlined, title: l.termsOfService, onTap: () => _launchUrl(l.termsOfServiceUrl), primaryColor: primaryColor, isLast: true),

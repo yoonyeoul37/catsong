@@ -3983,7 +3983,26 @@ class _BreathingTextState extends State<_BreathingText> with SingleTickerProvide
 
   @override
   Widget build(BuildContext context) {
-    final base = widget.style.color ?? _dim;
+    // 포인트 색 따라가기 (기본 파란소리 색이면 원래 하늘색 그대로)
+    final point = context.watch<ThemeProvider>().primaryColor;
+    final isDefault = point.value == 0xFF2589E8;
+    final isInk = point.computeLuminance() < 0.08; // 먹색처럼 아주 어두운 색은 사진 위에서 안 보여서 흰빛으로
+    final dim = isDefault
+        ? _dim
+        : isInk
+            ? Colors.white.withOpacity(0.55)
+            : point.withOpacity(0.7);
+    final bright = isDefault
+        ? _bright
+        : isInk
+            ? Colors.white.withOpacity(0.95)
+            : Color.lerp(point, Colors.white, 0.45)!.withOpacity(0.8);
+    final glow = isDefault ? const Color(0xFF7FB8F0) : bright.withOpacity(1);
+    final base = isDefault
+        ? (widget.style.color ?? _dim)
+        : isInk
+            ? Colors.white.withOpacity(0.7)
+            : Color.lerp(point, Colors.white, 0.3)!.withOpacity(0.8);
     return TweenAnimationBuilder<double>(
       // 재생 중 1 → 일시정지 0 (원래 색으로 부드럽게)
       tween: Tween(end: widget.moving ? 1.0 : 0.0),
@@ -3992,14 +4011,14 @@ class _BreathingTextState extends State<_BreathingText> with SingleTickerProvide
         animation: _c,
         builder: (context, __) {
           final t = Curves.easeInOut.transform(_c.value);
-          final breath = Color.lerp(_dim, _bright, t)!;
+          final breath = Color.lerp(dim, bright, t)!;
           return Text(
             widget.text,
             style: widget.style.copyWith(
               color: Color.lerp(base, breath, f),
               shadows: [
                 Shadow(
-                  color: const Color(0xFF7FB8F0).withOpacity(0.25 * t * f),
+                  color: glow.withOpacity(0.25 * t * f),
                   blurRadius: 10,
                 ),
               ],

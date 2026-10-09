@@ -243,19 +243,27 @@ class _LyricsScreenState extends State<LyricsScreen> {
   }
 
   /// 오른쪽 아래 워터마크 — 한국: 파란소리 | Paransori / 해외: ParanSori (한 줄, 은은하게)
-  Widget _watermark(BuildContext context, {double scale = 1}) {
+  Widget _watermark(BuildContext context, {double scale = 1, bool moving = false}) {
     final c = _ink.withOpacity(_light ? 0.72 : 0.88); // 더 잘 보이게
     final shadow = _light ? const <Shadow>[] : [Shadow(color: Colors.black.withOpacity(0.3), blurRadius: 6)];
     // 영어 이름은 앱 전체 Quicksand로 통일 (바로 세움)
-    return Text(
-      'Paransori',
-      style: GoogleFonts.quicksand(
-          color: c,
-          fontSize: 16 * scale,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.8 * scale,
-          shadows: shadow),
-    );
+    final style = GoogleFonts.quicksand(
+        color: c,
+        fontSize: 16 * scale,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.8 * scale,
+        shadows: shadow);
+    // "Paran"만 숨쉬기 (재생 중일 때만) — 재생화면처럼 포인트 색 따라가기
+    final point = context.watch<ThemeProvider>().primaryColor;
+    final Color accent;
+    if (point.value == 0xFF2589E8) {
+      accent = _light ? const Color(0xFF2589E8) : const Color(0xFF7FB8F0); // 기본: 지금 하늘색
+    } else if (point.computeLuminance() < 0.08) {
+      accent = _light ? point : Colors.white; // 먹색 같은 아주 어두운 색
+    } else {
+      accent = _light ? point : Color.lerp(point, Colors.white, 0.35)!;
+    }
+    return _ParanBreath(style: style, accent: accent, moving: moving);
   }
 
   Color get _ink => _light ? const Color(0xFF17140F) : Colors.white;
@@ -1225,7 +1233,9 @@ class _LyricsScreenState extends State<LyricsScreen> {
                         const SizedBox(height: 10),
                         Align(
                           alignment: Alignment.centerRight,
-                          child: Opacity(opacity: 0.85, child: _watermark(context, scale: 0.78)),
+                          child: Opacity(
+                              opacity: 0.85,
+                              child: _watermark(context, scale: 0.78, moving: playerProvider.isPlaying)),
                         ),
                       ],
                           ),
@@ -1518,6 +1528,66 @@ class _LyricsScreenState extends State<LyricsScreen> {
         ],
       ),
     ),
+    );
+  }
+}
+
+
+/// "Paransori" 중 "Paran"만 숨쉬듯 천천히 색이 바뀌는 글씨 (재생 중일 때만)
+class _ParanBreath extends StatefulWidget {
+  final TextStyle style;
+  final Color accent;
+  final bool moving;
+  const _ParanBreath({required this.style, required this.accent, required this.moving});
+
+  @override
+  State<_ParanBreath> createState() => _ParanBreathState();
+}
+
+class _ParanBreathState extends State<_ParanBreath> with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1600), // 재생화면과 같은 빠르기
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.moving) _c.repeat(reverse: true);
+  }
+
+  @override
+  void didUpdateWidget(_ParanBreath old) {
+    super.didUpdateWidget(old);
+    if (widget.moving && !_c.isAnimating) {
+      _c.repeat(reverse: true);
+    } else if (!widget.moving && old.moving) {
+      // 멈추면 원래 색으로 부드럽게
+      _c.animateTo(0, duration: const Duration(milliseconds: 400));
+    }
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _c,
+      builder: (context, _) {
+        final t = Curves.easeInOut.transform(_c.value);
+        final base = widget.style.color ?? Colors.white;
+        return Text.rich(
+          TextSpan(children: [
+            TextSpan(text: 'Paran', style: TextStyle(color: Color.lerp(base, widget.accent, t))),
+            const TextSpan(text: 'sori'),
+          ]),
+          style: widget.style,
+        );
+      },
     );
   }
 }

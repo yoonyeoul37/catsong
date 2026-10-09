@@ -152,10 +152,10 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = context.watch<ThemeProvider>().isDarkMode;
-    final bg = isDark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
-    final card = isDark ? const Color(0xFF26221C) : Colors.white;
+    final bg = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
+    final card = isDark ? const Color(0xFF32302C) : Colors.white;
     final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final sub = isDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
+    final sub = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
     // 곡 정보를 아직 읽는 중이면 기다리기 (파일 이름 상태로 검사하면 잘못 나와서)
     final music = context.watch<MusicProvider>();
     if (music.isLoading || music.metaLoading) {

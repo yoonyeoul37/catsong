@@ -12,12 +12,12 @@ import '../providers/theme_provider.dart';
 
 // ── 라디오 창 색 (라이트: 베이지 · 다크: 어두운 갈색) — 창을 그릴 때마다 다크 모드인지 맞춤 ──
 bool _rdDark = false;
-Color get _rBg => _rdDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
-Color get _rCard => _rdDark ? const Color(0xFF332E26) : Colors.white;
+Color get _rBg => _rdDark ? const Color(0xFF32302C) : const Color(0xFFF4EFE5);
+Color get _rCard => _rdDark ? const Color(0xFF3E3B37) : Colors.white;
 Color get _rInk => _rdDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-Color get _rSub => _rdDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
+Color get _rSub => _rdDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
 Color get _rMuted => _rdDark ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
-Color get _rLine => _rdDark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
+Color get _rLine => _rdDark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
 
 class ScheduleSheet extends StatefulWidget {
   const ScheduleSheet({super.key});

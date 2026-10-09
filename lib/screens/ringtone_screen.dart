@@ -82,11 +82,11 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
     final musicProvider = context.watch<MusicProvider>();
     final isDark = context.watch<ThemeProvider>().isDarkMode;
     // ── 화면 공통 모양 (베이지 바탕 · 흰 카드 · 먹색 큰 버튼) ──
-    final bg = isDark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
-    final card = isDark ? const Color(0xFF26221C) : Colors.white;
+    final bg = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
+    final card = isDark ? const Color(0xFF32302C) : Colors.white;
     final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final sub = isDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-    final line = isDark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
+    final sub = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
+    final line = isDark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
     final point = context.watch<ThemeProvider>().primaryColor; // 포인트 색 (설정에서 고름)
     // 녹음처럼 음악 목록에 없는 곡을 자를 때도 선택 칸에 보이게 같이 넣기
     final songs = [

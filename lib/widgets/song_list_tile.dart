@@ -135,16 +135,21 @@ class SongListTile extends StatelessWidget {
                   ),
                   if (playCount > 0) ...[
                     const SizedBox(height: 2),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.play_arrow_rounded, size: 11, color: subColor),
-                        const SizedBox(width: 1),
-                        Text(
-                          '$playCount',
-                          style: TextStyle(color: subColor, fontSize: 10.5),
-                        ),
-                      ],
+                    // 누르면 세는 기준 알려주기
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => showParanToast(context, '30초 이상 들은 횟수예요'),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.play_arrow_rounded, size: 11, color: subColor),
+                          const SizedBox(width: 1),
+                          Text(
+                            '$playCount',
+                            style: TextStyle(color: subColor, fontSize: 10.5),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ],
@@ -237,9 +242,9 @@ class SongListTile extends StatelessWidget {
     bool showNew = !(prefs.getBool('hasSeenParanPhoto') ?? false);
     if (!context.mounted) return;
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
-    final sheetColor = isDarkMode ? const Color(0xFF2A251D) : const Color(0xFFF4EFE5);
+    final sheetColor = isDarkMode ? const Color(0xFF353330) : const Color(0xFFF4EFE5);
     final baseColor = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF1A1A1A);
-    final descColor = isDarkMode ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
+    final descColor = isDarkMode ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
     const accent = Color(0xFF8A8378); // 메뉴 아이콘은 차분한 회색 (재생화면 메뉴와 통일)
 
     showModalBottomSheet(

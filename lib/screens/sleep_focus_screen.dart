@@ -19,7 +19,7 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
   Widget build(BuildContext context) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
-    final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
+    final bgColor = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA);
 
     final categories = ['전체', '수면', '명상', '백색소음', '기타'];
 
@@ -113,7 +113,7 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
                               category,
                               style: TextStyle(
                                 color: isSelected
-                                    ? (isDarkMode ? const Color(0xFF17140F) : Colors.white)
+                                    ? (isDarkMode ? const Color(0xFF24221F) : Colors.white)
                                     : baseColor.withOpacity(0.7),
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,

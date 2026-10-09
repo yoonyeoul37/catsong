@@ -248,7 +248,7 @@ class PlaylistDetailScreen extends StatelessWidget {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
-    final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
+    final bgColor = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA);
     return Scaffold(
       backgroundColor: bgColor,
       body: CustomScrollView(

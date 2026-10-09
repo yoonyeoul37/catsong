@@ -16,9 +16,9 @@ Future<bool> showExitConfirm(BuildContext context) async {
   final ok = await showDialog<bool>(
     context: context,
     builder: (ctx) {
-      final bg = isDark ? const Color(0xFF1F1B16) : Colors.white;
+      final bg = isDark ? const Color(0xFF2B2926) : Colors.white;
       final titleColor = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-      final subColor = isDark ? const Color(0xFFA29A8B) : const Color(0xFFA39C90);
+      final subColor = isDark ? const Color(0xFFB8B0A2) : const Color(0xFFA39C90);
       return Dialog(
         backgroundColor: bg,
         insetPadding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
@@ -64,7 +64,7 @@ Future<bool> showExitConfirm(BuildContext context) async {
                             },
                             style: OutlinedButton.styleFrom(
                               foregroundColor: isDark ? Colors.white70 : const Color(0xFF5A5348),
-                              backgroundColor: isDark ? const Color(0xFF2A251E) : Colors.white,
+                              backgroundColor: isDark ? const Color(0xFF353330) : Colors.white,
                               side: BorderSide(color: isDark ? Colors.white24 : const Color(0xFFE2DACB)),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                               // 살짝 떠 보이게 연한 그림자

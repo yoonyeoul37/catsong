@@ -513,7 +513,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
   Widget build(BuildContext context) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
-    final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
+    final bgColor = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA);
     final primaryColor = Theme.of(context).colorScheme.primary;
     final playerProvider = context.watch<PlayerProvider>();
 
@@ -524,7 +524,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: Color(0xFF17140F),
+          systemNavigationBarColor: Color(0xFF24221F),
           systemNavigationBarIconBrightness: Brightness.light,
         )
             : const SystemUiOverlayStyle(
@@ -647,7 +647,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                           '$category($count)',
                           style: TextStyle(
                             color: isSelected
-                                ? (isDarkMode ? const Color(0xFF17140F) : Colors.white)
+                                ? (isDarkMode ? const Color(0xFF24221F) : Colors.white)
                                 : baseColor.withOpacity(0.7),
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
@@ -862,7 +862,7 @@ class _VariantPickerSheet extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
       decoration: BoxDecoration(
-        color: baseColor == Colors.white ? const Color(0xFF26221C) : const Color(0xFFF4EFE5), // 다른 창과 같은 색
+        color: baseColor == Colors.white ? const Color(0xFF32302C) : const Color(0xFFF4EFE5), // 다른 창과 같은 색
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(

@@ -234,7 +234,7 @@ class RadioHomeScreen extends StatelessWidget {
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: Color(0xFF17140F),
+          systemNavigationBarColor: Color(0xFF24221F),
           systemNavigationBarIconBrightness: Brightness.light,
         )
             : const SystemUiOverlayStyle(
@@ -248,7 +248,7 @@ class RadioHomeScreen extends StatelessWidget {
     });
 
     return Scaffold(
-      backgroundColor: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA),
+      backgroundColor: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
       extendBodyBehindAppBar: false,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -335,7 +335,7 @@ class _MyCountryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = context.watch<ThemeProvider>().isDarkMode;
     final bg = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final fg = isDark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
+    final fg = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
     final l = AppLocalizations.of(context)!;
     final isKo = Localizations.localeOf(context).languageCode == 'ko';
     String count;

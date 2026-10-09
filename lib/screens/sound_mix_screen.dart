@@ -57,7 +57,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
     Duration picked = const Duration(minutes: 30);
     showModalBottomSheet(
       context: context,
-      backgroundColor: isDarkMode ? const Color(0xFF26221C) : const Color(0xFFF4EFE5), // 다른 창과 같은 색
+      backgroundColor: isDarkMode ? const Color(0xFF32302C) : const Color(0xFFF4EFE5), // 다른 창과 같은 색
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) {
@@ -113,7 +113,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                       style: ElevatedButton.styleFrom(
                         // 큰 버튼: 먹색 (다크는 크림색)
                         backgroundColor: isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F),
-                        foregroundColor: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFF4EFE5),
+                        foregroundColor: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFF4EFE5),
                         elevation: 6,
                         shadowColor: Colors.black.withOpacity(0.25),
                         padding: const EdgeInsets.symmetric(vertical: 14),
@@ -148,7 +148,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
     final searchController = TextEditingController();
     showModalBottomSheet(
       context: context,
-      backgroundColor: isDarkMode ? const Color(0xFF26221C) : const Color(0xFFF4EFE5), // 다른 창과 같은 색
+      backgroundColor: isDarkMode ? const Color(0xFF32302C) : const Color(0xFFF4EFE5), // 다른 창과 같은 색
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
@@ -263,7 +263,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
-    final sheetBg = isDarkMode ? const Color(0xFF26221C) : const Color(0xFFF4EFE5); // 다른 창과 같은 색
+    final sheetBg = isDarkMode ? const Color(0xFF32302C) : const Color(0xFFF4EFE5); // 다른 창과 같은 색
     final blue = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F); // 고른 것 표시: 먹색
     final variants = SoundMixProvider.natureVariants[key]!.keys.toList();
     showModalBottomSheet(
@@ -422,7 +422,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
   Widget build(BuildContext context) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
-    final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
+    final bgColor = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA);
     final primaryColor = Theme.of(context).colorScheme.primary;
     final mix = context.watch<SoundMixProvider>();
 

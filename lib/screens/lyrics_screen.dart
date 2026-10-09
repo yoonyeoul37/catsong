@@ -122,6 +122,10 @@ class _LyricsScreenState extends State<LyricsScreen> {
   void initState() {
     super.initState();
     _loadBgList(); // 인터넷 목록 받기 (못 받으면 기본 목록)
+    SharedPreferences.getInstance().then((p) {
+      final s = (p.getInt('lyricsTextSize') ?? 1).clamp(0, 2);
+      if (s != _sizeStep && mounted) setState(() => _sizeStep = s);
+    });
     // 처음 한 번만: 가사를 꾹 누르면 카드로 공유된다고 알려주기
     SharedPreferences.getInstance().then((p) {
       if (p.getBool('lyricsCardHint') == true) return;
@@ -326,6 +330,79 @@ class _LyricsScreenState extends State<LyricsScreen> {
     );
   }
 
+  // ───── 가사 글자 크기 (0 작게 · 1 보통 · 2 크게, 모든 노래에 같이) ─────
+  static int _sizeStep = 1;
+  double get _curSize => const [15.0, 17.0, 19.5][_sizeStep]; // 지금 부르는 줄
+  double get _lineSize => const [13.0, 14.5, 16.5][_sizeStep]; // 다른 줄·시간 없는 가사
+
+  /// 가 가 가 고르기 창 (누르면 뒤 가사에 바로 보임, 창은 안 닫힘)
+  void _pickTextSize() {
+    showParanSheet(
+      context,
+      title: '가사 글자 크기',
+      builder: (ctx, setSheet) {
+        final dark = context.read<ThemeProvider>().isDarkMode;
+        final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+        final onInk = dark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
+        final card = dark ? const Color(0xFF32302C) : Colors.white;
+        final line = dark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
+        const labels = ['작게', '보통', '크게'];
+        const sample = [15.0, 19.0, 23.0];
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: Row(
+            children: [
+              for (var i = 0; i < 3; i++) ...[
+                if (i > 0) const SizedBox(width: 8),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () async {
+                      HapticFeedback.selectionClick();
+                      setState(() => _sizeStep = i);
+                      setSheet(() {});
+                      final p = await SharedPreferences.getInstance();
+                      await p.setInt('lyricsTextSize', i);
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 150),
+                      height: 76,
+                      decoration: BoxDecoration(
+                        color: _sizeStep == i ? ink : card,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: _sizeStep == i ? ink : line),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 28,
+                            child: Center(
+                              child: Text('가',
+                                  style: TextStyle(
+                                      color: _sizeStep == i ? onInk : ink,
+                                      fontSize: sample[i],
+                                      fontWeight: FontWeight.w700)),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(labels[i],
+                              style: TextStyle(
+                                  color: _sizeStep == i ? onInk.withOpacity(0.8) : ink.withOpacity(0.6),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   /// ⏱ 박자 맞추기 창 (누를 때마다 바로 적용, 창은 안 닫힘)
   void _pickOffset(LyricsProvider lp) {
     showParanSheet(
@@ -409,6 +486,177 @@ class _LyricsScreenState extends State<LyricsScreen> {
     if (mounted) setState(() => _bg = n);
   }
 
+  /// ✏ 가사 직접 넣기·고치기 창 (붙여넣기 → 저장, 노래마다 기억)
+  Future<void> _editLyrics(LyricsProvider lp, PlayerProvider pp) async {
+    final song = pp.currentSong;
+    if (song == null) return;
+    final ctrl = TextEditingController(text: lp.hasLyrics ? lp.editableText : '');
+    final dark = context.read<ThemeProvider>().isDarkMode;
+    final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final sub = dark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
+    final onInk = dark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
+    final card = dark ? const Color(0xFF32302C) : Colors.white;
+    final line = dark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
+    final sheet = dark ? const Color(0xFF2B2926) : const Color(0xFFF4EFE5);
+    final saved = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom), // 키보드 위로
+        child: SafeArea(
+          top: false,
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 14),
+            decoration: BoxDecoration(color: sheet, borderRadius: BorderRadius.circular(22)),
+            child: StatefulBuilder(
+              builder: (ctx, setSheet) => SingleChildScrollView(
+               child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 36,
+                      height: 4,
+                      decoration: BoxDecoration(color: line, borderRadius: BorderRadius.circular(2)),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(lp.hasManual ? '가사 직접 고치기' : '가사 직접 넣기',
+                                  style: TextStyle(
+                                      color: ink, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
+                              const SizedBox(height: 3),
+                              Text('${song.titleDisplay} · ${song.artistDisplay}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: sub, fontSize: 12.5)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      ParanCloseX(onTap: () => Navigator.pop(ctx)),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  // 키보드를 뺀 남은 자리에 맞춰 높이 (긴 가사는 칸 안에서 스크롤)
+                  SizedBox(
+                   height: (MediaQuery.of(ctx).size.height -
+                           MediaQuery.of(ctx).viewInsets.bottom -
+                           MediaQuery.of(ctx).padding.top -
+                           290)
+                       .clamp(110.0, 300.0),
+                   child: TextField(
+                    controller: ctrl,
+                    expands: true,
+                    minLines: null,
+                    maxLines: null,
+                    textAlignVertical: TextAlignVertical.top,
+                    keyboardType: TextInputType.multiline,
+                    onChanged: (_) => setSheet(() {}),
+                    style: TextStyle(color: ink, fontSize: 14.5, height: 1.5),
+                    cursorColor: ink,
+                    decoration: InputDecoration(
+                      hintText: '가사를 붙여넣어 주세요\n[00:12.34] 처럼 시간이 있으면 노래에 맞춰 나와요',
+                      hintMaxLines: 3,
+                      hintStyle: TextStyle(color: sub, fontSize: 13.5, height: 1.5),
+                      filled: true,
+                      fillColor: card,
+                      contentPadding: const EdgeInsets.all(14),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: BorderSide(color: line),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: BorderSide(color: ink, width: 1.5),
+                      ),
+                    ),
+                   ),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      TextButton.icon(
+                        onPressed: () async {
+                          final d = await Clipboard.getData('text/plain');
+                          final t = d?.text ?? '';
+                          if (t.trim().isEmpty) return;
+                          ctrl.text = t;
+                          setSheet(() {});
+                        },
+                        style: TextButton.styleFrom(foregroundColor: ink),
+                        icon: const Icon(Icons.content_paste_rounded, size: 18),
+                        label: const Text('붙여넣기', style: TextStyle(fontWeight: FontWeight.w600)),
+                      ),
+                      const Spacer(),
+                      if (ctrl.text.isNotEmpty)
+                        TextButton(
+                          onPressed: () {
+                            ctrl.clear();
+                            setSheet(() {});
+                          },
+                          style: TextButton.styleFrom(foregroundColor: sub),
+                          child: const Text('비우기'),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: ctrl.text.trim().isEmpty ? null : () => Navigator.pop(ctx, true),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ink,
+                        foregroundColor: onInk,
+                        disabledBackgroundColor: ink.withOpacity(0.15),
+                        disabledForegroundColor: sub,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      ),
+                      child: const Text('저장', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15.5)),
+                    ),
+                  ),
+                ],
+               ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    if (saved == true) {
+      await lp.saveManualLyrics(song.titleDisplay, song.artistDisplay, ctrl.text);
+      if (mounted) showParanToast(context, '이 노래 가사로 저장했어요');
+    }
+  }
+
+  /// 직접 넣은 가사 지우기 (지우면 인터넷에서 다시 찾기)
+  Future<void> _deleteManual(LyricsProvider lp, PlayerProvider pp) async {
+    final song = pp.currentSong;
+    if (song == null) return;
+    final ok = await showParanConfirm(
+      context,
+      title: '직접 넣은 가사를 지울까요?',
+      message: '지우면 인터넷에서 다시 찾아요',
+      confirmLabel: '지우기',
+      danger: true,
+    );
+    if (!ok) return;
+    await lp.deleteManualLyrics(song.titleDisplay, song.artistDisplay, filePath: song.uri);
+  }
+
   /// 🖼 배경 고르기 창
   void _pickBackground() {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -481,16 +729,16 @@ class _LyricsScreenState extends State<LyricsScreen> {
 
         final dark = context.read<ThemeProvider>().isDarkMode;
         final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-        final sub = dark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
+        final sub = dark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
 
         // + 사진 추가
         Widget addTile() => GestureDetector(
               onTap: () => _addMyPhotos(setSheet),
               child: Container(
                 decoration: BoxDecoration(
-                  color: dark ? const Color(0xFF26221C) : Colors.white,
+                  color: dark ? const Color(0xFF32302C) : Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: dark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB), width: 1.2),
+                  border: Border.all(color: dark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB), width: 1.2),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -678,6 +926,9 @@ class _LyricsScreenState extends State<LyricsScreen> {
                 offset: const Offset(0, 40),
                 onSelected: (v) {
                   if (v == 'offset') _pickOffset(lp);
+                  if (v == 'size') _pickTextSize();
+                  if (v == 'edit') _editLyrics(lp, pp);
+                  if (v == 'delete') _deleteManual(lp, pp);
                   if (v == 'refresh') {
                     final song = pp.currentSong;
                     if (song != null) {
@@ -686,8 +937,12 @@ class _LyricsScreenState extends State<LyricsScreen> {
                   }
                 },
                 itemBuilder: (_) => [
+                  if (lp.hasLyrics) _menuItem(Icons.format_size_rounded, '가사 글자 크기', 'size'),
                   if (lp.lyrics.isNotEmpty) _menuItem(Icons.timer_outlined, '박자 맞추기', 'offset'),
-                  _menuItem(Icons.refresh, '가사 다시 찾기', 'refresh'),
+                  // 직접 넣은 가사가 있으면 그게 먼저라서 "다시 찾기" 대신 "지우기"
+                  if (!lp.hasManual) _menuItem(Icons.refresh, '가사 다시 찾기', 'refresh'),
+                  _menuItem(Icons.edit_note_rounded, lp.hasManual ? '가사 직접 고치기' : '가사 직접 넣기', 'edit'),
+                  if (lp.hasManual) _menuItem(Icons.delete_outline_rounded, '직접 넣은 가사 지우기', 'delete'),
                 ],
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
@@ -1071,40 +1326,93 @@ class _LyricsScreenState extends State<LyricsScreen> {
     }
 
     if (!lyricsProvider.hasLyrics) {
+      // 가사 없을 때: 유리 카드 하나에 안내 + [다시 찾기] [직접 넣기]
+      final noNet = lyricsProvider.errorMessage.isNotEmpty &&
+          lyricsProvider.errorMessage == AppLocalizations.of(context)!.lyricsErrorNetwork;
+      final fillBg = _light ? const Color(0xFF17140F) : const Color(0xFFF4EFE5); // 꽉 찬 버튼
+      final fillFg = _light ? const Color(0xFFF4EFE5) : const Color(0xFF17140F);
       return Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.lyrics_outlined, size: 64, color: ink.withOpacity(0.45)),
-              const SizedBox(height: 16),
-              Text(
-                lyricsProvider.errorMessage.isEmpty
-                    ? AppLocalizations.of(context)!.lyricsSearchPrompt
-                    : lyricsProvider.errorMessage,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: sub, fontSize: 15.5, shadows: shadow),
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {
-                  final song = playerProvider.currentSong;
-                  if (song != null) {
-                    lyricsProvider.fetchLyrics(song.titleDisplay, song.artistDisplay);
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: ink.withOpacity(_light ? 0.9 : 0.18),
-                  foregroundColor: _light ? const Color(0xFFF4EFE5) : Colors.white,
-                  elevation: 0,
-                  padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          padding: const EdgeInsets.symmetric(horizontal: 28),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(22),
+            child: BackdropFilter(
+              filter: ui.ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(22, 26, 22, 22),
+                decoration: BoxDecoration(
+                  color: _light ? Colors.white.withOpacity(0.38) : Colors.black.withOpacity(0.28),
+                  borderRadius: BorderRadius.circular(22),
+                  border: Border.all(color: ink.withOpacity(0.08)),
                 ),
-                child: Text(AppLocalizations.of(context)!.lyricsSearchButton,
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: ink.withOpacity(0.08)),
+                      child: Icon(Icons.music_note_rounded, size: 22, color: ink.withOpacity(0.7)),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      noNet ? '인터넷 연결을 확인해 주세요' : '이 노래 가사를 아직 못 찾았어요',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: ink, fontSize: 16.5, fontWeight: FontWeight.w700, letterSpacing: -0.3, shadows: shadow),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      noNet ? '연결되면 다시 찾아볼 수 있어요' : '다시 찾거나, 가사를 직접 넣을 수 있어요',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: sub, fontSize: 13, height: 1.4, shadows: shadow),
+                    ),
+                    const SizedBox(height: 22),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 46,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                final song = playerProvider.currentSong;
+                                if (song != null) {
+                                  lyricsProvider.fetchLyrics(song.titleDisplay, song.artistDisplay,
+                                      filePath: song.uri, force: true);
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: fillBg,
+                                foregroundColor: fillFg,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                              ),
+                              child: const Text('다시 찾기', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: SizedBox(
+                            height: 46,
+                            child: OutlinedButton(
+                              onPressed: () => _editLyrics(lyricsProvider, playerProvider),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: ink,
+                                side: BorderSide(color: ink.withOpacity(0.35), width: 1.2),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                              ),
+                              child: const Text('직접 넣기', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
         ),
       );
@@ -1150,10 +1458,11 @@ class _LyricsScreenState extends State<LyricsScreen> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: (index == lyricsProvider.currentLineIndex || _isSel(index)) ? ink : ink.withOpacity(0.5),
-                        fontSize: index == lyricsProvider.currentLineIndex ? 19 : 15.5,
-                        height: 1.4,
+                        fontSize: index == lyricsProvider.currentLineIndex ? _curSize : _lineSize,
+                        height: 1.45,
+                        letterSpacing: -0.2,
                         fontWeight:
-                            index == lyricsProvider.currentLineIndex ? FontWeight.w800 : FontWeight.w500,
+                            index == lyricsProvider.currentLineIndex ? FontWeight.w700 : FontWeight.w500,
                         shadows: shadow,
                       ),
                       child: Text(lyricsProvider.lyrics[index].text.trim(), textAlign: TextAlign.center),
@@ -1198,8 +1507,9 @@ class _LyricsScreenState extends State<LyricsScreen> {
                   _visibleLines[i],
                   style: TextStyle(
                       color: ink,
-                      fontSize: 15.5,
+                      fontSize: _lineSize,
                       height: 1.8,
+                      letterSpacing: -0.2,
                       fontWeight: _isSel(i) ? FontWeight.w700 : FontWeight.w400,
                       shadows: shadow),
                   textAlign: TextAlign.center,

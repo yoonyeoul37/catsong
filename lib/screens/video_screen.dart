@@ -170,11 +170,11 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
   void _showSortSheet(BuildContext context) {
     final p = context.read<VideoProvider>();
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
-    final bg = isDarkMode ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
-    final card = isDarkMode ? const Color(0xFF332E26) : Colors.white;
+    final bg = isDarkMode ? const Color(0xFF32302C) : const Color(0xFFF4EFE5);
+    final card = isDarkMode ? const Color(0xFF3E3B37) : Colors.white;
     final ink = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final sub = isDarkMode ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-    final line = isDarkMode ? const Color(0xFF3A342B) : const Color(0xFFEFE9DE);
+    final sub = isDarkMode ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
+    final line = isDarkMode ? const Color(0xFF4A4640) : const Color(0xFFEFE9DE);
     final iconColor = isDarkMode ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
     final primary = Theme.of(context).colorScheme.primary;
     const icons = {
@@ -273,11 +273,11 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
   void _showMoreSheet(bool isDark) {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
     final list = context.read<VideoProvider>().videos;
-    final bg = isDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
-    final card = isDark ? const Color(0xFF332E26) : Colors.white;
+    final bg = isDark ? const Color(0xFF32302C) : const Color(0xFFF4EFE5);
+    final card = isDark ? const Color(0xFF3E3B37) : Colors.white;
     final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final sub = isDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-    final line = isDark ? const Color(0xFF3A342B) : const Color(0xFFEFE9DE);
+    final sub = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
+    final line = isDark ? const Color(0xFF4A4640) : const Color(0xFFEFE9DE);
     const red = Color(0xFFD84A3A);
     showModalBottomSheet(
       context: context,
@@ -403,7 +403,7 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
     final picked = list.where((v) => _selected.contains(v.uri)).toList();
     final enabled = picked.isNotEmpty;
     final barBg = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final barFg = isDark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
+    final barFg = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
     final barRed = isDark ? const Color(0xFFD84A3A) : const Color(0xFFFF8A7A);
 
     Widget btn(IconData icon, String label, VoidCallback onTap, {Color? color}) {
@@ -543,14 +543,14 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
     final videoProvider = context.watch<VideoProvider>();
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
-    final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
+    final bgColor = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA);
 
     if (videoProvider.permissionDenied) {
       // 권한 안내: 작은 아이콘 + 부드러운 문구 + 1·2·3 순서 카드 + 먹색 버튼
-      final card = isDarkMode ? const Color(0xFF26221C) : Colors.white;
+      final card = isDarkMode ? const Color(0xFF32302C) : Colors.white;
       final ink = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
       final sub = isDarkMode ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
-      final hint = isDarkMode ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
+      final hint = isDarkMode ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
       Widget step(int n, String text, {String? note}) => Container(
             margin: const EdgeInsets.only(bottom: 8),
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -841,11 +841,11 @@ class _VideoTileState extends State<_VideoTile> {
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
     // 아래에서 올라오는 창 (통화녹음 ⋮ 창과 같은 모양)
-    final bg = isDarkMode ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
-    final card = isDarkMode ? const Color(0xFF332E26) : Colors.white;
+    final bg = isDarkMode ? const Color(0xFF32302C) : const Color(0xFFF4EFE5);
+    final card = isDarkMode ? const Color(0xFF3E3B37) : Colors.white;
     final ink = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final sub = isDarkMode ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-    final line = isDarkMode ? const Color(0xFF3A342B) : const Color(0xFFEFE9DE);
+    final sub = isDarkMode ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
+    final line = isDarkMode ? const Color(0xFF4A4640) : const Color(0xFFEFE9DE);
     const red = Color(0xFFD84A3A);
     showModalBottomSheet(
       context: context,
@@ -1126,7 +1126,7 @@ class _VideoTileState extends State<_VideoTile> {
                             border: Border.all(color: Colors.white, width: 1.6),
                           ),
                           child: widget.selected
-                              ? Icon(Icons.check, size: 15, color: isDarkMode ? const Color(0xFF17140F) : Colors.white)
+                              ? Icon(Icons.check, size: 15, color: isDarkMode ? const Color(0xFF24221F) : Colors.white)
                               : null,
                         ),
                       ),
@@ -1471,11 +1471,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
 
   // 재생 속도 고르는 창 (정렬 창과 같은 모양 · 재생 화면이라 어두운 색)
   void _showSpeedSheet() {
-    const bg = Color(0xFF26221C);
-    const card = Color(0xFF332E26);
+    const bg = Color(0xFF32302C);
+    const card = Color(0xFF3E3B37);
     const ink = Color(0xFFF3EFE7);
-    const sub = Color(0xFFA29A8B);
-    const line = Color(0xFF3A342B);
+    const sub = Color(0xFFB8B0A2);
+    const line = Color(0xFF4A4640);
     final primary = Theme.of(context).colorScheme.primary;
     const speeds = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
     showModalBottomSheet(
@@ -1620,7 +1620,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
     return Container(
       margin: const EdgeInsets.fromLTRB(12, 4, 12, 12),
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
-      decoration: BoxDecoration(color: const Color(0xFF26221C), borderRadius: BorderRadius.circular(18)),
+      decoration: BoxDecoration(color: const Color(0xFF32302C), borderRadius: BorderRadius.circular(18)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -1751,7 +1751,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: Colors.white),
             // 재생 화면은 늘 어두워서 어두운 둥근 카드 (재생목록 ⋮과 같은 모양)
-            color: const Color(0xFF26221C),
+            color: const Color(0xFF32302C),
             position: PopupMenuPosition.under,
             itemBuilder: (context) {
               const red = Color(0xFFD84A3A);

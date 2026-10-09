@@ -48,12 +48,12 @@ import 'package:flutter_tts/flutter_tts.dart';
 
 // ── TV 창 색 (라이트: 베이지 · 다크: 어두운 갈색) — 창을 열 때 다크 모드인지 맞춤 ──
 bool _tvDark = false;
-Color get _cBg => _tvDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
-Color get _cCard => _tvDark ? const Color(0xFF332E26) : Colors.white;
+Color get _cBg => _tvDark ? const Color(0xFF32302C) : const Color(0xFFF4EFE5);
+Color get _cCard => _tvDark ? const Color(0xFF3E3B37) : Colors.white;
 Color get _cInk => _tvDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-Color get _cSub => _tvDark ? const Color(0xFFA29A8B) : const Color(0xFF8A857B);
+Color get _cSub => _tvDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A857B);
 Color get _cMuted => _tvDark ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
-Color get _cLine => _tvDark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
+Color get _cLine => _tvDark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({super.key});
@@ -796,7 +796,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
                 constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.7),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2A251D),
+                  color: const Color(0xFF353330),
                   borderRadius: BorderRadius.circular(22),
                 ),
                 padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
@@ -1536,9 +1536,9 @@ class _PlayerScreenState extends State<PlayerScreen>
     final playerProvider = context.read<PlayerProvider>();
     // 다크 모드면 메뉴도 어둡게 (음악 목록 메뉴와 같은 색)
     final isDark = context.read<ThemeProvider>().isDarkMode;
-    final sheetColor = isDark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
+    final sheetColor = isDark ? const Color(0xFF32302C) : const Color(0xFFF4EFE5);
     final baseColor = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF1A1A1A);
-    final descColor = isDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
+    final descColor = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
     const accent = Color(0xFF8A8378); // 메뉴 아이콘은 차분한 회색 (곡 목록 메뉴와 통일)
 
     showModalBottomSheet(
@@ -1549,6 +1549,7 @@ class _PlayerScreenState extends State<PlayerScreen>
         // 메뉴를 안 닫고 여러 개 바꿀 수 있게: 값이 바뀌면 메뉴가 바로 다시 그려짐
         return StatefulBuilder(builder: (ctx, setSheet) {
         final playerProvider = ctx.watch<PlayerProvider>();
+        _sheetBlue = ctx.watch<ThemeProvider>().primaryColor; // 셔플·반복·스타일 표시 = 지금 포인트 색
         return SafeArea(
           top: false,
           child: Container(
@@ -3284,7 +3285,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     Duration picked = const Duration(minutes: 30);
     showModalBottomSheet(
       context: context,
-      backgroundColor: isDarkMode ? const Color(0xFF26221C) : const Color(0xFFF4EFE5),
+      backgroundColor: isDarkMode ? const Color(0xFF32302C) : const Color(0xFFF4EFE5),
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
@@ -3544,7 +3545,9 @@ class _PlayerScreenState extends State<PlayerScreen>
         required VoidCallback onTap,
       }) {
     const baseColor = Colors.white;
-    final iconColor = isActive ? baseColor : baseColor.withOpacity(0.55);
+    // 켜진 건 또렷한 흰색, 꺼진 건 흐리게 (사진 위라서 큰 건 흰색 유지)
+    final iconColor = isActive ? baseColor : baseColor.withOpacity(0.45);
+    final point = context.watch<ThemeProvider>().primaryColor; // 켜짐 점 = 포인트 색
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -3567,11 +3570,11 @@ class _PlayerScreenState extends State<PlayerScreen>
             ),
             const SizedBox(height: 4),
             Container(
-              width: 3,
-              height: 3,
+              width: 4,
+              height: 4,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isActive ? AppTheme.fixedAccent : Colors.transparent,
+                color: isActive ? point : Colors.transparent,
               ),
             ),
           ],
@@ -3592,7 +3595,10 @@ class _PlayerScreenState extends State<PlayerScreen>
   /// 재생화면 스타일 선택 창 (재생화면 메뉴 · 곡 목록 메뉴 같이 씀)
   static Future<void> _styleDialog(BuildContext context, int current, ValueChanged<int> onPick,
       {int printStyle = 0, ValueChanged<int>? onPrintPick}) {
-    const blue = Color(0xFF2589E8);
+    // 고른 칸은 먹색 (다크 모드는 크림색) — 포인트 색과 상관없이 늘 같게
+    final dark = context.read<ThemeProvider>().isDarkMode;
+    final blue = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final onBlue = dark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
     final l = AppLocalizations.of(context)!;
     final styles = [
       (1, l.styleCD, Icons.album_outlined),
@@ -3641,7 +3647,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                           ),
                           child: Text(e.value,
                               style: TextStyle(
-                                  color: printStyle == e.key ? Colors.white : const Color(0xFF8A8378),
+                                  color: printStyle == e.key ? onBlue : const Color(0xFF8A8378),
                                   fontSize: 12.5,
                                   fontWeight: FontWeight.w600)),
                         ),
@@ -4256,7 +4262,7 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
     Duration picked = const Duration(minutes: 30);
     showModalBottomSheet(
       context: context,
-      backgroundColor: isDarkMode ? const Color(0xFF26221C) : const Color(0xFFF4EFE5),
+      backgroundColor: isDarkMode ? const Color(0xFF32302C) : const Color(0xFFF4EFE5),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) {

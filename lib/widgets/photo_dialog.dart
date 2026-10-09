@@ -23,9 +23,9 @@ Future<bool> showPhotoDialog(
     context: context,
     barrierDismissible: barrierDismissible,
     builder: (ctx) {
-      final bg = isDark ? const Color(0xFF1F1B16) : Colors.white;
+      final bg = isDark ? const Color(0xFF2B2926) : Colors.white;
       final titleColor = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-      final subColor = isDark ? const Color(0xFFA29A8B) : const Color(0xFFA39C90);
+      final subColor = isDark ? const Color(0xFFB8B0A2) : const Color(0xFFA39C90);
       return Dialog(
         backgroundColor: bg,
         insetPadding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),

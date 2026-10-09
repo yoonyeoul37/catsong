@@ -18,7 +18,7 @@ class RadioFavoritesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final accent = isDarkMode ? Colors.white : Colors.black;
-    final bgColor = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA);
+    final bgColor = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA);
     final radioProvider = context.watch<RadioProvider>();
     final favorites     = radioProvider.favorites;
 
@@ -29,7 +29,7 @@ class RadioFavoritesScreen extends StatelessWidget {
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: Color(0xFF17140F),
+          systemNavigationBarColor: Color(0xFF24221F),
           systemNavigationBarIconBrightness: Brightness.light,
         )
             : const SystemUiOverlayStyle(

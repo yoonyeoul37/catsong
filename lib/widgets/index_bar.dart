@@ -9,7 +9,7 @@ Color kIndexBlue = const Color(0xFF2589E8); // 포인트 색 (그릴 때마다 �
 const kIndexBg = Color(0xFFEDF4F8);
 /// 평소 글자색: 차분한 회갈색 (라이트 / 다크)
 const kIndexMuted = Color(0xFF8A857B);
-const kIndexMutedDark = Color(0xFFA29A8B);
+const kIndexMutedDark = Color(0xFFB8B0A2);
 
 /// 곡 목록 오른쪽 세로 빠른 이동 막대
 /// 항목은 항상 A-Z / ㄱ ~ ㅎ / # 16개. 곡이 없는 글자는 연하게, 누르면 가까운 글자로.

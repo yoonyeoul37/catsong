@@ -43,7 +43,7 @@ Future<bool> saveVideoAudio(BuildContext context, Video video, int startMs, int 
 /// 음악으로 저장: 전체 저장 / 구간 골라서 저장 (앱 공통 고르는 창)
 Future<void> showSaveAudioSheet(BuildContext context, Video video) async {
   final isDark = context.read<ThemeProvider>().isDarkMode;
-  final sub = isDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
+  final sub = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
   final pick = await showParanSheet<String>(
     context,
     title: '음악으로 저장',
@@ -214,11 +214,11 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
   Widget build(BuildContext context) {
     final isDark = context.watch<ThemeProvider>().isDarkMode;
     // ── 벨소리·녹음 자르기 화면과 같은 모양 (베이지 바탕 · 흰 카드 · 먹색 큰 버튼) ──
-    final bg = isDark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
-    final card = isDark ? const Color(0xFF26221C) : Colors.white;
+    final bg = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
+    final card = isDark ? const Color(0xFF32302C) : Colors.white;
     final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final sub = isDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-    final line = isDark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
+    final sub = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
+    final line = isDark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
     final point = context.watch<ThemeProvider>().primaryColor;
     final ready = _ctrl.value.isInitialized;
     final l = AppLocalizations.of(context)!;

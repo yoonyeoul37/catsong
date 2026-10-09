@@ -97,7 +97,7 @@ void showMoreMenuSheet(
       // 메뉴가 열려 있는 동안 하단 시스템바를 메뉴 색에 맞춤
       value: SystemUiOverlayStyle(
         systemNavigationBarColor:
-            isDarkMode ? const Color(0xFF1F1B15) : const Color(0xFFF4EFE5),
+            isDarkMode ? const Color(0xFF2B2926) : const Color(0xFFF4EFE5),
         systemNavigationBarIconBrightness:
             isDarkMode ? Brightness.light : Brightness.dark,
       ),
@@ -212,19 +212,19 @@ class _Pal {
   );
 
   static const dark = _Pal(
-    sheet: Color(0xFF1F1B15),
-    card: Color(0xFF2A251D),
+    sheet: Color(0xFF2B2926),
+    card: Color(0xFF353330),
     cardBorder: Color(0x12FFFFFF),
     cardShadow: Color(0x59000000),
     iconBg: Color(0x1F6FB0FF),
     accent: Color(0xFF6FB0FF),
     title: Color(0xFFF3EFE7),
-    desc: Color(0xFFA29A8B),
+    desc: Color(0xFFB8B0A2),
     chevron: Color(0xFF786F61),
     handle: Color(0x33FFFFFF),
     closeBg: Color(0x14FFFFFF),
     closeIcon: Color(0xFFE8E2D6),
-    brandBg: Color(0xFF26221A),
+    brandBg: Color(0xFF32302C),
     bars: Color(0x856FB0FF),
   );
 }
@@ -533,7 +533,7 @@ class _BrandCard extends StatelessWidget {
         // 먹색 카드 (다크 모드는 크림색) — 설정 화면 맨 위 카드와 한 세트
         final dark = p.sheet.computeLuminance() < 0.5;
         final bg = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-        final fg = dark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
+        final fg = dark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
         final blue = dark ? const Color(0xFF2589E8) : const Color(0xFF7FB8F0);
         return Container(
           width: double.infinity,

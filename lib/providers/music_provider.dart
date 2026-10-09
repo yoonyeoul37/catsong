@@ -46,6 +46,7 @@ class MusicProvider extends ChangeNotifier {
     try {
       await _loadFavorites();
       await _loadPlayCounts();
+      await _loadPlayHistory(); // 언제 들었는지
       await _loadEditedSongs();
       await _loadCustomArt();
       await _loadRecentSongsUris();
@@ -169,6 +170,73 @@ class MusicProvider extends ChangeNotifier {
     await prefs.setString('play_counts', jsonEncode(_playCounts));
   }
 
+  // ───── 언제 들었는지 (홈 카드: 한 달 동안 안 들은 곡 · 최근 7일 기록) ─────
+  Map<String, int> _lastPlayed = {}; // 곡 경로 → 마지막으로 들은 시각(ms)
+  List<String> _playLog = []; // "시각ms|곡경로" (최근 7일만)
+
+  Future<void> _loadPlayHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    try {
+      final raw = prefs.getString('last_played');
+      if (raw != null) {
+        final Map decoded = jsonDecode(raw);
+        _lastPlayed = decoded.map((k, v) => MapEntry(k.toString(), (v as num).toInt()));
+      }
+    } catch (_) {}
+    _playLog = prefs.getStringList('play_log') ?? [];
+    _prunePlayLog();
+  }
+
+  void _prunePlayLog() {
+    final cut = DateTime.now().subtract(const Duration(days: 7)).millisecondsSinceEpoch;
+    _playLog.removeWhere((e) => (int.tryParse(e.split('|').first) ?? 0) < cut);
+  }
+
+  Future<void> _savePlayHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('last_played', jsonEncode(_lastPlayed));
+    await prefs.setStringList('play_log', _playLog);
+  }
+
+  /// 최근 7일 동안 들은 횟수
+  int get weekPlayCount {
+    _prunePlayLog();
+    return _playLog.length;
+  }
+
+  /// 최근 7일 동안 가장 많이 들은 곡 (없으면 null)
+  Song? get weekTopSong {
+    _prunePlayLog();
+    final counts = <String, int>{};
+    for (final e in _playLog) {
+      final i = e.indexOf('|');
+      if (i < 0) continue;
+      final uri = e.substring(i + 1);
+      counts[uri] = (counts[uri] ?? 0) + 1;
+    }
+    String? best;
+    var most = 0;
+    for (final c in counts.entries) {
+      if (c.value > most) {
+        most = c.value;
+        best = c.key;
+      }
+    }
+    if (best == null) return null;
+    for (final s in _songs) {
+      if (s.uri == best) return s;
+    }
+    return null;
+  }
+
+  /// 이 기간 동안 안 들은 곡 (한 번도 안 들은 곡 포함, 녹음 제외)
+  List<Song> songsNotPlayedFor(Duration d) {
+    final cut = DateTime.now().subtract(d).millisecondsSinceEpoch;
+    return _songs
+        .where((s) => s.uri != null && !isCallRecordingPath(s.uri) && (_lastPlayed[s.uri!] ?? 0) < cut)
+        .toList();
+  }
+
   List<String> _recentSongUris = [];
 
   Future<void> _loadRecentSongsUris() async {
@@ -215,6 +283,11 @@ class MusicProvider extends ChangeNotifier {
     if (song.uri != null) {
       _playCounts[song.uri!] = (_playCounts[song.uri!] ?? 0) + 1;
       _savePlayCounts();
+      final now = DateTime.now().millisecondsSinceEpoch;
+      _lastPlayed[song.uri!] = now;
+      _playLog.add('$now|${song.uri}');
+      _prunePlayLog();
+      _savePlayHistory();
     }
     _recentSongs.removeWhere((s) => s.id == song.id);
     _recentSongs.insert(0, song);

@@ -113,9 +113,9 @@ class _UndoFeedbackState extends State<_UndoFeedback> with TickerProviderStateMi
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final ink = widget.isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final sub = widget.isDark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-    final line = widget.isDark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
-    final bg = widget.isDark ? const Color(0xFF2A251E) : Colors.white;
+    final sub = widget.isDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
+    final line = widget.isDark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
+    final bg = widget.isDark ? const Color(0xFF353330) : Colors.white;
 
     return AnimatedBuilder(
       animation: Listenable.merge([_in, _out, _life]),
@@ -390,7 +390,7 @@ class _ActionFeedbackState extends State<_ActionFeedback> with SingleTickerProvi
                     padding: const EdgeInsets.fromLTRB(26, 18, 26, 16),
                     decoration: BoxDecoration(
                       color: widget.isDark
-                          ? const Color(0xFF2A251E).withOpacity(0.82)
+                          ? const Color(0xFF353330).withOpacity(0.82)
                           : Colors.white.withOpacity(0.82),
                       borderRadius: BorderRadius.circular(22),
                       border: Border.all(

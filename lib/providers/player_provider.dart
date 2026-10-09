@@ -175,6 +175,7 @@ class PlayerProvider extends ChangeNotifier {
 
     _player.positionStream.listen((position) {
       _position = position;
+      _trackListen(position); // 30초 이상 들으면 기록
       notifyListeners();
     });
 
@@ -247,9 +248,9 @@ class PlayerProvider extends ChangeNotifier {
       case LoopMode.one:
         _player.seek(Duration.zero);
         _player.play();
-        // 한 곡 반복도 끝까지 한 번 들을 때마다 재생 횟수 +1
+        // 한 곡 반복: 다시 30초 이상 들으면 또 +1
         final song = currentSong;
-        if (song != null) onSongPlayed?.call(song);
+        if (song != null) _startListen(song);
         break;
       case LoopMode.all:
         if (hasNext) {
@@ -300,7 +301,7 @@ class PlayerProvider extends ChangeNotifier {
         ));
       }
 
-      onSongPlayed?.call(song);
+      _startListen(song); // 틀자마자 세지 않고, 30초 이상 들으면 기록
       onSongChanged?.call(song);
       await _player.setAudioSource(AudioSource.uri(Uri.parse(song.uri!)));
       // 자연소리가 남긴 "무한반복" 설정을 꺼준다 (반복은 앱이 직접 처리함)
@@ -406,7 +407,14 @@ class PlayerProvider extends ChangeNotifier {
   Future<void> playNatureSound(String assetPath, String displayName) async {
     _onStopRadio?.call();
     _natureSoundName = displayName;
-    onNaturePlayed?.call(assetPath, displayName);
+    _listenSong = null;
+    // 30초 이상 들었을 때만 "최근에 들었어요"에 넣기
+    _natureTimer?.cancel();
+    _natureTimer = Timer(const Duration(seconds: 30), () {
+      if (_natureSoundName == displayName && _player.playing) {
+        onNaturePlayed?.call(assetPath, displayName);
+      }
+    });
     _currentIndex = -1;
     _isLoading = true;
     notifyListeners();
@@ -511,6 +519,36 @@ class PlayerProvider extends ChangeNotifier {
 
   bool _isChangingSong = false;
   DateTime _startedAt = DateTime(2000); // 곡을 막 튼 시각
+
+  // ───── 들은 기록: 30초 이상(1분보다 짧은 곡은 절반 이상) 들어야 재생 횟수·최근에 넣음 ─────
+  Song? _listenSong; // 지금 재고 있는 곡
+  int _listenMs = 0; // 실제로 들은 시간
+  int _lastPosMs = 0;
+  bool _listenCounted = false; // 이번에 이미 셌는지
+  Timer? _natureTimer;
+
+  void _startListen(Song song) {
+    _listenSong = song;
+    _listenMs = 0;
+    _lastPosMs = 0;
+    _listenCounted = false;
+  }
+
+  void _trackListen(Duration pos) {
+    final song = _listenSong;
+    final p = pos.inMilliseconds;
+    final d = p - _lastPosMs;
+    _lastPosMs = p;
+    if (song == null || _listenCounted || !_player.playing) return;
+    if (d <= 0 || d > 2000) return; // 앞뒤로 넘긴 건 안 셈
+    _listenMs += d;
+    final total = _duration.inMilliseconds > 0 ? _duration.inMilliseconds : song.duration;
+    final need = total > 0 && total < 60000 ? total ~/ 2 : 30000;
+    if (_listenMs >= need) {
+      _listenCounted = true;
+      onSongPlayed?.call(song);
+    }
+  }
 
   Future<void> playNext() async {
     if (_isChangingSong) return;

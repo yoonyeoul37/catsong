@@ -32,6 +32,7 @@ import 'dart:ui' show PlatformDispatcher;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 
 late AudioHandler globalAudioHandler;
 late BaseAudioHandler radioAudioHandler;
@@ -48,6 +49,8 @@ void main() async {
   // 오류 기록 (Firebase Crashlytics): 앱이 튕기거나 빨간 오류 화면이 뜨면 자동으로 기록
   try {
     await Firebase.initializeApp();
+    // 디버깅(flutter run) 중 오류는 안 보내고, 스토어에서 받은 앱 오류만 기록
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
     // 화면 경고는 "튕김"이 아니라 "일반 오류"로 기록 (진짜 튕김만 비정상 종료로 집계)
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
     PlatformDispatcher.instance.onError = (error, stack) {
@@ -233,7 +236,7 @@ class MyApp extends StatelessWidget {
                   .copyWith(systemOverlayStyle: themeProvider.systemBarStyle),
               // ⋮ 메뉴 공통 모양: 둥근 카드 + 부드러운 그림자 (다크면 어두운 카드)
               popupMenuTheme: PopupMenuThemeData(
-                color: themeProvider.isDarkMode ? const Color(0xFF26221C) : Colors.white,
+                color: themeProvider.isDarkMode ? const Color(0xFF32302C) : Colors.white,
                 surfaceTintColor: Colors.transparent,
                 elevation: 10,
                 shadowColor: Colors.black.withOpacity(themeProvider.isDarkMode ? 0.5 : 0.18),

@@ -714,7 +714,7 @@ class _HomeScreenState extends State<HomeScreen> {
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: Color(0xFF17140F),
+          systemNavigationBarColor: Color(0xFF24221F),
           systemNavigationBarIconBrightness: Brightness.light,
         )
             : const SystemUiOverlayStyle(
@@ -739,7 +739,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA),
+        backgroundColor: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
         appBar: _buildAppBar(primaryColor),
         body: Column(
           children: [
@@ -782,7 +782,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final isBluePoint = pointColor.value == 0xFF2589E8;
     final logoBarColor = isBluePoint ? const Color(0xFF2F7DE8) : pointColor;
     return AppBar(
-      backgroundColor: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA),
+      backgroundColor: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
       elevation: 0,
       titleSpacing: 20,
       title: _isSearching
@@ -1717,7 +1717,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontSize: 13,
                             fontWeight: FontWeight.w700)),
                     const SizedBox(height: 3),
-                    Text('음악을 재생하면 여기에 표시됩니다',
+                    Text('30초 이상 들은 곡·라디오·자연이 여기에 모여요',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: isDarkMode ? Colors.white60 : const Color(0xFF7891A8),
@@ -1952,7 +1952,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (n < 3) return const SizedBox.shrink(); // 몇 곡 안 되면 안 띄움
     // 밝은 화면: 먹색 바 / 다크 화면: 크림색 바 (배경과 반대라 또렷하게)
     final card = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final ink = isDark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
+    final ink = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
     final sub = isDark ? const Color(0xFF8A8378) : const Color(0xFFA29A8B);
     final bg = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     return Container(
@@ -2051,15 +2051,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildDailyCard(MusicProvider music, bool isDark) {
     final card = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final ink = isDark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
+    final ink = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
     final sub = isDark ? const Color(0xFF8A8378) : const Color(0xFFA29A8B);
     final circle = isDark ? const Color(0xFFE4DCCD) : const Color(0xFF2A251D);
 
     final now = DateTime.now();
     final day = DateTime(now.year, now.month, now.day).difference(DateTime(2024, 1, 1)).inDays;
     final songs = music.songs.where((s) => !music.isCallRecordingPath(s.uri)).toList();
-    var kind = day % 3; // 날짜 따라 순서대로 (같은 날은 같은 카드)
-    if (kind == 0 && songs.isEmpty) kind = 1;
+    var kind = day % 5; // 날짜 따라 순서대로 (같은 날은 같은 카드)
+    final notPlayed = kind == 1 ? music.songsNotPlayedFor(const Duration(days: 30)) : const <Song>[];
+    final weekCount = kind == 2 ? music.weekPlayCount : 0;
+    final weekTop = kind == 2 ? music.weekTopSong : null;
+    // 보여줄 게 없으면 시간대 추천으로
+    if (kind == 0 && songs.isEmpty) kind = 3;
+    if (kind == 1 && notPlayed.length < 3) kind = 3;
+    if (kind == 2 && (weekCount == 0 || weekTop == null)) kind = 3;
 
     late IconData icon;
     late String title;
@@ -2085,7 +2091,37 @@ class _HomeScreenState extends State<HomeScreen> {
       action = '듣기';
       onAction = () => context.read<PlayerProvider>().playFromList(songs, i);
     } else if (kind == 1) {
-      // ② 시간대 추천 (자연소리)
+      // ② 한 달 동안 안 들은 곡 (섞어서 틀기)
+      icon = Icons.history_rounded;
+      title = '한 달 동안 안 들은 곡 ${notPlayed.length}개';
+      subLine = Text('오랜만에 다시 들어볼까요',
+          maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: sub, fontSize: 11.5));
+      action = '틀기';
+      onAction = () {
+        final list = List<Song>.from(notPlayed)..shuffle();
+        context.read<PlayerProvider>().playFromList(list, 0);
+      };
+    } else if (kind == 2) {
+      // ③ 최근 7일 듣기 기록 + 가장 많이 들은 곡
+      final top = weekTop!;
+      icon = Icons.bar_chart_rounded;
+      title = '최근 7일 동안 $weekCount번 들었어요';
+      subLine = Text.rich(
+        TextSpan(children: [
+          const TextSpan(text: '가장 많이 들은 곡  '),
+          TextSpan(text: top.titleDisplay, style: TextStyle(color: ink, fontWeight: FontWeight.w600)),
+        ]),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(color: sub, fontSize: 11.5),
+      );
+      action = '듣기';
+      onAction = () {
+        final i = songs.indexWhere((s) => s.uri == top.uri);
+        context.read<PlayerProvider>().playFromList(i >= 0 ? songs : [top], i >= 0 ? i : 0);
+      };
+    } else if (kind == 3) {
+      // ④ 시간대 추천 (자연소리)
       final h = now.hour;
       final (IconData ic, String t, String sound, String line) = h >= 5 && h < 11
           ? (Icons.wb_sunny_outlined, '상쾌한 아침이에요', '새소리', '새소리로 하루를 시작해요')
@@ -2113,7 +2149,7 @@ class _HomeScreenState extends State<HomeScreen> {
         (Icons.water_drop_outlined, '음악에 빗소리 섞기', '재생화면 ⋮ 메뉴 → 자연소리 섞기'),
         (Icons.format_quote_rounded, '가사 한 줄 공유', '가사를 꾹 누르면 카드로 보낼 수 있어요'),
       ];
-      final tip = tips[(day ~/ 3) % tips.length];
+      final tip = tips[(day ~/ 5) % tips.length];
       icon = tip.$1;
       title = tip.$2;
       subLine = Text(tip.$3,

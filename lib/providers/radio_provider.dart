@@ -418,13 +418,20 @@ class RadioProvider extends ChangeNotifier {
   }
 
   void Function(RadioStation station)? onStationPlayed;
+  Timer? _playedTimer; // 30초 이상 들었을 때만 최근에 넣기
 
   Future<void> playStation(RadioStation station) async {
     if (_playerState == RadioPlayerState.loading) {
       debugPrint('이미 로딩 중 - 중복 호출 무시');
       return;
     }
-    onStationPlayed?.call(station);
+    // 30초 이상 들었을 때만 "최근에 들었어요"에 넣기
+    _playedTimer?.cancel();
+    _playedTimer = Timer(const Duration(seconds: 30), () {
+      if (_currentStation?.stationUuid == station.stationUuid && isPlaying) {
+        onStationPlayed?.call(station);
+      }
+    });
 
     try {
       _errorMessage = null;

@@ -69,7 +69,7 @@ class ThemeProvider extends ChangeNotifier {
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: Color(0xFF17140F),
+          systemNavigationBarColor: Color(0xFF24221F),
           systemNavigationBarIconBrightness: Brightness.light,
         )
       : const SystemUiOverlayStyle(
@@ -88,7 +88,7 @@ class ThemeProvider extends ChangeNotifier {
               statusBarColor: Colors.transparent,
               statusBarIconBrightness: Brightness.light,
               statusBarBrightness: Brightness.dark,
-              systemNavigationBarColor: Color(0xFF17140F),
+              systemNavigationBarColor: Color(0xFF24221F),
               systemNavigationBarIconBrightness: Brightness.light,
             )
           : const SystemUiOverlayStyle(

@@ -102,7 +102,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
             label,
             style: TextStyle(
               color: selected
-                  ? (isDarkMode ? const Color(0xFF17140F) : Colors.white)
+                  ? (isDarkMode ? const Color(0xFF24221F) : Colors.white)
                   : baseColor.withOpacity(0.7),
               fontSize: 13,
               fontWeight: FontWeight.w600,
@@ -315,7 +315,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: Color(0xFF17140F),
+          systemNavigationBarColor: Color(0xFF24221F),
           systemNavigationBarIconBrightness: Brightness.light,
         )
             : const SystemUiOverlayStyle(
@@ -329,7 +329,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
     });
 
     return Scaffold(
-      backgroundColor: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA),
+      backgroundColor: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -1004,7 +1004,7 @@ class _BroadcasterStationList extends StatelessWidget {
     final baseColor = isDarkMode ? Colors.white : Colors.black;
 
     return Scaffold(
-      backgroundColor: isDarkMode ? const Color(0xFF17140F) : const Color(0xFFEDE7DA),
+      backgroundColor: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,

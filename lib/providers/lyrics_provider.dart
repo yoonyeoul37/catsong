@@ -30,6 +30,22 @@ class LyricsProvider extends ChangeNotifier {
   int get currentLineIndex => _currentLineIndex;
   String get currentSongKey => _currentSongKey;
 
+  // ───── 직접 넣은 가사 (노래마다 저장, 인터넷 가사보다 먼저) ─────
+  bool _manual = false;
+  bool get hasManual => _manual;
+
+  /// 고치기 창에 넣을 지금 가사 (시간 있는 가사는 [00:12.34] 모양 그대로)
+  String get editableText {
+    if (_lyrics.isNotEmpty && !isEstimated) {
+      String two(int n) => n.toString().padLeft(2, '0');
+      return _lyrics.map((l) {
+        final t = l.time;
+        return '[${two(t.inMinutes)}:${two(t.inSeconds % 60)}.${two((t.inMilliseconds % 1000) ~/ 10)}]${l.text}';
+      }).join('\n');
+    }
+    return _plainLyrics;
+  }
+
   // ───── 시간 없는 가사 → 노래 길이로 시간표를 짐작해서 만들기 (대충 맞춤) ─────
   String _estimatedFor = '';
   bool get isEstimated => _estimatedFor.isNotEmpty && _estimatedFor == _currentSongKey;
@@ -102,9 +118,17 @@ class LyricsProvider extends ChangeNotifier {
     _plainLyrics = '';
     _errorMessage = '';
     _currentLineIndex = 0;
+    _manual = false;
     notifyListeners();
 
     try {
+      // ⓪ 직접 넣은 가사가 있으면 제일 먼저
+      final manual = await _readManual(songKey);
+      if (manual != null && _applyText(manual)) {
+        _manual = true;
+        return;
+      }
+
       if (filePath != null) {
         final lrcPath = filePath.replaceAll(RegExp(r'\.[^.]+$'), '.lrc');
         final lrcFile = File(lrcPath);
@@ -271,6 +295,50 @@ class LyricsProvider extends ChangeNotifier {
       return true;
     }
     return false;
+  }
+
+  /// 글 하나를 가사로 넣기 ([00:12] 같은 시간이 있으면 노래에 맞춰 나오는 가사)
+  bool _applyText(String text) {
+    final isLrc = RegExp(r'\[\d{1,2}:\d{2}').hasMatch(text);
+    return _applyFound(isLrc ? {'syncedLyrics': text, 'plainLyrics': text} : {'plainLyrics': text});
+  }
+
+  Future<String?> _readManual(String key) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      final s = p.getString('lyricsManual_$key');
+      return (s == null || s.trim().isEmpty) ? null : s;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// 직접 넣은 가사 저장 → 바로 화면에
+  Future<void> saveManualLyrics(String title, String artist, String text) async {
+    final t = text.trim();
+    if (t.isEmpty) return;
+    final key = '$title-$artist';
+    final p = await SharedPreferences.getInstance();
+    await p.setString('lyricsManual_$key', t);
+    _currentSongKey = key;
+    _lyrics = [];
+    _plainLyrics = '';
+    _estimatedFor = '';
+    _errorMessage = '';
+    _currentLineIndex = 0;
+    _isLoading = false;
+    _hasLyrics = false;
+    _manual = _applyText(t);
+    notifyListeners();
+  }
+
+  /// 직접 넣은 가사 지우기 → 인터넷에서 다시 찾기
+  Future<void> deleteManualLyrics(String title, String artist, {String? filePath}) async {
+    final p = await SharedPreferences.getInstance();
+    await p.remove('lyricsManual_$title-$artist');
+    _manual = false;
+    _estimatedFor = '';
+    await fetchLyrics(title, artist, filePath: filePath, force: true);
   }
 
   /// 찾은 가사는 폰에 저장 → 다음엔 인터넷 없이 바로

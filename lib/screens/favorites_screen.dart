@@ -25,7 +25,7 @@ class FavoritesScreen extends StatelessWidget {
     final baseColor = isDarkMode ? Colors.white : Colors.black;
     // 큰 버튼은 먹색 (다크 모드는 크림색)
     final inkFill = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final inkText = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
+    final inkText = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
 
     return CustomScrollView(
       slivers: [

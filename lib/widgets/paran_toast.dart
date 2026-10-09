@@ -36,7 +36,7 @@ void showParanToast(
       margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       padding: EdgeInsets.fromLTRB(16, 12, actionLabel != null ? 6 : 16, 12),
       elevation: 6,
-      backgroundColor: isDark ? const Color(0xFF2A251E) : Colors.white,
+      backgroundColor: isDark ? const Color(0xFF353330) : Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       // 버튼이 있으면 누를 시간을 넉넉하게
       duration: duration ?? Duration(seconds: actionLabel != null ? 8 : 3),

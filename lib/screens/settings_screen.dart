@@ -22,12 +22,12 @@ import '../utils/home_card_pref.dart';
 import 'settings_help_screen.dart';
 
 // 화면 공통 색 (베이지 바탕 · 흰 카드 · 먹색 글자)
-Color _sBg(bool d) => d ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
-Color _sCard(bool d) => d ? const Color(0xFF26221C) : const Color(0xFFFFFFFF);
+Color _sBg(bool d) => d ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
+Color _sCard(bool d) => d ? const Color(0xFF32302C) : const Color(0xFFFFFFFF);
 Color _sText(bool d) => d ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
 Color _sTextSub(bool d) => d ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
-Color _sTextHint(bool d) => d ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
-Color _sBorder(bool d) => d ? const Color(0xFF3A342B) : const Color(0xFFEEE9DF);
+Color _sTextHint(bool d) => d ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
+Color _sBorder(bool d) => d ? const Color(0xFF4A4640) : const Color(0xFFEEE9DF);
 Color _sIconBg(bool d) => d ? Colors.white.withOpacity(0.08) : const Color(0xFFF4EFE5);
 /// 메뉴와 같은 아이콘 베이지 칸
 Widget _iconBox(IconData icon, bool d) => Container(
@@ -188,7 +188,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   /// 맨 위 먹색 Paransori 카드 (다크 모드는 크림색) — 누르면 프로모션 코드
   Widget _heroCard(bool isDark) {
     final bg = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final fg = isDark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
+    final fg = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
     return FutureBuilder<(String, bool)>(
       future: _heroInfo(),
       builder: (context, snap) {
@@ -476,7 +476,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (!context.mounted) return;
 
     final ink = _sText(isDarkMode);
-    final btnText = isDarkMode ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
+    final btnText = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
     const red = Color(0xFFD84A3A);
 
 

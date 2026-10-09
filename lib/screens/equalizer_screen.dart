@@ -316,7 +316,7 @@ class _EqPal {
   static _EqPal of(BuildContext context) {
     final d = context.watch<ThemeProvider>().isDarkMode;
     return d
-        ? const _EqPal(true, Color(0xFF17140F), Color(0xFF26221C), Color(0xFFF3EFE7), Color(0xFFA29A8B), Color(0xFF3A342B))
+        ? const _EqPal(true, Color(0xFF24221F), Color(0xFF32302C), Color(0xFFF3EFE7), Color(0xFFB8B0A2), Color(0xFF4A4640))
         : const _EqPal(false, Color(0xFFF4EFE5), Colors.white, Color(0xFF17140F), Color(0xFF8A8378), Color(0xFFE2DACB));
   }
 }

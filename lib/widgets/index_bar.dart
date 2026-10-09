@@ -87,7 +87,7 @@ class _IndexBarState extends State<IndexBar> {
                 : (widget.isDark ? kIndexMutedDark : kIndexMuted)
                     .withOpacity(has ? 1.0 : 0.35),
         fontSize: isAZ ? 11.5 : 14.5,
-        fontWeight: (isActive || g == widget.current) ? FontWeight.w900 : FontWeight.w700,
+        fontWeight: (isActive || g == widget.current) ? FontWeight.w900 : FontWeight.w800,
         height: 1.0,
       ),
     );

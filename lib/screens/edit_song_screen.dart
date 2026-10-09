@@ -178,7 +178,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
                   child: TextButton(
                     onPressed: () => Navigator.pop(ctx),
                     style: TextButton.styleFrom(foregroundColor: sub),
-                    child: const Text('맞는 곡이 없어요'),
+                    child: const Text('찾는 곡이 없어요'),
                   ),
                 ),
               ],

@@ -76,6 +76,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
   static String? _myBg; // 내 사진 배경 (파일 경로) — 있으면 이게 먼저
   static bool _myLight = false; // 내 사진이 밝은지 (밝으면 먹색 글자, 어두우면 흰 글자)
   List<String> _myPhotos = []; // 가사 배경용 내 사진 목록
+  String? _hideNoLyricsFor; // ✕로 닫은 "가사 못 찾았어요" 카드 (노래가 바뀌면 다시 나와요)
   bool _manageMy = false; // 내 사진 관리(✕) 모드
   final Map<int, GlobalKey> _lineKeys = {}; // 줄마다 위치 (지금 줄로 부드럽게 이동)
   int _lastLine = -1;
@@ -1103,14 +1104,14 @@ class _LyricsScreenState extends State<LyricsScreen> {
                     end: Alignment.bottomCenter,
                     colors: _light
                         ? [
-                            const Color(0xFFF4EFE5).withOpacity(_busy ? 0.72 : 0.55),
-                            const Color(0xFFF4EFE5).withOpacity(_busy ? 0.5 : 0.3),
-                            const Color(0xFFF4EFE5).withOpacity(0.05),
+                            const Color(0xFFF4EFE5).withOpacity(_busy ? 0.35 : 0.22),
+                            const Color(0xFFF4EFE5).withOpacity(_busy ? 0.18 : 0.08),
+                            const Color(0xFFF4EFE5).withOpacity(0.0),
                           ]
                         : [
-                            Colors.black.withOpacity(0.45),
                             Colors.black.withOpacity(0.25),
-                            Colors.black.withOpacity(0.05),
+                            Colors.black.withOpacity(0.10),
+                            Colors.black.withOpacity(0.0),
                           ],
                     stops: const [0.0, 0.6, 1.0],
                   ),
@@ -1335,6 +1336,9 @@ class _LyricsScreenState extends State<LyricsScreen> {
     }
 
     if (!lyricsProvider.hasLyrics) {
+      // ✕로 닫았으면 이 노래에서는 안 띄움 (⋮ 메뉴에 다시 찾기·직접 넣기가 있어요)
+      final songKey = playerProvider.currentSong?.uri ?? '';
+      if (_hideNoLyricsFor == songKey) return const SizedBox.shrink();
       // 가사 없을 때: 유리 카드 하나에 안내 + [다시 찾기] [직접 넣기]
       final noNet = lyricsProvider.errorMessage.isNotEmpty &&
           lyricsProvider.errorMessage == AppLocalizations.of(context)!.lyricsErrorNetwork;
@@ -1358,11 +1362,36 @@ class _LyricsScreenState extends State<LyricsScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
-                      width: 48,
+                    SizedBox(
+                      width: double.infinity,
                       height: 48,
-                      decoration: BoxDecoration(shape: BoxShape.circle, color: ink.withOpacity(0.08)),
-                      child: Icon(Icons.music_note_rounded, size: 22, color: ink.withOpacity(0.7)),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(shape: BoxShape.circle, color: ink.withOpacity(0.08)),
+                            child: Icon(Icons.music_note_rounded, size: 22, color: ink.withOpacity(0.7)),
+                          ),
+                          // ✕ 닫기 (동그라미 없이 ✕만)
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                setState(() => _hideNoLyricsFor = playerProvider.currentSong?.uri ?? '');
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: Icon(Icons.close_rounded, size: 20, color: ink.withOpacity(0.6)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 16),
                     Text(

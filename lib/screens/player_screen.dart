@@ -674,85 +674,290 @@ class _PlayerScreenState extends State<PlayerScreen>
     return child;
   }
 
-  Widget _buildPhotoOptions() {
-    Widget chip(String label, bool selected, VoidCallback onTap) {
-      return GestureDetector(
-        onTap: () {
-          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-          onTap();
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: selected ? const Color(0xFF2F7DE8) : Colors.black.withOpacity(0.35),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: selected ? Colors.transparent : Colors.white.withOpacity(0.25),
-            ),
-          ),
-          child: Text(
-            label,
-            style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
-          ),
-        ),
-      );
+  /// 파란포토 사진 고르기 창 (가사 배경 창과 같은 모양: 아래에서 올라오고, 사진은 3장씩 위아래로)
+  void _openParanPhotoSheet() {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    // 처음 열 때는 지금 배경 사진이 들어 있는 카테고리로
+    String cat = '전체';
+    if (_nightBgIsFile) {
+      cat = '내 사진';
+    } else {
+      for (final e in _nightCategoryPhotos.entries) {
+        if (e.value.contains(_nightBgPath)) {
+          cat = e.key;
+          break;
+        }
+      }
     }
+    bool manage = false; // 내 사진 관리(✕) 모드
 
-    Widget optionRow(String title, List<Widget> chips) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
+    showParanSheet(
+      context,
+      title: '파란포토',
+      builder: (ctx, setSheet) {
+        final dark = context.read<ThemeProvider>().isDarkMode;
+        final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+        final sub = dark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
+        final chipBg = dark ? const Color(0xFF32302C) : Colors.white;
+        final chipLine = dark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
+        void tick() => const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+
+        // 작은 칩 (고른 것은 먹색, 다크 모드는 크림색)
+        Widget chip(String label, bool on, VoidCallback onTap) => GestureDetector(
+              onTap: () {
+                tick();
+                onTap();
+                setSheet(() {});
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+                decoration: BoxDecoration(
+                  color: on ? ink : chipBg,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: on ? ink : chipLine),
+                ),
+                child: Text(label,
+                    style: TextStyle(
+                        color: on ? (dark ? const Color(0xFF17140F) : Colors.white) : sub,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600)),
+              ),
+            );
+
+        // 카드 안 한 줄 (아이콘 · 이름 · 오른쪽 칩들)
+        Widget optionRow(IconData icon, String title, List<Widget> chips) => Padding(
+              padding: const EdgeInsets.fromLTRB(14, 10, 12, 10),
+              child: Row(
+                children: [
+                  SizedBox(width: 22, child: Icon(icon, color: sub, size: 20)),
+                  const SizedBox(width: 10),
+                  Text(title, style: TextStyle(color: ink, fontSize: 14, fontWeight: FontWeight.w500)),
+                  const Spacer(),
+                  for (var i = 0; i < chips.length; i++) ...[
+                    if (i > 0) const SizedBox(width: 6),
+                    chips[i],
+                  ],
+                ],
+              ),
+            );
+
+        // 내 사진 지우기 (지금 배경이면 다른 사진으로)
+        void removeMine(String path) {
+          tick();
+          setState(() {
+            _nightFavPaths.remove(path);
+            if (_nightBgPath == path) {
+              final next = _nightFavPaths.isNotEmpty ? _nightFavPaths.first : 'assets/spring_photo1.png';
+              _nightBgPath = next;
+              _nightBgIsFile = !next.startsWith('assets/');
+              _saveNightBg(next, isFile: _nightBgIsFile);
+            }
+          });
+          SharedPreferences.getInstance()
+              .then((p) => p.setStringList('nightFavPaths', _nightFavPaths.toList()));
+          setSheet(() {});
+        }
+
+        // 사진 한 장: 누르면 배경으로 + 창 닫기, 오른쪽 위 하트는 "자동으로 바꿀 때 쓸 사진"
+        Widget photoTile(String path, {bool isFile = false}) {
+          final selected = _nightBgPath == path;
+          final fav = _nightFavPaths.contains(path);
+          return GestureDetector(
+            onTap: manage
+                ? null
+                : () {
+                    tick();
+                    setState(() {
+                      _nightBgPath = path;
+                      _nightBgIsFile = isFile;
+                    });
+                    _saveNightBg(path, isFile: isFile);
+                    Navigator.pop(ctx);
+                  },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: selected && !manage ? ink : Colors.transparent, width: 2.5),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    isFile
+                        ? Image.file(File(path),
+                            fit: BoxFit.cover,
+                            cacheWidth: 270, // 작게 미리보기
+                            errorBuilder: (_, __, ___) => Container(color: const Color(0x22000000)))
+                        : paranPhoto(path, thumb: true, fit: BoxFit.cover),
+                    if (selected && !manage)
+                      const Positioned(
+                        left: 6,
+                        top: 6,
+                        child: Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
+                      ),
+                    if (manage)
+                      Positioned(
+                        right: 5,
+                        top: 5,
+                        child: GestureDetector(
+                          onTap: () => removeMine(path),
+                          child: Container(
+                            width: 26,
+                            height: 26,
+                            decoration: const BoxDecoration(color: Color(0xB317140F), shape: BoxShape.circle),
+                            child: const Icon(Icons.close_rounded, size: 16, color: Colors.white),
+                          ),
+                        ),
+                      )
+                    else if (!isFile)
+                      Positioned(
+                        right: 0,
+                        top: 0,
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            tick();
+                            _toggleNightFav(path);
+                            setSheet(() {});
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(6),
+                            child: Icon(
+                              fav ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                              size: 18,
+                              color: fav ? const Color(0xFFE05A4F) : Colors.white,
+                              shadows: const [Shadow(color: Colors.black45, blurRadius: 4)],
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        // + 사진 추가 (가사 배경 창과 같은 모양)
+        Widget addTile() => GestureDetector(
+              onTap: () async {
+                final before = _nightBgPath;
+                await _pickFromGallery();
+                if (!ctx.mounted) return;
+                if (_nightBgPath != before) {
+                  Navigator.pop(ctx);
+                } else {
+                  setSheet(() {});
+                }
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: chipBg,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: chipLine, width: 1.2),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add_rounded, color: sub, size: 26),
+                    const SizedBox(height: 4),
+                    Text('사진 추가', style: TextStyle(color: sub, fontSize: 11.5, fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ),
+            );
+
+        final cats = <String>['전체', ..._nightCategoryPhotos.keys, '내 사진'];
+        final mine = _nightFavPaths.where((p) => !p.startsWith('assets/')).toList();
+        final List<Widget> tiles;
+        if (cat == '내 사진') {
+          tiles = [if (!manage) addTile(), for (final f in mine) photoTile(f, isFile: true)];
+        } else {
+          final photos = cat == '전체'
+              ? _nightCategoryPhotos.values.expand((e) => e).toList()
+              : (_nightCategoryPhotos[cat] ?? const <String>[]);
+          tiles = [for (final p in photos) photoTile(p)];
+        }
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              width: 64,
-              child: Text(title, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+            // 색감 · 자동으로 바꾸기
+            ParanCard(
+              children: [
+                optionRow(Icons.palette_outlined, '색감', [
+                  chip('컬러', _bgFilter == 0, () => _setBgFilter(0)),
+                  chip('흑백', _bgFilter == 1, () => _setBgFilter(1)),
+                  chip('세피아', _bgFilter == 2, () => _setBgFilter(2)),
+                  chip('필름', _bgFilter == 3, () => _setBgFilter(3)),
+                ]),
+                optionRow(Icons.schedule_rounded, '자동 바꾸기', [
+                  chip('끄기', _autoBgMin == 0, () => _setAutoBg(0)),
+                  chip('10분', _autoBgMin == 10, () => _setAutoBg(10)),
+                  chip('30분', _autoBgMin == 30, () => _setAutoBg(30)),
+                ]),
+              ],
             ),
-            for (final c in chips) ...[c, const SizedBox(width: 6)],
+            Padding(
+              padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
+              child: Text('하트한 사진이 2장 이상이면 그 사진들 안에서 바뀌어요',
+                  style: TextStyle(color: sub, fontSize: 11.5)),
+            ),
+            const SizedBox(height: 16),
+            // 카테고리 한 줄
+            SizedBox(
+              height: 32,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: cats.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 6),
+                itemBuilder: (_, i) => Center(
+                  child: chip(cats[i], cat == cats[i], () {
+                    cat = cats[i];
+                    manage = false;
+                  }),
+                ),
+              ),
+            ),
+            // 내 사진: 관리 / 완료
+            if (cat == '내 사진' && mine.isNotEmpty)
+              Align(
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => setSheet(() => manage = !manage),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 10, 4, 0),
+                    child: Text(manage ? '완료' : '관리',
+                        style: TextStyle(
+                            color: manage ? Theme.of(ctx).colorScheme.primary : sub,
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                ),
+              ),
+            const SizedBox(height: 12),
+            if (tiles.isEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 28),
+                child: Text('준비 중이에요',
+                    textAlign: TextAlign.center, style: TextStyle(color: sub, fontSize: 13)),
+              )
+            else
+              GridView.count(
+                crossAxisCount: 3,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                childAspectRatio: 9 / 16,
+                children: tiles,
+              ),
           ],
-        ),
-      );
-    }
-
-    Widget label(String text) => Padding(
-          padding: const EdgeInsets.only(right: 6),
-          child: Center(
-            child: Text(text, style: const TextStyle(color: Colors.white70, fontSize: 12)),
-          ),
         );
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-    SizedBox(
-      height: 30,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        children: [
-          label('색감'),
-          chip('컬러', _bgFilter == 0, () => _setBgFilter(0)),
-          const SizedBox(width: 6),
-          chip('흑백', _bgFilter == 1, () => _setBgFilter(1)),
-          const SizedBox(width: 6),
-          chip('세피아', _bgFilter == 2, () => _setBgFilter(2)),
-          const SizedBox(width: 6),
-          chip('필름', _bgFilter == 3, () => _setBgFilter(3)),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-            child: Container(width: 1, color: Colors.white.withOpacity(0.3)),
-          ),
-          label('자동'),
-          chip('끄기', _autoBgMin == 0, () => _setAutoBg(0)),
-          const SizedBox(width: 6),
-          chip('10분', _autoBgMin == 10, () => _setAutoBg(10)),
-          const SizedBox(width: 6),
-          chip('30분', _autoBgMin == 30, () => _setAutoBg(30)),
-        ],
-      ),
-    ),
-
-      ],
+      },
     );
   }
 
@@ -780,113 +985,6 @@ class _PlayerScreenState extends State<PlayerScreen>
         .then((p) => p.setStringList('nightFavPaths', _nightFavPaths.toList()));
   }
 
-  void _showGalleryFavManager(BuildContext context) {
-    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (ctx) {
-        return StatefulBuilder(
-          builder: (ctx, setSheetState) {
-            final myPhotos = _nightFavPaths.where((p) => !p.startsWith('assets/')).toList();
-            return SafeArea(
-              top: false,
-              child: Container(
-                margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-                constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.7),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF353330),
-                  borderRadius: BorderRadius.circular(22),
-                ),
-                padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      children: [
-                        const Expanded(
-                          child: Text('내 사진 관리',
-                              style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700)),
-                        ),
-                        GestureDetector(
-                          onTap: () => Navigator.pop(ctx),
-                          behavior: HitTestBehavior.opaque,
-                          child: const Padding(
-                            padding: EdgeInsets.all(4),
-                            child: Icon(Icons.close, size: 20, color: Colors.white70),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    if (myPhotos.isEmpty)
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 24),
-                        child: Text('아직 등록한 내 사진이 없어요',
-                            style: TextStyle(color: Colors.white54, fontSize: 13)),
-                      )
-                    else
-                      Flexible(
-                        child: SingleChildScrollView(
-                          child: Wrap(
-                            spacing: 10,
-                            runSpacing: 10,
-                            children: myPhotos.map((path) {
-                              return Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.file(File(path), width: 70, height: 70, fit: BoxFit.cover),
-                                  ),
-                                  Positioned(
-                                    right: 2,
-                                    top: 2,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                                        setState(() {
-                                          _nightFavPaths.remove(path);
-                                          // 지금 배경으로 쓰는 사진을 지웠으면 바로 다른 사진으로 바꾼다
-                                          if (_nightBgPath == path) {
-                                            final next = _nightFavPaths.isNotEmpty
-                                                ? _nightFavPaths.first
-                                                : 'assets/spring_photo1.png';
-                                            _nightBgPath = next;
-                                            _nightBgIsFile = !next.startsWith('assets/');
-                                            _saveNightBg(next, isFile: _nightBgIsFile);
-                                          }
-                                        });
-                                        setSheetState(() {});
-                                        SharedPreferences.getInstance().then(
-                                                (p) => p.setStringList('nightFavPaths', _nightFavPaths.toList()));
-                                      },
-                                      child: Container(
-                                        width: 20,
-                                        height: 20,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.black87,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(Icons.close, size: 13, color: Colors.white),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
   Future<void> _pickFromGallery() async {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
     final picker = ImagePicker();
@@ -1477,18 +1575,13 @@ class _PlayerScreenState extends State<PlayerScreen>
           if (_albumArtStyle == 6)
             GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: () {
-                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                final open = !_showNightPicker;
-                setState(() => _showNightPicker = open);
-                SharedPreferences.getInstance().then((p) => p.setBool('showNightPicker', open));
-              },
+              onTap: _openParanPhotoSheet,
               child: SizedBox(
                 width: 36,
                 height: 40,
                 child: Icon(
                   Icons.photo_outlined,
-                  color: _showNightPicker ? const Color(0xFF7FB8F0) : baseColor,
+                  color: baseColor,
                   size: 20,
                 ),
               ),
@@ -2127,404 +2220,7 @@ class _PlayerScreenState extends State<PlayerScreen>
             ],
           ),
         ),
-        // 사진 고르기를 제일 위에 (제목 박스에 가려서 안 눌리는 것 방지)
-        _buildNightBgPicker(),
       ],
-    );
-  }
-  Widget _buildNightBgPicker() {
-
-    // 닫혀 있을 때: 아무것도 안 띄움 (위쪽 줄 사진 아이콘으로 열기)
-    if (!_showNightPicker) return const SizedBox.shrink();
-
-    // 2단계: 카테고리를 아직 안 골랐으면 카테고리 목록을 보여준다.
-    if (_nightSelectedCategory == null) {
-      return Align(
-        alignment: Alignment.topCenter,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: SizedBox(
-            height: 74,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              itemCount: _nightCategoryCover.length + 4,
-              separatorBuilder: (_, __) => const SizedBox(width: 10),
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return GestureDetector(
-                    onTap: () {
-                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      setState(() => _nightSelectedCategory = '전체');
-                    },
-                    child: Container(
-                      width: 60,
-                      height: 74,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.black.withOpacity(0.35),
-                        border: Border.all(color: Colors.white.withOpacity(0.25)),
-                      ),
-                      child: const Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.grid_view_rounded, color: Colors.white, size: 22),
-                          SizedBox(height: 4),
-                          Text('전체보기', style: TextStyle(color: Colors.white, fontSize: 10)),
-                        ],
-                      ),
-                    ),
-                  );
-                }
-                if (index == _nightCategoryCover.length + 1) {
-                  return GestureDetector(
-                    onTap: _pickFromGallery,
-                    child: Container(
-                      width: 60,
-                      height: 74,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.black.withOpacity(0.35),
-                        border: Border.all(color: Colors.white.withOpacity(0.25)),
-                      ),
-                      child: const Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.add_photo_alternate_outlined, color: Colors.white, size: 22),
-                          SizedBox(height: 4),
-                          Text('내 사진', style: TextStyle(color: Colors.white, fontSize: 10)),
-                        ],
-                      ),
-                    ),
-                  );
-                }
-                if (index == _nightCategoryCover.length + 2) {
-                  return GestureDetector(
-                    onTap: () => _showGalleryFavManager(context),
-                    child: Container(
-                      width: 60,
-                      height: 74,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.black.withOpacity(0.35),
-                        border: Border.all(color: Colors.white.withOpacity(0.25)),
-                      ),
-                      child: const Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.tune_rounded, color: Colors.white, size: 22),
-                          SizedBox(height: 4),
-                          Text('관리', style: TextStyle(color: Colors.white, fontSize: 10)),
-                        ],
-                      ),
-                    ),
-                  );
-                }
-                if (index == _nightCategoryCover.length + 3) {
-                  return GestureDetector(
-                    onTap: () {
-                      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      setState(() => _showNightPicker = false);
-                      SharedPreferences.getInstance().then((p) => p.setBool('showNightPicker', false));
-                    },
-                    child: Container(
-                      width: 60,
-                      height: 74,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.black.withOpacity(0.35),
-                        border: Border.all(color: Colors.white.withOpacity(0.25)),
-                      ),
-                      child: const Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.close, color: Colors.white, size: 22),
-                          SizedBox(height: 4),
-                          Text('닫기', style: TextStyle(color: Colors.white, fontSize: 10)),
-                        ],
-                      ),
-                    ),
-                  );
-                }
-                final category = _nightCategoryCover.keys.elementAt(index - 1);
-                final cover = _nightCategoryCover[category]!;
-                return GestureDetector(
-                  onTap: () {
-                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                    setState(() => _nightSelectedCategory = category);
-                  },
-                  child: Container(
-                    width: 60,
-                    height: 74,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.white.withOpacity(0.25)),
-                    ),
-                    child: Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(11),
-                          child: paranPhoto(
-                            cover,
-                            thumb: true,
-                            width: 60,
-                            height: 74,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            decoration: const BoxDecoration(
-                              color: Colors.black38,
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(11),
-                                bottomRight: Radius.circular(11),
-                              ),
-                            ),
-                            child: Text(
-                              category,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-      );
-    }
-
-    // 3단계: 고른 카테고리 안의 사진들을 보여준다.
-    final photos = _nightSelectedCategory == '전체'
-        ? _nightCategoryPhotos.values.expand((e) => e).toList()
-        : (_nightCategoryPhotos[_nightSelectedCategory] ?? []);
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-        SizedBox(
-          height: 64,
-          child: photos.isEmpty
-              ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(width: 20),
-                    GestureDetector(
-                      onTap: () {
-                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                        setState(() => _nightSelectedCategory = null);
-                      },
-                      child: Container(
-                        width: 56,
-                        height: 56,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.black.withOpacity(0.35),
-                          border: Border.all(color: Colors.white.withOpacity(0.25)),
-                        ),
-                        child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 14),
-                      ),
-                    ),
-                    const SizedBox(width: 14),
-                    const Text(
-                      '준비중입니다',
-                      style: TextStyle(color: Colors.white70, fontSize: 13),
-                    ),
-                  ],
-                )
-              : Row(
-                  children: [
-                    Expanded(
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.only(left: 20, right: 10),
-                  itemCount: _nightSelectedCategory == '전체' ? photos.length + 4 : photos.length + 1,
-                  separatorBuilder: (_, __) => const SizedBox(width: 10),
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return GestureDetector(
-                        onTap: () {
-                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                          setState(() => _nightSelectedCategory = null);
-                        },
-                        child: Container(
-                          width: 56,
-                          height: 56,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.black.withOpacity(0.35),
-                            border: Border.all(color: Colors.white.withOpacity(0.25)),
-                          ),
-                          child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 14),
-                        ),
-                      );
-                    }
-                    if (_nightSelectedCategory == '전체' && index == 1) {
-                      final allSelected = photos.every((p) => _nightFavPaths.contains(p));
-                      return GestureDetector(
-                        onTap: () {
-                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                          setState(() {
-                            if (allSelected) {
-                              _nightFavPaths.removeAll(photos);
-                            } else {
-                              _nightFavPaths.addAll(photos);
-                            }
-                          });
-                          SharedPreferences.getInstance()
-                              .then((p) => p.setStringList('nightFavPaths', _nightFavPaths.toList()));
-                        },
-                        child: Container(
-                          width: 56,
-                          height: 56,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: allSelected ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.35),
-                            border: Border.all(color: Colors.white.withOpacity(0.25)),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                allSelected ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
-                                color: allSelected ? Colors.black : Colors.white,
-                                size: 20,
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '전체 선택',
-                                style: TextStyle(
-                                  color: allSelected ? Colors.black : Colors.white,
-                                  fontSize: 9,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-                    // 전체보기에서도 "내 사진" 추가 · "관리" (전체 선택 버튼과 같은 모양)
-                    if (_nightSelectedCategory == '전체' && (index == 2 || index == 3)) {
-                      final isAdd = index == 2;
-                      return GestureDetector(
-                        onTap: isAdd ? _pickFromGallery : () => _showGalleryFavManager(context),
-                        child: Container(
-                          width: 56,
-                          height: 56,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.black.withOpacity(0.35),
-                            border: Border.all(color: Colors.white.withOpacity(0.25)),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(isAdd ? Icons.add_photo_alternate_outlined : Icons.tune_rounded,
-                                  color: Colors.white, size: 20),
-                              const SizedBox(height: 4),
-                              Text(isAdd ? '내 사진' : '관리',
-                                  style: const TextStyle(color: Colors.white, fontSize: 9)),
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-                    final photoIndex = _nightSelectedCategory == '전체' ? index - 4 : index - 1;
-
-                    final path = photos[photoIndex];
-                    final isFav = _nightFavPaths.contains(path);
-                    return GestureDetector(
-                      onTap: () {
-                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                        _toggleNightFav(path);
-                        setState(() {
-                          _nightBgPath = path;
-                          _nightBgIsFile = false;
-                        });
-                        _saveNightBg(path);
-                      },
-                      child: Container(
-                        width: 56,
-                        height: 56,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: isFav ? Colors.white : Colors.white.withOpacity(0.25),
-                            width: isFav ? 2.5 : 1,
-                          ),
-                          boxShadow: isFav
-                              ? [BoxShadow(color: Colors.black.withOpacity(0.4), blurRadius: 8)]
-                              : null,
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: paranPhoto(path, fit: BoxFit.cover, thumb: true),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                        setState(() {
-                          _showNightPicker = false;
-                          _nightSelectedCategory = null;
-                        });
-                        SharedPreferences.getInstance().then((p) => p.setBool('showNightPicker', false));
-                      },
-                      child: Container(
-                        width: 56,
-                        height: 56, // 옆 버튼들과 같은 크기
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.black.withOpacity(0.35),
-                          border: Border.all(color: Colors.white.withOpacity(0.25)),
-                        ),
-                        child: const Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.close, color: Colors.white, size: 20),
-                            SizedBox(height: 4),
-                            Text('닫기', style: TextStyle(color: Colors.white, fontSize: 9)),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                  ],
-                ),
-        ),
-            const SizedBox(height: 10),
-            _buildPhotoOptions(),
-          ],
-        ),
-      ),
     );
   }
   Widget _buildCDStyle(Song song, Color primaryColor) {

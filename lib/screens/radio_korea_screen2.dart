@@ -1,4 +1,7 @@
 import 'dart:math' as math;
+import 'dart:async';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -26,6 +29,33 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
   final Map<String, GlobalKey> _stationItemKeys = {};
   String? _lastScrolledStationName;
   _ViewMode _mode = _ViewMode.all;
+  // 주파수 맞추기: 스크롤 중이면 true (멈추고 0.3초 뒤 false)
+  final ValueNotifier<bool> _scrolling = ValueNotifier(false);
+  final ValueNotifier<double> _scrollPx = ValueNotifier(0);
+  Timer? _settleTimer;
+
+  @override
+  void dispose() {
+    _settleTimer?.cancel();
+    _scrolling.dispose();
+    _scrollPx.dispose();
+    super.dispose();
+  }
+
+  bool _onDialScroll(ScrollNotification n) {
+    if (n.depth != 0) return false;
+    _scrollPx.value = n.metrics.pixels;
+    if (n is ScrollStartNotification || (n is ScrollUpdateNotification && !_scrolling.value)) {
+      _settleTimer?.cancel();
+      _scrolling.value = true;
+    } else if (n is ScrollEndNotification) {
+      _settleTimer?.cancel();
+      _settleTimer = Timer(const Duration(milliseconds: 300), () {
+        if (mounted) _scrolling.value = false;
+      });
+    }
+    return false;
+  }
 
   static const Map<String, Color> _regionColors = {
     '수도권': Color(0xFF14356B),
@@ -134,10 +164,15 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
       }
     });
 
-    return ListView.separated(
+    return Stack(
+      children: [
+        NotificationListener<ScrollNotification>(
+          onNotification: _onDialScroll,
+          child: ListView.separated(
       padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
       itemCount: koreanStations.length,
-      separatorBuilder: (_, __) => Divider(height: 1, color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.1)),
+      separatorBuilder: (_, __) => _DialEffect(
+          child: Divider(height: 1, color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.1))),
       itemBuilder: (context, i) {
         final ks = koreanStations[i];
         final current = radioProvider.currentStation;
@@ -145,15 +180,33 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         _stationItemKeys.putIfAbsent(ks.name, () => GlobalKey());
         return Container(
           key: _stationItemKeys[ks.name],
-          child: _StationTile(
-            station: ks,
-            isPlaying: isPlaying,
-            radioStation: radioStations[i],
-            stationList: radioStations,
-            stationIndex: i,
+          child: _DialItem(
+            scrolling: _scrolling,
+            child: _StationTile(
+              station: ks,
+              isPlaying: isPlaying,
+              radioStation: radioStations[i],
+              stationList: radioStations,
+              stationIndex: i,
+            ),
           ),
         );
       },
+          ),
+        ),
+        // 오른쪽 끝 주파수 눈금 (스크롤 따라 움직임)
+        Positioned(
+          top: 0,
+          bottom: 0,
+          right: 4,
+          width: 12,
+          child: IgnorePointer(
+            child: CustomPaint(
+              painter: _TickPainter(_scrollPx, (isDarkMode ? Colors.white : Colors.black).withOpacity(0.35)),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -503,12 +556,27 @@ class _StationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dial = _DialScope.of(context);
+    if (dial == null) return _tile(context, false, false);
+    return AnimatedBuilder(
+      animation: Listenable.merge([dial.tuned, dial.scrolling]),
+      builder: (ctx, _) => _tile(ctx, dial.tuned.value && dial.scrolling.value, dial.scrolling.value),
+    );
+  }
+
+  Widget _tile(BuildContext context, bool tuned, bool scrolling) {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
 
-    return Container(
-      color: isPlaying ? primaryColor.withOpacity(0.08) : Colors.transparent,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 180),
+      // 스크롤 중 가운데 방송은 살짝 밝은 칸
+      color: isPlaying
+          ? primaryColor.withOpacity(0.08)
+          : tuned
+              ? baseColor.withOpacity(0.06)
+              : Colors.transparent,
       child: InkWell(
         onTap: () {
           const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -679,10 +747,29 @@ class _StationTile extends StatelessWidget {
                   ],
                 ),
               ),
-              if (isPlaying)
-                _PlayingBars(color: primaryColor)
-              else
-                GestureDetector(
+              SizedBox(
+                width: 46,
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  layoutBuilder: (cur, prev) => Stack(
+                    alignment: Alignment.centerRight,
+                    children: [...prev, if (cur != null) cur],
+                  ),
+                  child: isPlaying
+                      ? KeyedSubtree(key: const ValueKey('bars'), child: _PlayingBars(color: primaryColor))
+                      : scrolling
+                          ? Text(
+                              station.frequency.replaceAll(' MHz', ''),
+                              key: const ValueKey('freq'),
+                              maxLines: 1,
+                              style: GoogleFonts.quicksand(
+                                color: tuned ? primaryColor : baseColor.withOpacity(0.45),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )
+                          : GestureDetector(
+                  key: const ValueKey('heart'),
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -701,6 +788,8 @@ class _StationTile extends StatelessWidget {
                     size: 22,
                   ),
                 ),
+                ),
+              ),
             ],
           ),
         ),
@@ -1117,4 +1206,155 @@ class _LogoEqBarsState extends State<_LogoEqBars>
       ),
     );
   }
+}
+
+// ══════════════════════════════════════════
+// 주파수 맞추기: 끝으로 갈수록 작아지고 흐려짐 + 가운데 방송 표시
+// ══════════════════════════════════════════
+class _DialScope extends InheritedWidget {
+  final ValueNotifier<bool> tuned;
+  final ValueNotifier<bool> scrolling;
+  const _DialScope({required this.tuned, required this.scrolling, required super.child});
+
+  static _DialScope? of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<_DialScope>();
+
+  @override
+  bool updateShouldNotify(_DialScope old) => old.tuned != tuned || old.scrolling != scrolling;
+}
+
+class _DialItem extends StatefulWidget {
+  final ValueNotifier<bool> scrolling;
+  final Widget child;
+  const _DialItem({required this.scrolling, required this.child});
+
+  @override
+  State<_DialItem> createState() => _DialItemState();
+}
+
+class _DialItemState extends State<_DialItem> {
+  final ValueNotifier<bool> _tuned = ValueNotifier(false);
+
+  @override
+  void dispose() {
+    _tuned.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _DialScope(
+      tuned: _tuned,
+      scrolling: widget.scrolling,
+      child: _DialEffect(
+        onTuned: (v) {
+          if (mounted && _tuned.value != v) _tuned.value = v;
+        },
+        child: widget.child,
+      ),
+    );
+  }
+}
+
+class _DialEffect extends SingleChildRenderObjectWidget {
+  final ValueChanged<bool>? onTuned;
+  const _DialEffect({this.onTuned, required Widget child}) : super(child: child);
+
+  @override
+  _RenderDial createRenderObject(BuildContext context) => _RenderDial(Scrollable.of(context), onTuned);
+
+  @override
+  void updateRenderObject(BuildContext context, _RenderDial renderObject) {
+    renderObject
+      ..scrollable = Scrollable.of(context)
+      ..onTuned = onTuned;
+  }
+}
+
+class _RenderDial extends RenderProxyBox {
+  _RenderDial(this._scrollable, this.onTuned);
+
+  ScrollableState _scrollable;
+  ValueChanged<bool>? onTuned;
+  bool? _lastTuned;
+
+  set scrollable(ScrollableState s) {
+    if (identical(s, _scrollable)) return;
+    if (attached) _scrollable.position.removeListener(markNeedsPaint);
+    _scrollable = s;
+    if (attached) _scrollable.position.addListener(markNeedsPaint);
+  }
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+    _scrollable.position.addListener(markNeedsPaint);
+  }
+
+  @override
+  void detach() {
+    _scrollable.position.removeListener(markNeedsPaint);
+    super.detach();
+  }
+
+  @override
+  bool get alwaysNeedsCompositing => child != null;
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    final c = child;
+    if (c == null) return;
+    double k = 0;
+    bool tuned = false;
+    final vp = _scrollable.context.findRenderObject();
+    if (vp is RenderBox && vp.hasSize) {
+      final cy = localToGlobal(size.center(Offset.zero), ancestor: vp).dy;
+      final half = vp.size.height / 2;
+      if (half > 0) k = ((cy - half) / half).clamp(-1.0, 1.0).abs();
+      tuned = (cy - half).abs() < size.height / 2;
+    }
+    // 가운데 방송인지 알려주기 (그리는 중엔 못 바꿔서 다음 화면에)
+    if (onTuned != null && tuned != _lastTuned) {
+      _lastTuned = tuned;
+      final cb = onTuned!;
+      SchedulerBinding.instance.addPostFrameCallback((_) => cb(tuned));
+    }
+    final s = 1 - 0.12 * k * k; // 끝으로 갈수록 작게 (최대 12%)
+    final alpha = (255 * (1 - 0.55 * k * k)).round().clamp(0, 255); // 끝으로 갈수록 흐리게
+    final m = Matrix4.identity()
+      ..setEntry(0, 0, s)
+      ..setEntry(1, 1, s)
+      ..setEntry(0, 3, size.width / 2 * (1 - s))
+      ..setEntry(1, 3, size.height / 2 * (1 - s));
+    context.pushOpacity(offset, alpha, (ctx, o) {
+      ctx.pushTransform(needsCompositing, o, m, (ctx2, o2) => ctx2.paintChild(c, o2));
+    });
+  }
+}
+
+/// 오른쪽 끝 주파수 눈금 (스크롤 따라 움직임, 위아래 끝은 흐리게)
+class _TickPainter extends CustomPainter {
+  final ValueNotifier<double> px;
+  final Color color;
+  _TickPainter(this.px, this.color) : super(repaint: px);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const gap = 12.0;
+    final off = -(px.value * 0.6) % (gap * 5);
+    final half = size.height / 2;
+    if (half <= 0) return;
+    final paint = Paint()..strokeWidth = 1;
+    for (int i = -5; i < 400; i++) {
+      final y = off + i * gap;
+      if (y > size.height) break;
+      if (y < 0) continue;
+      final d = ((y - half).abs() / half).clamp(0.0, 1.0);
+      paint.color = color.withOpacity(color.opacity * (1 - d * d));
+      final w = (i % 5 + 5) % 5 == 0 ? 10.0 : 5.0;
+      canvas.drawLine(Offset(size.width - w, y), Offset(size.width, y), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_TickPainter old) => old.color != color || old.px != px;
 }

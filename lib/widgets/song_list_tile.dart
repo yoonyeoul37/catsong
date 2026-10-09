@@ -55,7 +55,7 @@ class SongListTile extends StatelessWidget {
     final isDarkMode = forceWhiteText ? true : context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
 
-    return InkWell(
+    return _RiseIn(child: InkWell(
       onTap: () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         FocusManager.instance.primaryFocus?.unfocus();
@@ -168,7 +168,7 @@ class SongListTile extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildAlbumArt(bool isCurrentSong, PlayerProvider playerProvider, Color primaryColor, Color baseColor,
@@ -539,6 +539,45 @@ class SongListTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis),
         ],
       ),
+    );
+  }
+}
+
+/// 곡 줄이 화면에 나타날 때 아래에서 살포시 떠오르게
+class _RiseIn extends StatefulWidget {
+  final Widget child;
+  const _RiseIn({required this.child});
+
+  @override
+  State<_RiseIn> createState() => _RiseInState();
+}
+
+class _RiseInState extends State<_RiseIn> with SingleTickerProviderStateMixin {
+  late final AnimationController _c;
+  late final Animation<double> _fade;
+  late final Animation<Offset> _slide;
+
+  @override
+  void initState() {
+    super.initState();
+    _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 420));
+    final curve = CurvedAnimation(parent: _c, curve: Curves.easeOutCubic);
+    _fade = curve;
+    _slide = Tween<Offset>(begin: const Offset(0, 0.22), end: Offset.zero).animate(curve);
+    _c.forward();
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fade,
+      child: SlideTransition(position: _slide, child: widget.child),
     );
   }
 }

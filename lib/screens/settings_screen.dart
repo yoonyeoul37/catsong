@@ -21,6 +21,7 @@ import 'bulk_art_screen.dart';
 import 'player_screen.dart' show showPlayerStyleMenu;
 import '../utils/home_card_pref.dart';
 import 'settings_help_screen.dart';
+import 'policy_web_screen.dart';
 import '../services/loudness.dart';
 import '../services/headset_resume.dart';
 
@@ -139,6 +140,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
             builder: (context, on, _) => _buildTile(context,
                 icon: Icons.view_agenda_outlined,
                 title: '홈 추천 카드',
+                // ⓘ 누르면 어떤 카드가 나오는지 (포인트 색과 같은 말풍선)
+                titleExtra: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => _showBubble(_homeInfoKey, context.read<ThemeProvider>().isDarkMode,
+                      title: '홈 추천 카드에 나오는 것',
+                      items: _homeInfoItems,
+                      foot: '날마다 바뀌고, 정리할 곡이 있으면 정리 카드가 먼저 나와요'),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(6, 4, 8, 4),
+                    child: Icon(Icons.info_outline_rounded,
+                        key: _homeInfoKey, size: 16, color: _sTextHint(context.read<ThemeProvider>().isDarkMode)),
+                  ),
+                ),
                 desc: '홈 맨 위에 날마다 바뀌는 카드',
                 onTap: () => HomeCardPref.setOn(!on),
                 primaryColor: primaryColor,
@@ -197,8 +211,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             if (mounted) setState(() {}); // 맨 위 카드 글자도 바로 바뀌게
           }, primaryColor: primaryColor),
           _buildTile(context, icon: Icons.star_outline, title: l.rateApp, onTap: () => _launchUrl('https://play.google.com/store/apps/details?id=kr.ssing.catsong'), primaryColor: primaryColor),
-          _buildTile(context, icon: Icons.privacy_tip_outlined, title: l.privacyPolicy, onTap: () => _launchUrl(_policyUrl('privacy_policy')), primaryColor: primaryColor),
-          _buildTile(context, icon: Icons.description_outlined, title: l.termsOfService, onTap: () => _launchUrl(_policyUrl('terms_of_service')), primaryColor: primaryColor, isLast: true),
+          _buildTile(context, icon: Icons.privacy_tip_outlined, title: l.privacyPolicy, onTap: () => _openPolicy('privacy_policy', l.privacyPolicy), primaryColor: primaryColor),
+          _buildTile(context, icon: Icons.description_outlined, title: l.termsOfService, onTap: () => _openPolicy('terms_of_service', l.termsOfService), primaryColor: primaryColor, isLast: true),
           const SizedBox(height: 24),
           Center(child: Text('KNEXM.Co.,LTD', style: TextStyle(color: Colors.grey[400], fontSize: 12))),
           const SizedBox(height: 8),
@@ -398,6 +412,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final cardBox = _cardBoxOf(box);
     final cardRect = cardBox != null ? cardBox.localToGlobal(Offset.zero, ancestor: ovBox) & cardBox.size : null;
     final top = (cardRect?.bottom ?? iconPos.dy + box.size.height) + 10;
+    // 줄이 화면 아래쪽에 있으면 말풍선을 카드 위로 (아래 시스템 버튼과 안 겹치게)
+    final above = (cardRect?.center.dy ?? iconPos.dy) > ovBox.size.height * 0.5;
+    final bottomGap = ovBox.size.height - (cardRect?.top ?? iconPos.dy) + 10;
 
     // 소리: 효과음 켜져 있으면 톡 (폰이 진동 모드면 진동, 무음이면 조용) / 꺼져 있으면 평소 터치 진동
     final soundOn = context.read<ThemeProvider>().feedbackSoundEnabled;
@@ -427,9 +444,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Positioned(
             left: 16,
-            top: top,
+            top: above ? null : top,
+            bottom: above ? bottomGap : null,
             width: w,
             child: _InfoBubble(
+              tailDown: above,
               key: _bubbleKey,
               title: title,
               text: text,
@@ -463,6 +482,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   final GlobalKey _pointInfoKey = GlobalKey();
+  final GlobalKey _homeInfoKey = GlobalKey();
+  static const List<(String, String)> _homeInfoItems = [
+    ('오늘의 한 곡', '내 음악 중에서 날마다 한 곡을 골라 줘요'),
+    ('오랜만에 듣기', '한 달 동안 안 들은 곡을 섞어서 틀어요'),
+    ('이번 주 기록', '7일 동안 들은 횟수와 가장 많이 들은 곡'),
+    ('시간대 추천', '아침·낮·저녁·밤에 어울리는 자연소리'),
+    ('알아두면 좋은 기능', '벨소리 만들기, 빗소리 섞기 같은 팁'),
+    ('내일 알람', '알람을 켜 두면 저녁 7시부터 내일 깨울 시간'),
+  ];
   static const List<(String, String)> _pointInfoItems = [
     ('음악', '재생 중인 곡 표시, 오른쪽 초성 글자'),
     ('재생 화면', '진행 막대, 시디롬 빛 번짐'),
@@ -583,6 +611,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required IconData icon, required String title, String? subtitle, String? desc,
     required VoidCallback onTap, required Color primaryColor,
     Widget? trailing, bool isFirst = false, bool isLast = false,
+    Widget? titleExtra, // 이름 바로 옆 (예: ⓘ)
   }) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     // 같은 묶음은 흰 카드 하나로 (위·아래 끝만 둥글게)
@@ -612,10 +641,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: _sText(isDarkMode), fontSize: 14.5)),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: _sText(isDarkMode), fontSize: 14.5)),
+                            ),
+                            if (titleExtra != null) titleExtra,
+                          ],
+                        ),
                         if (desc != null) ...[
                           const SizedBox(height: 2),
                           Text(desc,
@@ -955,6 +991,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return 'https://www.ssing.kr/$page.html?lang=$lang&theme=$theme';
   }
 
+  /// 약관은 앱 안에서 열기 (폰 브라우저의 다크 모드와 상관없이 앱 설정대로)
+  void _openPolicy(String page, String title) {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => PolicyWebScreen(url: _policyUrl(page), title: title)));
+  }
+
   Future<void> _launchUrl(String url) async {
     final uri = Uri.parse(url);
     try { await launchUrl(uri, mode: LaunchMode.externalApplication); } catch (e) { await launchUrl(uri, mode: LaunchMode.inAppWebView); }
@@ -1090,8 +1131,10 @@ class _InfoBubble extends StatefulWidget {
   final bool isDark;
   final VoidCallback onClose;
   final VoidCallback onClosed;
+  final bool tailDown; // true면 말풍선이 위에 있고 꼬리가 아래(ⓘ 쪽)를 가리킴
   const _InfoBubble({
     super.key,
+    this.tailDown = false,
     this.title,
     this.text,
     this.items,
@@ -1140,7 +1183,7 @@ class _InfoBubbleState extends State<_InfoBubble> with SingleTickerProviderState
     return FadeTransition(
       opacity: curve,
       child: SlideTransition(
-        position: Tween<Offset>(begin: const Offset(0, -0.03), end: Offset.zero).animate(curve),
+        position: Tween<Offset>(begin: Offset(0, widget.tailDown ? 0.03 : -0.03), end: Offset.zero).animate(curve),
         child: Material(
           type: MaterialType.transparency,
           child: Stack(
@@ -1148,7 +1191,8 @@ class _InfoBubbleState extends State<_InfoBubble> with SingleTickerProviderState
             children: [
               // 꼬리 (ⓘ 쪽을 가리킴)
               Positioned(
-                top: -6,
+                top: widget.tailDown ? null : -6,
+                bottom: widget.tailDown ? -6 : null,
                 left: (widget.tailX - 6.5).clamp(14.0, double.infinity).toDouble(),
                 child: Transform.rotate(
                   angle: 0.785398,

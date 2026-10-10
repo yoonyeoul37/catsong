@@ -210,6 +210,7 @@ class _PlayerScreenState extends State<PlayerScreen>
   Color _dominantColor = const Color(0xFF1A1A1A);
   bool _showSwipeHint = false;
   bool _hasSeenParanPhoto = true;
+  bool _photoBtnSeen = true; // 아래 사진기를 한 번이라도 눌렀는지 (안 눌렀으면 NEW)
   Color? _lastPoint; // 포인트 색 바뀌면 시디롬 빛 번짐도 바로 다시
 
   @override
@@ -423,6 +424,7 @@ class _PlayerScreenState extends State<PlayerScreen>
       _nightBgIsFile = prefs.getBool('nightBgIsFile') ?? false;
       _showNightPicker = prefs.getBool('showNightPicker') ?? true;
       _hasSeenParanPhoto = prefs.getBool('hasSeenParanPhoto') ?? false;
+      _photoBtnSeen = prefs.getBool('photoBtnSeen') ?? false;
       _showSwipeHint = !shown;
       _bgFilter = prefs.getInt('bgFilter') ?? 0;
       if (_bgFilter == 4) _bgFilter = 0; // 예전 인화 설정 → 컬러로
@@ -1459,6 +1461,22 @@ class _PlayerScreenState extends State<PlayerScreen>
                             Navigator.push(context, MaterialPageRoute(builder: (_) => const LyricsScreen()));
                           },
                         ),
+                        // 파란포토 사진 고르기 (파란포토 스타일일 때만)
+                        if (_albumArtStyle == 6)
+                          _buildBottomBarItem(
+                            context,
+                            icon: CupertinoIcons.camera,
+                            label: '사진',
+                            isActive: false,
+                            showNew: !_photoBtnSeen,
+                            onTap: () {
+                              if (!_photoBtnSeen) {
+                                setState(() => _photoBtnSeen = true);
+                                SharedPreferences.getInstance().then((p) => p.setBool('photoBtnSeen', true));
+                              }
+                              _openParanPhotoSheet();
+                            },
+                          ),
                         ],
                     ),
                   ),
@@ -1725,11 +1743,11 @@ class _PlayerScreenState extends State<PlayerScreen>
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
               Navigator.pop(context);
             },
-            icon: Icon(Icons.keyboard_arrow_down,
-                color: baseColor, size: 30),
+            icon: Icon(Icons.arrow_back_ios_new_rounded,
+                color: baseColor, size: 18),
           ),
           // 오른쪽 아이콘(36씩) 폭에 맞춰 비워서 가운데 워터마크가 화면 정중앙에 오게 (왼쪽 ⌄는 48)
-          SizedBox(width: (_albumArtStyle == 6 ? 36.0 * 3 : 36.0 * 2) - 48),
+          // 왼쪽 ←(48)와 오른쪽 ⋯(36 + 여백 12)의 폭이 같아서 로고가 화면 정가운데
           Expanded(
             child: Center(
               // "재생 중" 대신 파란소리 워터마크 (홈 로고 스타일, 이퀄라이저 없이)
@@ -1774,49 +1792,6 @@ class _PlayerScreenState extends State<PlayerScreen>
               }),
             ),
           ),
-          // TV로 듣기 (연결되면 하늘색 아이콘)
-          // 파란포토 사진 고르기 (파란포토 스타일일 때만, 열려 있으면 하늘색)
-          if (_albumArtStyle == 6)
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: _openParanPhotoSheet,
-              child: SizedBox(
-                width: 36,
-                height: 40,
-                child: Icon(
-                  CupertinoIcons.camera,
-                  color: baseColor,
-                  size: 21,
-                ),
-              ),
-            ),
-          AnimatedBuilder(
-            animation: CastService.instance,
-            builder: (context, _) {
-              final cast = CastService.instance;
-              return GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                  if (song == null) return;
-                  if (cast.isConnected) {
-                    _showCastControl();
-                  } else {
-                    _showCastPicker(song, playerProvider);
-                  }
-                },
-                child: SizedBox(
-                  width: 36,
-                  height: 40,
-                  child: Icon(
-                    Icons.sensors_rounded, // 연결되면 하늘색
-                    color: cast.isConnected ? const Color(0xFF7FB8F0) : baseColor,
-                    size: 21,
-                  ),
-                ),
-              );
-            },
-          ),
           GestureDetector(
             onTap: () => _showPlayerOptionsSheet(context, song, primaryColor),
             behavior: HitTestBehavior.opaque,
@@ -1828,7 +1803,22 @@ class _PlayerScreenState extends State<PlayerScreen>
                 child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  Icon(Icons.more_vert_rounded, color: baseColor, size: 20),
+                  Icon(Icons.more_vert_rounded, color: baseColor, size: 19),
+                  // TV로 듣는 중이면 하늘색 점 (TV는 ⋯ 안에 있어서)
+                  Positioned(
+                    right: -3,
+                    bottom: -2,
+                    child: AnimatedBuilder(
+                      animation: CastService.instance,
+                      builder: (_, __) => CastService.instance.isConnected
+                          ? Container(
+                              width: 7,
+                              height: 7,
+                              decoration: const BoxDecoration(color: Color(0xFF7FB8F0), shape: BoxShape.circle),
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                  ),
                   if (!_hasSeenParanPhoto)
                     Positioned(
                       top: -1,
@@ -1847,6 +1837,7 @@ class _PlayerScreenState extends State<PlayerScreen>
               ),
             ),
           ),
+          const SizedBox(width: 12),
         ],
       ),
     );
@@ -1939,6 +1930,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     );
                   }),
                   MenuCard(isDark: isDark, children: [
+                  castMenuRow(ctx, baseColor), // TV로 듣기
                   _playerSheetItem(
                     ctx,
                     Icons.shuffle_rounded,
@@ -3472,6 +3464,7 @@ class _PlayerScreenState extends State<PlayerScreen>
         required String label,
         required bool isActive,
         required VoidCallback onTap,
+        bool showNew = false, // 아이콘 오른쪽 위 작은 NEW
       }) {
     const baseColor = Colors.white;
     // 켜진 건 또렷한 흰색, 꺼진 건 흐리게 (사진 위라서 큰 건 흰색 유지)
@@ -3482,7 +3475,10 @@ class _PlayerScreenState extends State<PlayerScreen>
       behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        child: Column(
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+        Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             customIcon != null
@@ -3506,6 +3502,20 @@ class _PlayerScreenState extends State<PlayerScreen>
                 color: isActive ? point : Colors.transparent,
               ),
             ),
+          ],
+        ),
+            if (showNew)
+              Positioned(
+                top: -6,
+                left: 11,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                  decoration: BoxDecoration(color: point, borderRadius: BorderRadius.circular(5)),
+                  child: const Text('NEW',
+                      style: TextStyle(
+                          color: Colors.white, fontSize: 7.5, fontWeight: FontWeight.w800, letterSpacing: 0.3, height: 1.2)),
+                ),
+              ),
           ],
         ),
       ),
@@ -3609,6 +3619,8 @@ List<Widget> playerSettingRows(
   const accent = Color(0xFF8A8378); // 메뉴 아이콘은 차분한 회색
   void vib() => const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
   return [
+    // TV로 듣기 (곡이 재생 중일 때만)
+    if (p.currentSong != null) castMenuRow(context, textColor),
     _PlayerScreenState._playerSheetItem(
       context, Icons.shuffle_rounded, AppLocalizations.of(context)!.shuffle, accent, textColor,
       () { vib(); p.toggleShuffle(); },
@@ -3649,6 +3661,42 @@ List<Widget> playerSettingRows(
         ),
       ),
   ];
+}
+
+/// TV로 듣기 줄 (재생 화면 ⋯ · 곡 목록 ⋯ 같이 씀) — 지금 재생 중인 곡을 TV로
+Widget castMenuRow(BuildContext context, Color textColor) {
+  return AnimatedBuilder(
+    animation: CastService.instance,
+    builder: (_, __) {
+      final cast = CastService.instance;
+      final on = cast.isConnected;
+      return _PlayerScreenState._playerSheetItem(
+        context,
+        Icons.sensors_rounded,
+        'TV로 듣기',
+        on ? const Color(0xFF2589E8) : const Color(0xFF8A8378),
+        textColor,
+        () {
+          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+          final p = context.read<PlayerProvider>();
+          final song = p.currentSong;
+          if (on) {
+            showCastControlSheet(context,
+                nowPlaying: song == null ? null : '${song.titleDisplay} · ${song.artistDisplay}');
+          } else if (song != null) {
+            showCastPickerSheet(context, onPick: (d) async {
+              cast.onTrackEnded = () => p.playNext(); // TV에서 곡 끝나면 다음 곡
+              final ok = await cast.connect(d, song);
+              if (ok) p.player.pause();
+              return ok;
+            });
+          }
+        },
+        trailing: on ? _PlayerScreenState._sheetValue(cast.device?.name ?? '연결됨') : null,
+        arrow: true,
+      );
+    },
+  );
 }
 
 void showPlayerSleepMenu(BuildContext context) {

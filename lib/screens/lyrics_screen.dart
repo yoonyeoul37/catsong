@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -925,7 +926,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (lp.hasLyrics) btn(Icons.ios_share_rounded, () => _shareNow(lp, pp)),
-              btn(Icons.wallpaper_rounded, _pickBackground),
+              btn(CupertinoIcons.camera, _pickBackground),
               PopupMenuButton<String>(
                 tooltip: '',
                 padding: EdgeInsets.zero,

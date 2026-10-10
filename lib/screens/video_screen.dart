@@ -1027,7 +1027,7 @@ class _VideoTileState extends State<_VideoTile> {
           children: [
             // 16:9 썸네일 (회색 칸·큰 ▶ 없이) + 오른쪽 아래 재생 시간 작은 표
             ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(10),
               child: AspectRatio(
                 aspectRatio: 16 / 9,
                 child: Stack(
@@ -1048,11 +1048,12 @@ class _VideoTileState extends State<_VideoTile> {
                     Positioned(
                       right: 6,
                       bottom: 6,
+                      // B안: 사진 위엔 재생 시간만 작게
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF17140F).withOpacity(0.72),
-                          borderRadius: BorderRadius.circular(6),
+                          color: Colors.black.withOpacity(0.45),
+                          borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
                           widget.video.durationFormatted,
@@ -1060,55 +1061,6 @@ class _VideoTileState extends State<_VideoTile> {
                         ),
                       ),
                     ),
-                    // 찍은 곳: 왼쪽 아래 (오른쪽 재생 시간 표와 같은 모양, 흰 선 핀)
-                    if (ctx.watch<VideoProvider>().placeOf(widget.video.uri) case final place?)
-                      Positioned(
-                        left: 6,
-                        bottom: 6,
-                        child: Container(
-                          constraints: const BoxConstraints(maxWidth: 110),
-                          padding: const EdgeInsets.fromLTRB(4, 2, 6, 2),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF17140F).withOpacity(0.72),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.place_outlined, size: 11, color: Colors.white),
-                              const SizedBox(width: 2),
-                              Flexible(
-                                child: Text(
-                                  // 칸이 좁아서 뒤 두 낱말만 (서울 중구 명동 → 중구 명동)
-                                  place.split(' ').length > 2
-                                      ? place.split(' ').sublist(place.split(' ').length - 2).join(' ')
-                                      : place,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(color: Colors.white, fontSize: 10.5, fontWeight: FontWeight.w600),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    // 새로 찍은(아직 안 본) 영상: 왼쪽 위 NEW
-                    if (ctx.watch<VideoProvider>().isNew(widget.video.uri))
-                      Positioned(
-                        left: 6,
-                        top: 6,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary,
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: const Text(
-                            'NEW',
-                            style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 0.4),
-                          ),
-                        ),
-                      ),
                     // 여러 개 선택 중: 고른 건 살짝 어둡게 + 오른쪽 위 동그라미 ✓ (녹음 선택과 같은 먹색)
                     if (widget.selecting) ...[
                       if (widget.selected) Container(color: Colors.black.withOpacity(0.28)),
@@ -1152,73 +1104,89 @@ class _VideoTileState extends State<_VideoTile> {
             // 제목 두 줄까지 (카메라 영상이면 날짜 + 시간)
             Flexible(
               child: Builder(builder: (_) {
+                // NEW는 제목 앞 작은 포인트색 글자, 찍은 곳은 날짜 뒤에 "· 중구 명동"
+                final isNew = context.watch<VideoProvider>().isNew(widget.video.uri);
+                final place = context.watch<VideoProvider>().placeOf(widget.video.uri);
+                final words = place?.split(' ') ?? const <String>[];
+                final shortPlace = place == null
+                    ? null
+                    : (words.length > 2 ? words.sublist(words.length - 2).join(' ') : place);
+                String withPlace(String s) => shortPlace == null ? s : '$s · $shortPlace';
+                Widget title(String text, TextStyle style, {int maxLines = 1}) => Text.rich(
+                      TextSpan(children: [
+                        if (isNew)
+                          TextSpan(
+                            text: 'NEW  ',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontSize: 10.5,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 0.3),
+                          ),
+                        TextSpan(text: text),
+                      ]),
+                      maxLines: maxLines,
+                      overflow: TextOverflow.ellipsis,
+                      style: style,
+                    );
+                // 첫 줄: 날짜(요일) / 둘째 줄: 시간 · 지역 (이름 바꾼 영상은 이름 · 지역)
                 final cd = _cameraDate(widget.video.title);
-                if (cd == null) {
-                  // 이름 바꾼 영상·다운받은 영상: 이름 + 찍은 날짜·요일·시간
+                String? first, time;
+                if (cd != null) {
+                  first = widget.dateMode == 'time' ? cd.time : (widget.dateMode == 'day' ? cd.day : cd.date);
+                  time = cd.time;
+                } else {
                   final ms = context.read<VideoProvider>().dateOf(widget.video.uri);
-                  String? when;
                   if (ms > 0) {
                     final d = DateTime.fromMillisecondsSinceEpoch(ms);
                     const week = ['월', '화', '수', '목', '금', '토', '일'];
+                    final wd = week[d.weekday - 1];
                     final ampm = d.hour < 12 ? '오전' : '오후';
                     final h12 = d.hour % 12 == 0 ? 12 : d.hour % 12;
-                    // 올해면 연도 빼고, 작년 이전이면 숫자로 짧게 (칸에 다 들어가게)
-                    final day = d.year == DateTime.now().year
-                        ? '${d.month}월 ${d.day}일'
-                        : '${d.year}.${d.month}.${d.day}';
-                    final hm = '$ampm $h12:${d.minute.toString().padLeft(2, '0')}';
-                    final wd = week[d.weekday - 1];
-                    // 위 묶음 제목과 겹치는 건 빼기
-                    when = widget.dateMode == 'time'
-                        ? hm
+                    time = '$ampm $h12:${d.minute.toString().padLeft(2, '0')}';
+                    // 위 묶음 제목과 겹치는 건 빼기 (올해면 연도 빼고)
+                    first = widget.dateMode == 'time'
+                        ? time
                         : widget.dateMode == 'day'
-                            ? '${d.day}일 ($wd) $hm'
-                            : '$day ($wd) $hm';
+                            ? '${d.day}일 ($wd)'
+                            : d.year == DateTime.now().year
+                                ? '${d.month}월 ${d.day}일 ($wd)'
+                                : '${d.year}.${d.month}.${d.day} ($wd)';
                   }
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        widget.video.titleDisplay,
-                        maxLines: when == null ? 2 : 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: baseColor, fontSize: 12.5, fontWeight: FontWeight.w600, height: 1.3),
-                      ),
-                      if (when != null)
-                        Text(
-                          when,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: baseColor.withOpacity(0.55), fontSize: 11.5, fontWeight: FontWeight.w500, height: 1.3),
-                        ),
-                    ],
-                  );
                 }
-                // 오늘·어제 묶음: 시간만 (진하게)
-                if (widget.dateMode == 'time') {
-                  return Text(
-                    cd.time,
-                    maxLines: 1,
-                    style: TextStyle(color: baseColor, fontSize: 12.5, fontWeight: FontWeight.w600, height: 1.3),
-                  );
+                final hasName = cd == null; // 이름 바꾼 영상·다운받은 영상
+                final firstStyle =
+                    TextStyle(color: baseColor, fontSize: 12.5, fontWeight: FontWeight.w600, height: 1.3);
+                final subStyle = TextStyle(
+                    color: baseColor.withOpacity(0.55), fontSize: 11.5, fontWeight: FontWeight.w500, height: 1.3);
+                // 둘째 줄 뒤쪽: 이름 있는 영상은 지역(없으면 시간), 카메라 영상은 시간 · 지역
+                final String? tail = hasName
+                    ? (shortPlace ?? (widget.dateMode == 'time' ? null : time))
+                    : (widget.dateMode == 'time' ? shortPlace : withPlace(time ?? ''));
+                if (first == null) {
+                  // 날짜를 모르면 이름만 (두 줄까지)
+                  return title(widget.video.titleDisplay, firstStyle, maxLines: 2);
                 }
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      // 월별 묶음이면 "5일 (월)", 아니면 "2026년 10월 5일 (월)"
-                      widget.dateMode == 'day' ? cd.day : cd.date,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: baseColor, fontSize: 12.5, fontWeight: FontWeight.w600, height: 1.3),
-                    ),
-                    Text(
-                      cd.time,
-                      maxLines: 1,
-                      style: TextStyle(color: baseColor.withOpacity(0.55), fontSize: 11.5, fontWeight: FontWeight.w500, height: 1.3),
-                    ),
+                    title(first, firstStyle),
+                    if (hasName || tail != null)
+                      Text.rich(
+                        TextSpan(children: [
+                          if (hasName)
+                            TextSpan(
+                              text: widget.video.titleDisplay,
+                              style: TextStyle(color: baseColor.withOpacity(0.85), fontWeight: FontWeight.w600),
+                            ),
+                          if (hasName && tail != null) const TextSpan(text: ' · '),
+                          if (tail != null) TextSpan(text: tail),
+                        ]),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: subStyle,
+                      ),
                   ],
                 );
               }),

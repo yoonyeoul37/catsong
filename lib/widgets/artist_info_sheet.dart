@@ -53,6 +53,7 @@ class _Info {
   String? bio;
   String? bioUrl;
   bool bioTranslated = false; // 영어 소개를 자동 번역했는지
+  bool bioEn = false; // 번역 못 하고 영어 그대로인지 (다음에 열 때 다시 번역)
   String? album; // 이 곡이 실린 앨범
   String? albumCover;
   String? release; // 2019-07-12
@@ -80,6 +81,7 @@ class _Info {
         'bio': bio,
         'bioUrl': bioUrl,
         'bioTranslated': bioTranslated,
+        'bioEn': bioEn,
         'album': album,
         'albumCover': albumCover,
         'release': release,
@@ -101,6 +103,7 @@ class _Info {
       ..bio = m['bio'] as String?
       ..bioUrl = m['bioUrl'] as String?
       ..bioTranslated = m['bioTranslated'] == true
+      ..bioEn = m['bioEn'] == true
       ..album = m['album'] as String?
       ..albumCover = m['albumCover'] as String?
       ..release = m['release'] as String?
@@ -387,12 +390,41 @@ class _ArtistApi {
     }
     // 그래도 없으면 영어 소개를 번역 (안 되면 영어 그대로)
     _useWiki(info, en);
-    final t = await _translate(info.bio!, 'en', lang);
-    if (t != null && t.isNotEmpty) {
-      info.bio = t;
-      info.bioTranslated = true;
-    }
+    info.bioEn = true;
+    await translateBio(info, lang);
   }
+
+  static const _nonLatin = {'ko', 'ja', 'zh', 'th', 'hi', 'ru', 'ar', 'he', 'el', 'uk'};
+
+  /// 소개가 아직 영어 그대로인지
+  static bool needsTranslate(_Info info, String lang) {
+    final b = info.bio;
+    if (b == null || b.isEmpty || info.bioTranslated || lang == 'en') return false;
+    if (info.bioEn) return true;
+    if (!_nonLatin.contains(lang)) return false;
+    // 예전에 저장된 정보: 글자 대부분이 영어면 번역 필요
+    final all = RegExp(r'[A-Za-z\u0080-\uFFFF]').allMatches(b).length;
+    final latin = RegExp(r'[A-Za-z]').allMatches(b).length;
+    return all > 0 && latin / all > 0.7;
+  }
+
+  /// 영어 소개 → 폰 언어 (안 되면 영어 그대로 두고 다음에 다시)
+  static Future<bool> translateBio(_Info info, String lang) async {
+    if (!needsTranslate(info, lang)) return false;
+    final t = await _translate(info.bio!, 'en', lang);
+    if (t == null || t.isEmpty) return false;
+    info.bio = t;
+    info.bioTranslated = true;
+    info.bioEn = false;
+    return true;
+  }
+
+  static String _unescape(String s) => s
+      .replaceAll('&#39;', "'")
+      .replaceAll('&quot;', '"')
+      .replaceAll('&lt;', '<')
+      .replaceAll('&gt;', '>')
+      .replaceAll('&amp;', '&');
 
   /// 무료 번역 (MyMemory) — 한 번에 500자까지라 문장 단위로 나눠서
   static Future<String?> _translate(String text, String from, String to) async {
@@ -409,11 +441,16 @@ class _ArtistApi {
     final out = <String>[];
     for (final p in parts.take(4)) {
       final q = p.length > 480 ? p.substring(0, 480) : p;
-      final d = await _get('https://api.mymemory.translated.net/get?langpair=$from%7C$to'
-          '&de=info@knexm.com&q=${Uri.encodeQueryComponent(q)}');
-      final status = d?['responseStatus'];
-      final t = '${(d?['responseData'] as Map?)?['translatedText'] ?? ''}'.trim();
-      if (t.isEmpty || (status is num && status != 200) || t.toUpperCase().contains('MYMEMORY')) return null;
+      String? t;
+      for (var k = 0; k < 2 && t == null; k++) {
+        if (k > 0) await Future.delayed(const Duration(milliseconds: 700));
+        final d = await _get('https://api.mymemory.translated.net/get?langpair=$from%7C$to'
+            '&de=info@knexm.com&q=${Uri.encodeQueryComponent(q)}');
+        final ok = '${d?['responseStatus'] ?? ''}' == '200';
+        final x = _unescape('${(d?['responseData'] as Map?)?['translatedText'] ?? ''}'.trim());
+        if (ok && x.isNotEmpty && x != q && !x.toUpperCase().contains('MYMEMORY')) t = x;
+      }
+      if (t == null) break; // 여기까지 번역된 것만 쓰기
       out.add(t);
     }
     return out.isEmpty ? null : out.join(' ');
@@ -618,6 +655,15 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
               });
             }
             if (!i.creditsDone) _loadCredits(i, p);
+            if (_ArtistApi.needsTranslate(i, lang)) {
+              _ArtistApi.translateBio(i, lang).then((ok) async {
+                if (!ok) return;
+                try {
+                  await p.setString(_key, jsonEncode({'at': '${m['at']}', 'info': i.toJson()}));
+                } catch (_) {}
+                if (mounted) setState(() {});
+              });
+            }
             return;
           }
         }
@@ -957,7 +1003,21 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
 
       // ── 이 가수의 앨범 ──
       if (info.albums.isNotEmpty) {
-        children.add(section('이 가수의 앨범'));
+        children.add(Padding(
+          padding: const EdgeInsets.fromLTRB(4, 18, 4, 8),
+          child: Row(
+            children: [
+              Text('이 가수의 앨범', style: TextStyle(color: hint, fontSize: 12, fontWeight: FontWeight.w700)),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text('(일부 오류가 있을 수 있어요)',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: hint.withOpacity(0.75), fontSize: 11)),
+              ),
+            ],
+          ),
+        ));
         children.add(SizedBox(
           height: 140,
           child: ListView.separated(
@@ -1048,11 +1108,26 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
   /// 사진 없으면 이름 첫 글자
   Widget _initial(String name, Color card, Color hint) {
     final n = name.trim().isEmpty ? _artist : name.trim();
+    // 이름에 따라 늘 같은 차분한 색 (앨범 사진 없는 곡 타일처럼)
+    const palette = [
+      [Color(0xFF8FA8C8), Color(0xFF5E7BA0)], // 하늘
+      [Color(0xFFC9A27E), Color(0xFF9C7652)], // 모래
+      [Color(0xFF9DB89A), Color(0xFF6E8E6B)], // 숲
+      [Color(0xFFC79AA6), Color(0xFF9B6E7B)], // 장미
+      [Color(0xFFA99BC9), Color(0xFF7A6DA0)], // 라벤더
+      [Color(0xFF8DBDBA), Color(0xFF5E908D)], // 바다
+      [Color(0xFFD1B07A), Color(0xFFA6854F)], // 햇살
+      [Color(0xFF9A9188), Color(0xFF6F665D)], // 먹
+    ];
+    final seed = n.codeUnits.fold<int>(0, (a, c) => (a * 31 + c) & 0x7fffffff);
+    final c = palette[seed % palette.length];
     return Container(
-      color: card,
       alignment: Alignment.center,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: c),
+      ),
       child: Text(n.isEmpty ? '?' : n.characters.first.toUpperCase(),
-          style: TextStyle(color: hint, fontSize: 26, fontWeight: FontWeight.w700)),
+          style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w800)),
     );
   }
 }

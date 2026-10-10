@@ -213,6 +213,7 @@ Future<T?> showParanSheet<T>(
   required String title,
   required Widget Function(BuildContext ctx, StateSetter setSheet) builder,
   Widget? header, // 제목 대신 넣을 머리 (곡 정보처럼 사진+제목)
+  Widget Function(BuildContext ctx, StateSetter setSheet)? footer, // 아래에 고정 (내용을 밀어도 늘 보임)
   String closeLabel = '닫기',
 }) {
   final p = _Pal.of(context);
@@ -257,6 +258,11 @@ Future<T?> showParanSheet<T>(
                 ],
               ),
               Flexible(child: SingleChildScrollView(child: builder(ctx, setSheet))),
+              if (footer != null) ...[
+                Container(height: 0.5, margin: const EdgeInsets.only(top: 4), color: p.line),
+                const SizedBox(height: 10),
+                footer(ctx, setSheet),
+              ],
               const SizedBox(height: 10),
             ],
           ),

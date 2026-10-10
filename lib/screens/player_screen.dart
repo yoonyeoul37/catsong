@@ -123,6 +123,8 @@ class _PlayerScreenState extends State<PlayerScreen>
   int _printStyle = 0; // 앨범 스타일 인화 모양: 0 기본, 1 폴라로이드, 2 테이프, 3 겹친 사진, 4 둥근 테두리
   int _autoBgMin = 0; // 0 끄기, 10, 30 (분)
   Timer? _autoBgTimer;
+  int _photoMode = 1; // 파란포토: 0 자동(시간대) · 1 랜덤 · 2 고정
+  String _photoRange = ''; // 랜덤 범위: 카테고리 이름 · 전체 · 하트 · 내 사진 (비어 있으면 지금 사진의 카테고리)
 
   static const Map<String, String> _nightCategoryCover = {
     '봄': 'assets/spring_photo1.png',
@@ -425,7 +427,9 @@ class _PlayerScreenState extends State<PlayerScreen>
       _bgFilter = prefs.getInt('bgFilter') ?? 0;
       if (_bgFilter == 4) _bgFilter = 0; // 예전 인화 설정 → 컬러로
       _printStyle = prefs.getInt('printStyle') ?? 0;
-      _autoBgMin = prefs.getInt('autoBgMin') ?? 0;
+      _autoBgMin = 0; // (예전 10분·30분마다 바꾸기 → 곡마다 바뀌는 자동·랜덤으로 대신)
+      _photoMode = prefs.getInt('paranPhotoMode') ?? 1;
+      _photoRange = prefs.getString('paranPhotoRange') ?? '';
       _styleLoaded = true;
     });
     _restartAutoBgTimer();
@@ -610,12 +614,7 @@ class _PlayerScreenState extends State<PlayerScreen>
   void _autoChangeBg() {
     if (!mounted || _albumArtStyle != 6) return;
     if (!context.read<PlayerProvider>().isPlaying) return;
-    // 하트한 사진이 2장 이상이면 그중에서, 아니면 지금 사진과 같은 카테고리에서
-    final List<String> pool = _nightFavPaths.length >= 2
-        ? _nightFavPaths.toList()
-        : _nightCategoryPhotos.values
-            .firstWhere((l) => l.contains(_nightBgPath), orElse: () => const [])
-            .toList();
+    final List<String> pool = _photoPool();
     pool.remove(_nightBgPath);
     if (pool.isEmpty) return;
     final next = pool[math.Random().nextInt(pool.length)];
@@ -631,8 +630,9 @@ class _PlayerScreenState extends State<PlayerScreen>
     });
   }
 
-  Widget _bgFiltered(Widget child) {
-    if (_bgFilter == 1) {
+  Widget _bgFiltered(Widget child, [int? only]) {
+    final f = only ?? _bgFilter; // only: 미리보기용 (그 색감으로)
+    if (f == 1) {
       return ColorFiltered(
         colorFilter: const ColorFilter.matrix(<double>[
           0.2126, 0.7152, 0.0722, 0, 0,
@@ -643,7 +643,7 @@ class _PlayerScreenState extends State<PlayerScreen>
         child: child,
       );
     }
-    if (_bgFilter == 2) {
+    if (f == 2) {
       return ColorFiltered(
         colorFilter: const ColorFilter.matrix(<double>[
           0.393, 0.769, 0.189, 0, 0,
@@ -655,7 +655,7 @@ class _PlayerScreenState extends State<PlayerScreen>
       );
     }
 
-    if (_bgFilter == 3) {
+    if (f == 3) {
       // 필름: 바랜 따뜻한 색 + 가장자리 어둡게 + 필름 입자
       return Stack(
         fit: StackFit.expand,
@@ -691,6 +691,70 @@ class _PlayerScreenState extends State<PlayerScreen>
     return child;
   }
 
+  // ───── 파란포토: 자동(시간대) · 랜덤 · 고정 ─────
+
+  /// 지금 시각의 시간대 (노을은 계절 따라: 여름 19시 · 겨울 17시 · 그 밖 18시부터 1시간 반)
+  static String _timeCategory([DateTime? now]) {
+    final t = now ?? DateTime.now();
+    final h = t.hour + t.minute / 60;
+    final dusk = (t.month >= 5 && t.month <= 8) ? 19.0 : ((t.month >= 11 || t.month <= 2) ? 17.0 : 18.0);
+    if (h >= 4 && h < 7) return '새벽';
+    if (h >= 7 && h < 12) return '아침';
+    if (h >= 12 && h < dusk) return '오후';
+    if (h >= dusk && h < dusk + 1.5) return '노을';
+    if (h >= dusk + 1.5 && h < 23) return '밤';
+    return '깊은 밤';
+  }
+
+  /// 사진이 들어 있는 카테고리 (없으면 null)
+  String? _catOf(String path) {
+    for (final e in _nightCategoryPhotos.entries) {
+      if (e.value.contains(path)) return e.key;
+    }
+    return null;
+  }
+
+  /// 다음 곡에 보여 줄 사진 후보 (고정이면 빈 목록)
+  List<String> _photoPool() {
+    if (_photoMode == 2) return <String>[];
+    if (_photoMode == 0) {
+      final list = _nightCategoryPhotos[_timeCategory()];
+      if (list != null && list.isNotEmpty) return List.of(list);
+      // 시간대 사진이 아직 없으면 랜덤처럼
+    }
+    final r = _photoRange;
+    if (r == '전체') return _nightCategoryPhotos.values.expand((e) => e).toList();
+    if (r == '하트') return _nightFavPaths.where((p) => p.startsWith('assets/')).toList();
+    if (r == '내 사진') return _nightFavPaths.where((p) => !p.startsWith('assets/')).toList();
+    final list = _nightCategoryPhotos[r] ?? _nightCategoryPhotos[_catOf(_nightBgPath) ?? ''];
+    return List.of(list ?? const <String>[]);
+  }
+
+  Future<void> _setPhotoMode(int m) async {
+    setState(() => _photoMode = m);
+    final p = await SharedPreferences.getInstance();
+    await p.setInt('paranPhotoMode', m);
+    // 자동으로 바꾸면 바로 지금 시간대 사진으로
+    if (m == 0) {
+      final list = _nightCategoryPhotos[_timeCategory()];
+      if (list != null && list.isNotEmpty && !list.contains(_nightBgPath)) {
+        final next = list[math.Random().nextInt(list.length)];
+        if (!mounted) return;
+        setState(() {
+          _nightBgPath = next;
+          _nightBgIsFile = false;
+        });
+        _saveNightBg(next);
+      }
+    }
+  }
+
+  Future<void> _setPhotoRange(String r) async {
+    _photoRange = r;
+    final p = await SharedPreferences.getInstance();
+    await p.setString('paranPhotoRange', r);
+  }
+
   /// 파란포토 사진 고르기 창 (가사 배경 창과 같은 모양: 아래에서 올라오고, 사진은 3장씩 위아래로)
   void _openParanPhotoSheet() {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -706,6 +770,11 @@ class _PlayerScreenState extends State<PlayerScreen>
         }
       }
     }
+    if (_photoMode == 0 && (_nightCategoryPhotos[_timeCategory()] ?? const []).isNotEmpty) {
+      cat = _timeCategory();
+    } else if (_photoMode == 1 && _photoRange.isNotEmpty) {
+      cat = _photoRange;
+    }
     bool manage = false; // 내 사진 관리(✕) 모드
 
     showParanSheet(
@@ -717,46 +786,8 @@ class _PlayerScreenState extends State<PlayerScreen>
         final sub = dark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
         final chipBg = dark ? const Color(0xFF32302C) : Colors.white;
         final chipLine = dark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
+        final segBg = dark ? const Color(0xFF2E2C28) : const Color(0xFFEDE6D8);
         void tick() => const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-
-        // 작은 칩 (고른 것은 먹색, 다크 모드는 크림색)
-        Widget chip(String label, bool on, VoidCallback onTap) => GestureDetector(
-              onTap: () {
-                tick();
-                onTap();
-                setSheet(() {});
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
-                decoration: BoxDecoration(
-                  color: on ? ink : chipBg,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: on ? ink : chipLine),
-                ),
-                child: Text(label,
-                    style: TextStyle(
-                        color: on ? (dark ? const Color(0xFF17140F) : Colors.white) : sub,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600)),
-              ),
-            );
-
-        // 카드 안 한 줄 (아이콘 · 이름 · 오른쪽 칩들)
-        Widget optionRow(IconData icon, String title, List<Widget> chips) => Padding(
-              padding: const EdgeInsets.fromLTRB(14, 10, 12, 10),
-              child: Row(
-                children: [
-                  SizedBox(width: 22, child: Icon(icon, color: sub, size: 20)),
-                  const SizedBox(width: 10),
-                  Text(title, style: TextStyle(color: ink, fontSize: 14, fontWeight: FontWeight.w500)),
-                  const Spacer(),
-                  for (var i = 0; i < chips.length; i++) ...[
-                    if (i > 0) const SizedBox(width: 6),
-                    chips[i],
-                  ],
-                ],
-              ),
-            );
 
         // 내 사진 지우기 (지금 배경이면 다른 사진으로)
         void removeMine(String path) {
@@ -784,6 +815,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 ? null
                 : () {
                     tick();
+                    if (_photoMode == 1) _setPhotoRange(cat); // 랜덤이면 이 카테고리 안에서
                     setState(() {
                       _nightBgPath = path;
                       _nightBgIsFile = isFile;
@@ -885,15 +917,59 @@ class _PlayerScreenState extends State<PlayerScreen>
               ),
             );
 
-        final cats = <String>['전체', ..._nightCategoryPhotos.keys, '내 사진'];
         final mine = _nightFavPaths.where((p) => !p.startsWith('assets/')).toList();
+        final favAssets = _nightFavPaths.where((p) => p.startsWith('assets/')).toList();
+        final cats = <String>['전체', '내 사진', ..._nightCategoryPhotos.keys, if (favAssets.isNotEmpty) '하트'];
+        if (!cats.contains(cat)) cat = '전체';
+
+        // 카테고리 작은 사진
+        Widget coverOf(String c) {
+          if (c == '내 사진') {
+            if (mine.isNotEmpty) {
+              return Image.file(File(mine.first),
+                  fit: BoxFit.cover,
+                  cacheWidth: 120,
+                  errorBuilder: (_, __, ___) => Container(color: chipBg));
+            }
+            return Container(color: chipBg, child: Icon(Icons.add_photo_alternate_outlined, color: sub, size: 22));
+          }
+          final String? p = c == '전체'
+              ? (_nightCategoryPhotos.values.isNotEmpty ? _nightCategoryPhotos.values.first.first : null)
+              : c == '하트'
+                  ? (favAssets.isNotEmpty ? favAssets.first : null)
+                  : (_nightCategoryCover[c] ?? _nightCategoryPhotos[c]?.first);
+          if (p == null) return Container(color: chipBg);
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              paranPhoto(p, thumb: true, fit: BoxFit.cover),
+              if (c == '하트')
+                const Center(
+                  child: Icon(Icons.favorite_rounded,
+                      color: Colors.white, size: 20, shadows: [Shadow(color: Colors.black45, blurRadius: 4)]),
+                ),
+            ],
+          );
+        }
+
+        // 모드 설명 한 줄
+        final tc = _timeCategory();
+        final hasTime = (_nightCategoryPhotos[tc] ?? const <String>[]).isNotEmpty;
+        final rangeName = _photoRange.isEmpty ? (_catOf(_nightBgPath) ?? '같은 카테고리') : _photoRange;
+        final modeHint = _photoMode == 0
+            ? (hasTime ? '지금은 $tc · 곡마다 $tc 사진으로 바뀌어요' : '시간대 사진을 준비 중이에요 · 지금은 고른 카테고리 안에서 바뀌어요')
+            : _photoMode == 1
+                ? '곡마다 "$rangeName" 사진 중에서 바뀌어요'
+                : '고른 사진 한 장만 계속 보여요';
         final List<Widget> tiles;
         if (cat == '내 사진') {
           tiles = [if (!manage) addTile(), for (final f in mine) photoTile(f, isFile: true)];
         } else {
           final photos = cat == '전체'
               ? _nightCategoryPhotos.values.expand((e) => e).toList()
-              : (_nightCategoryPhotos[cat] ?? const <String>[]);
+              : cat == '하트'
+                  ? favAssets
+                  : (_nightCategoryPhotos[cat] ?? const <String>[]);
           tiles = [for (final p in photos) photoTile(p)];
         }
 
@@ -901,41 +977,95 @@ class _PlayerScreenState extends State<PlayerScreen>
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // 색감 · 자동으로 바꾸기
-            ParanCard(
-              children: [
-                optionRow(Icons.palette_outlined, '색감', [
-                  chip('컬러', _bgFilter == 0, () => _setBgFilter(0)),
-                  chip('흑백', _bgFilter == 1, () => _setBgFilter(1)),
-                  chip('세피아', _bgFilter == 2, () => _setBgFilter(2)),
-                  chip('필름', _bgFilter == 3, () => _setBgFilter(3)),
-                ]),
-                optionRow(Icons.schedule_rounded, '자동 바꾸기', [
-                  chip('끄기', _autoBgMin == 0, () => _setAutoBg(0)),
-                  chip('10분', _autoBgMin == 10, () => _setAutoBg(10)),
-                  chip('30분', _autoBgMin == 30, () => _setAutoBg(30)),
-                ]),
-              ],
+            // 자동 · 랜덤 · 고정 (한 덩어리 칸, 고른 칸만 하얗게)
+            Container(
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(color: segBg, borderRadius: BorderRadius.circular(12)),
+              child: Row(
+                children: [
+                  for (final m in const [(0, '자동'), (1, '랜덤'), (2, '고정')])
+                    Expanded(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          tick();
+                          _setPhotoMode(m.$1).then((_) {
+                            if (ctx.mounted) setSheet(() {});
+                          });
+                          setSheet(() {});
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 160),
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          decoration: BoxDecoration(
+                            color: _photoMode == m.$1 ? chipBg : Colors.transparent,
+                            borderRadius: BorderRadius.circular(9),
+                            boxShadow: _photoMode == m.$1
+                                ? [BoxShadow(color: Colors.black.withOpacity(0.10), blurRadius: 3, offset: const Offset(0, 1))]
+                                : null,
+                          ),
+                          child: Text(m.$2,
+                              style: TextStyle(
+                                  color: _photoMode == m.$1 ? ink : sub,
+                                  fontSize: 13,
+                                  fontWeight: _photoMode == m.$1 ? FontWeight.w800 : FontWeight.w600)),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
-              child: Text('하트한 사진이 2장 이상이면 그 사진들 안에서 바뀌어요',
-                  style: TextStyle(color: sub, fontSize: 11.5)),
+              child: Text(modeHint, style: TextStyle(color: sub, fontSize: 11.5)),
             ),
-            const SizedBox(height: 16),
-            // 카테고리 한 줄
+            const SizedBox(height: 14),
+            // 카테고리: 작은 사진 + 이름 (옆으로 넘기기)
             SizedBox(
-              height: 32,
+              height: 84,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: cats.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 6),
-                itemBuilder: (_, i) => Center(
-                  child: chip(cats[i], cat == cats[i], () {
-                    cat = cats[i];
-                    manage = false;
-                  }),
-                ),
+                separatorBuilder: (_, __) => const SizedBox(width: 10),
+                itemBuilder: (_, i) {
+                  final c = cats[i];
+                  final on = cat == c;
+                  return GestureDetector(
+                    onTap: () {
+                      tick();
+                      cat = c;
+                      manage = false;
+                      if (_photoMode == 1) _setPhotoRange(c); // 랜덤이면 이 카테고리 안에서
+                      setSheet(() {});
+                    },
+                    child: SizedBox(
+                      width: 58,
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 58,
+                            height: 58,
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(color: on ? ink : Colors.transparent, width: 2),
+                            ),
+                            child: ClipRRect(borderRadius: BorderRadius.circular(10), child: coverOf(c)),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(c,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: on ? ink : sub,
+                                  fontSize: 11.5,
+                                  fontWeight: on ? FontWeight.w800 : FontWeight.w600)),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
             // 내 사진: 관리 / 완료
@@ -972,9 +1102,65 @@ class _PlayerScreenState extends State<PlayerScreen>
                 childAspectRatio: 9 / 16,
                 children: tiles,
               ),
+            const SizedBox(height: 6),
           ],
         );
       },
+      // 색감: 아래에 고정 (사진을 밀어도 늘 보이게)
+      footer: (ctx, setSheet) => _toneBar(setSheet),
+    );
+  }
+
+  /// 색감 고르기: 지금 사진을 컬러 · 흑백 · 세피아 · 필름으로 작게 미리보기
+  Widget _toneBar(StateSetter setSheet) {
+    final dark = context.read<ThemeProvider>().isDarkMode;
+    final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final sub = dark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
+    Widget photo() => _nightBgIsFile
+        ? Image.file(File(_nightBgPath),
+            fit: BoxFit.cover,
+            cacheWidth: 200,
+            errorBuilder: (_, __, ___) => Container(color: const Color(0x22000000)))
+        : paranPhoto(_nightBgPath, thumb: true, fit: BoxFit.cover);
+    return Row(
+      children: [
+        for (final t in const [(0, '컬러'), (1, '흑백'), (2, '세피아'), (3, '필름')]) ...[
+          if (t.$1 > 0) const SizedBox(width: 8),
+          Expanded(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                _setBgFilter(t.$1);
+                setSheet(() {});
+              },
+              child: Column(
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 160),
+                    height: 46,
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: _bgFilter == t.$1 ? ink : Colors.transparent, width: 2),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(9),
+                      child: SizedBox.expand(child: _bgFiltered(photo(), t.$1)),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(t.$2,
+                      style: TextStyle(
+                          color: _bgFilter == t.$1 ? ink : sub,
+                          fontSize: 11.5,
+                          fontWeight: _bgFilter == t.$1 ? FontWeight.w800 : FontWeight.w600)),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ],
     );
   }
 
@@ -1156,13 +1342,8 @@ class _PlayerScreenState extends State<PlayerScreen>
       final isFirst = _lastBgSongUri == null;
       _lastBgSongUri = song.uri;
       if (!isFirst && _albumArtStyle == 6) {
-        // 하트한 사진이 2장 이상이면 그중에서, 아니면 지금 사진과 같은 카테고리에서
-        final List<String> options = (_nightFavPaths.length >= 2
-                ? _nightFavPaths.toList()
-                : _nightCategoryPhotos.values
-                    .firstWhere((l) => l.contains(_nightBgPath), orElse: () => const [])
-                    .toList())
-          ..remove(_nightBgPath);
+        // 자동: 지금 시간대 · 랜덤: 고른 범위 · 고정: 안 바꿈
+        final List<String> options = _photoPool()..remove(_nightBgPath);
         if (options.isNotEmpty) {
           final next = options[math.Random().nextInt(options.length)];
           final nextIsFile = !next.startsWith('assets/');
@@ -1494,7 +1675,7 @@ class _PlayerScreenState extends State<PlayerScreen>
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(cast.isConnected ? Icons.cast_connected : Icons.cast,
+                  Icon(Icons.sensors_rounded,
                       color: Colors.white.withOpacity(0.85), size: 18),
                   const SizedBox(width: 6),
                   Flexible(
@@ -1603,9 +1784,9 @@ class _PlayerScreenState extends State<PlayerScreen>
                 width: 36,
                 height: 40,
                 child: Icon(
-                  Icons.photo_outlined,
+                  CupertinoIcons.camera,
                   color: baseColor,
-                  size: 20,
+                  size: 21,
                 ),
               ),
             ),
@@ -1628,9 +1809,9 @@ class _PlayerScreenState extends State<PlayerScreen>
                   width: 36,
                   height: 40,
                   child: Icon(
-                    cast.isConnected ? Icons.cast_connected : Icons.cast,
+                    Icons.sensors_rounded, // 연결되면 하늘색
                     color: cast.isConnected ? const Color(0xFF7FB8F0) : baseColor,
-                    size: 20,
+                    size: 21,
                   ),
                 ),
               );
@@ -1647,7 +1828,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  Icon(Icons.more_vert, color: baseColor, size: 20),
+                  Icon(Icons.more_vert_rounded, color: baseColor, size: 20),
                   if (!_hasSeenParanPhoto)
                     Positioned(
                       top: -1,

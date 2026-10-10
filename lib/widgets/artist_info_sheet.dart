@@ -643,12 +643,30 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
         );
 
     final children = <Widget>[
-      Center(
-        child: Container(
-          width: 36,
-          height: 4,
-          margin: const EdgeInsets.only(bottom: 14),
-          decoration: BoxDecoration(color: hint.withOpacity(0.4), borderRadius: BorderRadius.circular(2)),
+      // 손잡이 + 오른쪽 위 ✕ (손으로 내리는 걸 모르는 분도 닫을 수 있게)
+      SizedBox(
+        height: 30,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(color: hint.withOpacity(0.4), borderRadius: BorderRadius.circular(2)),
+              ),
+            ),
+            Positioned(
+              right: -8,
+              top: -8,
+              child: IconButton(
+                onPressed: () => Navigator.pop(context),
+                tooltip: '닫기',
+                icon: Icon(Icons.close_rounded, color: hint, size: 24),
+              ),
+            ),
+          ],
         ),
       ),
     ];

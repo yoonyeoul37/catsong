@@ -73,6 +73,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
   static int? _lastBg; // 한 번 읽은 배경 번호 기억 (다음에 열 때 바로)
   int _bg = _lastBg ?? 1; // 1~11 = 사진
   static bool _random = false; // 🔀 랜덤: 노래가 바뀔 때마다 다른 사진
+  static Set<String> _picks = {}; // 🔀 랜덤일 때 고른 사진 (파일 이름, 있으면 이 사진들만)
   static String _randomSongKey = ''; // 랜덤 사진을 고른 노래 (같은 노래 동안은 그대로)
   static String? _myBg; // 내 사진 배경 (파일 경로) — 있으면 이게 먼저
   static bool _myLight = false; // 내 사진이 밝은지 (밝으면 먹색 글자, 어두우면 흰 글자)
@@ -141,6 +142,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
       // 고른 사진은 파일 이름으로 기억 (예전 번호로 저장한 것도 알아보기)
       // 🔀 랜덤을 골라뒀으면 사진 고정 대신 랜덤 (노래마다 바뀜)
       final random = p.getBool('lyricsBgRandom') ?? false;
+      _picks = (p.getStringList('lyricsBgPicks') ?? []).toSet();
       if (random != _random && mounted) setState(() => _random = random);
       // 내 사진 목록 (지워진 파일은 빼기)
       _myPhotos = (p.getStringList('lyricsMyPhotos') ?? []).where((f) => File(f).existsSync()).toList();
@@ -272,6 +274,16 @@ class _LyricsScreenState extends State<LyricsScreen> {
 
   /// 🔀 지금 사진과 다른 사진 하나 고르기
   int _randomIndex() {
+    // 고른 사진이 있으면 그 사진들 중에서
+    final picked = <int>[
+      for (var k = 0; k < _bgs.length; k++)
+        if (_picks.contains(_bgs[k].file)) k + 1
+    ];
+    if (picked.isNotEmpty) {
+      final others = picked.where((i) => i != _bg).toList();
+      final from = others.isEmpty ? picked : others;
+      return from[math.Random().nextInt(from.length)];
+    }
     final n = _kLyricsBgCount;
     if (n <= 1) return 1;
     var i = _bg;
@@ -675,10 +687,28 @@ class _LyricsScreenState extends State<LyricsScreen> {
       title: '가사 배경',
       builder: (ctx, setSheet) {
         Widget tile(int i) {
-          final selected = !_random && _myBg == null && _bg == i;
+          final file = _bgs[(i - 1).clamp(0, _bgs.length - 1)].file;
+          final picked = _random && _picks.contains(file);
+          final selected = (!_random && _myBg == null && _bg == i) || picked;
           return GestureDetector(
             onTap: () async {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              // 노래마다 바꾸기 켜져 있으면: 고르기 / 한 번 더 누르면 빼기 (창은 그대로)
+              if (_random) {
+                setState(() {
+                  if (picked) {
+                    _picks.remove(file);
+                  } else {
+                    _picks.add(file);
+                    _bg = i; // 고르면 바로 보이게
+                    _lastBg = i;
+                  }
+                });
+                setSheet(() {});
+                final p = await SharedPreferences.getInstance();
+                await p.setStringList('lyricsBgPicks', _picks.toList());
+                return;
+              }
               setState(() {
                 _bg = i;
                 _myBg = null; // 파란소리 사진을 고르면 내 사진은 끄기
@@ -723,10 +753,13 @@ class _LyricsScreenState extends State<LyricsScreen> {
                           errorWidget: (_, __, ___) => Container(color: const Color(0x22000000)),
                         ),
                       if (selected)
-                        const Positioned(
+                        Positioned(
                           right: 6,
                           top: 6,
-                          child: Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
+                          child: Icon(Icons.check_circle_rounded,
+                              color: picked ? Theme.of(ctx).colorScheme.primary : Colors.white,
+                              size: 22,
+                              shadows: const [Shadow(color: Colors.black38, blurRadius: 4)]),
                         ),
                     ],
                   ),
@@ -846,7 +879,13 @@ class _LyricsScreenState extends State<LyricsScreen> {
                               Text('노래마다 바꾸기',
                                   style: TextStyle(color: ink, fontSize: 14, fontWeight: FontWeight.w500)),
                               const SizedBox(height: 2),
-                              Text('노래가 바뀔 때마다 다른 사진', style: TextStyle(color: sub, fontSize: 11.5)),
+                              Text(
+                                  !_random
+                                      ? '노래가 바뀔 때마다 다른 사진'
+                                      : _picks.isEmpty
+                                          ? '아래 사진을 누르면 고른 사진만 나와요'
+                                          : '고른 사진 ${_picks.length}장 중에서 · 다시 누르면 빠져요',
+                                  style: TextStyle(color: sub, fontSize: 11.5)),
                             ],
                           ),
                         ),

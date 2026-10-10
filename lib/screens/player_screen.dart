@@ -125,6 +125,7 @@ class _PlayerScreenState extends State<PlayerScreen>
   Timer? _autoBgTimer;
   int _photoMode = 1; // 파란포토: 0 자동(시간대) · 1 랜덤 · 2 고정
   String _photoRange = ''; // 랜덤 범위: 카테고리 이름 · 전체 · 하트 · 내 사진 (비어 있으면 지금 사진의 카테고리)
+  Set<String> _photoPicks = {}; // 랜덤일 때 고른 사진 (있으면 곡마다 이 사진들만)
 
   static const Map<String, String> _nightCategoryCover = {
     '봄': 'assets/spring_photo1.png',
@@ -432,6 +433,9 @@ class _PlayerScreenState extends State<PlayerScreen>
       _autoBgMin = 0; // (예전 10분·30분마다 바꾸기 → 곡마다 바뀌는 자동·랜덤으로 대신)
       _photoMode = prefs.getInt('paranPhotoMode') ?? 1;
       _photoRange = prefs.getString('paranPhotoRange') ?? '';
+      final picks = prefs.getStringList('paranPhotoPicks');
+      // 처음엔 예전에 하트 누른 사진을 고른 사진으로
+      _photoPicks = picks != null ? picks.toSet() : _nightFavPaths.where((p) => p.startsWith('assets/')).toSet();
       _styleLoaded = true;
     });
     _restartAutoBgTimer();
@@ -724,6 +728,9 @@ class _PlayerScreenState extends State<PlayerScreen>
       if (list != null && list.isNotEmpty) return List.of(list);
       // 시간대 사진이 아직 없으면 랜덤처럼
     }
+    // 랜덤: 고른 사진이 있으면 그 사진들만
+    final picks = _photoPicks.where((p) => p.startsWith('assets/') || File(p).existsSync()).toList();
+    if (picks.isNotEmpty) return picks;
     final r = _photoRange;
     if (r == '전체') return _nightCategoryPhotos.values.expand((e) => e).toList();
     if (r == '하트') return _nightFavPaths.where((p) => p.startsWith('assets/')).toList();
@@ -821,6 +828,9 @@ class _PlayerScreenState extends State<PlayerScreen>
           tick();
           setState(() {
             _nightFavPaths.remove(path);
+            _photoPicks.remove(path);
+            SharedPreferences.getInstance()
+                .then((p) => p.setStringList('paranPhotoPicks', _photoPicks.toList()));
             if (_nightBgPath == path) {
               final next = _nightFavPaths.isNotEmpty ? _nightFavPaths.first : 'assets/spring_photo1.png';
               _nightBgPath = next;
@@ -833,16 +843,35 @@ class _PlayerScreenState extends State<PlayerScreen>
           setSheet(() {});
         }
 
-        // 사진 한 장: 누르면 배경으로 + 창 닫기, 오른쪽 위 하트는 "자동으로 바꿀 때 쓸 사진"
+        // 사진 한 장
+        //  · 랜덤: 누르면 "고른 사진"에 넣기 / 한 번 더 누르면 빼기 (창은 그대로) — 고른 사진이 있으면 곡마다 그 사진들만
+        //  · 자동·고정: 누르면 배경으로 + 창 닫기
         Widget photoTile(String path, {bool isFile = false}) {
           final selected = _nightBgPath == path;
-          final fav = _nightFavPaths.contains(path);
+          final picked = _photoPicks.contains(path);
+          final pickMode = _photoMode == 1 && !manage;
+          final on = pickMode ? picked : selected;
           return GestureDetector(
             onTap: manage
                 ? null
                 : () {
                     tick();
-                    if (_photoMode == 1) _setPhotoRange(cat); // 랜덤이면 이 카테고리 안에서
+                    if (pickMode) {
+                      setState(() {
+                        if (picked) {
+                          _photoPicks.remove(path);
+                        } else {
+                          _photoPicks.add(path);
+                          _nightBgPath = path; // 고르면 바로 배경으로 보이게
+                          _nightBgIsFile = isFile;
+                        }
+                      });
+                      if (!picked) _saveNightBg(path, isFile: isFile);
+                      SharedPreferences.getInstance()
+                          .then((p) => p.setStringList('paranPhotoPicks', _photoPicks.toList()));
+                      setSheet(() {});
+                      return;
+                    }
                     setState(() {
                       _nightBgPath = path;
                       _nightBgIsFile = isFile;
@@ -853,7 +882,7 @@ class _PlayerScreenState extends State<PlayerScreen>
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: selected && !manage ? ink : Colors.transparent, width: 2.5),
+                border: Border.all(color: on && !manage ? ink : Colors.transparent, width: 2.5),
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
@@ -866,11 +895,14 @@ class _PlayerScreenState extends State<PlayerScreen>
                             cacheWidth: 270, // 작게 미리보기
                             errorBuilder: (_, __, ___) => Container(color: const Color(0x22000000)))
                         : paranPhoto(path, thumb: true, fit: BoxFit.cover),
-                    if (selected && !manage)
-                      const Positioned(
-                        left: 6,
+                    if (on && !manage)
+                      Positioned(
+                        right: 6,
                         top: 6,
-                        child: Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
+                        child: Icon(Icons.check_circle_rounded,
+                            color: pickMode ? Theme.of(ctx).colorScheme.primary : Colors.white,
+                            size: 22,
+                            shadows: const [Shadow(color: Colors.black38, blurRadius: 4)]),
                       ),
                     if (manage)
                       Positioned(
@@ -883,28 +915,6 @@ class _PlayerScreenState extends State<PlayerScreen>
                             height: 26,
                             decoration: const BoxDecoration(color: Color(0xB317140F), shape: BoxShape.circle),
                             child: const Icon(Icons.close_rounded, size: 16, color: Colors.white),
-                          ),
-                        ),
-                      )
-                    else if (!isFile)
-                      Positioned(
-                        right: 0,
-                        top: 0,
-                        child: GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () {
-                            tick();
-                            _toggleNightFav(path);
-                            setSheet(() {});
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(6),
-                            child: Icon(
-                              fav ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                              size: 18,
-                              color: fav ? const Color(0xFFE05A4F) : Colors.white,
-                              shadows: const [Shadow(color: Colors.black45, blurRadius: 4)],
-                            ),
                           ),
                         ),
                       ),
@@ -945,12 +955,16 @@ class _PlayerScreenState extends State<PlayerScreen>
             );
 
         final mine = _nightFavPaths.where((p) => !p.startsWith('assets/')).toList();
-        final favAssets = _nightFavPaths.where((p) => p.startsWith('assets/')).toList();
-        final cats = <String>['전체', '내 사진', ..._nightCategoryPhotos.keys, if (favAssets.isNotEmpty) '하트'];
+        final picksNow = _photoPicks.where((p) => p.startsWith('assets/') || File(p).existsSync()).toList();
+        final cats = <String>['전체', '내 사진', if (picksNow.isNotEmpty) '고른 사진', ..._nightCategoryPhotos.keys];
         if (!cats.contains(cat)) cat = '전체';
 
         // 카테고리 작은 사진
         Widget coverOf(String c) {
+          if (c == '고른 사진' && picksNow.isNotEmpty && !picksNow.first.startsWith('assets/')) {
+            return Image.file(File(picksNow.first),
+                fit: BoxFit.cover, cacheWidth: 120, errorBuilder: (_, __, ___) => Container(color: chipBg));
+          }
           if (c == '내 사진') {
             if (mine.isNotEmpty) {
               return Image.file(File(mine.first),
@@ -962,17 +976,17 @@ class _PlayerScreenState extends State<PlayerScreen>
           }
           final String? p = c == '전체'
               ? (_nightCategoryPhotos.values.isNotEmpty ? _nightCategoryPhotos.values.first.first : null)
-              : c == '하트'
-                  ? (favAssets.isNotEmpty ? favAssets.first : null)
+              : c == '고른 사진'
+                  ? (picksNow.isNotEmpty ? picksNow.first : null)
                   : (_nightCategoryCover[c] ?? _nightCategoryPhotos[c]?.first);
           if (p == null) return Container(color: chipBg);
           return Stack(
             fit: StackFit.expand,
             children: [
               paranPhoto(p, thumb: true, fit: BoxFit.cover),
-              if (c == '하트')
+              if (c == '고른 사진')
                 const Center(
-                  child: Icon(Icons.favorite_rounded,
+                  child: Icon(Icons.check_circle_rounded,
                       color: Colors.white, size: 20, shadows: [Shadow(color: Colors.black45, blurRadius: 4)]),
                 ),
             ],
@@ -986,7 +1000,9 @@ class _PlayerScreenState extends State<PlayerScreen>
         final modeHint = _photoMode == 0
             ? (hasTime ? '지금은 $tc · 곡마다 $tc 사진으로 바뀌어요' : '시간대 사진을 준비 중이에요 · 지금은 고른 카테고리 안에서 바뀌어요')
             : _photoMode == 1
-                ? '곡마다 "$rangeName" 사진 중에서 바뀌어요'
+                ? (picksNow.isNotEmpty
+                    ? '고른 사진 ${picksNow.length}장이 곡마다 바뀌어요 · 다시 누르면 빠져요'
+                    : '사진을 누르면 고른 사진만 나와요 · 안 고르면 "$rangeName" 중에서')
                 : '고른 사진 한 장만 계속 보여요';
         final List<Widget> tiles;
         if (cat == '내 사진') {
@@ -994,10 +1010,10 @@ class _PlayerScreenState extends State<PlayerScreen>
         } else {
           final photos = cat == '전체'
               ? _nightCategoryPhotos.values.expand((e) => e).toList()
-              : cat == '하트'
-                  ? favAssets
+              : cat == '고른 사진'
+                  ? picksNow
                   : (_nightCategoryPhotos[cat] ?? const <String>[]);
-          tiles = [for (final p in photos) photoTile(p)];
+          tiles = [for (final p in photos) photoTile(p, isFile: !p.startsWith('assets/'))];
         }
 
         return Column(
@@ -1891,7 +1907,7 @@ class _PlayerScreenState extends State<PlayerScreen>
           top: false,
           child: Container(
             margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-            constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.7),
+            constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.9),
             decoration: BoxDecoration(
               color: sheetColor,
               borderRadius: BorderRadius.circular(22),
@@ -3063,7 +3079,8 @@ class _PlayerScreenState extends State<PlayerScreen>
                             color: baseColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w900,
-                            letterSpacing: -0.5),
+                            letterSpacing: -0.5,
+                            shadows: const [Shadow(color: Color(0x59000000), blurRadius: 6)]),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis),
                     const SizedBox(height: 0),
@@ -3076,7 +3093,9 @@ class _PlayerScreenState extends State<PlayerScreen>
                           Flexible(
                             child: Text(song.artistDisplay,
                                 style: TextStyle(
-                                    color: baseColor.withOpacity(0.7), fontSize: 11),
+                                    color: baseColor.withOpacity(0.8),
+                                    fontSize: 11,
+                                    shadows: const [Shadow(color: Color(0x59000000), blurRadius: 6)]),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis),
                           ),
@@ -3093,7 +3112,7 @@ class _PlayerScreenState extends State<PlayerScreen>
               // 하트: 켤 때 통통 + 작은 하트 셋이 위로 떠올라요
               _HeartButton(
                 isFav: isFav,
-                offColor: baseColor.withOpacity(0.6),
+                offColor: baseColor.withOpacity(0.92),
                 onTap: () {
                   const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                   musicProvider.toggleFavorite(song);
@@ -4011,6 +4030,11 @@ class _HeartButtonState extends State<_HeartButton> with SingleTickerProviderSta
                     widget.isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
                     color: widget.isFav ? _red : widget.offColor,
                     size: 20,
+                    // 밝은 사진에서도 보이게 (어두운 사진에선 거의 티 안 남)
+                    shadows: const [
+                      Shadow(color: Color(0x73000000), blurRadius: 6),
+                      Shadow(color: Color(0x40000000), blurRadius: 1.5, offset: Offset(0, 1)),
+                    ],
                   ),
                 ),
               ],

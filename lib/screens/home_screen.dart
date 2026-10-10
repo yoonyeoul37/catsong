@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:just_audio/just_audio.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../utils/greeting_images.dart';
@@ -90,6 +91,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final ScrollController _songListController = ScrollController();
   final ValueNotifier<String?> _indexBubble = ValueNotifier(null); // 가운데 큰 글자
   final ValueNotifier<String?> _currentGroup = ValueNotifier(null); // 지금 보고 있는 구간
+  final ValueNotifier<bool> _indexShow = ValueNotifier(false); // 초성 막대: 스크롤하는 동안만
+  int _indexHideToken = 0;
 
   // ── 빠른 이동 막대용: 묶음(A-Z → ㄱ~ㅎ → #) 순서로 정리한 목록 (곡이 바뀔 때만 다시 계산) ──
   List<(String?, int)> _indexEntries = const []; // (머리글, null이면 곡) / 곡 번호
@@ -283,6 +286,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _songListController.addListener(_updateCurrentGroup); // 스크롤하면 오른쪽 초성 파랗게 따라감
+    _songListController.addListener(() {
+      // 손으로 밀 때만 (정렬 바꿀 때 맨 위로 가는 건 빼고)
+      if (_songListController.hasClients &&
+          _songListController.position.userScrollDirection != ScrollDirection.idle) {
+        _pokeIndexBar();
+      }
+    });
     // 지난번 정렬(제목/가수) 불러오기
     SharedPreferences.getInstance().then((p) {
       final v = p.getBool('song_sort_by_artist') ?? false;
@@ -2465,7 +2475,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListView.builder(
                   controller: _songListController,
                   // 인덱스 띠와 곡 줄(선택 배경 포함) 사이에 틈 두기
-                  padding: EdgeInsets.only(bottom: 8, right: showIndexBar ? 34 : 0),
+                  padding: const EdgeInsets.only(bottom: 8), // 막대는 오른쪽 끝 위에 겹쳐 떠요 (목록 폭 그대로)
                   itemCount: entries.length,
                   itemBuilder: (context, i) {
                     final entry = entries[i];
@@ -2557,14 +2567,33 @@ class _HomeScreenState extends State<HomeScreen> {
                   right: 0,
                   top: 4,
                   bottom: 12,
-                  child: ValueListenableBuilder<String?>(
-                    valueListenable: _currentGroup,
-                    builder: (context, cur, _) => IndexBar(
-                      available: available,
-                      isDark: isDarkList,
-                      onLetter: _jumpToGroup,
-                      onActiveChanged: (l) => _indexBubble.value = l,
-                      current: cur ?? (available.isNotEmpty ? kIndexGroups.firstWhere(available.contains) : null),
+                  child: ValueListenableBuilder<bool>(
+                    valueListenable: _indexShow,
+                    builder: (context, show, child) => IgnorePointer(
+                      ignoring: !show,
+                      child: AnimatedOpacity(
+                        opacity: show ? 1 : 0,
+                        duration: const Duration(milliseconds: 250),
+                        child: AnimatedSlide(
+                          offset: show ? Offset.zero : const Offset(0.3, 0),
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeOutCubic,
+                          child: child,
+                        ),
+                      ),
+                    ),
+                    child: ValueListenableBuilder<String?>(
+                      valueListenable: _currentGroup,
+                      builder: (context, cur, _) => IndexBar(
+                        available: available,
+                        isDark: isDarkList,
+                        onLetter: _jumpToGroup,
+                        onActiveChanged: (l) {
+                          _indexBubble.value = l;
+                          _pokeIndexBar(); // 누르고 있는 동안은 안 사라지게
+                        },
+                        current: cur ?? (available.isNotEmpty ? kIndexGroups.firstWhere(available.contains) : null),
+                      ),
                     ),
                   ),
                 ),
@@ -2601,6 +2630,15 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
+  }
+
+  /// 초성 막대: 스크롤하는 동안 보이고, 멈추면 1.5초 뒤 사라짐 (막대를 누르고 있는 동안은 그대로)
+  void _pokeIndexBar() {
+    if (!_indexShow.value) _indexShow.value = true;
+    final t = ++_indexHideToken;
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      if (mounted && t == _indexHideToken && _indexBubble.value == null) _indexShow.value = false;
+    });
   }
 
   Widget _buildFilterTab(String label, bool isSelected, VoidCallback onTap, Color primaryColor,

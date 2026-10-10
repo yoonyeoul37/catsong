@@ -62,6 +62,14 @@ class MainActivity : AudioServiceActivity() {
         setIntent(intent)
         handleAlarmIntent(intent)
         handleHeadsetIntent(intent)
+        handleHomeIntent(intent)
+    }
+
+    /// 약관 페이지의 홈 버튼 (paransori://home) → 앱 홈 화면으로
+    private fun handleHomeIntent(i: android.content.Intent?) {
+        if (i?.data?.scheme != "paransori") return
+        i.data = null
+        alarmChannel?.invokeMethod("goHome", null)
     }
 
     private fun handleAlarmIntent(i: android.content.Intent?) {

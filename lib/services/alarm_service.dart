@@ -88,6 +88,11 @@ class AlarmService {
   /// 앱 켤 때 한 번 (runApp 전에)
   static Future<void> init() async {
     _ch.setMethodCallHandler((call) async {
+      // 약관 페이지의 홈 버튼 → 앱 홈 화면까지 돌아가기
+      if (call.method == 'goHome') {
+        navKey.currentState?.popUntil((r) => r.isFirst);
+        return null;
+      }
       if (call.method == 'alarmFired') {
         try {
           await _ch.invokeMethod('takeLaunchAlarm'); // 다음에 켤 때 또 울리지 않게

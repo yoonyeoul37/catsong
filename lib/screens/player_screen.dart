@@ -3374,7 +3374,7 @@ class _PlayerScreenState extends State<PlayerScreen>
             ),
             if (st.$1 == 3 && current == 3 && onPrintPick != null)
               Padding(
-                padding: const EdgeInsets.fromLTRB(46, 0, 14, 14),
+                padding: const EdgeInsets.fromLTRB(46, 8, 14, 14),
                 child: Wrap(
                   spacing: 6,
                   runSpacing: 6,

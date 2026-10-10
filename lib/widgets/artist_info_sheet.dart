@@ -137,7 +137,34 @@ class _ArtistApi {
 
   static String _norm(String s) => s.toLowerCase().replaceAll(RegExp(r'[\s\(\)\[\]\-_.,·!?~]'), '');
 
+  /// 이름 모양들: "쿨 (COOL)" → 쿨 · cool / "아이유, 성시경" → 아이유 · 성시경
+  static Set<String> _nameForms(String s) {
+    final out = <String>{};
+    void add(String v) {
+      final n = _norm(v);
+      if (n.isNotEmpty) out.add(n);
+      final m = RegExp(r'^(.*?)\s*[\(\[](.*?)[\)\]]\s*$').firstMatch(v.trim());
+      if (m != null) {
+        final a = _norm(m.group(1)!), b = _norm(m.group(2)!);
+        if (a.isNotEmpty) out.add(a);
+        if (b.isNotEmpty) out.add(b);
+      }
+    }
+    add(s);
+    for (final part in s.split(RegExp(r'\s*(?:,|&|/|\bx\b|\bfeat\.?|\bft\.?|featuring)\s*', caseSensitive: false))) {
+      add(part);
+    }
+    return out;
+  }
+
+  /// 가수가 같은지: 이름이 정확히 같을 때만 (쿨 ≠ 쿨케이)
   static bool _sameArtist(String a, String b) {
+    final x = _nameForms(a), y = _nameForms(b);
+    return x.any(y.contains);
+  }
+
+  /// 곡 제목은 조금 느슨하게 (뒤에 (Feat.) 같은 게 붙어도 같게)
+  static bool _sameTitle(String a, String b) {
     final x = _norm(a), y = _norm(b);
     if (x.isEmpty || y.isEmpty) return false;
     return x == y || x.contains(y) || y.contains(x);
@@ -222,7 +249,15 @@ class _ArtistApi {
 
   static String _normAlbum(String s) => _norm(s
       .replaceAll(RegExp(r'\s*[\(\[].*?[\)\]]'), '')
-      .replaceAll(RegExp(r'\s+-\s+(single|ep)$', caseSensitive: false), ''));
+      .replaceAll(RegExp(r'\s+-\s+(single|ep)$', caseSensitive: false), '')
+      .replaceAll(RegExp(r'\b(deluxe|remaster(ed)?|special|expanded|anniversary|edition|version|reissue)\b|리마스터|스페셜|디럭스',
+          caseSensitive: false), ''));
+
+  /// 빼는 앨범: 모음집 · 라이브 · 베스트 · 리믹스
+  static final _skipAlbum = RegExp(r'\b(live|best|greatest hits|collection|remix(es)?|karaoke|instrumental)\b|라이브|베스트|히트곡 모음',
+      caseSensitive: false);
+  static bool _keepAlbum(_Album a) =>
+      a.kind != '모음집' && a.kind != '라이브' && !_skipAlbum.hasMatch(a.title);
 
   static String _year(String date) => date.length >= 4 ? date.substring(0, 4) : '';
 
@@ -269,6 +304,7 @@ class _ArtistApi {
       if (!_sameArtist(credit, artist)) continue;
       final pt = '${g['primary-type'] ?? ''}';
       final st = ((g['secondary-types'] as List?) ?? const []).map((e) => '$e').toList();
+      if (st.contains('Compilation') || st.contains('Live') || st.contains('Remix') || st.contains('DJ-mix')) continue;
       final kind = st.contains('Compilation')
           ? '모음집'
           : st.contains('Live')
@@ -286,18 +322,18 @@ class _ArtistApi {
 
   /// 겹치는 앨범은 빼고 합치기 → 최신부터 40개까지
   static void mergeAlbums(_Info info, List<_Album> extra) {
-    final seen = info.albums.map((a) => _normAlbum(a.title)).toSet();
-    final more = <_Album>[];
-    for (final a in extra) {
+    final seen = <String>{};
+    final all = <_Album>[];
+    for (final a in [...info.albums, ...extra]) {
       final t = a.title.replaceAll(RegExp(r'\s+-\s+(Single|EP)$'), '').trim();
+      final b = _Album(t, a.cover, a.year, a.kind);
       final k = _normAlbum(t);
-      if (t.isEmpty || k.isEmpty || !seen.add(k)) continue;
-      more.add(_Album(t, a.cover, a.year, a.kind));
+      if (t.isEmpty || k.isEmpty || !_keepAlbum(b) || !seen.add(k)) continue;
+      all.add(b);
     }
-    if (more.isEmpty) return;
-    final all = [...info.albums, ...more]..sort((a, b) => b.year.compareTo(a.year));
+    all.sort((a, b) => b.year.compareTo(a.year)); // 최신부터
     info.albums = all.take(40).toList();
-    if ((info.albumCount ?? 0) < info.albums.length) info.albumCount = info.albums.length;
+    info.albumCount = info.albums.isEmpty ? null : info.albums.length;
   }
 
   // ── Wikipedia: 짧은 소개 ──
@@ -472,7 +508,7 @@ class _ArtistApi {
       if (r == null) continue;
       final an = '${(r['primary_artist'] as Map?)?['name'] ?? ''}';
       final tn = '${r['title'] ?? ''}';
-      if (_sameArtist(an, artist) && _sameArtist(tn, title)) {
+      if (_sameArtist(an, artist) && _sameTitle(tn, title)) {
         id = (r['id'] as num?)?.toInt();
         break;
       }
@@ -542,7 +578,7 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
   String get _artist => widget.song.artistDisplay.trim();
   bool get _unknownArtist =>
       _artist.isEmpty || _artist.contains('알 수 없') || _artist.toLowerCase().contains('unknown');
-  String get _key => 'artistInfo4:${_artist.toLowerCase()}|${_title.toLowerCase()}';
+  String get _key => 'artistInfo5:${_artist.toLowerCase()}|${_title.toLowerCase()}';
 
   @override
   void initState() {

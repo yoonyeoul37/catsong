@@ -12,6 +12,7 @@ import '../models/radio_station.dart';
 import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
+import '../widgets/heart_pop.dart';
 import 'radio_player_screen.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/theme_provider.dart';
@@ -745,14 +746,25 @@ class _StationTile extends StatelessWidget {
                     // (하트가 바로 바뀌어서 따로 알림 없음)
                     Future.microtask(() => radioProvider.toggleFavorite(radioStation));
                   },
-                  child: Icon(
-                    context.watch<RadioProvider>().isFavorite(radioStation.stationUuid)
-                        ? CupertinoIcons.heart_fill
-                        : CupertinoIcons.heart,
-                    color: context.watch<RadioProvider>().isFavorite(radioStation.stationUuid)
-                        ? const Color(0xFFE05A4F)
-                        : baseColor.withOpacity(0.35),
-                    size: 22,
+                  // 하트 둘레 넓게 (옆을 눌러도 재생 안 되게) + 켤 때 통통
+                  child: SizedBox(
+                    width: 52,
+                    height: 48,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: HeartPop(
+                        on: context.watch<RadioProvider>().isFavorite(radioStation.stationUuid),
+                        child: Icon(
+                          context.watch<RadioProvider>().isFavorite(radioStation.stationUuid)
+                              ? CupertinoIcons.heart_fill
+                              : CupertinoIcons.heart,
+                          color: context.watch<RadioProvider>().isFavorite(radioStation.stationUuid)
+                              ? const Color(0xFFE05A4F)
+                              : baseColor.withOpacity(0.35),
+                          size: 22,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 ),

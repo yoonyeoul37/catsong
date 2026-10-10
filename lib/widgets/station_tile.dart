@@ -6,6 +6,7 @@ import '../providers/radio_provider.dart';
 import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import 'station_logo.dart';
+import 'heart_pop.dart';
 import '../screens/radio_player_screen.dart';
 
 class StationTile extends StatelessWidget {
@@ -80,10 +81,13 @@ class StationTile extends StatelessWidget {
               const Icon(Icons.graphic_eq, color: accent, size: 22)
             else
               IconButton(
-                icon: Icon(
-                  isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                  color: isFav ? const Color(0xFFE05A4F) : baseColor.withOpacity(0.3),
-                  size: 21,
+                icon: HeartPop(
+                  on: isFav,
+                  child: Icon(
+                    isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                    color: isFav ? const Color(0xFFE05A4F) : baseColor.withOpacity(0.3),
+                    size: 21,
+                  ),
                 ),
                 onPressed: () =>
                     Future.microtask(() => radioProvider.toggleFavorite(station)),

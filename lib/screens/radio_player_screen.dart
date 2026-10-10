@@ -18,6 +18,7 @@ import '../widgets/simple_radio_dial.dart';
 import '../widgets/frequency_ruler.dart';
 import '../widgets/radio_mood_placeholder.dart';
 import '../widgets/overseas_radio_view.dart';
+import '../widgets/heart_pop.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -753,10 +754,13 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                     // (하트가 바로 바뀌어서 따로 알림 없음)
                                     Future.microtask(() => radioProvider.toggleFavorite(current));
                                   },
-                                  child: Icon(
-                                    radioProvider.isFavorite(current.stationUuid) ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                                    color: radioProvider.isFavorite(current.stationUuid) ? const Color(0xFFE05A4F) : baseColor.withOpacity(0.6),
-                                    size: 16,
+                                  child: HeartPop(
+                                    on: radioProvider.isFavorite(current.stationUuid),
+                                    child: Icon(
+                                      radioProvider.isFavorite(current.stationUuid) ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                                      color: radioProvider.isFavorite(current.stationUuid) ? const Color(0xFFE05A4F) : baseColor.withOpacity(0.6),
+                                      size: 16,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(width: 10),

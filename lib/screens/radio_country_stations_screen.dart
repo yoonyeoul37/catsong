@@ -11,6 +11,7 @@ import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
 import '../widgets/station_logo.dart';
+import '../widgets/heart_pop.dart';
 import 'radio_player_screen.dart';
 import 'radio_home_screen.dart';
 import '../l10n/app_localizations.dart';
@@ -796,18 +797,21 @@ class _StationTile extends StatelessWidget {
                 ),
               ),
               IconButton(
-                  icon: Icon(
-                    context
-                        .watch<RadioProvider>()
-                        .isFavorite(station.stationUuid)
-                        ? CupertinoIcons.heart_fill
-                        : CupertinoIcons.heart,
-                    color: context
-                        .watch<RadioProvider>()
-                        .isFavorite(station.stationUuid)
-                        ? const Color(0xFFE05A4F)
-                        : baseColor.withOpacity(0.25),
-                    size: 21,
+                  icon: HeartPop(
+                    on: context.watch<RadioProvider>().isFavorite(station.stationUuid),
+                    child: Icon(
+                      context
+                          .watch<RadioProvider>()
+                          .isFavorite(station.stationUuid)
+                          ? CupertinoIcons.heart_fill
+                          : CupertinoIcons.heart,
+                      color: context
+                          .watch<RadioProvider>()
+                          .isFavorite(station.stationUuid)
+                          ? const Color(0xFFE05A4F)
+                          : baseColor.withOpacity(0.25),
+                      size: 21,
+                    ),
                   ),
                   onPressed: () {
                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate').catchError((_) {});

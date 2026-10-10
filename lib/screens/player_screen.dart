@@ -782,6 +782,31 @@ class _PlayerScreenState extends State<PlayerScreen>
     showParanSheet(
       context,
       title: '파란포토',
+      // 제목 옆에 작게: 무엇을 하는 곳인지
+      header: Padding(
+        padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
+        child: Text.rich(
+          TextSpan(children: [
+            TextSpan(
+              text: '파란포토',
+              style: TextStyle(
+                color: context.read<ThemeProvider>().isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F),
+                fontSize: 17,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.3,
+              ),
+            ),
+            TextSpan(
+              text: '  (음악 재생 배경을 바꿀 수 있어요)',
+              style: TextStyle(
+                color: context.read<ThemeProvider>().isDarkMode ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378),
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ]),
+        ),
+      ),
       builder: (ctx, setSheet) {
         final dark = context.read<ThemeProvider>().isDarkMode;
         final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
@@ -3065,16 +3090,14 @@ class _PlayerScreenState extends State<PlayerScreen>
                   ],
                 ),
               ),
-              IconButton(
-                onPressed: () {
+              // 하트: 켤 때 통통 + 작은 하트 셋이 위로 떠올라요
+              _HeartButton(
+                isFav: isFav,
+                offColor: baseColor.withOpacity(0.6),
+                onTap: () {
                   const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                   musicProvider.toggleFavorite(song);
-                  // (하트가 바로 바뀌어서 따로 알림 없음)
                 },
-                icon: Icon(
-                  isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                  color: isFav ? const Color(0xFFE05A4F) : baseColor.withOpacity(0.6),
-                ),
               ),
             ],
           ),
@@ -3907,6 +3930,98 @@ class _TornEdgePainter extends CustomPainter {
 }
 
 /// 파란 글자가 천천히 밝아졌다 어두워지는 숨쉬기 (재생 중일 때만)
+/// 재생 화면 하트: 켤 때만 하트가 통통 튀고 작은 하트 셋이 흔들리며 위로 떠올라요 (끌 때는 조용히)
+class _HeartButton extends StatefulWidget {
+  final bool isFav;
+  final Color offColor;
+  final VoidCallback onTap;
+  const _HeartButton({required this.isFav, required this.offColor, required this.onTap});
+
+  @override
+  State<_HeartButton> createState() => _HeartButtonState();
+}
+
+class _HeartButtonState extends State<_HeartButton> with SingleTickerProviderStateMixin {
+  static const _red = Color(0xFFE05A4F);
+  static const _total = 1240.0; // ms (마지막 작은 하트가 끝날 때까지)
+  late final AnimationController _c =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 1240));
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  /// 하트 통통: 1 → 1.35 → 0.9 → 1 (처음 0.45초)
+  double _pop(double ms) {
+    if (!_c.isAnimating) return 1;
+    final t = (ms / 450).clamp(0.0, 1.0);
+    if (t < 0.35) return 1 + 0.35 * Curves.easeOut.transform(t / 0.35);
+    if (t < 0.65) return 1.35 - 0.45 * ((t - 0.35) / 0.3);
+    return 0.9 + 0.1 * ((t - 0.65) / 0.35);
+  }
+
+  /// 작은 하트 하나: 1초 동안 위로 74 올라가며 커졌다가 흐려짐
+  Widget _mini(double ms, double startMs, double dx) {
+    final t = (ms - startMs) / 1000;
+    if (t <= 0 || t >= 1) return const SizedBox.shrink();
+    final e = Curves.easeOut.transform(t);
+    final op = t < 0.15 ? t / 0.15 : 1 - (t - 0.15) / 0.85;
+    final wobble = math.sin(t * math.pi * 2) * 3; // 좌우로 살짝 흔들림
+    return Transform.translate(
+      offset: Offset(dx * e + wobble, -74 * e),
+      child: Transform.scale(
+        scale: 0.4 + 0.6 * e,
+        child: Opacity(
+          opacity: op.clamp(0.0, 1.0),
+          child: const Icon(CupertinoIcons.heart_fill, color: _red, size: 12),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        if (!widget.isFav) _c.forward(from: 0); // 켤 때만
+        widget.onTap();
+      },
+      child: SizedBox(
+        width: 48,
+        height: 48,
+        child: AnimatedBuilder(
+          animation: _c,
+          builder: (_, __) {
+            final ms = _c.value * _total;
+            return Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: [
+                if (_c.isAnimating) ...[
+                  _mini(ms, 0, -14),
+                  _mini(ms, 120, 4),
+                  _mini(ms, 240, 16),
+                ],
+                Transform.scale(
+                  scale: _pop(ms),
+                  child: Icon(
+                    widget.isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                    color: widget.isFav ? _red : widget.offColor,
+                    size: 20,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
 class _BreathingText extends StatefulWidget {
   final String text;
   final TextStyle style;

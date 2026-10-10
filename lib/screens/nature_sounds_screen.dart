@@ -19,6 +19,7 @@ import '../widgets/logo_eq_bars.dart';
 import 'nature_sound_detail_screen.dart';
 import '../widgets/paran_dialog.dart';
 import '../widgets/paran_toast.dart';
+import '../widgets/heart_pop.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
 import '../main.dart' show globalAudioHandler;
@@ -797,19 +798,24 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                           Icon(Icons.chevron_right_rounded, color: baseColor.withOpacity(0.3), size: 22)
                         else
                           GestureDetector(
+                            // 하트 주변 칸 전체가 하트 자리 (옆을 눌러도 재생 안 되게)
+                            behavior: HitTestBehavior.opaque,
                             onTap: () => _toggleFavorite(primary.name),
                             child: SizedBox(
-                              width: 34,
-                              height: 34,
+                              width: 44,
+                              height: 44,
                               child: Center(
-                                child: Icon(
-                                  _favoriteNames.contains(primary.name)
-                                      ? CupertinoIcons.heart_fill
-                                      : CupertinoIcons.heart,
-                                  color: _favoriteNames.contains(primary.name)
-                                      ? const Color(0xFFE05A4F)
-                                      : baseColor.withOpacity(0.3),
-                                  size: 22,
+                                child: HeartPop(
+                                  on: _favoriteNames.contains(primary.name),
+                                  child: Icon(
+                                    _favoriteNames.contains(primary.name)
+                                        ? CupertinoIcons.heart_fill
+                                        : CupertinoIcons.heart,
+                                    color: _favoriteNames.contains(primary.name)
+                                        ? const Color(0xFFE05A4F)
+                                        : baseColor.withOpacity(0.3),
+                                    size: 22,
+                                  ),
                                 ),
                               ),
                             ),

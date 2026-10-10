@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../models/radio_station.dart';
 import '../providers/radio_provider.dart';
 import 'station_logo.dart';
+import 'heart_pop.dart';
 import 'sleep_timer_sheet.dart';
 import 'more_menu_sheet.dart';
 import '../screens/radio_country_stations_screen.dart';
@@ -343,10 +344,13 @@ class OverseasRadioView extends StatelessWidget {
                             _vibrate();
                             context.read<RadioProvider>().toggleFavorite(station);
                           },
-                          icon: Icon(
-                            isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                            color: isFav ? const Color(0xFFE05A4F) : Colors.white70,
-                            size: 24,
+                          icon: HeartPop(
+                            on: isFav,
+                            child: Icon(
+                              isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                              color: isFav ? const Color(0xFFE05A4F) : Colors.white70,
+                              size: 24,
+                            ),
                           ),
                         ),
                       ],

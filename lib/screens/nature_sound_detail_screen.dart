@@ -19,6 +19,7 @@ import '../widgets/more_menu_sheet.dart';
 import '../widgets/exit_confirm_dialog.dart';
 import 'nature_sounds_screen.dart';
 import '../widgets/paran_dialog.dart';
+import '../widgets/heart_pop.dart';
 
 class NatureSoundDetailScreen extends StatefulWidget {
   final String name;
@@ -745,8 +746,11 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                             width: 32,
                             height: 32,
                             decoration: BoxDecoration(color: Colors.black.withOpacity(0.38), shape: BoxShape.circle),
-                            child: Icon(isFavorite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                                color: isFavorite ? const Color(0xFFE05A4F) : Colors.white, size: 16),
+                            child: HeartPop(
+                              on: isFavorite,
+                              child: Icon(isFavorite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                                  color: isFavorite ? const Color(0xFFE05A4F) : Colors.white, size: 16),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),

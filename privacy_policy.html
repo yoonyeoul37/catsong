@@ -149,10 +149,20 @@ a{color:inherit}
   // 언어 목록: 내 나라(폰 언어) 먼저
   list.innerHTML = order.map(function(c){ return '<button type="button" data-lang="'+c+'" lang="'+c+'">'+NAMES[c]+'</button>'; }).join('');
   // 언어 창이 열려 있는 동안 뒤 페이지는 안 움직이게
+  // (폰에서도 확실하게: 페이지를 그 자리에 핀으로 고정했다가, 닫으면 원래 위치로)
+  var lockY = 0;
   function openSheet(on){
+    var b = document.body;
+    if (on && sheet.hidden) {
+      lockY = window.scrollY || window.pageYOffset || 0;
+      b.style.position = 'fixed'; b.style.top = (-lockY) + 'px'; b.style.left = '0'; b.style.right = '0'; b.style.width = '100%';
+      document.documentElement.style.scrollBehavior = 'auto';
+    } else if (!on && !sheet.hidden) {
+      b.style.position = ''; b.style.top = ''; b.style.left = ''; b.style.right = ''; b.style.width = '';
+      window.scrollTo(0, lockY);
+      document.documentElement.style.scrollBehavior = '';
+    }
     sheet.hidden = !on; sheetBg.hidden = !on;
-    document.documentElement.style.overflow = on ? 'hidden' : '';
-    document.body.style.overflow = on ? 'hidden' : '';
   }
   sheetBg.addEventListener('touchmove', function(e){ e.preventDefault(); }, {passive: false});
   document.getElementById('globe').addEventListener('click', function(){ openSheet(true); });

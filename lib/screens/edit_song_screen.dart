@@ -36,6 +36,22 @@ class _EditSongScreenState extends State<EditSongScreen> {
   // 인터넷에서 찾기
   bool _searching = false;
   String? _pickedArt; // 고른 앨범 사진 주소 (저장할 때 받아서 넣음)
+  // 검색 결과 넣기 전 값 (되돌리기용: 제목·가수·앨범·사진)
+  (String, String, String, String?)? _beforePick;
+
+  /// 검색 결과 넣기 전으로 되돌리기
+  void _undoPick() {
+    final b = _beforePick;
+    if (b == null) return;
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    setState(() {
+      _titleController.text = b.$1;
+      _artistController.text = b.$2;
+      _albumController.text = b.$3;
+      _pickedArt = b.$4;
+      _beforePick = null;
+    });
+  }
 
   @override
   void initState() {
@@ -119,7 +135,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
               children: [
                 Text('이 곡이 맞나요?', style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 4),
-                Text('맞는 곡을 고르면 제목·가수·앨범·앨범 사진이 채워져요',
+                Text('찾는 곡을 선택하면 제목·가수·앨범·앨범 사진이 채워져요',
                     style: TextStyle(color: sub, fontSize: 12.5)),
                 const SizedBox(height: 12),
                 Flexible(
@@ -191,6 +207,8 @@ class _EditSongScreenState extends State<EditSongScreen> {
     sheetSet = null;
     if (picked == null || !mounted) return;
     setState(() {
+      // 되돌리기용: 넣기 전 값 (여러 번 골라도 맨 처음 값으로)
+      _beforePick ??= (_titleController.text, _artistController.text, _albumController.text, _pickedArt);
       // 제목: 지금 한글인데 고른 게 영어면 한글 그대로
       final curTitle = _titleController.text.trim();
       _titleController.text =
@@ -350,6 +368,28 @@ class _EditSongScreenState extends State<EditSongScreen> {
                       style: TextButton.styleFrom(foregroundColor: ink),
                       child: Text(_cleanedOn ? '원래대로' : '다시 정리',
                           style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            // 검색 결과를 넣었으면: 안내 + 되돌리기 (자동 정리 카드와 같은 모양)
+            if (_beforePick != null) ...[
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.fromLTRB(14, 4, 4, 4),
+                decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(14)),
+                child: Row(
+                  children: [
+                    Icon(Icons.travel_explore_rounded, color: sub, size: 18),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text('검색 결과를 넣었어요', style: TextStyle(color: ink, fontSize: 13)),
+                    ),
+                    TextButton(
+                      onPressed: _undoPick,
+                      style: TextButton.styleFrom(foregroundColor: ink),
+                      child: const Text('되돌리기', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
                     ),
                   ],
                 ),

@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' show BuildContext;
+import '../widgets/paran_dialog.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/player_provider.dart';
@@ -22,6 +24,26 @@ class HeadsetResume {
     try {
       final p = await SharedPreferences.getInstance();
       mode.value = p.getInt('headsetResumeMode') ?? 0;
+    } catch (_) {}
+  }
+
+  /// 배터리 사용 "제한 없음" 부탁 — 필요한 기능을 켤 때만, 기능마다 한 번만
+  /// (이미 제한 없음이면 안 물어봄)
+  static Future<void> askBattery(BuildContext context, String key, String why) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      if (p.getBool('battery_ask_$key') ?? false) return;
+      final optimized = await _ch.invokeMethod('isBatteryOptimized');
+      if (optimized != true || !context.mounted) return;
+      await p.setBool('battery_ask_$key', true);
+      final go = await showParanConfirm(
+        context,
+        title: '배터리 사용을 "제한 없음"으로',
+        message: why,
+        confirmLabel: '허용하기',
+        cancelLabel: '나중에',
+      );
+      if (go) await _ch.invokeMethod('requestBatteryOptimization');
     } catch (_) {}
   }
 

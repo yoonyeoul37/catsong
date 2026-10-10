@@ -207,6 +207,22 @@ class _PlayerScreenState extends State<PlayerScreen>
   Color _dominantColor = const Color(0xFF1A1A1A);
   bool _showSwipeHint = false;
   bool _hasSeenParanPhoto = true;
+  Color? _lastPoint; // 포인트 색 바뀌면 시디롬 빛 번짐도 바로 다시
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final point = Theme.of(context).colorScheme.primary;
+    if (_lastPoint != null && _lastPoint!.value != point.value) {
+      final song = context.read<PlayerProvider>().currentSong;
+      if (song != null && song.albumArt == null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _extractColor(song);
+        });
+      }
+    }
+    _lastPoint = point;
+  }
 
   @override
   void initState() {

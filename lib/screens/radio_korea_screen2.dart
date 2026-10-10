@@ -29,33 +29,6 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
   final Map<String, GlobalKey> _stationItemKeys = {};
   String? _lastScrolledStationName;
   _ViewMode _mode = _ViewMode.all;
-  // 주파수 맞추기: 스크롤 중이면 true (멈추고 0.3초 뒤 false)
-  final ValueNotifier<bool> _scrolling = ValueNotifier(false);
-  final ValueNotifier<double> _scrollPx = ValueNotifier(0);
-  Timer? _settleTimer;
-
-  @override
-  void dispose() {
-    _settleTimer?.cancel();
-    _scrolling.dispose();
-    _scrollPx.dispose();
-    super.dispose();
-  }
-
-  bool _onDialScroll(ScrollNotification n) {
-    if (n.depth != 0) return false;
-    _scrollPx.value = n.metrics.pixels;
-    if (n is ScrollStartNotification || (n is ScrollUpdateNotification && !_scrolling.value)) {
-      _settleTimer?.cancel();
-      _scrolling.value = true;
-    } else if (n is ScrollEndNotification) {
-      _settleTimer?.cancel();
-      _settleTimer = Timer(const Duration(milliseconds: 300), () {
-        if (mounted) _scrolling.value = false;
-      });
-    }
-    return false;
-  }
 
   static const Map<String, Color> _regionColors = {
     '수도권': Color(0xFF14356B),
@@ -164,11 +137,9 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
       }
     });
 
-    return Stack(
-      children: [
-        NotificationListener<ScrollNotification>(
-          onNotification: _onDialScroll,
-          child: ListView.separated(
+    return _DialHost(
+      tickColor: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.35),
+      child: ListView.separated(
       padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
       itemCount: koreanStations.length,
       separatorBuilder: (_, __) => _DialEffect(
@@ -181,7 +152,6 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         return Container(
           key: _stationItemKeys[ks.name],
           child: _DialItem(
-            scrolling: _scrolling,
             child: _StationTile(
               station: ks,
               isPlaying: isPlaying,
@@ -192,21 +162,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           ),
         );
       },
-          ),
-        ),
-        // 오른쪽 끝 주파수 눈금 (스크롤 따라 움직임)
-        Positioned(
-          top: 0,
-          bottom: 0,
-          right: 4,
-          width: 12,
-          child: IgnorePointer(
-            child: CustomPaint(
-              painter: _TickPainter(_scrollPx, (isDarkMode ? Colors.white : Colors.black).withOpacity(0.35)),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
@@ -748,7 +704,7 @@ class _StationTile extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: 46,
+                width: 76,
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 250),
                   layoutBuilder: (cur, prev) => Stack(
@@ -758,8 +714,19 @@ class _StationTile extends StatelessWidget {
                   child: isPlaying
                       ? KeyedSubtree(key: const ValueKey('bars'), child: _PlayingBars(color: primaryColor))
                       : scrolling
-                          ? Text(
-                              station.frequency.replaceAll(' MHz', ''),
+                          ? Text.rich(
+                              TextSpan(children: [
+                                TextSpan(text: station.frequency.replaceAll(' MHz', '').trim()),
+                                if (station.frequency.trim().isNotEmpty)
+                                  TextSpan(
+                                    text: ' MHz',
+                                    style: GoogleFonts.quicksand(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w600,
+                                      color: (tuned ? primaryColor : baseColor).withOpacity(tuned ? 0.75 : 0.35),
+                                    ),
+                                  ),
+                              ]),
                               key: const ValueKey('freq'),
                               maxLines: 1,
                               style: GoogleFonts.quicksand(
@@ -1120,22 +1087,27 @@ class _BroadcasterStationList extends StatelessWidget {
       ),
       body: SafeArea(
         top: false,
-        child: ListView.separated(
+        child: _DialHost(
+          tickColor: baseColor.withOpacity(0.35),
+          child: ListView.separated(
           padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
           itemCount: stations.length,
-          separatorBuilder: (_, __) => Divider(height: 1, color: baseColor.withOpacity(0.1)),
+          separatorBuilder: (_, __) => _DialEffect(child: Divider(height: 1, color: baseColor.withOpacity(0.1))),
           itemBuilder: (context, i) {
             final ks = stations[i];
             final current = radioProvider.currentStation;
             final isPlaying = current?.name == ks.name && radioProvider.isPlaying;
-            return _StationTile(
-              station: ks,
-              isPlaying: isPlaying,
-              radioStation: radioStations[i],
-              stationList: radioStations,
-              stationIndex: i,
+            return _DialItem(
+              child: _StationTile(
+                station: ks,
+                isPlaying: isPlaying,
+                radioStation: radioStations[i],
+                stationList: radioStations,
+                stationIndex: i,
+              ),
             );
           },
+        ),
         ),
       ),
       bottomNavigationBar: radioProvider.currentStation != null
@@ -1223,9 +1195,8 @@ class _DialScope extends InheritedWidget {
 }
 
 class _DialItem extends StatefulWidget {
-  final ValueNotifier<bool> scrolling;
   final Widget child;
-  const _DialItem({required this.scrolling, required this.child});
+  const _DialItem({required this.child});
 
   @override
   State<_DialItem> createState() => _DialItemState();
@@ -1242,9 +1213,11 @@ class _DialItemState extends State<_DialItem> {
 
   @override
   Widget build(BuildContext context) {
+    final host = _DialHostScope.of(context);
+    if (host == null) return widget.child;
     return _DialScope(
       tuned: _tuned,
-      scrolling: widget.scrolling,
+      scrolling: host.scrolling,
       child: _DialEffect(
         onTuned: (v) {
           if (mounted && _tuned.value != v) _tuned.value = v;
@@ -1260,22 +1233,33 @@ class _DialEffect extends SingleChildRenderObjectWidget {
   const _DialEffect({this.onTuned, required Widget child}) : super(child: child);
 
   @override
-  _RenderDial createRenderObject(BuildContext context) => _RenderDial(Scrollable.of(context), onTuned);
+  _RenderDial createRenderObject(BuildContext context) =>
+      _RenderDial(Scrollable.of(context), onTuned, _DialHostScope.of(context)?.strength);
 
   @override
   void updateRenderObject(BuildContext context, _RenderDial renderObject) {
     renderObject
       ..scrollable = Scrollable.of(context)
-      ..onTuned = onTuned;
+      ..onTuned = onTuned
+      ..strength = _DialHostScope.of(context)?.strength;
   }
 }
 
 class _RenderDial extends RenderProxyBox {
-  _RenderDial(this._scrollable, this.onTuned);
+  _RenderDial(this._scrollable, this.onTuned, this._strength);
 
   ScrollableState _scrollable;
   ValueChanged<bool>? onTuned;
   bool? _lastTuned;
+  Animation<double>? _strength;
+
+  set strength(Animation<double>? a) {
+    if (identical(a, _strength)) return;
+    if (attached) _strength?.removeListener(markNeedsPaint);
+    _strength = a;
+    if (attached) _strength?.addListener(markNeedsPaint);
+    markNeedsPaint();
+  }
 
   set scrollable(ScrollableState s) {
     if (identical(s, _scrollable)) return;
@@ -1288,11 +1272,13 @@ class _RenderDial extends RenderProxyBox {
   void attach(PipelineOwner owner) {
     super.attach(owner);
     _scrollable.position.addListener(markNeedsPaint);
+    _strength?.addListener(markNeedsPaint);
   }
 
   @override
   void detach() {
     _scrollable.position.removeListener(markNeedsPaint);
+    _strength?.removeListener(markNeedsPaint);
     super.detach();
   }
 
@@ -1318,6 +1304,8 @@ class _RenderDial extends RenderProxyBox {
       final cb = onTuned!;
       SchedulerBinding.instance.addPostFrameCallback((_) => cb(tuned));
     }
+    // 멈춰 있으면 0 → 깔끔한 목록, 스크롤하면 1 → 다이얼
+    k = k * (_strength?.value ?? 1.0);
     final s = 1 - 0.12 * k * k; // 끝으로 갈수록 작게 (최대 12%)
     final alpha = (255 * (1 - 0.55 * k * k)).round().clamp(0, 255); // 끝으로 갈수록 흐리게
     final m = Matrix4.identity()
@@ -1335,7 +1323,8 @@ class _RenderDial extends RenderProxyBox {
 class _TickPainter extends CustomPainter {
   final ValueNotifier<double> px;
   final Color color;
-  _TickPainter(this.px, this.color) : super(repaint: px);
+  final Animation<double> strength;
+  _TickPainter(this.px, this.color, this.strength) : super(repaint: Listenable.merge([px, strength]));
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -1349,12 +1338,108 @@ class _TickPainter extends CustomPainter {
       if (y > size.height) break;
       if (y < 0) continue;
       final d = ((y - half).abs() / half).clamp(0.0, 1.0);
-      paint.color = color.withOpacity(color.opacity * (1 - d * d));
-      final w = (i % 5 + 5) % 5 == 0 ? 10.0 : 5.0;
+      paint.color = color.withOpacity(color.opacity * (1 - d * d) * strength.value);
+      final w = (i % 5 + 5) % 5 == 0 ? 18.0 : 9.0;
       canvas.drawLine(Offset(size.width - w, y), Offset(size.width, y), paint);
     }
   }
 
   @override
-  bool shouldRepaint(_TickPainter old) => old.color != color || old.px != px;
+  bool shouldRepaint(_TickPainter old) => old.color != color || old.px != px || old.strength != strength;
+}
+
+
+/// 목록 하나를 다이얼로 감싸요: 스크롤 감지, 효과 세기, 오른쪽 눈금
+class _DialHost extends StatefulWidget {
+  final Color tickColor;
+  final Widget child;
+  const _DialHost({required this.tickColor, required this.child});
+
+  @override
+  State<_DialHost> createState() => _DialHostState();
+}
+
+class _DialHostState extends State<_DialHost> with SingleTickerProviderStateMixin {
+  // 스크롤 중이면 true (멈추고 1초 뒤 false → 하트)
+  final ValueNotifier<bool> _scrolling = ValueNotifier(false);
+  final ValueNotifier<double> _px = ValueNotifier(0);
+  late final AnimationController _strength = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 220),
+    reverseDuration: const Duration(milliseconds: 450),
+  );
+  Timer? _relaxTimer;
+  Timer? _heartTimer;
+
+  @override
+  void dispose() {
+    _relaxTimer?.cancel();
+    _heartTimer?.cancel();
+    _strength.dispose();
+    _scrolling.dispose();
+    _px.dispose();
+    super.dispose();
+  }
+
+  bool _onScroll(ScrollNotification n) {
+    if (n.depth != 0) return false;
+    _px.value = n.metrics.pixels;
+    if (n is ScrollStartNotification || (n is ScrollUpdateNotification && !_scrolling.value)) {
+      _relaxTimer?.cancel();
+      _heartTimer?.cancel();
+      _scrolling.value = true;
+      _strength.forward();
+    } else if (n is ScrollEndNotification) {
+      _relaxTimer?.cancel();
+      _heartTimer?.cancel();
+      // 멈추면 다이얼이 부드럽게 풀리고
+      _relaxTimer = Timer(const Duration(milliseconds: 350), () {
+        if (mounted) _strength.reverse();
+      });
+      // 1초 뒤에 하트
+      _heartTimer = Timer(const Duration(milliseconds: 1000), () {
+        if (mounted) _scrolling.value = false;
+      });
+    }
+    return false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _DialHostScope(
+      scrolling: _scrolling,
+      strength: _strength,
+      child: Stack(
+        children: [
+          NotificationListener<ScrollNotification>(
+            onNotification: _onScroll,
+            child: widget.child,
+          ),
+          // 오른쪽 끝 주파수 눈금 (스크롤 따라 움직임)
+          Positioned(
+            top: 0,
+            bottom: 0,
+            right: 3,
+            width: 20,
+            child: IgnorePointer(
+              child: CustomPaint(
+                painter: _TickPainter(_px, widget.tickColor, _strength),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DialHostScope extends InheritedWidget {
+  final ValueNotifier<bool> scrolling;
+  final Animation<double> strength;
+  const _DialHostScope({required this.scrolling, required this.strength, required super.child});
+
+  static _DialHostScope? of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<_DialHostScope>();
+
+  @override
+  bool updateShouldNotify(_DialHostScope old) => old.scrolling != scrolling || old.strength != strength;
 }

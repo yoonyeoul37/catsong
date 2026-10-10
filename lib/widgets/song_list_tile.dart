@@ -556,19 +556,70 @@ class _RiseInState extends State<_RiseIn> with SingleTickerProviderStateMixin {
   late final AnimationController _c;
   late final Animation<double> _fade;
   late final Animation<Offset> _slide;
+  late final Animation<double> _scale;
+  ScrollPosition? _pos;
+  bool _started = false;
 
   @override
   void initState() {
     super.initState();
-    _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 420));
+    _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 560));
     final curve = CurvedAnimation(parent: _c, curve: Curves.easeOutCubic);
-    _fade = curve;
-    _slide = Tween<Offset>(begin: const Offset(0, 0.22), end: Offset.zero).animate(curve);
-    _c.forward();
+    _fade = CurvedAnimation(parent: _c, curve: const Interval(0, 0.7, curve: Curves.easeOut));
+    _slide = Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero).animate(curve);
+    _scale = Tween<double>(begin: 0.96, end: 1).animate(curve);
+    // 처음 그려진 뒤: 화면에 보이는 줄은 바로 떠오르기
+    WidgetsBinding.instance.addPostFrameCallback((_) => _check(first: true));
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final p = Scrollable.maybeOf(context)?.position;
+    if (!identical(p, _pos)) {
+      _pos?.removeListener(_check);
+      _pos = p;
+      if (!_started) _pos?.addListener(_check);
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant _RiseIn old) {
+    super.didUpdateWidget(old);
+    // 목록이 바뀌어 줄이 스크롤 없이 화면에 들어온 경우도 챙기기
+    if (!_started) WidgetsBinding.instance.addPostFrameCallback((_) => _check(first: true));
+  }
+
+  /// 줄이 실제로 화면 안에 들어왔는지 보고 시작
+  void _check({bool first = false}) {
+    if (_started || !mounted) return;
+    final box = context.findRenderObject();
+    if (box is! RenderBox || !box.attached || !box.hasSize) return;
+    final vp = Scrollable.maybeOf(context)?.context.findRenderObject();
+    if (vp is! RenderBox || !vp.hasSize) {
+      _start(animate: true);
+      return;
+    }
+    final top = box.localToGlobal(Offset.zero, ancestor: vp).dy;
+    final h = vp.size.height;
+    if (top + box.size.height <= 0 || top >= h) return; // 아직 화면 밖
+    // 아래에서 들어오면 떠오르기, 위로 올려서 들어오면 그냥 보이기
+    _start(animate: first || top > h * 0.5);
+  }
+
+  void _start({required bool animate}) {
+    _started = true;
+    _pos?.removeListener(_check);
+    if (animate) {
+      _c.forward();
+    } else {
+      _c.value = 1;
+    }
   }
 
   @override
   void dispose() {
+    _pos?.removeListener(_check);
     _c.dispose();
     super.dispose();
   }
@@ -577,7 +628,10 @@ class _RiseInState extends State<_RiseIn> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return FadeTransition(
       opacity: _fade,
-      child: SlideTransition(position: _slide, child: widget.child),
+      child: SlideTransition(
+        position: _slide,
+        child: ScaleTransition(scale: _scale, child: widget.child),
+      ),
     );
   }
 }

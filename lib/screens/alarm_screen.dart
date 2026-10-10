@@ -8,6 +8,7 @@ import '../providers/playlist_provider.dart';
 import '../providers/radio_provider.dart';
 import '../providers/theme_provider.dart';
 import '../services/alarm_service.dart';
+import '../services/headset_resume.dart';
 import '../widgets/paran_dialog.dart';
 import '../widgets/paran_toast.dart';
 import '../widgets/action_feedback.dart';
@@ -332,6 +333,11 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
           cancelLabel: '나중에',
         );
         if (go) AlarmService.openFullScreenSettings();
+      }
+      // 배터리 사용 "제한 없음" 부탁 (한 번만)
+      if (mounted) {
+        await HeadsetResume.askBattery(context, 'alarm',
+            '정해진 시간에 알람 곡을 틀려면 배터리 사용을 "제한 없음"으로 해 주는 게 좋아요.\n허용 안 해도 대부분 잘 울리지만, 일부 폰은 절전 때문에 늦을 수 있어요.');
       }
     }
     if (!mounted) return;

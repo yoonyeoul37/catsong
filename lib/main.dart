@@ -400,19 +400,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
             .read<PlaylistProvider>()
             .restorePlaylistSongs(musicProvider.allSongs);
       }
-      // 권한 허용 후 배터리 최적화 요청
-      if (musicProvider.hasPermission) {
-        await Future.delayed(const Duration(seconds: 1));
-        await _checkBatteryOptimization();
-      } else {
-        // 권한 변경 감지 후 배터리 최적화 요청
-        musicProvider.addListener(() async {
-          if (musicProvider.hasPermission) {
-            await Future.delayed(const Duration(seconds: 1));
-            await _checkBatteryOptimization();
-          }
-        });
-      }
+      // (배터리 창은 처음에 안 띄움 → 이어폰 이어서 듣기·아침 알람 켤 때만 물어봄)
       if (!AlarmService.launchedByAlarm) {
         await _checkAndRequestReview();
         await _checkForUpdate();
@@ -555,22 +543,6 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
         ),
       ),
     );
-  }
-
-  Future<void> _checkBatteryOptimization() async {
-    final prefs = await SharedPreferences.getInstance();
-    final asked = prefs.getBool('battery_opt_asked') ?? false;
-    if (asked) return;
-    try {
-      const platform = MethodChannel('kr.ssing.catsong/media');
-      final isOptimized = await platform.invokeMethod('isBatteryOptimized');
-      if (isOptimized == true && mounted) {
-        await platform.invokeMethod('requestBatteryOptimization');
-        await prefs.setBool('battery_opt_asked', true);
-      }
-    } catch (e) {
-      debugPrint('배터리 최적화 확인 오류: $e');
-    }
   }
 
   Future<void> _checkAndRequestReview() async {

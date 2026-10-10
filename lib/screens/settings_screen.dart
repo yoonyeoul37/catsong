@@ -1,5 +1,6 @@
 import 'equalizer_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:torch_light/torch_light.dart';
@@ -59,6 +60,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   void dispose() {
+    _removeBubbleNow();
     _isSosOn = false;
     TorchLight.disableTorch();
     super.dispose();
@@ -115,6 +117,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       body: SafeArea(
         top: false,
+        child: NotificationListener<ScrollStartNotification>(
+        onNotification: (_) {
+          _hideBubble();
+          return false;
+        },
         child: ListView(
         padding: const EdgeInsets.only(bottom: 16),
         children: [
@@ -198,6 +205,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
       ),
+      ),
     );
   }
 
@@ -267,46 +275,46 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  /// 자주 켜고 끄는 3칸 (누르면 바로 켜짐/꺼짐, 켜지면 카드 전체 먹색 · ⓘ 누르면 설명)
+  /// 자주 켜고 끄는 3칸 (흰 카드, 켜지면 아이콘 칸만 먹색 · ⓘ 누르면 아래 말풍선)
   Widget _quickTiles(ThemeProvider t) {
     final d = t.isDarkMode;
     Widget tile(IconData icon, String label, String info, bool on, VoidCallback onTap) {
-      final bg = on ? _sText(d) : _sCard(d); // 켜지면 먹색 (다크 모드는 크림색)
-      final fg = on ? _sBg(d) : _sText(d);
-      final sub = on ? _sBg(d).withOpacity(0.7) : _sTextHint(d);
+      final key = _infoKeys.putIfAbsent(label, () => GlobalKey());
       return Expanded(
         child: GestureDetector(
           onTap: () {
             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+            _hideBubble();
             onTap();
           },
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
+          child: Container(
             padding: const EdgeInsets.fromLTRB(12, 12, 6, 11),
-            decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(16)),
+            decoration: BoxDecoration(color: _sCard(d), borderRadius: BorderRadius.circular(16)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
+                    // 켜지면 아이콘 칸만 먹색 (다크 모드는 크림색)
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 180),
                       width: 30,
                       height: 30,
                       decoration: BoxDecoration(
-                        color: on ? _sBg(d).withOpacity(0.14) : _sIconBg(d),
+                        color: on ? _sText(d) : _sIconBg(d),
                         borderRadius: BorderRadius.circular(9),
                       ),
-                      child: Icon(icon, size: 16, color: on ? fg : _sTextSub(d)),
+                      child: Icon(icon, size: 16, color: on ? _sBg(d) : _sTextSub(d)),
                     ),
                     const Spacer(),
-                    // ⓘ 누르면 무슨 기능인지 설명
+                    // ⓘ 누르면 카드 아래 작은 말풍선
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: () => _showQuickInfo(label, info, d),
+                      onTap: () => _showBubble(key, d, text: info),
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(8, 0, 4, 8),
-                        child: Icon(Icons.info_outline_rounded, size: 16, color: sub),
+                        child: Icon(Icons.info_outline_rounded, key: key, size: 16, color: _sTextHint(d)),
                       ),
                     ),
                   ],
@@ -315,11 +323,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Text(label,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: fg, fontSize: 13, fontWeight: FontWeight.w600)),
+                    style: TextStyle(color: _sText(d), fontSize: 13, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 2),
                 Text(on ? '사용 중' : '꺼짐',
                     style: TextStyle(
-                        color: on ? fg : _sTextHint(d),
+                        color: on ? _sText(d) : _sTextHint(d),
                         fontSize: 11,
                         fontWeight: on ? FontWeight.w700 : FontWeight.w400)),
               ],
@@ -333,35 +341,137 @@ class _SettingsScreenState extends State<SettingsScreen> {
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
       child: Row(
         children: [
-          tile(Icons.dark_mode_outlined, '다크 모드', '화면을 어둡게 바꿔요.\n밤에 눈이 편해요.', t.isDarkMode,
+          tile(Icons.dark_mode_outlined, '다크 모드', '화면을 어둡게 바꿔요. 밤에 눈이 편해요.', t.isDarkMode,
               () => t.setDarkMode(!t.isDarkMode)),
           const SizedBox(width: 8),
           tile(
               Icons.water_drop_outlined,
               '효과음',
-              '수정·저장·삭제가 끝나면 물방울 소리로 알려줘요.\n진동 모드면 진동, 무음이면 조용해요.',
+              '수정·저장·삭제가 끝나면 물방울 소리로 알려줘요. 진동 모드면 진동, 무음이면 조용해요.',
               t.feedbackSoundEnabled,
               () => t.setFeedbackSoundEnabled(!t.feedbackSoundEnabled)),
           const SizedBox(width: 8),
-          tile(Icons.record_voice_over_outlined, '음성 안내', '앱을 켜고 끌 때\n짧은 인사말이 나와요.', t.voiceGreetingEnabled,
+          tile(Icons.record_voice_over_outlined, '음성 안내', '앱을 켜고 끌 때 짧은 인사말이 나와요.', t.voiceGreetingEnabled,
               () => t.setVoiceGreetingEnabled(!t.voiceGreetingEnabled)),
         ],
       ),
     );
   }
 
-  /// 카드 ⓘ: 기능 설명 창
-  void _showQuickInfo(String title, String info, bool d) {
-    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-    showParanSheet(
-      context,
-      title: title,
-      builder: (ctx, setSheet) => Padding(
-        padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
-        child: Text(info, style: TextStyle(color: _sTextSub(d), fontSize: 14, height: 1.6)),
+  // ───────── ⓘ 설명 (넓은 먹색 칸 · ✕로 닫기) ─────────
+  final Map<String, GlobalKey> _infoKeys = {};
+  OverlayEntry? _bubble;
+  GlobalKey? _bubbleFor;
+  final GlobalKey<_InfoBubbleState> _bubbleKey = GlobalKey();
+
+  void _removeBubbleNow() {
+    _bubble?.remove();
+    _bubble = null;
+    _bubbleFor = null;
+  }
+
+  /// 설명 닫기 (스르르)
+  void _hideBubble() {
+    final s = _bubbleKey.currentState;
+    if (s != null) {
+      s.close();
+    } else {
+      _removeBubbleNow();
+    }
+  }
+
+  /// ⓘ 누르면 카드 아래에 넓은 설명 (꼬리는 ⓘ를 가리킴)
+  /// 저절로 안 사라지고 ✕ · 다른 곳 누르기 · 스크롤로 닫힘 / 같은 ⓘ 다시 누르면 닫힘
+  void _showBubble(GlobalKey iconKey, bool d,
+      {String? title, String? text, List<(String, String)>? items, String? foot, bool keepOpenOnCard = false}) {
+    if (_bubble != null && identical(_bubbleFor, iconKey)) {
+      _hideBubble();
+      return;
+    }
+    final box = iconKey.currentContext?.findRenderObject();
+    final overlay = Overlay.maybeOf(context);
+    if (box is! RenderBox || overlay == null) return;
+    final ovBox = overlay.context.findRenderObject() as RenderBox;
+    final iconPos = box.localToGlobal(Offset.zero, ancestor: ovBox);
+    final iconCx = iconPos.dx + box.size.width / 2;
+    final w = ovBox.size.width - 32;
+    final cardBox = _cardBoxOf(box);
+    final cardRect = cardBox != null ? cardBox.localToGlobal(Offset.zero, ancestor: ovBox) & cardBox.size : null;
+    final top = (cardRect?.bottom ?? iconPos.dy + box.size.height) + 10;
+
+    // 소리: 효과음 켜져 있으면 톡 (폰이 진동 모드면 진동, 무음이면 조용) / 꺼져 있으면 평소 터치 진동
+    final soundOn = context.read<ThemeProvider>().feedbackSoundEnabled;
+    if (soundOn) {
+      const MethodChannel('kr.ssing.catsong/media')
+          .invokeMethod('feedbackSound', {'low': false})
+          .catchError((Object _) => null);
+    } else {
+      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    }
+
+    _removeBubbleNow();
+    _bubbleFor = iconKey;
+    _bubble = OverlayEntry(
+      builder: (_) => Stack(
+        children: [
+          // 다른 곳을 누르면 닫기 (누른 건 그대로 아래로 전달)
+          Positioned.fill(
+            child: Listener(
+              behavior: HitTestBehavior.translucent,
+              onPointerDown: (e) {
+                // 포인트 색 카드 안(동그라미)은 눌러도 열어 둠 → 바꿔 보며 비교
+                if (keepOpenOnCard && cardRect != null && cardRect.contains(ovBox.globalToLocal(e.position))) return;
+                _hideBubble();
+              },
+            ),
+          ),
+          Positioned(
+            left: 16,
+            top: top,
+            width: w,
+            child: _InfoBubble(
+              key: _bubbleKey,
+              title: title,
+              text: text,
+              items: items,
+              foot: foot,
+              tailX: iconCx - 16,
+              isDark: d,
+              onClose: _hideBubble,
+              onClosed: _removeBubbleNow,
+            ),
+          ),
+        ],
       ),
     );
+    overlay.insert(_bubble!);
   }
+
+  /// ⓘ를 감싼 카드(위쪽으로 처음 만나는 꾸민 상자)
+  RenderBox? _cardBoxOf(RenderBox icon) {
+    RenderObject? r = icon.parent;
+    var depth = 0;
+    while (r != null && depth < 30) {
+      if (r is RenderDecoratedBox) {
+        final dec = r.decoration;
+        if (dec is BoxDecoration && dec.borderRadius != null && r.size.width > 60) return r;
+      }
+      r = r.parent;
+      depth++;
+    }
+    return null;
+  }
+
+  final GlobalKey _pointInfoKey = GlobalKey();
+  static const List<(String, String)> _pointInfoItems = [
+    ('음악', '재생 중인 곡 표시, 오른쪽 초성 글자'),
+    ('재생 화면', '진행 막대, 시디롬 빛 번짐'),
+    ('가사', '지금 부르는 줄, 진행 막대'),
+    ('라디오', '주파수 바늘·눈금, 재생 중 표시'),
+    ('자연·믹스', '소리 막대, 선택 표시, 수면 타이머'),
+    ('동영상', '진행 표시, 반복·체크 표시'),
+    ('그 밖에', '스위치, 체크, 알림, 이퀄라이저, 알람'),
+  ];
 
   /// 포인트 색: 이름 + 아래 동그라미 10개 (누르면 바로 바뀜, 폰 크기에 맞춰 한 줄)
   Widget _pointColorTile(ThemeProvider t) {
@@ -379,7 +489,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               _iconBox(Icons.palette_outlined, d),
               const SizedBox(width: 12),
-              Expanded(child: Text('포인트 색', style: TextStyle(color: _sText(d), fontSize: 14.5))),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Text('포인트 색', style: TextStyle(color: _sText(d), fontSize: 14.5)),
+                        // ⓘ 누르면 바뀌는 곳 말풍선
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => _showBubble(_pointInfoKey, d,
+                              title: '포인트 색이 바뀌는 곳',
+                              items: _pointInfoItems,
+                              foot: '큰 버튼과 앱 아이콘은 바뀌지 않아요',
+                              keepOpenOnCard: true),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(6, 4, 8, 4),
+                            child: Icon(Icons.info_outline_rounded, key: _pointInfoKey, size: 16, color: _sTextHint(d)),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text('재생 중 표시·막대·스위치 같은 작은 곳의 색',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: _sTextHint(d), fontSize: 11.5)),
+                  ],
+                ),
+              ),
               Text(t.pointColorName ?? '', style: TextStyle(color: _sTextHint(d), fontSize: 12.5)),
             ],
           ),
@@ -763,6 +902,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                     HeadsetResume.setMode(i);
                     Navigator.pop(ctx);
+                    // 켤 때만 배터리 부탁 (한 번만)
+                    if (i > 0) {
+                      HeadsetResume.askBattery(context, 'headset',
+                          '폰이 오래 쉬고 있을 때도 이어폰 연결을 바로 알아차리려면 배터리 사용을 "제한 없음"으로 해 주세요.\n허용 안 해도 쓸 수 있지만, 가끔 늦거나 안 될 수 있어요.');
+                    }
                   },
                 ),
             ],
@@ -923,6 +1067,182 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+
+/// 넓은 먹색 설명 (다크 모드는 크림색) · 위쪽 꼬리 · ✕로 닫기
+class _InfoBubble extends StatefulWidget {
+  final String? title;
+  final String? text;
+  final List<(String, String)>? items;
+  final String? foot;
+  final double tailX;
+  final bool isDark;
+  final VoidCallback onClose;
+  final VoidCallback onClosed;
+  const _InfoBubble({
+    super.key,
+    this.title,
+    this.text,
+    this.items,
+    this.foot,
+    required this.tailX,
+    required this.isDark,
+    required this.onClose,
+    required this.onClosed,
+  });
+
+  @override
+  State<_InfoBubble> createState() => _InfoBubbleState();
+}
+
+class _InfoBubbleState extends State<_InfoBubble> with SingleTickerProviderStateMixin {
+  late final AnimationController _c =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 220));
+  bool _closing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _c.forward();
+  }
+
+  void close() {
+    if (_closing || !mounted) return;
+    _closing = true;
+    _c.reverse().whenComplete(widget.onClosed);
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bg = widget.isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final fg = widget.isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
+    final point = context.watch<ThemeProvider>().primaryColor; // 점 = 지금 포인트 색
+    final curve = CurvedAnimation(parent: _c, curve: Curves.easeOutCubic);
+    final head = widget.title ?? widget.text ?? '';
+    final items = widget.items ?? const <(String, String)>[];
+    return FadeTransition(
+      opacity: curve,
+      child: SlideTransition(
+        position: Tween<Offset>(begin: const Offset(0, -0.03), end: Offset.zero).animate(curve),
+        child: Material(
+          type: MaterialType.transparency,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              // 꼬리 (ⓘ 쪽을 가리킴)
+              Positioned(
+                top: -6,
+                left: (widget.tailX - 6.5).clamp(14.0, double.infinity).toDouble(),
+                child: Transform.rotate(
+                  angle: 0.785398,
+                  child: Container(
+                    width: 13,
+                    height: 13,
+                    decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(2)),
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.fromLTRB(18, 12, 12, 14),
+                decoration: BoxDecoration(
+                  color: bg,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black.withOpacity(0.22), blurRadius: 28, offset: const Offset(0, 12)),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              head,
+                              style: widget.title != null
+                                  ? TextStyle(color: fg, fontSize: 15.5, fontWeight: FontWeight.w800, letterSpacing: -0.3)
+                                  : TextStyle(color: fg, fontSize: 14, height: 1.55),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        // ✕ 닫기
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: widget.onClose,
+                          child: Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(color: fg.withOpacity(0.12), shape: BoxShape.circle),
+                            child: Icon(Icons.close_rounded, size: 19, color: fg),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (items.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      for (var i = 0; i < items.length; i++) ...[
+                        if (i > 0) Container(height: 1, margin: const EdgeInsets.only(right: 6), color: fg.withOpacity(0.12)),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 7, 6, 7),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 9,
+                                height: 9,
+                                margin: const EdgeInsets.only(top: 6),
+                                decoration: BoxDecoration(color: point, shape: BoxShape.circle),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text.rich(
+                                  TextSpan(children: [
+                                    TextSpan(text: items[i].$1, style: const TextStyle(fontWeight: FontWeight.w700)),
+                                    const TextSpan(text: '  '),
+                                    TextSpan(text: items[i].$2, style: TextStyle(color: fg.withOpacity(0.75))),
+                                  ]),
+                                  style: TextStyle(color: fg, fontSize: 14, height: 1.5),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
+                    if (widget.foot != null) ...[
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(Icons.info_outline_rounded, size: 15, color: fg.withOpacity(0.65)),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(widget.foot!,
+                                style: TextStyle(color: fg.withOpacity(0.65), fontSize: 12.5)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

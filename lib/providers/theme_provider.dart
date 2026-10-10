@@ -146,6 +146,11 @@ class ThemeProvider extends ChangeNotifier {
     final feedbackSoundEnabled = prefs.getBool('feedbackSoundEnabled');
     if (colorValue != null) {
       _primaryColor = Color(colorValue);
+      // 예전 색(지금 목록에 없는 색)은 가장 비슷한 새 색으로 바꿔 저장
+      if (pointColorName == null) {
+        _primaryColor = _nearestPointColor(_primaryColor);
+        await prefs.setInt('primaryColor', _primaryColor.value);
+      }
     }
     if (textScale != null) {
       _textScale = textScale;
@@ -167,6 +172,21 @@ class ThemeProvider extends ChangeNotifier {
     }
     _applySystemBars();
     notifyListeners();
+  }
+
+  /// 예전 색 → 새 색: 초록→숲, 주황·빨강→노을, 보라→라벤더, 분홍→벚꽃, 청록→바다, 노랑→햇살, 나머지→파란소리
+  static Color _nearestPointColor(Color c) {
+    Color pick(String name) => pointColors.firstWhere((p) => p.$1 == name).$2;
+    final hsv = HSVColor.fromColor(c);
+    if (hsv.saturation < 0.15 || hsv.value < 0.15) return pick('파란소리');
+    final h = hsv.hue;
+    if (h < 40 || h >= 345) return pick('노을');
+    if (h < 75) return pick('햇살');
+    if (h < 170) return pick('숲');
+    if (h < 200) return pick('바다');
+    if (h < 250) return pick('파란소리');
+    if (h < 290) return pick('라벤더');
+    return pick('벚꽃');
   }
 
   Future<void> setPrimaryColor(Color color) async {

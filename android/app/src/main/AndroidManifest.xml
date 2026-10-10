@@ -72,13 +72,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
-            <!-- 약관 페이지의 홈 버튼 (paransori://home) → 앱 열기 -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="paransori" android:host="home"/>
-            </intent-filter>
+
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -92,6 +86,21 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="file" android:mimeType="audio/*"/>
+            </intent-filter>
+        </activity>
+
+        <!-- 약관 페이지의 홈 버튼 (paransori://home) → 켜져 있던 파란소리 메인 화면으로 -->
+        <activity
+            android:name=".HomeLinkActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="paransori" android:host="home"/>
             </intent-filter>
         </activity>
 

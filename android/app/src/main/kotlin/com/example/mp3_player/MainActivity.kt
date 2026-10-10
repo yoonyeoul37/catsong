@@ -65,10 +65,10 @@ class MainActivity : AudioServiceActivity() {
         handleHomeIntent(intent)
     }
 
-    /// 약관 페이지의 홈 버튼 (paransori://home) → 앱 홈 화면으로
+    /// 약관 페이지의 홈 버튼 → 메인 화면으로 (HomeLinkActivity가 보내 줌)
     private fun handleHomeIntent(i: android.content.Intent?) {
-        if (i?.data?.scheme != "paransori") return
-        i.data = null
+        if (i == null || !i.getBooleanExtra("paranGoHome", false)) return
+        i.removeExtra("paranGoHome")
         alarmChannel?.invokeMethod("goHome", null)
     }
 
@@ -2021,5 +2021,23 @@ object HeadsetWatch {
         startedAt = System.currentTimeMillis()
         val am = ctx.applicationContext.getSystemService(android.content.Context.AUDIO_SERVICE) as AudioManager
         am.registerAudioDeviceCallback(callback, android.os.Handler(android.os.Looper.getMainLooper()))
+    }
+}
+
+/// 약관 페이지 홈 버튼 (paransori://home) → 이미 켜진 파란소리로 돌아가서 메인 화면으로
+/// (새로 켜지지 않게: 기존 화면을 앞으로 가져오고 바로 사라짐)
+class HomeLinkActivity : android.app.Activity() {
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+        super.onCreate(savedInstanceState)
+        val i = android.content.Intent(this, MainActivity::class.java).apply {
+            addFlags(
+                android.content.Intent.FLAG_ACTIVITY_NEW_TASK or
+                        android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                        android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
+            )
+            putExtra("paranGoHome", true)
+        }
+        startActivity(i)
+        finish()
     }
 }

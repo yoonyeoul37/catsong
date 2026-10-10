@@ -224,18 +224,11 @@ class _ArtistApi {
       .replaceAll(RegExp(r'\s*[\(\[].*?[\)\]]'), '')
       .replaceAll(RegExp(r'\s+-\s+(single|ep)$', caseSensitive: false), ''));
 
-  /// 앨범 더 찾기: 애플(한국 스토어) + 뮤직브레인즈 → 디저 목록에 없는 것만 더하기
-  static Future<void> moreAlbums(_Info info, String artist) async {
-    final seen = info.albums.map((a) => _normAlbum(a.title)).toSet();
-    final more = <_Album>[];
-    void add(String title, String cover, String date, String kind) {
-      final t = title.replaceAll(RegExp(r'\s+-\s+(Single|EP)$'), '').trim();
-      final k = _normAlbum(t);
-      if (t.isEmpty || k.isEmpty || !seen.add(k)) return;
-      more.add(_Album(t, cover, date.length >= 4 ? date.substring(0, 4) : '', kind));
-    }
+  static String _year(String date) => date.length >= 4 ? date.substring(0, 4) : '';
 
-    // 애플 (한국 스토어: 옛날 한국 앨범이 많아요)
+  /// 애플(한국 스토어) 앨범 — 카드 뜰 때 디저와 동시에
+  static Future<List<_Album>> appleAlbums(String artist) async {
+    final out = <_Album>[];
     final s = await _get('https://itunes.apple.com/search?entity=musicArtist&country=KR&limit=5'
         '&term=${Uri.encodeQueryComponent(artist)}');
     int? appleId;
@@ -245,23 +238,26 @@ class _ArtistApi {
         break;
       }
     }
-    if (appleId != null) {
-      final l = await _get('https://itunes.apple.com/lookup?id=$appleId&entity=album&country=KR&limit=200');
-      for (final c in (l?['results'] as List?)?.whereType<Map>() ?? const <Map>[]) {
-        if (c['wrapperType'] != 'collection') continue;
-        final name = '${c['collectionName'] ?? ''}';
-        final n = (c['trackCount'] as num?)?.toInt() ?? 0;
-        final kind = name.endsWith(' - Single') || (n > 0 && n <= 3)
-            ? '싱글'
-            : name.endsWith(' - EP')
-                ? 'EP'
-                : '앨범';
-        add(name, '${c['artworkUrl100'] ?? ''}'.replaceAll('100x100bb', '300x300bb'), '${c['releaseDate'] ?? ''}',
-            kind);
-      }
+    if (appleId == null) return out;
+    final l = await _get('https://itunes.apple.com/lookup?id=$appleId&entity=album&country=KR&limit=200');
+    for (final c in (l?['results'] as List?)?.whereType<Map>() ?? const <Map>[]) {
+      if (c['wrapperType'] != 'collection') continue;
+      final name = '${c['collectionName'] ?? ''}';
+      final n = (c['trackCount'] as num?)?.toInt() ?? 0;
+      final kind = name.endsWith(' - Single') || (n > 0 && n <= 3)
+          ? '싱글'
+          : name.endsWith(' - EP')
+              ? 'EP'
+              : '앨범';
+      out.add(_Album(name, '${c['artworkUrl100'] ?? ''}'.replaceAll('100x100bb', '300x300bb'),
+          _year('${c['releaseDate'] ?? ''}'), kind));
     }
+    return out;
+  }
 
-    // 뮤직브레인즈 (1초에 한 번만)
+  /// 뮤직브레인즈 앨범 — 조금 늦게 (1초에 한 번만 물어봐야 해서)
+  static Future<List<_Album>> mbAlbums(String artist) async {
+    final out = <_Album>[];
     await Future.delayed(const Duration(milliseconds: 1100));
     final q = Uri.encodeQueryComponent('artist:"$artist"');
     final m = await _get('https://musicbrainz.org/ws/2/release-group?query=$q&fmt=json&limit=60');
@@ -282,12 +278,24 @@ class _ArtistApi {
                   : pt == 'EP'
                       ? 'EP'
                       : '앨범';
-      add('${g['title'] ?? ''}', 'https://coverartarchive.org/release-group/${g['id']}/front-250',
-          '${g['first-release-date'] ?? ''}', kind);
+      out.add(_Album('${g['title'] ?? ''}', 'https://coverartarchive.org/release-group/${g['id']}/front-250',
+          _year('${g['first-release-date'] ?? ''}'), kind));
     }
+    return out;
+  }
 
+  /// 겹치는 앨범은 빼고 합치기 → 최신부터 40개까지
+  static void mergeAlbums(_Info info, List<_Album> extra) {
+    final seen = info.albums.map((a) => _normAlbum(a.title)).toSet();
+    final more = <_Album>[];
+    for (final a in extra) {
+      final t = a.title.replaceAll(RegExp(r'\s+-\s+(Single|EP)$'), '').trim();
+      final k = _normAlbum(t);
+      if (t.isEmpty || k.isEmpty || !seen.add(k)) continue;
+      more.add(_Album(t, a.cover, a.year, a.kind));
+    }
     if (more.isEmpty) return;
-    final all = [...info.albums, ...more]..sort((a, b) => b.year.compareTo(a.year)); // 최신부터
+    final all = [...info.albums, ...more]..sort((a, b) => b.year.compareTo(a.year));
     info.albums = all.take(40).toList();
     if ((info.albumCount ?? 0) < info.albums.length) info.albumCount = info.albums.length;
   }
@@ -417,7 +425,81 @@ class _ArtistApi {
     }
   }
 
+  /// 작사·작곡: ① 뮤직브레인즈 → ② 없으면 Genius
   static Future<void> credits(_Info info, String title, String artist) async {
+    await _mbCredits(info, title, artist);
+    if (info.credits.isEmpty) await _geniusCredits(info, title, artist);
+  }
+
+  // ── Genius: 작사 · 작곡 · 편곡 · 프로듀서 ──
+  static const _geniusToken = 'BE8Wt-esSV5yI_7Dxs8aYrvanspIVI_YLO56H9alyGtvUYBJ0We5DqytX0xXpBNw';
+
+  static Future<Map?> _genius(String path) async {
+    try {
+      final r = await http.get(Uri.parse('https://api.genius.com$path'), headers: {
+        'Authorization': 'Bearer $_geniusToken',
+        'User-Agent': 'Paransori/1.0 (info@knexm.com)',
+      }).timeout(const Duration(seconds: 10));
+      if (r.statusCode != 200) return null;
+      final d = jsonDecode(utf8.decode(r.bodyBytes));
+      return d is Map ? d['response'] as Map? : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// "Kim Hyung-seok (김형석)" → 한국어 이름이 괄호 안에 있으면 그걸로
+  static String _cleanName(String n) {
+    final m = RegExp(r'^(.*?)\s*\(([^)]*)\)\s*$').firstMatch(n.trim());
+    if (m != null && RegExp(r'[가-힣]').hasMatch(m.group(2)!)) return m.group(2)!.trim();
+    return n.trim();
+  }
+
+  static void _addNames(_Info info, String role, List? artists) {
+    for (final a in artists?.whereType<Map>() ?? const <Map>[]) {
+      final name = _cleanName('${a['name'] ?? ''}');
+      if (name.isEmpty) continue;
+      final l = info.credits.putIfAbsent(role, () => []);
+      if (!l.contains(name)) l.add(name);
+    }
+  }
+
+  static Future<void> _geniusCredits(_Info info, String title, String artist) async {
+    final s = await _genius('/search?q=${Uri.encodeQueryComponent('$artist $title')}');
+    int? id;
+    for (final h in (s?['hits'] as List?)?.whereType<Map>() ?? const <Map>[]) {
+      final r = h['result'] as Map?;
+      if (r == null) continue;
+      final an = '${(r['primary_artist'] as Map?)?['name'] ?? ''}';
+      final tn = '${r['title'] ?? ''}';
+      if (_sameArtist(an, artist) && _sameArtist(tn, title)) {
+        id = (r['id'] as num?)?.toInt();
+        break;
+      }
+    }
+    if (id == null) return;
+    final song = (await _genius('/songs/$id?text_format=plain'))?['song'] as Map?;
+    if (song == null) return;
+    // 작사 · 작곡 · 편곡 (Genius "Credits")
+    for (final c in (song['custom_performances'] as List?)?.whereType<Map>() ?? const <Map>[]) {
+      final label = '${c['label'] ?? ''}'.toLowerCase();
+      final role = label.contains('lyric')
+          ? '작사'
+          : label.contains('compos')
+              ? '작곡'
+              : label.contains('arrang')
+                  ? '편곡'
+                  : null;
+      if (role != null) _addNames(info, role, c['artists'] as List?);
+    }
+    // 작사·작곡 따로 없으면 "Written By" → 작사·작곡
+    if (info.credits['작사'] == null && info.credits['작곡'] == null) {
+      _addNames(info, '작사·작곡', song['writer_artists'] as List?);
+    }
+    _addNames(info, '프로듀서', song['producer_artists'] as List?);
+  }
+
+  static Future<void> _mbCredits(_Info info, String title, String artist) async {
     final q = Uri.encodeQueryComponent('recording:"$title" AND artist:"$artist"');
     final s = await _get('https://musicbrainz.org/ws/2/recording/?query=$q&fmt=json&limit=3');
     final recs = (s?['recordings'] as List?)?.whereType<Map>().toList() ?? [];
@@ -460,7 +542,7 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
   String get _artist => widget.song.artistDisplay.trim();
   bool get _unknownArtist =>
       _artist.isEmpty || _artist.contains('알 수 없') || _artist.toLowerCase().contains('unknown');
-  String get _key => 'artistInfo3:${_artist.toLowerCase()}|${_title.toLowerCase()}';
+  String get _key => 'artistInfo4:${_artist.toLowerCase()}|${_title.toLowerCase()}';
 
   @override
   void initState() {
@@ -507,11 +589,14 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
     }
     // 2) 인터넷에서 찾기 (곡·가수 사진 / 소개 / 솔로·그룹 동시에)
     final info = _Info()..artist = _artist;
+    var apple = <_Album>[];
     await Future.wait([
+      _ArtistApi.appleAlbums(_artist).then((l) => apple = l),
       _ArtistApi.deezer(info, _title, _artist),
       _ArtistApi.wiki(info, _artist, lang),
       _ArtistApi.mbArtist(info, _artist),
     ]);
+    _ArtistApi.mergeAlbums(info, apple);
     if (!mounted) return;
     setState(() {
       _info = info;
@@ -522,8 +607,8 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
 
   /// 작사·작곡은 조금 늦게 (뮤직브레인즈가 천천히 받아야 해서)
   Future<void> _loadCredits(_Info info, SharedPreferences p) async {
-    // 앨범 더 찾기 (애플·뮤직브레인즈) → 화면에 바로 반영
-    await _ArtistApi.moreAlbums(info, _artist);
+    // 뮤직브레인즈에만 있는 앨범 더하기 → 화면에 바로 반영
+    _ArtistApi.mergeAlbums(info, await _ArtistApi.mbAlbums(_artist));
     if (mounted) setState(() {});
     await Future.delayed(const Duration(milliseconds: 1100));
     await _ArtistApi.credits(info, _title, _artist);
@@ -680,36 +765,51 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
         ));
       }
       if (info.bio != null) {
-        children.add(GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () => setState(() => _bioOpen = !_bioOpen),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 220),
-                  alignment: Alignment.topCenter,
-                  child: Text(info.bio!,
-                      maxLines: _bioOpen ? null : 3,
-                      overflow: _bioOpen ? TextOverflow.visible : TextOverflow.ellipsis,
-                      style: TextStyle(color: sub, fontSize: 13.5, height: 1.65)),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(_bioOpen ? '접기' : '더 보기',
-                        style: TextStyle(color: ink, fontSize: 12.5, fontWeight: FontWeight.w700)),
-                    if (info.bioTranslated) ...[
-                      const Spacer(),
-                      Text('자동 번역', style: TextStyle(color: hint, fontSize: 11.5)),
-                    ],
+        final bioStyle = TextStyle(color: sub, fontSize: 13.5, height: 1.65);
+        children.add(Padding(
+          padding: const EdgeInsets.only(top: 12),
+          child: LayoutBuilder(builder: (context, c) {
+            // 3줄이 넘을 때만 "더 보기"
+            final tp = TextPainter(
+              text: TextSpan(text: info.bio!, style: bioStyle),
+              maxLines: 3,
+              textDirection: TextDirection.ltr,
+              textScaler: MediaQuery.textScalerOf(context),
+            )..layout(maxWidth: c.maxWidth);
+            final long = tp.didExceedMaxLines;
+            tp.dispose();
+            return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: long ? () => setState(() => _bioOpen = !_bioOpen) : null,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 220),
+                    alignment: Alignment.topCenter,
+                    child: Text(info.bio!,
+                        maxLines: (_bioOpen || !long) ? null : 3,
+                        overflow: (_bioOpen || !long) ? TextOverflow.visible : TextOverflow.ellipsis,
+                        style: bioStyle),
+                  ),
+                  if (long || info.bioTranslated) ...[
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        if (long)
+                          Text(_bioOpen ? '접기' : '더 보기',
+                              style: TextStyle(color: ink, fontSize: 12.5, fontWeight: FontWeight.w700)),
+                        if (info.bioTranslated) ...[
+                          const Spacer(),
+                          Text('자동 번역', style: TextStyle(color: hint, fontSize: 11.5)),
+                        ],
+                      ],
+                    ),
                   ],
-                ),
-              ],
-            ),
-          ),
+                ],
+              ),
+            );
+          }),
         ));
       }
 
@@ -851,7 +951,7 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
         padding: const EdgeInsets.only(top: 18),
         child: Column(
           children: [
-            Text('정보: Deezer · MusicBrainz · Wikipedia',
+            Text('정보: Deezer · Apple · MusicBrainz · Genius · Wikipedia',
                 textAlign: TextAlign.center, style: TextStyle(color: hint, fontSize: 11.5)),
             const SizedBox(height: 2),
             Text('찾지 못한 항목은 보이지 않아요',
@@ -871,12 +971,22 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
       ));
     }
 
-    return Container(
-      decoration: BoxDecoration(color: bg, borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
-      child: ListView(
-        controller: widget.scroll,
-        padding: EdgeInsets.fromLTRB(16, 10, 16, 24 + MediaQuery.of(context).padding.bottom),
-        children: children,
+    // 아래 시스템 바 자리는 비워 두기 (글자가 아이콘 뒤로 안 들어가게) + 아이콘 색은 카드에 맞추기
+    final navH = MediaQuery.of(context).viewPadding.bottom;
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        systemNavigationBarColor: bg,
+        systemNavigationBarIconBrightness: d ? Brightness.light : Brightness.dark,
+        systemNavigationBarDividerColor: Colors.transparent,
+      ),
+      child: Container(
+        decoration: BoxDecoration(color: bg, borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
+        padding: EdgeInsets.only(bottom: navH),
+        child: ListView(
+          controller: widget.scroll,
+          padding: const EdgeInsets.fromLTRB(16, 10, 16, 24),
+          children: children,
+        ),
       ),
     );
   }

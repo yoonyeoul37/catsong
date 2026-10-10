@@ -1907,7 +1907,7 @@ class _PlayerScreenState extends State<PlayerScreen>
           top: false,
           child: Container(
             margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-            constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.9),
+            constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.8),
             decoration: BoxDecoration(
               color: sheetColor,
               borderRadius: BorderRadius.circular(22),

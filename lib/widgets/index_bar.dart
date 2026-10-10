@@ -127,10 +127,8 @@ class _IndexBarState extends State<IndexBar> {
               width: 30,
               padding: const EdgeInsets.symmetric(vertical: 6),
               decoration: BoxDecoration(
-                // 목록 위에 겹쳐 뜨니까 반투명 바탕 (아래가 살짝 비쳐요)
-                color: (widget.isDark ? const Color(0xFF32302C) : Colors.white).withOpacity(0.9),
+                color: Colors.transparent, // 막대 배경 없음 (초성 글자만)
                 borderRadius: BorderRadius.circular(15),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 10)],
               ),
               child: Column(
                 children: kIndexGroups

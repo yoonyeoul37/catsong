@@ -555,7 +555,8 @@ class _RiseIn extends StatefulWidget {
 class _RiseInState extends State<_RiseIn> with SingleTickerProviderStateMixin {
   late final AnimationController _c;
   late final Animation<double> _fade;
-  late final Animation<Offset> _slide;
+  late Animation<Offset> _slide;
+  late final CurvedAnimation _curve;
   late final Animation<double> _scale;
   ScrollPosition? _pos;
   bool _started = false;
@@ -564,7 +565,7 @@ class _RiseInState extends State<_RiseIn> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 560));
-    final curve = CurvedAnimation(parent: _c, curve: Curves.easeOutCubic);
+    final curve = _curve = CurvedAnimation(parent: _c, curve: Curves.easeOutCubic);
     _fade = CurvedAnimation(parent: _c, curve: const Interval(0, 0.7, curve: Curves.easeOut));
     _slide = Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero).animate(curve);
     _scale = Tween<double>(begin: 0.96, end: 1).animate(curve);
@@ -603,8 +604,12 @@ class _RiseInState extends State<_RiseIn> with SingleTickerProviderStateMixin {
     final top = box.localToGlobal(Offset.zero, ancestor: vp).dy;
     final h = vp.size.height;
     if (top + box.size.height <= 0 || top >= h) return; // 아직 화면 밖
-    // 아래에서 들어오면 떠오르기, 위로 올려서 들어오면 그냥 보이기
-    _start(animate: first || top > h * 0.5);
+    // 아래에서 들어오면 아래→위로, 위에서 들어오면 위→아래로 살포시
+    final fromTop = !first && top <= h * 0.5;
+    if (fromTop) {
+      setState(() => _slide = Tween<Offset>(begin: const Offset(0, -0.5), end: Offset.zero).animate(_curve));
+    }
+    _start(animate: true);
   }
 
   void _start({required bool animate}) {

@@ -38,6 +38,7 @@ import '../widgets/paran_toast.dart';
 import '../widgets/paran_dialog.dart';
 import '../services/cast_service.dart';
 import '../widgets/cast_sheets.dart';
+import '../widgets/artist_info_sheet.dart';
 import '../services/nature_overlay.dart';
 import '../l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
@@ -1186,6 +1187,12 @@ class _PlayerScreenState extends State<PlayerScreen>
     }
 
     return GestureDetector(
+      // 위로 밀면 가수·곡 정보 카드
+      onVerticalDragEnd: (details) {
+        final v = details.primaryVelocity ?? 0;
+        final s = playerProvider.currentSong;
+        if (v < -500 && s != null) showArtistInfo(context, s);
+      },
       onHorizontalDragEnd: (details) {
         if (details.primaryVelocity == null) return;
         if (details.primaryVelocity! < -300) {
@@ -2199,7 +2206,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                             letterSpacing: -0.3),
                       ),
                       const SizedBox(height: 5),
-                      Row(
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => showArtistInfo(context, song),
+                        child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           // 포인트색 점 (가사 화면·미니플레이어와 같은 색)
@@ -2223,7 +2233,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                                   fontWeight: FontWeight.w500),
                             ),
                           ),
+                          // 누를 수 있다는 표시
+                          Icon(Icons.chevron_right_rounded, size: 17, color: Colors.white.withOpacity(0.55)),
                         ],
+                      ),
                       ),
                       // 자연소리 같이 듣는 중이면 가는 선 아래에 표시
                       _natureBadge(const EdgeInsets.only(top: 0), withLine: true),
@@ -2856,11 +2869,24 @@ class _PlayerScreenState extends State<PlayerScreen>
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis),
                     const SizedBox(height: 0),
-                    Text(song.artistDisplay,
-                        style: TextStyle(
-                            color: baseColor.withOpacity(0.7), fontSize: 11),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => showArtistInfo(context, song),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(song.artistDisplay,
+                                style: TextStyle(
+                                    color: baseColor.withOpacity(0.7), fontSize: 11),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis),
+                          ),
+                          // 누를 수 있다는 표시
+                          Icon(Icons.chevron_right_rounded, size: 15, color: baseColor.withOpacity(0.45)),
+                        ],
+                      ),
+                    ),
                     // 🌿 자연소리 섞는 중 (파란포토는 가운데 박스에 나오니까 여기선 빼기)
                     if (_albumArtStyle != 6) _natureBadge(const EdgeInsets.only(top: 6)),
                   ],

@@ -197,8 +197,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             if (mounted) setState(() {}); // 맨 위 카드 글자도 바로 바뀌게
           }, primaryColor: primaryColor),
           _buildTile(context, icon: Icons.star_outline, title: l.rateApp, onTap: () => _launchUrl('https://play.google.com/store/apps/details?id=kr.ssing.catsong'), primaryColor: primaryColor),
-          _buildTile(context, icon: Icons.privacy_tip_outlined, title: l.privacyPolicy, onTap: () => _launchUrl(l.privacyPolicyUrl), primaryColor: primaryColor),
-          _buildTile(context, icon: Icons.description_outlined, title: l.termsOfService, onTap: () => _launchUrl(l.termsOfServiceUrl), primaryColor: primaryColor, isLast: true),
+          _buildTile(context, icon: Icons.privacy_tip_outlined, title: l.privacyPolicy, onTap: () => _launchUrl(_policyUrl('privacy_policy')), primaryColor: primaryColor),
+          _buildTile(context, icon: Icons.description_outlined, title: l.termsOfService, onTap: () => _launchUrl(_policyUrl('terms_of_service')), primaryColor: primaryColor, isLast: true),
           const SizedBox(height: 24),
           Center(child: Text('KNEXM.Co.,LTD', style: TextStyle(color: Colors.grey[400], fontSize: 12))),
           const SizedBox(height: 8),
@@ -946,6 +946,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
     );
+  }
+
+  /// 약관 주소: 폰 언어 + 앱 다크/라이트를 붙여서 (페이지가 그대로 맞춰 열림)
+  String _policyUrl(String page) {
+    final lang = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+    final theme = context.read<ThemeProvider>().isDarkMode ? 'dark' : 'light';
+    return 'https://www.ssing.kr/$page.html?lang=$lang&theme=$theme';
   }
 
   Future<void> _launchUrl(String url) async {

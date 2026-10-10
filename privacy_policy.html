@@ -7,6 +7,7 @@
 <meta name="description" content="Paransori (파란소리) — Privacy Policy, KNEXM Co., Ltd.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=Quicksand:wght@600;700&display=swap">
+<script>(function(){try{var t=new URLSearchParams(location.search).get('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <style>
 :root{--page:#EDE7DA;--bg:#F4EFE5;--card:#FFFFFF;--ink:#17140F;--onink:#F4EFE5;--sub:#5A5348;--hint:#8A8378;--line:#E6DFD2;--point:#2589E8;--tint:#F4EFE5}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--page:#1C1A17;--bg:#24221F;--card:#32302C;--ink:#F3EFE7;--onink:#24221F;--sub:#CFC8BB;--hint:#B8B0A2;--line:#4A4640;--point:#6FB0FF;--tint:rgba(255,255,255,.06);color-scheme:dark}}
@@ -101,11 +102,14 @@ a{color:inherit}
     docs.forEach(function(d){ d.hidden = d.getAttribute('data-lang') !== code; });
     document.documentElement.lang = document.querySelector('.doc[data-lang="'+code+'"]').getAttribute('lang');
     chips.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.lang === code ? 'true' : 'false'); });
-    swap.textContent = SWAP[code]; swap.href = swap.getAttribute('data-base') + '?lang=' + code;
+    swap.textContent = SWAP[code]; swap.href = swap.getAttribute('data-base') + '?lang=' + code + THEME;
+    document.querySelectorAll('.foot .other').forEach(function(a){ a.href = a.href.split('?')[0] + '?lang=' + a.closest('.doc').getAttribute('data-lang') + THEME; });
     document.title = TITLES[code] + ' · Paransori';
-    if (push) { try { history.replaceState(null, '', '?lang=' + code); } catch(e){} }
+    if (push) { try { history.replaceState(null, '', '?lang=' + code + THEME); } catch(e){} }
   }
   var TITLES = {"ko": "개인정보처리방침", "en": "Privacy Policy", "ja": "プライバシーポリシー", "zh": "隱私權政策", "vi": "Chính sách quyền riêng tư", "hi": "गोपनीयता नीति", "id": "Kebijakan Privasi", "th": "นโยบายความเป็นส่วนตัว", "es": "Política de privacidad", "pt": "Política de Privacidade"};
+  var TH = document.documentElement.getAttribute('data-theme');
+  var THEME = TH ? '&theme=' + TH : '';
   var first = pick();
   var order = [first].concat(ORDER.filter(function(c){ return c !== first; }));
   chips.innerHTML = order.map(function(c){ return '<button type="button" data-lang="'+c+'" lang="'+c+'">'+NAMES[c]+'</button>'; }).join('');

@@ -703,6 +703,48 @@ class _LyricsScreenState extends State<LyricsScreen> {
     showParanSheet(
       context,
       title: '가사 배경',
+      // 제목: 카메라 아이콘 칸 + '가사 배경'(도현) + 설명 (파란포토 창과 같은 모양)
+      header: Padding(
+        padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
+        child: Builder(builder: (_) {
+          final dark = context.read<ThemeProvider>().isDarkMode;
+          return Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: dark ? const Color(0xFF3E3B37) : Colors.white,
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                child: Icon(Icons.photo_camera_outlined, size: 20,
+                    color: dark ? const Color(0xFFB8B0A2) : const Color(0xFF5A5348)),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('가사 배경',
+                        style: GoogleFonts.doHyeon(
+                          color: dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F),
+                          fontSize: 19,
+                        )),
+                    const SizedBox(height: 1),
+                    Text('나만의 가사 화면 꾸미기',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: dark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378),
+                          fontSize: 12,
+                        )),
+                  ],
+                ),
+              ),
+            ],
+          );
+        }),
+      ),
       builder: (ctx, setSheet) {
         Widget tile(int i) {
           final file = _bgs[(i - 1).clamp(0, _bgs.length - 1)].file;
@@ -807,7 +849,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                     const SizedBox(height: 4),
                     Text('사진 추가', style: TextStyle(color: sub, fontSize: 11.5, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 1),
-                    Text('세로 사진 추천', style: TextStyle(color: sub.withOpacity(0.75), fontSize: 9.5)),
+                    Text('세로형 사진을 추천해요', style: TextStyle(color: sub.withOpacity(0.75), fontSize: 9.5)),
                   ],
                 ),
               ),
@@ -903,7 +945,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                                   !_random
                                       ? '노래가 바뀔 때마다 다른 사진'
                                       : _picks.isEmpty
-                                          ? '아래 사진을 누르면 고른 사진만 나와요'
+                                          ? '원하는 사진을 선택해 보세요'
                                           : '고른 사진 ${_picks.length}장 중에서 · 다시 누르면 빠져요',
                                   style: TextStyle(color: sub, fontSize: 11.5)),
                             ],

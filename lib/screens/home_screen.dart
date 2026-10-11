@@ -1870,13 +1870,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           gaplessPlayback: true,
                           cacheWidth: 216, // 화면 크기만큼만
                         )
-                            : Container(
-                          width: 72,
-                          height: 72,
-                          color: primaryColor.withOpacity(0.7),
-                          child: const Icon(Icons.music_note_rounded,
-                              color: Colors.white, size: 26),
-                        );
+                            : _recentTile(isDarkMode, const Color(0xFFF3D9C9), Icons.music_note_rounded);
                         onTapAction = () {
                           if (matched != null) {
                             final queueIndex = recentMusicSongs.indexWhere((s) => s.uri == matched!.uri);
@@ -1890,12 +1884,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       case RecentContentType.radio:
                         typeIcon = Icons.radio_rounded;
                         typeColor = const Color(0xFF8B5CF6);
-                        thumbnail = Container(
-                          width: 72,
-                          height: 72,
-                          color: typeColor.withOpacity(0.7),
-                          child: const Icon(Icons.radio_rounded, color: Colors.white, size: 26),
-                        );
+                        thumbnail = _recentTile(isDarkMode, const Color(0xFFD5E1EC), Icons.radio_rounded);
                         onTapAction = () {
                           if (item.stationData != null) {
                             final station = RadioStation.fromJson(item.stationData!);
@@ -1906,12 +1895,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       case RecentContentType.nature:
                         typeIcon = Icons.waves_rounded;
                         typeColor = const Color(0xFF10B981);
-                        thumbnail = Container(
-                          width: 72,
-                          height: 72,
-                          color: typeColor.withOpacity(0.7),
-                          child: const Icon(Icons.waves_rounded, color: Colors.white, size: 26),
-                        );
+                        thumbnail = _recentTile(isDarkMode, const Color(0xFFDCE5D2), Icons.waves_rounded);
                         onTapAction = () {
                           if (item.natureAssetPath != null) {
                             context.read<PlayerProvider>().playNatureSound(item.natureAssetPath!, item.title);
@@ -1921,12 +1905,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       case RecentContentType.sleep:
                         typeIcon = Icons.bedtime_rounded;
                         typeColor = const Color(0xFF6366F1);
-                        thumbnail = Container(
-                          width: 72,
-                          height: 72,
-                          color: typeColor.withOpacity(0.7),
-                          child: const Icon(Icons.bedtime_rounded, color: Colors.white, size: 26),
-                        );
+                        thumbnail = _recentTile(isDarkMode, const Color(0xFFDDD6E8), Icons.bedtime_rounded);
                         onTapAction = () {};
                         break;
                     }
@@ -3328,4 +3307,20 @@ class _DashedBoxPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_DashedBoxPainter old) => old.color != color;
+}
+
+/// 최근에 들었어요: 사진 없는 칸 (위 큰 카드와 같은 파스텔 색)
+Widget _recentTile(bool isDarkMode, Color pastel, IconData icon) {
+  return Container(
+    width: 72,
+    height: 72,
+    color: isDarkMode ? const Color(0xFF3A3631) : pastel,
+    child: Icon(
+      icon,
+      size: 26,
+      color: isDarkMode
+          ? const Color(0xFFF3EFE7).withOpacity(0.75)
+          : const Color(0xFF17140F).withOpacity(0.55),
+    ),
+  );
 }

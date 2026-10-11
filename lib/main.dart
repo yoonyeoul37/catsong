@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'utils/greeting_images.dart';
 import 'utils/paran_photo.dart';
 import 'package:audio_service/audio_service.dart';
@@ -45,7 +46,7 @@ void main() async {
   PaintingBinding.instance.imageCache.maximumSizeBytes = 50 << 20;
   // 시작 화면을 최소 1.2초는 보여주기 (너무 빨리 지나가지 않게)
   FlutterNativeSplash.preserve(widgetsBinding: binding);
-  Future.delayed(const Duration(milliseconds: 1200), FlutterNativeSplash.remove);
+  Future.delayed(const Duration(milliseconds: 600), FlutterNativeSplash.remove);
   MediaKit.ensureInitialized();
 
   // 오류 기록 (Firebase Crashlytics): 앱이 튕기거나 빨간 오류 화면이 뜨면 자동으로 기록
@@ -361,9 +362,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
     if (AlarmService.launchedByAlarm) {
       WidgetsBinding.instance.addPostFrameCallback((_) => AlarmService.showRing());
     }
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) setState(() => _showIntro = false);
-    });
+    // (첫인사 시간은 사진이 화면에 뜬 뒤부터 _IntroView가 잼)
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _checkAndShowWelcome();
     });
@@ -707,14 +706,13 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
         onTap: () => setState(() => _showIntro = false),
         child: Scaffold(
           backgroundColor: Colors.black,
-          body: Stack(
-            fit: StackFit.expand,
-            children: [
-              Image.asset(
-                introAssetPath(context),
-                fit: BoxFit.cover, // 화면 꽉 채우기 (위아래 검은 칸 없애기)
-              ),
-            ],
+          body: _IntroView(
+            path: introAssetPath(context),
+            onDone: () {
+              if (mounted) setState(() => _showIntro = false);
+            },
+            // 새 사진(글자 없음)은 한국어만 → 'Paransori'를 코드로 얹기
+            showTitle: Localizations.localeOf(context).languageCode == 'ko',
           ),
         ),
       );
@@ -726,6 +724,97 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
       WidgetsBinding.instance.addPostFrameCallback((_) => AssetImage(introPath).evict());
     }
     return const HomeScreen();
+  }
+}
+
+/// 첫인사 화면: 사진이 아주 천천히 다가오고, 'Paransori'가 아래에서 떠오르며 나타남
+class _IntroView extends StatefulWidget {
+  final String path;
+  final bool showTitle;
+  final VoidCallback onDone;
+  const _IntroView({required this.path, required this.showTitle, required this.onDone});
+
+  @override
+  State<_IntroView> createState() => _IntroViewState();
+}
+
+class _IntroViewState extends State<_IntroView> with SingleTickerProviderStateMixin {
+  // 첫인사가 3초라서 3초 동안 움직임
+  late final AnimationController _c =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 4500));
+  bool _started = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_started) return;
+    _started = true;
+    // 사진을 다 불러온 다음에 시작 (불러오는 동안 시간이 흘러가지 않게)
+    precacheImage(AssetImage(widget.path), context).whenComplete(() {
+      if (!mounted) return;
+      _c.forward().whenComplete(() {
+        if (mounted) widget.onDone();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // 사진: 3초 동안 6%만 살짝 다가오기
+    final zoom = Tween(begin: 1.0, end: 1.06)
+        .animate(CurvedAnimation(parent: _c, curve: Curves.easeOut));
+    // 글자: 0.4초 뒤부터 1.4초 동안 떠오르기 (글자 사이도 천천히 모임)
+    final t = CurvedAnimation(parent: _c, curve: const Interval(0.13, 0.6, curve: Curves.easeOutCubic));
+    final h = MediaQuery.sizeOf(context).height;
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        AnimatedBuilder(
+          animation: zoom,
+          builder: (_, child) => Transform.scale(scale: zoom.value, child: child),
+          child: Image.asset(widget.path, fit: BoxFit.cover), // 화면 꽉 채우기
+        ),
+        if (widget.showTitle)
+          Positioned(
+            left: 0,
+            right: 0,
+            top: h * 0.22, // 파란 하늘 자리
+            child: AnimatedBuilder(
+              animation: t,
+              builder: (_, __) => Opacity(
+                opacity: t.value,
+                child: Transform.translate(
+                  offset: Offset(0, 14 * (1 - t.value)),
+                  child: Text(
+                    'Paransori',
+                    textAlign: TextAlign.center,
+                    textScaler: TextScaler.noScaling, // 글자 크기 설정과 상관없이 고정
+                    style: GoogleFonts.quicksand( // 홈 로고와 같은 글꼴
+                      color: Colors.white,
+                      fontSize: 34,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 4 + 6 * (1 - t.value),
+                      shadows: [
+                        Shadow(
+                          color: Colors.black.withOpacity(0.18),
+                          blurRadius: 12,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
   }
 }
 

@@ -792,27 +792,45 @@ class _PlayerScreenState extends State<PlayerScreen>
       // 제목 옆에 작게: 무엇을 하는 곳인지
       header: Padding(
         padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-        child: Text.rich(
-          TextSpan(children: [
-            TextSpan(
-              text: '파란포토',
-              style: TextStyle(
-                color: context.read<ThemeProvider>().isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F),
-                fontSize: 17,
-                fontWeight: FontWeight.w800,
-                letterSpacing: -0.3,
+        child: Builder(builder: (_) {
+          final dark = context.read<ThemeProvider>().isDarkMode;
+          return Row(
+            children: [
+              // 왼쪽 카메라 아이콘 칸 (수면 타이머 창과 같은 모양)
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: dark ? const Color(0xFF3E3B37) : Colors.white,
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                child: Icon(Icons.photo_camera_outlined, size: 20,
+                    color: dark ? const Color(0xFFB8B0A2) : const Color(0xFF5A5348)),
               ),
-            ),
-            TextSpan(
-              text: '  (음악 재생 배경을 바꿀 수 있어요)',
-              style: TextStyle(
-                color: context.read<ThemeProvider>().isDarkMode ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378),
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('파란포토',
+                        style: GoogleFonts.doHyeon( // 홈과 같은 글꼴
+                          color: dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F),
+                          fontSize: 19,
+                        )),
+                    const SizedBox(height: 1),
+                    Text('나만의 재생 화면 꾸미기',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: dark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378),
+                          fontSize: 12,
+                        )),
+                  ],
+                ),
               ),
-            ),
-          ]),
-        ),
+            ],
+          );
+        }),
       ),
       builder: (ctx, setSheet) {
         final dark = context.read<ThemeProvider>().isDarkMode;
@@ -950,7 +968,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     const SizedBox(height: 4),
                     Text('사진 추가', style: TextStyle(color: sub, fontSize: 11.5, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 1),
-                    Text('세로 사진 추천', style: TextStyle(color: sub.withOpacity(0.75), fontSize: 9.5)),
+                    Text('세로형 사진을 추천해요', style: TextStyle(color: sub.withOpacity(0.75), fontSize: 9.5)),
                   ],
                 ),
               ),
@@ -1004,7 +1022,7 @@ class _PlayerScreenState extends State<PlayerScreen>
             : _photoMode == 1
                 ? (picksNow.isNotEmpty
                     ? '고른 사진 ${picksNow.length}장이 곡마다 바뀌어요 · 다시 누르면 빠져요'
-                    : '사진을 누르면 고른 사진만 나와요 · 안 고르면 "$rangeName" 중에서')
+                    : '원하는 사진을 선택해 보세요')
                 : '고른 사진 한 장만 계속 보여요';
         final List<Widget> tiles;
         if (cat == '내 사진') {

@@ -294,6 +294,8 @@ class _HomeScreenState extends State<HomeScreen> {
       if (_songListController.hasClients &&
           _songListController.position.userScrollDirection != ScrollDirection.idle) {
         _scrollPokeIndexBar();
+        // 검색 중에 목록을 밀면 키보드만 내려가기
+        if (_isSearching) FocusManager.instance.primaryFocus?.unfocus();
       }
     });
     // 지난번 정렬(제목/가수) 불러오기
@@ -1157,7 +1159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 context.read<MusicProvider>().clearSearch();
               },
               child: Text(AppLocalizations.of(context)!.cancel,
-                  style: TextStyle(color: baseColor.withOpacity(0.7), fontWeight: FontWeight.w600)),
+                  style: TextStyle(color: baseColor, fontWeight: FontWeight.w700)),
             ),
           ),
       ],
@@ -1165,29 +1167,53 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildSearchField() {
+    // 크림 상자 · 회갈색 아이콘 (⋮ 메뉴 카드·아이콘과 같은 색)
+    final dark = context.watch<ThemeProvider>().isDarkMode;
+    final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    const iconColor = Color(0xFF8A8378);
+    final hasText = _searchController.text.isNotEmpty;
     return TextField(
       controller: _searchController,
       autofocus: true,
-      style: const TextStyle(color: Colors.black),
+      // 키보드 [검색] 누르면 키보드만 내려가서 결과가 다 보이게
+      textInputAction: TextInputAction.search,
+      onSubmitted: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+      cursorColor: ink,
+      style: TextStyle(color: ink, fontSize: 15, fontWeight: FontWeight.w500),
       decoration: InputDecoration(
         hintText: AppLocalizations.of(context)!.searchHint,
-        hintStyle: const TextStyle(color: Colors.black38),
+        hintStyle: TextStyle(color: ink.withOpacity(0.38), fontSize: 15),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
         filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        prefixIcon: const Icon(Icons.search, color: AppTheme.fixedAccent, size: 18),
-        suffixIcon: IconButton(
-          icon: Icon(
-            _isListening ? Icons.mic : Icons.mic_none,
-            color: _isListening ? Colors.redAccent : AppTheme.fixedAccent,
-            size: 20,
-          ),
-          onPressed: _toggleListening,
-        ),
+        fillColor: dark ? const Color(0xFF34312C) : const Color(0xFFFBF8F2),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+        prefixIcon: const Icon(Icons.search, color: iconColor, size: 20),
+        // 글자가 있으면 ✕(글자만 지우기), 없으면 마이크
+        suffixIcon: hasText
+            ? IconButton(
+                onPressed: () {
+                  _searchController.clear();
+                  context.read<MusicProvider>().search('');
+                  setState(() {});
+                },
+                icon: Container(
+                  width: 18,
+                  height: 18,
+                  decoration: BoxDecoration(color: ink.withOpacity(0.2), shape: BoxShape.circle),
+                  child: Icon(Icons.close_rounded, size: 12, color: dark ? const Color(0xFF24221F) : Colors.white),
+                ),
+              )
+            : IconButton(
+                icon: Icon(
+                  _isListening ? Icons.mic : Icons.mic_none,
+                  color: _isListening ? Colors.redAccent : iconColor,
+                  size: 20,
+                ),
+                onPressed: _toggleListening,
+              ),
         isDense: true,
       ),
       onChanged: (value) {

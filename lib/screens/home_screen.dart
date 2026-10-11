@@ -615,7 +615,7 @@ class _HomeScreenState extends State<HomeScreen> {
           opacity: value,
           child: TweenAnimationBuilder<double>(
             tween: Tween(begin: 0.05, end: 0.85),
-            duration: const Duration(milliseconds: 11000),
+            duration: const Duration(milliseconds: 7000), // 끝인사: 서서히 어둡게
             curve: Curves.easeIn,
             builder: (_, darkValue, __) => Container(
               width: double.infinity,
@@ -640,7 +640,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     overlay.insert(entry);
 
-    Future.delayed(const Duration(milliseconds: 8000), () async {
+    Future.delayed(const Duration(milliseconds: 6500), () async {
       late OverlayEntry fadeOutEntry;
       fadeOutEntry = OverlayEntry(
         builder: (_) => TweenAnimationBuilder<double>(

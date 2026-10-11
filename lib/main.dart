@@ -799,7 +799,7 @@ class _IntroViewState extends State<_IntroView> with SingleTickerProviderStateMi
                       color: Colors.white,
                       fontSize: 34,
                       fontWeight: FontWeight.w500,
-                      letterSpacing: 4 + 6 * (1 - t.value),
+                      letterSpacing: 1.5 + 4 * (1 - t.value),
                       shadows: [
                         Shadow(
                           color: Colors.black.withOpacity(0.18),

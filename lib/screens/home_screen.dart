@@ -54,6 +54,7 @@ import 'nature_sound_detail_screen.dart';
 import 'radio_player_screen.dart';
 import '../utils/nature_sound_catalog.dart';
 import '../utils/paran_photo.dart';
+import '../utils/no_album_helper.dart';
 import '../utils/index_letter.dart';
 import '../widgets/index_bar.dart';
 import '../widgets/action_feedback.dart';
@@ -2091,12 +2092,22 @@ class _HomeScreenState extends State<HomeScreen> {
     late Widget subLine;
     String? action;
     VoidCallback? onAction;
+    late String label; // 제목 위 작은 이름표
+    late Widget lead; // 왼쪽 그림
+    // 이름표·막대 강조 색 (기본 파랑이면 로고와 같은 파랑)
+    final point = context.read<ThemeProvider>().primaryColor;
+    final accent = point.value == 0xFF2589E8
+        ? (isDark ? const Color(0xFF6FB0FF) : const Color(0xFF2F7DE8))
+        : point;
+    final softBox = isDark ? const Color(0xFF3A3631) : const Color(0x8CFFFFFF);
 
     if (kind == 0) {
       // ① 오늘의 한 곡 (같은 날은 같은 곡)
       final i = math.Random(day).nextInt(songs.length);
       final s = songs[i];
       icon = Icons.album_outlined;
+      label = '오늘의 곡';
+      lead = _cardArt(s, 40, isDark);
       title = '오늘은 이 곡 어때요';
       subLine = Text.rich(
         TextSpan(children: [
@@ -2112,6 +2123,25 @@ class _HomeScreenState extends State<HomeScreen> {
     } else if (kind == 1) {
       // ② 한 달 동안 안 들은 곡 (섞어서 틀기)
       icon = Icons.history_rounded;
+      label = '다시 듣기';
+      lead = SizedBox(
+        width: 50,
+        height: 40,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            for (var k = 0; k < math.min(3, notPlayed.length); k++)
+              Positioned(
+                left: k * 7.0,
+                top: 4,
+                child: Transform.rotate(
+                  angle: const [-8.0, -2.0, 5.0][k] * math.pi / 180,
+                  child: _cardArt(notPlayed[k], 32, isDark),
+                ),
+              ),
+          ],
+        ),
+      );
       title = '한 달 동안 안 들은 곡 ${notPlayed.length}개';
       subLine = Text('오랜만에 다시 들어볼까요',
           maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: sub, fontSize: 11.5));
@@ -2124,6 +2154,30 @@ class _HomeScreenState extends State<HomeScreen> {
       // ③ 최근 7일 듣기 기록 + 가장 많이 들은 곡
       final top = weekTop!;
       icon = Icons.bar_chart_rounded;
+      label = '내 기록';
+      lead = Container(
+        width: 40,
+        height: 40,
+        padding: const EdgeInsets.only(bottom: 9),
+        decoration: BoxDecoration(color: softBox, borderRadius: BorderRadius.circular(9)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            for (final (k, hgt) in const [(0, 9.0), (1, 15.0), (2, 11.0), (3, 20.0), (4, 13.0)]) ...[
+              if (k > 0) const SizedBox(width: 3),
+              Container(
+                width: 4,
+                height: hgt,
+                decoration: BoxDecoration(
+                  color: k == 3 ? accent : ink.withOpacity(0.25),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ],
+          ],
+        ),
+      );
       title = '최근 7일 동안 $weekCount번 들었어요';
       subLine = Text.rich(
         TextSpan(children: [
@@ -2150,6 +2204,31 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? (Icons.waves_rounded, '오늘도 수고했어요', '파도소리', '파도소리 틀어놓고 쉬어요')
                   : (Icons.bedtime_outlined, '늦은 밤엔 잔잔하게', '빗소리', '빗소리 틀어놓고 쉬어요');
       icon = ic;
+      label = '지금 이 시간';
+      const natureImg = {
+        '새소리': 'assets/nature_bird_bg.png',
+        '시냇물': 'assets/nature_stream_bg.png',
+        '파도소리': 'assets/nature_wave_bg.png',
+        '빗소리': 'assets/nature_rain_bg.png',
+      };
+      lead = Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 6, offset: const Offset(0, 2))],
+        ),
+        child: ClipOval(
+          child: paranPhoto(
+            natureImg[sound] ?? 'assets/nature_wave_bg.png',
+            thumb: true,
+            width: 40,
+            height: 40,
+            fit: BoxFit.cover,
+            fallback: Container(color: softBox, child: Icon(ic, size: 18, color: ink)),
+          ),
+        ),
+      );
       title = t;
       subLine = Text(line,
           maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: sub, fontSize: 11.5));
@@ -2162,6 +2241,27 @@ class _HomeScreenState extends State<HomeScreen> {
     } else if (kind == 5) {
       // ⑥ 내일 아침 알람
       icon = Icons.alarm_rounded;
+      label = '내일 알람';
+      final hm = RegExp(r'\d{1,2}:\d{2}').firstMatch(alarmNext)?.group(0);
+      lead = Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(color: softBox, borderRadius: BorderRadius.circular(9)),
+        child: hm == null
+            ? Icon(Icons.alarm_rounded, size: 18, color: ink)
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FittedBox(
+                    child: Text(hm,
+                        style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w800, height: 1.0)),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(alarmNext.contains('내일') ? '내일' : '오늘',
+                      style: TextStyle(color: sub, fontSize: 8.5, height: 1.0)),
+                ],
+              ),
+      );
       title = '$alarmNext에 깨워 드릴게요';
       subLine = Text(alarm!.label,
           maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: sub, fontSize: 11.5));
@@ -2178,6 +2278,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ];
       final tip = tips[(day ~/ 5) % tips.length];
       icon = tip.$1;
+      label = 'TIP';
+      lead = CustomPaint(
+        painter: _DashedBoxPainter(ink.withOpacity(0.28)),
+        child: SizedBox(width: 40, height: 40, child: Icon(tip.$1, size: 18, color: ink)),
+      );
       title = tip.$2;
       subLine = Text(tip.$3,
           maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: sub, fontSize: 11.5));
@@ -2195,18 +2300,18 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(color: card),
       child: Row(
         children: [
-          Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(color: circle, shape: BoxShape.circle),
-            child: Icon(icon, size: 16, color: ink),
-          ),
-          const SizedBox(width: 10),
+          lead,
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
+                Text(label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: accent, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
+                const SizedBox(height: 1),
                 Text(title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -2241,6 +2346,21 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  /// 오늘의 카드 왼쪽: 곡 앨범 사진 (없으면 글자 타일)
+  Widget _cardArt(Song s, double size, bool isDark) => Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(size * 0.18),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 6, offset: const Offset(0, 2))],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(size * 0.18),
+          child: s.albumArt != null
+              ? Image.memory(Uint8List.fromList(s.albumArt!),
+                  width: size, height: size, fit: BoxFit.cover, gaplessPlayback: true, cacheWidth: (size * 3).round())
+              : NoArtTile(title: s.titleDisplay, colorKey: s.uri ?? s.titleDisplay, size: size, isDark: isDark),
+        ),
+      );
 
   Future<void> _closeDailyCard() async {
     final ask = await HomeCardPref.closeToday();
@@ -3087,4 +3207,29 @@ class _LogoEqBarsState extends State<_LogoEqBars>
       ),
     );
   }
+}
+
+/// 오늘의 카드 TIP 그림: 점선 네모
+class _DashedBoxPainter extends CustomPainter {
+  final Color color;
+  _DashedBoxPainter(this.color);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final p = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5;
+    final path = Path()..addRRect(RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(9)));
+    for (final m in path.computeMetrics()) {
+      var d = 0.0;
+      while (d < m.length) {
+        canvas.drawPath(m.extractPath(d, d + 4), p);
+        d += 7;
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_DashedBoxPainter old) => old.color != color;
 }

@@ -2064,11 +2064,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildDailyCard(MusicProvider music, bool isDark) {
-    // 카드는 라이트·다크 모두 검정 (다크는 바탕보다 한 톤 더 까맣게 + 얇은 테두리)
-    final card = isDark ? const Color(0xFF0E0D0B) : const Color(0xFF17140F);
-    const ink = Color(0xFFF4EFE5);
-    const sub = Color(0xFFA29A8B);
-    final circle = isDark ? const Color(0xFF26231F) : const Color(0xFF2A251D);
+    // 양옆 끝까지 꽉 찬 띠: 바탕보다 한 톤 진한 베이지 (다크는 바탕보다 한 톤 밝게)
+    final card = isDark ? const Color(0xFF302D29) : const Color(0xFFDDD4C3);
+    final ink = isDark ? const Color(0xFFF4EFE5) : const Color(0xFF17140F);
+    final sub = isDark ? const Color(0xFFA29A8B) : const Color(0xFF746C60);
+    final circle = isDark ? const Color(0xFF3A3631) : const Color(0x80FFFFFF);
 
     final now = DateTime.now();
     final day = DateTime(now.year, now.month, now.day).difference(DateTime(2024, 1, 1)).inDays;
@@ -2189,20 +2189,10 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 10, 16, 4),
-      padding: const EdgeInsets.fromLTRB(12, 8, 4, 8),
-      decoration: BoxDecoration(
-        color: card,
-        borderRadius: BorderRadius.circular(16),
-        border: isDark ? Border.all(color: Colors.white.withOpacity(0.08)) : null,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.25 : 0.14),
-            blurRadius: 14,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
+      // 모서리·그림자 없이 양옆 끝까지
+      margin: const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.fromLTRB(20, 10, 8, 10),
+      decoration: BoxDecoration(color: card),
       child: Row(
         children: [
           Container(

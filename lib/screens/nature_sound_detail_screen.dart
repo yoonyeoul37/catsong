@@ -47,6 +47,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
   Timer? _sleepTicker;
   DateTime? _sleepEndTime;
   int? _sleepMinutes;
+  String? _lastSleepLabel; // 화면에 보이는 남은 시간 글자 (바뀔 때만 다시 그림)
   bool _sleepFading = false; // 수면 타이머 끝나기 1분 전부터 작게 하는 중
   PlayerProvider? _pp; // 화면을 나갈 때도 소리 크기를 돌려놓으려고 미리 잡아둠
   Set<String> _favoriteNames = {};
@@ -186,7 +187,12 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
           _sleepFading = true;
           context.read<PlayerProvider>().player.setVolume(remaining.inMilliseconds / 60000.0);
         }
-        setState(() {});
+        // 'N분' 글자가 바뀔 때만 화면 다시 그리기 (1초마다 사진까지 다시 그리지 않게)
+        final label = _formatRemaining();
+        if (label != _lastSleepLabel) {
+          _lastSleepLabel = label;
+          setState(() {});
+        }
       }
     });
   }

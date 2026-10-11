@@ -65,6 +65,7 @@ class SoundMixProvider extends ChangeNotifier {
   }
   DateTime? _sleepEndTime;
   int? _sleepMinutes;
+  String? _lastSleepLabel; // 화면에 보이는 남은 시간 글자 (바뀔 때만 알림)
 
   Map<String, double> get volumes => _volumes;
   bool get isPlaying => _isPlaying;
@@ -140,7 +141,12 @@ class SoundMixProvider extends ChangeNotifier {
         _sleepFading = true;
         _applySleepFade(remaining.inMilliseconds / 60000.0);
       }
-      notifyListeners();
+      // 'N분' 글자가 바뀔 때나 타이머가 끝날 때만 화면에 알리기 (1초마다 다시 그리지 않게)
+      final label = remainingLabel;
+      if (_sleepMinutes == null || label != _lastSleepLabel) {
+        _lastSleepLabel = label;
+        notifyListeners();
+      }
     });
   }
 

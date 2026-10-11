@@ -1324,7 +1324,12 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
 
                       SizedBox(height: h * 0.01),
 
-                      if (sleep != null) _SleepTimerBadge(remaining: sleep),
+                      if (sleep != null)
+                        ValueListenableBuilder<Duration?>(
+                          valueListenable: radioProvider.sleepTick,
+                          builder: (_, d, __) =>
+                              d == null ? const SizedBox.shrink() : _SleepTimerBadge(remaining: d),
+                        ),
 
                       SizedBox(height: h * 0.02),
                     ],

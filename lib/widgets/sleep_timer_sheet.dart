@@ -126,13 +126,16 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 ),
               ),
               SizedBox(height: 10),
-              Text(
-                _formatCountdown(sleep),
-                style: TextStyle(
-                  color: primaryColor,
-                  fontSize: 52,
-                  fontWeight: FontWeight.w200,
-                  letterSpacing: -2,
+              ValueListenableBuilder<Duration?>(
+                valueListenable: radioProvider.sleepTick,
+                builder: (_, d, __) => Text(
+                  _formatCountdown(d ?? sleep),
+                  style: TextStyle(
+                    color: primaryColor,
+                    fontSize: 52,
+                    fontWeight: FontWeight.w200,
+                    letterSpacing: -2,
+                  ),
                 ),
               ),
               SizedBox(height: 6),

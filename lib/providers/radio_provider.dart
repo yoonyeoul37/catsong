@@ -48,6 +48,8 @@ class RadioProvider extends ChangeNotifier {
   Timer? _sleepTimer;
   Duration? _sleepRemaining;
   Timer? _sleepCountdown;
+  /// 수면 타이머 남은 시간 (1초마다 바뀜). 이 값만 따로 알려서 화면 전체가 1초마다 다시 그려지지 않게
+  final ValueNotifier<Duration?> sleepTick = ValueNotifier<Duration?>(null);
   bool _sleepFading = false; // 수면 타이머 끝나기 1분 전부터 작게 하는 중
 
   static const _keyFavorites = 'radio_favorites';
@@ -1995,6 +1997,7 @@ class RadioProvider extends ChangeNotifier {
   void setSleepTimer(Duration duration) {
     cancelSleepTimer();
     _sleepRemaining = duration;
+    sleepTick.value = duration;
     _sleepTimer = Timer(duration, () async {
       await _player.stop();
       if (_sleepFading) {
@@ -2019,7 +2022,8 @@ class RadioProvider extends ChangeNotifier {
         _sleepFading = true;
         setAlarmVolume(left / 60);
       }
-      notifyListeners();
+      sleepTick.value = _sleepRemaining; // 남은 시간 글자만 바뀜
+      if (left % 60 == 59) notifyListeners(); // 'N분' 표시는 분이 바뀔 때만
     });
     notifyListeners();
   }
@@ -2035,6 +2039,7 @@ class RadioProvider extends ChangeNotifier {
     _sleepTimer = null;
     _sleepCountdown = null;
     _sleepRemaining = null;
+    sleepTick.value = null;
     notifyListeners();
   }
 

@@ -93,6 +93,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final ValueNotifier<String?> _currentGroup = ValueNotifier(null); // 지금 보고 있는 구간
   final ValueNotifier<bool> _indexShow = ValueNotifier(false); // 초성 막대: 스크롤하는 동안만
   int _indexHideToken = 0;
+  double? _indexFrom; // 초성이 숨어 있을 때 밀기 시작한 위치
+  DateTime _indexMovedAt = DateTime(0);
 
   // ── 빠른 이동 막대용: 묶음(A-Z → ㄱ~ㅎ → #) 순서로 정리한 목록 (곡이 바뀔 때만 다시 계산) ──
   List<(String?, int)> _indexEntries = const []; // (머리글, null이면 곡) / 곡 번호
@@ -290,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // 손으로 밀 때만 (정렬 바꿀 때 맨 위로 가는 건 빼고)
       if (_songListController.hasClients &&
           _songListController.position.userScrollDirection != ScrollDirection.idle) {
-        _pokeIndexBar();
+        _scrollPokeIndexBar();
       }
     });
     // 지난번 정렬(제목/가수) 불러오기
@@ -2637,6 +2639,25 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
+  }
+
+  /// 손으로 밀 때: 이미 보이면 계속 보이게, 숨어 있으면 3줄쯤(250) 밀었을 때부터 나타나게
+  void _scrollPokeIndexBar() {
+    final px = _songListController.position.pixels;
+    final now = DateTime.now();
+    if (_indexShow.value) {
+      _indexFrom = null;
+      _indexMovedAt = now;
+      _pokeIndexBar();
+      return;
+    }
+    // 잠깐 멈췄다가 다시 밀면 처음부터 다시 셈
+    if (_indexFrom == null || now.difference(_indexMovedAt).inMilliseconds > 800) _indexFrom = px;
+    _indexMovedAt = now;
+    if ((px - _indexFrom!).abs() >= 250) {
+      _indexFrom = null;
+      _pokeIndexBar();
+    }
   }
 
   /// 초성 막대: 스크롤하는 동안 보이고, 멈추면 1.5초 뒤 사라짐 (막대를 누르고 있는 동안은 그대로)

@@ -53,8 +53,12 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
     SharedPreferences.getInstance().then((p) {
       if (!mounted) return;
       setState(() {
-        _diceNew = !(p.getBool('radioDiceSeen') ?? false);
-        _diceIntro = true; // 시험용
+        // NEW: 처음 본 날부터 7일 동안, 또는 주사위를 3번 던질 때까지
+        final first = p.getInt('radioDiceNewFrom') ?? DateTime.now().millisecondsSinceEpoch;
+        if (!p.containsKey('radioDiceNewFrom')) p.setInt('radioDiceNewFrom', first);
+        final days = DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(first)).inDays;
+        _diceNew = (p.getInt('radioDiceCount') ?? 0) < 3 && days < 7;
+        _diceIntro = !(p.getBool('radioDiceIntroSeen') ?? false);
       });
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -138,6 +142,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
               weight: _diceLow.contains(ks.name) ? 0.3 : 1.0,
               station: _toRadioStation(ks),
               badge: ks.broadcaster,
+              image: (r) => (r.currentProgramFor(ks.name)?['image'] ?? '').toString(),
               frequency: ks.frequency,
               program: (r) {
                 final p = r.currentProgramFor(ks.name);
@@ -149,15 +154,16 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
 
   Future<void> _openDice() async {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-    if (_diceNew || _diceIntro) {
-      setState(() {
-        _diceNew = false;
-        _diceIntro = false;
-      });
-      final p = await SharedPreferences.getInstance();
-      await p.setBool('radioDiceSeen', true);
-      await p.setBool('radioDiceIntroSeen', true);
-    }
+    // 던진 횟수 세기 (3번 던지면 NEW 사라짐)
+    final p = await SharedPreferences.getInstance();
+    final count = (p.getInt('radioDiceCount') ?? 0) + 1;
+    await p.setInt('radioDiceCount', count);
+    if (_diceIntro) await p.setBool('radioDiceIntroSeen', true);
+    if (!mounted) return;
+    setState(() {
+      _diceIntro = false;
+      if (count >= 3) _diceNew = false;
+    });
     if (!mounted) return;
     showRadioDice(context, _dicePool(), onOpen: (st) {
       // 전체 목록 순서 그대로 넘겨서 상세 화면에서 이전/다음도 되게

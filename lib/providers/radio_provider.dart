@@ -138,8 +138,10 @@ class RadioProvider extends ChangeNotifier {
     _listenAudioFocus();
     _listenNativeAudioFocus();
     _initPlayerStreams();
+    _startStreamTitleWatch();
     _initAudioSession();
     _loadFromPrefs();
+    loadSavedSongs();
     _startScheduleRefreshTimer();
     _scheduleService.loadSchedule().then((_) {
       fetchJsonSchedule('CBS 음악FM');
@@ -441,6 +443,7 @@ class RadioProvider extends ChangeNotifier {
       final prevStationName = _currentStation?.name;
       _setPlayerState(RadioPlayerState.loading);
       _currentStation = station;
+      _streamTitle = null;
       if (prevStationName != station.name) {
         _currentProgramMap.remove(station.name);
         _nowPlayingMap.remove(station.name);
@@ -650,6 +653,22 @@ class RadioProvider extends ChangeNotifier {
   final Map<String, int> _countryStationCounts = {};
   int? getCountryStationCount(String countryCode) => _countryStationCounts[countryCode];
 
+  // ── 나라 방송 전체를 200개씩 이어서 불러오기 ──
+  String? _countryCode;
+  int _countryOffset = 0; // 서버에서 받은 개수 (같은 방송 포함)
+  bool _countryHasMore = false;
+  bool _isLoadingMoreCountry = false;
+  final Set<String> _countryNameKeys = {}; // 같은 이름 방송은 하나만
+  final Map<String, String> _stationLanguage = {}; // 방송 → 언어 (언어 칩용)
+  final Map<String, int> _stationTrend = {}; // 방송 → 최근 이틀 사이 늘어난 청취 수 (요즘 뜨는 탭용)
+  bool get countryHasMore => _countryHasMore;
+  bool get isLoadingMoreCountry => _isLoadingMoreCountry;
+  String languageOf(String stationUuid) => _stationLanguage[stationUuid] ?? '';
+  int trendOf(String stationUuid) => _stationTrend[stationUuid] ?? 0;
+
+  static String _nameKey(String name) =>
+      name.toLowerCase().replaceAll(RegExp(r'[^\p{L}\p{N}]', unicode: true), '');
+
   Future<void> fetchAllCountryCounts() async {
     if (_countryStationCounts.isNotEmpty) return;
     try {
@@ -664,7 +683,7 @@ class RadioProvider extends ChangeNotifier {
           final code = item['name'] as String? ?? '';
           final count = item['stationcount'] as int? ?? 0;
           if (code.isNotEmpty && count > 0) {
-            _countryStationCounts[code] = count > 200 ? 200 : count;
+            _countryStationCounts[code] = count; // 이제 200개로 자르지 않음 (전부 불러옴)
           }
         }
         notifyListeners();
@@ -674,40 +693,66 @@ class RadioProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchTopStations(String countryCode, {int limit = 200, int retryCount = 0}) async {
-    if (retryCount == 0) {
-      _countryStations = [];
-      _isLoadingCountryStations = true;
-      notifyListeners();
-    }
-
+  /// 한 번에 [limit]개 받아서 같은 방송은 빼고 뒤에 붙이기. 서버가 준 개수 (실패면 -1)
+  Future<int> _fetchCountryPage(String countryCode, int offset, int limit) async {
+    List<String> servers;
     try {
-      final servers = await _getApiServers();
-      for (final server in servers) {
+      servers = await _getApiServers();
+    } catch (e) {
+      return -1;
+    }
+    for (final server in servers) {
+      try {
         final uri = Uri.https(server, '/json/stations/bycountrycodeexact/$countryCode', {
           'order': 'clickcount',
           'reverse': 'true',
+          'offset': '$offset',
           'limit': '$limit',
           'hidebroken': 'true',
           'lastcheckok': '1',
           'codec': 'MP3,AAC,AAC+,OGG',
         });
-
         final response = await http.get(uri, headers: _apiHeaders).timeout(const Duration(seconds: 15));
-        if (response.statusCode == 200) {
-          final List<dynamic> data = json.decode(response.body);
-          _countryStations = data
-              .map((j) => RadioStation.fromJson(j as Map<String, dynamic>))
-              .where((s) => s.streamUrl.isNotEmpty)
-              .toList();
-          _mergeFavoriteFlags(_countryStations);
-          _countryStationCounts[countryCode] = _countryStations.length;
-          break;
+        if (response.statusCode != 200) continue;
+        final List<dynamic> data = json.decode(response.body);
+        if (_countryCode != countryCode) return 0; // 그 사이 다른 나라로 바뀜
+        final added = <RadioStation>[];
+        for (final j in data) {
+          final m = j as Map<String, dynamic>;
+          final s = RadioStation.fromJson(m);
+          if (s.streamUrl.isEmpty) continue;
+          final key = _nameKey(s.name);
+          if (key.isEmpty || !_countryNameKeys.add(key)) continue; // 인기 많은 쪽 하나만 남김
+          final lang = (m['language'] ?? '').toString().split(',').first.trim();
+          if (lang.isNotEmpty) _stationLanguage[s.stationUuid] = lang;
+          final tr = m['clicktrend'];
+          if (tr is num) _stationTrend[s.stationUuid] = tr.toInt();
+          added.add(s);
         }
+        _mergeFavoriteFlags(added);
+        _countryStations = [..._countryStations, ...added];
+        return data.length;
+      } catch (e) {
+        debugPrint('국가별 방송 로드 오류($server): $e');
       }
-    } catch (e) {
-      debugPrint('국가별 방송 로드 오류: $e');
     }
+    return -1;
+  }
+
+  Future<void> fetchTopStations(String countryCode, {int limit = 200, int retryCount = 0}) async {
+    if (retryCount == 0) {
+      _countryCode = countryCode;
+      _countryStations = [];
+      _countryNameKeys.clear();
+      _countryOffset = 0;
+      _countryHasMore = false;
+      _isLoadingMoreCountry = false;
+      _isLoadingCountryStations = true;
+      notifyListeners();
+    }
+
+    final got = await _fetchCountryPage(countryCode, 0, limit);
+    if (_countryCode != countryCode) return;
 
     if (_countryStations.isEmpty && retryCount < 4) {
       debugPrint('국가별 방송 재시도: ${retryCount + 1}회차');
@@ -715,8 +760,134 @@ class RadioProvider extends ChangeNotifier {
       return fetchTopStations(countryCode, limit: limit, retryCount: retryCount + 1);
     }
 
+    if (got > 0) {
+      _countryOffset = got;
+      _countryHasMore = got >= limit;
+    }
+    _countryStationCounts.putIfAbsent(countryCode, () => _countryStations.length);
     _isLoadingCountryStations = false;
     notifyListeners();
+  }
+
+  /// 목록 끝에 가까워지면 다음 200개 더 불러오기
+  Future<void> fetchMoreCountryStations({int limit = 200}) async {
+    final code = _countryCode;
+    if (code == null || !_countryHasMore || _isLoadingMoreCountry || _isLoadingCountryStations) return;
+    _isLoadingMoreCountry = true;
+    notifyListeners();
+    final got = await _fetchCountryPage(code, _countryOffset, limit);
+    if (_countryCode == code && got >= 0) {
+      _countryOffset += got;
+      _countryHasMore = got >= limit;
+    }
+    // 실패(-1)면 그대로 두고, 다음에 내리면 다시 시도
+    _isLoadingMoreCountry = false;
+    notifyListeners();
+  }
+
+  // ── 지금 나오는 곡 (방송이 소리와 같이 보내 주는 곡 이름) ──
+  String? _streamTitle;
+  String? get streamTitle => _streamTitle;
+
+  // ── 저장한 곡 (라디오에서 ♡ 누른 곡) ──
+  static const _keySongs = 'radio_saved_songs';
+  List<Map<String, dynamic>> _savedSongs = [];
+  bool _songsLoaded = false;
+  List<Map<String, dynamic>> get savedSongs => _savedSongs;
+
+  Future<void> loadSavedSongs() async {
+    if (_songsLoaded) return;
+    _songsLoaded = true;
+    final p = await SharedPreferences.getInstance();
+    _savedSongs = (p.getStringList(_keySongs) ?? [])
+        .map((s) {
+          try {
+            return json.decode(s) as Map<String, dynamic>;
+          } catch (_) {
+            return null;
+          }
+        })
+        .whereType<Map<String, dynamic>>()
+        .toList();
+    notifyListeners();
+  }
+
+  bool isSongSaved(String title) => _savedSongs.any((m) => m['title'] == title);
+
+  /// ♡: 곡 저장 (이미 있으면 빼기). 저장했으면 true
+  Future<bool> toggleSavedSong(String title, RadioStation station) async {
+    await loadSavedSongs();
+    final i = _savedSongs.indexWhere((m) => m['title'] == title);
+    final saved = i < 0;
+    if (saved) {
+      _savedSongs.insert(0, {
+        'title': title,
+        'station': station.name,
+        'cc': station.countryCode ?? '',
+        'at': DateTime.now().toIso8601String(),
+      });
+      if (_savedSongs.length > 300) _savedSongs = _savedSongs.sublist(0, 300);
+    } else {
+      _savedSongs.removeAt(i);
+    }
+    notifyListeners();
+    await _saveSongs();
+    return saved;
+  }
+
+  /// 지운 자리 번호를 돌려줌 (되돌리기용)
+  int removeSavedSong(Map<String, dynamic> song) {
+    final i = _savedSongs.indexOf(song);
+    if (i >= 0) {
+      _savedSongs.removeAt(i);
+      notifyListeners();
+      _saveSongs();
+    }
+    return i;
+  }
+
+  void restoreSavedSong(int index, Map<String, dynamic> song) {
+    if (_savedSongs.contains(song)) return;
+    _savedSongs.insert(index.clamp(0, _savedSongs.length), song);
+    notifyListeners();
+    _saveSongs();
+  }
+
+  Future<void> _saveSongs() async {
+    final p = await SharedPreferences.getInstance();
+    await p.setStringList(_keySongs, _savedSongs.map((m) => json.encode(m)).toList());
+  }
+  Timer? _streamTitleTimer;
+
+  void _startStreamTitleWatch() {
+    _streamTitleTimer?.cancel();
+    _streamTitleTimer = Timer.periodic(const Duration(seconds: 4), (_) => _readStreamTitle());
+  }
+
+  Future<void> _readStreamTitle() async {
+    final st = _currentStation;
+    if (st == null || !isPlaying) return;
+    var raw = '';
+    try {
+      final native = _player.platform as NativePlayer;
+      raw = (await native.getProperty('metadata/by-key/icy-title')).trim();
+    } catch (_) {}
+    String? t = (raw.isEmpty || raw == 'null') ? null : raw;
+    if (t != null) {
+      final low = t.toLowerCase();
+      // 방송 이름만 보내거나 광고·빈 값이면 안 보여줌
+      if (t.length < 3 ||
+          low == st.name.toLowerCase() ||
+          low.contains('advert') ||
+          low == 'unknown' ||
+          RegExp(r'^[\s\-–_|.]+$').hasMatch(t)) {
+        t = null;
+      }
+    }
+    if (t != _streamTitle) {
+      _streamTitle = t;
+      notifyListeners();
+    }
   }
 
   // ══════ 편성표 ══════
@@ -1978,7 +2149,62 @@ class RadioProvider extends ChangeNotifier {
 
   void _setPlayerState(RadioPlayerState state) {
     _playerState = state;
+    if (state == RadioPlayerState.error) {
+      _onStationFailed();
+    } else if (state == RadioPlayerState.loading) {
+      _similar = null;
+    }
     notifyListeners();
+  }
+
+  // ── 안 나오는 방송 → 비슷한 방송 추천 (해외 방송만) ──
+  final Set<String> _failedToday = {}; // 오늘 안 나왔던 방송은 추천 안 함
+  String _failedDay = '';
+  RadioStation? _similar;
+  RadioStation? get similarStation => _playerState == RadioPlayerState.error ? _similar : null;
+
+  static Set<String> _tagSet(RadioStation s) => (s.tags ?? '')
+      .toLowerCase()
+      .split(',')
+      .map((t) => t.trim())
+      .where((t) => t.isNotEmpty)
+      .toSet();
+
+  void _onStationFailed() {
+    final cur = _currentStation;
+    _similar = null;
+    if (cur == null) return;
+    final now = DateTime.now();
+    final day = '${now.year}-${now.month}-${now.day}';
+    if (day != _failedDay) {
+      _failedDay = day;
+      _failedToday.clear();
+    }
+    _failedToday.add(cur.stationUuid);
+    final code = cur.countryCode ?? '';
+    if (code.isEmpty || code.toUpperCase() == 'KR') return;
+    // 같은 나라 목록 (인기순) 에서 장르가 가장 많이 겹치는 방송, 같으면 더 인기 있는 쪽
+    final pool = (_countryCode == code && _countryStations.isNotEmpty) ? _countryStations : _currentQueue;
+    final tags = _tagSet(cur);
+    var best = -1;
+    for (final s in pool.take(400)) {
+      if (s.stationUuid == cur.stationUuid || _failedToday.contains(s.stationUuid)) continue;
+      if ((s.countryCode ?? code) != code) continue;
+      final score = _tagSet(s).intersection(tags).length;
+      if (score > best) {
+        best = score;
+        _similar = s;
+      }
+    }
+  }
+
+  /// '비슷한 방송 듣기' 누르면
+  Future<void> playSimilar() async {
+    final s = similarStation;
+    if (s == null) return;
+    final i = _currentQueue.indexWhere((x) => x.stationUuid == s.stationUuid);
+    if (i >= 0) _currentQueueIndex = i;
+    await playStation(s);
   }
 
   void _mergeFavoriteFlags(List<RadioStation> stations) {
@@ -2001,6 +2227,7 @@ class RadioProvider extends ChangeNotifier {
   @override
   void dispose() {
     _connectivitySubscription?.cancel();
+    _streamTitleTimer?.cancel();
     _player.dispose();
     _sleepTimer?.cancel();
     _sleepCountdown?.cancel();

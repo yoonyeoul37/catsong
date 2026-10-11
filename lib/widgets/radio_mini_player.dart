@@ -140,6 +140,8 @@ class RadioMiniPlayer extends StatelessWidget {
                                   Text(
                                     isLoading
                                         ? '접속 중...'
+                                        : radioProvider.playerState == RadioPlayerState.error
+                                        ? '나오지 않아요'
                                         : isPlaying
                                         ? '● LIVE'
                                         : '일시정지',
@@ -152,6 +154,22 @@ class RadioMiniPlayer extends StatelessWidget {
                                       fontSize: 12,
                                     ),
                                   ),
+                                  // 안 나오는 해외 방송 → 같은 나라 비슷한 방송
+                                  if (radioProvider.similarStation != null) ...[
+                                    const SizedBox(width: 8),
+                                    GestureDetector(
+                                      behavior: HitTestBehavior.opaque,
+                                      onTap: () {
+                                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                        radioProvider.playSimilar();
+                                      },
+                                      child: Text('비슷한 방송 듣기 ›',
+                                          style: TextStyle(
+                                              color: Theme.of(context).colorScheme.primary,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w700)),
+                                    ),
+                                  ],
                                   if (isPlaying || radioProvider.currentStation != null) ...[
                                     const SizedBox(width: 6),
                                     Flexible(

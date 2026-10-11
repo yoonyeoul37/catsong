@@ -1084,6 +1084,55 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                             style: TextStyle(color: Colors.white.withOpacity(0.75), fontSize: 12, height: 1.0),
                                           ),
                                         ),
+                                      // 지금 나오는 곡 (방송이 곡 이름을 보내 줄 때만)
+                                      if ((radioProvider.streamTitle ?? '').isNotEmpty)
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 6),
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.music_note_rounded,
+                                                  size: 14, color: Colors.white.withOpacity(0.85)),
+                                              const SizedBox(width: 4),
+                                              Expanded(
+                                                child: Text(
+                                                  radioProvider.streamTitle!,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      color: Colors.white.withOpacity(0.92),
+                                                      fontSize: 12.5,
+                                                      fontWeight: FontWeight.w600),
+                                                ),
+                                              ),
+                                              // ♡ 누르면 '저장한 곡'에 넣기
+                                              Builder(builder: (ctx) {
+                                                final saved = radioProvider.isSongSaved(radioProvider.streamTitle!);
+                                                return GestureDetector(
+                                                  behavior: HitTestBehavior.opaque,
+                                                  onTap: () async {
+                                                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                                                    final title = radioProvider.streamTitle;
+                                                    if (title == null || title.isEmpty) return;
+                                                    final now = await radioProvider.toggleSavedSong(title, current);
+                                                    if (!context.mounted) return;
+                                                    showParanToast(context, now ? '저장한 곡에 넣었어요' : '저장한 곡에서 뺐어요');
+                                                  },
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.fromLTRB(8, 2, 2, 2),
+                                                    child: HeartPop(
+                                                      on: saved,
+                                                      child: Icon(
+                                                        saved ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                                                        size: 17,
+                                                        color: saved ? const Color(0xFFE05A4F) : Colors.white.withOpacity(0.85),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              }),
+                                            ],
+                                          ),
+                                        ),
                                       Builder(builder: (ctx) {
                                         final smsNumber = radioProvider.smsNumberFor(current.name);
                                         if (smsNumber == null) return const SizedBox.shrink();
@@ -1220,6 +1269,41 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                             radioProvider.errorMessage ?? AppLocalizations.of(context)!.radioPlaybackFailed,
                             textAlign: TextAlign.center,
                             style: const TextStyle(color: Colors.redAccent, fontSize: 13),
+                          ),
+                        ),
+                      // 안 나오는 해외 방송: 같은 나라 비슷한 방송으로
+                      if (isError && radioProvider.similarStation != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: GestureDetector(
+                            onTap: () {
+                              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                              radioProvider.playSimilar();
+                            },
+                            child: Container(
+                              constraints: const BoxConstraints(maxWidth: 300),
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+                              decoration: BoxDecoration(
+                                color: primaryColor.withOpacity(0.12),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: primaryColor.withOpacity(0.35)),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.skip_next_rounded, size: 18, color: primaryColor),
+                                  const SizedBox(width: 6),
+                                  Flexible(
+                                    child: Text(
+                                      '비슷한 방송 듣기 · ${radioProvider.similarStation!.name}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(color: primaryColor, fontSize: 13, fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
 

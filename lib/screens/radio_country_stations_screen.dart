@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/radio_station.dart';
 import '../models/radio_country.dart';
@@ -12,6 +14,8 @@ import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
 import '../widgets/station_logo.dart';
 import '../widgets/heart_pop.dart';
+import '../widgets/radio_dice.dart';
+import 'radio_saved_songs_screen.dart';
 import 'radio_player_screen.dart';
 import 'radio_home_screen.dart';
 import '../l10n/app_localizations.dart';
@@ -26,7 +30,7 @@ class RadioCountryStationsScreen extends StatefulWidget {
       _RadioCountryStationsScreenState();
 }
 
-enum _ViewMode { all, broadcaster, region, recent, favorite }
+enum _ViewMode { all, broadcaster, region, recent, favorite, saved }
 
 class _RadioCountryStationsScreenState
     extends State<RadioCountryStationsScreen> {
@@ -34,6 +38,18 @@ class _RadioCountryStationsScreenState
   String _query = '';
   _ViewMode _mode = _ViewMode.all;
   bool _showSearch = false; // 돋보기 눌렀을 때만 검색칸 보이기
+  // 칩: 인기 · 장르 · 지역 · 언어
+  String _chip = 'pop';
+  String? _sub;
+  final ScrollController _listCtrl = ScrollController();
+  // 주사위: 처음 소개 팝업 · NEW 표시
+  bool _diceIntro = false;
+  bool _diceNew = false;
+  // 인기 칩 안 두 탭 · 이 나라에서 마지막으로 고른 칩
+  static const String _popMost = '많이 듣는', _popTrend = '요즘 뜨는';
+  String? _savedChip;
+  bool get _isTrend => _chip == 'pop' && _sub == _popTrend;
+  Timer? _clock; // 현지 시각을 계속 맞춤
 
   @override
   void initState() {
@@ -41,11 +57,28 @@ class _RadioCountryStationsScreenState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<RadioProvider>().fetchTopStations(widget.country.code);
     });
+    _loadDiceFlags();
+    _loadChip();
+    if (_localTimeText(widget.country.code) != null) {
+      _clock = Timer.periodic(const Duration(seconds: 20), (_) {
+        if (mounted) setState(() {});
+      });
+    }
+    // 목록 끝에 가까워지면 다음 200개
+    _listCtrl.addListener(() {
+      if (!_listCtrl.hasClients || _isTrend) return;
+      final p = _listCtrl.position;
+      if (p.pixels > p.maxScrollExtent - 600) {
+        context.read<RadioProvider>().fetchMoreCountryStations();
+      }
+    });
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _listCtrl.dispose();
+    _clock?.cancel();
     super.dispose();
   }
 
@@ -82,6 +115,7 @@ class _RadioCountryStationsScreenState
 
   Widget _buildModeBody(BuildContext context, RadioProvider radioProvider,
       List<RadioStation> allStations, Color baseColor, bool isDarkMode, Color primaryColor) {
+    if (_mode == _ViewMode.saved) return const RadioSavedSongsList();
     if (_mode == _ViewMode.broadcaster) {
       final Map<String, List<RadioStation>> grouped = {};
       for (final s in allStations) {
@@ -223,6 +257,520 @@ class _RadioCountryStationsScreenState
     );
   }
 
+  // ── 장르: 라디오 정보의 태그를 알기 쉬운 이름으로 묶기 ──
+  static const List<(String, List<String>)> _genreMap = [
+    ('뉴스', ['news']),
+    ('토크', ['talk']),
+    ('스포츠', ['sport']),
+    ('팝', ['pop']),
+    ('인기곡', ['hits', 'top 40', 'top40', 'chart']),
+    ('록', ['rock']),
+    ('재즈', ['jazz']),
+    ('클래식', ['classical', 'orchestra', 'opera']),
+    ('댄스·일렉', ['dance', 'edm', 'electronic', 'house', 'techno', 'trance']),
+    ('힙합', ['hip hop', 'hiphop', 'hip-hop', 'rap']),
+    ('R&B·소울', ['r&b', 'rnb', 'soul']),
+    ('라틴', ['latin', 'salsa', 'reggaeton', 'bachata', 'cumbia']),
+    ('컨트리', ['country']),
+    ('올디스', ['oldies', '60s', '70s', '80s', '90s', 'retro']),
+    ('라운지', ['lounge', 'chill', 'ambient', 'easy listening']),
+    ('포크', ['folk']),
+    ('블루스', ['blues']),
+    ('레게', ['reggae']),
+    ('메탈', ['metal']),
+    ('종교', ['religio', 'christian', 'gospel', 'catholic', 'islam', 'quran', 'worship']),
+    ('어린이', ['kids', 'children']),
+    ('볼리우드', ['bollywood']),
+    ('세르타네주', ['sertanejo']),
+    ('K-POP', ['kpop', 'k-pop']),
+    ('J-POP', ['jpop', 'j-pop', 'anime']),
+  ];
+
+  Set<String> _genresOf(RadioStation s) {
+    final tags = (s.tags ?? '')
+        .toLowerCase()
+        .split(',')
+        .map((t) => t.trim())
+        .where((t) => t.isNotEmpty)
+        .toList();
+    final out = <String>{};
+    if (tags.isEmpty) return out;
+    for (final g in _genreMap) {
+      if (tags.any((t) => g.$2.any((k) => t.contains(k)))) out.add(g.$1);
+    }
+    return out;
+  }
+
+  static const Map<String, String> _langKo = {
+    'english': '영어', 'spanish': '스페인어', 'portuguese': '포르투갈어', 'french': '프랑스어',
+    'german': '독일어', 'italian': '이탈리아어', 'hindi': '힌디어', 'tamil': '타밀어',
+    'telugu': '텔루구어', 'malayalam': '말라얄람어', 'bengali': '벵골어', 'marathi': '마라티어',
+    'kannada': '칸나다어', 'punjabi': '펀자브어', 'gujarati': '구자라트어', 'urdu': '우르두어',
+    'japanese': '일본어', 'chinese': '중국어', 'mandarin': '중국어', 'cantonese': '광둥어',
+    'korean': '한국어', 'vietnamese': '베트남어', 'thai': '태국어', 'indonesian': '인도네시아어',
+    'malay': '말레이어', 'javanese': '자바어', 'arabic': '아랍어', 'russian': '러시아어',
+    'ukrainian': '우크라이나어', 'dutch': '네덜란드어', 'catalan': '카탈루냐어', 'basque': '바스크어',
+    'galician': '갈리시아어', 'swiss german': '스위스 독일어', 'romansh': '로망슈어', 'turkish': '터키어',
+    'polish': '폴란드어', 'swedish': '스웨덴어', 'welsh': '웨일스어', 'irish': '아일랜드어',
+    'filipino': '필리핀어', 'tagalog': '타갈로그어', 'persian': '페르시아어', 'hebrew': '히브리어',
+    'greek': '그리스어',
+  };
+
+  String _langName(String raw) {
+    final k = raw.toLowerCase().trim();
+    if (k.isEmpty) return '';
+    return _langKo[k] ?? (k[0].toUpperCase() + k.substring(1));
+  }
+
+  /// 칩마다 고를 항목 (이름, 방송 수) — 자료가 충분한 나라만
+  List<(String, int)> _optionsFor(String chip, List<RadioStation> all, RadioProvider radio) {
+    final counts = <String, int>{};
+    void add(String k) {
+      if (k.isNotEmpty) counts[k] = (counts[k] ?? 0) + 1;
+    }
+
+    var withInfo = 0;
+    for (final s in all) {
+      if (chip == 'genre') {
+        for (final g in _genresOf(s)) {
+          add(g);
+        }
+      } else if (chip == 'region') {
+        final st = s.state?.trim() ?? '';
+        if (st.isNotEmpty) {
+          withInfo++;
+          add(st);
+        }
+      } else if (chip == 'lang') {
+        add(_langName(radio.languageOf(s.stationUuid)));
+      }
+    }
+    final min = chip == 'region' ? 3 : 5;
+    final list = counts.entries.where((e) => e.value >= min).map((e) => (e.key, e.value)).toList()
+      ..sort((a, b) => b.$2.compareTo(a.$2));
+    if (chip == 'genre' && list.length < 3) return const [];
+    if (chip == 'region' && (list.length < 2 || withInfo < all.length * 0.3)) return const [];
+    if (chip == 'lang' && list.length < 2) return const [];
+    return list.take(chip == 'region' ? 15 : 10).toList();
+  }
+
+  bool _matches(RadioStation s, RadioProvider radio) {
+    final sub = _sub;
+    if (_chip == 'pop' || sub == null) return true;
+    if (_chip == 'genre') return _genresOf(s).contains(sub);
+    if (_chip == 'region') return (s.state?.trim() ?? '') == sub;
+    return _langName(radio.languageOf(s.stationUuid)) == sub;
+  }
+
+  static String _fmtNum(int n) =>
+      n.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',');
+
+  // '내 라디오' 아래 탭: 즐겨찾기 · 최근청취 · 저장한 곡
+  static const List<(String, _ViewMode)> _mineTabs = [
+    ('즐겨찾기', _ViewMode.favorite),
+    ('최근청취', _ViewMode.recent),
+    ('저장한 곡', _ViewMode.saved),
+  ];
+
+  /// 글자 탭 한 줄 (고른 것만 진하게 + 밑줄) + 점으로 나눈 아래 탭
+  /// 번역해서 글자가 길어져도 줄바꿈 없이 옆으로 밀어서 보게 함
+  Widget _chipBar(List<RadioStation> all, RadioProvider radio, Color baseColor, bool isDarkMode) {
+    final opts = <String, List<(String, int)>>{
+      'genre': _optionsFor('genre', all, radio),
+      'region': _optionsFor('region', all, radio),
+      'lang': _optionsFor('lang', all, radio),
+    };
+    const names = {'mine': '내 라디오', 'pop': '인기', 'genre': '장르', 'region': '지역', 'lang': '언어'};
+    final chips = ['mine', 'pop', for (final k in ['genre', 'region', 'lang']) if (opts[k]!.isNotEmpty) k];
+    final popOpts = _hasTrend(all, radio) ? const [(_popMost, 0), (_popTrend, 0)] : const <(String, int)>[];
+    final code = widget.country.code;
+    final mineCounts = [
+      radio.favorites.length,
+      radio.recentlyListened.where((s) => s.countryCode == code).length,
+      radio.savedSongs.length,
+    ];
+    final List<(String, int)> cur = _chip == 'mine'
+        ? [for (var i = 0; i < _mineTabs.length; i++) (_mineTabs[i].$1, mineCounts[i])]
+        : _chip == 'pop'
+            ? popOpts
+            : (opts[_chip] ?? const <(String, int)>[]);
+    final selSub = _chip == 'mine'
+        ? _mineTabs.firstWhere((t) => t.$2 == _mode, orElse: () => _mineTabs.first).$1
+        : _chip == 'pop'
+            ? (_sub ?? _popMost)
+            : _sub;
+
+    void toTop() {
+      if (_listCtrl.hasClients) _listCtrl.jumpTo(0);
+    }
+
+    void pickChip(String c) {
+      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+      setState(() {
+        _chip = c;
+        if (c == 'mine') {
+          _mode = _ViewMode.favorite;
+          _sub = null;
+        } else {
+          _mode = _ViewMode.all;
+          final o = opts[c] ?? const <(String, int)>[];
+          _sub = o.isEmpty ? null : o.first.$1;
+        }
+        _savedChip = null;
+      });
+      if (c != 'mine') _saveChip();
+      toTop();
+    }
+
+    void pickSub(String name) {
+      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+      setState(() {
+        if (_chip == 'mine') {
+          _mode = _mineTabs.firstWhere((t) => t.$1 == name).$2;
+        } else {
+          _sub = name;
+        }
+        _savedChip = null;
+      });
+      if (_chip != 'mine') _saveChip();
+      toTop();
+    }
+
+    final dim = baseColor.withOpacity(0.38);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 위 줄: 글자 탭
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 24),
+          decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: baseColor.withOpacity(0.12))),
+          ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (final c in chips)
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => pickChip(c),
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 22),
+                      padding: const EdgeInsets.only(top: 6, bottom: 9),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: _chip == c ? baseColor : Colors.transparent, width: 2),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (c == 'mine') ...[
+                            Icon(_chip == c ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                                size: 14, color: _chip == c ? baseColor : dim),
+                            const SizedBox(width: 4),
+                          ],
+                          Text(
+                            names[c]!,
+                            softWrap: false,
+                            style: TextStyle(
+                              color: _chip == c ? baseColor : dim,
+                              fontSize: 15,
+                              fontWeight: _chip == c ? FontWeight.w800 : FontWeight.w600,
+                              letterSpacing: -0.2,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        // 아래 줄: 점(·)으로만 나눈 가벼운 탭
+        if (cur.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Row(
+              children: [
+                for (var i = 0; i < cur.length; i++) ...[
+                  if (i > 0)
+                    Container(
+                      width: 3,
+                      height: 3,
+                      margin: const EdgeInsets.symmetric(horizontal: 9),
+                      decoration: BoxDecoration(color: baseColor.withOpacity(0.25), shape: BoxShape.circle),
+                    ),
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => pickSub(cur[i].$1),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: Text.rich(
+                        TextSpan(children: [
+                          TextSpan(text: cur[i].$1),
+                          if (cur[i].$2 > 0)
+                            TextSpan(
+                              text: ' ${cur[i].$2}',
+                              style: TextStyle(
+                                  fontSize: 11, color: baseColor.withOpacity(0.35), fontWeight: FontWeight.w500),
+                            ),
+                        ]),
+                        softWrap: false,
+                        style: TextStyle(
+                          color: selSub == cur[i].$1 ? baseColor : baseColor.withOpacity(0.42),
+                          fontSize: 13,
+                          fontWeight: selSub == cur[i].$1 ? FontWeight.w800 : FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+        const SizedBox(height: 6),
+      ],
+    );
+  }
+
+  // ── 인기 칩 안: 많이 듣는 · 요즘 뜨는 ──
+  bool _hasTrend(List<RadioStation> all, RadioProvider radio) =>
+      all.where((s) => radio.trendOf(s.stationUuid) > 0).length >= 5;
+
+  // ── 나라마다 마지막으로 고른 칩 기억 ──
+  String get _chipKey => 'radioChip_${widget.country.code}';
+
+  Future<void> _loadChip() async {
+    final p = await SharedPreferences.getInstance();
+    final v = p.getString(_chipKey);
+    if (v != null && mounted) setState(() => _savedChip = v);
+  }
+
+  void _saveChip() {
+    final v = '$_chip|${_sub ?? ''}';
+    SharedPreferences.getInstance().then((p) => p.setString(_chipKey, v));
+  }
+
+  /// 방송을 불러온 뒤 한 번: 저장해 둔 칩이 이 나라에 있으면 다시 골라 줌
+  void _restoreChip(List<RadioStation> all, RadioProvider radio) {
+    final v = _savedChip;
+    if (v == null) return;
+    _savedChip = null;
+    final i = v.indexOf('|');
+    final chip = i < 0 ? v : v.substring(0, i);
+    final sub = i < 0 ? '' : v.substring(i + 1);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (chip == 'pop') {
+        if (sub == _popTrend && _hasTrend(all, radio)) setState(() => _sub = _popTrend);
+        return;
+      }
+      final opts = _optionsFor(chip, all, radio);
+      if (opts.isEmpty) return;
+      setState(() {
+        _chip = chip;
+        _sub = opts.any((o) => o.$1 == sub) ? sub : opts.first.$1;
+      });
+    });
+  }
+
+  // ── 맨 위 '다시 듣기': 이 나라에서 최근 들은 방송 + 즐겨찾기 ──
+  List<RadioStation> _againList(RadioProvider radio) {
+    final code = widget.country.code;
+    final seen = <String>{};
+    return [
+      ...radio.recentlyListened.where((s) => s.countryCode == code),
+      ...radio.favorites.where((s) => s.countryCode == code),
+    ].where((s) => seen.add(s.stationUuid)).take(12).toList();
+  }
+
+  Widget _againRow(List<RadioStation> list, RadioProvider radio, Color baseColor) {
+    final point = context.read<ThemeProvider>().primaryColor;
+    final accent = point.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : point;
+    final cur = radio.currentStation?.stationUuid;
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('다시 듣기',
+              style: TextStyle(color: baseColor.withOpacity(0.45), fontSize: 12, fontWeight: FontWeight.w700)),
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 78,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: list.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 14),
+              itemBuilder: (context, i) {
+                final s = list[i];
+                final on = s.stationUuid == cur;
+                return GestureDetector(
+                  onTap: () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    radio.setQueue(list, i);
+                    // 처음 누르면 바로 재생, 듣는 중인 방송을 또 누르면 상세 화면
+                    if (!on) {
+                      radio.playStation(s);
+                      return;
+                    }
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => RadioPlayerScreen(station: s, stationList: list, currentIndex: i),
+                        transitionsBuilder: (_, a, __, child) => FadeTransition(opacity: a, child: child),
+                        transitionDuration: const Duration(milliseconds: 250),
+                      ),
+                    );
+                  },
+                  child: SizedBox(
+                    width: 54,
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(13),
+                            border: Border.all(color: on ? accent : Colors.transparent, width: 2),
+                          ),
+                          child: StationLogo(logoUrl: s.logoUrl, name: s.name, size: 46),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(s.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: on ? accent : baseColor.withOpacity(0.7),
+                                fontSize: 11,
+                                fontWeight: on ? FontWeight.w700 : FontWeight.w500)),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 8),
+          Divider(height: 1, color: baseColor.withOpacity(0.16)),
+        ],
+      ),
+    );
+  }
+
+  /// 목록 맨 아래: 다음 방송 불러오는 중
+  Widget _loadMoreRow(Color baseColor) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 18),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 14,
+            height: 14,
+            child: CircularProgressIndicator(strokeWidth: 2, color: baseColor.withOpacity(0.35)),
+          ),
+          const SizedBox(width: 8),
+          Text('방송을 더 불러오는 중', style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 12)),
+        ],
+      ),
+    );
+  }
+
+  // ── 해외 라디오 주사위: 이 나라 인기 음악 방송 중 하나 ──
+  static const Set<String> _notMusic = {'뉴스', '토크', '스포츠', '종교', '어린이'};
+
+  List<DiceStation> _worldDicePool(List<RadioStation> all) {
+    final music = <RadioStation>[], plain = <RadioStation>[];
+    for (final s in all.take(400)) {
+      final g = _genresOf(s);
+      if (g.any(_notMusic.contains)) continue; // 뉴스·토크·종교 등은 빼기
+      (g.isEmpty ? plain : music).add(s);
+    }
+    var list = music.take(150).toList();
+    if (list.length < 10) list = [...list, ...plain].take(150).toList(); // 장르 정보가 적은 나라
+    final c = widget.country;
+    final time = _localTimeText(c.code);
+    return [
+      for (final s in list)
+        DiceStation(
+          station: s,
+          badge: c.flag,
+          badgeSize: 20,
+          frequency: [
+            (s.state?.trim().isNotEmpty ?? false) ? s.state!.trim() : c.displayName,
+            if (time != null) time,
+          ].join(' · '),
+          programLabel: '지금 나오는 곡',
+          emptyProgram: '곡 정보가 아직 없어요',
+          program: (r) =>
+              r.currentStation?.stationUuid == s.stationUuid ? (r.streamTitle ?? '').trim() : '',
+        ),
+    ];
+  }
+
+  // 소개 팝업은 한 번만 (한국 라디오와 같이 씀) · NEW는 7일 안에 3번 던질 때까지
+  Future<void> _loadDiceFlags() async {
+    final p = await SharedPreferences.getInstance();
+    final now = DateTime.now().millisecondsSinceEpoch;
+    var first = p.getInt('worldDiceNewFrom');
+    if (first == null) {
+      first = now;
+      await p.setInt('worldDiceNewFrom', now);
+    }
+    final count = p.getInt('worldDiceCount') ?? 0;
+    final days = (now - first) / 86400000;
+    if (!mounted) return;
+    setState(() {
+      _diceNew = count < 3 && days < 7;
+      _diceIntro = !(p.getBool('radioDiceIntroSeen') ?? false);
+    });
+  }
+
+  Future<void> _diceUsed() async {
+    final p = await SharedPreferences.getInstance();
+    final count = (p.getInt('worldDiceCount') ?? 0) + 1;
+    await p.setInt('worldDiceCount', count);
+    await p.setBool('radioDiceIntroSeen', true);
+    if (!mounted) return;
+    setState(() {
+      _diceIntro = false;
+      if (count >= 3) _diceNew = false;
+    });
+  }
+
+  Future<void> _closeDiceIntro() async {
+    setState(() => _diceIntro = false);
+    final p = await SharedPreferences.getInstance();
+    await p.setBool('radioDiceIntroSeen', true);
+  }
+
+  void _openWorldDice(List<RadioStation> all) {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    _diceUsed();
+    final pool = _worldDicePool(all);
+    if (pool.isEmpty) return;
+    final list = [for (final d in pool) d.station];
+    showRadioDice(context, pool, onOpen: (st) {
+      if (!mounted) return;
+      final i = math.max(0, list.indexWhere((x) => x.stationUuid == st.stationUuid));
+      context.read<RadioProvider>().setQueue(list, i);
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) => RadioPlayerScreen(station: st, stationList: list, currentIndex: i),
+          transitionsBuilder: (_, a, __, child) => FadeTransition(opacity: a, child: child),
+          transitionDuration: const Duration(milliseconds: 250),
+        ),
+      );
+    });
+  }
+
   String _sloganFor(BuildContext context, String countryCode) {
     switch (countryCode) {
       case 'US': return 'The Voice of Freedom';
@@ -348,13 +896,33 @@ class _RadioCountryStationsScreenState
     final primaryColor = Theme.of(context).colorScheme.primary;
     final radioProvider = context.watch<RadioProvider>();
     final allStations = radioProvider.countryStations;
-    final stations = _query.isEmpty
-        ? allStations
-        : allStations
-        .where((s) => s.name.toLowerCase().contains(_query.toLowerCase()))
+    var stations = allStations
+        .where((s) => _query.isEmpty || s.name.toLowerCase().contains(_query.toLowerCase()))
+        .where((s) => _matches(s, radioProvider))
         .toList();
+    // 요즘 뜨는: 최근 이틀 사이 듣는 사람이 많이 늘어난 순
+    if (_isTrend) {
+      stations = stations.where((s) => radioProvider.trendOf(s.stationUuid) > 0).toList()
+        ..sort((a, b) => radioProvider.trendOf(b.stationUuid).compareTo(radioProvider.trendOf(a.stationUuid)));
+    }
+    // 찾는 방송이 적게 보이면 다음 방송을 자동으로 더 불러오기 (2000개까지)
+    if ((_query.isNotEmpty || _chip != 'pop') &&
+        stations.length < 20 &&
+        radioProvider.countryHasMore &&
+        !radioProvider.isLoadingMoreCountry &&
+        allStations.length < 2000) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) context.read<RadioProvider>().fetchMoreCountryStations();
+      });
+    }
     final isLoading = radioProvider.isLoadingCountryStations;
     final current = radioProvider.currentStation;
+    if (!isLoading && allStations.isNotEmpty) _restoreChip(allStations, radioProvider);
+    final again = (_chip == 'pop' && !_isTrend && _query.isEmpty)
+        ? _againList(radioProvider)
+        : const <RadioStation>[];
+    final head = again.isEmpty ? 0 : 1;
+    final localTime = _localTimeText(widget.country.code);
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
     final bgColor = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA);
@@ -408,29 +976,64 @@ class _RadioCountryStationsScreenState
           icon: Icon(Icons.arrow_back_ios,
               color: baseColor, size: 20),
         ),
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'Radio',
-              style: GoogleFonts.doHyeon(
-                color: baseColor,
-                fontSize: 22,
-                letterSpacing: 1,
+        // 나라 이름 (누르면 나라 고르기) — 긴 이름은 … 로 줄임
+        title: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const RadioHomeScreen()),
+            );
+          },
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(widget.country.flag, style: const TextStyle(fontSize: 18)),
+              const SizedBox(width: 7),
+              Flexible(
+                child: Text(
+                  widget.country.displayName,
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: baseColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.3,
+                  ),
+                ),
               ),
-            ),
-            // 라디오를 틀면(미니플레이어가 뜨면) 여기 막대는 숨기기
-            if (radioProvider.currentStation == null) ...[
-              const SizedBox(width: 6),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 3),
-                child: _LogoEqBars(),
-              ),
+              const SizedBox(width: 2),
+              Icon(Icons.keyboard_arrow_down_rounded, size: 22, color: baseColor.withOpacity(0.5)),
             ],
-          ],
+          ),
         ),
         actions: [
+          if (!isLoading && allStations.isNotEmpty)
+            IconButton(
+              onPressed: () => _openWorldDice(allStations),
+              icon: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  RollDiceIcon(size: 24, color: baseColor),
+                  if (_diceNew)
+                    Positioned(
+                      top: -7,
+                      right: -13,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                        decoration: BoxDecoration(
+                            color: const Color(0xFFE05A4F), borderRadius: BorderRadius.circular(6)),
+                        child: const Text('NEW',
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 8, fontWeight: FontWeight.w800, letterSpacing: 0.3)),
+                      ),
+                    ),
+                ],
+              ),
+            ),
           IconButton(
             onPressed: () {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -454,7 +1057,9 @@ class _RadioCountryStationsScreenState
           ),
         ],
       ),
-      body: SafeArea(
+      body: Stack(
+        children: [
+      SafeArea(
         top: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -496,90 +1101,8 @@ class _RadioCountryStationsScreenState
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 4, 24, 4),
-              child: Container(
-                height: 38,
-                decoration: BoxDecoration(
-                  color: baseColor.withOpacity(0.06),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  children: [
-                    _toggleButton('전체', _ViewMode.all, baseColor, isDarkMode),
-                    _toggleButton('즐겨찾기', _ViewMode.favorite, baseColor, isDarkMode),
-                    _toggleButton('최근청취', _ViewMode.recent, baseColor, isDarkMode),
-                  ],
-                ),
-              ),
-            ),
-            // 국가선택 (한국 화면과 같은 모양)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 4, 24, 8),
-              child: GestureDetector(
-                onTap: () {
-                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const RadioHomeScreen()),
-                  );
-                },
-                child: Container(
-                  width: double.infinity,
-                  height: 38,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  decoration: BoxDecoration(
-                    color: baseColor.withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 26,
-                        height: 26,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: isDarkMode
-                              ? const Color(0x14FFFFFF)
-                              : Colors.white.withOpacity(0.8),
-                        ),
-                        child: Icon(
-                          Icons.public,
-                          size: 16,
-                          color: context.watch<ThemeProvider>().primaryColor.value == 0xFF2589E8
-                              ? (isDarkMode ? const Color(0xFF6FB0FF) : const Color(0xFF2F7DE8))
-                              : context.watch<ThemeProvider>().primaryColor,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text('국가선택',
-                          style: TextStyle(
-                              color: baseColor, fontSize: 13, fontWeight: FontWeight.w700)),
-                      Container(
-                        width: 1,
-                        height: 14,
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
-                        color: baseColor.withOpacity(0.18),
-                      ),
-                      Text(widget.country.flag, style: const TextStyle(fontSize: 16)),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(widget.country.displayName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                color: baseColor.withOpacity(0.7),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500)),
-                      ),
-                      Icon(Icons.keyboard_arrow_down_rounded,
-                          size: 20, color: baseColor.withOpacity(0.5)),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            const SizedBox(height: 2),
+            _chipBar(allStations, radioProvider, baseColor, isDarkMode),
             Expanded(
               child: _mode != _ViewMode.all
                   ? _buildModeBody(context, radioProvider, allStations, baseColor, isDarkMode, primaryColor)
@@ -618,28 +1141,46 @@ class _RadioCountryStationsScreenState
                     padding: const EdgeInsets.fromLTRB(24, 10, 24, 6),
                     child: Row(
                       children: [
-                        Text(widget.country.flag, style: const TextStyle(fontSize: 13)),
-                        const SizedBox(width: 6),
-                        Text(
-                          AppLocalizations.of(context)!.radioPopularCount(stations.length),
+                        Expanded(
+                          child: Text(
+                          _isTrend
+                              ? '요즘 듣는 사람이 늘어난 순'
+                              : _chip == 'pop' && _query.isEmpty
+                              ? '방송 ${_fmtNum(radioProvider.getCountryStationCount(widget.country.code) ?? stations.length)}개 · 인기순'
+                              : '${_fmtNum(stations.length)}개',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               color: baseColor.withOpacity(0.35), fontSize: 12.5),
                         ),
+                        ),
+                        // 그 나라 지금 시각 (오른쪽 끝)
+                        if (localTime != null) ...[
+                          const SizedBox(width: 10),
+                          Text(localTime,
+                              style: TextStyle(color: baseColor.withOpacity(0.35), fontSize: 12.5)),
+                        ],
                       ],
                     ),
                   ),
                   Expanded(
                     child: ListView.separated(
+                      controller: _listCtrl,
                       padding:
                       EdgeInsets.fromLTRB(24, 0, 24, 80 + MediaQuery.of(context).padding.bottom),
-                      itemCount: stations.length,
-                      separatorBuilder: (_, __) =>
-                          Divider(height: 1, color: baseColor.withOpacity(0.16)),
+                      itemCount: head + stations.length + (radioProvider.countryHasMore && !_isTrend ? 1 : 0),
+                      separatorBuilder: (_, i) => i < head
+                          ? const SizedBox.shrink()
+                          : Divider(height: 1, color: baseColor.withOpacity(0.16)),
                       itemBuilder: (context, index) {
+                        if (index < head) return _againRow(again, radioProvider, baseColor);
+                        index -= head;
+                        if (index >= stations.length) return _loadMoreRow(baseColor);
                         final station = stations[index];
                         final isPlaying = current?.stationUuid ==
                             station.stationUuid;
                         return _StationTile(
+                          key: ValueKey('$_chip|$_sub|${station.stationUuid}'),
                           station: station,
                           isPlaying: isPlaying,
                           stationList: stations,
@@ -654,6 +1195,16 @@ class _RadioCountryStationsScreenState
           ],
         ),
       ),
+          // 처음 들어왔을 때 한 번: 주사위 소개 (방송을 다 불러온 뒤)
+          if (_diceIntro && !isLoading && allStations.isNotEmpty && _mode == _ViewMode.all)
+            Positioned.fill(
+              child: RadioDiceIntro(
+                onThrow: () => _openWorldDice(allStations),
+                onClose: _closeDiceIntro,
+              ),
+            ),
+        ],
+      ),
       bottomNavigationBar: current != null
           ? Padding(
         padding: EdgeInsets.only(
@@ -666,6 +1217,69 @@ class _RadioCountryStationsScreenState
   }
 }
 
+// ── 현지 시각 (시간대가 하나인 나라만. 여러 시간대 나라는 안 보여줌) ──
+const Map<String, double> _utcFixed = {
+  'JP': 9, 'KR': 9, 'CN': 8, 'TW': 8, 'HK': 8, 'SG': 8, 'MY': 8, 'PH': 8, 'MN': 8,
+  'TH': 7, 'VN': 7, 'KH': 7, 'LA': 7, 'MM': 6.5, 'BD': 6, 'NP': 5.75, 'IN': 5.5, 'LK': 5.5,
+  'PK': 5, 'UZ': 5, 'KZ': 5, 'AE': 4, 'AZ': 4, 'AM': 4, 'GE': 4, 'IR': 3.5,
+  'SA': 3, 'IQ': 3, 'JO': 3, 'TR': 3, 'KE': 3, 'ET': 3, 'TZ': 3, 'UG': 3, 'MG': 3,
+  'ZA': 2, 'ZW': 2, 'MZ': 2, 'NG': 1, 'CM': 1, 'TN': 1, 'GH': 0, 'SN': 0, 'IS': 0,
+  'AR': -3, 'UY': -3, 'VE': -4, 'BO': -4, 'DO': -4, 'PR': -4, 'TT': -4,
+  'CO': -5, 'PE': -5, 'EC': -5, 'PA': -5, 'JM': -5,
+  'GT': -6, 'HN': -6, 'NI': -6, 'SV': -6, 'CR': -6, 'PG': 10, 'FJ': 12,
+};
+// 유럽: 3월 마지막 일요일 ~ 10월 마지막 일요일은 한 시간 빠름
+const Map<String, double> _utcEu = {
+  'GB': 0, 'IE': 0, 'PT': 0,
+  'ES': 1, 'FR': 1, 'DE': 1, 'IT': 1, 'NL': 1, 'BE': 1, 'LU': 1, 'CH': 1, 'AT': 1,
+  'SE': 1, 'NO': 1, 'DK': 1, 'PL': 1, 'CZ': 1, 'SK': 1, 'HU': 1, 'HR': 1, 'SI': 1,
+  'RS': 1, 'BA': 1, 'ME': 1, 'MK': 1, 'AL': 1, 'MT': 1,
+  'FI': 2, 'EE': 2, 'LV': 2, 'LT': 2, 'RO': 2, 'BG': 2, 'GR': 2, 'CY': 2, 'UA': 2,
+};
+
+DateTime _lastSundayUtc(int y, int m) {
+  final last = DateTime.utc(y, m + 1, 0); // 그 달 마지막 날
+  return DateTime.utc(y, m, last.day - (last.weekday % 7), 1);
+}
+
+/// '현지 오후 3:12' (모르는 나라는 null)
+String? _localTimeText(String code) {
+  final now = DateTime.now().toUtc();
+  var off = _utcFixed[code];
+  if (off == null) {
+    final eu = _utcEu[code];
+    if (eu == null) return null;
+    final summer = !now.isBefore(_lastSundayUtc(now.year, 3)) && now.isBefore(_lastSundayUtc(now.year, 10));
+    off = eu + (summer ? 1 : 0);
+  }
+  final t = now.add(Duration(minutes: (off * 60).round()));
+  final h12 = t.hour % 12 == 0 ? 12 : t.hour % 12;
+  return '현지 ${t.hour < 12 ? '오전' : '오후'} $h12:${t.minute.toString().padLeft(2, '0')}';
+}
+
+/// 이름 속 주파수 찾기 ('Power 98.7 FM' → 'FM 98.7', 'AM 1010 News' → 'AM 1010')
+String? _freqFromName(String name) {
+  String? check(String band, String num) {
+    final v = double.tryParse(num.replaceAll(',', '.'));
+    if (v == null) return null;
+    if (band == 'FM' && v >= 76 && v <= 108) return 'FM ${num.replaceAll(',', '.')}';
+    if (band == 'AM' && v >= 520 && v <= 1710 && v == v.roundToDouble()) return 'AM ${v.toInt()}';
+    return null;
+  }
+
+  final a = RegExp(r'\b(FM|AM)\s*(\d{2,4}(?:[.,]\d{1,2})?)\b', caseSensitive: false).firstMatch(name);
+  if (a != null) {
+    final r = check(a.group(1)!.toUpperCase(), a.group(2)!);
+    if (r != null) return r;
+  }
+  final b = RegExp(r'\b(\d{2,4}(?:[.,]\d{1,2})?)\s*(FM|AM|MHz)\b', caseSensitive: false).firstMatch(name);
+  if (b != null) {
+    final unit = b.group(2)!.toUpperCase();
+    return check(unit == 'AM' ? 'AM' : 'FM', b.group(1)!);
+  }
+  return null;
+}
+
 class _StationTile extends StatelessWidget {
   final RadioStation station;
   final bool isPlaying;
@@ -673,6 +1287,7 @@ class _StationTile extends StatelessWidget {
   final int stationIndex;
 
   const _StationTile({
+    super.key,
     required this.station,
     required this.isPlaying,
     required this.stationList,
@@ -682,7 +1297,7 @@ class _StationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final baseColor = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
-    return Container(
+    return _RiseIn(child: Container(
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
@@ -763,16 +1378,16 @@ class _StationTile extends StatelessWidget {
                       final nowPlaying = context
                           .watch<RadioProvider>()
                           .nowPlayingFor(station.name);
-                      final freq = station.frequency;
-                      final hasFreq = freq != null &&
-                          freq.isNotEmpty &&
-                          freq != 'null';
+                      final rawFreq = station.frequency;
+                      final band = (rawFreq != null && rawFreq.isNotEmpty && rawFreq != 'null')
+                          ? 'FM $rawFreq'
+                          : _freqFromName(station.name);
                       final String sub;
                       if (nowPlaying != null && nowPlaying.isNotEmpty) {
                         sub = nowPlaying;
-                      } else if (hasFreq) {
+                      } else if (band != null) {
                         sub = [
-                          'FM $freq',
+                          band,
                           if (station.country != null && station.country!.isNotEmpty)
                             station.country!,
                         ].join(' · ');
@@ -784,13 +1399,39 @@ class _StationTile extends StatelessWidget {
                             station.country!,
                         ].join(' · ');
                       }
-                      if (sub.isEmpty) return const SizedBox.shrink();
-                      return Text(
-                        sub,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            color: baseColor.withOpacity(0.5), fontSize: 12),
+                      // 음질 좋은 방송 (192kbps 이상)
+                      final hq = (station.bitrate ?? 0) >= 192;
+                      if (sub.isEmpty && !hq) return const SizedBox.shrink();
+                      return Row(
+                        children: [
+                          if (hq) ...[
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(color: baseColor.withOpacity(0.3), width: 1),
+                              ),
+                              child: Text('HQ',
+                                  style: TextStyle(
+                                      color: baseColor.withOpacity(0.55),
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w800,
+                                      letterSpacing: 0.3,
+                                      height: 1.2)),
+                            ),
+                            if (sub.isNotEmpty) const SizedBox(width: 6),
+                          ],
+                          if (sub.isNotEmpty)
+                            Flexible(
+                              child: Text(
+                                sub,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: baseColor.withOpacity(0.5), fontSize: 12),
+                              ),
+                            ),
+                        ],
                       );
                     }),
                   ],
@@ -824,6 +1465,104 @@ class _StationTile extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    ));
+  }
+}
+
+/// 방송 줄이 화면에 나타날 때 살포시 떠오르게 (곡 목록 song_list_tile.dart 와 같은 움직임)
+class _RiseIn extends StatefulWidget {
+  final Widget child;
+  const _RiseIn({required this.child});
+
+  @override
+  State<_RiseIn> createState() => _RiseInState();
+}
+
+class _RiseInState extends State<_RiseIn> with SingleTickerProviderStateMixin {
+  late final AnimationController _c;
+  late final Animation<double> _fade;
+  late Animation<Offset> _slide;
+  late final CurvedAnimation _curve;
+  late final Animation<double> _scale;
+  ScrollPosition? _pos;
+  bool _started = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 560));
+    final curve = _curve = CurvedAnimation(parent: _c, curve: Curves.easeOutCubic);
+    _fade = CurvedAnimation(parent: _c, curve: const Interval(0, 0.7, curve: Curves.easeOut));
+    _slide = Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero).animate(curve);
+    _scale = Tween<double>(begin: 0.96, end: 1).animate(curve);
+    // 처음 그려진 뒤: 화면에 보이는 줄은 바로 떠오르기
+    WidgetsBinding.instance.addPostFrameCallback((_) => _check(first: true));
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final p = Scrollable.maybeOf(context)?.position;
+    if (!identical(p, _pos)) {
+      _pos?.removeListener(_check);
+      _pos = p;
+      if (!_started) _pos?.addListener(_check);
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant _RiseIn old) {
+    super.didUpdateWidget(old);
+    // 목록이 바뀌어 줄이 스크롤 없이 화면에 들어온 경우도 챙기기
+    if (!_started) WidgetsBinding.instance.addPostFrameCallback((_) => _check(first: true));
+  }
+
+  /// 줄이 실제로 화면 안에 들어왔는지 보고 시작
+  void _check({bool first = false}) {
+    if (_started || !mounted) return;
+    final box = context.findRenderObject();
+    if (box is! RenderBox || !box.attached || !box.hasSize) return;
+    final vp = Scrollable.maybeOf(context)?.context.findRenderObject();
+    if (vp is! RenderBox || !vp.hasSize) {
+      _start(animate: true);
+      return;
+    }
+    final top = box.localToGlobal(Offset.zero, ancestor: vp).dy;
+    final h = vp.size.height;
+    if (top + box.size.height <= 0 || top >= h) return; // 아직 화면 밖
+    // 아래에서 들어오면 아래→위로, 위에서 들어오면 위→아래로 살포시
+    final fromTop = !first && top <= h * 0.5;
+    if (fromTop) {
+      setState(() => _slide = Tween<Offset>(begin: const Offset(0, -0.5), end: Offset.zero).animate(_curve));
+    }
+    _start(animate: true);
+  }
+
+  void _start({required bool animate}) {
+    _started = true;
+    _pos?.removeListener(_check);
+    if (animate) {
+      _c.forward();
+    } else {
+      _c.value = 1;
+    }
+  }
+
+  @override
+  void dispose() {
+    _pos?.removeListener(_check);
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fade,
+      child: SlideTransition(
+        position: _slide,
+        child: ScaleTransition(scale: _scale, child: widget.child),
       ),
     );
   }

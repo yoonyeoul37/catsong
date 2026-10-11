@@ -19,6 +19,11 @@ class DiceStation {
   /// 지금 하는 프로그램 이름 (편성표가 없으면 '')
   final String Function(RadioProvider radio) program;
   final double weight; // 나올 확률 (1 = 보통, 0.3 = 덜 나옴)
+  final double badgeSize; // 로고 칸 글자 크기 (국기는 크게)
+  final String programLabel; // 카드 아래 작은 제목
+  final String emptyProgram; // 정보가 없을 때
+  /// 로고 칸에 넣을 사진 주소 (없으면 '' → 글자)
+  final String Function(RadioProvider radio)? image;
 
   const DiceStation({
     required this.station,
@@ -26,6 +31,10 @@ class DiceStation {
     this.frequency = '',
     required this.program,
     this.weight = 1.0,
+    this.badgeSize = 10.5,
+    this.programLabel = '지금 하는 프로그램',
+    this.emptyProgram = '편성 정보가 없어요',
+    this.image,
   });
 }
 
@@ -346,6 +355,7 @@ class _StationInfo extends StatelessWidget {
     final radio = context.watch<RadioProvider>();
     final point = context.watch<ThemeProvider>().primaryColor;
     final program = item.program(radio);
+    final img = (item.image?.call(radio) ?? '').trim();
     final fav = radio.isFavorite(item.station.stationUuid);
     const ink = Color(0xFF17140F);
     const hint = Color(0xFF8A8378);
@@ -388,14 +398,34 @@ class _StationInfo extends StatelessWidget {
                           width: 36,
                           height: 36,
                           alignment: Alignment.center,
+                          clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
                             color: Color.lerp(Colors.white, point, 0.14),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Text(item.badge,
-                              maxLines: 1,
-                              overflow: TextOverflow.clip,
-                              style: TextStyle(color: point, fontSize: 10.5, fontWeight: FontWeight.w800)),
+                          // 방송 사진이 있으면 사진, 없거나 못 불러오면 글자
+                          child: Builder(builder: (_) {
+                            final badgeText = Text(item.badge,
+                                maxLines: 1,
+                                overflow: TextOverflow.clip,
+                                style: TextStyle(color: point, fontSize: item.badgeSize, fontWeight: FontWeight.w800));
+                            if (img.isEmpty) return badgeText;
+                            return Image.network(
+                              img,
+                              width: 36,
+                              height: 36,
+                              fit: BoxFit.cover,
+                              gaplessPlayback: true,
+                              frameBuilder: (_, child, frame, sync) => sync
+                                  ? child
+                                  : AnimatedOpacity(
+                                      opacity: frame == null ? 0 : 1,
+                                      duration: const Duration(milliseconds: 250),
+                                      child: child,
+                                    ),
+                              errorBuilder: (_, __, ___) => badgeText,
+                            );
+                          }),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
@@ -426,9 +456,9 @@ class _StationInfo extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('지금 하는 프로그램', style: TextStyle(color: hint, fontSize: 11.5)),
+                              Text(item.programLabel, style: const TextStyle(color: hint, fontSize: 11.5)),
                               const SizedBox(height: 1),
-                              Text(program.isEmpty ? '편성 정보가 없어요' : program,
+                              Text(program.isEmpty ? item.emptyProgram : program,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -581,7 +611,7 @@ class _MiniBars extends StatefulWidget {
 
 class _MiniBarsState extends State<_MiniBars> with SingleTickerProviderStateMixin {
   late final AnimationController _c =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 1000))..repeat();
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 3000))..repeat();
 
   @override
   void dispose() {

@@ -32,6 +32,7 @@ class SongListTile extends StatelessWidget {
   final int index;
   final List<Song> songList;
   final bool forceWhiteText;
+  final String highlight; // 검색 중이면 검색어 (제목·가수에서 강조 색으로)
 
   const SongListTile({
     super.key,
@@ -39,7 +40,28 @@ class SongListTile extends StatelessWidget {
     required this.index,
     required this.songList,
     this.forceWhiteText = false,
+    this.highlight = '',
   });
+
+  /// 글자 안에서 검색어만 강조 색으로 (대소문자 상관없이, 여러 번 나와도 모두)
+  static Widget hlText(String text, String query, TextStyle style, Color hl) {
+    final q = query.trim();
+    if (q.isEmpty) return Text(text, style: style, maxLines: 1, overflow: TextOverflow.ellipsis);
+    final low = text.toLowerCase(), ql = q.toLowerCase();
+    final spans = <TextSpan>[];
+    var i = 0;
+    while (true) {
+      final j = low.indexOf(ql, i);
+      if (j < 0) {
+        spans.add(TextSpan(text: text.substring(i)));
+        break;
+      }
+      if (j > i) spans.add(TextSpan(text: text.substring(i, j)));
+      spans.add(TextSpan(text: text.substring(j, j + q.length), style: TextStyle(color: hl, fontWeight: FontWeight.w700)));
+      i = j + q.length;
+    }
+    return Text.rich(TextSpan(children: spans), style: style, maxLines: 1, overflow: TextOverflow.ellipsis);
+  }
 
   /// 다른 화면(재생화면 메뉴)에서도 같은 곡 정보 창을 띄울 수 있게
   static void showInfo(BuildContext context, Song song) =>
@@ -47,11 +69,12 @@ class SongListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final playerProvider = context.watch<PlayerProvider>();
-    final musicProvider = context.watch<MusicProvider>();
-    final isCurrentSong = playerProvider.currentSong?.id == song.id;
+    // 필요한 값만 지켜보기 → 이 값들이 바뀔 때만 이 줄을 다시 그림 (재생 위치가 움직일 때는 안 그림)
+    final isCurrentSong = context.select<PlayerProvider, bool>((p) => p.currentSong?.id == song.id);
+    final isPlayingNow = context.select<PlayerProvider, bool>((p) => p.currentSong?.id == song.id && p.isPlaying);
+    final isFav = context.select<MusicProvider, bool>((m) => m.isFavorite(song.id));
+    final trimmed = context.select<MusicProvider, bool>((m) => m.isTrimmedWithOriginal(song));
     final primaryColor = Theme.of(context).colorScheme.primary;
-    final isFav = musicProvider.isFavorite(song.id);
     final isDarkMode = forceWhiteText ? true : context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
 
@@ -91,39 +114,38 @@ class SongListTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            _buildAlbumArt(isCurrentSong, playerProvider, primaryColor, baseColor,
-                musicProvider.isTrimmedWithOriginal(song)),
+            _buildAlbumArt(isCurrentSong, isPlayingNow, primaryColor, baseColor, trimmed),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  hlText(
                     song.titleDisplay,
-                    style: TextStyle(
+                    highlight,
+                    TextStyle(
                       color: isCurrentSong ? primaryColor : baseColor,
                       fontSize: 15,
                       fontWeight: isCurrentSong ? FontWeight.w600 : FontWeight.w500,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    primaryColor,
                   ),
                   const SizedBox(height: 3),
-                  Text(
+                  hlText(
                     song.artistDisplay,
-                    style: TextStyle(
+                    highlight,
+                    TextStyle(
                       color: isCurrentSong ? baseColor.withOpacity(0.7) : baseColor.withOpacity(0.38),
                       fontSize: 13,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    primaryColor,
                   ),
                 ],
               ),
             ),
             const SizedBox(width: 8),
             Builder(builder: (context) {
-              final playCount = context.watch<MusicProvider>().playCountOf(song);
+              final playCount = context.select<MusicProvider, int>((m) => m.playCountOf(song));
               final subColor = isCurrentSong ? baseColor.withOpacity(0.7) : baseColor.withOpacity(0.3);
               return Column(
                 mainAxisSize: MainAxisSize.min,
@@ -171,7 +193,7 @@ class SongListTile extends StatelessWidget {
     ));
   }
 
-  Widget _buildAlbumArt(bool isCurrentSong, PlayerProvider playerProvider, Color primaryColor, Color baseColor,
+  Widget _buildAlbumArt(bool isCurrentSong, bool isPlayingNow, Color primaryColor, Color baseColor,
       bool showTrimBadge) {
     return Stack(
       alignment: Alignment.center,
@@ -206,7 +228,7 @@ class SongListTile extends StatelessWidget {
             ),
             child: Center(
               child: AlbumEqOverlay(
-                isPlaying: playerProvider.isPlaying,
+                isPlaying: isPlayingNow,
                 width: 26,
                 height: 22,
               ),

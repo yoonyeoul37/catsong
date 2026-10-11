@@ -231,6 +231,24 @@ class _LyricsScreenState extends State<LyricsScreen> {
     await p.setStringList('lyricsMyPhotos', _myPhotos);
     await _useMyPhoto(picked.first.path);
     setSheet(() {});
+    _warnIfLandscape([for (final f in picked) f.path]);
+  }
+
+  /// 가로 사진을 골랐으면 한 번만 짧게 알려 주기 (사진은 그대로 들어가요)
+  Future<void> _warnIfLandscape(List<String> paths) async {
+    for (final path in paths) {
+      try {
+        final codec = await ui.instantiateImageCodec(await File(path).readAsBytes(), targetWidth: 64);
+        final frame = await codec.getNextFrame();
+        final landscape = frame.image.width > frame.image.height * 1.05;
+        frame.image.dispose();
+        codec.dispose();
+        if (landscape) {
+          if (mounted) showParanToast(context, '가로 사진은 가운데 부분만 보여요. 세로로 찍은 사진이 가장 잘 어울려요');
+          return;
+        }
+      } catch (_) {}
+    }
   }
 
   /// 관리 ✕: 목록에서 빼기 (지금 배경이면 파란소리 사진으로 돌아가기)
@@ -788,6 +806,8 @@ class _LyricsScreenState extends State<LyricsScreen> {
                     Icon(Icons.add_rounded, color: sub, size: 26),
                     const SizedBox(height: 4),
                     Text('사진 추가', style: TextStyle(color: sub, fontSize: 11.5, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 1),
+                    Text('세로 사진 추천', style: TextStyle(color: sub.withOpacity(0.75), fontSize: 9.5)),
                   ],
                 ),
               ),

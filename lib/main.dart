@@ -738,11 +738,18 @@ class _IntroView extends StatefulWidget {
   State<_IntroView> createState() => _IntroViewState();
 }
 
-class _IntroViewState extends State<_IntroView> with SingleTickerProviderStateMixin {
-  // 첫인사가 3초라서 3초 동안 움직임
+class _IntroViewState extends State<_IntroView> with TickerProviderStateMixin {
+  // 전체 4.5초: 사진이 올라옴(0~1.8초) → 글자(1.3~2.5초) → 소리 파형(1.9초~)
   late final AnimationController _c =
       AnimationController(vsync: this, duration: const Duration(milliseconds: 4500));
+  // 파형이 다 자란 뒤 숨 쉬듯 살짝 움직이기
+  late final AnimationController _p =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 1100));
   bool _started = false;
+
+  // 소리 파형: 막대 20개 높이 · 색 (홈 카드 색: 살구 → 보라 → 흰 → 연두 → 살구)
+  static const _barH = <int>[4, 7, 11, 16, 10, 20, 14, 24, 18, 12, 22, 15, 9, 17, 11, 6, 13, 8, 5, 4];
+  static const _barColors = <Color>[Color(0xFFFF9A70), Color(0xFFEE978B), Color(0xFFDE94A6), Color(0xFFCD91C1), Color(0xFFBC8EDC), Color(0xFFB492F1), Color(0xFFC5AAF4), Color(0xFFD5C2F7), Color(0xFFE6DBFA), Color(0xFFF7F3FD), Color(0xFFF2FAF3), Color(0xFFD9F0DA), Color(0xFFBFE6C1), Color(0xFFA6DCA9), Color(0xFF8CD290), Color(0xFF99C786), Color(0xFFB3BC80), Color(0xFFCCB17B), Color(0xFFE6A575), Color(0xFFFF9A70)];
 
   @override
   void didChangeDependencies() {
@@ -755,65 +762,123 @@ class _IntroViewState extends State<_IntroView> with SingleTickerProviderStateMi
       _c.forward().whenComplete(() {
         if (mounted) widget.onDone();
       });
+      Future.delayed(const Duration(milliseconds: 2600), () {
+        if (mounted) _p.repeat(reverse: true);
+      });
     });
   }
 
   @override
   void dispose() {
     _c.dispose();
+    _p.dispose();
     super.dispose();
+  }
+
+  // 0~4.5초 중 [from]~[to]초 구간의 진행(0~1)
+  double _seg(double from, double to, Curve curve) {
+    final sec = _c.value * 4.5;
+    final v = ((sec - from) / (to - from)).clamp(0.0, 1.0);
+    return curve.transform(v);
   }
 
   @override
   Widget build(BuildContext context) {
-    // 사진: 3초 동안 6%만 살짝 다가오기
-    final zoom = Tween(begin: 1.0, end: 1.06)
-        .animate(CurvedAnimation(parent: _c, curve: Curves.easeOut));
-    // 글자: 0.4초 뒤부터 1.4초 동안 떠오르기 (글자 사이도 천천히 모임)
-    final t = CurvedAnimation(parent: _c, curve: const Interval(0.13, 0.6, curve: Curves.easeOutCubic));
     final h = MediaQuery.sizeOf(context).height;
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        AnimatedBuilder(
-          animation: zoom,
-          builder: (_, child) => Transform.scale(scale: zoom.value, child: child),
-          child: Image.asset(widget.path, fit: BoxFit.cover), // 화면 꽉 채우기
-        ),
-        if (widget.showTitle)
-          Positioned(
-            left: 0,
-            right: 0,
-            top: h * 0.22, // 파란 하늘 자리
-            child: AnimatedBuilder(
-              animation: t,
-              builder: (_, __) => Opacity(
-                opacity: t.value,
-                child: Transform.translate(
-                  offset: Offset(0, 14 * (1 - t.value)),
-                  child: Text(
-                    'Paransori',
-                    textAlign: TextAlign.center,
-                    textScaler: TextScaler.noScaling, // 글자 크기 설정과 상관없이 고정
-                    style: GoogleFonts.quicksand( // 홈 로고와 같은 글꼴
-                      color: Colors.white,
-                      fontSize: 34,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 1.5 + 4 * (1 - t.value),
-                      shadows: [
-                        Shadow(
-                          color: Colors.black.withOpacity(0.18),
-                          blurRadius: 12,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                  ),
+    return AnimatedBuilder(
+      animation: Listenable.merge([_c, _p]),
+      builder: (context, _) {
+        // 사진: 아래에서 올라오며 나타나고(1.8초), 그다음 아주 천천히 다가오기
+        final rise = _seg(0, 1.8, Curves.easeOutCubic);
+        final zoom = _seg(1.8, 4.5, Curves.easeOut);
+        final photoScale = 1.08 - 0.08 * rise + 0.05 * zoom;
+        // 글자: 1.3초부터 떠오르며 글자 사이가 모임
+        final t = _seg(1.3, 2.5, Curves.easeOutCubic);
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            Opacity(
+              opacity: rise,
+              child: Transform.translate(
+                offset: Offset(0, h * 0.09 * (1 - rise)),
+                child: Transform.scale(
+                  scale: photoScale,
+                  child: Image.asset(widget.path, fit: BoxFit.cover), // 화면 꽉 채우기
                 ),
               ),
             ),
-          ),
-      ],
+            if (widget.showTitle)
+              Positioned(
+                left: 0,
+                right: 0,
+                top: h * 0.22, // 파란 하늘 자리
+                child: Column(
+                  children: [
+                    Opacity(
+                      opacity: t,
+                      child: Transform.translate(
+                        offset: Offset(0, 12 * (1 - t)),
+                        child: Text(
+                          'Paransori',
+                          textAlign: TextAlign.center,
+                          textScaler: TextScaler.noScaling, // 글자 크기 설정과 상관없이 고정
+                          style: GoogleFonts.quicksand( // 홈 로고와 같은 글꼴
+                            color: Colors.white,
+                            fontSize: 34,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 1.5 + 3.5 * (1 - t),
+                            shadows: [
+                              Shadow(
+                                color: Colors.black.withOpacity(0.18),
+                                blurRadius: 12,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    // 소리 파형: 가운데서 양쪽으로 자라고, 다 자라면 살짝 숨 쉬듯
+                    SizedBox(
+                      height: 34,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (var i = 0; i < _barH.length; i++) ...[
+                            if (i > 0) const SizedBox(width: 3.5),
+                            Builder(builder: (_) {
+                              final d = (i - 10) * (i - 10) * 0.006; // 가운데부터
+                              final g = _seg(1.9 + d, 2.5 + d, Curves.easeOutBack);
+                              final phase = ((_p.value + i * 0.07) % 1.0);
+                              final breathe = 1 - 0.45 * (phase < 0.5 ? phase * 2 : (1 - phase) * 2);
+                              final bh = (2 + (_barH[i] * 1.25 - 2) * g) * (_p.isAnimating ? breathe : 1);
+                              return Container(
+                                width: 3,
+                                height: bh.clamp(2.0, 40.0),
+                                decoration: BoxDecoration(
+                                  color: _barColors[i],
+                                  borderRadius: BorderRadius.circular(3),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.08),
+                                      blurRadius: 6,
+                                      offset: const Offset(0, 1),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }

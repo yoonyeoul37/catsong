@@ -1230,11 +1230,11 @@ class _LyricsScreenState extends State<LyricsScreen> {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 color: _ink,
-                                fontSize: 21,
-                                fontWeight: FontWeight.w800,
+                                fontSize: 16.5,
+                                fontWeight: FontWeight.w700,
                                 letterSpacing: -0.3,
                                 shadows: shadow)),
-                        const SizedBox(height: 5),
+                        const SizedBox(height: 3),
                         Row(
                           children: [
                             // 포인트색 점 (미니플레이어 진행 바와 같은 색)
@@ -1250,7 +1250,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       color: _ink.withOpacity(_light ? 0.85 : 0.72),
-                                      fontSize: 14,
+                                      fontSize: 13,
                                       fontWeight: _light ? FontWeight.w600 : FontWeight.w500,
                                       shadows: shadow)),
                             ),

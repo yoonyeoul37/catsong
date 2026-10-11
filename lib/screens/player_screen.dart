@@ -1975,7 +1975,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   _playerSheetItem(
                     ctx,
                     Icons.shuffle_rounded,
-                    AppLocalizations.of(context)!.shuffle,
+                    '랜덤 재생',
                     accent,
                     baseColor,
                         () {
@@ -1987,7 +1987,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   _playerSheetItem(
                     ctx,
                     Icons.repeat_rounded,
-                    '반복',
+                    '반복 재생',
                     accent,
                     baseColor,
                         () {
@@ -2000,7 +2000,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   _playerSheetItem(
                     ctx,
                     Icons.nightlight_round,
-                    '수면',
+                    '수면 타이머',
                     accent,
                     baseColor,
                         () {
@@ -2016,7 +2016,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   ),
                   ]),
                   MenuCard(isDark: isDark, children: [
-                  _playerSheetItem(ctx, Icons.style, AppLocalizations.of(context)!.playerStyle, accent, baseColor, () async {
+                  _playerSheetItem(ctx, Icons.style, '재생 화면', accent, baseColor, () async {
                     if (!_hasSeenParanPhoto) {
                       setState(() => _hasSeenParanPhoto = true);
                       SharedPreferences.getInstance().then((p) => p.setBool('hasSeenParanPhoto', true));
@@ -2025,10 +2025,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                     // 고르고 돌아오면 메뉴의 스타일 썸네일도 바로 바뀌게
                     if (ctx.mounted) setSheet(() {});
                   }, trailing: _sheetStyleThumbs(song)),
-                  _playerSheetItem(ctx, Icons.speed, '배속', accent, baseColor, () {
+                  _playerSheetItem(ctx, Icons.speed, '재생 속도', accent, baseColor, () {
                     _showSpeedDialog(context, context.read<PlayerProvider>(), primaryColor);
                   }, trailing: _sheetValue(_sheetSpeedLabel(playerProvider.playbackSpeed)), arrow: true),
-                  _playerSheetItem(ctx, Icons.lyrics_outlined, AppLocalizations.of(context)!.lyrics, accent, baseColor, () {
+                  _playerSheetItem(ctx, Icons.lyrics_outlined, '가사 보기', accent, baseColor, () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const LyricsScreen()));
                   }, arrow: true),
                   // 🌿 자연소리 섞기 (음악 위에 빗소리·파도 등을 깔기)
@@ -2037,7 +2037,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     builder: (_, __) => _playerSheetItem(
                       ctx,
                       Icons.forest_outlined,
-                      '자연소리 섞기',
+                      '자연 소리 믹스',
                       accent,
                       baseColor,
                       () {
@@ -2050,10 +2050,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                   ]),
                   MenuCard(isDark: isDark, children: [
                   // 들어갔다 나오면 메뉴가 그대로 있게 (메뉴를 닫지 않고 위에 띄움)
-                  _playerSheetItem(ctx, Icons.music_note, AppLocalizations.of(context)!.setRingtone, accent, baseColor, () {
+                  _playerSheetItem(ctx, Icons.music_note, '벨소리 설정', accent, baseColor, () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => RingtoneScreen(initialSong: song)));
                   }, arrow: true),
-                  _playerSheetItem(ctx, Icons.content_cut, '자르기', accent, baseColor, () {
+                  _playerSheetItem(ctx, Icons.content_cut, '오디오 자르기', accent, baseColor, () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => RingtoneScreen(initialSong: song, trimMode: true)));
                   }, arrow: true),
@@ -2210,7 +2210,7 @@ class _PlayerScreenState extends State<PlayerScreen>
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          chip('꺼짐', LoopMode.off),
+          chip('끔', LoopMode.off),
           chip('한 곡', LoopMode.one),
           chip('전체', LoopMode.all),
         ],
@@ -2329,9 +2329,9 @@ class _PlayerScreenState extends State<PlayerScreen>
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        box(1, '시디롬', cd),
+        box(1, 'CD', cd),
         box(6, '파란포토', photo, isNew: showNew),
-        box(3, '앨범', album),
+        box(3, '앨범 사진', album),
       ],
     );
   }
@@ -3664,29 +3664,29 @@ List<Widget> playerSettingRows(
     // TV로 듣기 (곡이 재생 중일 때만)
     if (p.currentSong != null) castMenuRow(context, textColor),
     _PlayerScreenState._playerSheetItem(
-      context, Icons.shuffle_rounded, AppLocalizations.of(context)!.shuffle, accent, textColor,
+      context, Icons.shuffle_rounded, '랜덤 재생', accent, textColor,
       () { vib(); p.toggleShuffle(); },
       trailing: _PlayerScreenState._sheetMiniSwitch(p.isShuffled),
     ),
     _PlayerScreenState._playerSheetItem(
-      context, Icons.repeat_rounded, '반복', accent, textColor,
+      context, Icons.repeat_rounded, '반복 재생', accent, textColor,
       () { vib(); p.toggleLoopMode(); },
       trailing: _PlayerScreenState._sheetRepeatChips(p),
       trailingTappable: true,
     ),
     _PlayerScreenState._playerSheetItem(
-      context, Icons.nightlight_round, '수면', accent, textColor,
+      context, Icons.nightlight_round, '수면 타이머', accent, textColor,
       () { vib(); showPlayerSleepMenu(context); },
       trailing: _PlayerScreenState._sheetValue(_PlayerScreenState._sheetSleepLabel(p)),
       arrow: true,
     ),
     _PlayerScreenState._playerSheetItem(
-      context, Icons.style, AppLocalizations.of(context)!.playerStyle, accent, textColor,
+      context, Icons.style, '재생 화면', accent, textColor,
       () async { await showPlayerStyleMenu(context); onStyleChanged(); },
       trailing: _PlayerScreenState._styleThumbs(song, style, bgPath, bgIsFile, showNew: showNew),
     ),
     _PlayerScreenState._playerSheetItem(
-      context, Icons.speed, '배속', accent, textColor,
+      context, Icons.speed, '재생 속도', accent, textColor,
       () { showPlayerSpeedMenu(context); },
       trailing: _PlayerScreenState._sheetValue(_PlayerScreenState._sheetSpeedLabel(p.playbackSpeed)),
       arrow: true,
@@ -3696,7 +3696,7 @@ List<Widget> playerSettingRows(
       AnimatedBuilder(
         animation: NatureOverlay.instance,
         builder: (_, __) => _PlayerScreenState._playerSheetItem(
-          context, Icons.forest_outlined, '자연소리 섞기', accent, textColor,
+          context, Icons.forest_outlined, '자연 소리 믹스', accent, textColor,
           () { showNatureOverlaySheet(context); },
           trailing: _PlayerScreenState._sheetValue(NatureOverlay.instance.summary),
           arrow: true,

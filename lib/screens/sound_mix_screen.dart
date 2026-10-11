@@ -652,7 +652,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('지금 섞고 있는 소리',
+                              Text('현재 재생 중',
                                   style: TextStyle(
                                       color: baseColor.withOpacity(0.4), fontSize: 11.5)),
                               const SizedBox(height: 4),

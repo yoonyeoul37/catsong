@@ -350,8 +350,8 @@ class SongListTile extends StatelessWidget {
                 ]),
                 MenuCard(isDark: isDarkMode, children: [
                   // 들어갔다 나오면 메뉴가 그대로 있게 (keepOpen)
-                  _sheetItem(context, Icons.music_note, AppLocalizations.of(context)!.setRingtone, 'ringtone', accent, baseColor, isDarkMode, arrow: true, keepOpen: true),
-                  _sheetItem(context, Icons.content_cut, '자르기', 'trim', accent, baseColor, isDarkMode, arrow: true, keepOpen: true),
+                  _sheetItem(context, Icons.music_note, '벨소리 설정', 'ringtone', accent, baseColor, isDarkMode, arrow: true, keepOpen: true),
+                  _sheetItem(context, Icons.content_cut, '오디오 자르기', 'trim', accent, baseColor, isDarkMode, arrow: true, keepOpen: true),
                   _sheetItem(context, Icons.info_outline, '파일 정보', 'info', accent, baseColor, isDarkMode, arrow: true, keepOpen: true),
                   _sheetItem(context, Icons.equalizer, AppLocalizations.of(context)!.equalizer, 'equalizer', accent, baseColor, isDarkMode, arrow: true, keepOpen: true),
                 ]),

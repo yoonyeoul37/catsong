@@ -15,7 +15,9 @@ class SoundMixMiniPlayer extends StatelessWidget {
     if (!mix.hasSession) return const SizedBox.shrink();
 
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
-    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    // 진한 띠 위라서 글자·아이콘은 늘 밝은 색 (라디오 미니 플레이어와 같음)
+    const baseColor = Color(0xFFF4EFE5);
+    const ink = Color(0xFF17140F);
     const accent = Color(0xFF6366F1);
 
     final activeNames = [
@@ -39,18 +41,16 @@ class SoundMixMiniPlayer extends StatelessWidget {
       },
       child: ClipRRect(
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
+          topLeft: Radius.zero,
+          topRight: Radius.zero,
         ),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
           child: Container(
-            height: 72,
+            height: 80,
             decoration: BoxDecoration(
-              color: isDarkMode
-                  ? Colors.white.withOpacity(0.08)
-                  : const Color(0xFFEDE7DA).withOpacity(0.92),
-              border: Border(top: BorderSide(color: baseColor.withOpacity(0.10))),
+              // 진한 띠 (어두운 화면에서는 바탕보다 한 톤 밝게)
+              color: isDarkMode ? const Color(0xFF3A3631) : ink,
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -75,7 +75,7 @@ class SoundMixMiniPlayer extends StatelessWidget {
                         Text(subtitle,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(color: accent, fontSize: 12)),
+                            style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 12)),
                       ],
                     ),
                   ),
@@ -91,9 +91,9 @@ class SoundMixMiniPlayer extends StatelessWidget {
                     child: Container(
                       width: 40,
                       height: 40,
-                      decoration: BoxDecoration(color: baseColor.withOpacity(0.15), shape: BoxShape.circle),
+                      decoration: const BoxDecoration(color: baseColor, shape: BoxShape.circle),
                       child: Icon(mix.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                          color: baseColor.withOpacity(0.7), size: 20),
+                          color: ink, size: 22),
                     ),
                   ),
                   // × (닫기): 재생 중에도 누르면 바로 멈추고 닫힘

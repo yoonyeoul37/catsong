@@ -22,7 +22,9 @@ class RadioMiniPlayer extends StatelessWidget {
     final isPlaying = radioProvider.isPlaying;
     final isLoading = radioProvider.isLoading;
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
-    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    // 진한 띠 위라서 글자·아이콘은 늘 밝은 색
+    const baseColor = Color(0xFFF4EFE5);
+    const ink = Color(0xFF17140F);
 
     return GestureDetector(
       // 아래로 휙 쓸어내리면 미니플레이어 닫기
@@ -76,18 +78,16 @@ class RadioMiniPlayer extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
+          topLeft: Radius.zero,
+          topRight: Radius.zero,
         ),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
           child: Container(
             height: 80,
             decoration: BoxDecoration(
-              color: isDarkMode ? Colors.white.withOpacity(0.08) : const Color(0xFFEDE7DA).withOpacity(0.92),
-              border: Border(
-                top: BorderSide(color: baseColor.withOpacity(0.10)),
-              ),
+              // 진한 띠 (어두운 화면에서는 바탕보다 한 톤 밝게)
+              color: isDarkMode ? const Color(0xFF3A3631) : ink,
             ),
             child: Column(
               children: [
@@ -235,8 +235,8 @@ class RadioMiniPlayer extends StatelessWidget {
                           child: Container(
                             width: 40,
                             height: 40,
-                            decoration: BoxDecoration(
-                              color: baseColor.withOpacity(0.15),
+                            decoration: const BoxDecoration(
+                              color: baseColor,
                               shape: BoxShape.circle,
                             ),
                             child: isLoading
@@ -244,13 +244,13 @@ class RadioMiniPlayer extends StatelessWidget {
                               padding: const EdgeInsets.all(10),
                               child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: baseColor),
+                                  color: ink),
                             )
                                 : Icon(
                               isPlaying
                                   ? Icons.pause
                                   : Icons.play_arrow,
-                              color: baseColor,
+                              color: ink,
                               size: 22,
                             ),
                           ),

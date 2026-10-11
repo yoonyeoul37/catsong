@@ -1049,18 +1049,26 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         GestureDetector(
+                          behavior: HitTestBehavior.opaque, // 아이콘 주변 빈 곳도 눌리게
                           onTap: () => _showCustomMinutesDialog(isDarkMode),
-                          child: Column(
-                            children: [
-                              Icon(Icons.bedtime,
-                                  color: _sleepMinutes != null
-                                      ? Colors.white
-                                      : Colors.white.withOpacity(0.7),
-                                  size: 22),
-                              const SizedBox(height: 4),
-                              Text(_formatRemaining(),
-                                  style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 10)),
-                            ],
+                          child: Container(
+                            width: 56,
+                            height: 52,
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.bedtime,
+                                    color: _sleepMinutes != null
+                                        ? Colors.white
+                                        : Colors.white.withOpacity(0.7),
+                                    size: 22),
+                                const SizedBox(height: 4),
+                                Text(_formatRemaining(),
+                                    maxLines: 1,
+                                    style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 10)),
+                              ],
+                            ),
                           ),
                         ),
                         GestureDetector(
@@ -1084,13 +1092,20 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                               color: Colors.white.withOpacity(0.85), size: 30),
                         ),
                         GestureDetector(
+                          behavior: HitTestBehavior.opaque, // 아이콘 주변 빈 곳도 눌리게
                           onTap: () => _goToSoundMix(context),
-                          child: Column(
-                            children: [
-                              Icon(Icons.graphic_eq_rounded, color: Colors.white.withOpacity(0.7), size: 22),
-                              const SizedBox(height: 4),
-                              Text('믹스', style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 10)),
-                            ],
+                          child: Container(
+                            width: 56,
+                            height: 52,
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.graphic_eq_rounded, color: Colors.white.withOpacity(0.7), size: 22),
+                                const SizedBox(height: 4),
+                                Text('믹스', style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 10)),
+                              ],
+                            ),
                           ),
                         ),
                       ],

@@ -241,7 +241,7 @@ void showNatureOverlaySheet(BuildContext context) {
                   const Icon(Icons.forest_outlined, color: blue, size: 22),
                   const SizedBox(width: 8),
                   const Expanded(
-                    child: Text('자연소리 섞기',
+                    child: Text('자연 소리 믹스',
                         style: TextStyle(color: Color(0xFF17140F), fontSize: 16, fontWeight: FontWeight.w700)),
                   ),
                   if (o.anyOn)

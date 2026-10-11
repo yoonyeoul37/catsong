@@ -2173,7 +2173,7 @@ class _HomeScreenState extends State<HomeScreen> {
         (Icons.battery_charging_full_rounded, '화면 꺼도 계속 들어요', "배터리를 '제한 없음'으로 바꿔 주세요"),
         (Icons.notifications_active_outlined, '노래로 벨소리 만들기', '곡 ⋮ 메뉴에서 바로 만들어요'),
         (Icons.movie_outlined, '동영상 노래만 저장', "동영상 ⋮ 메뉴에서 '음악으로 저장'"),
-        (Icons.water_drop_outlined, '음악에 빗소리 더하기', '재생 화면 ⋮ 메뉴 → 자연소리 섞기'),
+        (Icons.water_drop_outlined, '음악에 빗소리 더하기', '재생 화면 ⋮ 메뉴 → 자연 소리 믹스'),
         (Icons.format_quote_rounded, '가사 한 줄 공유', '가사를 꾹 누르면 카드로 보내요'),
       ];
       final tip = tips[(day ~/ 5) % tips.length];

@@ -1448,27 +1448,20 @@ class _HomeScreenState extends State<HomeScreen> {
     };
 
     String natureImage(NatureSound s) {
+      // 잠시 쉬어가요 전용 작은 사진 (재생 화면 배경은 그대로)
       switch (s.category) {
         case '파도소리':
-          const waves = [
-            'assets/nature_wave_bg.png',
-            'assets/wave2.png',
-            'assets/wave3.png',
-            'assets/wave4.png',
-            'assets/wave5.png',
-            'assets/wave6.png',
-          ];
-          return waves[s.name.hashCode.abs() % waves.length];
+          return 'assets/rest_wave.jpg';
         case '빗소리':
-          return 'assets/nature_rain_bg.png';
+          return 'assets/rest_rain.jpg';
         case '새소리':
-          return 'assets/nature_bird_bg.png';
+          return 'assets/rest_bird.jpg';
         case '모닥불':
-          return 'assets/nature_fire_bg.png';
+          return 'assets/rest_fire.jpg';
         case '시냇물':
-          return 'assets/nature_stream_bg.png';
+          return 'assets/rest_stream.jpg';
         default:
-          return 'assets/nature_wave_bg.png';
+          return 'assets/rest_wave.jpg';
       }
     }
 
@@ -1518,9 +1511,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
         ),
       (
-        '📻 ${todayRadio.$1}',
-        // 라디오 사진 10장 중 하루에 한 장
-        'assets/rest_radio_${(daySeed % 10) + 1}.png',
+        todayRadio.$1,
+        'assets/rest_radio.jpg',
         () => Navigator.push(
               context,
               MaterialPageRoute(
@@ -1543,8 +1535,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Icon(Icons.tune_rounded, size: 18, color: baseColor.withOpacity(0.7)),
               const SizedBox(width: 6),
               Text('이런 소리는 어때요?',
-                  style: GoogleFonts.notoSansKr(
-                      color: baseColor, fontSize: 14, fontWeight: FontWeight.w700)),
+                  style: GoogleFonts.doHyeon( // 로고와 같은 글꼴
+                      color: baseColor, fontSize: 16.5, fontWeight: FontWeight.w400)),
             ],
           ),
           const SizedBox(height: 16),
@@ -1562,10 +1554,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
+                      // 살짝 떠 있는 느낌: 넓고 연한 그림자 + 바로 밑 얇은 그림자
                       BoxShadow(
-                        color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.16),
-                        blurRadius: 16,
-                        offset: const Offset(0, 6),
+                        color: const Color(0xFF17140F).withOpacity(isDarkMode ? 0.45 : 0.13),
+                        blurRadius: 24,
+                        spreadRadius: -4,
+                        offset: const Offset(0, 12),
+                      ),
+                      BoxShadow(
+                        color: const Color(0xFF17140F).withOpacity(isDarkMode ? 0.3 : 0.06),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
@@ -1577,24 +1576,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         Image.asset(
                           c.imageAsset,
                           fit: BoxFit.cover,
+                          alignment: const Alignment(0, -0.4), // 물건·사람이 위쪽에 있어서
                           cacheWidth: 600, // 화면 크기만큼만 불러오기 (램 아끼기)
                           errorBuilder: (context, error, stackTrace) => Container(
                             color: baseColor.withOpacity(0.08),
                           ),
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.black.withOpacity(0.0),
-                                Colors.black.withOpacity(0.18),
-                              ],
-                              stops: const [0.5, 1.0],
-                            ),
-                          ),
-                        ),
+                        // 밝은 사진: 먹색 글자 (어두운 칸 없음)
                         Positioned(
                           left: 0,
                           right: 0,
@@ -1603,64 +1591,53 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: RepaintBoundary( // 흐림 효과 빼기 (폰이 버벅이고 사진이 회색으로 나오던 원인)
                               
                               child: Container(
-                                padding: const EdgeInsets.fromLTRB(12, 6, 12, 8),
+                                padding: const EdgeInsets.fromLTRB(12, 8, 12, 9),
+                                // 유리 띠: 반투명 흰색 + 위쪽 얇은 흰 선 (흐림 효과 없이, 속도 그대로)
                                 decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.08),
+                                  color: Colors.white.withOpacity(0.42),
                                   border: Border(
-                                    top: BorderSide(color: Colors.white.withOpacity(0.18)),
+                                    top: BorderSide(color: Colors.white.withOpacity(0.6)),
                                   ),
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text(c.title,
-                                        style: GoogleFonts.notoSansKr(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
-                                            shadows: [
-                                              const Shadow(
-                                                color: Colors.black,
-                                                blurRadius: 3,
-                                                offset: Offset(0, 1),
+                                    Text.rich(
+                                        TextSpan(children: [
+                                          // 제목 앞 작은 아이콘 (둥근 모양)
+                                          WidgetSpan(
+                                            alignment: PlaceholderAlignment.middle,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(right: 5),
+                                              child: Icon(
+                                                c.type == StartScreenType.music
+                                                    ? Icons.music_note_rounded
+                                                    : c.type == StartScreenType.radio
+                                                        ? Icons.radio_rounded
+                                                        : c.type == StartScreenType.nature
+                                                            ? Icons.eco_rounded
+                                                            : Icons.bedtime_rounded,
+                                                size: 15,
+                                                color: const Color(0xFF17140F).withOpacity(0.75),
                                               ),
-                                              Shadow(
-                                                color: Colors.black.withOpacity(0.9),
-                                                blurRadius: 8,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                              Shadow(
-                                                color: Colors.black.withOpacity(0.75),
-                                                blurRadius: 20,
-                                                offset: const Offset(0, 3),
-                                              ),
-                                            ])),
+                                            ),
+                                          ),
+                                          TextSpan(text: c.title),
+                                        ]),
+                                        style: GoogleFonts.doHyeon(
+                                            color: const Color(0xFF17140F),
+                                            fontSize: 14.5,
+                                            fontWeight: FontWeight.w400,
+                                            letterSpacing: -0.3)),
                                     const SizedBox(height: 2),
                                     Text(c.subtitle,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
-                                            color: Colors.white.withOpacity(0.9),
+                                            color: const Color(0xFF17140F).withOpacity(0.6),
                                             fontSize: 11,
-                                            fontWeight: FontWeight.w500,
-                                            shadows: [
-                                              const Shadow(
-                                                color: Colors.black,
-                                                blurRadius: 2,
-                                                offset: Offset(0, 1),
-                                              ),
-                                              Shadow(
-                                                color: Colors.black.withOpacity(0.85),
-                                                blurRadius: 6,
-                                                offset: const Offset(0, 1),
-                                              ),
-                                              Shadow(
-                                                color: Colors.black.withOpacity(0.65),
-                                                blurRadius: 14,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                            ])),
+                                            fontWeight: FontWeight.w500)),
                                   ],
                                 ),
                               ),
@@ -1676,19 +1653,19 @@ class _HomeScreenState extends State<HomeScreen> {
                               _handleStartScreenStarTap(context, c.type, c.title);
                             },
                             child: Container(
-                              padding: const EdgeInsets.all(7),
+                              padding: const EdgeInsets.all(5),
                               decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.28),
+                                color: Colors.white.withOpacity(0.55),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
                                 startScreen == c.type
                                     ? CupertinoIcons.heart_fill
                                     : CupertinoIcons.heart,
-                                size: 18,
+                                size: 13,
                                 color: startScreen == c.type
                                     ? const Color(0xFF6FA8DC)
-                                    : Colors.white.withOpacity(0.85),
+                                    : const Color(0xFF17140F).withOpacity(0.7),
                               ),
                             ),
                           ),
@@ -1706,8 +1683,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Icon(Icons.volume_up_rounded, size: 18, color: baseColor.withOpacity(0.7)),
               const SizedBox(width: 6),
               Text('잠시 쉬어가요',
-                  style: GoogleFonts.notoSansKr(
-                      color: baseColor, fontSize: 14, fontWeight: FontWeight.w700)),
+                  style: GoogleFonts.doHyeon( // 로고와 같은 글꼴
+                      color: baseColor, fontSize: 16.5, fontWeight: FontWeight.w400)),
             ],
           ),
           const SizedBox(height: 12),
@@ -1728,9 +1705,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(isDarkMode ? 0.5 : 0.24),
-                            blurRadius: 22,
+                            color: const Color(0xFF17140F).withOpacity(isDarkMode ? 0.45 : 0.13),
+                            blurRadius: 20,
+                            spreadRadius: -4,
                             offset: const Offset(0, 10),
+                          ),
+                          BoxShadow(
+                            color: const Color(0xFF17140F).withOpacity(isDarkMode ? 0.3 : 0.06),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),
@@ -1745,19 +1728,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               fit: BoxFit.cover,
                               fallback: Container(color: baseColor.withOpacity(0.08)),
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Colors.black.withOpacity(0.0),
-                                    Colors.black.withOpacity(0.12),
-                                  ],
-                                  stops: const [0.55, 1.0],
-                                ),
-                              ),
-                            ),
                             Positioned(
                               left: 0,
                               right: 0,
@@ -1766,38 +1736,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: RepaintBoundary( // 흐림 효과 빼기 (폰이 버벅이고 사진이 회색으로 나오던 원인)
                                   
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                    padding: const EdgeInsets.fromLTRB(9, 6, 9, 7),
+                                    // 유리 띠 (위 카드와 같은 모양, 어두운 사진에서도 읽히게 조금 더 진하게)
                                     decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.08),
+                                      color: const Color(0xFFFBF8F2).withOpacity(0.78),
                                       border: Border(
-                                        top: BorderSide(color: Colors.white.withOpacity(0.16)),
+                                        top: BorderSide(color: Colors.white.withOpacity(0.6)),
                                       ),
                                     ),
                                     child: Text(item.$1,
-                                        textAlign: TextAlign.center,
-                                        maxLines: 2,
+                                        maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w700,
-                                            shadows: [
-                                              const Shadow(
-                                                color: Colors.black,
-                                                blurRadius: 2,
-                                                offset: Offset(0, 1),
-                                              ),
-                                              Shadow(
-                                                color: Colors.black.withOpacity(0.9),
-                                                blurRadius: 6,
-                                                offset: const Offset(0, 1),
-                                              ),
-                                              Shadow(
-                                                color: Colors.black.withOpacity(0.7),
-                                                blurRadius: 14,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                            ])),
+                                        style: GoogleFonts.doHyeon( // 로고와 같은 글꼴
+                                            color: const Color(0xFF17140F),
+                                            fontSize: 12.5,
+                                            fontWeight: FontWeight.w400)),
                                   ),
                                 ),
                               ),
@@ -1818,8 +1771,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 Icon(Icons.headphones_rounded, size: 18, color: baseColor.withOpacity(0.7)),
                 const SizedBox(width: 6),
                 Text('최근에 들었어요',
-                    style: GoogleFonts.notoSansKr(
-                        color: baseColor, fontSize: 14, fontWeight: FontWeight.w700)),
+                    style: GoogleFonts.doHyeon( // 로고와 같은 글꼴
+                        color: baseColor, fontSize: 16.5, fontWeight: FontWeight.w400)),
               ],
             ),
             const SizedBox(height: 12),
@@ -1993,9 +1946,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius: BorderRadius.circular(10),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(isDarkMode ? 0.5 : 0.24),
-                                    blurRadius: 16,
-                                    offset: const Offset(0, 6),
+                                    color: const Color(0xFF17140F).withOpacity(isDarkMode ? 0.45 : 0.13),
+                                    blurRadius: 14,
+                                    spreadRadius: -3,
+                                    offset: const Offset(0, 8),
+                                  ),
+                                  BoxShadow(
+                                    color: const Color(0xFF17140F).withOpacity(isDarkMode ? 0.3 : 0.06),
+                                    blurRadius: 3,
+                                    offset: const Offset(0, 1.5),
                                   ),
                                 ],
                               ),

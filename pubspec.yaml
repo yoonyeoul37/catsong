@@ -1,7 +1,7 @@
 name: mp3_player
 description: Local MP3 Player App
 publish_to: 'none'
-version: 1.0.0+162
+version: 1.0.0+163
 environment:
   sdk: ^3.12.0
 
@@ -116,6 +116,12 @@ flutter:
     - assets/update_banner.jpg
     - assets/review_banner.jpg
     - assets/dice_roll.mp3
+    - assets/rest_wave.jpg
+    - assets/rest_rain.jpg
+    - assets/rest_bird.jpg
+    - assets/rest_fire.jpg
+    - assets/rest_stream.jpg
+    - assets/rest_radio.jpg
 
 flutter_native_splash:
   color: "#17140F"                  # 다크/라이트 상관없이 어두운 바탕 (첫인사 사진과 자연스럽게)

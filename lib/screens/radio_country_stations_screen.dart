@@ -50,6 +50,8 @@ class _RadioCountryStationsScreenState
   String? _savedChip;
   bool get _isTrend => _chip == 'pop' && _sub == _popTrend;
   Timer? _clock; // 현지 시각을 계속 맞춤
+  /// 현지 시각 글자 (이 값만 바뀌어서 목록 전체가 다시 그려지지 않게)
+  final ValueNotifier<String?> _timeNow = ValueNotifier<String?>(null);
 
   @override
   void initState() {
@@ -60,8 +62,9 @@ class _RadioCountryStationsScreenState
     _loadDiceFlags();
     _loadChip();
     if (_localTimeText(widget.country.code) != null) {
+      _timeNow.value = _localTimeText(widget.country.code);
       _clock = Timer.periodic(const Duration(seconds: 20), (_) {
-        if (mounted) setState(() {});
+        if (mounted) _timeNow.value = _localTimeText(widget.country.code);
       });
     }
     // 목록 끝에 가까워지면 다음 200개
@@ -79,6 +82,7 @@ class _RadioCountryStationsScreenState
     _searchController.dispose();
     _listCtrl.dispose();
     _clock?.cancel();
+    _timeNow.dispose();
     super.dispose();
   }
 
@@ -1157,8 +1161,11 @@ class _RadioCountryStationsScreenState
                         // 그 나라 지금 시각 (오른쪽 끝)
                         if (localTime != null) ...[
                           const SizedBox(width: 10),
-                          Text(localTime,
-                              style: TextStyle(color: baseColor.withOpacity(0.35), fontSize: 12.5)),
+                          ValueListenableBuilder<String?>(
+                            valueListenable: _timeNow,
+                            builder: (_, t, __) => Text(t ?? localTime,
+                                style: TextStyle(color: baseColor.withOpacity(0.35), fontSize: 12.5)),
+                          ),
                         ],
                       ],
                     ),

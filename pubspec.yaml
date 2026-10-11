@@ -115,6 +115,7 @@ flutter:
     - assets/promo_thumb.webp
     - assets/update_banner.jpg
     - assets/review_banner.jpg
+    - assets/dice_roll.mp3
 
 flutter_native_splash:
   color: "#17140F"                  # 다크/라이트 상관없이 어두운 바탕 (첫인사 사진과 자연스럽게)

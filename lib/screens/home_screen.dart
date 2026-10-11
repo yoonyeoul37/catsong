@@ -2062,10 +2062,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildDailyCard(MusicProvider music, bool isDark) {
-    final card = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final ink = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
-    final sub = isDark ? const Color(0xFF8A8378) : const Color(0xFFA29A8B);
-    final circle = isDark ? const Color(0xFFE4DCCD) : const Color(0xFF2A251D);
+    // 카드는 라이트·다크 모두 검정 (다크는 바탕보다 한 톤 더 까맣게 + 얇은 테두리)
+    final card = isDark ? const Color(0xFF0E0D0B) : const Color(0xFF17140F);
+    const ink = Color(0xFFF4EFE5);
+    const sub = Color(0xFFA29A8B);
+    final circle = isDark ? const Color(0xFF26231F) : const Color(0xFF2A251D);
 
     final now = DateTime.now();
     final day = DateTime(now.year, now.month, now.day).difference(DateTime(2024, 1, 1)).inDays;
@@ -2167,17 +2168,22 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       // ③ 기능 알려주기 (돌아올 때마다 다른 팁)
       const tips = <(IconData, String, String)>[
-        (Icons.notifications_active_outlined, '좋아하는 곡을 벨소리로', '곡 ⋮ 메뉴에서 벨소리·알림음으로 만들 수 있어요'),
-        (Icons.movie_outlined, '동영상에서 음악만 저장', '동영상 ⋮ 메뉴 → 음악으로 저장'),
-        (Icons.battery_charging_full_rounded, '화면 꺼도 음악이 안 끊기게', '앱 정보 → 배터리 → 제한 없음'),
-        (Icons.water_drop_outlined, '음악에 빗소리 섞기', '재생화면 ⋮ 메뉴 → 자연소리 섞기'),
-        (Icons.format_quote_rounded, '가사 한 줄 공유', '가사를 꾹 누르면 카드로 보낼 수 있어요'),
+        (Icons.battery_charging_full_rounded, '화면 꺼도 계속 들어요', "배터리를 '제한 없음'으로 바꿔 주세요"),
+        (Icons.notifications_active_outlined, '노래로 벨소리 만들기', '곡 ⋮ 메뉴에서 바로 만들어요'),
+        (Icons.movie_outlined, '동영상 노래만 저장', "동영상 ⋮ 메뉴에서 '음악으로 저장'"),
+        (Icons.water_drop_outlined, '음악에 빗소리 더하기', '재생 화면 ⋮ 메뉴 → 자연소리 섞기'),
+        (Icons.format_quote_rounded, '가사 한 줄 공유', '가사를 꾹 누르면 카드로 보내요'),
       ];
       final tip = tips[(day ~/ 5) % tips.length];
       icon = tip.$1;
       title = tip.$2;
       subLine = Text(tip.$3,
           maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: sub, fontSize: 11.5));
+      // 배터리 팁만: [설정] 누르면 파란소리 앱 설정이 바로 열림
+      if (tip.$1 == Icons.battery_charging_full_rounded) {
+        action = '설정';
+        onAction = () => openAppSettings();
+      }
     }
 
     return Container(
@@ -2186,6 +2192,7 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         color: card,
         borderRadius: BorderRadius.circular(16),
+        border: isDark ? Border.all(color: Colors.white.withOpacity(0.08)) : null,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(isDark ? 0.25 : 0.14),

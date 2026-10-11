@@ -50,46 +50,46 @@ const _topics = <_HelpTopic>[
   _HelpTopic(
     Icons.perm_media_outlined,
     '음악·동영상 불러오기',
-    '음악이나 동영상이 보이지 않을 때',
-    ['[설정 열기] 선택', '[권한] 선택', '[음악 및 오디오] · [사진 및 동영상] 허용'],
-    ios: ['[설정 열기] 선택', '[미디어 및 Apple Music] · [사진] 켜기', '앱으로 돌아오기'],
-    note: '허용하고 앱으로 돌아오면 목록이 바로 나와요.',
+    '음악이나 동영상이 목록에 나타나지 않을 때',
+    ['[설정 열기] 선택', '[권한] 선택', '[음악 및 오디오]와 [사진 및 동영상] 허용'],
+    ios: ['[설정 열기] 선택', '[미디어 및 Apple Music]과 [사진] 켜기', '앱으로 돌아오기'],
+    note: '허용한 뒤 앱으로 돌아오면 목록이 바로 나타나요.',
     path: '설정 → 애플리케이션 → 파란소리 → 권한 → 음악 및 오디오 / 사진 및 동영상',
     iosPath: '설정 → 파란소리 → 미디어 및 Apple Music · 사진',
   ),
   _HelpTopic(
     Icons.battery_charging_full_rounded,
-    '화면을 꺼도 계속 재생',
-    '화면을 끄면 음악이나 라디오가 멈출 때',
+    '백그라운드 재생',
+    '화면을 껐을 때 음악이 멈추는 경우',
     ['[설정 열기] 선택', '[배터리] 선택', '[제한 없음] 선택'],
-    note: '화면을 껐을 때 재생이 멈추는 일을 줄이는 데 도움이 돼요.\n폰에 따라 "최적화 안 함"처럼 다른 이름으로 나올 수 있어요.',
+    note: '화면을 꺼도 음악과 라디오가 끊기지 않도록 도와줘요.\n휴대폰에 따라 "최적화 안 함" 등 다른 이름으로 표시될 수 있어요.',
     path: '설정 → 애플리케이션 → 파란소리 → 배터리 → 제한 없음',
   ),
   _HelpTopic(
     Icons.alarm_rounded,
-    '아침 알람 설정',
-    '알람이 울리지 않거나 늦게 울릴 때',
+    '아침 알람',
+    '알람이 울리지 않거나 지연되는 경우',
     ['[설정 열기] 선택', '[알람 및 리마인더] 허용', '앱으로 돌아오기'],
-    note: '"화면을 꺼도 계속 재생"의 배터리 설정도 같이 해 두면 더 정확해요.',
+    note: '"백그라운드 재생"의 배터리 설정도 함께 해 두면 알람이 더 정확하게 울려요.',
     path: '설정 → 애플리케이션 → 파란소리 → 알람 및 리마인더 → 허용',
     exactAlarm: true,
   ),
   _HelpTopic(
     Icons.notifications_none_rounded,
-    '잠금화면 재생 버튼',
-    '잠금화면·알림창에 재생 버튼이 안 보일 때',
+    '잠금 화면 재생 버튼',
+    '잠금 화면이나 알림창에 재생 버튼이 표시되지 않을 때',
     ['[설정 열기] 선택', '[알림] 선택', '[알림 허용] 켜기'],
     ios: ['[설정 열기] 선택', '[알림] 선택', '[알림 허용] 켜기'],
-    note: '알림을 허용해야 잠금화면과 알림창에 재생 버튼이 나와요.',
+    note: '알림을 허용해야 잠금 화면과 알림창에 재생 버튼이 표시돼요.',
     path: '설정 → 애플리케이션 → 파란소리 → 알림 → 알림 허용',
     iosPath: '설정 → 파란소리 → 알림 → 알림 허용',
   ),
   _HelpTopic(
     Icons.music_note_outlined,
     '벨소리 설정',
-    '벨소리나 알림음 지정이 안 될 때',
+    '벨소리나 알림음을 설정할 수 없을 때',
     ['[설정 열기] 선택', '[시스템 설정 변경] 선택', '[허용] 켜기'],
-    note: '허용한 뒤 벨소리 지정을 다시 해 보세요.',
+    note: '허용한 뒤 벨소리 설정을 다시 시도해 보세요.',
     path: '설정 → 애플리케이션 → 파란소리 → 시스템 설정 변경 → 허용',
   ),
 ];
@@ -105,9 +105,9 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
   int? _open; // 펼친 카드 (한 번에 하나만)
   final List<GlobalKey> _keys = List.generate(_topics.length, (_) => GlobalKey());
 
-  // 돋보기: 이 화면 글자만 크게 (보통 → 크게 → 아주 크게, 기억)
+  // 돋보기: 이 화면 글자만 크게 (기본 → 크게 → 아주 크게, 기억)
   static const _levels = [1.0, 1.2, 1.4];
-  static const _levelNames = ['보통', '크게', '아주 크게'];
+  static const _levelNames = ['기본', '크게', '아주 크게'];
   double _zoom = 1.0;
   final Map<int, Offset> _pointers = {};
   double? _pinchStartDist;
@@ -207,7 +207,7 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
       ok = await openAppSettings();
     } catch (_) {}
     if (!ok && mounted) {
-      showParanToast(context, '설정이 안 열려요. 아래 "직접 설정하기" 순서대로 찾아가 주세요');
+      showParanToast(context, '설정 화면을 열 수 없어요. 아래 "직접 설정하기" 순서대로 이동해 주세요');
     }
   }
 
@@ -235,7 +235,7 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
     } catch (_) {}
     final body = '어떤 문제가 있나요?\n(여기에 적어 주세요)\n\n\n\n'
         '── 아래는 자동으로 들어가요 ──\n'
-        '폰 기종: $model\n'
+        '휴대폰 모델: $model\n'
         '${Platform.isIOS ? '시스템' : '안드로이드'}: $os\n'
         '앱 버전: 파란소리 $ver';
     // (+ 대신 %20 으로: 메일 앱에 + 가 그대로 보이는 것 방지)
@@ -248,7 +248,7 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
     } catch (_) {}
     if (!ok && mounted) {
       await Clipboard.setData(const ClipboardData(text: _contactMail));
-      if (mounted) showParanToast(context, '메일 앱이 없어서 주소를 복사했어요 ($_contactMail)');
+      if (mounted) showParanToast(context, '메일 앱을 찾을 수 없어 주소를 복사했어요 ($_contactMail)');
     }
   }
 
@@ -279,7 +279,7 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
           icon: Icon(Icons.arrow_back_ios, color: ink, size: 20),
         ),
         actions: [
-          // 돋보기: 보통 → 크게 → 아주 크게
+          // 돋보기: 기본 → 크게 → 아주 크게
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: TextButton.icon(
@@ -312,7 +312,7 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-                  child: Text('설정 열기를 누르면 파란소리 앱 설정이 바로 열려요',
+                  child: Text('앱 사용 중 문제가 발생하면 아래 안내를 확인하세요.',
                       style: TextStyle(color: hint, fontSize: 12.5)),
                 ),
                 for (var ti = 0; ti < _topics.length; ti++)
@@ -483,10 +483,10 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('그래도 해결이 안 되나요?',
+                                Text('추가 도움이 필요하신가요?',
                                     style: TextStyle(color: ink, fontSize: 14.5, fontWeight: FontWeight.w700)),
                                 const SizedBox(height: 2),
-                                Text('폰 기종과 증상을 보내 주시면 확인해 드려요',
+                                Text('휴대폰 모델과 문제 상황을 알려주세요.',
                                     style: TextStyle(color: hint, fontSize: 12, height: 1.4)),
                               ],
                             ),
@@ -506,7 +506,7 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           ),
                           icon: const Icon(Icons.edit_outlined, size: 19),
-                          label: const Text('메일로 문의하기',
+                          label: const Text('이메일 문의',
                               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
                         ),
                       ),

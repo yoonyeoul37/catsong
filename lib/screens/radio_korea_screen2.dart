@@ -17,6 +17,8 @@ import 'radio_player_screen.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/theme_provider.dart';
 import 'radio_home_screen.dart';
+import '../widgets/radio_dice.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 enum _ViewMode { all, broadcaster, region, recent }
 
 class RadioKoreaScreen extends StatefulWidget {
@@ -30,6 +32,8 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
   final Map<String, GlobalKey> _stationItemKeys = {};
   String? _lastScrolledStationName;
   _ViewMode _mode = _ViewMode.all;
+  bool _diceNew = false; // 주사위를 한 번도 안 눌렀으면 NEW
+  bool _diceIntro = false; // 처음 한 번만 가운데 큰 카드
 
   static const Map<String, Color> _regionColors = {
     '수도권': Color(0xFF14356B),
@@ -46,6 +50,13 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
   @override
   void initState() {
     super.initState();
+    SharedPreferences.getInstance().then((p) {
+      if (!mounted) return;
+      setState(() {
+        _diceNew = !(p.getBool('radioDiceSeen') ?? false);
+        _diceIntro = true; // 시험용
+      });
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final radio = context.read<RadioProvider>();
       for (final station in koreanStations) {
@@ -115,6 +126,63 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         ),
       ),
     );
+  }
+
+  // 주사위는 수도권 방송만 (지역 방송은 빼기) · 아래 방송은 덜 나오게
+  static const _diceLow = ['국악FM', 'CPBC 가톨릭'];
+
+  List<DiceStation> _dicePool() => [
+        for (final ks in koreanStations)
+          if (ks.region == '수도권')
+            DiceStation(
+              weight: _diceLow.contains(ks.name) ? 0.3 : 1.0,
+              station: _toRadioStation(ks),
+              badge: ks.broadcaster,
+              frequency: ks.frequency,
+              program: (r) {
+                final p = r.currentProgramFor(ks.name);
+                final t = r.nowPlayingFor(ks.name) ?? p?['title']?.toString() ?? '';
+                return t.trim();
+              },
+            ),
+      ];
+
+  Future<void> _openDice() async {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    if (_diceNew || _diceIntro) {
+      setState(() {
+        _diceNew = false;
+        _diceIntro = false;
+      });
+      final p = await SharedPreferences.getInstance();
+      await p.setBool('radioDiceSeen', true);
+      await p.setBool('radioDiceIntroSeen', true);
+    }
+    if (!mounted) return;
+    showRadioDice(context, _dicePool(), onOpen: (st) {
+      // 전체 목록 순서 그대로 넘겨서 상세 화면에서 이전/다음도 되게
+      final list = koreanStations.map(_toRadioStation).toList();
+      final i = list.indexWhere((s) => s.name == st.name);
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => RadioPlayerScreen(
+            station: i >= 0 ? list[i] : st,
+            stationList: list,
+            currentIndex: i >= 0 ? i : 0,
+          ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              FadeTransition(opacity: animation, child: child),
+          transitionDuration: const Duration(milliseconds: 250),
+        ),
+      );
+    });
+  }
+
+  Future<void> _closeDiceIntro() async {
+    setState(() => _diceIntro = false);
+    final p = await SharedPreferences.getInstance();
+    await p.setBool('radioDiceIntroSeen', true);
   }
 
   Widget _buildAllList(BuildContext context, RadioProvider radioProvider) {
@@ -364,6 +432,32 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
               color: baseColor, size: 20),
         ),
 
+        actions: [
+          // 주사위: 음악 방송 하나를 골라 바로 틀기 (처음엔 NEW)
+          IconButton(
+            onPressed: _openDice,
+            icon: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                RollDiceIcon(size: 24, color: baseColor),
+                if (_diceNew)
+                  Positioned(
+                    top: -7,
+                    right: -13,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                      decoration: BoxDecoration(
+                          color: const Color(0xFFE05A4F), borderRadius: BorderRadius.circular(6)),
+                      child: const Text('NEW',
+                          style: TextStyle(
+                              color: Colors.white, fontSize: 8, fontWeight: FontWeight.w800, letterSpacing: 0.3)),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 6),
+        ],
         title: Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -476,14 +570,19 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           ),
         ),
       ),
-      body: SafeArea(
-        top: false,
-        child: switch (_mode) {
-          _ViewMode.all => _buildAllList(context, radioProvider),
-          _ViewMode.broadcaster => _buildBroadcasterGrid(context, radioProvider),
-          _ViewMode.region => _buildRegionGrid(context),
-          _ViewMode.recent => _buildRecentList(context, radioProvider),
-        },
+      body: Stack(
+        children: [
+          SafeArea(
+            top: false,
+            child: switch (_mode) {
+              _ViewMode.all => _buildAllList(context, radioProvider),
+              _ViewMode.broadcaster => _buildBroadcasterGrid(context, radioProvider),
+              _ViewMode.region => _buildRegionGrid(context),
+              _ViewMode.recent => _buildRecentList(context, radioProvider),
+            },
+          ),
+          if (_diceIntro) Positioned.fill(child: RadioDiceIntro(onThrow: _openDice, onClose: _closeDiceIntro)),
+        ],
       ),
       bottomNavigationBar: radioProvider.currentStation != null
           ? Padding(

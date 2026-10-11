@@ -132,9 +132,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // ── 꾸미기 ──
           _buildSection('꾸미기'),
           Consumer<ThemeProvider>(builder: (context, t, _) => _pointColorTile(t)),
-          _buildTile(context, icon: Icons.style_outlined, title: l.playerStyle, desc: '시디롬·파란포토·앨범 중에서 골라요', onTap: () => _showPlayerStyleDialog(context), primaryColor: primaryColor),
-          _buildTile(context, icon: Icons.font_download_outlined, title: l.fontChange, desc: '앱 글꼴을 바꿔요', onTap: () => _showFontDialog(context), primaryColor: primaryColor),
-          _buildTile(context, icon: Icons.text_fields, title: l.textSize, desc: '앱 글자 크기를 키우거나 줄여요', onTap: () => _showTextSizeDialog(context), primaryColor: primaryColor),
+          _buildTile(context, icon: Icons.style_outlined, title: l.playerStyle, desc: '원하는 재생 화면을 선택하세요', onTap: () => _showPlayerStyleDialog(context), primaryColor: primaryColor),
+          _buildTile(context, icon: Icons.font_download_outlined, title: l.fontChange, desc: '원하는 글꼴을 선택하세요', onTap: () => _showFontDialog(context), primaryColor: primaryColor),
+          _buildTile(context, icon: Icons.text_fields, title: l.textSize, desc: '글자 크기를 조절하세요', onTap: () => _showTextSizeDialog(context), primaryColor: primaryColor),
           ValueListenableBuilder<bool>(
             valueListenable: HomeCardPref.on,
             builder: (context, on, _) => _buildTile(context,
@@ -153,7 +153,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         key: _homeInfoKey, size: 16, color: _sTextHint(context.read<ThemeProvider>().isDarkMode)),
                   ),
                 ),
-                desc: '홈 맨 위에 날마다 바뀌는 카드',
+                desc: '홈 화면에 새로운 추천을 보여줘요',
                 onTap: () => HomeCardPref.setOn(!on),
                 primaryColor: primaryColor,
                 isLast: true,
@@ -161,22 +161,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           // ── 음악 관리 ──
           _buildSection('음악 관리'),
-          _buildTile(context, icon: Icons.auto_awesome_outlined, title: '곡 정보 한꺼번에 정리', desc: '제목·가수 이름을 깔끔하게 정리해요',
+          _buildTile(context, icon: Icons.auto_awesome_outlined, title: '음악 정보 일괄 정리', desc: '곡 제목과 가수 정보를 정리하세요',
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BulkCleanScreen())),
               primaryColor: primaryColor, isFirst: true),
-          _buildTile(context, icon: Icons.photo_library_outlined, title: '앨범 사진 한꺼번에 찾기', desc: '사진 없는 곡에 앨범 사진을 찾아 넣어요',
+          _buildTile(context, icon: Icons.photo_library_outlined, title: '앨범 사진 자동 찾기', desc: '없는 앨범 사진을 찾아 추가해요',
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BulkArtScreen())),
               primaryColor: primaryColor, isLast: true),
           // ── 도구 ──
           _buildSection('도구'),
-          _buildTile(context, icon: Icons.equalizer, title: l.equalizer, desc: '저음·고음 같은 소리 색을 맞춰요', onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const EqualizerScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor, isFirst: true),
+          _buildTile(context, icon: Icons.equalizer, title: l.equalizer, desc: '취향에 맞게 음질을 조절하세요', onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const EqualizerScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor, isFirst: true),
           // 곡마다 소리 크기 맞추기 (큰 곡만 조금 줄여서 비슷하게)
           ValueListenableBuilder<bool>(
             valueListenable: Loudness.enabled,
             builder: (context, on, _) => _buildTile(context,
                 icon: Icons.graphic_eq_rounded,
-                title: '곡마다 소리 크기 맞추기',
-                desc: '유난히 큰 곡을 줄여 비슷하게 들려요',
+                title: '음량 자동 조절',
+                desc: '곡마다 다른 음량을 고르게 맞춰요',
                 onTap: () => Loudness.setEnabled(!on),
                 primaryColor: primaryColor,
                 trailing: Switch(value: on, onChanged: (v) => Loudness.setEnabled(v), activeColor: primaryColor, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
@@ -186,24 +186,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
             valueListenable: HeadsetResume.mode,
             builder: (context, m, _) => _buildTile(context,
                 icon: Icons.headphones_outlined,
-                title: '이어폰 연결하면 이어서 듣기',
-                desc: '이어폰을 연결하면 듣던 걸 다시 틀어요',
+                title: '이어폰 자동 재생',
+                desc: '이어폰 연결 시 음악을 이어서 재생해요',
                 subtitle: HeadsetResume.names[m],
                 onTap: () => _showHeadsetResumeSheet(context),
                 primaryColor: primaryColor),
           ),
-          _buildTile(context, icon: Icons.music_note_outlined, title: l.ringtone, desc: '노래로 전화 벨소리를 만들어요', onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const RingtoneScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor),
-          _buildTile(context, icon: _isFlashlightOn ? Icons.flashlight_on : Icons.flashlight_off, title: l.flashlight, desc: '휴대폰 플래시를 켜요', subtitle: _isFlashlightOn ? l.on : l.off, onTap: () => _toggleFlashlight(context), primaryColor: primaryColor,
+          _buildTile(context, icon: Icons.music_note_outlined, title: l.ringtone, desc: '좋아하는 음악을 벨소리로 설정하세요', onTap: () => Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => const RingtoneScreen(), transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child), transitionDuration: const Duration(milliseconds: 250))), primaryColor: primaryColor),
+          _buildTile(context, icon: _isFlashlightOn ? Icons.flashlight_on : Icons.flashlight_off, title: l.flashlight, desc: '휴대폰 플래시를 켜고 끄세요', onTap: () => _toggleFlashlight(context), primaryColor: primaryColor,
               trailing: Switch(value: _isFlashlightOn, onChanged: (_) => _toggleFlashlight(context), activeColor: primaryColor, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
-          _buildTile(context, icon: Icons.emergency, title: l.sos, desc: '플래시로 구조 신호를 깜빡여요', subtitle: _isSosOn ? l.sosWorking : l.sos, onTap: () => _toggleSOS(context), primaryColor: primaryColor,
+          _buildTile(context, icon: Icons.emergency, title: l.sos, desc: '플래시로 긴급 구조 신호를 보내요', onTap: () => _toggleSOS(context), primaryColor: primaryColor,
               trailing: Switch(value: _isSosOn, onChanged: (_) => _toggleSOS(context), activeColor: Colors.redAccent, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
-          _buildTile(context, icon: Icons.widgets_outlined, title: l.widget, desc: '홈 화면에 파란소리 위젯을 놓아요', onTap: () async {
+          _buildTile(context, icon: Icons.widgets_outlined, title: l.widget, desc: '홈 화면에서 음악을 간편하게 제어하세요', onTap: () async {
             const platform = MethodChannel('kr.ssing.catsong/media');
             try { await platform.invokeMethod('requestWidgetAdd'); } catch (e) {}
           }, primaryColor: primaryColor, isLast: true),
           // ── 기타 ──
           _buildSection('기타'),
-          _buildTile(context, icon: Icons.help_outline_rounded, title: '설정 도움말', desc: '권한·배터리·알림 설정 방법',
+          _buildTile(context, icon: Icons.help_outline_rounded, title: '설정 도움말', desc: '권한, 배터리 및 알림 설정을 안내해요',
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsHelpScreen())),
               primaryColor: primaryColor, isFirst: true),
           _buildTile(context, icon: Icons.card_giftcard_outlined, title: l.promoCode, onTap: () async {
@@ -272,7 +272,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            '${noAd ? '광고 없이 듣고 계세요' : '음악 · 라디오 · 자연'}${v.isEmpty ? '' : '  ·  $v'}',
+                            '${noAd ? '광고 없는 음악, 편안한 일상' : '음악 · 라디오 · 자연'}${v.isEmpty ? '' : '  ·  $v'}',
                             style: TextStyle(color: fg.withOpacity(0.65), fontSize: 11.5),
                           ),
                         ],
@@ -524,12 +524,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: [
                     Row(
                       children: [
-                        Text('포인트 색', style: TextStyle(color: _sText(d), fontSize: 14.5)),
+                        Text('강조 색상', style: TextStyle(color: _sText(d), fontSize: 14.5)),
                         // ⓘ 누르면 바뀌는 곳 말풍선
                         GestureDetector(
                           behavior: HitTestBehavior.opaque,
                           onTap: () => _showBubble(_pointInfoKey, d,
-                              title: '포인트 색이 바뀌는 곳',
+                              title: '강조 색상이 바뀌는 곳',
                               items: _pointInfoItems,
                               foot: '큰 버튼과 앱 아이콘은 바뀌지 않아요',
                               keepOpenOnCard: true),
@@ -540,8 +540,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       ],
                     ),
-                    Text('재생 중 표시·막대·스위치 같은 작은 곳의 색',
-                        maxLines: 1,
+                    Text('스위치와 표시 색상을 변경해요',
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(color: _sTextHint(d), fontSize: 11.5)),
                   ],
@@ -655,7 +655,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         if (desc != null) ...[
                           const SizedBox(height: 2),
                           Text(desc,
-                              maxLines: 1,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(color: _sTextHint(isDarkMode), fontSize: 11.5)),
                         ],
@@ -923,7 +923,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ];
     showParanSheet(
       context,
-      title: '이어폰 연결하면 이어서 듣기',
+      title: '이어폰 자동 재생',
       builder: (ctx, setSheet) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1006,7 +1006,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final isDarkMode = themeProvider.isDarkMode;
     showParanSheet(
       context,
-      title: '포인트 색',
+      title: '강조 색상',
       builder: (ctx, setSheet) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -227,7 +227,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
         onPressed: _working ? null : () => Navigator.pop(context),
         icon: Icon(Icons.arrow_back_ios, color: ink, size: 20),
       ),
-      title: Text('앨범 사진 한꺼번에 찾기',
+      title: Text('앨범 사진 자동 찾기',
           style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w700)),
       actions: actions,
     );

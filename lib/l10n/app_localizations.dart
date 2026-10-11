@@ -363,19 +363,19 @@ abstract class AppLocalizations {
   /// No description provided for @textSize.
   ///
   /// In ko, this message translates to:
-  /// **'텍스트 크기'**
+  /// **'글자 크기'**
   String get textSize;
 
   /// No description provided for @fontChange.
   ///
   /// In ko, this message translates to:
-  /// **'텍스트 변경'**
+  /// **'글꼴 변경'**
   String get fontChange;
 
   /// No description provided for @playerStyle.
   ///
   /// In ko, this message translates to:
-  /// **'재생화면 스타일'**
+  /// **'재생 화면 스타일'**
   String get playerStyle;
 
   /// No description provided for @flashlight.
@@ -387,19 +387,19 @@ abstract class AppLocalizations {
   /// No description provided for @sos.
   ///
   /// In ko, this message translates to:
-  /// **'SOS 비상등'**
+  /// **'SOS 긴급 신호'**
   String get sos;
 
   /// No description provided for @ringtone.
   ///
   /// In ko, this message translates to:
-  /// **'벨소리 지정'**
+  /// **'벨소리 설정'**
   String get ringtone;
 
   /// No description provided for @widget.
   ///
   /// In ko, this message translates to:
-  /// **'홈화면 위젯'**
+  /// **'홈 화면 위젯'**
   String get widget;
 
   /// No description provided for @version.

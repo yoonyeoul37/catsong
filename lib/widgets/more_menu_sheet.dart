@@ -93,6 +93,20 @@ void showMoreMenuSheet(
     }) {
   final isDarkMode = context.read<ThemeProvider>().isDarkMode;
   HelpSeen.load();
+  // 메뉴에서 화면으로 갔다가 뒤로 오면 메뉴를 다시 열어 준다
+  Future<void> openPage(BuildContext ctx, Route<void> route) async {
+    Navigator.pop(ctx);
+    await Navigator.push(context, route);
+    if (!context.mounted) return;
+    showMoreMenuSheet(
+      context,
+      shareText: shareText,
+      shareSubtitle: shareSubtitle,
+      stationHomepage: stationHomepage,
+      showSongTools: showSongTools,
+    );
+  }
+
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -111,14 +125,8 @@ void showMoreMenuSheet(
       shareSubtitle: shareSubtitle,
       hasHomepage: stationHomepage != null && stationHomepage.isNotEmpty,
       showSongTools: showSongTools,
-      onCleanSongs: () {
-        Navigator.pop(ctx);
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const BulkCleanScreen()));
-      },
-      onFindArt: () {
-        Navigator.pop(ctx);
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const BulkArtScreen()));
-      },
+      onCleanSongs: () => openPage(ctx, MaterialPageRoute(builder: (_) => const BulkCleanScreen())),
+      onFindArt: () => openPage(ctx, MaterialPageRoute(builder: (_) => const BulkArtScreen())),
       onShare: () {
         Navigator.pop(ctx);
         Share.share('$shareText\n$_kStoreUrl');
@@ -130,28 +138,19 @@ void showMoreMenuSheet(
           await launchUrl(uri, mode: LaunchMode.externalApplication);
         }
       },
-      onSettings: () {
-        Navigator.pop(ctx);
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-            const SettingsScreen(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) =>
-                FadeTransition(opacity: animation, child: child),
-            transitionDuration: const Duration(milliseconds: 250),
-          ),
-        );
-      },
-      onHelp: () {
-        Navigator.pop(ctx);
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsHelpScreen()));
-      },
-      onAlarm: () {
-        Navigator.pop(ctx);
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const AlarmScreen()));
-      },
+      onSettings: () => openPage(
+        ctx,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+          const SettingsScreen(),
+          transitionsBuilder:
+              (context, animation, secondaryAnimation, child) =>
+              FadeTransition(opacity: animation, child: child),
+          transitionDuration: const Duration(milliseconds: 250),
+        ),
+      ),
+      onHelp: () => openPage(ctx, MaterialPageRoute(builder: (_) => const SettingsHelpScreen())),
+      onAlarm: () => openPage(ctx, MaterialPageRoute(builder: (_) => const AlarmScreen())),
       onHomepage: () async {
         Navigator.pop(ctx);
         final url = stationHomepage;
@@ -297,14 +296,14 @@ class _MoreMenuSheet extends StatelessWidget {
                     _MenuCard(
                       p: p,
                       icon: _kIconSparkle,
-                      title: '곡 정보 한꺼번에 정리',
+                      title: '음악 정보 일괄 정리',
                       subtitle: '지저분한 제목·가수를 깔끔하게 정리해요.',
                       onTap: onCleanSongs,
                     ),
                     _MenuCard(
                       p: p,
                       icon: _kIconImage,
-                      title: '앨범 사진 한꺼번에 찾기',
+                      title: '앨범 사진 자동 찾기',
                       subtitle: '앨범 사진 없는 곡에 사진을 넣어요.',
                       onTap: onFindArt,
                     ),

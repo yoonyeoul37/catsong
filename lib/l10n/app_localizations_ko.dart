@@ -138,25 +138,25 @@ class AppLocalizationsKo extends AppLocalizations {
   String get themeColor => '테마 색상';
 
   @override
-  String get textSize => '텍스트 크기';
+  String get textSize => '글자 크기';
 
   @override
-  String get fontChange => '텍스트 변경';
+  String get fontChange => '글꼴 변경';
 
   @override
-  String get playerStyle => '재생화면 스타일';
+  String get playerStyle => '재생 화면 스타일';
 
   @override
   String get flashlight => '손전등';
 
   @override
-  String get sos => 'SOS 비상등';
+  String get sos => 'SOS 긴급 신호';
 
   @override
-  String get ringtone => '벨소리 지정';
+  String get ringtone => '벨소리 설정';
 
   @override
-  String get widget => '홈화면 위젯';
+  String get widget => '홈 화면 위젯';
 
   @override
   String get version => '버전 정보';

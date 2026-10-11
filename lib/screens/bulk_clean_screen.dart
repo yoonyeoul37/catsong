@@ -168,7 +168,7 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
             onPressed: () => Navigator.pop(context),
             icon: Icon(Icons.arrow_back_ios, color: ink, size: 20),
           ),
-          title: Text('곡 정보 한꺼번에 정리',
+          title: Text('음악 정보 일괄 정리',
               style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w700)),
         ),
         body: Center(
@@ -201,7 +201,7 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
           onPressed: _working ? null : () => Navigator.pop(context),
           icon: Icon(Icons.arrow_back_ios, color: ink, size: 20),
         ),
-        title: Text('곡 정보 한꺼번에 정리',
+        title: Text('음악 정보 일괄 정리',
             style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w700)),
         actions: [
           if (_items.isNotEmpty && !_working)

@@ -12,6 +12,7 @@ import '../services/sound_effects.dart';
 import '../services/cast_service.dart';
 import '../services/loudness.dart';
 import '../services/headset_resume.dart';
+import '../utils/no_album_helper.dart';
 
 class PlayerProvider extends ChangeNotifier {
   final AudioPlayer _player = AudioPlayer(handleInterruptions: false);
@@ -1069,7 +1070,11 @@ class MediaArt {
   /// 음악: 곡의 앨범 사진 (없으면 그냥 둠)
   static void attachSong(SimpleAudioHandler h, Song song, {String? id, String? title}) {
     final art = song.albumArt;
-    if (art == null || art.isEmpty) return;
+    if (art == null || art.isEmpty) {
+      // 앨범 사진 없는 곡: 재생 화면과 같은 고양이 사진
+      attachAsset(h, noAlbumImagePath(song.uri ?? song.title).replaceFirst('.jpg', '_media.jpg'), id ?? song.uri ?? '', title ?? song.titleDisplay);
+      return;
+    }
     _put(h, id ?? song.uri ?? '', title ?? song.titleDisplay,
         _file('song_${song.id}_${art.length}.img', () async => art));
   }

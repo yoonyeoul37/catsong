@@ -85,6 +85,9 @@ flutter:
     - assets/no_album2.jpg
     - assets/no_album3.jpg
     - assets/no_album4.jpg
+    - assets/no_album2_media.jpg
+    - assets/no_album3_media.jpg
+    - assets/no_album4_media.jpg
     - assets/radio_mood_bg.jpg
 
     - assets/farewell_ko_v4.mp3

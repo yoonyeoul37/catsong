@@ -116,7 +116,7 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
               decoration: InputDecoration(
                 border: InputBorder.none,
                 isDense: true,
-                hintText: isKo ? '나라 이름으로 찾기' : 'Search country',
+                hintText: isKo ? '국가 검색' : 'Search country',
                 hintStyle: TextStyle(color: hint, fontSize: 15),
               ),
             ),
@@ -487,7 +487,7 @@ class _MyCountryCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(isKo ? '내 나라' : 'My country',
+                    Text(isKo ? '현재 국가' : 'Current country',
                         style: TextStyle(color: fg.withOpacity(0.6), fontSize: 11)),
                     const SizedBox(height: 2),
                     Text(country.displayName,

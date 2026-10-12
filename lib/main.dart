@@ -368,13 +368,25 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
       await _checkAndShowWelcome();
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // 홈 사진: 홈 카드와 같은 크기(600)로 미리 준비해야 바로 뜸 (크기가 다르면 다시 읽어서 깜빡임)
       for (final path in [
         'assets/music_bg.jpg',
         'assets/radio_bg.jpg',
         'assets/nature_bg.jpg',
         'assets/sleep_bg.jpg',
       ]) {
-        precacheImage(AssetImage(path), context);
+        precacheImage(ResizeImage(AssetImage(path), width: 600), context);
+      }
+      // 잠시 쉬어가요 사진도 같은 크기(400)로 미리
+      for (final path in [
+        'assets/rest_wave.jpg',
+        'assets/rest_rain.jpg',
+        'assets/rest_bird.jpg',
+        'assets/rest_fire.jpg',
+        'assets/rest_stream.jpg',
+        'assets/rest_radio.jpg',
+      ]) {
+        precacheImage(ResizeImage(AssetImage(path), width: 400), context, onError: (_, __) {});
       }
       precacheImage(CachedNetworkImageProvider(farewellImageUrl(context)), context,
           onError: (_, __) {}); // 미리 받기 실패해도 조용히

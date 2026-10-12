@@ -173,6 +173,22 @@ class MusicProvider extends ChangeNotifier {
   // ───── 언제 들었는지 (홈 카드: 한 달 동안 안 들은 곡 · 최근 7일 기록) ─────
   Map<String, int> _lastPlayed = {}; // 곡 경로 → 마지막으로 들은 시각(ms)
   List<String> _playLog = []; // "시각ms|곡경로" (최근 7일만)
+  // 곡 경로 → [아침, 낮, 저녁, 밤] 들은 횟수 (홈 '오늘의 곡': 이 시간에 자주 듣던 곡)
+  Map<String, List<int>> _slotPlays = {};
+
+  /// 시간대: 0 아침(5~11시) · 1 낮(11~17시) · 2 저녁(17~22시) · 3 밤(22~5시)
+  static int slotOf(DateTime t) {
+    final h = t.hour;
+    if (h >= 5 && h < 11) return 0;
+    if (h >= 11 && h < 17) return 1;
+    if (h >= 17 && h < 22) return 2;
+    return 3;
+  }
+
+  void _addSlotPlay(String uri, DateTime t) {
+    final c = _slotPlays.putIfAbsent(uri, () => [0, 0, 0, 0]);
+    c[slotOf(t)]++;
+  }
 
   Future<void> _loadPlayHistory() async {
     final prefs = await SharedPreferences.getInstance();
@@ -185,6 +201,22 @@ class MusicProvider extends ChangeNotifier {
     } catch (_) {}
     _playLog = prefs.getStringList('play_log') ?? [];
     _prunePlayLog();
+    try {
+      final raw = prefs.getString('slot_plays');
+      if (raw != null) {
+        final Map decoded = jsonDecode(raw);
+        _slotPlays = decoded.map((k, v) => MapEntry(
+            k.toString(), (v as List).map((e) => (e as num).toInt()).toList()));
+      } else {
+        // 처음 한 번: 지금까지의 최근 7일 기록으로 시작
+        for (final e in _playLog) {
+          final i = e.indexOf('|');
+          final ms = int.tryParse(i < 0 ? '' : e.substring(0, i));
+          if (ms == null) continue;
+          _addSlotPlay(e.substring(i + 1), DateTime.fromMillisecondsSinceEpoch(ms));
+        }
+      }
+    } catch (_) {}
   }
 
   void _prunePlayLog() {
@@ -196,6 +228,7 @@ class MusicProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('last_played', jsonEncode(_lastPlayed));
     await prefs.setStringList('play_log', _playLog);
+    await prefs.setString('slot_plays', jsonEncode(_slotPlays));
   }
 
   /// 최근 7일 동안 들은 횟수
@@ -235,6 +268,31 @@ class MusicProvider extends ChangeNotifier {
     return _songs
         .where((s) => s.uri != null && !isCallRecordingPath(s.uri) && (_lastPlayed[s.uri!] ?? 0) < cut)
         .toList();
+  }
+
+  /// 이 시간대에 자주(2번 이상) 들은 곡, 많이 들은 순
+  List<Song> songsOftenAt(int slot) {
+    final out = <(Song, int)>[];
+    for (final s in _songs) {
+      if (s.uri == null || isCallRecordingPath(s.uri)) continue;
+      final n = _slotPlays[s.uri!]?[slot] ?? 0;
+      if (n >= 2) out.add((s, n));
+    }
+    out.sort((a, b) => b.$2.compareTo(a.$2));
+    return [for (final e in out) e.$1];
+  }
+
+  /// 예전에 즐겨(2번 이상) 듣다가 이 기간 동안 안 들은 곡, 많이 들은 순
+  List<Song> songsMissed(Duration d) {
+    final cut = DateTime.now().subtract(d).millisecondsSinceEpoch;
+    return _songs
+        .where((s) =>
+            s.uri != null &&
+            !isCallRecordingPath(s.uri) &&
+            (_playCounts[s.uri!] ?? 0) >= 2 &&
+            (_lastPlayed[s.uri!] ?? 0) < cut)
+        .toList()
+      ..sort((a, b) => playCountOf(b).compareTo(playCountOf(a)));
   }
 
   List<String> _recentSongUris = [];
@@ -286,6 +344,7 @@ class MusicProvider extends ChangeNotifier {
       final now = DateTime.now().millisecondsSinceEpoch;
       _lastPlayed[song.uri!] = now;
       _playLog.add('$now|${song.uri}');
+      _addSlotPlay(song.uri!, DateTime.now());
       _prunePlayLog();
       _savePlayHistory();
     }

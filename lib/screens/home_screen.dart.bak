@@ -289,6 +289,235 @@ class _HomeScreenState extends State<HomeScreen> {
   Set<int> _selectedSongIds = {};
   bool _showThemeHint = false;
 
+  // ───── 강조 색상 안내 카드: 앱을 3번째 켤 때부터 딱 한 번 ─────
+  bool _showColorTip = false;
+  static bool _launchCounted = false; // 앱 한 번 켤 때 한 번만 세기
+
+  Future<void> _checkColorTip() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('color_tip_done'); await prefs.remove('color_tip_shown'); prefs.setInt('app_launch_count', 2); // ★테스트용
+    if (prefs.getBool('color_tip_done') ?? false) return;
+    var n = prefs.getInt('app_launch_count') ?? 0;
+    if (!_launchCounted) {
+      _launchCounted = true;
+      n++;
+      await prefs.setInt('app_launch_count', n);
+    }
+    if (!mounted) return;
+    // 카드가 나오기 전에 이미 색을 바꾼 사람은 알고 있으니 안 보여줌
+    final shown = prefs.getBool('color_tip_shown') ?? false;
+    if (!shown && context.read<ThemeProvider>().primaryColor.value != 0xFF2589E8) {
+      await prefs.setBool('color_tip_done', true);
+      return;
+    }
+    if (n >= 3) {
+      await prefs.setBool('color_tip_shown', true); // 한 번 나온 뒤로는 ✕ 누를 때까지 계속
+      if (mounted) setState(() => _showColorTip = true);
+    }
+  }
+
+  /// [바꾸기]·✕ 누르면 끝 (다시 안 나옴)
+  Future<void> _finishColorTip() async {
+    if (mounted) setState(() => _showColorTip = false);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('color_tip_done', true);
+  }
+
+  /// 크림 카드 + 색 고리 + 문구 + [바꾸기] + ✕ (홈 사진 카드와 같은 모서리·그림자)
+  Widget _buildColorTip(bool isDark) {
+    final card = isDark ? const Color(0xFF32302C) : const Color(0xFFFBF8F2);
+    final ink = isDark ? const Color(0xFFF4EFE5) : const Color(0xFF17140F);
+    final sub = isDark ? const Color(0xFFA29A8B) : const Color(0xFF746C60);
+    final point = context.watch<ThemeProvider>().primaryColor;
+    final accent = point.value == 0xFF2589E8
+        ? (isDark ? const Color(0xFF6FB0FF) : const Color(0xFF2F7DE8))
+        : point;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.fromLTRB(14, 10, 4, 10),
+      decoration: BoxDecoration(
+        color: card,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF17140F).withOpacity(isDark ? 0.4 : 0.10),
+            blurRadius: 16,
+            spreadRadius: -3,
+            offset: const Offset(0, 6),
+          ),
+          BoxShadow(
+            color: const Color(0xFF17140F).withOpacity(0.05),
+            blurRadius: 3,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // 색 고리 (강조 색상 10가지)
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 6, offset: const Offset(0, 2))],
+            ),
+            child: CustomPaint(painter: _ColorRingPainter(hole: card)),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('꾸미기',
+                    maxLines: 1,
+                    style: TextStyle(color: accent, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
+                const SizedBox(height: 1),
+                Text('앱 색을 바꿔보세요',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 3),
+                Text('10가지 색 중에 골라요',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: sub, fontSize: 11.5)),
+              ],
+            ),
+          ),
+          const SizedBox(width: 6),
+          GestureDetector(
+            onTap: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              _openColorSheet();
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(color: ink, borderRadius: BorderRadius.circular(14)),
+              child: Text('바꾸기', style: TextStyle(color: card, fontSize: 12.5, fontWeight: FontWeight.w700)),
+            ),
+          ),
+          IconButton(
+            onPressed: _finishColorTip,
+            icon: Icon(Icons.close_rounded, color: sub, size: 17),
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(minWidth: 34, minHeight: 34),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 홈에서 바로 색 고르기: 누르면 즉시 바뀌고 창은 열린 채로 (여러 색 비교) → [완료]
+  Future<void> _openColorSheet() async {
+    final t = context.read<ThemeProvider>();
+    final dark = t.isDarkMode;
+    final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final sub = dark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
+    final sheetBg = dark ? const Color(0xFF32302C) : const Color(0xFFF4EFE5);
+    await showParanSheet(
+      context,
+      title: '강조 색상',
+      builder: (ctx, setSheet) {
+        Widget dot(int i) {
+          final (name, c) = ThemeProvider.pointColors[i];
+          final on = t.primaryColor.value == c.value;
+          return Expanded(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                t.setPrimaryColor(c);
+                setSheet(() {});
+              },
+              child: Column(
+                children: [
+                  Container(
+                    width: 34,
+                    height: 34,
+                    padding: on ? const EdgeInsets.all(3) : EdgeInsets.zero,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: on ? sheetBg : c,
+                      border: on ? Border.all(color: ink, width: 2) : null,
+                    ),
+                    child: on ? DecoratedBox(decoration: BoxDecoration(shape: BoxShape.circle, color: c)) : null,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          color: on ? ink : sub,
+                          fontSize: 11.5,
+                          fontWeight: on ? FontWeight.w700 : FontWeight.w400)),
+                ],
+              ),
+            ),
+          );
+        }
+
+        final n = ThemeProvider.pointColors.length;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(4, 0, 4, 16),
+              child: Text('오늘 기분에 어울리는 색은?',
+                  style: TextStyle(color: sub, fontSize: 12.5)),
+            ),
+            for (var row = 0; row * 5 < n; row++)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 14),
+                child: Row(
+                  children: [
+                    for (var i = row * 5; i < row * 5 + 5; i++)
+                      if (i < n) dot(i) else const Expanded(child: SizedBox()),
+                  ],
+                ),
+              ),
+            // 나중에 바꾸는 곳 알려주기
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(top: 2, bottom: 4),
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+              decoration: BoxDecoration(
+                color: ink.withOpacity(0.06),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.info_outline_rounded, size: 16, color: sub),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text('설정 → 꾸미기 → 강조 색상에서 다시 변경할 수 있습니다.',
+                        style: TextStyle(color: sub, fontSize: 12.5, height: 1.45)),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+      footer: (ctx, setSheet) => SizedBox(
+        width: double.infinity,
+        height: 48,
+        child: ElevatedButton(
+          onPressed: () => Navigator.pop(ctx),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: ink,
+            foregroundColor: sheetBg,
+            elevation: 0,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          ),
+          child: const Text('완료', style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700)),
+        ),
+      ),
+    );
+    // 창을 닫아도 카드는 그대로 (✕를 눌러야 끝)
+  }
+
   @override
   void initState() {
     super.initState();
@@ -328,6 +557,7 @@ class _HomeScreenState extends State<HomeScreen> {
       context.read<VideoProvider>().loadVideos();
       await _checkBanner();
       await _checkThemeHint();
+      await _checkColorTip();
       await _navigateToSavedStartScreen();
     });
   }
@@ -823,7 +1053,10 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             isKorean
                 // 한국어: 위 '파란소리 + 소리 막대', 아래 Paransori를 같은 폭으로 늘려 맞춤
-                ? IntrinsicWidth(
+                ? Padding(
+                    // 로고 전체를 살짝 아래로 (오른쪽 아이콘들과 높이 맞춤)
+                    padding: const EdgeInsets.only(top: 4),
+                    child: IntrinsicWidth(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -878,7 +1111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text(ch,
                                       textScaler: TextScaler.noScaling,
                                       style: GoogleFonts.quicksand(
-                                          color: logoInk.withOpacity(0.55),
+                                          color: logoInk.withOpacity(0.75),
                                           fontSize: 12,
                                           height: 1.0,
                                           fontWeight: FontWeight.w600)),
@@ -888,6 +1121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
+                  ),
                   )
                 : Column(
                     // 해외: Paran(파란색) / 밑에 Sori (가운데 정렬)
@@ -1555,6 +1789,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (_showColorTip) _buildColorTip(isDarkMode),
           Row(
             children: [
               Icon(Icons.tune_rounded, size: 18, color: baseColor.withOpacity(0.7)),
@@ -2201,11 +2436,26 @@ class _HomeScreenState extends State<HomeScreen> {
     final softBox = isDark ? const Color(0xFF3A3631) : const Color(0x8CFFFFFF);
 
     if (kind == 0) {
-      // ① 오늘의 한 곡 (같은 날은 같은 곡)
-      final i = math.Random(day).nextInt(songs.length);
-      final s = songs[i];
+      // ① 오늘의 한 곡: 듣기 기록으로 고르기
+      //    이 시간대에 자주 듣던 곡 / 예전에 즐겨 듣다 한 달 넘게 안 들은 곡을 날마다 번갈아
+      //    (기록이 없으면 예전처럼 날짜로 하나, 같은 날·같은 시간대엔 같은 곡)
+      final slot = MusicProvider.slotOf(now);
+      final often = music.songsOftenAt(slot).take(5).toList();
+      final missed = music.songsMissed(const Duration(days: 30)).take(10).toList();
+      final preferOften = (day + slot) % 2 == 0;
+      final Song s;
+      if (often.isNotEmpty && (preferOften || missed.isEmpty)) {
+        s = often[math.Random(day * 4 + slot).nextInt(often.length)];
+        label = '${const ['아침에', '낮에', '저녁에', '밤에'][slot]} 자주 듣던 곡';
+      } else if (missed.isNotEmpty) {
+        s = missed[math.Random(day).nextInt(missed.length)];
+        label = '오랜만에 듣는 곡';
+      } else {
+        s = songs[math.Random(day).nextInt(songs.length)];
+        label = '오늘의 곡';
+      }
+      final i = songs.indexWhere((x) => x.uri == s.uri);
       icon = Icons.album_outlined;
-      label = '오늘의 곡';
       lead = _cardArt(s, 40, isDark);
       title = '오늘은 이 곡 어때요';
       subLine = Text.rich(
@@ -2218,7 +2468,7 @@ class _HomeScreenState extends State<HomeScreen> {
         style: TextStyle(color: sub, fontSize: 11.5),
       );
       action = '듣기';
-      onAction = () => context.read<PlayerProvider>().playFromList(songs, i);
+      onAction = () => context.read<PlayerProvider>().playFromList(i >= 0 ? songs : [s], i >= 0 ? i : 0);
     } else if (kind == 1) {
       // ② 한 달 동안 안 들은 곡 (섞어서 틀기)
       icon = Icons.history_rounded;
@@ -3419,4 +3669,26 @@ class _BounceQState extends State<_BounceQ> with SingleTickerProviderStateMixin 
       },
     );
   }
+}
+
+/// 강조 색상 10가지를 한 바퀴로 (가운데는 카드 색 구멍)
+class _ColorRingPainter extends CustomPainter {
+  final Color hole;
+  const _ColorRingPainter({required this.hole});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final colors = [for (final c in ThemeProvider.pointColors) c.$2];
+    final r = size.shortestSide / 2;
+    final center = size.center(Offset.zero);
+    final rect = Rect.fromCircle(center: center, radius: r);
+    final sweep = 2 * math.pi / colors.length;
+    for (var i = 0; i < colors.length; i++) {
+      canvas.drawArc(rect, -math.pi / 2 + i * sweep, sweep + 0.01, true, Paint()..color = colors[i]);
+    }
+    canvas.drawCircle(center, r * 0.46, Paint()..color = hole);
+  }
+
+  @override
+  bool shouldRepaint(covariant _ColorRingPainter old) => old.hole != hole;
 }

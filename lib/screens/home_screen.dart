@@ -756,6 +756,9 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() => _isSearching = false);
           _searchController.clear();
           context.read<MusicProvider>().clearSearch();
+        } else if (_currentTabIndex != 0) {
+          // 앨범·아티스트·재생목록·폴더·동영상 탭 → 곡 탭으로
+          setState(() => _currentTabIndex = 0);
         } else {
           const platform = MethodChannel('kr.ssing.catsong/media');
           platform.invokeMethod('moveToBackground');

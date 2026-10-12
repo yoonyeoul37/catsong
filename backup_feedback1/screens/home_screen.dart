@@ -804,9 +804,15 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() => _isSearching = false);
           _searchController.clear();
           context.read<MusicProvider>().clearSearch();
+        } else if (_currentTabIndex != 0) {
+          setState(() => _currentTabIndex = 0);
         } else {
           const platform = MethodChannel('kr.ssing.catsong/media');
-          platform.invokeMethod('moveToBackground');
+          if (_currentTabIndex != 0) {
+            setState(() => _currentTabIndex = 0);
+          } else {
+            platform.invokeMethod('moveToBackground');
+          }
         }
       },
       child: Scaffold(

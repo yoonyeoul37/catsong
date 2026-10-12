@@ -1802,18 +1802,19 @@ String _heroImageNow() {
 /// 방송사 파스텔 (홈 '최근에 들었어요'와 같은 색)
 Color _brandPastel(String b) {
   switch (b) {
+    // 파스텔을 바탕(베이지)과 반쯤 섞어 은은하게
     case 'KBS':
-      return const Color(0xFFD5E1EC); // 하늘
+      return const Color(0xFFE1E4E3); // 하늘
     case 'MBC':
-      return const Color(0xFFF3D9C9); // 복숭아
+      return const Color(0xFFF0E0D2); // 복숭아
     case 'SBS':
-      return const Color(0xFFDCE5D2); // 연두
+      return const Color(0xFFE4E6D6); // 연두
     case 'CBS':
-      return const Color(0xFFDDD6E8); // 라벤더
+      return const Color(0xFFE5DEE1); // 라벤더
     case 'EBS':
-      return const Color(0xFFF0E3C2); // 노랑
+      return const Color(0xFFEEE5CE); // 노랑
     default:
-      return const Color(0xFFE6DFD2); // 그 밖: 연한 베이지
+      return const Color(0xFFEAE3D6); // 그 밖: 연한 베이지
   }
 }
 

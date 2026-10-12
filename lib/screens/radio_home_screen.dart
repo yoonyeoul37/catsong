@@ -17,6 +17,8 @@ import 'radio_favorites_screen.dart';
 import 'radio_korea_screen2.dart';
 import 'radio_country_stations_screen.dart';
 import '../l10n/app_localizations.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:permission_handler/permission_handler.dart';
 
 
 /// 라디오 진입 시 호출. 내 폰의 국가 설정에 맞는 방송국 목록이 있으면
@@ -75,8 +77,54 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
   final TextEditingController _search = TextEditingController();
   String _query = '';
 
+  // ── 마이크로 나라 찾기 (음악 검색칸과 같은 방식) ──
+  final stt.SpeechToText _speech = stt.SpeechToText();
+  bool _isListening = false;
+
+  Future<void> _toggleListening() async {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    if (_isListening) {
+      await _speech.stop();
+      if (mounted) setState(() => _isListening = false);
+      return;
+    }
+    final status = await Permission.microphone.request();
+    if (!status.isGranted) return;
+    final available = await _speech.initialize(
+      onStatus: (s) {
+        if ((s == 'done' || s == 'notListening') && mounted) {
+          setState(() => _isListening = false);
+        }
+      },
+      onError: (_) {
+        if (mounted) setState(() => _isListening = false);
+      },
+    );
+    if (!available || !mounted) return;
+    // 앱 언어에 맞춰 알아듣기
+    final lang = Localizations.localeOf(context).languageCode;
+    final localeId = switch (lang) {
+      'ko' => 'ko_KR',
+      'ja' => 'ja_JP',
+      'zh' => 'zh_CN',
+      _ => 'en_US',
+    };
+    setState(() => _isListening = true);
+    _speech.listen(
+      localeId: localeId,
+      onResult: (result) {
+        // "일본." 처럼 끝에 붙는 문장부호는 빼기
+        final words = result.recognizedWords.replaceAll(RegExp(r'[.,!?。、]'), '').trim();
+        _search.text = words;
+        _search.selection = TextSelection.fromPosition(TextPosition(offset: words.length));
+        if (mounted) setState(() => _query = words);
+      },
+    );
+  }
+
   @override
   void dispose() {
+    _speech.cancel();
     _search.dispose();
     super.dispose();
   }
@@ -89,6 +137,7 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
     return n(c.displayName).contains(k) ||
         n(c.name).contains(k) ||
         n(_countryEn[c.code] ?? '').contains(k) ||
+        n(_countryKoAlias[c.code] ?? '').contains(k) ||
         c.code.toLowerCase() == k;
   }
 
@@ -134,7 +183,18 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
               ),
             )
           else
-            const SizedBox(width: 12),
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: _toggleListening,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Icon(
+                  _isListening ? Icons.mic : Icons.mic_none,
+                  size: 20,
+                  color: _isListening ? Colors.redAccent : hint,
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -783,6 +843,13 @@ class _Appear extends StatelessWidget {
     );
   }
 }
+
+/// 나라 다른 한글 이름 (목록엔 안 보이고 검색에서만: '타이완' 쳐도 대만이 나오게)
+const Map<String, String> _countryKoAlias = {
+  'TW': '타이완', 'US': '미합중국 아메리카', 'GB': '잉글랜드 브리튼 영국',
+  'TR': '튀르키예 터키', 'NL': '네덜란드 홀랜드', 'MM': '미얀마 버마',
+  'AE': '아랍에미리트 두바이', 'CZ': '체코 체코공화국', 'NZ': '뉴질랜드',
+};
 
 /// 나라 영어 이름 (한국어 화면에서도 영어로 찾을 수 있게)
 const Map<String, String> _countryEn = {

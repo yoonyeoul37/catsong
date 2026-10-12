@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import '../utils/point_color.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
@@ -510,8 +511,8 @@ class ParanSongHeader extends StatelessWidget {
               child: art != null
                   ? Image.memory(Uint8List.fromList(art!), fit: BoxFit.cover)
                   : Container(
-                      color: _kBlue.withOpacity(0.15),
-                      child: const Icon(Icons.music_note_rounded, color: _kBlue, size: 26),
+                      color: pointColorOf(context).withOpacity(0.15),
+                      child: Icon(Icons.music_note_rounded, color: pointColorOf(context), size: 26),
                     ),
             ),
           ),

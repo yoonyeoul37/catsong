@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/point_color.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../models/call_recording.dart';
@@ -22,7 +23,7 @@ class CallRecordingsScreen extends StatefulWidget {
 }
 
 class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
-  static const _blue = Color(0xFF2589E8); // 파란색은 "지금 재생 중"에만
+  Color get _blue => pointColorOf(context); // 포인트 색은 "지금 재생 중"에만
   static const _ink = Color(0xFF3A352D); // 선택·강조는 차분한 먹색
   bool _voice = false; // false = 통화 녹음, true = 음성 녹음
   int _sort = 0; // 0 최신순, 1 오래된순, 2 긴 통화순
@@ -167,7 +168,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                                     style: TextStyle(fontWeight: _sort == v ? FontWeight.w700 : FontWeight.w400)),
                                 const Spacer(),
                                 if (_sort == v)
-                                  const Icon(Icons.check_rounded, size: 17, color: Color(0xFF2589E8)),
+                                  Icon(Icons.check_rounded, size: 17, color: pointColorOf(context)),
                               ],
                             ),
                           ),
@@ -667,7 +668,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
               value: progress,
               minHeight: 3,
               backgroundColor: baseColor.withOpacity(0.08),
-              valueColor: const AlwaysStoppedAnimation(_blue),
+              valueColor: AlwaysStoppedAnimation(_blue),
             ),
           ),
           Row(

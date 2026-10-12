@@ -1,123 +1,166 @@
-# 파란소리: 포인트 색 5가지 (파란소리·숲·노을·라벤더·먹색)
-# 실행: C:\apps\mp3_player_new 에서  python apply_point_color.py
-# - 바꿀 곳이 전부 있는지 먼저 확인하고, 하나라도 없으면 아무것도 안 바꿔요
-# - 바꾼 파일의 원본은 backup_point_color 폴더에 저장돼요
-import os, sys, json, shutil
-try:
-    sys.stdout.reconfigure(encoding="utf-8")
-except Exception:
-    pass
-
-DATA = json.loads(r"""{"ops": [["str", "providers/theme_provider.dart", "  Color _primaryColor = const Color(0xFF078CF6);", "  Color _primaryColor = const Color(0xFF2589E8); // 포인트 색 (기본: 파란소리)"], ["str", "providers/theme_provider.dart", "  Color get primaryColor => _primaryColor;\n", "  Color get primaryColor => _primaryColor;\n\n  /// 포인트 색 5가지 (설정 → 포인트 색) — 체크·스위치·막대 같은 작은 곳의 색\n  static const pointColors = <(String, Color)>[\n    ('파란소리', Color(0xFF2589E8)),\n    ('숲', Color(0xFF3E8E6A)),\n    ('노을', Color(0xFFE07A4F)),\n    ('라벤더', Color(0xFF8A6FD1)),\n    ('먹색', Color(0xFF4A4038)),\n  ];\n\n  /// 지금 포인트 색 이름 (예전에 고른 다른 색이면 null)\n  String? get pointColorName {\n    for (final c in pointColors) {\n      if (c.$2.value == _primaryColor.value) return c.$1;\n    }\n    return null;\n  }\n"], ["str", "screens/settings_screen.dart", "          _buildTile(context, icon: Icons.palette_outlined, title: l.themeColor, onTap: () => _showColorPicker(context), primaryColor: primaryColor),", "          _buildTile(context, icon: Icons.palette_outlined, title: '포인트 색', subtitle: context.watch<ThemeProvider>().pointColorName, onTap: () => _showColorPicker(context), primaryColor: primaryColor),"], ["func", "screens/settings_screen.dart", "  void _showColorPicker(BuildContext context)", "  void _showColorPicker(BuildContext context) {\n    final themeProvider = context.read<ThemeProvider>();\n    final isDarkMode = themeProvider.isDarkMode;\n    showParanSheet(\n      context,\n      title: '포인트 색',\n      builder: (ctx, setSheet) => Column(\n        crossAxisAlignment: CrossAxisAlignment.start,\n        children: [\n          Padding(\n            padding: const EdgeInsets.fromLTRB(4, 0, 4, 10),\n            child: Text('체크·스위치·막대 같은 작은 곳의 색이 바뀌어요',\n                style: TextStyle(color: _sTextHint(isDarkMode), fontSize: 12.5)),\n          ),\n          ParanCard(\n            children: [\n              for (final c in ThemeProvider.pointColors)\n                InkWell(\n                  onTap: () {\n                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');\n                    themeProvider.setPrimaryColor(c.$2);\n                    Navigator.pop(ctx);\n                  },\n                  child: Padding(\n                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),\n                    child: Row(\n                      children: [\n                        Container(width: 22, height: 22, decoration: BoxDecoration(color: c.$2, shape: BoxShape.circle)),\n                        const SizedBox(width: 12),\n                        Expanded(\n                          child: Text(c.$1,\n                              style: TextStyle(\n                                color: _sText(isDarkMode),\n                                fontSize: 14.5,\n                                fontWeight: themeProvider.primaryColor.value == c.$2.value\n                                    ? FontWeight.w700\n                                    : FontWeight.w500,\n                              )),\n                        ),\n                        if (themeProvider.primaryColor.value == c.$2.value)\n                          Icon(Icons.check_circle_rounded, color: c.$2, size: 20),\n                      ],\n                    ),\n                  ),\n                ),\n            ],\n          ),\n        ],\n      ),\n    );\n  }"], ["str", "widgets/paran_dialog.dart", "const _kRed = Color(0xFFE05A4F);\n", "const _kRed = Color(0xFFE05A4F);\n\n/// 포인트 색 (설정에서 고른 색, 기본 파란소리)\nColor _point(BuildContext context) {\n  try {\n    return context.watch<ThemeProvider>().primaryColor;\n  } catch (_) {\n    return _kBlue;\n  }\n}\n"], ["str", "widgets/paran_dialog.dart", "    final p = _Pal.of(context);\n    return Opacity(", "    final p = _Pal.of(context);\n    final pt = _point(context);\n    return Opacity("], ["str", "widgets/paran_dialog.dart", "SizedBox(width: 22, child: Icon(icon, color: danger ? _kRed : (accent ? _kBlue : p.sub), size: 20)),", "SizedBox(width: 22, child: Icon(icon, color: danger ? _kRed : (accent ? pt : p.sub), size: 20)),"], ["str", "widgets/paran_dialog.dart", "color: danger ? _kRed : (accent || selected ? _kBlue : p.ink),", "color: danger ? _kRed : (accent || selected ? pt : p.ink),"], ["str", "widgets/paran_dialog.dart", "const Icon(Icons.check_circle_rounded, color: _kBlue, size: 20),", "Icon(Icons.check_circle_rounded, color: pt, size: 20),"], ["str", "widgets/paran_toast.dart", "  const blue = Color(0xFF2589E8);\n", "  var blue = const Color(0xFF2589E8);\n  try {\n    blue = context.read<ThemeProvider>().primaryColor; // 포인트 색\n  } catch (_) {}\n"], ["str", "screens/ringtone_screen.dart", "    const point = Color(0xFF2589E8); // 작은 포인트에만", "    final point = context.watch<ThemeProvider>().primaryColor; // 포인트 색 (설정에서 고름)"], ["str", "screens/ringtone_screen.dart", "child: Text(t, style: const TextStyle(color: point, fontSize: 12.5, fontWeight: FontWeight.w700)),", "child: Text(t, style: TextStyle(color: point, fontSize: 12.5, fontWeight: FontWeight.w700)),"], ["str", "screens/equalizer_screen.dart", "  static const _point = Color(0xFF2589E8); // 작은 포인트에만 (막대·숫자)", "  static Color _point = const Color(0xFF2589E8); // 포인트 색 (그릴 때마다 설정 색으로)"], ["str", "screens/equalizer_screen.dart", "    final c = _EqPal.of(context);\n", "    final c = _EqPal.of(context);\n    _point = context.watch<ThemeProvider>().primaryColor;\n"], ["strall", "screens/equalizer_screen.dart", "const TextStyle(color: _point", "TextStyle(color: _point"]], "new": {}}""")
+# -*- coding: utf-8 -*-
+# 포인트 색 통일: 파랑으로 박혀 있던 곳을 전부 '포인트 색 꺼내기' 하나로
+# - 새 파일 lib/utils/point_color.dart 만들기
+# - 기본 색이면 라이트 #2F7DE8(로고 파랑) / 다크 #6FB0FF, 다른 색이면 그 색 (다크에서 너무 어두우면 살짝 밝게)
+import os, sys, shutil
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-LIB = os.path.join(ROOT, "lib")
-BACKUP = os.path.join(ROOT, "backup_point_color")
+LIB = os.path.join(ROOT, 'lib')
 
-def func_span(s, sig):
-    i = s.find(sig)
-    if i < 0 or s.find(sig, i + 1) >= 0:
-        return None
-    j = s.find("{", i + len(sig))
-    if j < 0:
-        return None
-    depth = 0
-    k = j
-    while k < len(s):
-        c = s[k]
-        if c == "{":
-            depth += 1
-        elif c == "}":
-            depth -= 1
-            if depth == 0:
-                return (i, k + 1)
-        k += 1
+def find(name):
+    for d, _, fs in os.walk(LIB):
+        if name in fs:
+            return os.path.join(d, name)
     return None
 
-def main():
-    if not os.path.isdir(LIB):
-        print("[실패] lib 폴더를 못 찾았어요. 이 파일을 C:\\apps\\mp3_player_new 에 두고 실행해 주세요.")
-        sys.exit(1)
-    texts, newlines, problems = {}, {}, []
-    for op in DATA["ops"]:
-        kind, rel = op[0], op[1]
-        if rel not in texts:
-            p = os.path.join(LIB, rel)
-            if not os.path.exists(p):
-                problems.append(f"{rel}: 파일이 없어요")
-                continue
-            with open(p, "r", encoding="utf-8", newline="") as fh:
-                raw = fh.read()
-            newlines[rel] = "\r\n" if "\r\n" in raw else "\n"
-            texts[rel] = raw.replace("\r\n", "\n")
-    if not problems:
-        # 미리 해보기 (진짜 파일은 아직 안 바꿈)
-        trial = dict(texts)
-        for op in DATA["ops"]:
-            kind, rel = op[0], op[1]
-            a = op[2]
-            b = op[3] if len(op) > 3 else None
-            s = trial[rel]
-            if kind == "str":
-                n = s.count(a)
-                if n != 1:
-                    problems.append(f"{rel}: '{a.strip().splitlines()[0][:60]}' → {n}군데 (1군데여야 해요)")
-                    continue
-                trial[rel] = s.replace(a, b, 1)
-            elif kind == "strall":
-                n = s.count(a)
-                if n < 1:
-                    problems.append(f"{rel}: '{a.strip().splitlines()[0][:60]}' 를 못 찾았어요")
-                    continue
-                trial[rel] = s.replace(a, b)
-            elif kind == "region":
-                key, start, end, repl = op[2], op[3], op[4], op[5]
-                ki = s.find(key)
-                if ki < 0 or s.find(key, ki + 1) >= 0:
-                    problems.append(f"{rel}: '{key[:50]}' 를 못 찾았어요")
-                    continue
-                si = s.rfind(start, 0, ki)
-                ei = s.find(end, ki)
-                if si < 0 or ei < 0:
-                    problems.append(f"{rel}: '{key[:50]}' 주변을 못 찾았어요")
-                    continue
-                ls = s.rfind("\n", 0, si) + 1
-                indent = s[ls:si]
-                le = s.find("\n", ei)
-                le = len(s) if le < 0 else le + 1
-                trial[rel] = s[:ls] + indent + repl + "\n" + s[le:]
-            else:
-                span = func_span(s, a)
-                if span is None:
-                    problems.append(f"{rel}: 함수 '{a.strip()[:60]}' 를 못 찾았어요")
-                    continue
-                trial[rel] = s[:span[0]] + b + s[span[1]:]
-    if problems:
-        print("[실패] 아래 곳을 못 찾아서 아무것도 안 바꿨어요. 이 내용을 그대로 보내주세요:")
-        for p in problems:
-            print("   -", p)
-        sys.exit(1)
+HELPER = '''import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/theme_provider.dart';
 
-    os.makedirs(BACKUP, exist_ok=True)
-    for rel in texts:
-        dst = os.path.join(BACKUP, rel)
-        os.makedirs(os.path.dirname(dst), exist_ok=True)
-        shutil.copy2(os.path.join(LIB, rel), dst)
-    for rel, s in trial.items():
-        with open(os.path.join(LIB, rel), "w", encoding="utf-8", newline="") as fh:
-            fh.write(s.replace("\n", "\r\n") if newlines[rel] == "\r\n" else s)
-        print("[완료] 바꿨어요:", rel)
-    for rel, content in DATA["new"].items():
-        p = os.path.join(LIB, rel)
-        if os.path.exists(p):
-            print("[참고] 이미 있어서 그대로 둬요:", rel)
-            continue
-        os.makedirs(os.path.dirname(p), exist_ok=True)
-        with open(p, "w", encoding="utf-8", newline="") as fh:
-            fh.write(content.replace("\n", "\r\n"))
-        print("[완료] 새로 만들었어요:", rel)
-    print("\n[끝] 끝! 이제  flutter run  으로 확인해 주세요.")
-    print("   문제가 있으면 backup_point_color 폴더의 원본으로 되돌릴 수 있어요.")
+/// 포인트 색 꺼내기 — 앱 어디서든 이것 하나만 쓰기 (화면마다 파랑이 달라지지 않게)
+/// - 기본(파란소리)이면: 밝은 바탕 #2F7DE8 (로고 파랑) / 어두운 바탕 #6FB0FF
+/// - 다른 색이면: 그 색 그대로 (어두운 바탕에서 너무 어두운 색이면 살짝 밝게)
+/// - onDark: 바탕이 어두운지 직접 정할 때 (예: 먹색 미니플레이어 = true, 흰 알림 = false)
+///   안 정하면 다크 모드인지로 정함
+Color pointColorOf(BuildContext context, {bool? onDark}) {
+  Theme.of(context); // 색이 바뀌면 다시 그리기
+  ThemeProvider? t;
+  try {
+    t = Provider.of<ThemeProvider>(context, listen: false);
+  } catch (_) {}
+  final dark = onDark ?? (t?.isDarkMode ?? false);
+  final p = t?.primaryColor ?? const Color(0xFF2589E8);
+  if (p.value == 0xFF2589E8) {
+    return dark ? const Color(0xFF6FB0FF) : const Color(0xFF2F7DE8);
+  }
+  if (dark && p.computeLuminance() < 0.08) return Color.lerp(p, Colors.white, 0.45)!;
+  return p;
+}
+'''
 
-if __name__ == "__main__":
-    main()
+IMPORT_FROM = "import 'package:flutter/material.dart';\n"
+IMPORT_TO = "import 'package:flutter/material.dart';\nimport '../utils/point_color.dart';\n"
+
+FILES = {
+    'action_feedback.dart': [
+        ("완료 알림(원래대로 있는 큰 알림) 아이콘",
+         "                        const Icon(Icons.check_circle_rounded, color: Color(0xFF2589E8), size: 46),",
+         "                        Icon(Icons.check_circle_rounded, color: pointColorOf(context), size: 46),"),
+        ("저장했어요·수정했어요·추가했어요 아이콘",
+         "    const blue = Color(0xFF2589E8);",
+         "    final blue = pointColorOf(context);"),
+    ],
+    'player_screen.dart': [
+        ("파란포토로 바꿨어요 ✓ 아이콘 (흰 알림)",
+         "            const Icon(Icons.check_circle_rounded, color: Color(0xFF2589E8), size: 22),",
+         "            Icon(Icons.check_circle_rounded, color: pointColorOf(context, onDark: false), size: 22),"),
+        ("되돌리기 버튼 글자",
+         "              style: TextButton.styleFrom(foregroundColor: const Color(0xFF2589E8)),",
+         "              style: TextButton.styleFrom(foregroundColor: pointColorOf(context, onDark: false)),"),
+        ("파란포토 추천 카드 버튼",
+         "                              backgroundColor: const Color(0xFF2589E8),",
+         "                              backgroundColor: pointColorOf(context, onDark: false),"),
+        ("TV 연결 표시 바탕",
+         "                color: cast.isConnected ? const Color(0xFF2589E8).withOpacity(0.3) : Colors.transparent,",
+         "                color: cast.isConnected ? pointColorOf(context).withOpacity(0.3) : Colors.transparent,"),
+        ("재생 속도 창 색",
+         "        child: _SpeedDialog(playerProvider: playerProvider, primaryColor: const Color(0xFF2589E8)),",
+         "        child: _SpeedDialog(playerProvider: playerProvider, primaryColor: pointColorOf(context)),"),
+        ("메뉴 'TV로 듣기' 켜짐",
+         "        on ? const Color(0xFF2589E8) : const Color(0xFF8A8378),",
+         "        on ? pointColorOf(context) : const Color(0xFF8A8378),"),
+    ],
+    'song_list_tile.dart': [
+        ("자른 곡 배지",
+         "                color: const Color(0xFF2589E8),\n                shape: BoxShape.circle,\n                border: Border.all(color: Colors.white, width: 1.5),",
+         "                color: pointColorOf(context, onDark: false),\n                shape: BoxShape.circle,\n                border: Border.all(color: Colors.white, width: 1.5),"),
+    ],
+    'paran_dialog.dart': [
+        ("확인 창 음표 아이콘",
+         "                      color: _kBlue.withOpacity(0.15),\n                      child: const Icon(Icons.music_note_rounded, color: _kBlue, size: 26),",
+         "                      color: pointColorOf(context).withOpacity(0.15),\n                      child: Icon(Icons.music_note_rounded, color: pointColorOf(context), size: 26),"),
+    ],
+    'radio_player_screen.dart': [
+        ("라디오 TV 버튼",
+         "                                      color: CastService.instance.isConnected ? const Color(0xFF2589E8) : baseColor,",
+         "                                      color: CastService.instance.isConnected ? pointColorOf(context) : baseColor,"),
+        ("라디오 'TV에서 재생 중' 뱃지",
+         "                                color: const Color(0xFF2589E8).withOpacity(0.14),\n                                borderRadius: BorderRadius.circular(20),\n                                border: Border.all(color: const Color(0xFF2589E8).withOpacity(0.35)),\n                              ),\n                              child: Row(mainAxisSize: MainAxisSize.min, children: [\n                                const Icon(Icons.cast_connected, size: 14, color: Color(0xFF2589E8)),",
+         "                                color: pointColorOf(context).withOpacity(0.14),\n                                borderRadius: BorderRadius.circular(20),\n                                border: Border.all(color: pointColorOf(context).withOpacity(0.35)),\n                              ),\n                              child: Row(mainAxisSize: MainAxisSize.min, children: [\n                                Icon(Icons.cast_connected, size: 14, color: pointColorOf(context)),"),
+        ("라디오 'TV에서 재생 중' 글자",
+         "                                  style: const TextStyle(\n                                      color: Color(0xFF2589E8), fontSize: 12, fontWeight: FontWeight.bold),",
+         "                                  style: TextStyle(\n                                      color: pointColorOf(context), fontSize: 12, fontWeight: FontWeight.bold),"),
+    ],
+    'mini_player.dart': [
+        ("미니플레이어 TV 아이콘 (먹색 띠 위)",
+         "                                    const Icon(Icons.cast_connected, size: 13, color: Color(0xFF2589E8)),",
+         "                                    Icon(Icons.cast_connected, size: 13, color: pointColorOf(context, onDark: true)),"),
+        ("미니플레이어 'TV에서 재생' 글자",
+         "                                              ? const Color(0xFF2589E8)\n                                              : baseColor.withOpacity(0.6),",
+         "                                              ? pointColorOf(context, onDark: true)\n                                              : baseColor.withOpacity(0.6),"),
+    ],
+    'more_menu_sheet.dart': [
+        ("⋮ 메뉴 맨 위 카드 음파 막대",
+         "        final blue = dark ? const Color(0xFF2589E8) : const Color(0xFF7FB8F0);",
+         "        final blue = pointColorOf(context, onDark: !dark); // 카드는 바탕과 반대 색"),
+    ],
+    'call_recordings_screen.dart': [
+        ("통화 녹음: 재생 중 색",
+         "  static const _blue = Color(0xFF2589E8); // 파란색은 \"지금 재생 중\"에만",
+         "  Color get _blue => pointColorOf(context); // 포인트 색은 \"지금 재생 중\"에만"),
+        ("통화 녹음: 진행 막대",
+         "              valueColor: const AlwaysStoppedAnimation(_blue),",
+         "              valueColor: AlwaysStoppedAnimation(_blue),"),
+        ("통화 녹음: 정렬 ✓",
+         "                                  const Icon(Icons.check_rounded, size: 17, color: Color(0xFF2589E8)),",
+         "                                  Icon(Icons.check_rounded, size: 17, color: pointColorOf(context)),"),
+    ],
+    'bulk_art_screen.dart': [
+        ("앨범 사진 한꺼번에: 고른 ✓",
+         "                            if (selected) const Icon(Icons.check_circle, color: _blue, size: 20),",
+         "                            if (selected) Icon(Icons.check_circle, color: pointColorOf(context), size: 20),"),
+    ],
+}
+
+def balanced(t):
+    return all(t.count(a) == t.count(b) for a, b in ('()', '{}', '[]'))
+
+helper_path = os.path.join(LIB, 'utils', 'point_color.dart')
+if os.path.exists(helper_path):
+    print('이미 적용돼 있어요'); sys.exit(0)
+
+ok = True
+out = {}
+for fname, edits in FILES.items():
+    p = find(fname)
+    if not p:
+        ok = False; print('❌ 파일을 못 찾았어요:', fname); continue
+    raw = open(p, 'rb').read().decode('utf-8')
+    crlf = '\r\n' in raw
+    t = raw.replace('\r\n', '\n')
+    print('\n[%s]' % fname)
+    if IMPORT_FROM in t and "utils/point_color.dart" not in t:
+        t = t.replace(IMPORT_FROM, IMPORT_TO, 1)
+    for name, a, b in edits:
+        if t.count(a) == 1:
+            t = t.replace(a, b); print('  ✔', name)
+        else:
+            ok = False; print('  ❌', name, '(찾은 개수: %d)' % t.count(a))
+    if not balanced(t) and balanced(raw):
+        ok = False; print('  ❌ 괄호 개수가 안 맞아요')
+    elif not balanced(t) and [t.count(c) for c in '(){}[]'] != [raw.count(c) for c in '(){}[]']:
+        ok = False; print('  ❌ 괄호 개수가 안 맞아요')
+    out[p] = (t, crlf)
+
+if not ok:
+    print('\n하나라도 ❌라서 아무것도 저장 안 했어요.'); sys.exit(1)
+
+os.makedirs(os.path.dirname(helper_path), exist_ok=True)
+open(helper_path, 'wb').write(HELPER.replace('\n', '\r\n').encode('utf-8'))
+print('\n✔ 새 파일: lib/utils/point_color.dart')
+for p, (t, crlf) in out.items():
+    shutil.copyfile(p, p + '.bak')
+    if crlf:
+        t = t.replace('\n', '\r\n')
+    open(p, 'wb').write(t.encode('utf-8'))
+print('\n완료!')

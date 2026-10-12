@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:async';
 import 'dart:ui' show FontFeature;
 import 'package:flutter/material.dart';
+import '../utils/point_color.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../utils/greeting_images.dart';
@@ -791,7 +792,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                     onTap: () => _onRadioCastTap(current, radioProvider),
                                     child: Icon(
                                       CastService.instance.isConnected ? Icons.cast_connected : Icons.cast,
-                                      color: CastService.instance.isConnected ? const Color(0xFF2589E8) : baseColor,
+                                      color: CastService.instance.isConnected ? pointColorOf(context) : baseColor,
                                       size: 16,
                                     ),
                                   ),
@@ -1244,19 +1245,19 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                           ? Container(
                               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF2589E8).withOpacity(0.14),
+                                color: pointColorOf(context).withOpacity(0.14),
                                 borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: const Color(0xFF2589E8).withOpacity(0.35)),
+                                border: Border.all(color: pointColorOf(context).withOpacity(0.35)),
                               ),
                               child: Row(mainAxisSize: MainAxisSize.min, children: [
-                                const Icon(Icons.cast_connected, size: 14, color: Color(0xFF2589E8)),
+                                Icon(Icons.cast_connected, size: 14, color: pointColorOf(context)),
                                 const SizedBox(width: 6),
                                 Text(
                                   CastService.instance.tvPlaying
                                       ? '${CastService.instance.device?.name ?? 'TV'}에서 재생 중'
                                       : 'TV에서 일시정지',
-                                  style: const TextStyle(
-                                      color: Color(0xFF2589E8), fontSize: 12, fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                      color: pointColorOf(context), fontSize: 12, fontWeight: FontWeight.bold),
                                 ),
                               ]),
                             )

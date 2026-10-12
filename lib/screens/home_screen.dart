@@ -678,55 +678,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final provider = context.read<StartScreenProvider>();
     if (provider.startScreen == type) {
       provider.setStartScreen(null);
-      final overlay = Overlay.of(context);
-      late OverlayEntry entry;
-      entry = OverlayEntry(
-        builder: (_) => Positioned.fill(
-          child: Center(
-            child: TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0.0, end: 1.0),
-              duration: const Duration(milliseconds: 300),
-              builder: (_, value, child) => Opacity(
-                opacity: value,
-                child: Transform.scale(scale: 0.85 + 0.15 * value, child: child),
-              ),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(CupertinoIcons.heart_slash, color: Colors.black38, size: 30),
-                    const SizedBox(height: 10),
-                    Text(
-                      '시작 화면이 취소되었습니다.',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.black87,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        decoration: TextDecoration.none,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-      overlay.insert(entry);
-      Future.delayed(const Duration(seconds: 2), () => entry.remove());
+      showActionFeedback(context, type: ActionFeedbackType.canceled); // 취소했어요 (저장했어요처럼 슝)
       return;
     }
     _showSetStartScreenDialog(context, type, label);
@@ -1935,7 +1887,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     : CupertinoIcons.heart,
                                 size: 13,
                                 color: startScreen == c.type
-                                    ? const Color(0xFF6FA8DC)
+                                    ? (context.watch<ThemeProvider>().primaryColor.value == 0xFF2589E8
+                                        ? const Color(0xFF2F7DE8) // 기본이면 로고 파랑
+                                        : context.watch<ThemeProvider>().primaryColor)
                                     : const Color(0xFF17140F).withOpacity(0.7),
                               ),
                             ),
@@ -3722,7 +3676,7 @@ class _SpinRing extends StatefulWidget {
 class _SpinRingState extends State<_SpinRing> with SingleTickerProviderStateMixin {
   static bool _spun = false; // 앱 한 번 켤 때 한 번만 (음악 탭 갔다 와도 다시 안 돎)
   late final AnimationController _c =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 4800));
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 6500));
 
   @override
   void initState() {

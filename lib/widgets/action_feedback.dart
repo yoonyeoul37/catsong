@@ -1,11 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../utils/point_color.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 
 /// 완료 피드백 종류
-enum ActionFeedbackType { edited, deleted, saved, added }
+enum ActionFeedbackType { edited, deleted, saved, added, canceled }
 
 /// 큰 작업이 끝났을 때: 가운데 카드 + [원래대로] [확인] (8초 지나면 저절로 슝)
 void showActionFeedbackWithUndo(
@@ -154,7 +155,7 @@ class _UndoFeedbackState extends State<_UndoFeedback> with TickerProviderStateMi
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.check_circle_rounded, color: Color(0xFF2589E8), size: 46),
+                        Icon(Icons.check_circle_rounded, color: pointColorOf(context), size: 46),
                         const SizedBox(height: 8),
                         Text(widget.message,
                             textAlign: TextAlign.center,
@@ -319,7 +320,7 @@ class _ActionFeedbackState extends State<_ActionFeedback> with SingleTickerProvi
   }
 
   (IconData, Color, String) get _look {
-    const blue = Color(0xFF2589E8);
+    final blue = pointColorOf(context);
     const red = Color(0xFFE05A4F);
     switch (widget.type) {
       case ActionFeedbackType.edited:
@@ -330,6 +331,8 @@ class _ActionFeedbackState extends State<_ActionFeedback> with SingleTickerProvi
         return (Icons.check_circle_rounded, blue, '저장했어요');
       case ActionFeedbackType.added:
         return (Icons.add_circle_rounded, blue, '추가했어요');
+      case ActionFeedbackType.canceled:
+        return (Icons.heart_broken_rounded, const Color(0xFF8A8378), '취소했어요');
     }
   }
 

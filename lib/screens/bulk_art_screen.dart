@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/point_color.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../models/song.dart';
@@ -153,7 +154,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
                                 ],
                               ),
                             ),
-                            if (selected) const Icon(Icons.check_circle, color: _blue, size: 20),
+                            if (selected) Icon(Icons.check_circle, color: pointColorOf(context), size: 20),
                           ],
                         ),
                       ),

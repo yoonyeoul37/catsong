@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import '../utils/point_color.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -557,7 +558,7 @@ class _BrandCard extends StatelessWidget {
         final dark = p.sheet.computeLuminance() < 0.5;
         final bg = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
         final fg = dark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
-        final blue = dark ? const Color(0xFF2589E8) : const Color(0xFF7FB8F0);
+        final blue = pointColorOf(context, onDark: !dark); // 카드는 바탕과 반대 색
         return Container(
           width: double.infinity,
           constraints: const BoxConstraints(minHeight: 92),

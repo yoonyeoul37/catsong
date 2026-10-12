@@ -2,6 +2,7 @@ import '../utils/no_album_helper.dart';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../utils/point_color.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -194,7 +195,7 @@ class MiniPlayer extends StatelessWidget {
                                 children: [
                                   // TV로 듣는 중이면 가수 대신 📺 TV 이름
                                   if (CastService.instance.isConnected) ...[
-                                    const Icon(Icons.cast_connected, size: 13, color: Color(0xFF2589E8)),
+                                    Icon(Icons.cast_connected, size: 13, color: pointColorOf(context, onDark: true)),
                                     const SizedBox(width: 4),
                                   ],
                                   Expanded(
@@ -204,7 +205,7 @@ class MiniPlayer extends StatelessWidget {
                                           : song.artistDisplay,
                                       style: TextStyle(
                                           color: CastService.instance.isConnected
-                                              ? const Color(0xFF2589E8)
+                                              ? pointColorOf(context, onDark: true)
                                               : baseColor.withOpacity(0.6),
                                           fontSize: 12),
                                       maxLines: 1,

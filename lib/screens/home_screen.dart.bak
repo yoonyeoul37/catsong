@@ -320,6 +320,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// 크림 카드 + 색 고리 + 문구 + [바꾸기] + ✕ (홈 사진 카드와 같은 모서리·그림자)
   Widget _buildColorTip(bool isDark) {
+    final isKo = Localizations.localeOf(context).languageCode == 'ko';
     final card = isDark ? const Color(0xFF32302C) : const Color(0xFFFBF8F2);
     final ink = isDark ? const Color(0xFFF4EFE5) : const Color(0xFF17140F);
     final sub = isDark ? const Color(0xFFA29A8B) : const Color(0xFF746C60);
@@ -365,16 +366,16 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('강조 색상',
+                Text(isKo ? '강조 색상' : 'Accent color',
                     maxLines: 1,
                     style: TextStyle(color: accent, fontSize: 10, height: 1.1, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
                 const SizedBox(height: 2),
-                Text('나만의 색으로 꾸며보세요',
+                Text(isKo ? '나만의 색으로 꾸며보세요' : 'Make it your color',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: ink, fontSize: 13.5, height: 1.15, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 3),
-                Text('숲 · 노을 · 벚꽃 등 10가지 색',
+                Text(isKo ? '숲 · 노을 · 벚꽃 등 10가지 색' : '10 colors like Forest, Sunset, Blossom',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: sub, fontSize: 11.5, height: 1.15)),
@@ -390,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
               decoration: BoxDecoration(color: ink, borderRadius: BorderRadius.circular(14)),
-              child: Text('꾸미기', style: TextStyle(color: card, fontSize: 12.5, fontWeight: FontWeight.w700)),
+              child: Text(isKo ? '꾸미기' : 'Try it', style: TextStyle(color: card, fontSize: 12.5, fontWeight: FontWeight.w700)),
             ),
           ),
           IconButton(
@@ -411,9 +412,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final sub = dark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
     final sheetBg = dark ? const Color(0xFF32302C) : const Color(0xFFF4EFE5);
+    final isKo = Localizations.localeOf(context).languageCode == 'ko';
     await showParanSheet(
       context,
-      title: '강조 색상',
+      title: isKo ? '강조 색상' : 'Accent color',
       // 창 머리 B안: 작은 '강조 색상'(지금 강조 색) + 도현체 큰 질문
       header: Builder(builder: (c) {
         final p = c.watch<ThemeProvider>().primaryColor;
@@ -423,10 +425,10 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('강조 색상',
+              Text(isKo ? '강조 색상' : 'Accent color',
                   style: TextStyle(color: label, fontSize: 10.5, fontWeight: FontWeight.w800, letterSpacing: 0.8)),
               const SizedBox(height: 3),
-              Text('오늘 기분에 어울리는 색은?',
+              Text(isKo ? '오늘 기분에 어울리는 색은?' : 'What color fits your mood today?',
                   textScaler: TextScaler.noScaling,
                   style: GoogleFonts.doHyeon(color: ink, fontSize: 21)),
             ],
@@ -459,7 +461,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: on ? DecoratedBox(decoration: BoxDecoration(shape: BoxShape.circle, color: c)) : null,
                   ),
                   const SizedBox(height: 6),
-                  Text(name,
+                  Text(isKo ? name : (_colorNameEn[name] ?? name),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -500,7 +502,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Icon(Icons.info_outline_rounded, size: 16, color: sub),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text('설정 → 꾸미기 → 강조 색상에서\n다시 변경할 수 있습니다.',
+                    child: Text(isKo ? '설정 → 꾸미기 → 강조 색상에서\n다시 변경할 수 있습니다.' : 'You can change it again\nanytime in Settings.',
                         style: TextStyle(color: sub, fontSize: 12.5, height: 1.45)),
                   ),
                 ],
@@ -520,7 +522,7 @@ class _HomeScreenState extends State<HomeScreen> {
             elevation: 0,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           ),
-          child: const Text('완료', style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700)),
+          child: Text(isKo ? '완료' : 'Done', style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700)),
         ),
       ),
     );
@@ -3680,6 +3682,12 @@ class _BounceQState extends State<_BounceQ> with SingleTickerProviderStateMixin 
   }
 }
 
+/// 강조 색상 이름 (영어 화면용)
+const Map<String, String> _colorNameEn = {
+  '파란소리': 'Paransori', '숲': 'Forest', '노을': 'Sunset', '라벤더': 'Lavender', '먹색': 'Ink',
+  '벚꽃': 'Blossom', '바다': 'Ocean', '햇살': 'Sunlight', '와인': 'Wine', '밤하늘': 'Night sky',
+};
+
 /// 강조 색상 10가지를 한 바퀴로 (가운데는 카드 색 구멍)
 class _ColorRingPainter extends CustomPainter {
   final Color hole;
@@ -3712,12 +3720,15 @@ class _SpinRing extends StatefulWidget {
 }
 
 class _SpinRingState extends State<_SpinRing> with SingleTickerProviderStateMixin {
+  static bool _spun = false; // 앱 한 번 켤 때 한 번만 (음악 탭 갔다 와도 다시 안 돎)
   late final AnimationController _c =
       AnimationController(vsync: this, duration: const Duration(milliseconds: 4800));
 
   @override
   void initState() {
     super.initState();
+    if (_spun) return;
+    _spun = true;
     Future.delayed(const Duration(milliseconds: 1500), () {
       if (mounted) _c.forward();
     });

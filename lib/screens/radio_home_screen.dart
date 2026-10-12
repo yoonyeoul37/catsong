@@ -63,8 +63,114 @@ Future<void> pushRadioEntry(BuildContext context, {bool instant = false}) {
   );
 }
 
-class RadioHomeScreen extends StatelessWidget {
+class RadioHomeScreen extends StatefulWidget {
   const RadioHomeScreen({super.key});
+
+  @override
+  State<RadioHomeScreen> createState() => _RadioHomeScreenState();
+}
+
+class _RadioHomeScreenState extends State<RadioHomeScreen> {
+  // ── 나라 검색 ──
+  final TextEditingController _search = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _search.dispose();
+    super.dispose();
+  }
+
+  /// 검색: 한글 이름 · 영어 이름 · 나라 코드 (띄어쓰기·대소문자 무시)
+  bool _matches(RadioCountry c, String q) {
+    String n(String v) => v.toLowerCase().replaceAll(' ', '');
+    final k = n(q);
+    if (k.isEmpty) return true;
+    return n(c.displayName).contains(k) ||
+        n(c.name).contains(k) ||
+        n(_countryEn[c.code] ?? '').contains(k) ||
+        c.code.toLowerCase() == k;
+  }
+
+  Widget _searchField(bool isDark) {
+    final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final hint = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
+    final isKo = Localizations.localeOf(context).languageCode == 'ko';
+    return Container(
+      height: 44,
+      decoration: BoxDecoration(
+        color: isDark ? Colors.white.withOpacity(0.06) : Colors.white.withOpacity(0.6),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        children: [
+          const SizedBox(width: 12),
+          Icon(Icons.search_rounded, size: 20, color: hint),
+          const SizedBox(width: 8),
+          Expanded(
+            child: TextField(
+              controller: _search,
+              onChanged: (v) => setState(() => _query = v.trim()),
+              textInputAction: TextInputAction.search,
+              style: TextStyle(color: ink, fontSize: 15),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                isDense: true,
+                hintText: isKo ? '나라 이름으로 찾기' : 'Search country',
+                hintStyle: TextStyle(color: hint, fontSize: 15),
+              ),
+            ),
+          ),
+          if (_query.isNotEmpty)
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                _search.clear();
+                setState(() => _query = '');
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Icon(Icons.cancel_rounded, size: 18, color: hint),
+              ),
+            )
+          else
+            const SizedBox(width: 12),
+        ],
+      ),
+    );
+  }
+
+  /// 검색 결과: 대륙 구분 없이 맞는 나라만
+  List<Widget> _searchResults(List<RadioCountry> countries, bool isDark) {
+    final found = countries.where((c) => _matches(c, _query)).toList();
+    final base = isDark ? Colors.white : Colors.black;
+    if (found.isEmpty) {
+      final isKo = Localizations.localeOf(context).languageCode == 'ko';
+      return [
+        Padding(
+          padding: const EdgeInsets.only(top: 60),
+          child: Column(
+            children: [
+              Icon(Icons.search_off_rounded, size: 40, color: base.withOpacity(0.25)),
+              const SizedBox(height: 12),
+              Text(isKo ? '찾는 나라가 없어요' : 'No country found',
+                  style: TextStyle(color: base.withOpacity(0.45), fontSize: 14)),
+            ],
+          ),
+        ),
+      ];
+    }
+    return [
+      for (int i = 0; i < found.length; i++)
+        Column(
+          children: [
+            _CountryListTile(country: found[i], onTap: () => _onCountryTap(context, found[i])),
+            if (i != found.length - 1)
+              Divider(height: 1, thickness: 0.6, color: base.withOpacity(0.07), indent: 48),
+          ],
+        ),
+    ];
+  }
 
   List<RadioCountry> get _sortedCountries {
     final deviceCountryCode = PlatformDispatcher.instance.locale.countryCode;
@@ -299,22 +405,42 @@ class RadioHomeScreen extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+        child: Column(
           children: [
-
-            Text(
-              AppLocalizations.of(context)!.radioSelectCountry,
-              style: TextStyle(
-                color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.65),
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 2,
-              ),
+            // 나라 검색칸
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 4),
+              child: _searchField(isDarkMode),
             ),
-            const SizedBox(height: 4),
-            ..._buildCountryListByContinent(context, countries, isDarkMode),
-            const SizedBox(height: 80),
+            Expanded(
+              child: Builder(builder: (context) {
+                final items = <Widget>[
+                  if (_query.isEmpty) ...[
+                    Text(
+                      AppLocalizations.of(context)!.radioSelectCountry,
+                      style: TextStyle(
+                        color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.65),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    ..._buildCountryListByContinent(context, countries, isDarkMode),
+                  ] else
+                    ..._searchResults(countries, isDarkMode),
+                  const SizedBox(height: 80),
+                ];
+                // 음악 곡 목록처럼: 내리고 올릴 때 화면에 들어오는 줄이 옆에서 스르륵
+                return ListView.builder(
+                  key: ValueKey(_query), // 검색어 바뀌면 처음부터 다시 스르륵
+                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                  padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+                  itemCount: items.length,
+                  itemBuilder: (context, i) => _Appear(child: items[i]),
+                );
+              }),
+            ),
           ],
         ),
       ),
@@ -634,3 +760,54 @@ class _LogoEqBarsState extends State<_LogoEqBars>
     );
   }
 }
+
+/// 음악 곡 목록과 같은 등장: 옆에서 살짝 밀려 들어오며 커지고 선명해짐
+class _Appear extends StatelessWidget {
+  final Widget child;
+  const _Appear({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: const Duration(milliseconds: 320),
+      curve: Curves.easeOutCubic,
+      child: child,
+      builder: (context, v, child) => Transform.translate(
+        offset: Offset((1 - v) * 24, 0),
+        child: Transform.scale(
+          scale: 0.95 + 0.05 * v,
+          child: Opacity(opacity: v.clamp(0.0, 1.0), child: child),
+        ),
+      ),
+    );
+  }
+}
+
+/// 나라 영어 이름 (한국어 화면에서도 영어로 찾을 수 있게)
+const Map<String, String> _countryEn = {
+  'KR': 'Korea South Korea', 'JP': 'Japan', 'TW': 'Taiwan', 'CN': 'China', 'HK': 'Hong Kong',
+  'VN': 'Vietnam', 'PH': 'Philippines', 'TH': 'Thailand', 'ID': 'Indonesia', 'IN': 'India',
+  'MY': 'Malaysia', 'SG': 'Singapore', 'PK': 'Pakistan', 'BD': 'Bangladesh', 'LK': 'Sri Lanka',
+  'NP': 'Nepal', 'MM': 'Myanmar', 'KH': 'Cambodia', 'MN': 'Mongolia', 'UZ': 'Uzbekistan',
+  'KZ': 'Kazakhstan', 'LA': 'Laos', 'GE': 'Georgia', 'AM': 'Armenia', 'AZ': 'Azerbaijan',
+  'GB': 'United Kingdom UK England Britain', 'DE': 'Germany', 'FR': 'France', 'ES': 'Spain', 'IT': 'Italy',
+  'NL': 'Netherlands Holland', 'SE': 'Sweden', 'PL': 'Poland', 'RU': 'Russia', 'AT': 'Austria',
+  'CH': 'Switzerland', 'BE': 'Belgium', 'PT': 'Portugal', 'GR': 'Greece', 'IE': 'Ireland',
+  'NO': 'Norway', 'DK': 'Denmark', 'FI': 'Finland', 'CZ': 'Czech Czechia', 'RO': 'Romania',
+  'UA': 'Ukraine', 'HU': 'Hungary', 'HR': 'Croatia', 'RS': 'Serbia', 'BG': 'Bulgaria',
+  'SK': 'Slovakia', 'LT': 'Lithuania', 'LV': 'Latvia', 'EE': 'Estonia', 'IS': 'Iceland',
+  'SI': 'Slovenia', 'AL': 'Albania', 'MK': 'North Macedonia', 'ME': 'Montenegro', 'BA': 'Bosnia Herzegovina',
+  'MT': 'Malta', 'LU': 'Luxembourg', 'CY': 'Cyprus',
+  'US': 'United States USA America', 'CA': 'Canada', 'MX': 'Mexico', 'CU': 'Cuba', 'JM': 'Jamaica',
+  'DO': 'Dominican Republic', 'TT': 'Trinidad and Tobago', 'HT': 'Haiti', 'GT': 'Guatemala', 'HN': 'Honduras',
+  'NI': 'Nicaragua', 'SV': 'El Salvador', 'PA': 'Panama', 'CR': 'Costa Rica', 'PR': 'Puerto Rico',
+  'BR': 'Brazil', 'AR': 'Argentina', 'CO': 'Colombia', 'CL': 'Chile', 'PE': 'Peru',
+  'VE': 'Venezuela', 'EC': 'Ecuador', 'BO': 'Bolivia', 'PY': 'Paraguay', 'UY': 'Uruguay',
+  'TR': 'Turkey Turkiye', 'SA': 'Saudi Arabia', 'AE': 'United Arab Emirates UAE Dubai', 'IQ': 'Iraq', 'IR': 'Iran',
+  'IL': 'Israel', 'EG': 'Egypt', 'JO': 'Jordan', 'LB': 'Lebanon',
+  'ZA': 'South Africa', 'NG': 'Nigeria', 'KE': 'Kenya', 'GH': 'Ghana', 'TZ': 'Tanzania',
+  'MA': 'Morocco', 'TN': 'Tunisia', 'ET': 'Ethiopia', 'UG': 'Uganda', 'CM': 'Cameroon',
+  'SN': 'Senegal', 'ZW': 'Zimbabwe', 'MZ': 'Mozambique', 'MG': 'Madagascar',
+  'AU': 'Australia', 'NZ': 'New Zealand', 'FJ': 'Fiji', 'PG': 'Papua New Guinea',
+};

@@ -304,12 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
       await prefs.setInt('app_launch_count', n);
     }
     if (!mounted) return;
-    // 카드가 나오기 전에 이미 색을 바꾼 사람은 알고 있으니 안 보여줌
-    final shown = prefs.getBool('color_tip_shown') ?? false;
-    if (!shown && context.read<ThemeProvider>().primaryColor.value != 0xFF2589E8) {
-      await prefs.setBool('color_tip_done', true);
-      return;
-    }
+    // 색을 이미 바꾼 사람에게도 한 번은 보여줌 (✕ 누르면 끝)
     if (n >= 3) {
       await prefs.setBool('color_tip_shown', true); // 한 번 나온 뒤로는 ✕ 누를 때까지 계속
       if (mounted) setState(() => _showColorTip = true);

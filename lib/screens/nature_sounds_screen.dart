@@ -814,7 +814,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                                     color: _favoriteNames.contains(primary.name)
                                         ? const Color(0xFFE05A4F)
                                         : baseColor.withOpacity(0.3),
-                                    size: 22,
+                                    size: 18,
                                   ),
                                 ),
                               ),

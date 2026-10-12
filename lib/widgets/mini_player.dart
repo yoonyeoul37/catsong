@@ -18,6 +18,14 @@ import '../providers/music_provider.dart';
 class MiniPlayer extends StatelessWidget {
   const MiniPlayer({super.key});
 
+  /// 먹색 띠 위에서 어두운 포인트 색은 같은 색을 밝게 (밝은 색은 그대로)
+  static Color _liftOnDark(Color c) {
+    final l = c.computeLuminance();
+    if (l >= 0.18) return c;
+    final t = ((0.18 - l) / 0.18 * 0.55).clamp(0.0, 0.55);
+    return Color.lerp(c, Colors.white, t)!;
+  }
+
   @override
   Widget build(BuildContext context) {
     final playerProvider = context.watch<PlayerProvider>();
@@ -108,7 +116,7 @@ class MiniPlayer extends StatelessWidget {
                     child: LinearProgressIndicator(
                       value: playerProvider.progress,
                       backgroundColor: baseColor.withOpacity(0.12),
-                      valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                      valueColor: AlwaysStoppedAnimation<Color>(_liftOnDark(primaryColor)),
                     ),
                   ),
                 ),

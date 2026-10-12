@@ -325,8 +325,10 @@ class MiniPlayer extends StatelessWidget {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
     final p = context.read<PlayerProvider>();
     if (CastService.instance.isConnected) await CastService.instance.disconnect();
+    final resume = p.songResumer();
     await p.player.stop();
     p.clearNatureSoundState();
     p.clearCurrentSong();
+    p.dismissMediaNotification(resume: resume);
   }
 }

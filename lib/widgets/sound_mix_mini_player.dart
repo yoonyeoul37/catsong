@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/sound_mix_provider.dart';
+import '../providers/player_provider.dart';
 import '../providers/theme_provider.dart';
 import '../screens/sound_mix_screen.dart';
 
@@ -116,6 +117,9 @@ class SoundMixMiniPlayer extends StatelessWidget {
   /// 미니플레이어 닫기: 믹스 멈추고 닫기 (고른 소리·노래·음량은 그대로 기억)
   Future<void> _close(BuildContext context) async {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-    await context.read<SoundMixProvider>().closeSession();
+    final pp = context.read<PlayerProvider>();
+    final mix = context.read<SoundMixProvider>();
+    await mix.closeSession();
+    pp.dismissMediaNotification(resume: () => mix.playAll());
   }
 }

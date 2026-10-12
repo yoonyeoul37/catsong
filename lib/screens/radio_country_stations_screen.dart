@@ -131,8 +131,9 @@ class _RadioCountryStationsScreenState
     } else if (_mode == _ViewMode.region) {
       final Map<String, List<RadioStation>> grouped = {};
       for (final s in allStations) {
-        if (s.state == null || s.state!.trim().isEmpty) continue;
-        grouped.putIfAbsent(s.state!.trim(), () => []).add(s);
+        final st = _stateOf(s);
+        if (st.isEmpty) continue;
+        grouped.putIfAbsent(st, () => []).add(s);
       }
       final keys = grouped.keys.toList()..sort();
       if (keys.isEmpty) {
@@ -326,8 +327,17 @@ class _RadioCountryStationsScreenState
     return _langKo[k] ?? (k[0].toUpperCase() + k.substring(1));
   }
 
+  /// 방송국 지역 이름을 하나로 맞추기 (대소문자·띄어쓰기·미국 주 약자)
+  String _stateOf(RadioStation s) => RadioProvider.normState(s.state ?? '', widget.country.code);
+
   /// 칩마다 고를 항목 (이름, 방송 수) — 자료가 충분한 나라만
   List<(String, int)> _optionsFor(String chip, List<RadioStation> all, RadioProvider radio) {
+    // 지역: 서버가 알려준 이 나라 지역 전부 (방송 많은 순)
+    if (chip == 'region' && radio.countryStates.length >= 2) {
+      final l = radio.countryStates.entries.map((e) => (e.key, e.value)).toList()
+        ..sort((a, b) => b.$2.compareTo(a.$2));
+      return l.take(100).toList();
+    }
     final counts = <String, int>{};
     void add(String k) {
       if (k.isNotEmpty) counts[k] = (counts[k] ?? 0) + 1;
@@ -340,7 +350,7 @@ class _RadioCountryStationsScreenState
           add(g);
         }
       } else if (chip == 'region') {
-        final st = s.state?.trim() ?? '';
+        final st = _stateOf(s);
         if (st.isNotEmpty) {
           withInfo++;
           add(st);
@@ -353,16 +363,17 @@ class _RadioCountryStationsScreenState
     final list = counts.entries.where((e) => e.value >= min).map((e) => (e.key, e.value)).toList()
       ..sort((a, b) => b.$2.compareTo(a.$2));
     if (chip == 'genre' && list.length < 3) return const [];
-    if (chip == 'region' && (list.length < 2 || withInfo < all.length * 0.3)) return const [];
+    if (chip == 'region' && _chip != 'region' &&
+        (list.length < 2 || (withInfo < 20 && withInfo < all.length * 0.3))) return const [];
     if (chip == 'lang' && list.length < 2) return const [];
-    return list.take(chip == 'region' ? 15 : 10).toList();
+    return list.take(chip == 'region' ? 30 : 10).toList();
   }
 
   bool _matches(RadioStation s, RadioProvider radio) {
     final sub = _sub;
     if (_chip == 'pop' || sub == null) return true;
     if (_chip == 'genre') return _genresOf(s).contains(sub);
-    if (_chip == 'region') return (s.state?.trim() ?? '') == sub;
+    if (_chip == 'region') return _stateOf(s) == sub;
     return _langName(radio.languageOf(s.stationUuid)) == sub;
   }
 
@@ -909,8 +920,16 @@ class _RadioCountryStationsScreenState
       stations = stations.where((s) => radioProvider.trendOf(s.stationUuid) > 0).toList()
         ..sort((a, b) => radioProvider.trendOf(b.stationUuid).compareTo(radioProvider.trendOf(a.stationUuid)));
     }
+    // 지역을 고르면 그 지역 방송을 서버에서 따로 불러오기
+    final regionSub = (_chip == 'region' && radioProvider.countryStates.isNotEmpty) ? _sub : null;
+    if (regionSub != null && !radioProvider.stateTried(regionSub)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) context.read<RadioProvider>().fetchStateStations(regionSub);
+      });
+    }
     // 찾는 방송이 적게 보이면 다음 방송을 자동으로 더 불러오기 (2000개까지)
     if ((_query.isNotEmpty || _chip != 'pop') &&
+        regionSub == null &&
         stations.length < 20 &&
         radioProvider.countryHasMore &&
         !radioProvider.isLoadingMoreCountry &&
@@ -919,7 +938,8 @@ class _RadioCountryStationsScreenState
         if (mounted) context.read<RadioProvider>().fetchMoreCountryStations();
       });
     }
-    final isLoading = radioProvider.isLoadingCountryStations;
+    final isLoading = radioProvider.isLoadingCountryStations ||
+        (stations.isEmpty && regionSub != null && radioProvider.isStateLoading(regionSub));
     final current = radioProvider.currentStation;
     if (!isLoading && allStations.isNotEmpty) _restoreChip(allStations, radioProvider);
     final again = (_chip == 'pop' && !_isTrend && _query.isEmpty)

@@ -169,7 +169,9 @@ class NatureMiniPlayer extends StatelessWidget {
   Future<void> _close(BuildContext context) async {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
     final p = context.read<PlayerProvider>();
+    final resume = p.natureResumer();
     await p.player.stop();
     p.clearNatureSoundState();
+    p.dismissMediaNotification(resume: resume);
   }
 }

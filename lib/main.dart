@@ -88,6 +88,7 @@ void main() async {
       androidNotificationIcon: 'mipmap/ic_launcher',
       notificationColor: null,
       androidNotificationClickStartsActivity: true,
+      androidResumeOnClick: false, // 끝나면 알림을 남기지 않고 지움
       
       preloadArtwork: false,
     ),

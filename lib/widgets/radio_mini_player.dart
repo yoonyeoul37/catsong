@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/radio_provider.dart';
+import '../providers/player_provider.dart';
 import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import '../screens/radio_player_screen.dart';
@@ -278,8 +279,12 @@ class RadioMiniPlayer extends StatelessWidget {
   /// 미니플레이어 닫기: 라디오 완전히 멈추고 비우기 (TV로 보내는 중이면 TV도 끊기)
   Future<void> _close(BuildContext context) async {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    final pp = context.read<PlayerProvider>();
+    final radio = context.read<RadioProvider>();
     if (CastService.instance.isConnected) await CastService.instance.disconnect();
-    await context.read<RadioProvider>().stopRadioAndClear();
+    final st = radio.currentStation;
+    await radio.stopRadioAndClear();
+    pp.dismissMediaNotification(resume: st == null ? null : () => radio.playStation(st));
   }
 }
 class _MiniEqualizerBars extends StatefulWidget {

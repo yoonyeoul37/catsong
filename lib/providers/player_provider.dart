@@ -166,6 +166,33 @@ class PlayerProvider extends ChangeNotifier {
     _audioHandler = handler;
   }
 
+  /// 미니플레이어 ×로 닫을 때: 알림을 끝내고, 알림창 카드의 재생 버튼으로 다시 틀 수 있게
+  void dismissMediaNotification({Future<void> Function()? resume}) {
+    final h = _audioHandler;
+    if (h is SimpleAudioHandler) {
+      h.dismiss();
+      h.onResumeLast = resume;
+    }
+  }
+
+  /// 지금 곡을 나중에 다시 틀기 (닫기 전에 불러 둠)
+  Future<void> Function()? songResumer() {
+    final i = _currentIndex;
+    if (i < 0 || i >= _queue.length) return null;
+    final q = List<Song>.from(_queue);
+    return () => playFromList(q, i);
+  }
+
+  /// 지금 자연소리를 나중에 다시 틀기 (닫기 전에 불러 둠)
+  Future<void> Function()? natureResumer() {
+    final name = _natureSoundName;
+    if (name == null) return null;
+    final i = natureSoundOrder.indexWhere((s) => s['name'] == name);
+    if (i < 0) return null;
+    final path = natureSoundOrder[i]['assetPath']!;
+    return () => playNatureSound(path, name);
+  }
+
   VoidCallback? _onStopMixMusic;
   void setOnStopMixMusic(VoidCallback cb) {
     _onStopMixMusic = cb;
@@ -768,6 +795,9 @@ class SimpleAudioHandler extends BaseAudioHandler {
   VoidCallback? onNatureNext;
   VoidCallback? onNaturePrevious;
 
+  /// ×로 닫은 뒤 알림창(미디어 출력) 카드의 재생 버튼: 닫았던 걸 다시 틀기
+  Future<void> Function()? onResumeLast;
+
   SimpleAudioHandler(this._provider) : _player = _provider.player {
     _player.playbackEventStream.listen((event) {
       if (!_radioMode) {
@@ -815,6 +845,7 @@ class SimpleAudioHandler extends BaseAudioHandler {
     required String title,
     required String subtitle,
   }) {
+    onResumeLast = null;
     mediaItem.add(MediaItem(
       id: 'sound_mix',
       title: title,
@@ -842,6 +873,7 @@ class SimpleAudioHandler extends BaseAudioHandler {
     required String artist,
     String? url,
   }) {
+    onResumeLast = null;
     if (_player.processingState == ProcessingState.idle) {
       _radioMode = true;
     }
@@ -912,6 +944,10 @@ class SimpleAudioHandler extends BaseAudioHandler {
       if (_player.processingState != ProcessingState.idle) {
         _radioMode = false;
         await _player.play();
+      } else if (onResumeLast != null) {
+        final f = onResumeLast!;
+        onResumeLast = null;
+        await f();
       }
     }
   }
@@ -962,7 +998,22 @@ class SimpleAudioHandler extends BaseAudioHandler {
     }
   }
 
+  /// 완전히 끝: '정지(idle)'로 알려야 알림창 미디어 출력이 사라짐
+  /// (그냥 멈추면 '일시정지'로 남아서, 눌러도 안 되는 알림이 남았음)
+  void dismiss() {
+    _radioMode = false;
+    _mixMode = false;
+    _natureMode = false;
+    if (playbackState.value.processingState != AudioProcessingState.idle) {
+      playbackState.add(playbackState.value.copyWith(
+        processingState: AudioProcessingState.idle,
+        playing: false,
+      ));
+    }
+  }
+
   Future<void> updateMediaItem(MediaItem item) async {
+    onResumeLast = null;
     mediaItem.add(item);
   }
 }

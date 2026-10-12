@@ -892,7 +892,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Transform.translate(
-                        offset: const Offset(0, -4),
+                        offset: const Offset(2, -8),
                         child: Text(
                           'Paransori',
                           style: TextStyle(

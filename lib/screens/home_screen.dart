@@ -807,6 +807,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final pointColor = context.watch<ThemeProvider>().primaryColor;
     final isBluePoint = pointColor.value == 0xFF2589E8;
     final logoBarColor = isBluePoint ? const Color(0xFF2F7DE8) : pointColor;
+    // 로고 글자: 순검정·순흰색 대신 먹색 / 크림색 (화면 톤과 맞게)
+    final logoInk = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     return AppBar(
       backgroundColor: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
       elevation: 0,
@@ -820,54 +822,76 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             isKorean
-                ? Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // "파란"만 숨쉬듯 은은하게
-                          if (isBluePoint)
-                            _LogoBreathe(
-                              child: Text('파란',
-                                  textScaler: TextScaler.noScaling, // 로고는 텍스트 크기 설정과 상관없이 고정
-                                  style: GoogleFonts.doHyeon(
-                                      color: const Color(0xFF2F7DE8),
-                                      fontSize: 22,
-                                      letterSpacing: -0.5)),
-                            )
-                          else
-                            _LogoBreathe(
-                              base: baseColor,
-                              glow: pointColor,
-                              child: Text('파란',
-                                  textScaler: TextScaler.noScaling,
-                                  style: GoogleFonts.doHyeon(
-                                      color: baseColor,
-                                      fontSize: 22,
-                                      letterSpacing: -0.5)),
+                // 한국어: 위 '파란소리 + 소리 막대', 아래 Paransori를 같은 폭으로 늘려 맞춤
+                ? Padding(
+                    // 로고 전체를 살짝 아래로 (오른쪽 아이콘들과 높이 맞춤)
+                    padding: const EdgeInsets.only(top: 4),
+                    child: IntrinsicWidth(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // "파란"만 숨쉬듯 은은하게
+                            if (isBluePoint)
+                              _LogoBreathe(
+                                child: Text('파란',
+                                    textScaler: TextScaler.noScaling, // 로고는 텍스트 크기 설정과 상관없이 고정
+                                    style: GoogleFonts.doHyeon(
+                                        color: const Color(0xFF2F7DE8),
+                                        fontSize: 22,
+                                        letterSpacing: -0.5)),
+                              )
+                            else
+                              _LogoBreathe(
+                                base: logoInk,
+                                glow: pointColor,
+                                child: Text('파란',
+                                    textScaler: TextScaler.noScaling,
+                                    style: GoogleFonts.doHyeon(
+                                        color: logoInk,
+                                        fontSize: 22,
+                                        letterSpacing: -0.5)),
+                              ),
+                            Text('소리',
+                                textScaler: TextScaler.noScaling,
+                                style: GoogleFonts.doHyeon(
+                                    color: logoInk,
+                                    fontSize: 22,
+                                    letterSpacing: -0.5)),
+                            const SizedBox(width: 6),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8, bottom: 4),
+                              child: _LogoEqBars(color: logoBarColor),
                             ),
-                          Text('소리',
-                              textScaler: TextScaler.noScaling,
-                              style: GoogleFonts.doHyeon(
-                                  color: baseColor,
-                                  fontSize: 22,
-                                  letterSpacing: -0.5)),
-                        ],
-                      ),
-                      Transform.translate(
-                        offset: const Offset(0, -4),
-                        child: Text(
-                          'Paransori',
-                          style: GoogleFonts.quicksand(
-                              color: baseColor.withOpacity(0.55),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 0.6),
+                          ],
                         ),
-                      ),
-                    ],
+                        // Paransori: 글자를 고르게 벌려서 '파' 왼쪽 끝 ~ 막대 오른쪽 끝까지
+                        Transform.translate(
+                          offset: const Offset(0, -6),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 1),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                for (final ch in 'Paransori'.split(''))
+                                  Text(ch,
+                                      textScaler: TextScaler.noScaling,
+                                      style: GoogleFonts.quicksand(
+                                          color: logoInk.withOpacity(0.75),
+                                          fontSize: 12,
+                                          height: 1.0,
+                                          fontWeight: FontWeight.w600)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   )
                 : Column(
                     // 해외: Paran(파란색) / 밑에 Sori (가운데 정렬)
@@ -885,29 +909,31 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       else
                         _LogoBreathe(
-                          base: baseColor,
+                          base: logoInk,
                           glow: pointColor,
                           child: Text('Paran',
                               style: GoogleFonts.doHyeon(
-                                  color: baseColor,
+                                  color: logoInk,
                                   fontSize: 20,
                                   height: 1.0,
                                   letterSpacing: -0.3)),
                         ),
                       Text('Sori',
                           style: GoogleFonts.doHyeon(
-                              color: baseColor,
+                              color: logoInk,
                               fontSize: 20,
                               height: 1.0,
                               letterSpacing: -0.3)),
                     ],
                   ),
-            const SizedBox(width: 6),
-            Padding(
-              // 해외는 아래 Sori 옆에 붙게 (파란 Paran과 안 겹치게)
-              padding: EdgeInsets.only(top: isKorean ? 8 : 23, bottom: 4),
-              child: _LogoEqBars(color: logoBarColor),
-            ),
+            if (!isKorean) ...[
+              const SizedBox(width: 6),
+              Padding(
+                // 해외는 아래 Sori 옆에 붙게 (파란 Paran과 안 겹치게)
+                padding: const EdgeInsets.only(top: 23, bottom: 4),
+                child: _LogoEqBars(color: logoBarColor),
+              ),
+            ],
           ],
         );
       }),
@@ -2389,10 +2415,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: accent, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
                 const SizedBox(height: 1),
-                Text(title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w600)),
+                if (title == '오늘은 이 곡 어때요')
+                  // 큰 물음표가 통통 튀기
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Flexible(
+                        child: Text(title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w600)),
+                      ),
+                      const SizedBox(width: 2),
+                      _BounceQ(color: accent),
+                    ],
+                  )
+                else
+                  Text(title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 3),
                 subLine,
               ],
@@ -3326,4 +3368,59 @@ Widget _recentTile(bool isDarkMode, Color pastel, IconData icon) {
           : const Color(0xFF17140F).withOpacity(0.55),
     ),
   );
+}
+
+/// 통통 튀는 큰 물음표: 두 번 톡톡 튀고 잠깐 쉬기를 반복
+class _BounceQ extends StatefulWidget {
+  final Color color;
+  const _BounceQ({required this.color});
+
+  @override
+  State<_BounceQ> createState() => _BounceQState();
+}
+
+class _BounceQState extends State<_BounceQ> with SingleTickerProviderStateMixin {
+  late final AnimationController _c =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 2400))..repeat();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  // 0~1 시간 → 위로 뜨는 높이(0~1)
+  double _hop(double t) {
+    if (t < 0.22) return math.sin(t / 0.22 * math.pi);              // 첫 번째 큰 톡
+    if (t < 0.38) return 0.45 * math.sin((t - 0.22) / 0.16 * math.pi); // 두 번째 작은 톡
+    return 0;                                                       // 쉬기
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _c,
+      builder: (_, __) {
+        final h = _hop(_c.value);
+        // 바닥에 닿는 순간 살짝 납작하게
+        final land = (h < 0.08 && _c.value < 0.4) ? 0.08 - h : 0.0;
+        return Transform.translate(
+          offset: Offset(0, -7 * h),
+          child: Transform.scale(
+            scaleX: 1 + land * 1.6,
+            scaleY: 1 - land * 1.6,
+            alignment: Alignment.bottomCenter,
+            child: Text('?',
+                textScaler: TextScaler.noScaling,
+                style: TextStyle(
+                  color: widget.color,
+                  fontSize: 19,
+                  height: 1.0,
+                  fontWeight: FontWeight.w900,
+                )),
+          ),
+        );
+      },
+    );
+  }
 }

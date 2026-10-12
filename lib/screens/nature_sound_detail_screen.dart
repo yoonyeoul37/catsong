@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../utils/paran_photo.dart';
 import '../utils/greeting_images.dart';
+import '../widgets/farewell_title.dart';
 import '../providers/player_provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/sound_mix_provider.dart';
@@ -553,7 +554,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       default:
         farewellAsset = 'assets/farewell_en.mp3';
     }
-    if (context.read<ThemeProvider>().voiceGreetingEnabled) {
+    if (langCode == 'ko' && context.read<ThemeProvider>().voiceGreetingEnabled) { // 목소리는 한국어만
       final farewellPlayer = AudioPlayer();
       farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
     }
@@ -577,7 +578,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
               height: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: CachedNetworkImageProvider(farewellImageUrl(context)),
+                  image: farewellImage(context),
                   onError: (_, __) {},
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
@@ -587,7 +588,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                 ),
               ),
               alignment: Alignment.center,
-              child: const SizedBox.shrink(),
+              child: const FarewellTitle(), // Paransori + 소리 막대 + 한 줄 인사
             ),
           ),
         ),

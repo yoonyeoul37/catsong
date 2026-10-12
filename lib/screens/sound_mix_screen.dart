@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../utils/greeting_images.dart';
+import '../widgets/farewell_title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
@@ -781,7 +782,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
       default:
         farewellAsset = 'assets/farewell_en.mp3';
     }
-    if (context.read<ThemeProvider>().voiceGreetingEnabled) {
+    if (langCode == 'ko' && context.read<ThemeProvider>().voiceGreetingEnabled) { // 목소리는 한국어만
       final farewellPlayer = AudioPlayer();
       farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
     }
@@ -804,7 +805,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
               height: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: CachedNetworkImageProvider(farewellImageUrl(context)),
+                  image: farewellImage(context),
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(darkValue),
@@ -813,7 +814,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                 ),
               ),
               alignment: Alignment.center,
-              child: const SizedBox.shrink(),
+              child: const FarewellTitle(), // Paransori + 소리 막대 + 한 줄 인사
             ),
           ),
         ),

@@ -6,6 +6,7 @@ import '../utils/point_color.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../utils/greeting_images.dart';
+import '../widgets/farewell_title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../models/radio_station.dart';
@@ -217,7 +218,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         smallText = 'Did you enjoy your time\nwith Paransori?\n\nCome back anytime — we\'ll\nwelcome you with great sounds again.\nGoodbye, and see you soon!';
         farewellAsset = 'assets/farewell_en.mp3';
     }
-    if (context.read<ThemeProvider>().voiceGreetingEnabled) {
+    if (langCode == 'ko' && context.read<ThemeProvider>().voiceGreetingEnabled) { // 목소리는 한국어만
       final farewellPlayer = AudioPlayer();
       farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
     }
@@ -239,7 +240,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
               height: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: CachedNetworkImageProvider(farewellImageUrl(context)),
+                  image: farewellImage(context),
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(darkValue),
@@ -248,7 +249,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                 ),
               ),
               alignment: Alignment.center,
-              child: const SizedBox.shrink(),
+              child: const FarewellTitle(), // Paransori + 소리 막대 + 한 줄 인사
             ),
           ),
         ),

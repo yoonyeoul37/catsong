@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:just_audio/just_audio.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../utils/greeting_images.dart';
+import '../widgets/farewell_title.dart';
 import 'package:audio_service/audio_service.dart';
 import '../main.dart' show globalAudioHandler, SimpleAudioHandler;
 import 'package:flutter/cupertino.dart';
@@ -815,7 +816,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: CachedNetworkImageProvider(farewellImageUrl(context)),
+                  image: farewellImage(context),
                   onError: (_, __) {},
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
@@ -825,7 +826,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               alignment: Alignment.center,
-              child: const SizedBox.shrink(),
+              child: const FarewellTitle(), // Paransori + 소리 막대 + 한 줄 인사
             ),
           ),
         ),

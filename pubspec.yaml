@@ -81,7 +81,7 @@ flutter:
 
 
 
-    - assets/no_album.svg
+
     - assets/no_album2.jpg
     - assets/no_album3.jpg
     - assets/no_album4.jpg
@@ -94,15 +94,7 @@ flutter:
     - assets/welcome_ko_v4.mp3
 
     - assets/music_night_bg.png
-    - assets/intro_photo_ko.png
-    - assets/intro_photo_en.png
-    - assets/intro_photo_ja.png
-    - assets/intro_photo_zh.png
 
-    - assets/intro_photo_ko.png
-    - assets/intro_photo_en.png
-    - assets/intro_photo_ja.png
-    - assets/intro_photo_zh.png
 
 
 
@@ -110,9 +102,7 @@ flutter:
     - assets/radio_bg.jpg
     - assets/nature_bg.jpg
     - assets/sleep_bg.jpg
-    - assets/sound_rain.jpg
-    - assets/sound_wave.jpg
-    - assets/sound_fire.jpg
+
     - assets/exit_banner.jpg
     - assets/exit_banner_night.jpg
     - assets/promo_thumb.webp
@@ -129,6 +119,22 @@ flutter:
     - assets/radio_hero_day.jpg
     - assets/radio_hero_evening.jpg
     - assets/radio_hero_night.jpg
+    - assets/hello_music.jpg
+    - assets/hello_radio.jpg
+    - assets/hello_nature.jpg
+    - assets/hello_sleep.jpg
+    - assets/bye_music.jpg
+    - assets/bye_radio.jpg
+    - assets/bye_nature.jpg
+    - assets/bye_sleep.jpg
+    - assets/hello_music_w.jpg
+    - assets/hello_radio_w.jpg
+    - assets/hello_nature_w.jpg
+    - assets/hello_sleep_w.jpg
+    - assets/bye_music_w.jpg
+    - assets/bye_radio_w.jpg
+    - assets/bye_nature_w.jpg
+    - assets/bye_sleep_w.jpg
     - assets/radio_media_morning.jpg
     - assets/radio_media_day.jpg
     - assets/radio_media_evening.jpg

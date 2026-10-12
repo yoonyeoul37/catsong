@@ -16,6 +16,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../utils/greeting_images.dart';
+import '../widgets/farewell_title.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/song.dart';
@@ -3394,7 +3395,7 @@ class _PlayerScreenState extends State<PlayerScreen>
         farewellAsset = 'assets/farewell_en.mp3';
     }
     context.read<PlayerProvider>().player.setVolume(0.12);
-    if (context.read<ThemeProvider>().voiceGreetingEnabled) {
+    if (langCode == 'ko' && context.read<ThemeProvider>().voiceGreetingEnabled) { // 목소리는 한국어만
       final farewellPlayer = AudioPlayer();
       farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
     }
@@ -3416,7 +3417,7 @@ class _PlayerScreenState extends State<PlayerScreen>
               height: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: CachedNetworkImageProvider(farewellImageUrl(context)),
+                  image: farewellImage(context),
                   onError: (_, __) {},
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
@@ -3426,7 +3427,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 ),
               ),
               alignment: Alignment.center,
-              child: const SizedBox.shrink(),
+              child: const FarewellTitle(), // Paransori + 소리 막대 + 한 줄 인사
             ),
           ),
         ),

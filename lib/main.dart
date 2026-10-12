@@ -170,6 +170,7 @@ void main() async {
     ..setOnStopMusic(() async => await playerProvider.player.stop());
 
   await AlarmService.init(); // 아침 알람 (알람 때문에 켜졌는지도 확인)
+  await initGreetingScene(); // 첫인사·끝인사 오늘 장면 (지난번과 다르게)
 
   runApp(MyApp(
     playerProvider: playerProvider,
@@ -388,7 +389,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
       ]) {
         precacheImage(ResizeImage(AssetImage(path), width: 400), context, onError: (_, __) {});
       }
-      precacheImage(CachedNetworkImageProvider(farewellImageUrl(context)), context,
+      precacheImage(farewellImage(context), context,
           onError: (_, __) {}); // 미리 받기 실패해도 조용히
       // 잠시 쉬어가요 라디오 사진(썸네일 10장)을 미리 받아두기
       for (var i = 1; i <= 10; i++) {
@@ -725,7 +726,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
               if (mounted) setState(() => _showIntro = false);
             },
             // 새 사진(글자 없음)은 한국어만 → 'Paransori'를 코드로 얹기
-            showTitle: Localizations.localeOf(context).languageCode == 'ko',
+            showTitle: greetingHasTitle(context),
           ),
         ),
       );
@@ -824,7 +825,7 @@ class _IntroViewState extends State<_IntroView> with TickerProviderStateMixin {
               Positioned(
                 left: 0,
                 right: 0,
-                top: h * 0.22, // 파란 하늘 자리
+                top: h * 0.13, // 사람·소품과 안 겹치게 위쪽 빈 곳
                 child: Column(
                   children: [
                     Opacity(
@@ -836,13 +837,13 @@ class _IntroViewState extends State<_IntroView> with TickerProviderStateMixin {
                           textAlign: TextAlign.center,
                           textScaler: TextScaler.noScaling, // 글자 크기 설정과 상관없이 고정
                           style: GoogleFonts.quicksand( // 홈 로고와 같은 글꼴
-                            color: Colors.white,
+                            color: const Color(0xFF17140F),
                             fontSize: 34,
                             fontWeight: FontWeight.w500,
                             letterSpacing: 1.5 + 3.5 * (1 - t),
                             shadows: [
                               Shadow(
-                                color: Colors.black.withOpacity(0.18),
+                                color: Colors.white.withOpacity(0.55),
                                 blurRadius: 12,
                                 offset: const Offset(0, 2),
                               ),
@@ -870,7 +871,7 @@ class _IntroViewState extends State<_IntroView> with TickerProviderStateMixin {
                                 width: 3,
                                 height: bh.clamp(2.0, 40.0),
                                 decoration: BoxDecoration(
-                                  color: _barColors[i],
+                                  color: Color.lerp(_barColors[i], const Color(0xFF17140F), 0.45),
                                   borderRadius: BorderRadius.circular(3),
                                   boxShadow: [
                                     BoxShadow(

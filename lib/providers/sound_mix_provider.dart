@@ -252,7 +252,7 @@ class SoundMixProvider extends ChangeNotifier {
     final title = currentSong?.titleDisplay ?? '나만의 소리 믹스';
     final subtitle = activeNature.isNotEmpty ? activeNature.join(' · ') : '파란소리 믹스';
 
-    handler.setMixMediaItem(title: title, subtitle: subtitle);
+    handler.setMixMediaItem(title: title, subtitle: subtitle, song: currentSong);
     handler.setMixPlaybackState(playing: playing);
   }
 

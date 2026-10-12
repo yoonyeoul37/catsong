@@ -34,6 +34,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
   _ViewMode _mode = _ViewMode.all;
   bool _diceNew = false; // 주사위를 한 번도 안 눌렀으면 NEW
   bool _diceIntro = false; // 처음 한 번만 가운데 큰 카드
+  String? _diceChoice; // 주사위로 나온 방송 (카드에 그대로 보여줌)
   bool _diceTip = false; // 주사위 옆 말풍선 "던져보세요!"
   double _diceWiggle = 0; // 주사위 데굴 (돌린 정도)
 
@@ -192,7 +193,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
       if (count >= 3) _diceNew = false;
     });
     if (!mounted) return;
-    showRadioDice(context, _dicePool(), onOpen: (st) {
+    await showRadioDice(context, _dicePool(), onOpen: (st) {
       // 전체 목록 순서 그대로 넘겨서 상세 화면에서 이전/다음도 되게
       final list = koreanStations.map(_toRadioStation).toList();
       final i = list.indexWhere((s) => s.name == st.name);
@@ -210,6 +211,12 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         ),
       );
     });
+    // 판이 닫히면: 주사위로 나와서 듣고 있는 방송을 카드에 그대로
+    if (!mounted) return;
+    final cur = context.read<RadioProvider>().currentStation?.name;
+    if (cur != null && koreanStations.any((k) => k.name == cur)) {
+      setState(() => _diceChoice = cur);
+    }
   }
 
   Future<void> _closeDiceIntro() async {
@@ -253,7 +260,8 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
   }
 
   Widget _nowNiceCard(BuildContext context, RadioProvider radio, List<RadioStation> list) {
-    final i = _pickNiceIndex(radio);
+    final diceI = _diceChoice == null ? -1 : koreanStations.indexWhere((k) => k.name == _diceChoice);
+    final i = diceI >= 0 ? diceI : _pickNiceIndex(radio);
     final ks = koreanStations[i];
     final prog = radio.nowPlayingFor(ks.name) ?? (radio.currentProgramFor(ks.name)?['title'] as String?) ?? '';
     final point = context.watch<ThemeProvider>().primaryColor;
@@ -326,7 +334,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('지금 듣기 좋은',
+                            Text(diceI >= 0 ? '주사위가 고른 방송' : '지금 듣기 좋은',
                                 textScaler: TextScaler.noScaling,
                                 style: TextStyle(color: accent, fontSize: 10.5, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
                             const SizedBox(height: 1),
@@ -1794,18 +1802,19 @@ String _heroImageNow() {
 /// 방송사 파스텔 (홈 '최근에 들었어요'와 같은 색)
 Color _brandPastel(String b) {
   switch (b) {
+    // 파스텔을 바탕(베이지)과 반쯤 섞어 은은하게
     case 'KBS':
-      return const Color(0xFFD5E1EC); // 하늘
+      return const Color(0xFFE1E4E3); // 하늘
     case 'MBC':
-      return const Color(0xFFF3D9C9); // 복숭아
+      return const Color(0xFFF0E0D2); // 복숭아
     case 'SBS':
-      return const Color(0xFFDCE5D2); // 연두
+      return const Color(0xFFE4E6D6); // 연두
     case 'CBS':
-      return const Color(0xFFDDD6E8); // 라벤더
+      return const Color(0xFFE5DEE1); // 라벤더
     case 'EBS':
-      return const Color(0xFFF0E3C2); // 노랑
+      return const Color(0xFFEEE5CE); // 노랑
     default:
-      return const Color(0xFFE6DFD2); // 그 밖: 연한 베이지
+      return const Color(0xFFEAE3D6); // 그 밖: 연한 베이지
   }
 }
 

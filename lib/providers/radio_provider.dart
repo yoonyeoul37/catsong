@@ -16,6 +16,8 @@ import '../models/radio_station.dart';
 import '../models/radio_country.dart';
 import 'player_provider.dart' show SimpleAudioHandler, PlayerProvider;
 import '../services/schedule_service.dart';
+import '../l10n/locale_holder.dart';
+import '../screens/radio_korea_screen2.dart' show koreanStationDesc;
 
 enum RadioPlayerState { idle, loading, playing, paused, error }
 
@@ -248,11 +250,25 @@ class RadioProvider extends ChangeNotifier {
     return null;
   }
 
+  /// 미디어 출력 둘째 줄 (편성표 없을 때): 한국 방송은 목록 설명, 해외는 나라 이름 (앱 언어로)
+  String _mediaSubtitle(RadioStation station) {
+    final code = (station.countryCode ?? '').toUpperCase();
+    final isKo = AppLocale.current?.localeName.startsWith('ko') ?? false;
+    if (code == 'KR' && isKo) {
+      final d = koreanStationDesc(station.name);
+      if (d != null) return d;
+    }
+    for (final c in RadioCountry.supported) {
+      if (c.code == code) return c.displayName;
+    }
+    return station.country ?? 'Radio';
+  }
+
   void _startForeground(RadioStation station, String url) {
     try {
       _simpleHandler?.setRadioMediaItem(
         title: station.name,
-        artist: station.country ?? 'Radio',
+        artist: _mediaSubtitle(station),
         url: url,
       );
       _simpleHandler?.setRadioPlaybackState(playing: true);

@@ -721,6 +721,9 @@ class RadioProvider extends ChangeNotifier {
         final added = <RadioStation>[];
         for (final j in data) {
           final m = j as Map<String, dynamic>;
+          if (_countryApiName == null && (m['country'] ?? '').toString().trim().isNotEmpty) {
+            _countryApiName = m['country'].toString().trim();
+          }
           final s = RadioStation.fromJson(m);
           if (s.streamUrl.isEmpty) continue;
           final key = _nameKey(s.name);
@@ -746,6 +749,11 @@ class RadioProvider extends ChangeNotifier {
       _countryCode = countryCode;
       _countryStations = [];
       _countryNameKeys.clear();
+      _countryApiName = null;
+      _countryStates = {};
+      _stateRawNames.clear();
+      _stateTried.clear();
+      _loadingState = null;
       _countryOffset = 0;
       _countryHasMore = false;
       _isLoadingMoreCountry = false;
@@ -765,9 +773,173 @@ class RadioProvider extends ChangeNotifier {
     if (got > 0) {
       _countryOffset = got;
       _countryHasMore = got >= limit;
+      _fetchCountryStates(countryCode);
     }
     _countryStationCounts.putIfAbsent(countryCode, () => _countryStations.length);
     _isLoadingCountryStations = false;
+    notifyListeners();
+  }
+
+  // ── 지역(주): 서버에 이 나라 지역 목록과 방송 수를 물어봄 ──
+  String? _countryApiName; // 서버가 쓰는 나라 이름 (예: The United States Of America)
+  Map<String, int> _countryStates = {}; // 맞춘 지역 이름 → 방송 수
+  final Map<String, Set<String>> _stateRawNames = {}; // 맞춘 이름 → 서버 이름들 (CA, California)
+  final Set<String> _stateTried = {}; // 이미 불러온 지역
+  String? _loadingState;
+  static List<dynamic>? _allStatesCache;
+  Map<String, int> get countryStates => _countryStates;
+  bool stateTried(String state) => _stateTried.contains(state);
+  bool isStateLoading(String state) => _loadingState == state;
+
+  // 미국 주 약자 → 이름 (CA, California 를 한 지역으로 묶기)
+  static const Map<String, String> _usStates = {
+    'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+    'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+    'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
+    'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+    'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
+    'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+    'NM': 'New Mexico', 'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+    'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+    'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+    'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming',
+    'DC': 'District of Columbia',
+  };
+
+  /// 지역 이름을 하나로 맞추기 (대소문자·띄어쓰기·미국 주 약자)
+  static String normState(String raw, String countryCode) {
+    var st = raw.trim().replaceAll(RegExp(r'\s+'), ' ');
+    if (st.isEmpty) return '';
+    if (countryCode.toUpperCase() == 'US') {
+      final full = _usStates[st.toUpperCase()];
+      if (full != null) return full;
+    }
+    // 전부 대문자이거나 전부 소문자면 첫 글자만 대문자로 (CALIFORNIA, california → California)
+    if (st.length > 3 && (st == st.toUpperCase() || st == st.toLowerCase())) {
+      st = st.split(' ').map((w) => w.isEmpty ? w : w[0].toUpperCase() + w.substring(1).toLowerCase()).join(' ');
+    }
+    return st;
+  }
+
+  Map<String, int> _statesFrom(List<dynamic> items, String countryCode, String name) {
+    final counts = <String, int>{};
+    _stateRawNames.clear();
+    for (final it in items) {
+      if (it is! Map) continue;
+      if ((it['country'] ?? '').toString().toLowerCase() != name.toLowerCase()) continue;
+      final raw = (it['name'] ?? '').toString();
+      final key = normState(raw, countryCode);
+      if (key.isEmpty) continue;
+      final c = it['stationcount'] is num ? (it['stationcount'] as num).toInt() : 0;
+      if (c <= 0) continue;
+      counts[key] = (counts[key] ?? 0) + c;
+      _stateRawNames.putIfAbsent(key, () => <String>{}).add(raw);
+    }
+    return counts;
+  }
+
+  Future<void> _fetchCountryStates(String countryCode) async {
+    final name = _countryApiName;
+    if (name == null || name.isEmpty) return;
+    List<String> servers;
+    try {
+      servers = await _getApiServers();
+    } catch (e) {
+      return;
+    }
+    var counts = <String, int>{};
+    // 먼저 이 나라 지역만
+    for (final server in servers) {
+      try {
+        final uri = Uri.https(server, '/json/states/$name/', {'hidebroken': 'true'});
+        final r = await http.get(uri, headers: _apiHeaders).timeout(const Duration(seconds: 15));
+        if (r.statusCode != 200) continue;
+        final d = json.decode(r.body);
+        if (d is List) counts = _statesFrom(d, countryCode, name);
+        break;
+      } catch (e) {
+        debugPrint('지역 목록 오류($server): $e');
+      }
+    }
+    // 안 되면 전체 지역 목록에서 이 나라 것만 (한 번 받아서 계속 씀)
+    if (counts.isEmpty) {
+      if (_allStatesCache == null) {
+        for (final server in servers) {
+          try {
+            final uri = Uri.https(server, '/json/states', {'hidebroken': 'true'});
+            final r = await http.get(uri, headers: _apiHeaders).timeout(const Duration(seconds: 25));
+            if (r.statusCode != 200) continue;
+            final d = json.decode(r.body);
+            if (d is List) _allStatesCache = d;
+            break;
+          } catch (e) {
+            debugPrint('전체 지역 목록 오류($server): $e');
+          }
+        }
+      }
+      if (_allStatesCache != null) counts = _statesFrom(_allStatesCache!, countryCode, name);
+    }
+    if (_countryCode != countryCode) return;
+    _countryStates = counts;
+    notifyListeners();
+  }
+
+  /// 지역을 고르면 그 지역 방송을 서버에서 따로 불러와 목록에 붙이기
+  Future<void> fetchStateStations(String state) async {
+    final code = _countryCode;
+    if (code == null || _stateTried.contains(state) || _loadingState != null) return;
+    _stateTried.add(state);
+    _loadingState = state;
+    notifyListeners();
+    final raws = _stateRawNames[state] ?? {state};
+    final added = <RadioStation>[];
+    try {
+      final servers = await _getApiServers();
+      for (final raw in raws.take(5)) {
+        for (final server in servers) {
+          try {
+            final uri = Uri.https(server, '/json/stations/search', {
+              'countrycode': code,
+              'state': raw,
+              'order': 'clickcount',
+              'reverse': 'true',
+              'limit': '300',
+              'hidebroken': 'true',
+            });
+            final r = await http.get(uri, headers: _apiHeaders).timeout(const Duration(seconds: 15));
+            if (r.statusCode != 200) continue;
+            final List<dynamic> data = json.decode(r.body);
+            if (_countryCode != code) break;
+            for (final j in data) {
+              final m = j as Map<String, dynamic>;
+              final codec = (m['codec'] ?? '').toString().toUpperCase();
+              if (codec.isNotEmpty && !const ['MP3', 'AAC', 'AAC+', 'OGG'].contains(codec)) continue;
+              if (m['lastcheckok'] == 0) continue;
+              final s = RadioStation.fromJson(m);
+              if (s.streamUrl.isEmpty) continue;
+              if (normState(s.state ?? '', code) != state) continue;
+              final key = _nameKey(s.name);
+              if (key.isEmpty || !_countryNameKeys.add(key)) continue;
+              final lang = (m['language'] ?? '').toString().split(',').first.trim();
+              if (lang.isNotEmpty) _stationLanguage[s.stationUuid] = lang;
+              final tr = m['clicktrend'];
+              if (tr is num) _stationTrend[s.stationUuid] = tr.toInt();
+              added.add(s);
+            }
+            break;
+          } catch (e) {
+            debugPrint('지역 방송 로드 오류($server): $e');
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('지역 방송 로드 실패: $e');
+    }
+    if (_countryCode == code && added.isNotEmpty) {
+      _mergeFavoriteFlags(added);
+      _countryStations = [..._countryStations, ...added];
+    }
+    _loadingState = null;
     notifyListeners();
   }
 

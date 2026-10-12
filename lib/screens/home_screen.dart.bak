@@ -304,12 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
       await prefs.setInt('app_launch_count', n);
     }
     if (!mounted) return;
-    // 카드가 나오기 전에 이미 색을 바꾼 사람은 알고 있으니 안 보여줌
-    final shown = prefs.getBool('color_tip_shown') ?? false;
-    if (!shown && context.read<ThemeProvider>().primaryColor.value != 0xFF2589E8) {
-      await prefs.setBool('color_tip_done', true);
-      return;
-    }
+    // 색을 이미 바꾼 사람에게도 한 번은 보여줌 (✕ 누르면 끝)
     if (n >= 3) {
       await prefs.setBool('color_tip_shown', true); // 한 번 나온 뒤로는 ✕ 누를 때까지 계속
       if (mounted) setState(() => _showColorTip = true);
@@ -370,19 +365,19 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('꾸미기',
+                Text('강조 색상',
                     maxLines: 1,
-                    style: TextStyle(color: accent, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
-                const SizedBox(height: 1),
-                Text('앱 색을 바꿔보세요',
+                    style: TextStyle(color: accent, fontSize: 10, height: 1.1, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
+                const SizedBox(height: 2),
+                Text('나만의 색으로 꾸며보세요',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w600)),
+                    style: TextStyle(color: ink, fontSize: 13.5, height: 1.15, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 3),
-                Text('10가지 색 중에 골라요',
+                Text('숲 · 노을 · 벚꽃 등 10가지 색',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: sub, fontSize: 11.5)),
+                    style: TextStyle(color: sub, fontSize: 11.5, height: 1.15)),
               ],
             ),
           ),
@@ -395,7 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
               decoration: BoxDecoration(color: ink, borderRadius: BorderRadius.circular(14)),
-              child: Text('바꾸기', style: TextStyle(color: card, fontSize: 12.5, fontWeight: FontWeight.w700)),
+              child: Text('꾸미기', style: TextStyle(color: card, fontSize: 12.5, fontWeight: FontWeight.w700)),
             ),
           ),
           IconButton(
@@ -419,6 +414,25 @@ class _HomeScreenState extends State<HomeScreen> {
     await showParanSheet(
       context,
       title: '강조 색상',
+      // 창 머리 B안: 작은 '강조 색상'(지금 강조 색) + 도현체 큰 질문
+      header: Builder(builder: (c) {
+        final p = c.watch<ThemeProvider>().primaryColor;
+        final label = p.value == 0xFF2589E8 ? (dark ? const Color(0xFF6FB0FF) : const Color(0xFF2F7DE8)) : p;
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(4, 0, 4, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('강조 색상',
+                  style: TextStyle(color: label, fontSize: 10.5, fontWeight: FontWeight.w800, letterSpacing: 0.8)),
+              const SizedBox(height: 3),
+              Text('오늘 기분에 어울리는 색은?',
+                  textScaler: TextScaler.noScaling,
+                  style: GoogleFonts.doHyeon(color: ink, fontSize: 21)),
+            ],
+          ),
+        );
+      }),
       builder: (ctx, setSheet) {
         Widget dot(int i) {
           final (name, c) = ThemeProvider.pointColors[i];
@@ -462,11 +476,6 @@ class _HomeScreenState extends State<HomeScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 16),
-              child: Text('오늘 기분에 어울리는 색은?',
-                  style: TextStyle(color: sub, fontSize: 12.5)),
-            ),
             for (var row = 0; row * 5 < n; row++)
               Padding(
                 padding: const EdgeInsets.only(bottom: 14),
@@ -491,7 +500,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Icon(Icons.info_outline_rounded, size: 16, color: sub),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text('설정 → 꾸미기 → 강조 색상에서 다시 변경할 수 있습니다.',
+                    child: Text('설정 → 꾸미기 → 강조 색상에서\n다시 변경할 수 있습니다.',
                         style: TextStyle(color: sub, fontSize: 12.5, height: 1.45)),
                   ),
                 ],

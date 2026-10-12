@@ -295,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _checkColorTip() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('color_tip_done'); await prefs.remove('color_tip_shown'); prefs.setInt('app_launch_count', 2); // ★테스트용
+
     if (prefs.getBool('color_tip_done') ?? false) return;
     var n = prefs.getInt('app_launch_count') ?? 0;
     if (!_launchCounted) {
@@ -357,7 +357,7 @@ class _HomeScreenState extends State<HomeScreen> {
               shape: BoxShape.circle,
               boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 6, offset: const Offset(0, 2))],
             ),
-            child: CustomPaint(painter: _ColorRingPainter(hole: card)),
+            child: _SpinRing(hole: card),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -3700,4 +3700,40 @@ class _ColorRingPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _ColorRingPainter old) => old.hole != hole;
+}
+
+/// 색 고리: 카드가 나타나면 잠깐 있다가 스르륵 한 바퀴 돌고 멈춤
+class _SpinRing extends StatefulWidget {
+  final Color hole;
+  const _SpinRing({required this.hole});
+
+  @override
+  State<_SpinRing> createState() => _SpinRingState();
+}
+
+class _SpinRingState extends State<_SpinRing> with SingleTickerProviderStateMixin {
+  late final AnimationController _c =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 4800));
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      if (mounted) _c.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RotationTransition(
+      turns: _c.drive(CurveTween(curve: Curves.easeInOutSine)).drive(Tween(begin: 0.0, end: 3.0)),
+      child: CustomPaint(painter: _ColorRingPainter(hole: widget.hole)),
+    );
+  }
 }

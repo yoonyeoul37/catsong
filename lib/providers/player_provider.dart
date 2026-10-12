@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
@@ -374,6 +375,7 @@ class PlayerProvider extends ChangeNotifier {
           album: song.albumDisplay,
           duration: Duration(milliseconds: song.duration),
         ));
+        MediaArt.attachSong(handler, song);
       }
 
       _startListen(song); // 틀자마자 세지 않고, 30초 이상 들으면 기록
@@ -509,6 +511,7 @@ class PlayerProvider extends ChangeNotifier {
         title: displayName,
         artist: '자연소리',
       ));
+      MediaArt.attachAsset(handler, MediaArt.natureImage(displayName), assetPath, displayName);
     }
 
     try {
@@ -586,6 +589,7 @@ class PlayerProvider extends ChangeNotifier {
             album: song.albumDisplay,
             duration: Duration(milliseconds: song.duration),
           ));
+          MediaArt.attachSong(handler, song);
         }
       }
       await Future.delayed(const Duration(milliseconds: 100));
@@ -844,6 +848,7 @@ class SimpleAudioHandler extends BaseAudioHandler {
   void setMixMediaItem({
     required String title,
     required String subtitle,
+    Song? song,
   }) {
     onResumeLast = null;
     mediaItem.add(MediaItem(
@@ -852,6 +857,7 @@ class SimpleAudioHandler extends BaseAudioHandler {
       artist: subtitle,
       album: '파란소리 믹스',
     ));
+    if (song != null) MediaArt.attachSong(this, song, id: 'sound_mix', title: title);
   }
 
   void setRadioPlaybackState({required bool playing}) {
@@ -883,6 +889,7 @@ class SimpleAudioHandler extends BaseAudioHandler {
       artist: artist,
       album: '파란소리 라디오',
     ));
+    MediaArt.attachAsset(this, MediaArt.radioHero(), url ?? '', title);
   }
 
   PlaybackState _transformEvent(PlaybackEvent event) {
@@ -1015,5 +1022,87 @@ class SimpleAudioHandler extends BaseAudioHandler {
   Future<void> updateMediaItem(MediaItem item) async {
     onResumeLast = null;
     mediaItem.add(item);
+  }
+}
+
+/// 폰 미디어 출력(알림창)에 보일 사진 — 폰이 이 사진 색으로 배경·버튼 색을 칠함
+class MediaArt {
+  static final Map<String, Uri> _done = {};
+
+  static String? _dir;
+  static Future<String?> _folder() async {
+    if (_dir != null) return _dir;
+    try {
+      final d = Directory('${Directory.systemTemp.path}/media_art');
+      if (!await d.exists()) await d.create(recursive: true);
+      _dir = d.path;
+    } catch (_) {}
+    return _dir;
+  }
+
+  /// 사진을 작은 파일로 저장해서 주소 돌려주기 (앱 켜져 있는 동안 한 번만)
+  static Future<Uri?> _file(String name, Future<List<int>?> Function() bytes) async {
+    final hit = _done[name];
+    if (hit != null) return hit;
+    try {
+      final dir = await _folder();
+      if (dir == null) return null;
+      final b = await bytes();
+      if (b == null || b.isEmpty) return null;
+      final f = File('$dir/$name');
+      await f.writeAsBytes(b, flush: true);
+      return _done[name] = Uri.file(f.path);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// 사진 준비되면 지금 알림창 항목에 붙이기 (그사이 다른 곡으로 바뀌었으면 안 붙임)
+  static void _put(SimpleAudioHandler h, String id, String title, Future<Uri?> art) {
+    art.then((uri) {
+      final cur = h.mediaItem.value;
+      if (uri == null || cur == null || cur.id != id || cur.title != title) return;
+      h.mediaItem.add(cur.copyWith(artUri: uri));
+    });
+  }
+
+  /// 음악: 곡의 앨범 사진 (없으면 그냥 둠)
+  static void attachSong(SimpleAudioHandler h, Song song, {String? id, String? title}) {
+    final art = song.albumArt;
+    if (art == null || art.isEmpty) return;
+    _put(h, id ?? song.uri ?? '', title ?? song.titleDisplay,
+        _file('song_${song.id}_${art.length}.img', () async => art));
+  }
+
+  /// 앱 안의 사진 (라디오 등)
+  static void attachAsset(SimpleAudioHandler h, String asset, String id, String title) {
+    final name = asset.split('/').last;
+    _put(h, id, title, _file(name, () async {
+      final data = await rootBundle.load(asset);
+      return data.buffer.asUint8List();
+    }));
+  }
+
+  /// 라디오: 지금 시간대 사진 (아침 5–11 · 낮 11–17 · 저녁 17–22 · 밤)
+  static String radioHero() {
+    final h = DateTime.now().hour;
+    final slot = h >= 5 && h < 11
+        ? 'morning'
+        : h >= 11 && h < 17
+            ? 'day'
+            : h >= 17 && h < 22
+                ? 'evening'
+                : 'night';
+    return 'assets/radio_media_$slot.jpg';
+  }
+
+  /// 자연소리: 이름에 맞는 사진
+  static String natureImage(String name) {
+    if (name.contains('비')) return 'assets/rest_rain.jpg';
+    if (name.contains('파도') || name.contains('갈매기')) return 'assets/rest_wave.jpg';
+    if (name.contains('모닥불')) return 'assets/rest_fire.jpg';
+    if (name.contains('시냇물') || name.contains('강물')) return 'assets/rest_stream.jpg';
+    if (name.contains('새') || name.contains('뻐꾸기')) return 'assets/rest_bird.jpg';
+    return 'assets/nature_bg.jpg';
   }
 }

@@ -1818,6 +1818,14 @@ Color _brandPastel(String b) {
   }
 }
 
+/// 미디어 출력용: 방송 이름 → 목록과 같은 설명 (없으면 null)
+String? koreanStationDesc(String name) {
+  for (final s in koreanStations) {
+    if (s.name == name) return _stationDesc(s);
+  }
+  return null;
+}
+
 /// 방송 둘째 줄: '지역 · 방송 성격' (예: 서울 · 뉴스·시사)
 String _stationDesc(_KStation s) {
   const exact = {

@@ -122,6 +122,10 @@ flutter:
     - assets/rest_fire.jpg
     - assets/rest_stream.jpg
     - assets/rest_radio.jpg
+    - assets/radio_hero_morning.jpg
+    - assets/radio_hero_day.jpg
+    - assets/radio_hero_evening.jpg
+    - assets/radio_hero_night.jpg
 
 flutter_native_splash:
   color: "#17140F"                  # 다크/라이트 상관없이 어두운 바탕 (첫인사 사진과 자연스럽게)

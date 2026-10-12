@@ -34,6 +34,32 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
   _ViewMode _mode = _ViewMode.all;
   bool _diceNew = false; // 주사위를 한 번도 안 눌렀으면 NEW
   bool _diceIntro = false; // 처음 한 번만 가운데 큰 카드
+  String? _diceChoice; // 주사위로 나온 방송 (카드에 그대로 보여줌)
+  bool _diceTip = false; // 주사위 옆 말풍선 "던져보세요!"
+  double _diceWiggle = 0; // 주사위 데굴 (돌린 정도)
+
+  /// 주사위를 아직 안 눌렀으면, 들어올 때 5번까지 말풍선 + 데굴
+  Future<void> _maybeShowDiceTip() async {
+    final p = await SharedPreferences.getInstance();
+    if ((p.getInt('radioDiceCount') ?? 0) > 0) return;
+    final shown = p.getInt('radioDiceTipShown') ?? 0;
+    if (shown >= 5) return;
+    await Future.delayed(const Duration(milliseconds: 600));
+    if (!mounted || _diceIntro || _mode != _ViewMode.all) return; // 처음 큰 카드가 떠 있으면 안 보여줌
+    await p.setInt('radioDiceTipShown', shown + 1);
+    setState(() {
+      _diceTip = true;
+      _diceWiggle = -0.06;
+    });
+    for (final (ms, w) in const [(170, 0.05), (340, -0.03), (500, 0.0)]) {
+      Future.delayed(Duration(milliseconds: ms), () {
+        if (mounted) setState(() => _diceWiggle = w);
+      });
+    }
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) setState(() => _diceTip = false);
+    });
+  }
 
   static const Map<String, Color> _regionColors = {
     '수도권': Color(0xFF14356B),
@@ -60,6 +86,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         _diceNew = (p.getInt('radioDiceCount') ?? 0) < 3 && days < 7;
         _diceIntro = !(p.getBool('radioDiceIntroSeen') ?? false);
       });
+      _maybeShowDiceTip();
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final radio = context.read<RadioProvider>();
@@ -154,6 +181,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
 
   Future<void> _openDice() async {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    if (_diceTip) setState(() => _diceTip = false);
     // 던진 횟수 세기 (3번 던지면 NEW 사라짐)
     final p = await SharedPreferences.getInstance();
     final count = (p.getInt('radioDiceCount') ?? 0) + 1;
@@ -165,7 +193,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
       if (count >= 3) _diceNew = false;
     });
     if (!mounted) return;
-    showRadioDice(context, _dicePool(), onOpen: (st) {
+    await showRadioDice(context, _dicePool(), onOpen: (st) {
       // 전체 목록 순서 그대로 넘겨서 상세 화면에서 이전/다음도 되게
       final list = koreanStations.map(_toRadioStation).toList();
       final i = list.indexWhere((s) => s.name == st.name);
@@ -183,12 +211,231 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         ),
       );
     });
+    // 판이 닫히면: 주사위로 나와서 듣고 있는 방송을 카드에 그대로
+    if (!mounted) return;
+    final cur = context.read<RadioProvider>().currentStation?.name;
+    if (cur != null && koreanStations.any((k) => k.name == cur)) {
+      setState(() => _diceChoice = cur);
+    }
   }
 
   Future<void> _closeDiceIntro() async {
     setState(() => _diceIntro = false);
     final p = await SharedPreferences.getInstance();
     await p.setBool('radioDiceIntroSeen', true);
+  }
+
+  // ───── 맨 위 사진 카드: 지금 듣기 좋은 방송 ─────
+  /// ① 이 시간대(아침·낮·저녁·밤)에 들었던 방송 (최근 것부터)  ② 없으면 시간대별 기본
+  /// 지금 듣고 있는 방송은 빼기
+  int _pickNiceIndex(RadioProvider radio) {
+    int slot(DateTime t) {
+      final h = t.hour;
+      if (h >= 5 && h < 11) return 0;
+      if (h >= 11 && h < 17) return 1;
+      if (h >= 17 && h < 22) return 2;
+      return 3;
+    }
+
+    final s = slot(DateTime.now());
+    final cur = radio.currentStation?.name;
+    for (final r in radio.recentlyListened) {
+      final t = r.lastListened;
+      if (t == null || slot(t) != s || r.name == cur) continue;
+      final i = koreanStations.indexWhere((k) => k.name == r.name);
+      if (i >= 0) return i;
+    }
+    const defaults = [
+      ['KBS 제1라디오', 'MBC 표준FM', 'SBS 러브FM'], // 아침: 뉴스·아침 방송
+      ['MBC FM4U', 'KBS Cool FM', 'SBS 파워FM'], // 낮: 가요
+      ['SBS 파워FM', 'KBS 해피FM', 'MBC FM4U'], // 저녁: 퇴근길 음악
+      ['KBS Classic FM', 'CBS 음악FM', 'MBC 올댓뮤직'], // 밤: 잔잔한 음악
+    ];
+    for (final n in defaults[s]) {
+      if (n == cur) continue;
+      final i = koreanStations.indexWhere((k) => k.name == n);
+      if (i >= 0) return i;
+    }
+    return 0;
+  }
+
+  Widget _nowNiceCard(BuildContext context, RadioProvider radio, List<RadioStation> list) {
+    final diceI = _diceChoice == null ? -1 : koreanStations.indexWhere((k) => k.name == _diceChoice);
+    final i = diceI >= 0 ? diceI : _pickNiceIndex(radio);
+    final ks = koreanStations[i];
+    final prog = radio.nowPlayingFor(ks.name) ?? (radio.currentProgramFor(ks.name)?['title'] as String?) ?? '';
+    final point = context.watch<ThemeProvider>().primaryColor;
+    final accent = point.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : point;
+    final isDark = context.watch<ThemeProvider>().isDarkMode;
+    const ink = Color(0xFF17140F);
+    void open() {
+      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              RadioPlayerScreen(station: list[i], stationList: list, currentIndex: i),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              FadeTransition(opacity: animation, child: child),
+          transitionDuration: const Duration(milliseconds: 250),
+        ),
+      );
+    }
+
+    return GestureDetector(
+      onTap: open,
+      child: Container(
+        height: 180,
+        margin: const EdgeInsets.only(bottom: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: ink.withOpacity(isDark ? 0.45 : 0.13),
+              blurRadius: 20,
+              spreadRadius: -3,
+              offset: const Offset(0, 10),
+            ),
+            BoxShadow(color: ink.withOpacity(0.06), blurRadius: 4, offset: const Offset(0, 2)),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Positioned(
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 68, // 사진은 글자 띠 위에만 (라디오가 안 가려지게)
+                child: Image.asset(
+                _heroImageNow(), // 아침·낮·저녁·밤 사진
+                fit: BoxFit.cover,
+                alignment: const Alignment(0, -0.2),
+                cacheWidth: 800,
+                errorBuilder: (_, __, ___) => Container(color: const Color(0xFFD5E1EC)),
+              ),
+              ),
+              // 사진 아래 크림 띠 (잠시 쉬어가요 카드와 같은 색)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(14, 8, 10, 9),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFFBF8F2),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(diceI >= 0 ? '주사위가 고른 방송' : '지금 듣기 좋은',
+                                textScaler: TextScaler.noScaling,
+                                style: TextStyle(color: accent, fontSize: 10.5, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
+                            const SizedBox(height: 1),
+                            Text(ks.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                textScaler: TextScaler.noScaling,
+                                style: GoogleFonts.doHyeon(color: ink, fontSize: 18)),
+                            if (prog.isNotEmpty)
+                              Text(prog,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  textScaler: TextScaler.noScaling,
+                                  style: TextStyle(color: ink.withOpacity(0.62), fontSize: 12)),
+                          ],
+                        ),
+                      ),
+                      // 🎲 주사위 (오른쪽 위 아이콘을 여기로)
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: _openDice,
+                            child: AnimatedRotation(
+                              turns: _diceWiggle,
+                              duration: const Duration(milliseconds: 160),
+                              curve: Curves.easeInOut,
+                              child: Container(
+                                width: 38,
+                                height: 38,
+                                alignment: Alignment.center,
+                                // 크림 띠 위에서 또렷하게: 홈 바탕과 같은 베이지
+                                decoration: const BoxDecoration(color: Color(0xFFEDE7DA), shape: BoxShape.circle),
+                                child: const RollDiceIcon(size: 21, color: ink),
+                              ),
+                            ),
+                          ),
+                          // 주사위 왼쪽 말풍선 "던져보세요!" (사진을 안 가리게 띠 안에서 옆으로)
+                          Positioned(
+                            right: 46,
+                            top: 0,
+                            bottom: 0,
+                            child: IgnorePointer(
+                              child: AnimatedOpacity(
+                                opacity: _diceTip ? 1 : 0,
+                                duration: const Duration(milliseconds: 280),
+                                child: AnimatedSlide(
+                                  offset: _diceTip ? Offset.zero : const Offset(0.08, 0),
+                                  duration: const Duration(milliseconds: 280),
+                                  curve: Curves.easeOutCubic,
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
+                                          decoration: BoxDecoration(color: ink, borderRadius: BorderRadius.circular(11)),
+                                          child: const Text('던져보세요!',
+                                              textScaler: TextScaler.noScaling,
+                                              style: TextStyle(
+                                                  color: Color(0xFFF4EFE5), fontSize: 12, fontWeight: FontWeight.w700)),
+                                        ),
+                                        // 꼬리 (주사위 쪽)
+                                        Transform.translate(
+                                          offset: const Offset(-5, 0),
+                                          child: Transform.rotate(
+                                            angle: 0.785398,
+                                            child: Container(
+                                              width: 9,
+                                              height: 9,
+                                              decoration: BoxDecoration(color: ink, borderRadius: BorderRadius.circular(2)),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 8),
+                      // ▶ 듣기
+                      Container(
+                        width: 38,
+                        height: 38,
+                        decoration: const BoxDecoration(color: ink, shape: BoxShape.circle),
+                        child: const Icon(Icons.play_arrow_rounded, color: Color(0xFFF4EFE5), size: 24),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildAllList(BuildContext context, RadioProvider radioProvider) {
@@ -216,10 +463,14 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
       tickColor: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.35),
       child: ListView.separated(
       padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
-      itemCount: koreanStations.length,
-      separatorBuilder: (_, __) => _DialEffect(
-          child: Divider(height: 1, color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.1))),
-      itemBuilder: (context, i) {
+      itemCount: koreanStations.length + 1,
+      separatorBuilder: (_, i) => i == 0
+          ? const SizedBox(height: 6)
+          : _DialEffect(
+              child: Divider(height: 1, color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.1))),
+      itemBuilder: (context, n) {
+        if (n == 0) return _nowNiceCard(context, radioProvider, radioStations); // 맨 위 사진 카드
+        final i = n - 1;
         final ks = koreanStations[i];
         final current = radioProvider.currentStation;
         final isPlaying = current?.name == ks.name && radioProvider.isPlaying;
@@ -439,29 +690,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         ),
 
         actions: [
-          // 주사위: 음악 방송 하나를 골라 바로 틀기 (처음엔 NEW)
-          IconButton(
-            onPressed: _openDice,
-            icon: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                RollDiceIcon(size: 24, color: baseColor),
-                if (_diceNew)
-                  Positioned(
-                    top: -7,
-                    right: -13,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-                      decoration: BoxDecoration(
-                          color: const Color(0xFFE05A4F), borderRadius: BorderRadius.circular(6)),
-                      child: const Text('NEW',
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 8, fontWeight: FontWeight.w800, letterSpacing: 0.3)),
-                    ),
-                  ),
-              ],
-            ),
-          ),
+          // 주사위는 맨 위 사진 카드 안으로 옮김
           const SizedBox(width: 6),
         ],
         title: Row(
@@ -666,17 +895,19 @@ class _StationTile extends StatelessWidget {
               Container(
                 width: 40,
                 height: 40,
+                // 홈 '최근에 들었어요'와 같은 파스텔 (듣는 중이면 강조 색 테두리)
                 decoration: BoxDecoration(
-                  color: isPlaying ? primaryColor : baseColor.withOpacity(0.08),
+                  color: _brandPastel(station.broadcaster).withOpacity(isDarkMode ? 0.9 : 1),
                   borderRadius: BorderRadius.circular(10),
+                  // (듣는 중이어도 테두리 없이 파스텔 그대로)
                 ),
                 alignment: Alignment.center,
                 child: Text(
                   station.broadcaster,
-                  style: TextStyle(
-                    color: isPlaying ? Colors.black : baseColor.withOpacity(0.6),
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
+                  textScaler: TextScaler.noScaling,
+                  style: GoogleFonts.doHyeon(
+                    color: const Color(0xFF17140F).withOpacity(0.8),
+                    fontSize: station.broadcaster.length > 3 ? 10.5 : 12.5,
                   ),
                   textAlign: TextAlign.center,
                   maxLines: 1,
@@ -691,11 +922,9 @@ class _StationTile extends StatelessWidget {
                   children: [
                     Text(
                       station.name,
-                      style: TextStyle(
+                      style: GoogleFonts.doHyeon(
                         color: isPlaying ? primaryColor : baseColor,
-                        fontWeight: isPlaying ? FontWeight.w700 : FontWeight.w500,
-                        fontSize: 15.5,
-                        letterSpacing: -0.2,
+                        fontSize: 16.5,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -712,11 +941,11 @@ class _StationTile extends StatelessWidget {
                         final hasJsonSchedule = radio.nowPlayingFor(station.name) != null && !isKbs && !isMbc && !isSbs;
                         if (!isKbs && !isMbc && !isSbs && !hasJsonSchedule) {
                           return Text(
-                            station.frequency.isNotEmpty
-                                ? station.frequency
-                                : '',
+                            _stationDesc(station), // 지역 · 방송 성격
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              color: baseColor.withOpacity(0.4),
+                              color: baseColor.withOpacity(0.55),
                               fontSize: 12,
                             ),
                           );
@@ -792,14 +1021,14 @@ class _StationTile extends StatelessWidget {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
+                            if (displayNowPlaying == null || displayNowPlaying.isEmpty)
                             Text(
-                              [
-                                if (station.frequency.isNotEmpty) station.frequency,
-                                if (timeStr.isNotEmpty) timeStr,
-                              ].join(' · '),
+                              _stationDesc(station), // 지역 · 방송 성격
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: baseColor.withOpacity(0.55),
-                                fontSize: 11,
+                                fontSize: 12,
                               ),
                             ),
                           ],
@@ -866,7 +1095,7 @@ class _StationTile extends StatelessWidget {
                           color: context.watch<RadioProvider>().isFavorite(radioStation.stationUuid)
                               ? const Color(0xFFE05A4F)
                               : baseColor.withOpacity(0.35),
-                          size: 22,
+                          size: 18,
                         ),
                       ),
                     ),
@@ -1559,4 +1788,77 @@ class _DialHostScope extends InheritedWidget {
 
   @override
   bool updateShouldNotify(_DialHostScope old) => old.scrolling != scrolling || old.strength != strength;
+}
+
+/// 지금 시간대 사진 (아침 5~11시 · 낮 11~17시 · 저녁 17~22시 · 밤)
+String _heroImageNow() {
+  final h = DateTime.now().hour;
+  if (h >= 5 && h < 11) return 'assets/radio_hero_morning.jpg';
+  if (h >= 11 && h < 17) return 'assets/radio_hero_day.jpg';
+  if (h >= 17 && h < 22) return 'assets/radio_hero_evening.jpg';
+  return 'assets/radio_hero_night.jpg';
+}
+
+/// 방송사 파스텔 (홈 '최근에 들었어요'와 같은 색)
+Color _brandPastel(String b) {
+  switch (b) {
+    case 'KBS':
+      return const Color(0xFFD5E1EC); // 하늘
+    case 'MBC':
+      return const Color(0xFFF3D9C9); // 복숭아
+    case 'SBS':
+      return const Color(0xFFDCE5D2); // 연두
+    case 'CBS':
+      return const Color(0xFFDDD6E8); // 라벤더
+    case 'EBS':
+      return const Color(0xFFF0E3C2); // 노랑
+    default:
+      return const Color(0xFFE6DFD2); // 그 밖: 연한 베이지
+  }
+}
+
+/// 방송 둘째 줄: '지역 · 방송 성격' (예: 서울 · 뉴스·시사)
+String _stationDesc(_KStation s) {
+  const exact = {
+    'KBS Cool FM': '가요·팝',
+    'KBS 3라디오': '사회·복지',
+    'MBC 올댓뮤직': '음악',
+    'SBS 파워FM': '가요·예능',
+    'SBS 러브FM': '시사·생활',
+    'CBS 음악FM': '음악',
+    'CBS 표준FM': '시사·종교',
+    'YTN 라디오': '뉴스·시사',
+    'TBS FM': '교통·생활',
+    'TBS eFM': '영어 방송',
+    'EBS FM': '교육',
+    'EBS 반디': '외국어 학습',
+    'OBS 라디오': '음악·생활',
+    '경인방송': '음악·생활',
+    'CPBC 가톨릭': '종교·음악',
+    'FEBC 극동방송': '종교·음악',
+    'BBS 불교방송': '종교·음악',
+    '국악FM': '국악',
+    '국방FM': '국군 방송',
+    'BeFM': '영어 방송',
+    'JTV 매직FM': '음악·생활',
+  };
+  final n = s.name;
+  String? g = exact[n];
+  if (g == null) {
+    if (n.startsWith('TBN')) {
+      g = '교통 정보';
+    } else if (n.contains('1라디오')) {
+      g = '뉴스·시사';
+    } else if (n.contains('해피FM')) {
+      g = '가요·생활';
+    } else if (n.contains('1FM') || n.contains('Classic')) {
+      g = '클래식';
+    } else if (n.contains('FM4U')) {
+      g = '음악';
+    } else if (n.contains('표준FM')) {
+      g = '시사·교양';
+    }
+  }
+  final loc = (s.subLabel.isEmpty || s.subLabel == '외국어') ? '서울' : s.subLabel;
+  return g == null ? loc : '$loc · $g';
 }

@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ThemeProvider extends ChangeNotifier {
   Color _primaryColor = const Color(0xFF2589E8); // 포인트 색 (기본: 파란소리)
   double _textScale = 1.12;
-  String _fontFamily = 'suit'; // 처음 설치하면 쓰는 글꼴 — 바꾸려면 이 한 줄만 (예: 'pretendard', 'line_seed', 'default'=스포카)
+  String _fontFamily = 'pretendard'; // 처음 설치하면 쓰는 글꼴 — 바꾸려면 이 한 줄만 (예: 'suit', 'line_seed', 'default'=스포카)
   bool _isDarkMode = false;
   bool _seasonalEffectEnabled = true;
   bool _voiceGreetingEnabled = true;
@@ -111,8 +111,8 @@ class ThemeProvider extends ChangeNotifier {
 
   /// 설정 → 글꼴 (전부 앱 안에 있어서 인터넷 없이 바로)
   static const List<Map<String, String>> availableFonts = [
-    {'key': 'default', 'name': 'Spoqa Han Sans Neo'},
     {'key': 'pretendard', 'name': 'Pretendard'},
+    {'key': 'default', 'name': 'Spoqa Han Sans Neo'},
     {'key': 'line_seed', 'name': 'LINESeedKR'},
     {'key': 'suit', 'name': 'SUIT'},
     {'key': 'wanted_sans', 'name': 'WantedSans'},
@@ -160,7 +160,7 @@ class ThemeProvider extends ChangeNotifier {
       _textScale = textSteps[textStepIndex].$2; // 예전 막대로 고른 크기는 가장 가까운 단계로
     }
     if (fontFamily != null) {
-      _fontFamily = availableFonts.any((f) => f['key'] == fontFamily) ? fontFamily : 'suit';
+      _fontFamily = availableFonts.any((f) => f['key'] == fontFamily) ? fontFamily : 'pretendard';
     }
     if (isDarkMode != null) {
       _isDarkMode = isDarkMode;

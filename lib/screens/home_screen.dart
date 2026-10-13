@@ -1174,29 +1174,32 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (isBluePoint)
                         _LogoBreathe(
                           child: Text('Paran',
-                              style: GoogleFonts.doHyeon(
+                              style: GoogleFonts.quicksand(
                                   color: const Color(0xFF2F7DE8),
                                   fontSize: 20,
+                                  fontWeight: FontWeight.w700,
                                   height: 1.0,
-                                  letterSpacing: -0.3)),
+                                  letterSpacing: 0.2)),
                         )
                       else
                         _LogoBreathe(
                           base: logoInk,
                           glow: pointColor,
                           child: Text('Paran',
-                              style: GoogleFonts.doHyeon(
+                              style: GoogleFonts.quicksand(
                                   color: logoInk,
                                   fontSize: 20,
+                                  fontWeight: FontWeight.w700,
                                   height: 1.0,
-                                  letterSpacing: -0.3)),
+                                  letterSpacing: 0.2)),
                         ),
-                      Text('Sori',
-                          style: GoogleFonts.doHyeon(
+                      Text('sori',
+                          style: GoogleFonts.quicksand(
                               color: logoInk,
                               fontSize: 20,
+                              fontWeight: FontWeight.w700,
                               height: 1.0,
-                              letterSpacing: -0.3)),
+                              letterSpacing: 0.2)),
                     ],
                   ),
             if (!isKorean) ...[

@@ -101,9 +101,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final l = AppLocalizations.of(context)!;
     const names = {
       'default': '스포카 한 산스',
-      'pretendard': '프리텐다드',
+      'pretendard': '프리텐다드 (기본)',
       'line_seed': '라인 시드',
-      'suit': '수트 (기본)',
+      'suit': '수트',
       'wanted_sans': '원티드 산스',
       'nanum_gothic': '나눔고딕',
       'ibm_plex': 'IBM 플렉스 산스',

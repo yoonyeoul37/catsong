@@ -144,32 +144,16 @@
                 android:resource="@xml/widget_info" />
         </receiver>
 
+        <!-- 홈 위젯 4×3 (버튼은 모두 위 PlayerWidget이 받음) -->
         <receiver
             android:name=".PlayerWidget2"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="kr.ssing.catsong.PLAY_PAUSE" />
-                <action android:name="kr.ssing.catsong.NEXT" />
-                <action android:name="kr.ssing.catsong.PREV" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info2" />
-        </receiver>
-
-        <receiver
-            android:name=".PlayerWidget3"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="kr.ssing.catsong.PLAY_PAUSE" />
-                <action android:name="kr.ssing.catsong.NEXT" />
-                <action android:name="kr.ssing.catsong.PREV" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info3" />
         </receiver>
         <!-- 아침 알람: 시간이 되면 알람 화면 띄우기 -->
         <receiver

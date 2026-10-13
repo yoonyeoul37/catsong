@@ -130,6 +130,8 @@ class HeadsetResume {
     // 마지막에 튼 것 기억 (30초 안 들었어도) → 위젯 재생 버튼이 이걸 이어서
     _radio?.addListener(_rememberLast);
     _pp?.addListener(_rememberLast);
+    r.addListener(saveWidgetList); // 최근 목록이 바뀌면 4×3 위젯 아래 줄도
+    saveWidgetList();
   }
 
   static String _lastKey = '';
@@ -163,6 +165,9 @@ class HeadsetResume {
     final isMusic = data['type'] == 'music';
     SharedPreferences.getInstance().then((p) => p.setBool('w_music', isMusic)); // 위젯 섞기·반복 보이기
     SharedPreferences.getInstance().then((p) => p.setString('widget_last_played', jsonEncode(data)));
+    // 4×3 위젯 아래 줄: 지금 듣는 종류에 맞춰 다시 고르기
+    final kind = data['type'] as String;
+    SharedPreferences.getInstance().then((p) => p.setString('w_kind', kind)).then((_) => saveWidgetList());
   }
 
   /// 기억해 둔 '마지막에 튼 것' 틀기 (못 틀면 false)
@@ -213,6 +218,10 @@ class HeadsetResume {
     final pp = _pp, radio = _radio, r = _recent;
     if (pp == null || radio == null || r == null) return;
     _lastWidgetPlay = DateTime.now(); // 재생 버튼 신호가 같이 와도 겹치지 않게
+    if (kind.startsWith('recent:')) {
+      await _playRecent(kind.substring(7), pp, radio, r); // 4×3 위젯 '최근에 들었어요' 줄
+      return;
+    }
     final nowRadio = radio.isPlaying || radio.isLoading;
     final nowNature = pp.isPlaying && pp.natureSoundName != null;
     final nowMusic = pp.isPlaying && pp.natureSoundName == null && pp.currentSong != null;
@@ -280,6 +289,123 @@ class HeadsetResume {
       debugPrint('위젯 버튼 재생 오류: $err');
     }
   }
+  /// 4×3 위젯 아래 3줄 고르기 — 지금 듣는 종류에 맞춰 (지금 나오는 것은 빼고)
+  /// 음악 → 최근 곡 · 라디오 → 최근 방송 (모자라면 라디오 최근·즐겨찾기) · 자연 → 최근 자연 (모자라면 다른 자연소리)
+  static Future<void> saveWidgetList() async {
+    final pp = _pp, radio = _radio, r = _recent;
+    if (pp == null || radio == null || r == null) return;
+    try {
+      final p = await SharedPreferences.getInstance();
+      final kind = p.getString('w_kind') ?? (r.entries.isNotEmpty ? r.entries.first.type.name : 'music');
+      final items = <Map<String, String>>[];
+      void add(String type, String key, String title, String sub) {
+        if (items.length >= 3 || key.isEmpty || items.any((x) => x['key'] == key)) return;
+        items.add({'type': type, 'key': key, 'title': title, 'subtitle': sub});
+      }
+
+      if (kind == 'radio') {
+        final now = radio.currentStation?.stationUuid;
+        for (final x in r.entries) {
+          if (x.type == RecentContentType.radio && x.key != now) add('radio', x.key, x.title, x.subtitle);
+        }
+        for (final s in [...radio.recentlyListened, ...radio.favorites]) {
+          if (s.stationUuid == now) continue;
+          add('radio', s.stationUuid, s.name, (s.country?.isNotEmpty ?? false) ? s.country! : '라디오');
+        }
+      } else if (kind == 'nature') {
+        final now = pp.natureSoundName;
+        for (final x in r.entries) {
+          if (x.type == RecentContentType.nature && x.title != now) add('nature', x.key, x.title, '자연소리');
+        }
+        for (final s in PlayerProvider.natureSoundOrder) {
+          if (s['name'] == now) continue;
+          add('nature', s['assetPath']!, s['name']!, '자연소리');
+        }
+      } else {
+        final now = pp.natureSoundName == null ? pp.currentSong?.uri : null;
+        for (final x in r.entries) {
+          if (x.type == RecentContentType.music && x.key != now) add('music', x.key, x.title, x.subtitle);
+        }
+      }
+      await p.setString('w_list', jsonEncode(items));
+      await _ch.invokeMethod('refreshWidget');
+    } catch (_) {}
+  }
+
+  /// 4×3 위젯 '최근에 들었어요' 줄 ("종류|키"): 그것 바로 틀기
+  /// 이미 나오고 있는 거면 멈춤 · 다시
+  static Future<void> _playRecent(
+      String id, PlayerProvider pp, RadioProvider radio, RecentContentProvider r) async {
+    final cut = id.indexOf('|');
+    if (cut < 0) return;
+    final type = id.substring(0, cut);
+    final key = id.substring(cut + 1);
+    // 앱을 막 켰으면 기록이 불러와질 때까지 잠깐 기다리기
+    for (var i = 0; i < 25 && r.entries.isEmpty; i++) {
+      await Future.delayed(const Duration(milliseconds: 200));
+    }
+    RecentContentEntry? e;
+    for (final x in r.entries) {
+      if (x.type.name == type && x.key == key) {
+        e = x;
+        break;
+      }
+    }
+    if (e == null) {
+      // 최근 기록에 없는 줄 (라디오 최근·즐겨찾기, 다른 자연소리에서 채운 것)
+      try {
+        if (type == 'radio') {
+          for (final s in [...radio.recentlyListened, ...radio.favorites]) {
+            if (s.stationUuid == key) {
+              await _playSaved({'type': 'radio', 'station': s.toJson()}, r);
+              return;
+            }
+          }
+        } else if (type == 'nature') {
+          for (final s in PlayerProvider.natureSoundOrder) {
+            if (s['assetPath'] == key) {
+              await pp.playNatureSound(key, s['name']!);
+              return;
+            }
+          }
+        }
+      } catch (err) {
+        debugPrint('위젯 최근 재생 오류: $err');
+      }
+      return;
+    }
+    try {
+      switch (e.type) {
+        case RecentContentType.radio:
+          if (radio.currentStation?.stationUuid == key && (radio.isPlaying || radio.isLoading)) {
+            await radio.togglePlayPause();
+            return;
+          }
+          if (e.stationData == null) return;
+          await _playSaved({'type': 'radio', 'station': e.stationData}, r);
+        case RecentContentType.nature:
+          if (pp.isPlaying && pp.natureSoundName == e.title) {
+            await pp.pauseNatureSound();
+            return;
+          }
+          if (e.natureAssetPath == null) return;
+          await pp.playNatureSound(e.natureAssetPath!, e.title);
+        case RecentContentType.music:
+          if (pp.natureSoundName == null && pp.currentSong?.uri == key) {
+            await pp.togglePlayPause(); // 같은 곡이면 멈춤 · 이어서
+            return;
+          }
+          final m = _music;
+          if (m != null && m.allSongs.isEmpty && !m.isLoading) m.initialize();
+          await _playSaved({'type': 'music', 'uri': key}, r); // 그 곡부터 목록 순서대로
+        case RecentContentType.sleep:
+          break;
+      }
+    } catch (err) {
+      debugPrint('위젯 최근 재생 오류: $err');
+    }
+  }
+
   static Future<void> widgetPlay() async {
     final pp = _pp, radio = _radio;
     if (pp == null || radio == null) return;

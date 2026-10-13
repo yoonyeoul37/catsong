@@ -1113,29 +1113,18 @@ class MainActivity : AudioServiceActivity() {
                     requestAudioFocus()
                     result.success(true)
                 }
+                "refreshWidget" -> {
+                    PlayerWidget.refreshAll(this) // 최근에 들은 목록이 바뀜
+                    result.success(true)
+                }
                 "updateWidget" -> {
                     val title = call.argument<String>("title") ?: "파란소리"
                     val artist = call.argument<String>("artist") ?: "음악을 재생해보세요"
                     val isPlaying = call.argument<Boolean>("isPlaying") ?: false
                     val schedule = call.argument<String>("schedule") ?: ""
                     val appWidgetManager = android.appwidget.AppWidgetManager.getInstance(this)
-                    val ids = appWidgetManager.getAppWidgetIds(
-                        android.content.ComponentName(this, PlayerWidget::class.java)
-                    )
-                    for (id in ids) {
+                    for (id in PlayerWidget.allIds(this)) { // 4×2 + 4×3 둘 다
                         PlayerWidget.updateAppWidget(this, appWidgetManager, id, title, artist, isPlaying, schedule)
-                    }
-                    val ids2 = appWidgetManager.getAppWidgetIds(
-                        android.content.ComponentName(this, PlayerWidget2::class.java)
-                    )
-                    for (id in ids2) {
-                        PlayerWidget2.updateAppWidget(this, appWidgetManager, id, title, artist, isPlaying, schedule)
-                    }
-                    val ids3 = appWidgetManager.getAppWidgetIds(
-                        android.content.ComponentName(this, PlayerWidget3::class.java)
-                    )
-                    for (id in ids3) {
-                        PlayerWidget3.updateAppWidget(this, appWidgetManager, id, title, artist, isPlaying, schedule)
                     }
                     result.success(true)
                 }

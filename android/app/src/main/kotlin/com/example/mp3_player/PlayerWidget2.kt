@@ -1,103 +1,20 @@
 package kr.ssing.catsong
 
-import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
-import android.content.Intent
-import android.widget.RemoteViews
 
+/// 홈 위젯 4×3: 4×2 위젯 + 아래에 최근에 들은 것 3개
+/// 그리기·버튼은 모두 PlayerWidget이 같이 함 (모양만 큰 것)
 class PlayerWidget2 : AppWidgetProvider() {
 
-    override fun onUpdate(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
-    ) {
-        for (appWidgetId in appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId)
-        }
+    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+        for (id in appWidgetIds) PlayerWidget.updateAppWidget(context, appWidgetManager, id)
     }
 
-    override fun onReceive(context: Context, intent: Intent) {
-        super.onReceive(context, intent)
-        when (intent.action) {
-            PlayerWidget.ACTION_PLAY_PAUSE, PlayerWidget.ACTION_NEXT, PlayerWidget.ACTION_PREV -> {
-                val keyCode = when (intent.action) {
-                    PlayerWidget.ACTION_PLAY_PAUSE -> android.view.KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE
-                    PlayerWidget.ACTION_NEXT -> android.view.KeyEvent.KEYCODE_MEDIA_NEXT
-                    else -> android.view.KeyEvent.KEYCODE_MEDIA_PREVIOUS
-                }
-                val downEvent = android.view.KeyEvent(android.view.KeyEvent.ACTION_DOWN, keyCode)
-                val upEvent = android.view.KeyEvent(android.view.KeyEvent.ACTION_UP, keyCode)
-                val downIntent = Intent(Intent.ACTION_MEDIA_BUTTON).apply {
-                    putExtra(Intent.EXTRA_KEY_EVENT, downEvent)
-                    setPackage(context.packageName)
-                }
-                val upIntent = Intent(Intent.ACTION_MEDIA_BUTTON).apply {
-                    putExtra(Intent.EXTRA_KEY_EVENT, upEvent)
-                    setPackage(context.packageName)
-                }
-                context.sendBroadcast(downIntent)
-                context.sendBroadcast(upIntent)
-            }
-        }
-    }
-
-    companion object {
-        fun updateAppWidget(
-            context: Context,
-            appWidgetManager: AppWidgetManager,
-            appWidgetId: Int,
-            title: String = "캣송",
-            artist: String = "음악을 재생해보세요",
-            isPlaying: Boolean = false,
-            schedule: String = ""
-        ) {
-            val views = RemoteViews(context.packageName, R.layout.widget_player2)
-
-            views.setTextViewText(R.id.widget_title, title)
-            views.setTextViewText(R.id.widget_artist, artist)
-            views.setTextViewText(R.id.widget_schedule, schedule)
-            views.setTextViewText(R.id.widget_schedule, schedule)
-
-            val playPauseIcon = if (isPlaying)
-                android.R.drawable.ic_media_pause
-            else
-                android.R.drawable.ic_media_play
-            views.setImageViewResource(R.id.widget_play_pause, playPauseIcon)
-
-            val openIntent = Intent(context, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            }
-            val openPendingIntent = PendingIntent.getActivity(
-                context, 0, openIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-            views.setOnClickPendingIntent(R.id.widget_title, openPendingIntent)
-
-            val prevIntent = Intent(context, PlayerWidget2::class.java).setAction(PlayerWidget.ACTION_PREV)
-            val prevPendingIntent = PendingIntent.getBroadcast(
-                context, 4, prevIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-            views.setOnClickPendingIntent(R.id.widget_prev, prevPendingIntent)
-
-            val playPauseIntent = Intent(context, PlayerWidget2::class.java).setAction(PlayerWidget.ACTION_PLAY_PAUSE)
-            val playPausePendingIntent = PendingIntent.getBroadcast(
-                context, 5, playPauseIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-            views.setOnClickPendingIntent(R.id.widget_play_pause, playPausePendingIntent)
-
-            val nextIntent = Intent(context, PlayerWidget2::class.java).setAction(PlayerWidget.ACTION_NEXT)
-            val nextPendingIntent = PendingIntent.getBroadcast(
-                context, 6, nextIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-            views.setOnClickPendingIntent(R.id.widget_next, nextPendingIntent)
-
-            appWidgetManager.updateAppWidget(appWidgetId, views)
-        }
+    // 바탕화면에서 위젯 크기를 바꾸면 사진도 새 크기에 맞게
+    override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager,
+                                           appWidgetId: Int, newOptions: android.os.Bundle) {
+        PlayerWidget.updateAppWidget(context, appWidgetManager, appWidgetId)
     }
 }

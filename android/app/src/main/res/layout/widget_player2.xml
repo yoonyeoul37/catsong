@@ -1,81 +1,421 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 홈 위젯 4×3: 4×2 위젯과 똑같이 + 맨 아래 최근에 들은 것 3개 -->
+<!-- @android:id/background + clipToOutline: 안드로이드 12 이상은 폰 모서리 그대로 깔끔하게 잘림 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#99000000"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp">
+    android:background="@drawable/paran_widget_bg"
+    android:clipToOutline="true"
+    android:orientation="vertical">
 
+    <!-- 위: 시간대 라디오 사진 + 글자 + 버튼 -->
+    <FrameLayout
+        android:id="@+id/widget_top"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/widget_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/paran_widget_photo_empty" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="10dp"
+            android:shadowColor="#66000000"
+            android:shadowDy="1"
+            android:shadowRadius="4"
+            android:text="Paransori"
+            android:textColor="#F2FFFFFF"
+            android:textSize="11.5sp"
+            android:textStyle="bold" />
+
+        <!-- 섞기 · 반복 (음악일 때만 보임) -->
+        <LinearLayout
+            android:id="@+id/widget_modes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/widget_shuffle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/paran_widget_mode_bg"
+                android:padding="6dp"
+                android:src="@drawable/paran_ic_shuffle"
+                android:tint="#FFFFFF" />
+
+            <ImageView
+                android:id="@+id/widget_repeat"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/paran_widget_mode_bg"
+                android:padding="6dp"
+                android:src="@drawable/paran_ic_repeat"
+                android:tint="#FFFFFF" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="14dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/widget_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:shadowColor="#66000000"
+                    android:shadowDy="1"
+                    android:shadowRadius="4"
+                    android:text="파란소리"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14.5sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/widget_artist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:shadowColor="#66000000"
+                    android:shadowDy="1"
+                    android:shadowRadius="4"
+                    android:text="음악 · 라디오 · 자연을 들어보세요"
+                    android:textColor="#D9FFFFFF"
+                    android:textSize="11.5sp" />
+
+                <TextView
+                    android:id="@+id/widget_schedule"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text=""
+                    android:textColor="#B3FFFFFF"
+                    android:textSize="10.5sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/widget_prev"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="9dp"
+                android:src="@drawable/paran_ic_prev"
+                android:tint="#FFFFFF" />
+
+            <ImageView
+                android:id="@+id/widget_play_pause"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/paran_widget_play"
+                android:padding="11dp"
+                android:src="@drawable/paran_ic_play"
+                android:tint="#17140F" />
+
+            <ImageView
+                android:id="@+id/widget_next"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="9dp"
+                android:src="@drawable/paran_ic_next"
+                android:tint="#FFFFFF" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- 가운데: 바로가기 4개 (4×2와 똑같이) -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:layout_height="46dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="7dp"
+        android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/widget_prev"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:src="@android:drawable/ic_media_previous"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:tint="#D4AF37"/>
+        <LinearLayout
+            android:id="@+id/widget_go_music"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:background="@drawable/paran_widget_chip"
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/widget_play_pause"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:src="@android:drawable/ic_media_play"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:tint="#D4AF37"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"/>
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/paran_ic_music"
+                android:tint="@color/paran_w_sub" />
 
-        <ImageButton
-            android:id="@+id/widget_next"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:src="@android:drawable/ic_media_next"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:tint="#D4AF37"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="음악"
+                android:textColor="@color/paran_w_ink"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/widget_go_radio"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:background="@drawable/paran_widget_chip"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/paran_ic_radio"
+                android:tint="@color/paran_w_sub" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="라디오"
+                android:textColor="@color/paran_w_ink"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/widget_go_nature"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:background="@drawable/paran_widget_chip"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/paran_ic_leaf"
+                android:tint="@color/paran_w_sub" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="자연"
+                android:textColor="@color/paran_w_ink"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/widget_go_sleep"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:background="@drawable/paran_widget_chip"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/paran_ic_moon"
+                android:tint="@color/paran_w_sub" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="수면"
+                android:textColor="@color/paran_w_ink"
+                android:textSize="11sp" />
+        </LinearLayout>
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/widget_title"
+    <!-- 아래: 최근에 들은 것 3개 (누르면 바로 재생) — 높이를 바꾸면 PlayerWidget.kt recentRows 숫자도 같이 -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="플레이쏭"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:layout_marginTop="12dp"/>
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/widget_artist"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="음악을 재생해보세요"
-        android:textColor="#AAAAAA"
-        android:textSize="14sp"
-        android:gravity="center"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:layout_marginTop="4dp"/>
+        <TextView
+            android:id="@+id/widget_recent_empty"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/paran_widget_chip"
+            android:gravity="center"
+            android:text="최근에 들은 게 여기에 나와요"
+            android:textColor="@color/paran_w_sub"
+            android:textSize="11.5sp"
+            android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/widget_schedule"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="#E4D194"
-        android:textSize="11sp"
-        android:gravity="center"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:layout_marginTop="4dp"/>
+        <LinearLayout
+            android:id="@+id/widget_recent1"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/paran_widget_chip"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
 
+            <ImageView
+                android:id="@+id/widget_recent1_icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/paran_ic_music"
+                android:tint="@color/paran_w_sub" />
+
+            <TextView
+                android:id="@+id/widget_recent1_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="좋아하는 노래"
+                android:textColor="@color/paran_w_ink"
+                android:textSize="12.5sp" />
+
+            <TextView
+                android:id="@+id/widget_recent1_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:maxWidth="110dp"
+                android:text="가수"
+                android:textColor="@color/paran_w_sub"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/widget_recent2"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/paran_widget_chip"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
+
+            <ImageView
+                android:id="@+id/widget_recent2_icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/paran_ic_radio"
+                android:tint="@color/paran_w_sub" />
+
+            <TextView
+                android:id="@+id/widget_recent2_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="라디오 방송"
+                android:textColor="@color/paran_w_ink"
+                android:textSize="12.5sp" />
+
+            <TextView
+                android:id="@+id/widget_recent2_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:maxWidth="110dp"
+                android:text="라디오"
+                android:textColor="@color/paran_w_sub"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/widget_recent3"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/paran_widget_chip"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
+
+            <ImageView
+                android:id="@+id/widget_recent3_icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/paran_ic_leaf"
+                android:tint="@color/paran_w_sub" />
+
+            <TextView
+                android:id="@+id/widget_recent3_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="빗소리"
+                android:textColor="@color/paran_w_ink"
+                android:textSize="12.5sp" />
+
+            <TextView
+                android:id="@+id/widget_recent3_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:maxWidth="110dp"
+                android:text="자연소리"
+                android:textColor="@color/paran_w_sub"
+                android:textSize="11sp" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

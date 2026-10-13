@@ -179,10 +179,12 @@ class PlayerWidget : AppWidgetProvider() {
             ch.setMethodCallHandler { call, result ->
                 if (call.method == "requestAudioFocus") {
                     result.success(true) // 화면 없을 땐 그냥 통과 (오류 안 나게)
+                } else if (call.method == "refreshWidget") {
+                    refreshAll(app) // 최근에 들은 목록이 바뀜
+                    result.success(null)
                 } else if (call.method == "updateWidget") {
                     val mgr = AppWidgetManager.getInstance(app)
-                    val ids = mgr.getAppWidgetIds(android.content.ComponentName(app, PlayerWidget::class.java))
-                    for (id in ids) updateAppWidget(app, mgr, id,
+                    for (id in allIds(app)) updateAppWidget(app, mgr, id,
                         call.argument<String>("title") ?: "파란소리",
                         call.argument<String>("artist") ?: "",
                         call.argument<Boolean>("isPlaying") ?: false,
@@ -205,12 +207,18 @@ class PlayerWidget : AppWidgetProvider() {
             })
         }
 
-        /// 바탕화면에 붙은 이 위젯 전부 다시 그리기 (앱이 켜지고 꺼질 때)
+        /// 바탕화면에 붙은 파란소리 위젯 전부 (4×2 + 4×3)
+        fun allIds(context: Context): IntArray {
+            val mgr = AppWidgetManager.getInstance(context)
+            return mgr.getAppWidgetIds(android.content.ComponentName(context, PlayerWidget::class.java)) +
+                mgr.getAppWidgetIds(android.content.ComponentName(context, PlayerWidget2::class.java))
+        }
+
+        /// 바탕화면에 붙은 위젯 전부 다시 그리기 (앱이 켜지고 꺼질 때)
         fun refreshAll(context: Context) {
             try {
                 val mgr = AppWidgetManager.getInstance(context)
-                val ids = mgr.getAppWidgetIds(android.content.ComponentName(context, PlayerWidget::class.java))
-                for (id in ids) updateAppWidget(context, mgr, id)
+                for (id in allIds(context)) updateAppWidget(context, mgr, id)
             } catch (_: Exception) {}
         }
 
@@ -244,7 +252,9 @@ class PlayerWidget : AppWidgetProvider() {
             val playing = p.getBoolean("p", false)
             val empty = t == null || t == "플레이쏭" || t == "캣송"
 
-            val views = RemoteViews(context.packageName, R.layout.widget_player)
+            // 4×3 위젯이면 큰 모양 (위는 똑같고, 아래에 최근에 들은 것)
+            val big = appWidgetManager.getAppWidgetInfo(appWidgetId)?.provider?.className == PlayerWidget2::class.java.name
+            val views = RemoteViews(context.packageName, if (big) R.layout.widget_player2 else R.layout.widget_player)
             views.setTextViewText(R.id.widget_title,
                 if (loading) "불러오는 중…" else if (empty) "파란소리" else t)
             views.setTextViewText(R.id.widget_artist,
@@ -269,7 +279,10 @@ class PlayerWidget : AppWidgetProvider() {
             }
             mode(R.id.widget_repeat, loop != 0L)
             mode(R.id.widget_shuffle, shuf)
-            photo(context, appWidgetManager, appWidgetId)?.let { views.setImageViewBitmap(R.id.widget_photo, it) }
+            // 4×3: 아래 '최근에 들었어요' 줄 (사진 칸 높이도 그만큼 빼기)
+            // 4×2: 바로가기 64 / 4×3: 바로가기 54(46 + 위 8) + 최근 줄
+            val bottomDp = if (big) 54 + recentRows(context, views, if (empty) null else t) else 64
+            photo(context, appWidgetManager, appWidgetId, bottomDp, big)?.let { views.setImageViewBitmap(R.id.widget_photo, it) }
 
             // 사진 부분 누르면 앱 열기
             val open = Intent(context, MainActivity::class.java).apply {
@@ -318,13 +331,65 @@ class PlayerWidget : AppWidgetProvider() {
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
 
+        /// 4×3 위젯: '최근에 들었어요' 3개 (지금 위에 나오는 건 빼고) — 누르면 바로 재생
+        /// 돌려주는 값: 아래 칸 높이(dp) → 사진 칸 크기 맞추기용 (위 4 + 아래 10 + 줄마다 40)
+        private fun recentRows(context: Context, views: RemoteViews, now: String?): Int {
+            val rows = arrayOf(
+                intArrayOf(R.id.widget_recent1, R.id.widget_recent1_icon, R.id.widget_recent1_title, R.id.widget_recent1_sub),
+                intArrayOf(R.id.widget_recent2, R.id.widget_recent2_icon, R.id.widget_recent2_title, R.id.widget_recent2_sub),
+                intArrayOf(R.id.widget_recent3, R.id.widget_recent3_icon, R.id.widget_recent3_title, R.id.widget_recent3_sub)
+            )
+            // 앱이 저장해 둔 '최근에 들었어요' 목록 (음악·라디오·자연만)
+            val list = mutableListOf<org.json.JSONObject>()
+            try {
+                // 앱이 지금 듣는 종류에 맞춰 골라 둔 3개 (아직 없으면 '최근에 들었어요' 앞에서)
+                val fp = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+                val picked = fp.getString("flutter.w_list", null)
+                val raw = picked ?: fp.getString("flutter.recent_content_v1", null)
+                if (raw != null) {
+                    val arr = org.json.JSONArray(raw)
+                    for (i in 0 until arr.length()) {
+                        val o = arr.getJSONObject(i)
+                        val type = o.optString("type")
+                        if (type != "music" && type != "radio" && type != "nature") continue
+                        if (picked == null && now != null && o.optString("title") == now) continue
+                        list.add(o)
+                        if (list.size == rows.size) break
+                    }
+                }
+            } catch (_: Exception) {}
+            rows.forEachIndexed { i, r ->
+                val o = list.getOrNull(i)
+                if (o == null) {
+                    views.setViewVisibility(r[0], View.GONE)
+                    return@forEachIndexed
+                }
+                val type = o.optString("type")
+                views.setViewVisibility(r[0], View.VISIBLE)
+                views.setImageViewResource(r[1], when (type) {
+                    "radio" -> R.drawable.paran_ic_radio
+                    "nature" -> R.drawable.paran_ic_leaf
+                    else -> R.drawable.paran_ic_music
+                })
+                views.setTextViewText(r[2], o.optString("title"))
+                views.setTextViewText(r[3], o.optString("subtitle"))
+                // 아래 버튼(음악·라디오·자연)과 같은 길로 → 앱이 꺼져 있어도 바로 재생
+                views.setOnClickPendingIntent(r[0], PendingIntent.getBroadcast(context, 40 + i,
+                    Intent(context, PlayerWidget::class.java)
+                        .setAction(ACTION_KIND + "recent:" + type + "|" + o.optString("key")),
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE))
+            }
+            views.setViewVisibility(R.id.widget_recent_empty, if (list.isEmpty()) View.VISIBLE else View.GONE)
+            return 14 + 40 * maxOf(list.size, 1)
+        }
+
         /// 지금 시간대 라디오 사진 (아침 5–11 · 낮 11–17 · 저녁 17–22 · 밤)
         /// 위젯 띠 모양으로 자르고, 모서리 둥글게, 아래쪽은 글자가 보이게 살짝 어둡게
-        private fun photo(context: Context, mgr: AppWidgetManager, id: Int): Bitmap? {
-            // 사진 칸 크기(dp): 위젯 크기 - 아래 바로가기 줄(46 + 위 8 + 아래 10)
+        private fun photo(context: Context, mgr: AppWidgetManager, id: Int, bottomDp: Int, big: Boolean): Bitmap? {
+            // 사진 칸 크기(dp): 위젯 크기 - 아래 줄 (4×2 바로가기 64 · 4×3 최근에 들은 것)
             val opt = mgr.getAppWidgetOptions(id)
             val vw = opt.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH).takeIf { it > 0 } ?: 250
-            val vh = ((opt.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT).takeIf { it > 0 } ?: 180) - 64)
+            val vh = ((opt.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT).takeIf { it > 0 } ?: if (big) 280 else 180) - bottomDp)
                 .coerceAtLeast(56)
             // 바깥 모서리 크기(dp) = res/values 의 paran_w_radius (안드로이드 12 이상은 폰이 정한 크기)
             val dens = context.resources.displayMetrics.density

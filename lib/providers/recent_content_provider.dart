@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/recent_content_entry.dart';
 import '../models/song.dart';
@@ -35,6 +36,10 @@ class RecentContentProvider extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       final raw = jsonEncode(_entries.map((e) => e.toJson()).toList());
       await prefs.setString(_prefsKey, raw);
+    } catch (_) {}
+    // 홈 위젯(4×3)의 '최근에 들었어요'도 다시 그리기
+    try {
+      await const MethodChannel('kr.ssing.catsong/media').invokeMethod('refreshWidget');
     } catch (_) {}
   }
 

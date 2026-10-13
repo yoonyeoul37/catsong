@@ -185,6 +185,12 @@ flutter:
     - assets/radio_media_day.jpg
     - assets/radio_media_evening.jpg
     - assets/radio_media_night.jpg
+    - assets/widget_photo1.jpg
+    - assets/widget_photo2.jpg
+    - assets/widget_photo3.jpg
+    - assets/widget_photo4.jpg
+    - assets/widget_photo5.jpg
+    - assets/widget_photo6.jpg
 
 flutter_native_splash:
   color: "#F4EFE5"                  # 라이트: 앱과 같은 크림색 (첫인사 바탕도 같은 색)

@@ -329,14 +329,13 @@ class PlayerWidget : AppWidgetProvider() {
             // 바깥 모서리 크기(dp) = res/values 의 paran_w_radius (안드로이드 12 이상은 폰이 정한 크기)
             val dens = context.resources.displayMetrics.density
             val radiusDp = context.resources.getDimension(R.dimen.paran_w_radius) / dens
-            val h = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-            val slot = when (h) {
-                in 5..10 -> "morning"
-                in 11..16 -> "day"
-                in 17..21 -> "evening"
-                else -> "night"
-            }
-            val path = "flutter_assets/assets/radio_media_$slot.jpg"
+            // 위젯 사진 6장 중 하루에 한 장 (하루 동안은 같고, 어제와 같은 사진은 안 나옴)
+            val cal = Calendar.getInstance()
+            val day = cal.get(Calendar.YEAR) * 400 + cal.get(Calendar.DAY_OF_YEAR)
+            fun pick(d: Int) = java.util.Random(d.toLong() * 7919).nextInt(6)
+            var n = pick(day)
+            if (n == pick(day - 1)) n = (n + 1) % 6
+            val path = "flutter_assets/assets/widget_photo${n + 1}.jpg"
             return try {
                 val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
                 context.assets.open(path).use { BitmapFactory.decodeStream(it, null, bounds) }

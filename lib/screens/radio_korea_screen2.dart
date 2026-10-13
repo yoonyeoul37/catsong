@@ -1730,7 +1730,10 @@ class _DialHostState extends State<_DialHost> with SingleTickerProviderStateMixi
   bool _onScroll(ScrollNotification n) {
     if (n.depth != 0) return false;
     _px.value = n.metrics.pixels;
-    if (n is ScrollStartNotification || (n is ScrollUpdateNotification && !_scrolling.value)) {
+    // 손가락으로 직접 끌 때만 (하트 눌러서 목록이 살짝 바뀌는 건 무시)
+    final byFinger = (n is ScrollStartNotification && n.dragDetails != null) ||
+        (n is ScrollUpdateNotification && n.dragDetails != null);
+    if (byFinger && !_scrolling.value) {
       _relaxTimer?.cancel();
       _heartTimer?.cancel();
       _scrolling.value = true;

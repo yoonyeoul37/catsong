@@ -760,6 +760,13 @@ class _IntroViewState extends State<_IntroView> with TickerProviderStateMixin {
   late final AnimationController _p =
       AnimationController(vsync: this, duration: const Duration(milliseconds: 1100));
   bool _started = false;
+  // 켤 때마다 인사말 한 줄을 무작위로
+  final String _line = _greetingLines[Random().nextInt(5)];
+  String get _greet {
+    final ko = Localizations.localeOf(context).languageCode == 'ko';
+    final i = _greetingLines.indexOf(_line);
+    return ko ? _line : _greetingLinesEn[i];
+  }
 
   // 소리 파형: 막대 20개 높이 · 색 (홈 카드 색: 살구 → 보라 → 흰 → 연두 → 살구)
   static const _barH = <int>[4, 7, 11, 16, 10, 20, 14, 24, 18, 12, 22, 15, 9, 17, 11, 6, 13, 8, 5, 4];
@@ -777,7 +784,7 @@ class _IntroViewState extends State<_IntroView> with TickerProviderStateMixin {
         if (mounted) widget.onDone();
       });
       Future.delayed(const Duration(milliseconds: 2600), () {
-        if (mounted) _p.repeat(reverse: true);
+        if (mounted) _p.repeat(); // 끝인사와 같은 숨 쉬기 (1.1초마다 한 번)
       });
     });
   }
@@ -871,11 +878,14 @@ class _IntroViewState extends State<_IntroView> with TickerProviderStateMixin {
                                 width: 3,
                                 height: bh.clamp(2.0, 40.0),
                                 decoration: BoxDecoration(
-                                  color: Color.lerp(_barColors[i], const Color(0xFF17140F), 0.45),
+                                  // 낮 버전: 끝인사와 같은 색을 조금 진하게 (밝은 사진 위에서 보이게)
+                                  // 연한 첫인사 사진에 어울리게: 파스텔에 먹색 살짝 + 조금 투명하게
+                                  // 'Paransori' 글자와 같은 먹색 한 가지로 (사진과 안 튀게)
+                                  color: const Color(0xFF17140F).withOpacity(0.55),
                                   borderRadius: BorderRadius.circular(3),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withOpacity(0.08),
+                                      color: Colors.white.withOpacity(0.35),
                                       blurRadius: 6,
                                       offset: const Offset(0, 1),
                                     ),
@@ -887,6 +897,31 @@ class _IntroViewState extends State<_IntroView> with TickerProviderStateMixin {
                         ],
                       ),
                     ),
+                    const SizedBox(height: 16),
+                    // 인사말 한 줄 (끝인사 한 줄과 같은 자리·크기)
+                    Builder(builder: (_) {
+                      final s = _seg(2.4, 3.2, Curves.easeOutCubic);
+                      return Opacity(
+                        opacity: s,
+                        child: Transform.translate(
+                          offset: Offset(0, 10 * (1 - s)),
+                          child: Text(
+                            _greet,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: const Color(0xFF17140F).withOpacity(0.85),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 0.2,
+                              decoration: TextDecoration.none,
+                              shadows: [
+                                Shadow(color: Colors.white.withOpacity(0.6), blurRadius: 8, offset: const Offset(0, 1)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
                   ],
                 ),
               ),
@@ -896,6 +931,22 @@ class _IntroViewState extends State<_IntroView> with TickerProviderStateMixin {
     );
   }
 }
+
+/// 첫인사 인사말 (켤 때마다 하나씩 무작위) — 번역할 때 일본어·중국어 추가
+const _greetingLines = <String>[
+  '오늘도 좋은 소리와 함께해요',
+  '반가워요, 잠시 쉬어가요',
+  '편안한 하루 되세요',
+  '오늘 하루도 반가워요',
+  '마음이 쉬어가는 곳, 파란소리',
+];
+const _greetingLinesEn = <String>[
+  'Welcome back',
+  'Good sounds, good day',
+  'Take a moment for yourself',
+  'Your sounds are waiting',
+  'Relax and listen',
+];
 
 class _WavePainter extends CustomPainter {
   final Color color;

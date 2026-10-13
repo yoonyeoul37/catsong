@@ -81,7 +81,6 @@ class _FarewellTitleState extends State<FarewellTitle> with SingleTickerProvider
                         height: 34,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             for (var i = 0; i < _barH.length; i++) ...[
                               if (i > 0) const SizedBox(width: 3.5),
@@ -101,8 +100,17 @@ class _FarewellTitleState extends State<FarewellTitle> with SingleTickerProvider
                                     width: 3,
                                     height: bh.clamp(2.0, 40.0),
                                     decoration: BoxDecoration(
-                                      color: _barColors[i],
+                                      // 밤 버전: 첫인사와 같은 색을 밝게 (어두운 사진 위에서 보이게)
+                                      // 'Paransori' 글자와 같은 흰색 한 가지로 (사진과 안 튀게)
+                                      color: Colors.white.withOpacity(0.75),
                                       borderRadius: BorderRadius.circular(3),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.25),
+                                          blurRadius: 6,
+                                          offset: const Offset(0, 1),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 );

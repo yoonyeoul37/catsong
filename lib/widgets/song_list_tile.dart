@@ -83,7 +83,13 @@ class SongListTile extends StatelessWidget {
       onTap: () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         FocusManager.instance.primaryFocus?.unfocus();
-        context.read<PlayerProvider>().playFromList(songList, index);
+        final player = context.read<PlayerProvider>();
+        if (isCurrentSong) {
+          // 지금 듣는 곡이면 처음부터 다시 틀지 않고 재생화면만 (멈춰 있으면 이어서 재생)
+          if (!player.isPlaying) player.togglePlayPause();
+        } else {
+          player.playFromList(songList, index);
+        }
         Navigator.push(
           context,
           PageRouteBuilder(

@@ -6,6 +6,7 @@ import '../utils/point_color.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../utils/greeting_images.dart';
+import '../widgets/farewell_title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../models/radio_station.dart';
@@ -217,7 +218,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         smallText = 'Did you enjoy your time\nwith Paransori?\n\nCome back anytime — we\'ll\nwelcome you with great sounds again.\nGoodbye, and see you soon!';
         farewellAsset = 'assets/farewell_en.mp3';
     }
-    if (context.read<ThemeProvider>().voiceGreetingEnabled) {
+    if (langCode == 'ko' && context.read<ThemeProvider>().voiceGreetingEnabled) { // 목소리는 한국어만
       final farewellPlayer = AudioPlayer();
       farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
     }
@@ -248,13 +249,26 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                 ),
               ),
               alignment: Alignment.center,
-              child: const SizedBox.shrink(),
+              child: const FarewellTitle(), // Paransori + 소리 막대 + 한 줄 인사
             ),
           ),
         ),
       ),
     );
     overlay.insert(entry);
+
+    // 끝인사 동안 라디오 소리를 천천히 작게 (음악 종료와 같게)
+    final radio = context.read<RadioProvider>();
+    final fadeStart = DateTime.now();
+    Timer.periodic(const Duration(milliseconds: 100), (t) {
+      final p = DateTime.now().difference(fadeStart).inMilliseconds / 5000;
+      if (p >= 1) {
+        t.cancel();
+        radio.setAlarmVolume(0);
+        return;
+      }
+      radio.setAlarmVolume((1 - p) * (1 - p)); // 처음부터 귀에 띄게 줄어듦
+    });
 
     Future.delayed(const Duration(milliseconds: 6500), () async {
       late OverlayEntry fadeOutEntry;
@@ -274,7 +288,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
       );
       overlay.insert(fadeOutEntry);
 
-      await context.read<RadioProvider>().stopRadio();
+      await radio.stopRadio();
+      await radio.setAlarmVolume(1.0); // 다음에 켤 때는 원래 크기로
       final handler = globalAudioHandler;
       if (handler is SimpleAudioHandler) {
         handler.setRadioMode(false);

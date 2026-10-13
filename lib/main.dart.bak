@@ -825,7 +825,7 @@ class _IntroViewState extends State<_IntroView> with TickerProviderStateMixin {
               Positioned(
                 left: 0,
                 right: 0,
-                top: h * 0.22, // 파란 하늘 자리
+                top: h * 0.13, // 사람·소품과 안 겹치게 위쪽 빈 곳
                 child: Column(
                   children: [
                     Opacity(

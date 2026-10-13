@@ -28,7 +28,7 @@ import '../widgets/equalizer_animation.dart';
 import '../l10n/app_localizations.dart';
 import 'package:audio_service/audio_service.dart';
 import '../main.dart' show globalAudioHandler;
-import '../providers/player_provider.dart' show SimpleAudioHandler;
+import '../providers/player_provider.dart' show SimpleAudioHandler, PlayerProvider;
 import '../providers/theme_provider.dart';
 import 'package:just_audio/just_audio.dart';
 import 'nature_sounds_screen.dart';
@@ -257,6 +257,18 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     );
     overlay.insert(entry);
 
+    // 끝인사 동안 음악·라디오 소리를 1.5초에 걸쳐 천천히 작게 (목소리가 잘 들리게)
+    final fadePlayer = context.read<PlayerProvider>().player;
+    final fadeRadio = context.read<RadioProvider>();
+    final fadeStart = DateTime.now();
+    Timer.periodic(const Duration(milliseconds: 50), (t) {
+      final p = (DateTime.now().difference(fadeStart).inMilliseconds / 1500).clamp(0.0, 1.0);
+      final v = 1 - 0.88 * Curves.easeOut.transform(p);
+      fadePlayer.setVolume(v);
+      fadeRadio.setAlarmVolume(v);
+      if (p >= 1) t.cancel();
+    });
+
     Future.delayed(const Duration(milliseconds: 6500), () async {
       late OverlayEntry fadeOutEntry;
       fadeOutEntry = OverlayEntry(
@@ -275,7 +287,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
       );
       overlay.insert(fadeOutEntry);
 
-      await context.read<RadioProvider>().stopRadio();
+      await fadeRadio.stopRadio();
+      await fadeRadio.setAlarmVolume(1.0); // 다음에 켤 때는 원래 크기로
       final handler = globalAudioHandler;
       if (handler is SimpleAudioHandler) {
         handler.setRadioMode(false);

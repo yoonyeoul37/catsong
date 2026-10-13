@@ -75,6 +75,7 @@ class SongListTile extends StatelessWidget {
     final isPlayingNow = context.select<PlayerProvider, bool>((p) => p.currentSong?.id == song.id && p.isPlaying);
     final isFav = context.select<MusicProvider, bool>((m) => m.isFavorite(song.id));
     final trimmed = context.select<MusicProvider, bool>((m) => m.isTrimmedWithOriginal(song));
+    final isNew = context.select<MusicProvider, bool>((m) => m.isNewSong(song)); // 새로 들어온 곡
     final primaryColor = Theme.of(context).colorScheme.primary;
     final isDarkMode = forceWhiteText ? true : context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
@@ -127,15 +128,22 @@ class SongListTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  hlText(
-                    song.titleDisplay,
-                    highlight,
-                    TextStyle(
-                      color: isCurrentSong ? primaryColor : baseColor,
-                      fontSize: 15,
-                      fontWeight: isCurrentSong ? FontWeight.w600 : FontWeight.w500,
-                    ),
-                    primaryColor,
+                  Row(
+                    children: [
+                      Flexible(
+                        child: hlText(
+                          song.titleDisplay,
+                          highlight,
+                          TextStyle(
+                            color: isCurrentSong ? primaryColor : baseColor,
+                            fontSize: 15,
+                            fontWeight: isCurrentSong ? FontWeight.w600 : FontWeight.w500,
+                          ),
+                          primaryColor,
+                        ),
+                      ),
+                      // (새 곡 표시는 목록 맨 위 '새로 들어온 곡' 머리글 점 하나로)
+                    ],
                   ),
                   const SizedBox(height: 3),
                   hlText(

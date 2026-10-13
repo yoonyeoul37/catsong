@@ -57,6 +57,7 @@ import 'radio_player_screen.dart';
 import '../utils/nature_sound_catalog.dart';
 import '../utils/paran_photo.dart';
 import '../utils/no_album_helper.dart';
+import '../utils/point_color.dart';
 import '../utils/widget_go.dart';
 import '../services/headset_resume.dart';
 import '../utils/index_letter.dart';
@@ -110,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<String, int> _indexCounts = const {}; // 초성별 곡 수
   int _indexFingerprint = -1;
   static const double _indexHeaderH = 34; // 위 여백 + 초성 글자
+  int _newTopRows = 0; // 목록 맨 위 '새로 들어온 곡' 곡 수 (빠른 이동 위치 계산용)
 
   // 정렬: false = 제목, true = 가수 (가수일 땐 초성 바도 가수 이름 기준 + 가수 묶음 줄)
   bool _byArtist = false;
@@ -217,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
     final top = _songListController.offset + 1;
-    double y = 0;
+    double y = _newTopRows > 0 ? _indexHeaderH + _newTopRows * rowH : 0; // 맨 위 새 곡 칸
     String? cur;
     for (final e in _indexEntries) {
       if (y > top) break;
@@ -240,13 +242,53 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
       }
     }
-    double offset = 0;
+    double offset = _newTopRows > 0 ? _indexHeaderH + _newTopRows * rowH : 0; // 맨 위 새 곡 칸
     for (var j = 0; j < hi; j++) {
       final t = _indexEntries[j].$2;
       offset += t == -1 ? _indexHeaderH : (t == -2 ? _artistHeaderH : rowH);
     }
     final max = _songListController.position.maxScrollExtent;
     _songListController.jumpTo(offset.clamp(0.0, max));
+  }
+
+  /// 목록 맨 위 '새로 들어온 곡' 머리글: 초성 머리글과 같은 모양 + 앞에 포인트 색 점
+  Widget _buildNewHeader(int count, bool isDark) {
+    return SizedBox(
+      height: _indexHeaderH,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(22, 14, 12, 2),
+        child: Align(
+          alignment: Alignment.bottomLeft,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 7,
+                height: 7,
+                decoration: BoxDecoration(color: pointColorOf(context), shape: BoxShape.circle),
+              ),
+              const SizedBox(width: 7),
+              Text(
+                '새로 들어온 곡',
+                style: TextStyle(
+                  color: isDark ? Colors.white.withOpacity(0.85) : const Color(0xFF4A443B),
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(width: 7),
+              Text(
+                '$count ${AppLocalizations.of(context)!.songCount}',
+                style: TextStyle(
+                  color: (isDark ? kIndexMutedDark : kIndexMuted).withOpacity(0.6),
+                  fontSize: 11,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   /// 목록 안 초성 머리글: 바·선 없이 회갈색 초성 + 연한 곡 수
@@ -2493,7 +2535,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildTopCard(MusicProvider music, bool isDark) {
     final clean = _buildCleanHint(music, isDark);
     if (clean is! SizedBox) return clean; // 정리할 곡이 있으면 정리 카드가 먼저
-    if (music.metaLoading || _showFavorites || _showRecent || _isSelectionMode) return clean;
+    if (_showFavorites || _showRecent || _isSelectionMode) return clean; // 곡 정보를 다 안 읽어도 바로
     HomeCardPref.load();
     return ValueListenableBuilder<bool>(
       valueListenable: HomeCardPref.on,
@@ -2521,6 +2563,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final notPlayed = kind == 1 ? music.songsNotPlayedFor(const Duration(days: 30)) : const <Song>[];
     final weekCount = kind == 2 ? music.weekPlayCount : 0;
     final weekTop = kind == 2 ? music.weekTopSong : null;
+    final cardSongs = <Song>[]; // 카드에 나오는 곡 (이 곡 정보부터 먼저 읽기)
     // 보여줄 게 없으면 시간대 추천으로
     if (kind == 0 && songs.isEmpty) kind = 3;
     if (kind == 1 && notPlayed.length < 3) kind = 3;
@@ -2566,6 +2609,7 @@ class _HomeScreenState extends State<HomeScreen> {
         label = '오늘의 곡';
       }
       final i = songs.indexWhere((x) => x.uri == s.uri);
+      cardSongs.add(s);
       icon = Icons.album_outlined;
       lead = _cardArt(s, 40, isDark);
       title = '오늘은 이 곡 어때요';
@@ -2582,6 +2626,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onAction = () => context.read<PlayerProvider>().playFromList(i >= 0 ? songs : [s], i >= 0 ? i : 0);
     } else if (kind == 1) {
       // ② 한 달 동안 안 들은 곡 (섞어서 틀기)
+      cardSongs.addAll(notPlayed.take(3));
       icon = Icons.history_rounded;
       label = '다시 듣기';
       lead = SizedBox(
@@ -2613,6 +2658,7 @@ class _HomeScreenState extends State<HomeScreen> {
     } else if (kind == 2) {
       // ③ 최근 7일 듣기 기록 + 가장 많이 들은 곡
       final top = weekTop!;
+      cardSongs.add(top);
       icon = Icons.bar_chart_rounded;
       label = '내 기록';
       lead = Container(
@@ -2753,12 +2799,18 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
+    // 카드에 나올 곡 정보를 아직 못 읽었으면: 그 곡부터 먼저 읽고, 그동안 띠만 (다 읽으면 글자가 스르르)
+    final ready = cardSongs.every(music.metaReady);
+    if (!ready) music.readFirst(cardSongs);
     return Container(
       // 모서리·그림자 없이 양옆 끝까지
       margin: const EdgeInsets.only(bottom: 4),
       padding: const EdgeInsets.fromLTRB(20, 10, 8, 10),
       decoration: BoxDecoration(color: card),
-      child: Row(
+      child: AnimatedOpacity(
+        opacity: ready ? 1 : 0,
+        duration: const Duration(milliseconds: 250),
+        child: Row(
         children: [
           lead,
           const SizedBox(width: 12),
@@ -2819,6 +2871,7 @@ class _HomeScreenState extends State<HomeScreen> {
             constraints: const BoxConstraints(minWidth: 34, minHeight: 34),
           ),
         ],
+      ),
       ),
     );
   }
@@ -3048,7 +3101,16 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: Builder(builder: (context) {
               // 빠른 이동 막대: 30곡 이상이고 검색 중이 아닐 때만
-              final listSongs = musicProvider.songs;
+              // 새로 들어온 곡은 목록 맨 위로 (원래 자리에서는 빼기) — 전체 보기에서만, 검색 중엔 원래대로
+              final newOnes = (!_isSearching && !_showFavorites && !_showRecent)
+                  ? musicProvider.newSongs
+                  : const <Song>[];
+              final newIds = {for (final s in newOnes) s.id};
+              final allListSongs = musicProvider.songs;
+              final listSongs = newOnes.isEmpty
+                  ? allListSongs
+                  : allListSongs.where((s) => !newIds.contains(s.id)).toList();
+              _newTopRows = newOnes.length; // 빠른 이동 위치 계산용
               final showIndexBar = listSongs.length >= 30 && !_isSearching;
               // 가수 정렬이면 곡이 적어도 가수별로 묶어서 보여줌
               final grouped = showIndexBar || (_byArtist && !_isSearching);
@@ -3057,10 +3119,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? _indexEntries.where((e) => e.$2 == -1).map((e) => e.$1!).toSet()
                   : <String>{};
               // 막대가 있을 땐 묶음 순서(A-Z → ㄱ~ㅎ → #) + 머리글, 아니면 원래 목록 그대로
-              final viewSongs = grouped ? _indexSongs : listSongs;
-              final List<(String?, int)> entries = grouped
+              final baseSongs = grouped ? _indexSongs : listSongs;
+              final List<(String?, int)> baseEntries = grouped
                   ? _indexEntries
                   : [for (var k = 0; k < listSongs.length; k++) (null, k)];
+              // 맨 위: '새로 들어온 곡' 머리글(-3) + 새 곡들 → 그 아래 원래 목록
+              final viewSongs = newOnes.isEmpty ? baseSongs : [...newOnes, ...baseSongs];
+              final List<(String?, int)> entries = newOnes.isEmpty
+                  ? baseEntries
+                  : [
+                      ('새로 들어온 곡', -3),
+                      for (var k = 0; k < newOnes.length; k++) (null, k),
+                      for (final e in baseEntries) e.$2 >= 0 ? (e.$1, e.$2 + newOnes.length) : e,
+                    ];
               final isDarkList = baseColor == Colors.white;
               return Stack(
               children: [
@@ -3074,6 +3145,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemCount: entries.length,
                   itemBuilder: (context, i) {
                     final entry = entries[i];
+                    if (entry.$2 == -3) {
+                      return _buildNewHeader(newOnes.length, isDarkList); // 새로 들어온 곡 머리글
+                    }
                     if (entry.$2 == -2) {
                       return _buildArtistHeader(entry.$1!, isDarkList); // 가수 이름 줄
                     }

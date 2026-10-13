@@ -23,6 +23,19 @@ class MusicProvider extends ChangeNotifier {
   bool _isLoading = true;
   bool _metaLoading = false; // 2단계: 곡 정보(제목·가수)를 뒤에서 읽는 중
   bool get metaLoading => _metaLoading;
+  final Set<String> _metaDone = {}; // 2단계에서 정보를 다 읽은 곡
+  final List<String> _metaFirst = []; // 먼저 읽어 줄 곡 (홈 오늘의 카드에 나올 곡)
+
+  /// 이 곡 정보(제목·가수·사진)를 다 읽었는지
+  bool metaReady(Song s) => !_metaLoading || (s.uri != null && _metaDone.contains(s.uri));
+
+  /// 이 곡들 정보부터 먼저 읽기 (오늘의 카드가 목록과 같이 바로 나오게)
+  void readFirst(Iterable<Song> list) {
+    for (final s in list) {
+      final u = s.uri;
+      if (u != null && !_metaDone.contains(u) && !_metaFirst.contains(u)) _metaFirst.add(u);
+    }
+  }
   bool _hasPermission = false;
   String _errorMessage = '';
 
@@ -293,6 +306,50 @@ class MusicProvider extends ChangeNotifier {
             (_lastPlayed[s.uri!] ?? 0) < cut)
         .toList()
       ..sort((a, b) => playCountOf(b).compareTo(playCountOf(a)));
+  }
+
+  // ───── 새로 들어온 곡 ─────
+  // 곡 경로 → 앱이 처음 본 시각(ms). 0 = 이 기능이 생기기 전부터 있던 곡 (새 곡 아님)
+  Map<String, int> _firstSeen = {};
+  bool _seenLoaded = false;
+
+  Future<void> _updateFirstSeen(List<Song> found) async {
+    final prefs = await SharedPreferences.getInstance();
+    final first = !prefs.containsKey('song_first_seen'); // 처음이면 지금 있는 곡은 전부 '예전 곡'
+    if (!_seenLoaded) {
+      try {
+        final raw = prefs.getString('song_first_seen');
+        if (raw != null) {
+          final Map decoded = jsonDecode(raw);
+          _firstSeen = decoded.map((k, v) => MapEntry(k.toString(), (v as num).toInt()));
+        }
+      } catch (_) {}
+      _seenLoaded = true;
+    }
+    final now = DateTime.now().millisecondsSinceEpoch;
+    for (final s in found) {
+      final u = s.uri;
+      if (u != null) _firstSeen.putIfAbsent(u, () => first ? 0 : now);
+    }
+    // (지운 곡도 기억은 남겨 둠 → 폴더가 잠깐 안 보였다 다시 보여도 새 곡으로 안 뜸)
+    await prefs.setString('song_first_seen', jsonEncode(_firstSeen));
+  }
+
+  /// 새로 들어온 곡인지: 처음 본 지 7일 안 + 그 뒤로 30초 이상 안 들음
+  bool isNewSong(Song s) {
+    final u = s.uri;
+    if (u == null) return false;
+    final seen = _firstSeen[u] ?? 0;
+    if (seen <= 0) return false;
+    if (DateTime.now().millisecondsSinceEpoch - seen > const Duration(days: 7).inMilliseconds) return false;
+    return (_lastPlayed[u] ?? 0) < seen;
+  }
+
+  /// 새로 들어온 곡 (최근 들어온 순, 최대 10곡, 녹음 빼고)
+  List<Song> get newSongs {
+    final out = _songs.where((s) => !isCallRecordingPath(s.uri) && isNewSong(s)).toList()
+      ..sort((a, b) => (_firstSeen[b.uri] ?? 0).compareTo(_firstSeen[a.uri] ?? 0));
+    return out.length > 10 ? out.sublist(0, 10) : out;
   }
 
   List<String> _recentSongUris = [];
@@ -636,15 +693,38 @@ class MusicProvider extends ChangeNotifier {
       _buildAlbums();
       _buildArtists();
       _buildFolders();
+      if (foundSongs.isNotEmpty) await _updateFirstSeen(foundSongs); // 새로 들어온 곡 찾기
       await _loadRecentSongs();
       _isLoading = false;
       notifyListeners();
 
       // 2단계: 백그라운드에서 메타데이터 읽기
       _metaLoading = true;
+      _metaDone.clear();
       int updateCount = 0;
-      for (final song in _songs) {
+      final pending = List<Song>.from(_songs);
+      final byUri = {for (final s in pending) if (s.uri != null) s.uri!: s};
+      final taken = <String>{};
+      var next = 0;
+      while (true) {
+        // 오늘의 카드에 나올 곡부터 먼저, 나머지는 목록 순서대로
+        Song? pick;
+        var first = false;
+        while (_metaFirst.isNotEmpty && pick == null) {
+          final u = _metaFirst.removeAt(0);
+          if (!taken.contains(u)) pick = byUri[u];
+          first = pick != null;
+        }
+        if (pick == null) {
+          while (next < pending.length && taken.contains(pending[next].uri)) {
+            next++;
+          }
+          if (next >= pending.length) break;
+          pick = pending[next++];
+        }
+        final Song song = pick!;
         if (song.uri == null) continue;
+        taken.add(song.uri!);
         try {
           final metadata = await _channel.invokeMethod(
               'getSongMetadata', {'path': song.uri});
@@ -685,8 +765,9 @@ class MusicProvider extends ChangeNotifier {
           if (art != null) song.albumArt = art;
         }
         updateCount++;
-        // 10개마다 한 번씩 업데이트
-        if (updateCount % 10 == 0) {
+        _metaDone.add(song.uri!);
+        // 10개마다 한 번씩 업데이트 (카드 곡은 읽자마자 바로)
+        if (first || updateCount % 10 == 0) {
           notifyListeners();
         }
       }

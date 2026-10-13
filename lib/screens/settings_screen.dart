@@ -53,10 +53,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _isFlashlightOn = false;
   bool _isSosOn = false;
 
+  // 돋보기: 설정 글자만 크게 (기본 → 크게 → 아주 크게) — 설정 도움말과 같은 크기를 같이 기억
+  static const _zoomLevels = [1.0, 1.2, 1.4];
+  static const _zoomNames = ['기본', '크게', '아주 크게'];
+  double _zoom = 1.0;
+
+  int get _zoomIndex {
+    var best = 0;
+    for (var i = 0; i < _zoomLevels.length; i++) {
+      if ((_zoomLevels[i] - _zoom).abs() < (_zoomLevels[best] - _zoom).abs()) best = i;
+    }
+    return best;
+  }
+
+  void _nextZoom() {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    _hideBubble();
+    final next = _zoomLevels.firstWhere((l) => l > _zoom + 0.01, orElse: () => _zoomLevels.first);
+    setState(() => _zoom = next);
+    SharedPreferences.getInstance().then((p) => p.setDouble('helpZoom', next));
+  }
+
   @override
   void initState() {
     super.initState();
     HomeCardPref.load();
+    SharedPreferences.getInstance().then((p) {
+      final z = p.getDouble('helpZoom');
+      if (z != null && mounted) setState(() => _zoom = z.clamp(1.0, 1.6));
+    });
   }
 
   @override
@@ -114,6 +139,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios, color: AppTheme.fixedAccent, size: 20),
         ),
+        actions: [
+          // 돋보기: 기본 → 크게 → 아주 크게 (설정 도움말과 같은 모양)
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: TextButton.icon(
+              onPressed: _nextZoom,
+              style: TextButton.styleFrom(
+                foregroundColor: _sText(isDarkMode),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                minimumSize: const Size(48, 40),
+              ),
+              icon: Icon(_zoomIndex == _zoomLevels.length - 1 ? Icons.zoom_out_rounded : Icons.zoom_in_rounded, size: 22),
+              label: Text(_zoomNames[_zoomIndex],
+                  style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600)),
+            ),
+          ),
+        ],
         bottom: PreferredSize(preferredSize: Size.fromHeight(1), child: Divider(height: 1, color: _sBorder(isDarkMode))),
       ),
       body: SafeArea(
@@ -123,6 +165,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _hideBubble();
           return false;
         },
+        // 이 화면 글자만 크게 (앱 전체 글자 크기 × 돋보기)
+        child: MediaQuery(
+        data: MediaQuery.of(context).copyWith(
+            textScaler: TextScaler.linear(MediaQuery.of(context).textScaler.scale(1) * _zoom)),
         child: ListView(
         padding: const EdgeInsets.only(bottom: 16),
         children: [
@@ -204,7 +250,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // ── 기타 ──
           _buildSection('기타'),
           _buildTile(context, icon: Icons.help_outline_rounded, title: '설정 도움말', desc: '권한, 배터리 및 알림 설정을 안내해요',
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsHelpScreen())),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsHelpScreen()))
+                  .then((_) => SharedPreferences.getInstance().then((p) {
+                        final z = p.getDouble('helpZoom');
+                        if (z != null && mounted) setState(() => _zoom = z.clamp(1.0, 1.6));
+                      })),
               primaryColor: primaryColor, isFirst: true),
           _buildTile(context, icon: Icons.card_giftcard_outlined, title: l.promoCode, onTap: () async {
             await _showPromoCodeDialog(context);
@@ -217,6 +267,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Center(child: Text('KNEXM.Co.,LTD', style: TextStyle(color: Colors.grey[400], fontSize: 12))),
           const SizedBox(height: 8),
         ],
+      ),
       ),
       ),
       ),

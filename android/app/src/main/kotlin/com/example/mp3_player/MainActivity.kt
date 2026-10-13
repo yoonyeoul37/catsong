@@ -24,6 +24,10 @@ class MainActivity : AudioServiceActivity() {
     companion object {
         // 녹음 알림 버튼(일시정지·이어서·완료) → 앱(녹음 화면)으로 전달
         var recordingChannel: MethodChannel? = null
+        // 홈 위젯 재생 버튼 → 앱 (앱이 켜져 있을 때만 있음)
+        var mediaChannel: MethodChannel? = null
+        // 앱 화면이 살아 있는지 (위젯 재생 버튼이 어떻게 동작할지 정함)
+        var activityAlive = false
     }
     private var equalizer: Equalizer? = null
     private var audioFocusRequest: AudioFocusRequest? = null
@@ -50,11 +54,29 @@ class MainActivity : AudioServiceActivity() {
     // 폰의 알람 시계(setAlarmClock)에 예약 → 시간이 되면 이 화면이 잠금화면 위로 켜지고 앱에 "alarmFired"
     private var alarmChannel: MethodChannel? = null
     private var pendingAlarm = false // 알람 때문에 켜졌는지 (앱이 물어보면 알려주고 지움)
+    private var pendingWidgetGo: String? = null // 홈 위젯 바로가기로 켜졌으면 어느 화면인지
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
+        // 홈 위젯으로 켜졌는지: 앱(다트)이 물어보기 전에 먼저 기억 (늦으면 첫인사가 나와 버림)
+        intent?.getStringExtra("widgetGo")?.let {
+            pendingWidgetGo = it
+            intent.removeExtra("widgetGo")
+        }
         super.onCreate(savedInstanceState)
         handleAlarmIntent(intent)
         handleHeadsetIntent(intent)
+        handleWidgetGo(intent, false)
+        pushPendingWidgetGo(0)
+        activityAlive = true
+        PlayerWidget.refreshAll(this)
+    }
+
+    override fun onDestroy() {
+        // 앱을 완전히 끄면: 위젯 재생 버튼을 '앱 열면서 이어 듣기'로
+        activityAlive = false
+        // (mediaChannel 은 그대로: 화면만 닫히고 재생 엔진은 살아 있을 수 있어서)
+        PlayerWidget.refreshAll(this)
+        super.onDestroy()
     }
 
     override fun onNewIntent(intent: android.content.Intent) {
@@ -63,6 +85,41 @@ class MainActivity : AudioServiceActivity() {
         handleAlarmIntent(intent)
         handleHeadsetIntent(intent)
         handleHomeIntent(intent)
+        handleWidgetGo(intent, true)
+    }
+
+    /// 앱(다트)이 화면 없이 살아 있다가 다시 열린 경우에도 위젯 바로가기 전달
+    /// (다트가 아직 준비 전이면 그대로 두고 → 다트가 켜지면서 직접 물어봄)
+    private fun pushPendingWidgetGo(tries: Int) {
+        val t = pendingWidgetGo ?: return // 다트가 이미 가져갔으면 끝
+        if (tries > 40) return // 4초 넘게 준비 안 되면 그만 (다트가 켜지면서 직접 물어봄)
+        val retry = { android.os.Handler(mainLooper).postDelayed({ pushPendingWidgetGo(tries + 1) }, 100) }
+        val ch = flutterMethodChannel
+        if (ch == null) {
+            retry()
+            return
+        }
+        ch.invokeMethod("widgetGo", t, object : MethodChannel.Result {
+            override fun success(result: Any?) {
+                if (pendingWidgetGo == t) pendingWidgetGo = null
+            }
+            override fun error(code: String, msg: String?, details: Any?) {}
+            override fun notImplemented() {
+                retry() // 다트가 아직 준비 중
+            }
+        })
+    }
+
+    /// 홈 위젯 바로가기 (음악·라디오·자연·수면)
+    /// 꺼져 있다 켜졌으면 기억만 (앱이 물어봄) / 켜져 있으면 바로 앱에 알림
+    private fun handleWidgetGo(i: android.content.Intent?, running: Boolean) {
+        val target = i?.getStringExtra("widgetGo") ?: return
+        i.removeExtra("widgetGo")
+        if (running && flutterMethodChannel != null) {
+            flutterMethodChannel?.invokeMethod("widgetGo", target)
+        } else {
+            pendingWidgetGo = target
+        }
     }
 
     /// 약관 페이지의 홈 버튼 → 메인 화면으로 (HomeLinkActivity가 보내 줌)
@@ -300,6 +357,7 @@ class MainActivity : AudioServiceActivity() {
         super.configureFlutterEngine(flutterEngine)
         val channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
         flutterMethodChannel = channel
+        mediaChannel = channel
         HeadsetWatch.start(this, channel) // 이어폰·블루투스 연결 알아채기
         recordingChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "kr.ssing.catsong/recording")
         // 아침 알람 통로
@@ -1008,6 +1066,16 @@ class MainActivity : AudioServiceActivity() {
                     } catch (e: Exception) {
                         result.success(false)
                     }
+                }
+                "moveToBack" -> {
+                    // 위젯 재생으로 켜졌을 때: 재생 시작 후 바탕화면으로 (음악은 계속)
+                    moveTaskToBack(true)
+                    result.success(true)
+                }
+                "takeWidgetGo" -> {
+                    val t = pendingWidgetGo
+                    pendingWidgetGo = null
+                    result.success(t)
                 }
                 "widgetPlayPause" -> { result.success(true) }
                 "widgetNext" -> { result.success(true) }

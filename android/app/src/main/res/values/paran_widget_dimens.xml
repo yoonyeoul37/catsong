@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 홈 위젯 바깥 모서리 (사진 위쪽 모서리도 같은 크기) -->
+    <dimen name="paran_w_radius">18dp</dimen>
+</resources>

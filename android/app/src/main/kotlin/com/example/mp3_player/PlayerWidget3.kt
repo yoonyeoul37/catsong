@@ -75,21 +75,21 @@ class PlayerWidget3 : AppWidgetProvider() {
             )
             views.setOnClickPendingIntent(R.id.widget_title, openPendingIntent)
 
-            val prevIntent = Intent(PlayerWidget.ACTION_PREV).apply { setPackage(context.packageName) }
+            val prevIntent = Intent(context, PlayerWidget3::class.java).setAction(PlayerWidget.ACTION_PREV)
             val prevPendingIntent = PendingIntent.getBroadcast(
                 context, 7, prevIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             views.setOnClickPendingIntent(R.id.widget_prev, prevPendingIntent)
 
-            val playPauseIntent = Intent(PlayerWidget.ACTION_PLAY_PAUSE).apply { setPackage(context.packageName) }
+            val playPauseIntent = Intent(context, PlayerWidget3::class.java).setAction(PlayerWidget.ACTION_PLAY_PAUSE)
             val playPausePendingIntent = PendingIntent.getBroadcast(
                 context, 8, playPauseIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             views.setOnClickPendingIntent(R.id.widget_play_pause, playPausePendingIntent)
 
-            val nextIntent = Intent(PlayerWidget.ACTION_NEXT).apply { setPackage(context.packageName) }
+            val nextIntent = Intent(context, PlayerWidget3::class.java).setAction(PlayerWidget.ACTION_NEXT)
             val nextPendingIntent = PendingIntent.getBroadcast(
                 context, 9, nextIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE

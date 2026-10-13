@@ -13,6 +13,7 @@ import '../services/cast_service.dart';
 import '../services/loudness.dart';
 import '../services/headset_resume.dart';
 import '../utils/no_album_helper.dart';
+import '../utils/widget_go.dart';
 
 class PlayerProvider extends ChangeNotifier {
   final AudioPlayer _player = AudioPlayer(handleInterruptions: false);
@@ -131,9 +132,12 @@ class PlayerProvider extends ChangeNotifier {
 
   void _initWidgetChannel() {
     _channel.setMethodCallHandler((call) async {
+      if (call.method.startsWith('widget') || call.method.startsWith('onAudio')) {
+        debugPrint('PARAN_W 앱이 받음: ${call.method} ${call.arguments ?? ''}');
+      }
       switch (call.method) {
         case 'widgetPlayPause':
-          await togglePlayPause();
+          HeadsetResume.widgetPlay(); // 안 틀었으면 마지막에 듣던 것 (기다리지 않고 바로 대답)
           break;
         case 'widgetNext':
           await playNext();
@@ -150,6 +154,13 @@ class PlayerProvider extends ChangeNotifier {
           if (_isPlaying && DateTime.now().difference(_startedAt).inSeconds >= 2) {
             await _player.pause();
           }
+          break;
+        case 'widgetPlayKind':
+          HeadsetResume.widgetPlayKind(call.arguments as String); // 위젯 아래 버튼 (바로 대답)
+          break;
+        case 'widgetGo':
+          WidgetGo.launched = true; // 위젯으로 켜졌으면 인삿말 목소리 안 함
+          WidgetGo.target.value = call.arguments as String?; // 홈 위젯 바로가기
           break;
         case 'onAudioFocusGain':
           if (!_isPlaying && _currentIndex >= 0) {
@@ -369,6 +380,7 @@ class PlayerProvider extends ChangeNotifier {
       if (handler is SimpleAudioHandler) {
         handler.setRadioMode(false);
         handler.setMixMode(false);
+        handler.setNatureMode(false); // 자연 소리 듣다 음악으로 바꿔도 다음·이전 곡이 되게
         handler.updateMediaItem(MediaItem(
           id: song.uri!,
           title: song.titleDisplay,
@@ -387,7 +399,7 @@ class PlayerProvider extends ChangeNotifier {
       _applyLoudness(song); // 곡마다 소리 크기 맞추기
       _startedAt = DateTime.now();
       await _player.play();
-      await WakelockPlus.enable();
+      await WakelockPlus.enable().catchError((Object _) {});
       _updateWidgetSongInfo(song);
     } catch (e) {
       debugPrint('재생 오류: $e');
@@ -411,8 +423,8 @@ class PlayerProvider extends ChangeNotifier {
     try {
       final song = currentSong;
       _channel.invokeMethod('updateWidget', {
-        'title': song?.titleDisplay ?? '플레이쏭',
-        'artist': song?.artistDisplay ?? '음악을 재생해보세요',
+        'title': song?.titleDisplay ?? '파란소리',
+        'artist': song?.artistDisplay ?? '음악 · 라디오 · 자연을 들어보세요',
         'isPlaying': isPlaying,
       });
     } catch (e) {}
@@ -523,7 +535,7 @@ class PlayerProvider extends ChangeNotifier {
       await _player.setLoopMode(LoopMode.one);
       _setNorm(1.0); // 자연은 크기 맞추기 안 함
       await _player.play();
-      await WakelockPlus.enable();
+      await WakelockPlus.enable().catchError((Object _) {});
     } catch (e) {
       debugPrint('자연소리 재생 오류: $e');
     }
@@ -538,7 +550,7 @@ class PlayerProvider extends ChangeNotifier {
       handler.setNatureMode(false);
     }
     await _player.stop();
-    await WakelockPlus.disable();
+    await WakelockPlus.disable().catchError((Object _) {});
     notifyListeners();
   }
 
@@ -575,7 +587,7 @@ class PlayerProvider extends ChangeNotifier {
     }
     if (_player.playing) {
       await _player.pause();
-      await WakelockPlus.disable();
+      await WakelockPlus.disable().catchError((Object _) {});
     } else {
       _onStopRadio?.call();
       final handler = _audioHandler;
@@ -595,7 +607,7 @@ class PlayerProvider extends ChangeNotifier {
       }
       await Future.delayed(const Duration(milliseconds: 100));
       await _player.play();
-      await WakelockPlus.enable();
+      await WakelockPlus.enable().catchError((Object _) {});
     }
   }
 
@@ -774,7 +786,7 @@ class PlayerProvider extends ChangeNotifier {
     _positionTimer?.cancel();
     _sleepTimer?.cancel();
     _player.dispose();
-    WakelockPlus.disable();
+    WakelockPlus.disable().catchError((Object _) {});
     super.dispose();
   }
 }
@@ -942,6 +954,7 @@ class SimpleAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> play() async {
+    debugPrint('PARAN_W 미디어 버튼: 재생 (라디오모드 $_radioMode, 자연모드 $_natureMode)');
     if (_radioMode && onRadioPlay != null) {
       onRadioPlay!();
     } else if (_mixMode && onMixPlay != null) {
@@ -956,12 +969,17 @@ class SimpleAudioHandler extends BaseAudioHandler {
         final f = onResumeLast!;
         onResumeLast = null;
         await f();
+      } else {
+        // 틀 게 없으면 마지막에 듣던 것 (위젯·블루투스 재생 버튼)
+        // 조금 늦게: 위젯 아래 버튼으로 깨어난 경우엔 그쪽이 먼저 틀게
+        Future.delayed(const Duration(milliseconds: 800), HeadsetResume.widgetPlay);
       }
     }
   }
 
   @override
   Future<void> pause() async {
+    debugPrint('PARAN_W 미디어 버튼: 멈춤 (라디오모드 $_radioMode, 자연모드 $_natureMode)');
     if (_radioMode && onRadioPause != null) {
       onRadioPause!();
     } else if (_mixMode && onMixPause != null) {
@@ -982,6 +1000,7 @@ class SimpleAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> skipToNext() async {
+    debugPrint('PARAN_W 미디어 버튼: 다음 (라디오모드 $_radioMode, 자연모드 $_natureMode)');
     if (_radioMode && onRadioNext != null) {
       onRadioNext!();
     } else if (_mixMode && onMixNext != null) {

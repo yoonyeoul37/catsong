@@ -1,0 +1,218 @@
+import 'dart:async';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' show BuildContext;
+import '../widgets/paran_dialog.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../providers/player_provider.dart';
+import '../providers/radio_provider.dart';
+import 'cast_service.dart';
+import '../providers/recent_content_provider.dart';
+import '../providers/music_provider.dart';
+import '../models/recent_content_entry.dart';
+import '../models/radio_station.dart';
+
+/// 이어폰·블루투스를 연결하면 듣던 것 이어서 듣기
+/// 0 끄기 · 1 알림으로 묻기 · 2 바로 재생 (작게 시작해서 천천히 커짐)
+class HeadsetResume {
+  static final mode = ValueNotifier<int>(0);
+  static const names = ['끄기', '알림으로 묻기', '바로 재생'];
+  static const _ch = MethodChannel('kr.ssing.catsong/media');
+  static PlayerProvider? _pp;
+  static RadioProvider? _radio;
+  static Timer? _fade;
+
+  static Future<void> init(PlayerProvider pp, RadioProvider radio) async {
+    _pp = pp;
+    _radio = radio;
+    try {
+      final p = await SharedPreferences.getInstance();
+      mode.value = p.getInt('headsetResumeMode') ?? 0;
+    } catch (_) {}
+  }
+
+  /// 배터리 사용 "제한 없음" 부탁 — 필요한 기능을 켤 때만, 기능마다 한 번만
+  /// (이미 제한 없음이면 안 물어봄)
+  static Future<void> askBattery(BuildContext context, String key, String why) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      if (p.getBool('battery_ask_$key') ?? false) return;
+      final optimized = await _ch.invokeMethod('isBatteryOptimized');
+      if (optimized != true || !context.mounted) return;
+      await p.setBool('battery_ask_$key', true);
+      final go = await showParanConfirm(
+        context,
+        title: '배터리 사용을 "제한 없음"으로',
+        message: why,
+        confirmLabel: '허용하기',
+        cancelLabel: '나중에',
+      );
+      if (go) await _ch.invokeMethod('requestBatteryOptimization');
+    } catch (_) {}
+  }
+
+  static Future<void> setMode(int m) async {
+    mode.value = m;
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setInt('headsetResumeMode', m);
+    } catch (_) {}
+  }
+
+  /// 이어서 들을 게 있으면 (종류, 이름) — 없으면 null
+  static (String, String)? _target() {
+    final pp = _pp, radio = _radio;
+    if (pp == null || radio == null) return null;
+    if (CastService.instance.isConnected) return null; // TV로 듣는 중
+    if (pp.volumeLocked) return null; // 알람 울리는 중
+    if (pp.isPlaying || radio.isPlaying || radio.isLoading) return null; // 이미 듣는 중
+    final st = radio.currentStation;
+    if (st != null) return ('radio', st.name);
+    final nature = pp.natureSoundName;
+    if (nature != null) return ('nature', nature);
+    final song = pp.currentSong;
+    if (song != null) return ('music', '${song.titleDisplay} · ${song.artistDisplay}');
+    return null;
+  }
+
+  /// 안드로이드에서 오는 신호 (연결됨 / 알림의 재생 누름)
+  static Future<void> onCall(String method) async {
+    if (method == 'onHeadsetResume') {
+      await _resume();
+      return;
+    }
+    if (method != 'onHeadsetConnected' || mode.value == 0) return;
+    final t = _target();
+    if (t == null) return;
+    if (mode.value == 1) {
+      try {
+        await _ch.invokeMethod('showHeadsetAsk', {'title': '이어서 들을까요?', 'text': t.$2});
+      } catch (_) {}
+    } else {
+      await Future.delayed(const Duration(milliseconds: 900)); // 소리 길이 이어폰으로 바뀔 시간
+      await _resume();
+    }
+  }
+
+  static Future<void> _resume() async {
+    final t = _target();
+    final pp = _pp, radio = _radio;
+    if (t == null || pp == null || radio == null) return;
+    _fade?.cancel();
+    try {
+      switch (t.$1) {
+        case 'radio':
+          await radio.setAlarmVolume(0.05);
+          await radio.playStation(radio.currentStation!);
+          _rampUp((v) => radio.setAlarmVolume(v));
+        case 'nature':
+          await pp.player.setVolume(0.05);
+          await pp.resumeNatureSound();
+          _rampUp((v) => pp.player.setVolume(v));
+        default:
+          final full = pp.normGain; // 곡마다 소리 크기 맞추기 값까지만
+          await pp.player.setVolume(0.05 * full);
+          await pp.togglePlayPause();
+          _rampUp((v) => pp.player.setVolume(v * full));
+      }
+    } catch (e) {
+      debugPrint('이어서 듣기 오류: $e');
+    }
+  }
+
+  // ───── 홈 위젯 재생 버튼 ─────
+  static RecentContentProvider? _recent;
+  static MusicProvider? _music;
+  static void attachRecent(RecentContentProvider r, MusicProvider m) {
+    _recent = r;
+    _music = m;
+  }
+
+  /// 위젯 재생 버튼: 듣는 중이면 멈춤, 멈춰 있으면 이어서,
+  /// 앱을 켜고 아무것도 안 틀었으면 '최근에 들었어요' 맨 앞의 것
+  static Future<void> widgetPlay() async {
+    final pp = _pp, radio = _radio;
+    if (pp == null || radio == null) return;
+    if (CastService.instance.isConnected) {
+      await pp.togglePlayPause(); // TV로 듣는 중
+      return;
+    }
+    if (radio.isPlaying || radio.isLoading) {
+      await radio.togglePlayPause();
+      return;
+    }
+    if (pp.isPlaying) {
+      if (pp.natureSoundName != null) {
+        await pp.pauseNatureSound();
+      } else {
+        await pp.togglePlayPause();
+      }
+      return;
+    }
+    if (_target() != null) {
+      await _resume(); // 멈춰 둔 것 이어서 (작게 시작해서 천천히)
+      return;
+    }
+    await _playLastRecent();
+  }
+
+  /// 이번에 켜고 아무것도 안 틀었으면: 최근에 들었어요 맨 앞의 것
+  static Future<void> _playLastRecent() async {
+    final r = _recent, pp = _pp, radio = _radio;
+    if (r == null || pp == null || radio == null) return;
+    // 앱을 막 켰으면 기록이 불러와질 때까지 잠깐 기다리기
+    for (var i = 0; i < 25 && r.entries.isEmpty; i++) {
+      await Future.delayed(const Duration(milliseconds: 200));
+    }
+    if (r.entries.isEmpty) return;
+    final e = r.entries.first;
+    try {
+      switch (e.type) {
+        case RecentContentType.radio:
+          // 다음·이전으로 넘길 수 있게: 최근에 들은 방송들을 목록으로 묶어서 틀기
+          final stations = <RadioStation>[];
+          for (final x in r.entries) {
+            if (x.type == RecentContentType.radio && x.stationData != null) {
+              try {
+                stations.add(RadioStation.fromJson(x.stationData!));
+              } catch (_) {}
+            }
+          }
+          if (stations.isEmpty) break;
+          radio.setQueue(stations, 0);
+          await radio.playStation(stations.first);
+          break;
+        case RecentContentType.nature:
+          if (e.natureAssetPath != null) await pp.playNatureSound(e.natureAssetPath!, e.title);
+          break;
+        case RecentContentType.music:
+          final m = _music;
+          if (m == null) return;
+          // 곡 목록을 다 불러올 때까지 잠깐 기다리기
+          for (var i = 0; i < 40 && m.allSongs.isEmpty; i++) {
+            await Future.delayed(const Duration(milliseconds: 250));
+          }
+          // 마지막 곡부터 시작해서 내 음악 목록 순서대로 계속 (한 곡만 나오고 끝나지 않게)
+          final all = m.songs.isNotEmpty ? m.songs : m.allSongs;
+          final i = all.indexWhere((s) => s.uri == e.songUri);
+          if (i >= 0) await pp.playFromList(all, i);
+          break;
+        case RecentContentType.sleep:
+          break;
+      }
+    } catch (err) {
+      debugPrint('위젯 재생 오류: $err');
+    }
+  }
+
+  /// 3초 동안 천천히 원래 크기로 (처음엔 아주 천천히)
+  static void _rampUp(void Function(double v) set) {
+    var step = 0;
+    _fade = Timer.periodic(const Duration(milliseconds: 150), (t) {
+      step++;
+      final x = (step / 20).clamp(0.0, 1.0);
+      set(0.05 + 0.95 * x * x);
+      if (step >= 20) t.cancel();
+    });
+  }
+}

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#FFFFFF</color>
+    <!-- 홈 위젯 (라이트) -->
+    <color name="paran_w_bg">#F4EFE5</color>
+    <color name="paran_w_chip">#FFFFFF</color>
+    <color name="paran_w_ink">#17140F</color>
+    <color name="paran_w_sub">#5A5348</color>
 </resources>

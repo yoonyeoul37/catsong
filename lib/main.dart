@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'utils/greeting_images.dart';
+import 'utils/widget_go.dart';
 import 'utils/paran_photo.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:media_kit/media_kit.dart';
@@ -149,6 +150,24 @@ void main() async {
   };
 
   HeadsetResume.init(playerProvider, radioProvider); // 이어폰 연결하면 이어서 듣기
+  HeadsetResume.attachRecent(recentContentProvider, musicProvider); // 위젯 재생: 마지막에 듣던 것
+  // 앱이 꺼져 있을 때 위젯 재생을 눌렀으면 (화면 없이 엔진만 켜짐) → 마지막에 듣던 것 바로
+  try {
+    final sp = await SharedPreferences.getInstance();
+    final at = sp.getInt('widget_play_at') ?? 0;
+    final kind = sp.getString('widget_play_kind') ?? ''; // 아래 버튼 (음악·라디오·자연)
+    if (at > 0) await sp.remove('widget_play_at');
+    if (kind.isNotEmpty) await sp.remove('widget_play_kind');
+    if (at > 0 && DateTime.now().millisecondsSinceEpoch - at < 15000) {
+      WidgetGo.launched = true; // 나중에 앱을 열어도 인삿말 목소리 안 함
+      if (musicProvider.songs.isEmpty) musicProvider.initialize(); // 곡 목록 (화면이 없어서 여기서)
+      if (kind.isNotEmpty) {
+        HeadsetResume.widgetPlayKind(kind);
+      } else {
+        HeadsetResume.widgetPlay();
+      }
+    }
+  } catch (_) {}
 
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
@@ -171,6 +190,7 @@ void main() async {
 
   await AlarmService.init(); // 아침 알람 (알람 때문에 켜졌는지도 확인)
   await initGreetingScene(); // 첫인사·끝인사 오늘 장면 (지난번과 다르게)
+  await WidgetGo.loadLaunch(); // 홈 위젯 바로가기로 켜졌는지
 
   runApp(MyApp(
     playerProvider: playerProvider,
@@ -298,7 +318,8 @@ class AppInitializer extends StatefulWidget {
 
 class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObserver {
   bool _showWelcome = false;
-  bool _showIntro = !AlarmService.launchedByAlarm; // 알람으로 켜졌으면 인트로 없이 바로
+  // 알람이나 홈 위젯 바로가기로 켜졌으면 첫인사 없이 바로
+  bool _showIntro = !AlarmService.launchedByAlarm && WidgetGo.target.value == null;
   bool _introCleared = false; // 첫인사 사진을 램에서 비웠는지
 
   AudioPlayer? _welcomePlayer; // 첫인사 전용 작은 재생기
@@ -312,6 +333,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
       return;
     }
     if (!mounted || AlarmService.launchedByAlarm) return;
+    if (WidgetGo.launched || WidgetGo.target.value != null) return; // 위젯으로 켜졌으면 인삿말 없이
     if (!context.read<ThemeProvider>().voiceGreetingEnabled) return;
     final langCode = Localizations.localeOf(context).languageCode;
     final welcomeAsset = langCode == 'ko' ? 'assets/welcome_ko_v4.mp3' : null;
@@ -340,10 +362,23 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
     });
     try {
       await p.setAsset(welcomeAsset);
-      if (_welcomePlayer == p && !AlarmService.launchedByAlarm) p.play(); // 준비하는 사이에 멈췄으면 재생 안 함
+      // 준비하는 사이에 멈췄거나 위젯으로 켜졌으면 재생 안 함
+      if (_welcomePlayer == p && !AlarmService.launchedByAlarm && !WidgetGo.launched) {
+        p.play();
+      } else {
+        _stopWelcome();
+      }
     } catch (_) {
       _stopWelcome();
     }
+  }
+
+  /// 위젯 바로가기로 들어오면 첫인사(사진·목소리)를 바로 끄고 그 화면으로
+  void _onWidgetGoIntro() {
+    if (WidgetGo.target.value == null || !mounted) return;
+    WidgetGo.launched = true;
+    _stopWelcome();
+    if (_showIntro) setState(() => _showIntro = false);
   }
 
   /// 첫인사 멈추고 재생기 정리
@@ -361,6 +396,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     AlarmService.onRingStart = _stopWelcome; // 알람이 울리면 첫인삿말 바로 멈춤
+    WidgetGo.target.addListener(_onWidgetGoIntro); // 첫인사 중에 위젯 바로가기 → 첫인사 끄기
     if (AlarmService.launchedByAlarm) {
       WidgetsBinding.instance.addPostFrameCallback((_) => AlarmService.showRing());
     }
@@ -425,6 +461,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     AlarmService.onRingStart = null;
+    WidgetGo.target.removeListener(_onWidgetGoIntro);
     _stopWelcome();
     super.dispose();
   }
@@ -719,7 +756,10 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
       return GestureDetector(
         onTap: () => setState(() => _showIntro = false),
         child: Scaffold(
-          backgroundColor: Colors.black,
+          // 시작 화면과 같은 색 (라이트 크림 · 다크 진한 갈색) → 넘어갈 때 번쩍이지 않게
+          backgroundColor: context.watch<ThemeProvider>().isDarkMode
+              ? const Color(0xFF24221F)
+              : const Color(0xFFF4EFE5),
           body: _IntroView(
             path: introAssetPath(context),
             onDone: () {

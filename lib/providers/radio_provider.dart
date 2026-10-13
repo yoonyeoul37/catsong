@@ -524,7 +524,7 @@ class RadioProvider extends ChangeNotifier {
       _lastPlayUrl = playUrl;
       _lastPlayStationId = station.stationUuid;
 
-      await WakelockPlus.disable();
+      await WakelockPlus.disable().catchError((Object _) {});
       _startForeground(station, playUrl);
 
       await _player.open(
@@ -540,7 +540,7 @@ class RadioProvider extends ChangeNotifier {
       );
 
       await recordListened(station);
-      _updateWidget(station.name, station.country ?? '', true);
+      _updateWidget(station.name, _mediaSubtitle(station), true); // 알림창과 같은 한글 설명
 
       // JSON 편성표 확인 (KBS/MBC/SBS 아닌 경우만)
       if (station.name == '국방FM') {
@@ -629,7 +629,7 @@ class RadioProvider extends ChangeNotifier {
   Future<void> togglePlayPause() async {
     if (_playerState == RadioPlayerState.playing) {
       await _player.pause();
-      await WakelockPlus.disable();
+      await WakelockPlus.disable().catchError((Object _) {});
     } else if (_playerState == RadioPlayerState.paused) {
       if (_currentStation != null) {
         await playStation(_currentStation!);
@@ -642,7 +642,7 @@ class RadioProvider extends ChangeNotifier {
     await _player.stop();
     _isActuallyPlaying = false;
     _stopForeground();
-    await WakelockPlus.disable();
+    await WakelockPlus.disable().catchError((Object _) {});
     cancelSleepTimer();
   }
 
@@ -1609,6 +1609,9 @@ class RadioProvider extends ChangeNotifier {
 
   // dispose는 아래 기존 것에 합칩니다
 
+  /// 위젯 둘째 줄에 쓸 지금 프로그램 (방송 이름 → "프로그램 9:00~11:00")
+  final Map<String, String> _widgetProgram = {};
+
   void _updateNotification(String stationName) {
     if (_currentStation?.name != stationName) return;
     final program = _currentProgramMap[stationName];
@@ -1655,6 +1658,14 @@ class RadioProvider extends ChangeNotifier {
       artist: artist,
       url: _currentStation?.streamUrl ?? '',
     );
+    // 위젯에도 지금 하는 프로그램 (늦게 도착해도 바로 바뀌게)
+    _widgetProgram[stationName] = artist;
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('updateWidget', {
+      'title': stationName,
+      'artist': artist,
+      'isPlaying': isPlaying,
+      'schedule': '',
+    }).catchError((Object _) => null);
   }
 
   Future<void> _updateWidget(String title, String artist, bool isPlaying) async {
@@ -1673,9 +1684,10 @@ class RadioProvider extends ChangeNotifier {
       }
       await platform.invokeMethod('updateWidget', {
         'title': title,
-        'artist': artist,
+        // 지금 하는 프로그램이 있으면 둘째 줄에 (누가 방송하는지), 없으면 방송 설명
+        'artist': schedule.isNotEmpty ? schedule : (_widgetProgram[title] ?? artist),
         'isPlaying': isPlaying,
-        'schedule': schedule,
+        'schedule': '',
       });
       // 알림바(미디어 컨트롤)도 업데이트
       if (programTitle.isNotEmpty) {
@@ -1765,7 +1777,7 @@ class RadioProvider extends ChangeNotifier {
         _scheduleListMap[stationName] = schedules;
         notifyListeners();
         if (_currentStation?.name == stationName) {
-          _updateWidget(stationName, _currentStation?.country ?? '', true);
+          _updateWidget(stationName, _currentStation == null ? '' : _mediaSubtitle(_currentStation!), true);
         }
       }
     } catch (e) {
@@ -1895,7 +1907,7 @@ class RadioProvider extends ChangeNotifier {
         }).toList();
     notifyListeners();
     if (_currentStation?.name == stationName) {
-      _updateWidget(stationName, _currentStation?.country ?? '', true);
+      _updateWidget(stationName, _currentStation == null ? '' : _mediaSubtitle(_currentStation!), true);
     }
   }
 
@@ -2192,7 +2204,7 @@ class RadioProvider extends ChangeNotifier {
         _sleepFading = false;
         await setAlarmVolume(1.0);
       }
-      await WakelockPlus.disable();
+      await WakelockPlus.disable().catchError((Object _) {});
       _isActuallyPlaying = false;
       _setPlayerState(RadioPlayerState.idle);
       _updateForeground(false);
@@ -2426,7 +2438,7 @@ class RadioProvider extends ChangeNotifier {
     _sleepCountdown?.cancel();
     _scheduleRefreshTimer?.cancel();
     _scheduleDisplayTimer?.cancel();
-    WakelockPlus.disable();
+    WakelockPlus.disable().catchError((Object _) {});
     super.dispose();
   }
 }

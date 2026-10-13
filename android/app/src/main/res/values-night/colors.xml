@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 홈 위젯 (다크) -->
+    <color name="paran_w_bg">#24221F</color>
+    <color name="paran_w_chip">#32302C</color>
+    <color name="paran_w_ink">#F3EFE7</color>
+    <color name="paran_w_sub">#CFC8BB</color>
+</resources>

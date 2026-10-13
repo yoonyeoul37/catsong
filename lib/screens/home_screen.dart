@@ -57,6 +57,8 @@ import 'radio_player_screen.dart';
 import '../utils/nature_sound_catalog.dart';
 import '../utils/paran_photo.dart';
 import '../utils/no_album_helper.dart';
+import '../utils/widget_go.dart';
+import '../services/headset_resume.dart';
 import '../utils/index_letter.dart';
 import '../widgets/index_bar.dart';
 import '../widgets/action_feedback.dart';
@@ -545,6 +547,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadRecentSearches();
+    WidgetGo.target.addListener(_onWidgetGo); // 앱이 켜져 있을 때 위젯 바로가기
     _songListController.addListener(_updateCurrentGroup); // 스크롤하면 오른쪽 초성 파랗게 따라감
     _songListController.addListener(() {
       // 손으로 밀 때만 (정렬 바꿀 때 맨 위로 가는 건 빼고)
@@ -581,8 +584,61 @@ class _HomeScreenState extends State<HomeScreen> {
       await _checkBanner();
       await _checkThemeHint();
       await _checkColorTip();
-      await _navigateToSavedStartScreen();
+      // 위젯 바로가기로 켜졌으면 그 화면으로, 아니면 정해 둔 시작 화면으로
+      if (WidgetGo.target.value != null) {
+        await _handleWidgetGo();
+      } else {
+        await _navigateToSavedStartScreen();
+      }
     });
+  }
+
+  void _onWidgetGo() {
+    if (WidgetGo.target.value != null && mounted) _handleWidgetGo();
+  }
+
+  /// 홈 위젯 바로가기: 열려 있던 화면을 닫고 고른 화면으로
+  Future<void> _handleWidgetGo() async {
+    final t = WidgetGo.take();
+    if (t == null || !mounted) return;
+    Navigator.of(context).popUntil((r) => r.isFirst);
+    setState(() => _pendingStartScreenNav = false);
+    PageRouteBuilder<void> instant(Widget page) => PageRouteBuilder(
+          pageBuilder: (_, __, ___) => page,
+          transitionsBuilder: (_, __, ___, child) => child,
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        );
+    switch (t) {
+      case 'music':
+        setState(() => _showMusicLibrary = true);
+        break;
+      case 'radio':
+        await pushRadioEntry(context, instant: true);
+        break;
+      case 'nature':
+        await Navigator.push(context, instant(NatureSoundsScreen()));
+        break;
+      case 'sleep':
+        await Navigator.push(context, instant(const SleepFocusScreen()));
+        break;
+      case 'resume':
+        // 위젯 재생: 마지막에 듣던 것 (재생이 끝날 때까지 기다리지 않게 그냥 시작만)
+        HeadsetResume.widgetPlay();
+        // 실제로 소리가 나기 시작하면 바탕화면으로 돌아가기 (음악은 계속)
+        final pp = context.read<PlayerProvider>();
+        final rp = context.read<RadioProvider>();
+        for (var k = 0; k < 80 && !(pp.isPlaying || rp.isPlaying); k++) {
+          await Future.delayed(const Duration(milliseconds: 100));
+        }
+        if (pp.isPlaying || rp.isPlaying) {
+          await Future.delayed(const Duration(milliseconds: 300));
+          try {
+            await const MethodChannel('kr.ssing.catsong/media').invokeMethod('moveToBack');
+          } catch (_) {}
+        }
+        break;
+    }
   }
 
   Future<void> _navigateToSavedStartScreen() async {
@@ -642,6 +698,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
+    WidgetGo.target.removeListener(_onWidgetGo);
     _searchController.dispose();
     _recentSaveTimer?.cancel();
     _songListController.dispose();

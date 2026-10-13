@@ -109,28 +109,30 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// 설정 → 글꼴 (전부 앱 안에 있어서 인터넷 없이 바로)
   static const List<Map<String, String>> availableFonts = [
-    {'key': 'default', 'name': 'Default Font'},
-    {'key': 'noto_sans', 'name': 'Noto Sans KR (Clean)'},
-    {'key': 'jua', 'name': 'Jua (Cute)'},
-    {'key': 'gaegu', 'name': 'Gaegu (Handwriting)'},
-    {'key': 'nanum_gothic', 'name': 'Nanum Gothic (Soft)'},
-    {'key': 'do_hyeon', 'name': 'Do Hyeon (Modern)'},
-    {'key': 'cute_font', 'name': 'Cute Font (Cute)'},
-    {'key': 'stylish', 'name': 'Stylish (Elegant)'},
-    {'key': 'sunflower', 'name': 'Sunflower (Light)'},
-    {'key': 'hi_melody', 'name': 'Hi Melody (Emotional)'},
-    {'key': 'poor_story', 'name': 'Poor Story (Handwriting)'},
-    {'key': 'east_sea_dokdo', 'name': 'East Sea Dokdo (Unique)'},
-    {'key': 'nanum_brush', 'name': 'Nanum Brush Script (Brush)'},
-    {'key': 'nanum_myeongjo', 'name': 'Nanum Myeongjo (Serif)'},
-    {'key': 'black_and_white', 'name': 'Black And White Picture (Special)'},
-    {'key': 'gowun_dodum', 'name': 'Gowun Dodum (Round)'},
-    {'key': 'gowun_batang', 'name': 'Gowun Batang (Batang)'},
-    {'key': 'nanum_pen', 'name': 'Nanum Pen Script (Pen)'},
-    {'key': 'single_day', 'name': 'Single Day (Cute)'},
-    {'key': 'yeon_sung', 'name': 'Yeon Sung (Soft)'},
+    {'key': 'default', 'name': 'Spoqa Han Sans Neo'},
+    {'key': 'pretendard', 'name': 'Pretendard'},
+    {'key': 'suit', 'name': 'SUIT'},
+    {'key': 'wanted_sans', 'name': 'WantedSans'},
+    {'key': 'nanum_gothic', 'name': 'NanumGothic'},
+    {'key': 'ibm_plex', 'name': 'IBMPlexSansKR'},
+    {'key': 'nanum_square_round', 'name': 'NanumSquareRound'},
+    {'key': 'gowun_dodum', 'name': 'GowunDodum'},
+    {'key': 'maru_buri', 'name': 'MaruBuri'},
   ];
+
+  /// 설정 → 글자 크기 3단계 (보통 = 예전 기본 크기 그대로)
+  static const textSteps = <(String, double)>[('작게', 1.0), ('보통', 1.12), ('크게', 1.2)];
+
+  /// 지금 크기와 가장 가까운 단계
+  int get textStepIndex {
+    var best = 1;
+    for (var i = 0; i < textSteps.length; i++) {
+      if ((textSteps[i].$2 - _textScale).abs() < (textSteps[best].$2 - _textScale).abs()) best = i;
+    }
+    return best;
+  }
   ThemeProvider() {
     _loadSettings();
   }
@@ -154,9 +156,10 @@ class ThemeProvider extends ChangeNotifier {
     }
     if (textScale != null) {
       _textScale = textScale;
+      _textScale = textSteps[textStepIndex].$2; // 예전 막대로 고른 크기는 가장 가까운 단계로
     }
     if (fontFamily != null) {
-      _fontFamily = fontFamily;
+      _fontFamily = availableFonts.any((f) => f['key'] == fontFamily) ? fontFamily : 'default';
     }
     if (isDarkMode != null) {
       _isDarkMode = isDarkMode;
@@ -211,6 +214,19 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   TextTheme getTextTheme() {
+    // 앱 안에 넣은 글꼴 (pubspec.yaml 의 family 이름)
+    const bundled = {
+      'pretendard': 'Pretendard',
+      'suit': 'SUIT',
+      'wanted_sans': 'WantedSans',
+      'nanum_gothic': 'NanumGothic',
+      'ibm_plex': 'IBMPlexSansKR',
+      'nanum_square_round': 'NanumSquareRound',
+      'gowun_dodum': 'GowunDodum',
+      'maru_buri': 'MaruBuri',
+    };
+    final f = bundled[_fontFamily];
+    if (f != null) return TextTheme(bodyLarge: TextStyle(fontFamily: f));
     switch (_fontFamily) {
       case 'noto_sans':
         return GoogleFonts.notoSansKrTextTheme();

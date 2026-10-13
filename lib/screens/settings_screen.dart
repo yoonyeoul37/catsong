@@ -99,6 +99,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   String _getFontName(BuildContext context, String key) {
     final l = AppLocalizations.of(context)!;
+    const names = {
+      'pretendard': '프리텐다드',
+      'suit': '수트 (SUIT)',
+      'wanted_sans': '원티드 산스',
+      'nanum_gothic': '나눔고딕',
+      'ibm_plex': 'IBM 플렉스 산스',
+      'nanum_square_round': '나눔스퀘어라운드',
+      'gowun_dodum': '고운돋움',
+      'maru_buri': '마루 부리',
+    };
+    if (names.containsKey(key)) return names[key]!;
     switch (key) {
       case 'default': return l.fontDefault;
       case 'noto_sans': return l.fontNotoSans;
@@ -1104,69 +1115,78 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  /// 글자 크기: 작게 · 보통 · 크게 (누르면 앱 전체가 바로 바뀜)
   void _showTextSizeDialog(BuildContext context) {
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
     final themeProvider = context.read<ThemeProvider>();
-    const accent = AppTheme.fixedAccent;
     showParanSheet(
       context,
       title: AppLocalizations.of(context)!.textSize,
-      builder: (ctx, setSheet) => Column(
-        children: [
-          // 미리보기
-          ParanCard(
-            padding: const EdgeInsets.all(16),
-            children: [
-              Text(AppLocalizations.of(context)!.preview,
-                  style: TextStyle(color: _sText(isDarkMode), fontSize: 16 * themeProvider.textScale)),
-            ],
-          ),
-          ParanCard(
-            padding: const EdgeInsets.fromLTRB(8, 8, 8, 12),
-            children: [
-              SliderTheme(
-                data: SliderTheme.of(context).copyWith(
-                  activeTrackColor: accent,
-                  inactiveTrackColor: accent.withOpacity(0.2),
-                  thumbColor: accent,
-                ),
-                child: Slider(
-                  value: themeProvider.textScale.clamp(1.0, 1.5),
-                  min: 1.0,
-                  max: 1.5,
-                  divisions: 10,
-                  label: '${(themeProvider.textScale * 100).toInt()}%',
-                  onChanged: (value) {
-                    themeProvider.setTextScale(value);
-                    setSheet(() {});
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Text(AppLocalizations.of(context)!.small, style: TextStyle(color: _sTextSub(isDarkMode), fontSize: 12)),
-                  Text('${(themeProvider.textScale * 100).toInt()}%',
-                      style: const TextStyle(color: accent, fontSize: 13, fontWeight: FontWeight.bold)),
-                  Text(AppLocalizations.of(context)!.large, style: TextStyle(color: _sTextSub(isDarkMode), fontSize: 12)),
-                ]),
-              ),
-            ],
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () {
-                themeProvider.setTextScale(1.13);
-                setSheet(() {});
-              },
-              style: TextButton.styleFrom(foregroundColor: accent),
-              child: Text(AppLocalizations.of(context)!.defaultValue,
-                  style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600)),
+      builder: (ctx, setSheet) {
+        final cur = themeProvider.textStepIndex;
+        return Column(
+          children: [
+            // 미리보기 (고른 크기 그대로 보임)
+            ParanCard(
+              padding: const EdgeInsets.all(16),
+              children: [
+                Text(AppLocalizations.of(context)!.preview,
+                    style: TextStyle(color: _sText(isDarkMode), fontSize: 16)),
+              ],
             ),
-          ),
-        ],
-      ),
+            // 작게 · 보통 · 크게 (고른 칸은 먹색)
+            ParanCard(
+              padding: const EdgeInsets.all(8),
+              children: [
+                Row(
+                  children: [
+                    for (var i = 0; i < ThemeProvider.textSteps.length; i++) ...[
+                      if (i > 0) const SizedBox(width: 8),
+                      Expanded(
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                            themeProvider.setTextScale(ThemeProvider.textSteps[i].$2);
+                            setSheet(() {});
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 160),
+                            height: 66,
+                            decoration: BoxDecoration(
+                              color: i == cur ? _sText(isDarkMode) : _sInputBg(isDarkMode),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('가',
+                                    textScaler: TextScaler.noScaling,
+                                    style: TextStyle(
+                                        color: i == cur ? _sBg(isDarkMode) : _sText(isDarkMode),
+                                        fontSize: 15 + i * 4.0,
+                                        height: 1.2,
+                                        fontWeight: FontWeight.w700)),
+                                const SizedBox(height: 3),
+                                Text(ThemeProvider.textSteps[i].$1,
+                                    textScaler: TextScaler.noScaling,
+                                    style: TextStyle(
+                                        color: i == cur ? _sBg(isDarkMode) : _sTextSub(isDarkMode),
+                                        fontSize: 12,
+                                        fontWeight: i == cur ? FontWeight.w700 : FontWeight.w500)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 }

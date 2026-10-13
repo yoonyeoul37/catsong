@@ -74,6 +74,45 @@ flutter:
           weight: 500
         - asset: assets/fonts/SpoqaHanSansNeo-Bold.ttf
           weight: 700
+    # 설정 → 글꼴 (자주 쓰는 한글 2,350자 + 영문만 남긴 가벼운 버전)
+    - family: Pretendard
+      fonts:
+        - asset: assets/fonts/Pretendard-Regular.ttf
+        - asset: assets/fonts/Pretendard-Bold.ttf
+          weight: 700
+    - family: NanumSquareRound
+      fonts:
+        - asset: assets/fonts/NanumSquareRound-Regular.ttf
+        - asset: assets/fonts/NanumSquareRound-Bold.ttf
+          weight: 700
+    - family: GowunDodum
+      fonts:
+        - asset: assets/fonts/GowunDodum-Regular.ttf
+    - family: MaruBuri
+      fonts:
+        - asset: assets/fonts/MaruBuri-Regular.ttf
+        - asset: assets/fonts/MaruBuri-Bold.ttf
+          weight: 700
+    - family: SUIT
+      fonts:
+        - asset: assets/fonts/SUIT-Regular.ttf
+        - asset: assets/fonts/SUIT-Bold.ttf
+          weight: 700
+    - family: WantedSans
+      fonts:
+        - asset: assets/fonts/WantedSans-Regular.ttf
+        - asset: assets/fonts/WantedSans-Bold.ttf
+          weight: 700
+    - family: NanumGothic
+      fonts:
+        - asset: assets/fonts/NanumGothic-Regular.ttf
+        - asset: assets/fonts/NanumGothic-Bold.ttf
+          weight: 700
+    - family: IBMPlexSansKR
+      fonts:
+        - asset: assets/fonts/IBMPlexSansKR-Regular.ttf
+        - asset: assets/fonts/IBMPlexSansKR-Bold.ttf
+          weight: 700
 
 
   assets:

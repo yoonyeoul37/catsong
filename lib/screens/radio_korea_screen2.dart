@@ -922,9 +922,12 @@ class _StationTile extends StatelessWidget {
                   children: [
                     Text(
                       station.name,
-                      style: GoogleFonts.doHyeon(
+                      // 도현체는 너무 진해서 앱 글꼴 중간 굵기로 (곡 목록 제목과 같게)
+                      style: TextStyle(
                         color: isPlaying ? primaryColor : baseColor,
-                        fontSize: 16.5,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: -0.2,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

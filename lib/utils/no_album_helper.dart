@@ -8,6 +8,7 @@ String noAlbumImagePath(String key) {
     'assets/no_album2.jpg',
     'assets/no_album3.jpg',
     'assets/no_album4.jpg',
+    'assets/no_album5.jpg',
   ];
   final index = key.hashCode.abs() % images.length;
   return images[index];

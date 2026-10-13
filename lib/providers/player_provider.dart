@@ -146,9 +146,6 @@ class PlayerProvider extends ChangeNotifier {
 
   void _initWidgetChannel() {
     _channel.setMethodCallHandler((call) async {
-      if (call.method.startsWith('widget') || call.method.startsWith('onAudio')) {
-        debugPrint('PARAN_W 앱이 받음: ${call.method} ${call.arguments ?? ''}');
-      }
       switch (call.method) {
         case 'widgetPlayPause':
           HeadsetResume.widgetPlay(); // 안 틀었으면 마지막에 듣던 것 (기다리지 않고 바로 대답)
@@ -977,7 +974,6 @@ class SimpleAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> play() async {
-    debugPrint('PARAN_W 미디어 버튼: 재생 (라디오모드 $_radioMode, 자연모드 $_natureMode)');
     if (_radioMode && onRadioPlay != null) {
       onRadioPlay!();
     } else if (_mixMode && onMixPlay != null) {
@@ -1002,7 +998,6 @@ class SimpleAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> pause() async {
-    debugPrint('PARAN_W 미디어 버튼: 멈춤 (라디오모드 $_radioMode, 자연모드 $_natureMode)');
     if (_radioMode && onRadioPause != null) {
       onRadioPause!();
     } else if (_mixMode && onMixPause != null) {
@@ -1023,7 +1018,6 @@ class SimpleAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> skipToNext() async {
-    debugPrint('PARAN_W 미디어 버튼: 다음 (라디오모드 $_radioMode, 자연모드 $_natureMode)');
     if (_radioMode && onRadioNext != null) {
       onRadioNext!();
     } else if (_mixMode && onMixNext != null) {

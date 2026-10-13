@@ -39,7 +39,6 @@ class PlayerWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         val a = intent.action ?: return
-        android.util.Log.d("PARAN_W", "위젯 버튼: $a / 앱 통로 ${if (MainActivity.mediaChannel != null) "있음" else "없음"}")
         if (MainActivity.mediaChannel == null) attachHeadless(context)
         when {
             a == ACTION_PLAY_PAUSE -> {
@@ -83,18 +82,15 @@ class PlayerWidget : AppWidgetProvider() {
             }
         }
         h.postDelayed({
-            if (!done) android.util.Log.d("PARAN_W", "앱 대답: 1.2초 넘게 없음 ($method) → 엔진 깨우기")
             finish(true)
         }, 1200)
         try {
             ch.invokeMethod(method, arg, object : MethodChannel.Result {
                 override fun success(result: Any?) {
-                    android.util.Log.d("PARAN_W", "앱 대답: 받음 ($method)")
                     finish(false)
                 }
                 override fun error(code: String, msg: String?, details: Any?) = finish(false)
                 override fun notImplemented() {
-                    android.util.Log.d("PARAN_W", "앱 대답: 받을 곳 없음 ($method) → 엔진 깨우기")
                     finish(true)
                 }
             })
@@ -105,7 +101,6 @@ class PlayerWidget : AppWidgetProvider() {
 
     /// 앱이 정말 꺼져 있으면: 화면 없이 재생 엔진만 깨우기 (다트가 이 표시를 보고 틂)
     private fun wakeAndPlay(context: Context, kind: String?) {
-        android.util.Log.d("PARAN_W", "엔진 깨우기 (종류: $kind)")
         val e = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE).edit()
             .putLong("flutter.widget_play_at", System.currentTimeMillis())
         if (kind == null) e.remove("flutter.widget_play_kind") else e.putString("flutter.widget_play_kind", kind)
@@ -130,7 +125,6 @@ class PlayerWidget : AppWidgetProvider() {
             val now = System.currentTimeMillis()
             val gap = now - p.getLong("tap", 0L)
             if (gap in 0 until TAP_GAP) {
-                android.util.Log.d("PARAN_W", "연타 무시 (${gap}ms)")
                 return true
             }
             p.edit().putLong("tap", now).apply()
@@ -199,7 +193,6 @@ class PlayerWidget : AppWidgetProvider() {
                 }
             }
             MainActivity.mediaChannel = ch
-            android.util.Log.d("PARAN_W", "엔진만 깨어남 → 위젯 통로 연결")
         }
 
         /// 다음·이전 → 앱의 재생 버튼 받는 곳(audio_service)으로 바로

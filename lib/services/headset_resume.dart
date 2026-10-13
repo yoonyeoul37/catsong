@@ -210,7 +210,6 @@ class HeadsetResume {
   /// 위젯 아래 버튼: 음악(내 목록 첫 곡부터) · 라디오(마지막에 듣던 방송) · 자연(마지막에 듣던 소리)
   /// 같은 종류가 이미 나오고 있으면 → 멈춤 / 다시
   static Future<void> widgetPlayKind(String kind) async {
-    debugPrint('PARAN_W 아래 버튼 처리: $kind (음악중 ${_pp?.isPlaying}, 라디오중 ${_radio?.isPlaying})');
     final pp = _pp, radio = _radio, r = _recent;
     if (pp == null || radio == null || r == null) return;
     _lastWidgetPlay = DateTime.now(); // 재생 버튼 신호가 같이 와도 겹치지 않게
@@ -259,7 +258,6 @@ class HeadsetResume {
           for (final s in [...radio.recentlyListened, ...radio.favorites]) {
             if (!list.any((e) => e.stationUuid == s.stationUuid)) list.add(s);
           }
-          debugPrint('PARAN_W 라디오 후보 ${list.length}개 ${list.isNotEmpty ? list.first.name : ''}');
           if (list.isEmpty) return;
           radio.setQueue(list, 0);
           await radio.playStation(list.first);

@@ -151,6 +151,7 @@ void main() async {
 
   HeadsetResume.init(playerProvider, radioProvider); // 이어폰 연결하면 이어서 듣기
   HeadsetResume.attachRecent(recentContentProvider, musicProvider); // 위젯 재생: 마지막에 듣던 것
+  LyricsProvider.shared.attachWidget(playerProvider); // 위젯에 지금 가사 한 줄
   // 앱이 꺼져 있을 때 위젯 재생을 눌렀으면 (화면 없이 엔진만 켜짐) → 마지막에 듣던 것 바로
   try {
     final sp = await SharedPreferences.getInstance();
@@ -226,7 +227,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: musicProvider),
         ChangeNotifierProvider.value(value: playerProvider),
         ChangeNotifierProvider(create: (_) => PlaylistProvider()),
-        ChangeNotifierProvider(create: (_) => LyricsProvider()),
+        ChangeNotifierProvider.value(value: LyricsProvider.shared),
         ChangeNotifierProvider.value(value: videoProvider),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider.value(value: radioProvider),

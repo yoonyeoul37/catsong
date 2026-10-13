@@ -49,6 +49,12 @@ class PlayerWidget : AppWidgetProvider() {
             }
             a == ACTION_NEXT -> sendMediaKey(context, android.view.KeyEvent.KEYCODE_MEDIA_NEXT)
             a == ACTION_PREV -> sendMediaKey(context, android.view.KeyEvent.KEYCODE_MEDIA_PREVIOUS)
+            a == ACTION_REPEAT || a == ACTION_SHUFFLE -> {
+                if (MainActivity.mediaChannel != null) {
+                    flipMode(context, a == ACTION_REPEAT) // 누르자마자 모양 먼저
+                    toApp(if (a == ACTION_REPEAT) "widgetRepeat" else "widgetShuffle", null) {}
+                }
+            }
             a.startsWith(ACTION_KIND) -> {
                 // 아래 버튼: 음악 · 라디오 · 자연 바로 재생 (앱 안 열고)
                 if (tooSoon(context)) return
@@ -112,6 +118,8 @@ class PlayerWidget : AppWidgetProvider() {
         const val ACTION_NEXT = "kr.ssing.catsong.NEXT"
         const val ACTION_PREV = "kr.ssing.catsong.PREV"
         const val ACTION_KIND = "kr.ssing.catsong.PLAY_KIND_" // 뒤에 music · radio · nature
+        const val ACTION_REPEAT = "kr.ssing.catsong.REPEAT"
+        const val ACTION_SHUFFLE = "kr.ssing.catsong.SHUFFLE"
         private const val PREFS = "paran_widget"
         private const val TAP_GAP = 1000L    // 이 시간 안에 또 누르면 무시 (1초)
         private const val LOAD_MAX = 10000L  // '불러오는 중…' 은 길어도 10초까지만
@@ -127,6 +135,20 @@ class PlayerWidget : AppWidgetProvider() {
             }
             p.edit().putLong("tap", now).apply()
             return false
+        }
+
+        /// 반복·섞기: 누르자마자 위젯 모양 먼저 (앱도 같은 값으로 저장함)
+        private fun flipMode(context: Context, repeat: Boolean) {
+            try {
+                val fp = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+                if (repeat) {
+                    // 0 반복 안 함 → 1 한 곡 반복 → 2 전체 반복
+                    fp.edit().putLong("flutter.w_loop", (fp.getLong("flutter.w_loop", 0L) + 1) % 3).apply()
+                } else {
+                    fp.edit().putBoolean("flutter.w_shuffle", !fp.getBoolean("flutter.w_shuffle", false)).apply()
+                }
+            } catch (_: Exception) {}
+            refreshAll(context)
         }
 
         /// 누르자마자 위젯 모양부터 바꾸기
@@ -216,6 +238,11 @@ class PlayerWidget : AppWidgetProvider() {
                 // 소리가 나기 시작하면 끝 (다른 걸 듣다 바꾼 경우엔 어떤 소식이든 오면 끝)
                 if (isPlaying == true || p.getBoolean("load_any", false)) p.edit().remove("load").apply()
             }
+            // 가사 줄만 바뀐 건 폰 화면이 꺼져 있으면 기억만 하고 안 그림 (화면 켜면 다음 줄부터)
+            if (schedule.startsWith("♪")) {
+                val pm = context.getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+                if (!pm.isInteractive) return
+            }
             val loadAt = p.getLong("load", 0L)
             val loading = loadAt > 0 && System.currentTimeMillis() - loadAt in 0 until LOAD_MAX
             val t = p.getString("t", null)
@@ -233,6 +260,22 @@ class PlayerWidget : AppWidgetProvider() {
             views.setViewVisibility(R.id.widget_schedule, if (loading || s.isEmpty()) View.GONE else View.VISIBLE)
             views.setImageViewResource(R.id.widget_play_pause,
                 if (playing || loading) R.drawable.paran_ic_pause else R.drawable.paran_ic_play)
+            // 섞기 · 반복 (음악일 때만, 꺼져 있으면 흐리게)
+            val fp = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+            val music = try { fp.getBoolean("flutter.w_music", false) } catch (_: Exception) { false }
+            val loop = try { fp.getLong("flutter.w_loop", 0L) } catch (_: Exception) { 0L }
+            val shuf = try { fp.getBoolean("flutter.w_shuffle", false) } catch (_: Exception) { false }
+            views.setViewVisibility(R.id.widget_modes, if (music && !empty) View.VISIBLE else View.GONE)
+            views.setImageViewResource(R.id.widget_repeat,
+                if (loop == 1L) R.drawable.paran_ic_repeat_one else R.drawable.paran_ic_repeat)
+            fun mode(id: Int, on: Boolean) {
+                views.setInt(id, "setBackgroundResource",
+                    if (on) R.drawable.paran_widget_mode_on else R.drawable.paran_widget_mode_bg)
+                views.setInt(id, "setColorFilter", if (on) 0xFF17140F.toInt() else 0xFFFFFFFF.toInt())
+                views.setInt(id, "setImageAlpha", if (on) 255 else 200)
+            }
+            mode(R.id.widget_repeat, loop != 0L)
+            mode(R.id.widget_shuffle, shuf)
             photo(context, appWidgetManager, appWidgetId)?.let { views.setImageViewBitmap(R.id.widget_photo, it) }
 
             // 사진 부분 누르면 앱 열기
@@ -250,6 +293,8 @@ class PlayerWidget : AppWidgetProvider() {
             // 재생: 앱이 켜져 있으면 앱에게 바로 / 꺼져 있으면 앱을 열면서 마지막에 듣던 것
             views.setOnClickPendingIntent(R.id.widget_play_pause, media(ACTION_PLAY_PAUSE, 2))
             views.setOnClickPendingIntent(R.id.widget_next, media(ACTION_NEXT, 3))
+            views.setOnClickPendingIntent(R.id.widget_repeat, media(ACTION_REPEAT, 4))
+            views.setOnClickPendingIntent(R.id.widget_shuffle, media(ACTION_SHUFFLE, 5))
 
             // 바로가기 4개
             val go = listOf(

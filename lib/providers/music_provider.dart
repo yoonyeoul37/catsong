@@ -618,9 +618,9 @@ class MusicProvider extends ChangeNotifier {
                 !_isLegacyRecording(entity.path)) { // 음악 폴더에 들어간 녹음은 음악 목록에서 빼기
               foundSongs.add(Song(
                 id: idCounter++,
-                title: _getFileName(entity.path),
-                artist: '',
-                album: '',
+                title: _editedSongs[entity.path]?['title'] ?? _getFileName(entity.path), // 정리한 곡은 처음부터 정리된 이름
+                artist: _editedSongs[entity.path]?['artist'] ?? '',
+                album: _editedSongs[entity.path]?['album'] ?? '',
                 uri: entity.path,
                 duration: 0,
                 isFavorite: _favoriteIds.contains(idCounter - 1),

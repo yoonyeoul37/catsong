@@ -37,6 +37,37 @@
             android:textSize="11.5sp"
             android:textStyle="bold" />
 
+        <!-- 섞기 · 반복 (음악일 때만 보임) -->
+        <LinearLayout
+            android:id="@+id/widget_modes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/widget_shuffle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/paran_widget_mode_bg"
+                android:padding="6dp"
+                android:src="@drawable/paran_ic_shuffle"
+                android:tint="#FFFFFF" />
+
+            <ImageView
+                android:id="@+id/widget_repeat"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/paran_widget_mode_bg"
+                android:padding="6dp"
+                android:src="@drawable/paran_ic_repeat"
+                android:tint="#FFFFFF" />
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

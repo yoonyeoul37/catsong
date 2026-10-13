@@ -120,6 +120,20 @@ class PlayerProvider extends ChangeNotifier {
     final saved = prefs.getInt('loop_mode') ?? 0;
     _loopMode = LoopMode.values[saved];
     notifyListeners();
+    _saveWidgetModes(redraw: false);
+  }
+
+  /// 위젯이 직접 읽는 반복·섞기 값 저장 (+ 위젯 다시 그리기)
+  static VoidCallback? widgetResend; // 가사 줄까지 다시 보내기 (lyrics_provider가 채움)
+  Future<void> _saveWidgetModes({bool redraw = true}) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setInt('w_loop', _loopMode == LoopMode.one ? 1 : _loopMode == LoopMode.all ? 2 : 0);
+      await p.setBool('w_shuffle', _isShuffled);
+    } catch (_) {}
+    if (!redraw || currentSong == null) return;
+    _updateWidgetPlayState(_isPlaying);
+    widgetResend?.call();
   }
 
   Future<void> _saveLoopMode() async {
@@ -157,6 +171,12 @@ class PlayerProvider extends ChangeNotifier {
           break;
         case 'widgetPlayKind':
           HeadsetResume.widgetPlayKind(call.arguments as String); // 위젯 아래 버튼 (바로 대답)
+          break;
+        case 'widgetRepeat':
+          toggleLoopMode(); // 위젯: 반복 안 함 → 한 곡 → 전체
+          break;
+        case 'widgetShuffle':
+          toggleShuffle(); // 위젯: 섞기 켜기·끄기
           break;
         case 'widgetGo':
           WidgetGo.launched = true; // 위젯으로 켜졌으면 인삿말 목소리 안 함
@@ -693,6 +713,7 @@ class PlayerProvider extends ChangeNotifier {
       }
     }
     notifyListeners();
+    _saveWidgetModes();
   }
 
   void toggleLoopMode() {
@@ -709,12 +730,14 @@ class PlayerProvider extends ChangeNotifier {
     }
     notifyListeners();
     _saveLoopMode();
+    _saveWidgetModes();
   }
 
   void setLoopMode(LoopMode mode) {
     _loopMode = mode;
     notifyListeners();
     _saveLoopMode();
+    _saveWidgetModes();
   }
 
   String formatDuration(Duration d) {

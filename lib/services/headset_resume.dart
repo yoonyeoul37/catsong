@@ -160,6 +160,8 @@ class HeadsetResume {
     }
     if (key == _lastKey) return; // 바뀔 때만 저장
     _lastKey = key;
+    final isMusic = data['type'] == 'music';
+    SharedPreferences.getInstance().then((p) => p.setBool('w_music', isMusic)); // 위젯 섞기·반복 보이기
     SharedPreferences.getInstance().then((p) => p.setString('widget_last_played', jsonEncode(data)));
   }
 

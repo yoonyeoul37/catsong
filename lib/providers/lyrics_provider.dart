@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'player_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../l10n/locale_holder.dart';
@@ -14,6 +16,60 @@ class LyricsLine {
 }
 
 class LyricsProvider extends ChangeNotifier {
+  /// 앱 전체에서 하나만 (가사 화면 · 재생 화면 · 홈 위젯이 같이 씀)
+  static final LyricsProvider shared = LyricsProvider();
+
+  // ───── 홈 위젯: 지금 부르는 가사 한 줄 ─────
+  PlayerProvider? _wp;
+  String _wSong = '';
+  String? _wLine; // 위젯에 마지막으로 보낸 줄 (null = 다시 보내기)
+  bool _wPlaying = false;
+
+  void attachWidget(PlayerProvider pp) {
+    _wp = pp;
+    pp.addListener(_widgetTick);
+    PlayerProvider.widgetResend = () {
+      _wLine = null;
+      _widgetTick();
+    };
+  }
+
+  void _widgetTick() {
+    final pp = _wp;
+    if (pp == null) return;
+    final song = pp.currentSong;
+    final playing = pp.isPlaying && song != null && pp.natureSoundName == null;
+    if (playing != _wPlaying) {
+      _wPlaying = playing;
+      _wLine = null; // 멈췄다 다시 틀면 위젯이 가사 줄을 지우니까 다시 보내기
+    }
+    if (!playing || song == null) return;
+    final key = '${song.titleDisplay}-${song.artistDisplay}';
+    if (key != _wSong) {
+      _wSong = key;
+      _wLine = null;
+      // 가사 화면을 안 열어도 찾아오기 (이미 찾는 중이거나 찾았으면 그대로)
+      if (key != _currentSongKey || (!_hasLyrics && !_isLoading)) {
+        fetchLyrics(song.titleDisplay, song.artistDisplay, filePath: song.uri);
+      }
+    }
+    var line = '';
+    if (key == _currentSongKey && _hasLyrics) {
+      ensureEstimated(pp.duration); // 시간 없는 가사는 노래 길이로 짐작
+      updateCurrentLine(pp.position);
+      final i = _currentLineIndex;
+      if (_lyrics.isNotEmpty && i >= 0 && i < _lyrics.length) line = _lyrics[i].text.trim();
+    }
+    if (line == _wLine) return; // 줄이 바뀔 때만
+    _wLine = line;
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('updateWidget', {
+      'title': song.titleDisplay,
+      'artist': song.artistDisplay,
+      'isPlaying': true,
+      'schedule': line.isEmpty ? '' : '♪ $line',
+    }).catchError((Object _) => null);
+  }
+
   List<LyricsLine> _lyrics = [];
   String _plainLyrics = '';
   bool _isLoading = false;

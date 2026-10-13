@@ -2201,14 +2201,38 @@ class _HomeScreenState extends State<HomeScreen> {
                           cacheWidth: 216, // 화면 크기만큼만
                         )
                             : _recentAsset(noAlbumImagePath(matched?.uri ?? item.songUri ?? item.title));
-                        onTapAction = () {
-                          if (matched != null) {
-                            final queueIndex = recentMusicSongs.indexWhere((s) => s.uri == matched!.uri);
-                            context.read<PlayerProvider>().playFromList(
-                              recentMusicSongs,
-                              queueIndex >= 0 ? queueIndex : 0,
-                            );
+                        onTapAction = () async {
+                          final pp = context.read<PlayerProvider>();
+                          var song = matched;
+                          var queue = recentMusicSongs;
+                          if (song == null) {
+                            // 앱을 막 켜서 곡 목록을 아직 불러오는 중 → 다 불러올 때까지 잠깐 기다렸다가 틀기
+                            for (var i = 0; i < 40 && musicProvider.allSongs.isEmpty; i++) {
+                              await Future.delayed(const Duration(milliseconds: 250));
+                            }
+                            final all = musicProvider.allSongs;
+                            for (final s in all) {
+                              if (s.uri == item.songUri) {
+                                song = s;
+                                break;
+                              }
+                            }
+                            if (song == null) return; // 지운 곡 등
+                            // 다음·이전용: 최근에 들은 음악끼리 다시 묶기
+                            queue = <Song>[];
+                            for (final e in recentContent) {
+                              if (e.type != RecentContentType.music) continue;
+                              for (final s in all) {
+                                if (s.uri == e.songUri) {
+                                  queue.add(s);
+                                  break;
+                                }
+                              }
+                            }
                           }
+                          final target = song;
+                          final queueIndex = queue.indexWhere((s) => s.uri == target.uri);
+                          pp.playFromList(queue, queueIndex >= 0 ? queueIndex : 0);
                         };
                         break;
                       case RecentContentType.radio:

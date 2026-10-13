@@ -146,7 +146,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Text(
             label,
-            style: TextStyle(
+            style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily, 
               color: selected
                   ? (isDarkMode ? const Color(0xFF24221F) : Colors.white)
                   : baseColor.withOpacity(0.7),
@@ -342,7 +342,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 textScaler: TextScaler.noScaling,
-                                style: GoogleFonts.doHyeon(color: ink, fontSize: 18)),
+                                style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w700, letterSpacing: -0.3)),
                             if (prog.isNotEmpty)
                               Text(prog,
                                   maxLines: 1,
@@ -775,8 +775,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                         ),
                         const SizedBox(width: 8),
                         Text('국가선택',
-                            style: TextStyle(
-                                color: baseColor, fontSize: 13, fontWeight: FontWeight.w700)),
+                            style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily, color: baseColor, fontSize: 13, fontWeight: FontWeight.w700)),
                         Container(
                           width: 1,
                           height: 14,
@@ -789,7 +788,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                           child: Text('한국',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily, 
                                   color: baseColor.withOpacity(0.7),
                                   fontSize: 13,
                                   fontWeight: FontWeight.w500)),
@@ -905,9 +904,11 @@ class _StationTile extends StatelessWidget {
                 child: Text(
                   station.broadcaster,
                   textScaler: TextScaler.noScaling,
-                  style: GoogleFonts.doHyeon(
+                  style: TextStyle(
                     color: const Color(0xFF17140F).withOpacity(0.8),
-                    fontSize: station.broadcaster.length > 3 ? 10.5 : 12.5,
+                    fontSize: station.broadcaster.length > 3 ? 10 : 12,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.2,
                   ),
                   textAlign: TextAlign.center,
                   maxLines: 1,
@@ -922,11 +923,11 @@ class _StationTile extends StatelessWidget {
                   children: [
                     Text(
                       station.name,
-                      // 도현체는 너무 진해서 앱 글꼴 중간 굵기로 (곡 목록 제목과 같게)
+                      // 라디오 목록 방송 이름 (설정 글꼴)
                       style: TextStyle(
                         color: isPlaying ? primaryColor : baseColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
                         letterSpacing: -0.2,
                       ),
                       maxLines: 1,

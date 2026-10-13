@@ -734,7 +734,7 @@ class _RadioCountryStationsScreenState
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   textScaler: TextScaler.noScaling,
-                                  style: GoogleFonts.doHyeon(color: ink, fontSize: 18)),
+                                  style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w700, letterSpacing: -0.3)),
                               if (sub.isNotEmpty)
                                 Text(sub,
                                     maxLines: 1,

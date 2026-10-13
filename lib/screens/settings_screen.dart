@@ -100,8 +100,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String _getFontName(BuildContext context, String key) {
     final l = AppLocalizations.of(context)!;
     const names = {
+      'default': '스포카 한 산스',
       'pretendard': '프리텐다드',
-      'suit': '수트 (SUIT)',
+      'line_seed': '라인 시드',
+      'suit': '수트 (기본)',
       'wanted_sans': '원티드 산스',
       'nanum_gothic': '나눔고딕',
       'ibm_plex': 'IBM 플렉스 산스',
@@ -1164,7 +1166,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     textScaler: TextScaler.noScaling,
                                     style: TextStyle(
                                         color: i == cur ? _sBg(isDarkMode) : _sText(isDarkMode),
-                                        fontSize: 15 + i * 4.0,
+                                        fontSize: 13 + i * 2.5,
                                         height: 1.2,
                                         fontWeight: FontWeight.w700)),
                                 const SizedBox(height: 3),
@@ -1172,7 +1174,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     textScaler: TextScaler.noScaling,
                                     style: TextStyle(
                                         color: i == cur ? _sBg(isDarkMode) : _sTextSub(isDarkMode),
-                                        fontSize: 12,
+                                        fontSize: 10.5,
                                         fontWeight: i == cur ? FontWeight.w700 : FontWeight.w500)),
                               ],
                             ),

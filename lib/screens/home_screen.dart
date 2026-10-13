@@ -3259,10 +3259,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Text(
               label,
               style: specialFont
-                  // 녹음 탭: 고운돋움 서체
-                  ? GoogleFonts.dongle(
+                  // 녹음 탭도 다른 탭과 같은 글꼴
+                  ? TextStyle(
                       color: isSelected ? baseColor : baseColor.withOpacity(0.54),
-                      fontSize: 19,
+                      fontSize: 14,
                       fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
                     )
                   : TextStyle(

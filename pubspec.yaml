@@ -74,6 +74,11 @@ flutter:
           weight: 500
         - asset: assets/fonts/SpoqaHanSansNeo-Bold.ttf
           weight: 700
+    - family: LINESeedKR
+      fonts:
+        - asset: assets/fonts/LINESeedKR-Regular.otf
+        - asset: assets/fonts/LINESeedKR-Bold.otf
+          weight: 700
     # 설정 → 글꼴 (자주 쓰는 한글 2,350자 + 영문만 남긴 가벼운 버전)
     - family: Pretendard
       fonts:

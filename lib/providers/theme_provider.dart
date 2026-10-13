@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ThemeProvider extends ChangeNotifier {
   Color _primaryColor = const Color(0xFF2589E8); // 포인트 색 (기본: 파란소리)
   double _textScale = 1.12;
-  String _fontFamily = 'default';
+  String _fontFamily = 'suit'; // 처음 설치하면 쓰는 글꼴 — 바꾸려면 이 한 줄만 (예: 'pretendard', 'line_seed', 'default'=스포카)
   bool _isDarkMode = false;
   bool _seasonalEffectEnabled = true;
   bool _voiceGreetingEnabled = true;
@@ -113,6 +113,7 @@ class ThemeProvider extends ChangeNotifier {
   static const List<Map<String, String>> availableFonts = [
     {'key': 'default', 'name': 'Spoqa Han Sans Neo'},
     {'key': 'pretendard', 'name': 'Pretendard'},
+    {'key': 'line_seed', 'name': 'LINESeedKR'},
     {'key': 'suit', 'name': 'SUIT'},
     {'key': 'wanted_sans', 'name': 'WantedSans'},
     {'key': 'nanum_gothic', 'name': 'NanumGothic'},
@@ -123,7 +124,7 @@ class ThemeProvider extends ChangeNotifier {
   ];
 
   /// 설정 → 글자 크기 3단계 (보통 = 예전 기본 크기 그대로)
-  static const textSteps = <(String, double)>[('작게', 1.0), ('보통', 1.12), ('크게', 1.2)];
+  static const textSteps = <(String, double)>[('아주 작게', 0.92), ('작게', 1.0), ('보통', 1.12), ('크게', 1.2), ('아주 크게', 1.3)];
 
   /// 지금 크기와 가장 가까운 단계
   int get textStepIndex {
@@ -159,7 +160,7 @@ class ThemeProvider extends ChangeNotifier {
       _textScale = textSteps[textStepIndex].$2; // 예전 막대로 고른 크기는 가장 가까운 단계로
     }
     if (fontFamily != null) {
-      _fontFamily = availableFonts.any((f) => f['key'] == fontFamily) ? fontFamily : 'default';
+      _fontFamily = availableFonts.any((f) => f['key'] == fontFamily) ? fontFamily : 'suit';
     }
     if (isDarkMode != null) {
       _isDarkMode = isDarkMode;
@@ -217,6 +218,7 @@ class ThemeProvider extends ChangeNotifier {
     // 앱 안에 넣은 글꼴 (pubspec.yaml 의 family 이름)
     const bundled = {
       'pretendard': 'Pretendard',
+      'line_seed': 'LINESeedKR',
       'suit': 'SUIT',
       'wanted_sans': 'WantedSans',
       'nanum_gothic': 'NanumGothic',

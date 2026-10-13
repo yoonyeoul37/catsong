@@ -180,7 +180,8 @@ void main() async {
     ),
   );
 
-  await SystemChrome.setPreferredOrientations([
+  // 기다리지 않기: 위젯으로 화면 없이 깨어나면 대답이 안 와서 앱이 여기서 영원히 멈췄음
+  SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
@@ -192,6 +193,7 @@ void main() async {
   await AlarmService.init(); // 아침 알람 (알람 때문에 켜졌는지도 확인)
   await initGreetingScene(); // 첫인사·끝인사 오늘 장면 (지난번과 다르게)
   await WidgetGo.loadLaunch(); // 홈 위젯 바로가기로 켜졌는지
+
 
   runApp(MyApp(
     playerProvider: playerProvider,

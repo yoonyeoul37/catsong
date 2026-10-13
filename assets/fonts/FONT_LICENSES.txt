@@ -99,3 +99,5 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 - Wanted Sans (Regular, Bold) — Copyright (c) Wanted Lab (github.com/wanteddev/wanted-sans)
 - Nanum Gothic (Regular, Bold) — Copyright (c) 2010, NAVER Corporation
 - IBM Plex Sans KR (Regular, Bold) — Copyright (c) IBM Corp. (github.com/IBM/plex)
+
+- LINE Seed Sans KR (Regular, Bold) — Copyright (c) LINE Corporation, SIL Open Font License 1.1 (한글 2,350자 + 영문만 남긴 버전)

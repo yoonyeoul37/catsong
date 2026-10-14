@@ -77,6 +77,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
   static String _randomSongKey = ''; // 랜덤 사진을 고른 노래 (같은 노래 동안은 그대로)
   static String? _myBg; // 내 사진 배경 (파일 경로) — 있으면 이게 먼저
   static bool _myLight = false; // 내 사진이 밝은지 (밝으면 먹색 글자, 어두우면 흰 글자)
+  static int _tone = 0; // 배경 색감: 0 컬러 · 1 흑백 · 2 세피아 · 3 필름 (파란포토와 같게)
   List<String> _myPhotos = []; // 가사 배경용 내 사진 목록
   String? _hideNoLyricsFor; // ✕로 닫은 "가사 못 찾았어요" 카드 (노래가 바뀌면 다시 나와요)
   bool _manageMy = false; // 내 사진 관리(✕) 모드
@@ -128,6 +129,8 @@ class _LyricsScreenState extends State<LyricsScreen> {
     SharedPreferences.getInstance().then((p) {
       final s = (p.getInt('lyricsTextSize') ?? 1).clamp(0, 2);
       if (s != _sizeStep && mounted) setState(() => _sizeStep = s);
+      final t = (p.getInt('lyricsBgTone') ?? 0).clamp(0, 3);
+      if (t != _tone && mounted) setState(() => _tone = t);
     });
     // 처음 한 번만: 가사를 꾹 누르면 카드로 공유된다고 알려주기
     SharedPreferences.getInstance().then((p) {
@@ -141,7 +144,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
     SharedPreferences.getInstance().then((p) {
       // 고른 사진은 파일 이름으로 기억 (예전 번호로 저장한 것도 알아보기)
       // 🔀 랜덤을 골라뒀으면 사진 고정 대신 랜덤 (노래마다 바뀜)
-      final random = p.getBool('lyricsBgRandom') ?? false;
+      final random = p.getBool('lyricsBgRandom') ?? true; // 처음 설치하면 랜덤 (파란포토와 같게)
       _picks = (p.getStringList('lyricsBgPicks') ?? []).toSet();
       if (random != _random && mounted) setState(() => _random = random);
       // 내 사진 목록 (지워진 파일은 빼기)
@@ -923,37 +926,39 @@ class _LyricsScreenState extends State<LyricsScreen> {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 🔀 노래마다 바꾸기 (스위치 — 설정 화면 스위치와 같은 모양)
+            // 랜덤 · 고정 스위치 (음악 재생화면 · 가사 배경 같은 모양)
             ParanCard(
               children: [
                 InkWell(
-                  onTap: () => _setRandom(!_random, setSheet),
+                  onTap: () {
+                    _setRandom(!_random, setSheet);
+                  },
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(14, 10, 8, 10),
                     child: Row(
                       children: [
-                        SizedBox(width: 22, child: Icon(Icons.shuffle_rounded, color: sub, size: 20)),
+                        SizedBox(
+                            width: 22,
+                            child: Icon(_random ? Icons.shuffle_rounded : Icons.push_pin_outlined,
+                                color: sub, size: 20)),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('노래마다 바꾸기',
-                                  style: TextStyle(color: ink, fontSize: 14, fontWeight: FontWeight.w500)),
+                              Text(_random ? '랜덤' : '고정',
+                                  style: TextStyle(color: ink, fontSize: 14, fontWeight: FontWeight.w600)),
                               const SizedBox(height: 2),
-                              Text(
-                                  !_random
-                                      ? '노래가 바뀔 때마다 다른 사진'
-                                      : _picks.isEmpty
-                                          ? '원하는 사진을 선택해 보세요'
-                                          : '고른 사진 ${_picks.length}장 중에서 · 다시 누르면 빠져요',
+                              Text(_random ? '노래가 바뀔 때마다 사진이 바뀌어요' : '고른 사진 한 장만 계속 보여요',
                                   style: TextStyle(color: sub, fontSize: 11.5)),
                             ],
                           ),
                         ),
                         Switch(
                           value: _random,
-                          onChanged: (v) => _setRandom(v, setSheet),
+                          onChanged: (v) {
+                            _setRandom(v, setSheet);
+                          },
                           activeColor: Theme.of(ctx).colorScheme.primary,
                           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
@@ -998,7 +1003,132 @@ class _LyricsScreenState extends State<LyricsScreen> {
           ],
         );
       },
+      // 색감: 아래에 고정 (사진을 밀어도 늘 보이게 — 파란포토 창과 같게)
+      footer: (ctx, setSheet) => _toneBar(setSheet),
     );
+  }
+
+  /// 색감 고르기 (파란포토 창과 같은 모양): 지금 배경을 컬러 · 흑백 · 세피아 · 필름으로 작게 미리보기
+  Widget _toneBar(StateSetter setSheet) {
+    final dark = context.read<ThemeProvider>().isDarkMode;
+    final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final sub = dark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
+    Widget photo() => _myBg != null
+        ? Image.file(File(_myBg!),
+            fit: BoxFit.cover,
+            cacheWidth: 200,
+            errorBuilder: (_, __, ___) => Container(color: const Color(0x22000000)))
+        : _bg != 0
+            ? CachedNetworkImage(
+                imageUrl: _bgUrl(_bg),
+                fit: BoxFit.cover,
+                memCacheWidth: 200,
+                placeholder: (_, __) => Container(color: const Color(0x22000000)),
+                errorWidget: (_, __, ___) => Container(color: const Color(0x22000000)),
+              )
+            : Container(color: AppTheme.background);
+    return Row(
+      children: [
+        for (final t in const [(0, '컬러'), (1, '흑백'), (2, '세피아'), (3, '필름')]) ...[
+          if (t.$1 > 0) const SizedBox(width: 8),
+          Expanded(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                setState(() => _tone = t.$1);
+                setSheet(() {});
+                SharedPreferences.getInstance().then((p) => p.setInt('lyricsBgTone', t.$1));
+              },
+              child: Column(
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 160),
+                    height: 46,
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: _tone == t.$1 ? ink : Colors.transparent, width: 2),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(9),
+                      child: SizedBox.expand(child: _toned(photo(), t.$1)),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(t.$2,
+                      style: TextStyle(
+                          color: _tone == t.$1 ? ink : sub,
+                          fontSize: 11.5,
+                          fontWeight: _tone == t.$1 ? FontWeight.w800 : FontWeight.w600)),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  /// 배경에 색감 입히기 (only: 미리보기용) — 파란포토와 같은 값
+  Widget _toned(Widget child, [int? only]) {
+    final f = only ?? _tone;
+    if (f == 1) {
+      return ColorFiltered(
+        colorFilter: const ColorFilter.matrix(<double>[
+          0.2126, 0.7152, 0.0722, 0, 0,
+          0.2126, 0.7152, 0.0722, 0, 0,
+          0.2126, 0.7152, 0.0722, 0, 0,
+          0, 0, 0, 1, 0,
+        ]),
+        child: child,
+      );
+    }
+    if (f == 2) {
+      return ColorFiltered(
+        colorFilter: const ColorFilter.matrix(<double>[
+          0.393, 0.769, 0.189, 0, 0,
+          0.349, 0.686, 0.168, 0, 0,
+          0.272, 0.534, 0.131, 0, 0,
+          0, 0, 0, 1, 0,
+        ]),
+        child: child,
+      );
+    }
+    if (f == 3) {
+      // 필름: 바랜 따뜻한 색 + 가장자리 어둡게 + 필름 입자
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          ColorFiltered(
+            colorFilter: const ColorFilter.matrix(<double>[
+              0.7016, 0.1803, 0.0182, 0, 19,
+              0.0524, 0.8099, 0.0178, 0, 17,
+              0.0464, 0.1562, 0.5774, 0, 19,
+              0, 0, 0, 1, 0,
+            ]),
+            child: child,
+          ),
+          const IgnorePointer(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  radius: 1.0,
+                  colors: [Colors.transparent, Color(0x73000000)],
+                  stops: [0.55, 1.0],
+                ),
+              ),
+            ),
+          ),
+          IgnorePointer(
+            child: RepaintBoundary(
+              child: CustomPaint(painter: _LyricsGrainPainter()),
+            ),
+          ),
+        ],
+      );
+    }
+    return child;
   }
 
   // 오른쪽 위 버튼 묶음: 자주 쓰는 것만 밖에, 나머지는 ⋮ 안으로 (유리 알약 하나에)
@@ -1176,18 +1306,18 @@ class _LyricsScreenState extends State<LyricsScreen> {
           children: [
             // 배경 사진
             if (_myBg != null)
-              // 내 사진 배경 (화면 크기만큼만 풀기)
+              // 내 사진 배경 (화면 크기만큼만 풀기) + 고른 색감
               RepaintBoundary(
-                child: Image.file(File(_myBg!),
+                child: _toned(Image.file(File(_myBg!),
                     fit: BoxFit.cover,
                     cacheWidth: 1080,
                     gaplessPlayback: true,
-                    errorBuilder: (_, __, ___) => Container(color: const Color(0xFF14110C))),
+                    errorBuilder: (_, __, ___) => Container(color: const Color(0xFF14110C)))),
               )
             else if (_bg != 0)
-              // 배경 사진은 한 번만 그리고 고정 (가사가 바뀔 때마다 다시 안 그리게)
+              // 배경 사진은 한 번만 그리고 고정 (가사가 바뀔 때마다 다시 안 그리게) + 고른 색감
               RepaintBoundary(
-                child: CachedNetworkImage(
+                child: _toned(CachedNetworkImage(
                   imageUrl: _bgUrl(_bg),
                   fit: BoxFit.cover,
                   memCacheWidth: 1080, // 화면 크기만큼만
@@ -1195,7 +1325,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                   fadeInDuration: const Duration(milliseconds: 250),
                   placeholder: (_, __) => Container(color: const Color(0xFF14110C)),
                   errorWidget: (_, __, ___) => Container(color: const Color(0xFF14110C)),
-                ),
+                )),
               ),
             // 글자가 잘 보이게 얇은 막 (밝은 사진은 크림색, 어두운 사진은 검은색)
             if (_hasPhoto)
@@ -1721,4 +1851,27 @@ class _ParanBreathState extends State<_ParanBreath> with SingleTickerProviderSta
       },
     );
   }
+}
+
+/// 필름 입자: 화면 위에 아주 옅은 점들을 한 번만 그림 (파란포토 필름과 같은 무늬)
+class _LyricsGrainPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rnd = math.Random(7);
+    final count = (size.width * size.height / 160).round();
+    final light = Paint();
+    final dark = Paint();
+    for (var i = 0; i < count; i++) {
+      final x = rnd.nextDouble() * size.width;
+      final y = rnd.nextDouble() * size.height;
+      final a = 0.04 + rnd.nextDouble() * 0.07;
+      final p = rnd.nextBool()
+          ? (light..color = Colors.white.withOpacity(a))
+          : (dark..color = Colors.black.withOpacity(a));
+      canvas.drawRect(Rect.fromLTWH(x, y, 1.3, 1.3), p);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_LyricsGrainPainter old) => false;
 }

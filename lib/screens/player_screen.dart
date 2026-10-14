@@ -376,6 +376,7 @@ class _PlayerScreenState extends State<PlayerScreen>
       _printStyle = prefs.getInt('printStyle') ?? 0;
       _autoBgMin = 0; // (예전 10분·30분마다 바꾸기 → 곡마다 바뀌는 자동·랜덤으로 대신)
       _photoMode = prefs.getInt('paranPhotoMode') ?? 1;
+      if (_photoMode == 0) _photoMode = 1; // 자동은 뺐으니 랜덤으로
       _photoRange = prefs.getString('paranPhotoRange') ?? '';
       final picks = prefs.getStringList('paranPhotoPicks');
       // 처음엔 예전에 하트 누른 사진을 고른 사진으로
@@ -804,7 +805,6 @@ class _PlayerScreenState extends State<PlayerScreen>
         final sub = dark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
         final chipBg = dark ? const Color(0xFF32302C) : Colors.white;
         final chipLine = dark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
-        final segBg = dark ? const Color(0xFF2E2C28) : const Color(0xFFEDE6D8);
         void tick() => const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
 
         // 내 사진 지우기 (지금 배경이면 다른 사진으로)
@@ -981,17 +981,6 @@ class _PlayerScreenState extends State<PlayerScreen>
           );
         }
 
-        // 모드 설명 한 줄
-        final tc = _timeCategory();
-        final hasTime = (_nightCategoryPhotos[tc] ?? const <String>[]).isNotEmpty;
-        final rangeName = _photoRange.isEmpty ? (_catOf(_nightBgPath) ?? '같은 카테고리') : _photoRange;
-        final modeHint = _photoMode == 0
-            ? (hasTime ? '지금은 $tc · 곡마다 $tc 사진으로 바뀌어요' : '시간대 사진을 준비 중이에요 · 지금은 고른 카테고리 안에서 바뀌어요')
-            : _photoMode == 1
-                ? (picksNow.isNotEmpty
-                    ? '고른 사진 ${picksNow.length}장이 곡마다 바뀌어요 · 다시 누르면 빠져요'
-                    : '원하는 사진을 선택해 보세요')
-                : '고른 사진 한 장만 계속 보여요';
         final List<Widget> tiles;
         if (cat == '내 사진') {
           tiles = [if (!manage) addTile(), for (final f in mine) photoTile(f, isFile: true)];
@@ -1008,48 +997,55 @@ class _PlayerScreenState extends State<PlayerScreen>
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // 자동 · 랜덤 · 고정 (한 덩어리 칸, 고른 칸만 하얗게)
-            Container(
-              padding: const EdgeInsets.all(3),
-              decoration: BoxDecoration(color: segBg, borderRadius: BorderRadius.circular(12)),
-              child: Row(
-                children: [
-                  for (final m in const [(0, '자동'), (1, '랜덤'), (2, '고정')])
-                    Expanded(
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          tick();
-                          _setPhotoMode(m.$1).then((_) {
-                            if (ctx.mounted) setSheet(() {});
-                          });
-                          setSheet(() {});
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 160),
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          decoration: BoxDecoration(
-                            color: _photoMode == m.$1 ? chipBg : Colors.transparent,
-                            borderRadius: BorderRadius.circular(9),
-                            boxShadow: _photoMode == m.$1
-                                ? [BoxShadow(color: Colors.black.withOpacity(0.10), blurRadius: 3, offset: const Offset(0, 1))]
-                                : null,
+            // 랜덤 · 고정 스위치 (음악 재생화면 · 가사 배경 같은 모양)
+            ParanCard(
+              children: [
+                InkWell(
+                  onTap: () {
+                    tick();
+                    _setPhotoMode(_photoMode == 1 ? 2 : 1).then((_) {
+                      if (ctx.mounted) setSheet(() {});
+                    });
+                    setSheet(() {});
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(14, 10, 8, 10),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                            width: 22,
+                            child: Icon((_photoMode == 1) ? Icons.shuffle_rounded : Icons.push_pin_outlined,
+                                color: sub, size: 20)),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text((_photoMode == 1) ? '랜덤' : '고정',
+                                  style: TextStyle(color: ink, fontSize: 14, fontWeight: FontWeight.w600)),
+                              const SizedBox(height: 2),
+                              Text((_photoMode == 1) ? '노래가 바뀔 때마다 사진이 바뀌어요' : '고른 사진 한 장만 계속 보여요',
+                                  style: TextStyle(color: sub, fontSize: 11.5)),
+                            ],
                           ),
-                          child: Text(m.$2,
-                              style: TextStyle(
-                                  color: _photoMode == m.$1 ? ink : sub,
-                                  fontSize: 13,
-                                  fontWeight: _photoMode == m.$1 ? FontWeight.w800 : FontWeight.w600)),
                         ),
-                      ),
+                        Switch(
+                          value: (_photoMode == 1),
+                          onChanged: (v) {
+                            tick();
+                            _setPhotoMode(v ? 1 : 2).then((_) {
+                              if (ctx.mounted) setSheet(() {});
+                            });
+                            setSheet(() {});
+                          },
+                          activeColor: Theme.of(ctx).colorScheme.primary,
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                      ],
                     ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
-              child: Text(modeHint, style: TextStyle(color: sub, fontSize: 11.5)),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 14),
             // 카테고리: 작은 사진 + 이름 (옆으로 넘기기)

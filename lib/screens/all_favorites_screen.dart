@@ -116,7 +116,10 @@ class _AllFavoritesScreenState extends State<AllFavoritesScreen>
           labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
           labelColor: ink,
           unselectedLabelColor: baseColor.withOpacity(0.45),
-          indicatorColor: ink,
+          // 밑줄: 둥근 모서리 없이 반듯한 직선 (먹색, 두께 2)
+          indicator: UnderlineTabIndicator(
+            borderSide: BorderSide(color: ink, width: 2),
+          ),
           // 탭을 누르거나 밀 때 포인트 색 배경(물결)이 번지지 않게
           overlayColor: const WidgetStatePropertyAll(Colors.transparent),
           splashFactory: NoSplash.splashFactory,

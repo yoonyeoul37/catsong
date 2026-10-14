@@ -1733,12 +1733,19 @@ class _HomeScreenState extends State<HomeScreen> {
     final baseColor = isDarkMode ? Colors.white : Colors.black;
     final primaryColor = Theme.of(context).colorScheme.primary;
     // 7일 안에 들은 것만 · 같은 것은 가장 최근 한 번만 · 최대 20개
+    // 지운 곡은 빼기: 곡 목록을 다 불러온 뒤에만 (불러오는 중엔 그대로 두기)
+    final songsReady = context.select<MusicProvider, int>(
+        (m) => m.isLoading || m.allSongs.isEmpty ? -1 : m.allSongs.length);
+    final songUris = songsReady < 0
+        ? null
+        : {for (final s in context.read<MusicProvider>().allSongs) s.uri};
     final recentContent = () {
       final cut = DateTime.now().subtract(const Duration(days: 7));
       final seen = <String>{};
       final out = <RecentContentEntry>[];
       for (final e in context.watch<RecentContentProvider>().entries) {
         if (e.playedAt.isBefore(cut)) continue;
+        if (songUris != null && e.type == RecentContentType.music && !songUris.contains(e.songUri)) continue;
         if (!seen.add('${e.type.name}|${e.key}')) continue;
         out.add(e);
         if (out.length >= 20) break;
@@ -3942,7 +3949,7 @@ class _SpinRing extends StatefulWidget {
 class _SpinRingState extends State<_SpinRing> with SingleTickerProviderStateMixin {
   static bool _spun = false; // 앱 한 번 켤 때 한 번만 (음악 탭 갔다 와도 다시 안 돎)
   late final AnimationController _c =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 6500));
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 10000)); // 10초에 3바퀴 (천천히)
 
   @override
   void initState() {

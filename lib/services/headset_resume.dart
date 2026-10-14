@@ -323,8 +323,13 @@ class HeadsetResume {
         }
       } else {
         final now = pp.natureSoundName == null ? pp.currentSong?.uri : null;
+        // 지운 곡은 빼기 (곡 목록을 불러온 뒤에만)
+        final m = _music;
+        final have = (m == null || m.allSongs.isEmpty) ? null : {for (final s in m.allSongs) s.uri};
         for (final x in r.entries) {
-          if (x.type == RecentContentType.music && x.key != now) add('music', x.key, x.title, x.subtitle);
+          if (x.type == RecentContentType.music && x.key != now && (have == null || have.contains(x.key))) {
+            add('music', x.key, x.title, x.subtitle);
+          }
         }
       }
       await p.setString('w_list', jsonEncode(items));

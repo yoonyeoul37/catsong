@@ -1996,7 +1996,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                             color: const Color(0xFF17140F),
                                             fontSize: 14.5,
                                             fontWeight: FontWeight.w400,
-                                            letterSpacing: -0.3)),
+                                            letterSpacing: -0.3,
+                                            // 붕 뜬 느낌: 아래로 살짝 내린 옅은 그림자 + 위쪽 흰 빛
+                                            shadows: [
+                                              Shadow(
+                                                color: const Color(0xFF17140F).withOpacity(0.13),
+                                                offset: const Offset(0, 1.5),
+                                                blurRadius: 3,
+                                              ),
+                                              Shadow(
+                                                color: Colors.white.withOpacity(0.6),
+                                                offset: const Offset(0, -0.5),
+                                                blurRadius: 1,
+                                              ),
+                                            ])),
                                     const SizedBox(height: 2),
                                     Text(c.subtitle,
                                         maxLines: 1,

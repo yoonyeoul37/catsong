@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:marquee/marquee.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/sound_mix_provider.dart';
@@ -48,7 +49,7 @@ class SoundMixMiniPlayer extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
           child: Container(
-            height: 80,
+            height: 72, // 음악·라디오 미니플레이어와 같은 높이 (예전 80)
             decoration: BoxDecoration(
               // 진한 띠 (어두운 화면에서는 바탕보다 한 톤 밝게)
               color: isDarkMode ? const Color(0xFF3A3631) : ink,
@@ -73,10 +74,8 @@ class SoundMixMiniPlayer extends StatelessWidget {
                             style: TextStyle(
                                 color: baseColor, fontSize: 14, fontWeight: FontWeight.w600)),
                         const SizedBox(height: 2),
-                        Text(subtitle,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 12)),
+                        // 섞은 소리 이름이 길면 좌우로 흐르게
+                        _MiniTitle(subtitle, TextStyle(color: baseColor.withOpacity(0.6), fontSize: 12)),
                       ],
                     ),
                   ),
@@ -121,5 +120,43 @@ class SoundMixMiniPlayer extends StatelessWidget {
     final mix = context.read<SoundMixProvider>();
     await mix.closeSession();
     pp.dismissMediaNotification(resume: () => mix.playAll());
+  }
+}
+
+/// 글자가 칸보다 길면 좌우로 천천히 흐르게 (짧으면 그냥 글자) — 음악·라디오 미니플레이어와 같음
+class _MiniTitle extends StatelessWidget {
+  final String text;
+  final TextStyle style;
+  const _MiniTitle(this.text, this.style);
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, c) {
+      final tp = TextPainter(
+        text: TextSpan(text: text, style: style),
+        maxLines: 1,
+        textDirection: TextDirection.ltr,
+        textScaler: MediaQuery.textScalerOf(context),
+      )..layout();
+      if (tp.width <= c.maxWidth) {
+        return Text(text, style: style, maxLines: 1, overflow: TextOverflow.ellipsis);
+      }
+      return SizedBox(
+        width: c.maxWidth,
+        height: tp.height,
+        child: Marquee(
+          key: ValueKey(text),
+          text: text,
+          style: style,
+          velocity: 28,
+          blankSpace: 48,
+          startAfter: const Duration(seconds: 2),
+          pauseAfterRound: const Duration(seconds: 2),
+          fadingEdgeStartFraction: 0.06,
+          fadingEdgeEndFraction: 0.06,
+          showFadingOnlyWhenScrolling: true,
+        ),
+      );
+    });
   }
 }

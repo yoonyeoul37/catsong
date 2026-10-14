@@ -11,6 +11,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
 import 'package:flutter/material.dart';
+import 'home_screen.dart';
 import '../utils/point_color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -1782,12 +1783,13 @@ class _PlayerScreenState extends State<PlayerScreen>
       child: Row(
         children: [
           IconButton(
+            // 집 아이콘: 누르면 홈으로 (중간 화면 다 닫고 맨 처음 화면으로)
             onPressed: () {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              Navigator.pop(context);
+              Navigator.of(context).popUntil((r) => r.isFirst);
+              HomeScreen.goHome.value++; // 곡 목록이 아니라 메인 홈으로
             },
-            icon: Icon(Icons.arrow_back_ios_new_rounded,
-                color: baseColor, size: 18),
+            icon: const Icon(Icons.home_rounded, color: baseColor, size: 21),
           ),
           // 오른쪽 아이콘(36씩) 폭에 맞춰 비워서 가운데 워터마크가 화면 정중앙에 오게 (왼쪽 ⌄는 48)
           // 왼쪽 ←(48)와 오른쪽 ⋯(36 + 여백 12)의 폭이 같아서 로고가 화면 정가운데

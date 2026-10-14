@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:marquee/marquee.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/radio_provider.dart';
@@ -26,6 +27,19 @@ class RadioMiniPlayer extends StatelessWidget {
     // 진한 띠 위라서 글자·아이콘은 늘 밝은 색
     const baseColor = Color(0xFFF4EFE5);
     const ink = Color(0xFF17140F);
+
+    // ⏮ ⏭ : 지금 목록에서 이전·다음 방송 (끝이면 처음으로)
+    void step(int d) {
+      final queue = radioProvider.currentQueue;
+      if (queue.isEmpty) return;
+      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+      final idx = radioProvider.currentQueueIndex;
+      final n = (idx + d) % queue.length;
+      final newIdx = n < 0 ? n + queue.length : n;
+      radioProvider.setQueue(queue, newIdx);
+      radioProvider.playStation(queue[newIdx]);
+    }
+    final canStep = radioProvider.currentQueue.length > 1;
 
     return GestureDetector(
       // 아래로 휙 쓸어내리면 미니플레이어 닫기
@@ -85,7 +99,7 @@ class RadioMiniPlayer extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
           child: Container(
-            height: 80,
+            height: 72, // 살짝 낮게 (예전 80)
             decoration: BoxDecoration(
               // 진한 띠 (어두운 화면에서는 바탕보다 한 톤 밝게)
               color: isDarkMode ? const Color(0xFF3A3631) : ink,
@@ -125,15 +139,14 @@ class RadioMiniPlayer extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              // 방송 이름이 길면 좌우로 흐르게
+                              _MiniTitle(
                                 station.name,
-                                style: TextStyle(
+                                const TextStyle(
                                   color: baseColor,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 2),
                               Row(
@@ -226,6 +239,15 @@ class RadioMiniPlayer extends StatelessWidget {
                             ],
                           ),
                         ),
+                        // 이전 방송 (음악 미니플레이어와 같은 모양)
+                        if (canStep)
+                          IconButton(
+                            onPressed: () => step(-1),
+                            icon: Icon(Icons.skip_previous, color: baseColor.withOpacity(0.7)),
+                            iconSize: 26,
+                            padding: const EdgeInsets.all(4),
+                            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                          ),
                         GestureDetector(
                           onTap: isLoading
                               ? null
@@ -256,6 +278,15 @@ class RadioMiniPlayer extends StatelessWidget {
                             ),
                           ),
                         ),
+                        // 다음 방송
+                        if (canStep)
+                          IconButton(
+                            onPressed: () => step(1),
+                            icon: Icon(Icons.skip_next, color: baseColor.withOpacity(0.7)),
+                            iconSize: 26,
+                            padding: const EdgeInsets.all(4),
+                            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                          ),
                         // × (닫기): 재생 중에도 누르면 바로 멈추고 닫힘
                         IconButton(
                           onPressed: () => _close(context),
@@ -342,5 +373,43 @@ class _MiniEqualizerBarsState extends State<_MiniEqualizerBars>
         }),
       ),
     );
+  }
+}
+
+/// 제목이 칸보다 길면 좌우로 천천히 흐르게 (짧으면 그냥 글자)
+class _MiniTitle extends StatelessWidget {
+  final String text;
+  final TextStyle style;
+  const _MiniTitle(this.text, this.style);
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, c) {
+      final tp = TextPainter(
+        text: TextSpan(text: text, style: style),
+        maxLines: 1,
+        textDirection: TextDirection.ltr,
+        textScaler: MediaQuery.textScalerOf(context),
+      )..layout();
+      if (tp.width <= c.maxWidth) {
+        return Text(text, style: style, maxLines: 1, overflow: TextOverflow.ellipsis);
+      }
+      return SizedBox(
+        width: c.maxWidth,
+        height: tp.height,
+        child: Marquee(
+          key: ValueKey(text), // 곡이 바뀌면 처음부터
+          text: text,
+          style: style,
+          velocity: 28, // 천천히
+          blankSpace: 48,
+          startAfter: const Duration(seconds: 2), // 2초 보여 주고 출발
+          pauseAfterRound: const Duration(seconds: 2), // 한 바퀴 돌면 2초 쉬기
+          fadingEdgeStartFraction: 0.06,
+          fadingEdgeEndFraction: 0.06,
+          showFadingOnlyWhenScrolling: true,
+        ),
+      );
+    });
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:marquee/marquee.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../utils/paran_photo.dart';
@@ -61,6 +62,18 @@ class NatureMiniPlayer extends StatelessWidget {
     final accent = (meta?['color'] as Color?) ?? const Color(0xFF3E9C7E);
     final icon = (meta?['icon'] as IconData?) ?? Icons.eco_rounded;
 
+    // ⏮ ⏭ : 자연소리 목록에서 이전·다음 (끝이면 처음으로)
+    void step(int d) {
+      final order = PlayerProvider.natureSoundOrder;
+      if (order.isEmpty) return;
+      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+      final i = order.indexWhere((s) => s['name'] == name);
+      var n = ((i < 0 ? 0 : i) + d) % order.length;
+      if (n < 0) n += order.length;
+      final s = order[n];
+      context.read<PlayerProvider>().playNatureSound(s['assetPath']!, s['name']!);
+    }
+
     return GestureDetector(
       // 아래로 휙 쓸어내리면 미니플레이어 닫기
       onVerticalDragEnd: (details) {
@@ -90,7 +103,7 @@ class NatureMiniPlayer extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
           child: Container(
-            height: 80,
+            height: 72, // 음악·라디오 미니플레이어와 같은 높이 (예전 80)
             decoration: BoxDecoration(
               // 진한 띠 (어두운 화면에서는 바탕보다 한 톤 밝게)
               color: isDarkMode ? const Color(0xFF3A3631) : ink,
@@ -121,15 +134,22 @@ class NatureMiniPlayer extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(isPlaying ? '$name 재생 중' : '$name 일시정지',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
+                        // 이름이 길면 좌우로 흐르게
+                        _MiniTitle(isPlaying ? '$name 재생 중' : '$name 일시정지',
+                            const TextStyle(
                                 color: baseColor, fontSize: 14, fontWeight: FontWeight.w600)),
                         const SizedBox(height: 2),
                         Text('자연소리', style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 12)),
                       ],
                     ),
+                  ),
+                  // 이전 자연소리 (음악 미니플레이어와 같은 모양)
+                  IconButton(
+                    onPressed: () => step(-1),
+                    icon: Icon(Icons.skip_previous, color: baseColor.withOpacity(0.7)),
+                    iconSize: 26,
+                    padding: const EdgeInsets.all(4),
+                    constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -147,6 +167,14 @@ class NatureMiniPlayer extends StatelessWidget {
                       child: Icon(isPlaying ? Icons.pause : Icons.play_arrow,
                           color: ink, size: 22),
                     ),
+                  ),
+                  // 다음 자연소리
+                  IconButton(
+                    onPressed: () => step(1),
+                    icon: Icon(Icons.skip_next, color: baseColor.withOpacity(0.7)),
+                    iconSize: 26,
+                    padding: const EdgeInsets.all(4),
+                    constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
                   ),
                   // × (닫기): 재생 중에도 누르면 바로 멈추고 닫힘
                   IconButton(
@@ -173,5 +201,43 @@ class NatureMiniPlayer extends StatelessWidget {
     await p.player.stop();
     p.clearNatureSoundState();
     p.dismissMediaNotification(resume: resume);
+  }
+}
+
+/// 글자가 칸보다 길면 좌우로 천천히 흐르게 (짧으면 그냥 글자) — 음악·라디오 미니플레이어와 같음
+class _MiniTitle extends StatelessWidget {
+  final String text;
+  final TextStyle style;
+  const _MiniTitle(this.text, this.style);
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, c) {
+      final tp = TextPainter(
+        text: TextSpan(text: text, style: style),
+        maxLines: 1,
+        textDirection: TextDirection.ltr,
+        textScaler: MediaQuery.textScalerOf(context),
+      )..layout();
+      if (tp.width <= c.maxWidth) {
+        return Text(text, style: style, maxLines: 1, overflow: TextOverflow.ellipsis);
+      }
+      return SizedBox(
+        width: c.maxWidth,
+        height: tp.height,
+        child: Marquee(
+          key: ValueKey(text),
+          text: text,
+          style: style,
+          velocity: 28,
+          blankSpace: 48,
+          startAfter: const Duration(seconds: 2),
+          pauseAfterRound: const Duration(seconds: 2),
+          fadingEdgeStartFraction: 0.06,
+          fadingEdgeEndFraction: 0.06,
+          showFadingOnlyWhenScrolling: true,
+        ),
+      );
+    });
   }
 }

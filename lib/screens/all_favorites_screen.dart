@@ -88,7 +88,8 @@ class _AllFavoritesScreenState extends State<AllFavoritesScreen>
   Widget build(BuildContext context) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    // 고른 탭: 포인트 색 말고 먹색(다크는 크림색)으로 고정
+    final ink = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final bgColor = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA);
 
     final natureFavList =
@@ -113,9 +114,12 @@ class _AllFavoritesScreenState extends State<AllFavoritesScreen>
           tabAlignment: TabAlignment.center,
           labelPadding: const EdgeInsets.symmetric(horizontal: 10),
           labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-          labelColor: primaryColor,
+          labelColor: ink,
           unselectedLabelColor: baseColor.withOpacity(0.45),
-          indicatorColor: primaryColor,
+          indicatorColor: ink,
+          // 탭을 누르거나 밀 때 포인트 색 배경(물결)이 번지지 않게
+          overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+          splashFactory: NoSplash.splashFactory,
           tabs: [
             Tab(text: '음악($musicFavCount)'),
             Tab(text: '라디오($radioFavCount)'),

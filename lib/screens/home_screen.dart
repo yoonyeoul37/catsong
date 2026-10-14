@@ -79,6 +79,9 @@ import 'package:permission_handler/permission_handler.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  /// 재생화면·가사 화면의 집 아이콘: 값을 바꾸면 메인 홈(음악·라디오·자연·수면)으로
+  static final ValueNotifier<int> goHome = ValueNotifier(0);
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -590,6 +593,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _loadRecentSearches();
     WidgetGo.target.addListener(_onWidgetGo); // 앱이 켜져 있을 때 위젯 바로가기
+    HomeScreen.goHome.addListener(_onGoHome); // 집 아이콘 → 메인 홈
     _songListController.addListener(_updateCurrentGroup); // 스크롤하면 오른쪽 초성 파랗게 따라감
     _songListController.addListener(() {
       // 손으로 밀 때만 (정렬 바꿀 때 맨 위로 가는 건 빼고)
@@ -632,6 +636,23 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         await _navigateToSavedStartScreen();
       }
+    });
+  }
+
+  /// 집 아이콘: 곡 목록·즐겨찾기·최근·검색을 다 닫고 메인 홈 화면으로
+  void _onGoHome() {
+    if (!mounted) return;
+    if (_isSearching) {
+      _searchController.clear();
+      context.read<MusicProvider>().clearSearch();
+    }
+    setState(() {
+      _isSearching = false;
+      _showMusicLibrary = false;
+      _showFavorites = false;
+      _showRecent = false;
+      _showCalls = false;
+      _currentTabIndex = 0;
     });
   }
 
@@ -741,6 +762,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     WidgetGo.target.removeListener(_onWidgetGo);
+    HomeScreen.goHome.removeListener(_onGoHome);
     _searchController.dispose();
     _recentSaveTimer?.cancel();
     _songListController.dispose();

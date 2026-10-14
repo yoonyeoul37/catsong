@@ -2,6 +2,7 @@ import '../utils/no_album_helper.dart';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:marquee/marquee.dart';
 import '../utils/point_color.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -99,7 +100,7 @@ class MiniPlayer extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
           child: Container(
-            height: 80,
+            height: 72, // 살짝 낮게 (예전 80)
             decoration: BoxDecoration(
               // 진한 띠 (어두운 화면에서는 바탕보다 한 톤 밝게)
               color: isDarkMode ? const Color(0xFF3A3631) : ink,
@@ -181,14 +182,13 @@ class MiniPlayer extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              // 제목이 길면 좌우로 흐르게
+                              _MiniTitle(
                                 song.titleDisplay,
-                                style: TextStyle(
+                                const TextStyle(
                                     color: baseColor,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 2),
                               Row(
@@ -213,17 +213,14 @@ class MiniPlayer extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(width: 6),
-                                  // 녹음처럼 버튼이 많거나 작은 폰에서도 넘치지 않게
-                                  Flexible(
-                                    child: Text(
-                                      '${playerProvider.formatDuration(playerProvider.position)} / ${playerProvider.formatDuration(playerProvider.duration)}',
-                                      maxLines: 1,
-                                      softWrap: false,
-                                      overflow: TextOverflow.fade,
-                                      style: TextStyle(
-                                          color: baseColor.withOpacity(0.38),
-                                          fontSize: 11),
-                                    ),
+                                  // 시간은 늘 다 보이게 (좁으면 가수 이름이 줄어듦)
+                                  Text(
+                                    '${playerProvider.formatDuration(playerProvider.position)} / ${playerProvider.formatDuration(playerProvider.duration)}',
+                                    maxLines: 1,
+                                    softWrap: false,
+                                    style: TextStyle(
+                                        color: baseColor.withOpacity(0.38),
+                                        fontSize: 11),
                                   ),
                                 ],
                               ),
@@ -339,5 +336,43 @@ class MiniPlayer extends StatelessWidget {
     p.clearNatureSoundState();
     p.clearCurrentSong();
     p.dismissMediaNotification(resume: resume);
+  }
+}
+
+/// 제목이 칸보다 길면 좌우로 천천히 흐르게 (짧으면 그냥 글자)
+class _MiniTitle extends StatelessWidget {
+  final String text;
+  final TextStyle style;
+  const _MiniTitle(this.text, this.style);
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, c) {
+      final tp = TextPainter(
+        text: TextSpan(text: text, style: style),
+        maxLines: 1,
+        textDirection: TextDirection.ltr,
+        textScaler: MediaQuery.textScalerOf(context),
+      )..layout();
+      if (tp.width <= c.maxWidth) {
+        return Text(text, style: style, maxLines: 1, overflow: TextOverflow.ellipsis);
+      }
+      return SizedBox(
+        width: c.maxWidth,
+        height: tp.height,
+        child: Marquee(
+          key: ValueKey(text), // 곡이 바뀌면 처음부터
+          text: text,
+          style: style,
+          velocity: 28, // 천천히
+          blankSpace: 48,
+          startAfter: const Duration(seconds: 2), // 2초 보여 주고 출발
+          pauseAfterRound: const Duration(seconds: 2), // 한 바퀴 돌면 2초 쉬기
+          fadingEdgeStartFraction: 0.06,
+          fadingEdgeEndFraction: 0.06,
+          showFadingOnlyWhenScrolling: true,
+        ),
+      );
+    });
   }
 }

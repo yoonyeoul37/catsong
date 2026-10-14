@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'home_screen.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -1289,9 +1290,14 @@ class _LyricsScreenState extends State<LyricsScreen> {
           surfaceTintColor: Colors.transparent,
           // 위 줄은 버튼만 (제목·가수는 아래 왼쪽으로)
           title: const SizedBox.shrink(),
+          // 집 아이콘: 누르면 홈으로 (재생화면도 같이 닫고 맨 처음 화면으로)
           leading: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: Icon(Icons.keyboard_arrow_down_rounded, color: _ink, size: 30),
+            onPressed: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              Navigator.of(context).popUntil((r) => r.isFirst);
+              HomeScreen.goHome.value++; // 곡 목록이 아니라 메인 홈으로
+            },
+            icon: Icon(Icons.home_rounded, color: _ink, size: 21),
           ),
           actions: [
             // 공유 · 배경 · ⋮(박자 맞추기 · 가사 다시 찾기)

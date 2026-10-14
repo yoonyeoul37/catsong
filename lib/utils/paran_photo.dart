@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 const _paranBase =
-    'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/app-images';
+    'https://files.ssing.kr/app-images';
 
 // 이 이름으로 시작하는 사진은 수파베이스에서 가져온다
 const _onlinePrefixes = [
@@ -12,6 +12,7 @@ const _onlinePrefixes = [
   'nature_fire_bg', 'nature_stream_bg',
   'wave', 'rain', 'bird2', 'stream2',
   'rest_radio_',
+  'paranphoto/', // 파란포토 새 사진 (app-images/paranphoto)
 ];
 
 bool _isOnline(String path) {

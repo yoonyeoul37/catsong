@@ -22,7 +22,7 @@ import '../widgets/lyrics_card_sheet.dart';
 
 /// 가사 배경 사진 (수파베이스 app-images/lyrics) — 목록은 list.json 으로 앱 업데이트 없이 바꿀 수 있어요
 const _kLyricsBgBase =
-    'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/app-images/lyrics';
+    'https://files.ssing.kr/app-images/lyrics';
 
 class _LyricsBg {
   final String file;

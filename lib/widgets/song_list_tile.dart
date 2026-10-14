@@ -274,7 +274,11 @@ class SongListTile extends StatelessWidget {
     // 재생화면 스타일 썸네일용 (지금 고른 스타일 · 파란포토 사진)
     final prefs = await SharedPreferences.getInstance();
     int style = prefs.getInt('albumArtStyle') ?? 6; // 처음엔 파란포토
-    final bgPath = prefs.getString('nightBgPath') ?? 'assets/spring_photo1.png';
+    final savedBg = prefs.getString('nightBgPath'); // 예전 사진(봄·여름…)이면 새 기본 사진으로
+    final bgPath = (savedBg == null ||
+            RegExp(r'^assets/(spring|summer|autumn|winter|mood|animal|love|etc)_').hasMatch(savedBg))
+        ? 'assets/paranphoto/001.png'
+        : savedBg;
     final bgIsFile = prefs.getBool('nightBgIsFile') ?? false;
     bool showNew = !(prefs.getBool('hasSeenParanPhoto') ?? false);
     if (!context.mounted) return;

@@ -16,7 +16,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 // 재생목록 위쪽 그림 (수파베이스 app-images/covers 폴더)
 const _kCoverBase =
-    'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/app-images/covers';
+    'https://files.ssing.kr/app-images/covers';
 const _kCoverCount = 5; // 그림 수 (더 올리면 여기만 바꾸기)
 
 // 같은 재생목록이면 항상 같은 그림 (5장 중 하나)

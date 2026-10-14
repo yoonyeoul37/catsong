@@ -325,7 +325,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.waves,
       'color': Color(0xFF4A7BA6),
       'description': '규칙적인 파도 소리는 마음을 차분히 가라앉혀 깊은 휴식과 수면에 도움을 줘요',
-      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_sound.mp3',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/wave_sound.mp3',
       'image': 'assets/nature_wave_bg.png',
     },
     {
@@ -333,7 +333,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.waves,
       'color': Color(0xFF5B8FB0),
       'description': '한결 부드럽고 잔잔하게 밀려오는 파도 소리로 편안한 휴식을 도와줘요',
-      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_calm_sound.mp3',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/wave_calm_sound.mp3',
       'image': null,
     },
     {
@@ -341,7 +341,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.waves,
       'color': Color(0xFF3D6E8C),
       'description': '갈매기 울음소리가 어우러진 파도 소리로 생생한 해변 분위기를 느껴보세요',
-      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_seagull_sound.mp3',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/wave_seagull_sound.mp3',
       'image': null,
     },
     {
@@ -349,7 +349,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.waves,
       'color': Color(0xFF2A4D66),
       'description': '바위에 세게 부딪히며 부서지는 파도 소리로 역동적인 바다를 느껴보세요',
-      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_rocks_sound.mp3',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/wave_rocks_sound.mp3',
       'image': null,
     },
     {
@@ -357,7 +357,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.waves,
       'color': Color(0xFF6E97AD),
       'description': '고요한 바닷가, 멀리서 은은하게 들려오는 갈매기 소리로 차분한 휴식을 느껴보세요',
-      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_distant_seagull_sound.mp3',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/wave_distant_seagull_sound.mp3',
       'image': null,
     },
     {
@@ -365,7 +365,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.waves,
       'color': Color(0xFF345F80),
       'description': '거칠게 밀려와 부서지는 파도 소리로 힘 있는 바다를 느껴보세요',
-      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_rough_sound.mp3',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/wave_rough_sound.mp3',
       'image': null,
     },
     {
@@ -373,7 +373,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.water_drop_outlined,
       'color': Color(0xFF3E5A78),
       'description': '일정한 빗소리는 집중력을 높이고 불안한 마음을 편안하게 다독여줘요',
-      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_sound.mp3',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/rain_sound.mp3',
       'image': 'assets/nature_rain_bg.png',
     },
     {
@@ -381,7 +381,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.water_drop_outlined,
       'color': Color(0xFF3E5A78),
       'description': '창문을 두드리는 부드러운 빗소리로 편안하게 잠들어보세요',
-      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_window_sound.mp3',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/rain_window_sound.mp3',
       'image': 'assets/nature_rain_bg.png',
     },
     {
@@ -389,7 +389,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.water_drop_outlined,
       'color': Color(0xFF3E5A78),
       'description': '숲속에 내리는 빗소리와 새소리가 어우러져 마음을 편안하게 해줘요',
-      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_forest_sound.mp3',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/rain_forest_sound.mp3',
       'image': 'assets/rain3.png',
     },
     {
@@ -397,7 +397,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.water_drop_outlined,
       'color': Color(0xFF3E5A78),
       'description': '깊은 밤 숲속에 세차게 내리는 빗소리로 몰입감 있는 휴식을 느껴보세요',
-      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_night_forest_sound.mp3',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/rain_night_forest_sound.mp3',
       'image': 'assets/rain4.png',
     },
     {
@@ -405,7 +405,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.forest_outlined,
       'color': Color(0xFF5C7A5E),
       'description': '청아한 새소리는 스트레스를 줄이고 상쾌한 기분을 만들어줘요',
-      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/bird_sound.mp3',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/bird_sound.mp3',
       'image': 'assets/nature_bird_bg.png',
     },
     {
@@ -413,7 +413,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.forest_outlined,
       'color': Color(0xFF5C7A5E),
       'description': '뻐꾸기 소리가 어우러진 숲속의 새소리로 상쾌한 아침을 느껴보세요',
-      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/bird_forest_cuckoo_sound.mp3',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/bird_forest_cuckoo_sound.mp3',
       'image': 'assets/bird2.png',
     },
     {
@@ -421,7 +421,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.local_fire_department_outlined,
       'color': Color(0xFFC97B4A),
       'description': '타닥타닥 장작 타는 소리는 아늑하고 포근한 분위기를 만들어줘요',
-      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/campfire_sound.mp3',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/campfire_sound.mp3',
       'image': 'assets/nature_fire_bg.png',
     },
     {
@@ -429,7 +429,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.water_outlined,
       'color': Color(0xFF2C6BB3),
       'description': '졸졸 흐르는 시냇물 소리는 마음을 편안하게 이완시켜줘요',
-      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/stream_sound.mp3',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/stream_sound.mp3',
       'image': 'assets/nature_stream_bg.png',
     },
     {
@@ -437,7 +437,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'icon': Icons.water_outlined,
       'color': Color(0xFF2C6BB3),
       'description': '넓은 강물이 잔잔하게 흐르는 소리로 편안한 휴식을 느껴보세요',
-      'assetPath': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/stream_river_sound.mp3',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/stream_river_sound.mp3',
       'image': 'assets/stream2.png',
     },
   ];

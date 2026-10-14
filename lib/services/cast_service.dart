@@ -731,7 +731,7 @@ if (res.statusCode == 200 && b.length > 3000 && isImage(b)) return b;
 try {
 final n = key.hashCode.abs() % 10 + 1;
 final res = await http
-.get(Uri.parse('https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/app-images/rest_radio_$n.jpg'))
+.get(Uri.parse('https://files.ssing.kr/app-images/rest_radio_$n.jpg'))
 .timeout(const Duration(seconds: 5));
 if (res.statusCode == 200 && isImage(res.bodyBytes)) return res.bodyBytes;
 } catch (_) {}

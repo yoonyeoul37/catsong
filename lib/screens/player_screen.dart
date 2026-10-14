@@ -129,85 +129,26 @@ class _PlayerScreenState extends State<PlayerScreen>
   String _photoRange = ''; // 랜덤 범위: 카테고리 이름 · 전체 · 하트 · 내 사진 (비어 있으면 지금 사진의 카테고리)
   Set<String> _photoPicks = {}; // 랜덤일 때 고른 사진 (있으면 곡마다 이 사진들만)
 
-  static const Map<String, String> _nightCategoryCover = {
-    '봄': 'assets/spring_photo1.png',
-    '여름': 'assets/summer_photo1.png',
-    '가을': 'assets/autumn_photo1.png',
-    '겨울': 'assets/winter_photo1.png',
-    '감성': 'assets/mood_photo1.png',
-    '동물': 'assets/animal_photo1.png',
-    '사랑': 'assets/love_photo1.png',
-    '기타': 'assets/etc_photo1.png',
-  };
+  // ───── 파란포토 사진 (클라우드플레어 R2: app-images/paranphoto/001.jpg + 001_thumb.jpg) ─────
+  //  · 이름은 'assets/paranphoto/번호.png'로 적으면 paran_photo.dart가 R2에서 받아와요
+  //  · 사진 추가: R2에 큰 사진·작은 사진(_thumb)을 올리고 아래 묶음에 한 줄 추가
+  //  · 카테고리 나누기: '비 오는 날': [...] 처럼 묶음을 더 만들면 사진 고르기 창에 칩이 저절로 생겨요
+  //    (묶음이 하나뿐이면 칩은 안 보이고 전체 · 내 사진 · 고른 사진만)
+  static const String _paranDefault = 'assets/paranphoto/001.png'; // 처음 쓰는 사람 기본 사진
+  static const Map<String, String> _nightCategoryCover = {}; // 카테고리 칩 사진 (비우면 그 묶음 첫 사진)
 
   static const Map<String, List<String>> _nightCategoryPhotos = {
-    '봄': [
-      'assets/spring_photo1.png',
-      'assets/spring_photo2.png',
-      'assets/spring_photo3.png',
-      'assets/spring_photo4.png',
-      'assets/spring_photo5.png',
-      'assets/spring_photo6.png',
-    ],
-    '여름': [
-      'assets/summer_photo1.png',
-      'assets/summer_photo2.png',
-      'assets/summer_photo3.png',
-      'assets/summer_photo4.png',
-      'assets/summer_photo5.png',
-      'assets/summer_photo6.png',
-    ],
-    '가을': [
-      'assets/autumn_photo1.png',
-      'assets/autumn_photo2.png',
-      'assets/autumn_photo3.png',
-      'assets/autumn_photo4.png',
-      'assets/autumn_photo5.png',
-      'assets/autumn_photo6.png',
-    ],
-    '겨울': [
-      'assets/winter_photo1.png',
-      'assets/winter_photo2.png',
-      'assets/winter_photo3.png',
-      'assets/winter_photo4.png',
-      'assets/winter_photo5.png',
-      'assets/winter_photo6.png',
-    ],
-    '감성': [
-      'assets/mood_photo1.png',
-      'assets/mood_photo2.png',
-      'assets/mood_photo3.png',
-      'assets/mood_photo4.png',
-      'assets/mood_photo5.png',
-      'assets/mood_photo6.png',
-    ],
-    '동물': [
-      'assets/animal_photo1.png',
-      'assets/animal_photo2.png',
-      'assets/animal_photo3.png',
-      'assets/animal_photo4.png',
-      'assets/animal_photo5.png',
-      'assets/animal_photo6.png',
-    ],
-    '사랑': [
-      'assets/love_photo1.png',
-      'assets/love_photo2.png',
-      'assets/love_photo3.png',
-      'assets/love_photo4.png',
-      'assets/love_photo5.png',
-      'assets/love_photo6.png',
-      'assets/love_photo7.png',
-      'assets/love_photo8.png',
-      'assets/love_photo9.png',
-      'assets/love_photo10.png',
-    ],
-    '기타': [
-      'assets/etc_photo1.png',
-      'assets/etc_photo2.png',
-      'assets/etc_photo3.png',
-      'assets/etc_photo4.png',
-      'assets/etc_photo5.png',
-      'assets/etc_photo6.png',
+    '파란포토': [
+      'assets/paranphoto/001.png',
+      'assets/paranphoto/002.png',
+      'assets/paranphoto/003.png',
+      'assets/paranphoto/004.png',
+      'assets/paranphoto/005.png',
+      'assets/paranphoto/006.png',
+      'assets/paranphoto/007.png',
+      'assets/paranphoto/008.png',
+      'assets/paranphoto/009.png',
+      'assets/paranphoto/010.png',
     ],
   };
   Color _dominantColor = const Color(0xFF1A1A1A);
@@ -420,9 +361,10 @@ class _PlayerScreenState extends State<PlayerScreen>
   Future<void> _loadStyle() async {
     final prefs = await SharedPreferences.getInstance();
     final shown = false;
+    var fixedOld = false; // 예전 사진(봄·여름…)을 정리했는지
     setState(() {
       _albumArtStyle = prefs.getInt('albumArtStyle') ?? 6; // 처음엔 파란포토로 시작
-      _nightBgPath = prefs.getString('nightBgPath') ?? 'assets/spring_photo1.png';
+      _nightBgPath = prefs.getString('nightBgPath') ?? _paranDefault;
       _nightFavPaths = (prefs.getStringList('nightFavPaths') ?? []).toSet();
       _nightBgIsFile = prefs.getBool('nightBgIsFile') ?? false;
       _showNightPicker = prefs.getBool('showNightPicker') ?? true;
@@ -438,8 +380,30 @@ class _PlayerScreenState extends State<PlayerScreen>
       final picks = prefs.getStringList('paranPhotoPicks');
       // 처음엔 예전에 하트 누른 사진을 고른 사진으로
       _photoPicks = picks != null ? picks.toSet() : _nightFavPaths.where((p) => p.startsWith('assets/')).toSet();
+      // 예전 사진은 없어졌으니 정리 (배경 → 새 기본 사진, 하트·고른 사진에서는 빼기 / 내 사진은 그대로)
+      final all = _nightCategoryPhotos.values.expand((e) => e).toSet();
+      bool gone(String p) => p.startsWith('assets/') && !all.contains(p) && p != 'assets/music_night_bg.png';
+      if (!_nightBgIsFile && gone(_nightBgPath)) {
+        _nightBgPath = _paranDefault;
+        fixedOld = true;
+      }
+      final favBefore = _nightFavPaths.length, picksBefore = _photoPicks.length;
+      _nightFavPaths.removeWhere(gone);
+      _photoPicks.removeWhere(gone);
+      if (_nightFavPaths.length != favBefore || _photoPicks.length != picksBefore) fixedOld = true;
+      if (_photoRange.isNotEmpty &&
+          !['전체', '하트', '내 사진', '고른 사진', ..._nightCategoryPhotos.keys].contains(_photoRange)) {
+        _photoRange = '';
+        fixedOld = true;
+      }
       _styleLoaded = true;
     });
+    if (fixedOld) {
+      await prefs.setString('nightBgPath', _nightBgPath);
+      await prefs.setStringList('nightFavPaths', _nightFavPaths.toList());
+      await prefs.setStringList('paranPhotoPicks', _photoPicks.toList());
+      await prefs.setString('paranPhotoRange', _photoRange);
+    }
     _restartAutoBgTimer();
     if (!shown) {
       await prefs.setBool('swipe_hint_shown', true);
@@ -852,7 +816,7 @@ class _PlayerScreenState extends State<PlayerScreen>
             SharedPreferences.getInstance()
                 .then((p) => p.setStringList('paranPhotoPicks', _photoPicks.toList()));
             if (_nightBgPath == path) {
-              final next = _nightFavPaths.isNotEmpty ? _nightFavPaths.first : 'assets/spring_photo1.png';
+              final next = _nightFavPaths.isNotEmpty ? _nightFavPaths.first : _paranDefault;
               _nightBgPath = next;
               _nightBgIsFile = !next.startsWith('assets/');
               _saveNightBg(next, isFile: _nightBgIsFile);
@@ -978,7 +942,9 @@ class _PlayerScreenState extends State<PlayerScreen>
 
         final mine = _nightFavPaths.where((p) => !p.startsWith('assets/')).toList();
         final picksNow = _photoPicks.where((p) => p.startsWith('assets/') || File(p).existsSync()).toList();
-        final cats = <String>['전체', '내 사진', if (picksNow.isNotEmpty) '고른 사진', ..._nightCategoryPhotos.keys];
+        // 카테고리 묶음이 둘 이상일 때만 칩으로 (하나뿐이면 '전체'와 같아서 숨김)
+        final cats = <String>['전체', '내 사진', if (picksNow.isNotEmpty) '고른 사진',
+          if (_nightCategoryPhotos.length > 1) ..._nightCategoryPhotos.keys];
         if (!cats.contains(cat)) cat = '전체';
 
         // 카테고리 작은 사진

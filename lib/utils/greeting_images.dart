@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const _base =
-    'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/app-images';
+    'https://files.ssing.kr/app-images';
 
 /// 한국어·영어·일본어·중국어는 그 언어, 나머지는 영어
 String _lang(BuildContext context) {

@@ -12,11 +12,11 @@ import 'player_provider.dart';
 class SoundMixProvider extends ChangeNotifier {
   // 자연소리 고정 레이어 (asset 기반, 각자 무한 반복)
   static const natureAssets = <String, String>{
-    '파도소리': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/wave_sound.mp3',
-    '빗소리': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/rain_sound.mp3',
-    '새소리': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/bird_sound.mp3',
-    '모닥불': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/campfire_sound.mp3',
-    '시냇물': 'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/nature-sounds/stream_sound.mp3',
+    '파도소리': 'https://files.ssing.kr/nature-sounds/wave_sound.mp3',
+    '빗소리': 'https://files.ssing.kr/nature-sounds/rain_sound.mp3',
+    '새소리': 'https://files.ssing.kr/nature-sounds/bird_sound.mp3',
+    '모닥불': 'https://files.ssing.kr/nature-sounds/campfire_sound.mp3',
+    '시냇물': 'https://files.ssing.kr/nature-sounds/stream_sound.mp3',
   };
 
   /// 칸마다 고를 수 있는 종류 — 자연소리 목록(nature_sound_catalog.dart)에서 자동으로 만든다.

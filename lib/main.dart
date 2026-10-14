@@ -434,7 +434,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
       for (var i = 1; i <= 10; i++) {
         precacheImage(
           CachedNetworkImageProvider(
-              'https://srdzgrinceazcimdwayu.supabase.co/storage/v1/object/public/app-images/rest_radio_${i}_thumb.jpg'),
+              'https://files.ssing.kr/app-images/rest_radio_${i}_thumb.jpg'),
           context,
           onError: (_, __) {}, // 미리 받기 실패해도 조용히
         );

@@ -14,6 +14,41 @@ KEY_FILE = 'play-key.json'
 AAB = os.path.join('build', 'app', 'outputs', 'bundle', 'release', 'app-release.aab')
 TRACK = 'production'
 DEFAULT_NOTES = '작은 개선과 오류 수정'
+# 따로 적은 게 없으면 4개 언어 전체 소개를 출시 노트로
+FULL_NOTES = {
+    'ko-KR': """파란소리 – 음악, 라디오, 자연소리를 하나로
+- MP3·동영상 플레이어, 가사 보기와 가사 카드 공유
+- 한국과 100여 개 나라 라디오, 편성표까지
+- 휴식·집중·잠을 위한 자연소리와 소리 믹스
+- 파란포토 배경 (고정·랜덤, 컬러·흑백·세피아·필름)
+- 수면 타이머, 아침 알람, 홈 화면 위젯
+- TV·스피커로 보내기, 이퀄라이저, 녹음
+- 다크 모드, 포인트 색, 글꼴로 나만의 앱 꾸미기""",
+    'en-US': """Paransori – music, radio and nature sounds in one app
+- MP3 & video player with synced lyrics and lyric card sharing
+- Live radio from Korea and 100+ countries, with program schedules
+- Nature sounds & sound mix for rest, focus and sleep
+- Paran Photo backgrounds with Fixed / Random and Color, B&W, Sepia, Film tones
+- Sleep timer, morning alarm and home screen widgets
+- Cast to TV and speakers, equalizer, recordings
+- Dark mode, point colors and fonts to make it yours""",
+    'ja-JP': """パランソリ – 音楽・ラジオ・自然音をひとつのアプリで
+- MP3・動画プレーヤー、歌詞表示と歌詞カードの共有
+- 韓国と100か国以上のライブラジオ、番組表つき
+- 休息・集中・睡眠のための自然音とサウンドミックス
+- パランフォト背景(固定・ランダム、カラー・モノクロ・セピア・フィルム)
+- スリープタイマー、モーニングアラーム、ホーム画面ウィジェット
+- テレビ・スピーカーへのキャスト、イコライザー、録音
+- ダークモード、ポイントカラー、フォントで自分好みに""",
+    'zh-TW': """Paransori – 音樂、廣播、大自然聲音一次擁有
+- MP3・影片播放器，歌詞顯示與歌詞卡片分享
+- 韓國與 100 多個國家的線上廣播，附節目表
+- 放鬆、專注、助眠的大自然聲音與混音
+- Paran Photo 背景(固定・隨機，彩色・黑白・復古・底片)
+- 睡眠定時、晨間鬧鐘、桌面小工具
+- 投放至電視與喇叭、等化器、錄音
+- 深色模式、主題色與字型，打造專屬風格""",
+}
 
 
 def keep_key_out_of_github():
@@ -68,7 +103,9 @@ def main():
             body={'track': TRACK, 'releases': [{
                 'versionCodes': [str(vc)],
                 'status': 'completed',
-                'releaseNotes': [{'language': 'ko-KR', 'text': notes}],
+                # 명령어 뒤에 적은 게 있으면 한국어로 그걸, 없으면 4개 언어 전체 소개
+                'releaseNotes': ([{'language': 'ko-KR', 'text': notes}] if sys.argv[1:]
+                                 else [{'language': k, 'text': v} for k, v in FULL_NOTES.items()]),
             }]}).execute()
         print('✔ 프로덕션에 새 버전 넣음')
         edits.commit(packageName=PACKAGE, editId=eid).execute()

@@ -173,7 +173,7 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
+      // 상단 아이콘 색은 화면마다 정함 (여기서 흰색으로 정하면 첫인사 때 잠깐 하얗게 보였음)
       systemNavigationBarColor: AppTheme.surface,
       systemNavigationBarIconBrightness: Brightness.light,
       systemNavigationBarContrastEnforced: false,
@@ -756,7 +756,10 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
   @override
   Widget build(BuildContext context) {
     if (_showIntro) {
-      return GestureDetector(
+      return AnnotatedRegion<SystemUiOverlayStyle>(
+        // 상단 아이콘 색을 홈과 같게 (넘어갈 때 하얗다 검게 바뀌지 않게)
+        value: context.watch<ThemeProvider>().systemBarStyle,
+        child: GestureDetector(
         onTap: () => setState(() => _showIntro = false),
         child: Scaffold(
           // 시작 화면과 같은 색 (라이트 크림 · 다크 진한 갈색) → 넘어갈 때 번쩍이지 않게
@@ -771,6 +774,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
             // 새 사진(글자 없음)은 한국어만 → 'Paransori'를 코드로 얹기
             showTitle: greetingHasTitle(context),
           ),
+        ),
         ),
       );
     }
@@ -864,7 +868,7 @@ class _IntroViewState extends State<_IntroView> with TickerProviderStateMixin {
             Opacity(
               opacity: rise,
               child: Transform.translate(
-                offset: Offset(0, h * 0.09 * (1 - rise)),
+                offset: Offset(0, h * 0.03 * (1 - rise)), // 사진이 크게 시작해서 3%까지는 위가 안 비어요
                 child: Transform.scale(
                   scale: photoScale,
                   child: Image.asset(widget.path, fit: BoxFit.cover), // 화면 꽉 채우기

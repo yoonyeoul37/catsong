@@ -1737,11 +1737,14 @@ class _DialHostState extends State<_DialHost> with SingleTickerProviderStateMixi
     // 손가락으로 직접 끌 때만 (하트 눌러서 목록이 살짝 바뀌는 건 무시)
     final byFinger = (n is ScrollStartNotification && n.dragDetails != null) ||
         (n is ScrollUpdateNotification && n.dragDetails != null);
-    if (byFinger && !_scrolling.value) {
+    if (byFinger) {
+      // 끌 때마다 다시 켜기 (손 떼고 1초 안에 또 올려도 다이얼이 되게)
       _relaxTimer?.cancel();
       _heartTimer?.cancel();
       _scrolling.value = true;
-      _strength.forward();
+      if (_strength.status != AnimationStatus.forward && _strength.status != AnimationStatus.completed) {
+        _strength.forward();
+      }
     } else if (n is ScrollEndNotification) {
       _relaxTimer?.cancel();
       _heartTimer?.cancel();

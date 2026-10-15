@@ -255,7 +255,32 @@ def jtv():
         progs = clean_day(json.loads(json.dumps(cols[c])))
         if len(progs) >= 5:
             week[key] = progs
+    sbs_images(week)
     return {'JTV 매직FM': week} if week else {}
+
+
+def sbs_images(week):
+    # JTV는 SBS 파워FM 프로그램을 많이 틀어서, 제목이 같으면 SBS 프로그램 사진 빌려 쓰기
+    def key(t):
+        return re.sub(r'[\s,.·!?~\-]', '', t).lower()
+    pics = {}
+    d = today_kst()
+    for k in range(7):  # 요일마다 편성이 달라서 일주일치 사진을 모음
+        day = d + datetime.timedelta(days=k)
+        for ch in ('Power', 'Love'):
+            try:
+                data = get_json(f'https://static.cloud.sbs.co.kr/schedule/{day.year}/{day.month}/{day.day}/{ch}.json',
+                                'https://www.sbs.co.kr/')
+            except Exception:
+                continue
+            for it in data if isinstance(data, list) else []:
+                t, img = (it.get('title') or '').strip(), (it.get('program_image') or '').strip()
+                if t and img:
+                    pics.setdefault(key(t), img if img.startswith('http') else 'https:' + img if img.startswith('//') else img)
+    for progs in week.values():
+        for p in progs:
+            if not p.get('image') and key(p['title']) in pics:
+                p['image'] = pics[key(p['title'])]
 
 
 def fill_images(week):

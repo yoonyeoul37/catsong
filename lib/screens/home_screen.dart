@@ -591,7 +591,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Stack(
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(14, 14, onClose == null ? 14 : 34, showDots ? 18 : 14),
+            padding: EdgeInsets.fromLTRB(14, 10, onClose == null ? 14 : 34, showDots ? 14 : 10),
             child: Row(
             children: [
               Container(

@@ -96,18 +96,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get album => '專輯';
 
   @override
-  String get addToPlaylist => '新增至播放清單';
-
-  @override
-  String get addToFavorites => '加入我的最愛';
-
-  @override
-  String get removeFromFavorites => '從我的最愛移除';
-
-  @override
-  String get setRingtone => '設為鈴聲';
-
-  @override
   String get share => '分享';
 
   @override
@@ -133,9 +121,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get repeatAll => '全部重複';
-
-  @override
-  String get themeColor => '主題顏色';
 
   @override
   String get textSize => '文字大小';
@@ -177,9 +162,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get playMusic => '播放一些音樂吧';
 
   @override
-  String get clearAll => '全部清除';
-
-  @override
   String get clearRecent => '清除最近播放';
 
   @override
@@ -187,18 +169,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get playAll => '全部播放';
-
-  @override
-  String get addedToFavorites => '已加入我的最愛';
-
-  @override
-  String get removedFromFavorites => '已從我的最愛移除';
-
-  @override
-  String get songSaved => '歌曲資訊已儲存';
-
-  @override
-  String get swipeToChange => '滑動切換歌曲';
 
   @override
   String get noAlbums => '找不到專輯';
@@ -225,13 +195,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get playing => '播放中...';
 
   @override
-  String get ringtoneSet => '鈴聲已設定！🎵';
-
-  @override
   String get ringtoneFailed => '設定鈴聲失敗';
-
-  @override
-  String get promoUnlocked => '🎉 廣告已移除！';
 
   @override
   String get promoInvalid => '無效的代碼';
@@ -258,9 +222,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteSong => '刪除歌曲';
 
   @override
-  String get deleteSongConfirm => '要刪除這首歌嗎？\n將從裝置中永久刪除。';
-
-  @override
   String get deleted => '已刪除';
 
   @override
@@ -270,25 +231,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get playNext => '下一首播放';
 
   @override
-  String get addedToQueue => '已加入播放佇列';
-
-  @override
-  String get noPlaylists => '沒有播放清單。\n請在播放清單標籤中建立。';
-
-  @override
-  String get addedToPlaylist => '已加入播放清單';
-
-  @override
   String get searchHint => '搜尋歌曲、藝術家、專輯...';
 
   @override
   String get timerCancel => '取消計時器';
-
-  @override
-  String get minutesAfterEnd => '分鐘後停止';
-
-  @override
-  String get hoursAfterEnd => '小時後停止';
 
   @override
   String get set => '設定';
@@ -310,9 +256,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get off => '關閉';
-
-  @override
-  String get sosWorking => '運作中...';
 
   @override
   String get flashlightError => '手電筒錯誤';
@@ -424,34 +367,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get styleCD => 'CD旋轉';
 
   @override
-  String get styleCDDesc => '經典CD旋轉動畫';
-
-  @override
-  String get styleCassette => '卡帶';
-
-  @override
-  String get styleCassetteDesc => '復古卡帶風格';
-
-  @override
   String get styleCard => '專輯封面卡片';
-
-  @override
-  String get styleCardDesc => '簡約專輯封面卡片';
-
-  @override
-  String get styleVisualizer => '波形視覺化';
-
-  @override
-  String get styleVisualizerDesc => '音波動畫';
-
-  @override
-  String get styleGradient => '漸層';
-
-  @override
-  String get styleGradientDesc => '專輯封面顏色漸層背景';
-
-  @override
-  String get themeColorHint => '您可以在設定中變更背景顏色';
 
   @override
   String get hourWord => '小時';
@@ -485,72 +401,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get selectAll => '全選';
 
   @override
-  String get deleteSelected => '刪除所選';
-
-  @override
-  String deleteSelectedConfirm(Object count) {
-    return '要刪除$count首歌曲嗎？\n將從裝置中永久刪除。';
-  }
-
-  @override
-  String deletedCount(Object count) {
-    return '已刪除$count項';
-  }
-
-  @override
   String get noVideosFound => '找不到影片';
 
   @override
-  String videoCount(Object count) {
-    return '$count部';
-  }
-
-  @override
   String get rename => '重新命名';
-
-  @override
-  String get deleteVideoTitle => '刪除影片';
-
-  @override
-  String deleteVideoConfirm(Object name) {
-    return '要刪除$name嗎？';
-  }
-
-  @override
-  String get nameChanged => '名稱已變更';
-
-  @override
-  String renameFailed(Object error) {
-    return '重新命名失敗：$error';
-  }
-
-  @override
-  String deleteFailedWithError(Object error) {
-    return '刪除失敗：$error';
-  }
-
-  @override
-  String get videoPermissionRequired => '需要影片存取權限';
-
-  @override
-  String get videoPermissionMessage => '需要存取權限\n才能觀看影片。';
-
-  @override
-  String get openSettings => '開啟設定';
-
-  @override
-  String deleteSongConfirmFormat(Object title) {
-    return '要刪除$title嗎？\n將從裝置中永久刪除。';
-  }
 
   @override
   String get playTime => '播放時間';
 
   @override
   String get path => '路徑';
-
-  @override
-  String get newPlaylist => '新增播放清單';
 
   @override
   String get playlistNameHint => '播放清單名稱';
@@ -560,17 +420,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get playlistLabel => '播放清單';
-
-  @override
-  String get renamePlaylistTitle => '重新命名';
-
-  @override
-  String get deletePlaylistTitle => '刪除播放清單';
-
-  @override
-  String deletePlaylistConfirm(Object name) {
-    return '要刪除$name嗎？';
-  }
 
   @override
   String get change => '變更';
@@ -585,19 +434,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get lyricsLoading => '正在載入歌詞...';
 
   @override
-  String get lyricsNotFound => '找不到歌詞';
-
-  @override
-  String get lyricsSearchPrompt => '搜尋歌詞看看';
-
-  @override
-  String get lyricsSearchButton => '搜尋歌詞';
-
-  @override
   String get lyricsErrorNotFound => '找不到歌詞';
-
-  @override
-  String get lyricsErrorLoadFailed => '歌詞載入失敗';
 
   @override
   String get lyricsErrorNetwork => '請確認網路連線';
@@ -619,9 +456,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String dateFormat(Object day, Object month, Object year) {
     return '$year年$month月$day日';
   }
-
-  @override
-  String get deleteAllTooltip => '全部刪除';
 
   @override
   String get radioTitle => '廣播';
@@ -1056,20 +890,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get radioNoFavoritesDesc => '在頻道列表中點擊♡來新增收藏';
 
   @override
-  String get radioRemovedFromFavorites => '已從我的最愛移除';
-
-  @override
-  String get radioAddedToFavoritesToast => '已加入我的最愛';
-
-  @override
-  String get radioConnecting => '連線中...';
-
-  @override
-  String radioPopularCount(Object count) {
-    return '熱門廣播$count個';
-  }
-
-  @override
   String get radioLoadingPopular => '正在載入熱門廣播...';
 
   @override
@@ -1081,30 +901,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get radioLoadingSchedule => '正在載入節目表...';
 
   @override
-  String get radioScheduleChannelSwitch => '預約頻道切換';
-
-  @override
-  String radioMaxSchedules(Object count) {
-    return '最多5個 ($count/5)';
-  }
-
-  @override
-  String get radioSelectTime => '選擇時間';
-
-  @override
-  String get radioSetSchedule => '設定預約';
-
-  @override
   String get radioBroadcastSchedule => '節目表';
 
   @override
   String get radioPlayFirst => '請先播放廣播';
-
-  @override
-  String get radioCancelAllSchedules => '取消全部預約';
-
-  @override
-  String get radioScheduleSetToast => '已設定預約';
 
   @override
   String radioScheduleCompleteToast(Object time, Object title) {
@@ -1463,11 +1263,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get end => '結束';
-
-  @override
-  String rangeFormat(Object end, Object seconds, Object start) {
-    return '範圍: $start ~ $end ($seconds秒)';
-  }
 
   @override
   String get deselectAll => '取消全選';

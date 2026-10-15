@@ -276,30 +276,6 @@ abstract class AppLocalizations {
   /// **'앨범'**
   String get album;
 
-  /// No description provided for @addToPlaylist.
-  ///
-  /// In ko, this message translates to:
-  /// **'재생목록에 추가'**
-  String get addToPlaylist;
-
-  /// No description provided for @addToFavorites.
-  ///
-  /// In ko, this message translates to:
-  /// **'즐겨찾기 추가'**
-  String get addToFavorites;
-
-  /// No description provided for @removeFromFavorites.
-  ///
-  /// In ko, this message translates to:
-  /// **'즐겨찾기 제거'**
-  String get removeFromFavorites;
-
-  /// No description provided for @setRingtone.
-  ///
-  /// In ko, this message translates to:
-  /// **'벨소리로 설정'**
-  String get setRingtone;
-
   /// No description provided for @share.
   ///
   /// In ko, this message translates to:
@@ -353,12 +329,6 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'전체 반복'**
   String get repeatAll;
-
-  /// No description provided for @themeColor.
-  ///
-  /// In ko, this message translates to:
-  /// **'테마 색상'**
-  String get themeColor;
 
   /// No description provided for @textSize.
   ///
@@ -438,12 +408,6 @@ abstract class AppLocalizations {
   /// **'음악을 재생해보세요'**
   String get playMusic;
 
-  /// No description provided for @clearAll.
-  ///
-  /// In ko, this message translates to:
-  /// **'전체 삭제'**
-  String get clearAll;
-
   /// No description provided for @clearRecent.
   ///
   /// In ko, this message translates to:
@@ -461,30 +425,6 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'전체 재생'**
   String get playAll;
-
-  /// No description provided for @addedToFavorites.
-  ///
-  /// In ko, this message translates to:
-  /// **'즐겨찾기에 추가됐습니다'**
-  String get addedToFavorites;
-
-  /// No description provided for @removedFromFavorites.
-  ///
-  /// In ko, this message translates to:
-  /// **'즐겨찾기에서 제거됐습니다'**
-  String get removedFromFavorites;
-
-  /// No description provided for @songSaved.
-  ///
-  /// In ko, this message translates to:
-  /// **'곡 정보가 저장되었습니다'**
-  String get songSaved;
-
-  /// No description provided for @swipeToChange.
-  ///
-  /// In ko, this message translates to:
-  /// **'스와이프로 곡 변경'**
-  String get swipeToChange;
 
   /// No description provided for @noAlbums.
   ///
@@ -534,23 +474,11 @@ abstract class AppLocalizations {
   /// **'재생 중...'**
   String get playing;
 
-  /// No description provided for @ringtoneSet.
-  ///
-  /// In ko, this message translates to:
-  /// **'벨소리가 설정됐습니다! 🎵'**
-  String get ringtoneSet;
-
   /// No description provided for @ringtoneFailed.
   ///
   /// In ko, this message translates to:
   /// **'벨소리 설정에 실패했습니다'**
   String get ringtoneFailed;
-
-  /// No description provided for @promoUnlocked.
-  ///
-  /// In ko, this message translates to:
-  /// **'🎉 광고가 제거되었습니다!'**
-  String get promoUnlocked;
 
   /// No description provided for @promoInvalid.
   ///
@@ -600,12 +528,6 @@ abstract class AppLocalizations {
   /// **'곡 삭제'**
   String get deleteSong;
 
-  /// No description provided for @deleteSongConfirm.
-  ///
-  /// In ko, this message translates to:
-  /// **'을(를) 삭제할까요?\n기기에서 영구 삭제됩니다.'**
-  String get deleteSongConfirm;
-
   /// No description provided for @deleted.
   ///
   /// In ko, this message translates to:
@@ -624,24 +546,6 @@ abstract class AppLocalizations {
   /// **'다음에 재생'**
   String get playNext;
 
-  /// No description provided for @addedToQueue.
-  ///
-  /// In ko, this message translates to:
-  /// **'다음에 재생됩니다'**
-  String get addedToQueue;
-
-  /// No description provided for @noPlaylists.
-  ///
-  /// In ko, this message translates to:
-  /// **'재생목록이 없습니다.\n재생목록 탭에서 먼저 만들어주세요.'**
-  String get noPlaylists;
-
-  /// No description provided for @addedToPlaylist.
-  ///
-  /// In ko, this message translates to:
-  /// **'에 추가됐습니다'**
-  String get addedToPlaylist;
-
   /// No description provided for @searchHint.
   ///
   /// In ko, this message translates to:
@@ -653,18 +557,6 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'타이머 취소'**
   String get timerCancel;
-
-  /// No description provided for @minutesAfterEnd.
-  ///
-  /// In ko, this message translates to:
-  /// **'분 후 종료'**
-  String get minutesAfterEnd;
-
-  /// No description provided for @hoursAfterEnd.
-  ///
-  /// In ko, this message translates to:
-  /// **'시간 후 종료'**
-  String get hoursAfterEnd;
 
   /// No description provided for @set.
   ///
@@ -707,12 +599,6 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'꺼짐'**
   String get off;
-
-  /// No description provided for @sosWorking.
-  ///
-  /// In ko, this message translates to:
-  /// **'작동 중...'**
-  String get sosWorking;
 
   /// No description provided for @flashlightError.
   ///
@@ -930,65 +816,11 @@ abstract class AppLocalizations {
   /// **'CD 회전'**
   String get styleCD;
 
-  /// No description provided for @styleCDDesc.
-  ///
-  /// In ko, this message translates to:
-  /// **'클래식한 CD 회전 애니메이션'**
-  String get styleCDDesc;
-
-  /// No description provided for @styleCassette.
-  ///
-  /// In ko, this message translates to:
-  /// **'카세트 테이프'**
-  String get styleCassette;
-
-  /// No description provided for @styleCassetteDesc.
-  ///
-  /// In ko, this message translates to:
-  /// **'레트로 카세트 테이프'**
-  String get styleCassetteDesc;
-
   /// No description provided for @styleCard.
   ///
   /// In ko, this message translates to:
   /// **'앨범아트 카드'**
   String get styleCard;
-
-  /// No description provided for @styleCardDesc.
-  ///
-  /// In ko, this message translates to:
-  /// **'심플한 앨범아트 카드형'**
-  String get styleCardDesc;
-
-  /// No description provided for @styleVisualizer.
-  ///
-  /// In ko, this message translates to:
-  /// **'파형 비주얼라이저'**
-  String get styleVisualizer;
-
-  /// No description provided for @styleVisualizerDesc.
-  ///
-  /// In ko, this message translates to:
-  /// **'음파 애니메이션'**
-  String get styleVisualizerDesc;
-
-  /// No description provided for @styleGradient.
-  ///
-  /// In ko, this message translates to:
-  /// **'그라데이션'**
-  String get styleGradient;
-
-  /// No description provided for @styleGradientDesc.
-  ///
-  /// In ko, this message translates to:
-  /// **'앨범아트 색상 그라데이션 배경'**
-  String get styleGradientDesc;
-
-  /// No description provided for @themeColorHint.
-  ///
-  /// In ko, this message translates to:
-  /// **'설정에서 배경색을 바꿀 수 있어요'**
-  String get themeColorHint;
 
   /// No description provided for @hourWord.
   ///
@@ -1044,95 +876,17 @@ abstract class AppLocalizations {
   /// **'전체선택'**
   String get selectAll;
 
-  /// No description provided for @deleteSelected.
-  ///
-  /// In ko, this message translates to:
-  /// **'선택 삭제'**
-  String get deleteSelected;
-
-  /// No description provided for @deleteSelectedConfirm.
-  ///
-  /// In ko, this message translates to:
-  /// **'{count}개 곡을 삭제할까요?\n기기에서 영구 삭제됩니다.'**
-  String deleteSelectedConfirm(Object count);
-
-  /// No description provided for @deletedCount.
-  ///
-  /// In ko, this message translates to:
-  /// **'{count}개 삭제됐습니다'**
-  String deletedCount(Object count);
-
   /// No description provided for @noVideosFound.
   ///
   /// In ko, this message translates to:
   /// **'동영상이 없습니다'**
   String get noVideosFound;
 
-  /// No description provided for @videoCount.
-  ///
-  /// In ko, this message translates to:
-  /// **'{count}개'**
-  String videoCount(Object count);
-
   /// No description provided for @rename.
   ///
   /// In ko, this message translates to:
   /// **'이름 변경'**
   String get rename;
-
-  /// No description provided for @deleteVideoTitle.
-  ///
-  /// In ko, this message translates to:
-  /// **'동영상 삭제'**
-  String get deleteVideoTitle;
-
-  /// No description provided for @deleteVideoConfirm.
-  ///
-  /// In ko, this message translates to:
-  /// **'{name}을 삭제할까요?'**
-  String deleteVideoConfirm(Object name);
-
-  /// No description provided for @nameChanged.
-  ///
-  /// In ko, this message translates to:
-  /// **'이름이 변경됐습니다'**
-  String get nameChanged;
-
-  /// No description provided for @renameFailed.
-  ///
-  /// In ko, this message translates to:
-  /// **'이름 변경 실패: {error}'**
-  String renameFailed(Object error);
-
-  /// No description provided for @deleteFailedWithError.
-  ///
-  /// In ko, this message translates to:
-  /// **'삭제 실패: {error}'**
-  String deleteFailedWithError(Object error);
-
-  /// No description provided for @videoPermissionRequired.
-  ///
-  /// In ko, this message translates to:
-  /// **'동영상 접근 권한 필요'**
-  String get videoPermissionRequired;
-
-  /// No description provided for @videoPermissionMessage.
-  ///
-  /// In ko, this message translates to:
-  /// **'동영상을 보려면\n접근 권한이 필요합니다.'**
-  String get videoPermissionMessage;
-
-  /// No description provided for @openSettings.
-  ///
-  /// In ko, this message translates to:
-  /// **'설정 열기'**
-  String get openSettings;
-
-  /// No description provided for @deleteSongConfirmFormat.
-  ///
-  /// In ko, this message translates to:
-  /// **'{title}을(를) 삭제할까요?\n기기에서 영구 삭제됩니다.'**
-  String deleteSongConfirmFormat(Object title);
 
   /// No description provided for @playTime.
   ///
@@ -1145,12 +899,6 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'경로'**
   String get path;
-
-  /// No description provided for @newPlaylist.
-  ///
-  /// In ko, this message translates to:
-  /// **'새 재생목록'**
-  String get newPlaylist;
 
   /// No description provided for @playlistNameHint.
   ///
@@ -1169,24 +917,6 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'재생목록'**
   String get playlistLabel;
-
-  /// No description provided for @renamePlaylistTitle.
-  ///
-  /// In ko, this message translates to:
-  /// **'이름 변경'**
-  String get renamePlaylistTitle;
-
-  /// No description provided for @deletePlaylistTitle.
-  ///
-  /// In ko, this message translates to:
-  /// **'재생목록 삭제'**
-  String get deletePlaylistTitle;
-
-  /// No description provided for @deletePlaylistConfirm.
-  ///
-  /// In ko, this message translates to:
-  /// **'{name}을 삭제할까요?'**
-  String deletePlaylistConfirm(Object name);
 
   /// No description provided for @change.
   ///
@@ -1212,35 +942,11 @@ abstract class AppLocalizations {
   /// **'가사를 불러오는 중...'**
   String get lyricsLoading;
 
-  /// No description provided for @lyricsNotFound.
-  ///
-  /// In ko, this message translates to:
-  /// **'가사를 찾을 수 없습니다'**
-  String get lyricsNotFound;
-
-  /// No description provided for @lyricsSearchPrompt.
-  ///
-  /// In ko, this message translates to:
-  /// **'가사를 검색해보세요'**
-  String get lyricsSearchPrompt;
-
-  /// No description provided for @lyricsSearchButton.
-  ///
-  /// In ko, this message translates to:
-  /// **'가사 검색'**
-  String get lyricsSearchButton;
-
   /// No description provided for @lyricsErrorNotFound.
   ///
   /// In ko, this message translates to:
   /// **'가사를 찾을 수 없습니다'**
   String get lyricsErrorNotFound;
-
-  /// No description provided for @lyricsErrorLoadFailed.
-  ///
-  /// In ko, this message translates to:
-  /// **'가사 로딩 실패'**
-  String get lyricsErrorLoadFailed;
 
   /// No description provided for @lyricsErrorNetwork.
   ///
@@ -1271,12 +977,6 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'{year}년 {month}월 {day}일'**
   String dateFormat(Object day, Object month, Object year);
-
-  /// No description provided for @deleteAllTooltip.
-  ///
-  /// In ko, this message translates to:
-  /// **'전체 삭제'**
-  String get deleteAllTooltip;
 
   /// No description provided for @radioTitle.
   ///
@@ -2142,30 +1842,6 @@ abstract class AppLocalizations {
   /// **'채널 목록에서 ♡를 눌러 추가해 보세요'**
   String get radioNoFavoritesDesc;
 
-  /// No description provided for @radioRemovedFromFavorites.
-  ///
-  /// In ko, this message translates to:
-  /// **'즐겨찾기에서 제거했습니다'**
-  String get radioRemovedFromFavorites;
-
-  /// No description provided for @radioAddedToFavoritesToast.
-  ///
-  /// In ko, this message translates to:
-  /// **'즐겨찾기에 추가했습니다'**
-  String get radioAddedToFavoritesToast;
-
-  /// No description provided for @radioConnecting.
-  ///
-  /// In ko, this message translates to:
-  /// **'접속 중...'**
-  String get radioConnecting;
-
-  /// No description provided for @radioPopularCount.
-  ///
-  /// In ko, this message translates to:
-  /// **'인기 방송 {count}개'**
-  String radioPopularCount(Object count);
-
   /// No description provided for @radioLoadingPopular.
   ///
   /// In ko, this message translates to:
@@ -2184,30 +1860,6 @@ abstract class AppLocalizations {
   /// **'편성표를 불러오는 중...'**
   String get radioLoadingSchedule;
 
-  /// No description provided for @radioScheduleChannelSwitch.
-  ///
-  /// In ko, this message translates to:
-  /// **'예약 채널 전환'**
-  String get radioScheduleChannelSwitch;
-
-  /// No description provided for @radioMaxSchedules.
-  ///
-  /// In ko, this message translates to:
-  /// **'최대 5개 ({count}/5)'**
-  String radioMaxSchedules(Object count);
-
-  /// No description provided for @radioSelectTime.
-  ///
-  /// In ko, this message translates to:
-  /// **'시간 선택'**
-  String get radioSelectTime;
-
-  /// No description provided for @radioSetSchedule.
-  ///
-  /// In ko, this message translates to:
-  /// **'예약 설정'**
-  String get radioSetSchedule;
-
   /// No description provided for @radioBroadcastSchedule.
   ///
   /// In ko, this message translates to:
@@ -2219,18 +1871,6 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'먼저 라디오를 재생해주세요'**
   String get radioPlayFirst;
-
-  /// No description provided for @radioCancelAllSchedules.
-  ///
-  /// In ko, this message translates to:
-  /// **'전체 예약 취소'**
-  String get radioCancelAllSchedules;
-
-  /// No description provided for @radioScheduleSetToast.
-  ///
-  /// In ko, this message translates to:
-  /// **'예약이 설정되었습니다'**
-  String get radioScheduleSetToast;
 
   /// No description provided for @radioScheduleCompleteToast.
   ///
@@ -2915,12 +2555,6 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'끝'**
   String get end;
-
-  /// No description provided for @rangeFormat.
-  ///
-  /// In ko, this message translates to:
-  /// **'구간: {start} ~ {end} ({seconds}초)'**
-  String rangeFormat(Object end, Object seconds, Object start);
 
   /// No description provided for @deselectAll.
   ///

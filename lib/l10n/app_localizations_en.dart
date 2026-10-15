@@ -96,18 +96,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get album => 'Album';
 
   @override
-  String get addToPlaylist => 'Add to Playlist';
-
-  @override
-  String get addToFavorites => 'Add to Favorites';
-
-  @override
-  String get removeFromFavorites => 'Remove from Favorites';
-
-  @override
-  String get setRingtone => 'Set as Ringtone';
-
-  @override
   String get share => 'Share';
 
   @override
@@ -133,9 +121,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get repeatAll => 'Repeat All';
-
-  @override
-  String get themeColor => 'Theme Color';
 
   @override
   String get textSize => 'Text Size';
@@ -177,9 +162,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playMusic => 'Play some music';
 
   @override
-  String get clearAll => 'Clear All';
-
-  @override
   String get clearRecent => 'Clear Recent Songs';
 
   @override
@@ -187,18 +169,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playAll => 'Play All';
-
-  @override
-  String get addedToFavorites => 'Added to Favorites';
-
-  @override
-  String get removedFromFavorites => 'Removed from Favorites';
-
-  @override
-  String get songSaved => 'Song info saved';
-
-  @override
-  String get swipeToChange => 'Swipe to change song';
 
   @override
   String get noAlbums => 'No albums found';
@@ -225,13 +195,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playing => 'Playing...';
 
   @override
-  String get ringtoneSet => 'Ringtone set! 🎵';
-
-  @override
   String get ringtoneFailed => 'Failed to set ringtone';
-
-  @override
-  String get promoUnlocked => '🎉 Ads removed!';
 
   @override
   String get promoInvalid => 'Invalid promo code';
@@ -259,10 +223,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteSong => 'Delete Song';
 
   @override
-  String get deleteSongConfirm =>
-      'Delete this song?\nIt will be permanently deleted.';
-
-  @override
   String get deleted => 'Deleted';
 
   @override
@@ -272,25 +232,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playNext => 'Play Next';
 
   @override
-  String get addedToQueue => 'Added to queue';
-
-  @override
-  String get noPlaylists => 'No playlists.\nCreate one in the Playlist tab.';
-
-  @override
-  String get addedToPlaylist => 'Added to playlist';
-
-  @override
   String get searchHint => 'Search songs, artists, albums...';
 
   @override
   String get timerCancel => 'Cancel Timer';
-
-  @override
-  String get minutesAfterEnd => 'min until stop';
-
-  @override
-  String get hoursAfterEnd => 'hr until stop';
 
   @override
   String get set => 'Set';
@@ -312,9 +257,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get off => 'Off';
-
-  @override
-  String get sosWorking => 'Working...';
 
   @override
   String get flashlightError => 'Flashlight error';
@@ -427,35 +369,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get styleCD => 'CD Rotation';
 
   @override
-  String get styleCDDesc => 'Classic CD rotation animation';
-
-  @override
-  String get styleCassette => 'Cassette Tape';
-
-  @override
-  String get styleCassetteDesc => 'Retro cassette tape style';
-
-  @override
   String get styleCard => 'Album Art Card';
-
-  @override
-  String get styleCardDesc => 'Simple album art card style';
-
-  @override
-  String get styleVisualizer => 'Waveform Visualizer';
-
-  @override
-  String get styleVisualizerDesc => 'Sound wave animation';
-
-  @override
-  String get styleGradient => 'Gradient';
-
-  @override
-  String get styleGradientDesc => 'Album art color gradient background';
-
-  @override
-  String get themeColorHint =>
-      'You can change the background color in Settings';
 
   @override
   String get hourWord => 'hr';
@@ -489,73 +403,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectAll => 'Select All';
 
   @override
-  String get deleteSelected => 'Delete Selected';
-
-  @override
-  String deleteSelectedConfirm(Object count) {
-    return 'Delete $count song(s)?\nThis will be permanently deleted from your device.';
-  }
-
-  @override
-  String deletedCount(Object count) {
-    return '$count deleted';
-  }
-
-  @override
   String get noVideosFound => 'No videos found';
 
   @override
-  String videoCount(Object count) {
-    return '$count';
-  }
-
-  @override
   String get rename => 'Rename';
-
-  @override
-  String get deleteVideoTitle => 'Delete Video';
-
-  @override
-  String deleteVideoConfirm(Object name) {
-    return 'Delete $name?';
-  }
-
-  @override
-  String get nameChanged => 'Name changed';
-
-  @override
-  String renameFailed(Object error) {
-    return 'Failed to rename: $error';
-  }
-
-  @override
-  String deleteFailedWithError(Object error) {
-    return 'Delete failed: $error';
-  }
-
-  @override
-  String get videoPermissionRequired => 'Video Access Required';
-
-  @override
-  String get videoPermissionMessage =>
-      'Access permission is needed\nto view videos.';
-
-  @override
-  String get openSettings => 'Open Settings';
-
-  @override
-  String deleteSongConfirmFormat(Object title) {
-    return 'Delete $title?\nThis will be permanently deleted from your device.';
-  }
 
   @override
   String get playTime => 'Duration';
 
   @override
   String get path => 'Path';
-
-  @override
-  String get newPlaylist => 'New Playlist';
 
   @override
   String get playlistNameHint => 'Playlist name';
@@ -565,17 +422,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playlistLabel => 'Playlist';
-
-  @override
-  String get renamePlaylistTitle => 'Rename';
-
-  @override
-  String get deletePlaylistTitle => 'Delete Playlist';
-
-  @override
-  String deletePlaylistConfirm(Object name) {
-    return 'Delete $name?';
-  }
 
   @override
   String get change => 'Change';
@@ -590,19 +436,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lyricsLoading => 'Loading lyrics...';
 
   @override
-  String get lyricsNotFound => 'Lyrics not found';
-
-  @override
-  String get lyricsSearchPrompt => 'Search for lyrics';
-
-  @override
-  String get lyricsSearchButton => 'Search Lyrics';
-
-  @override
   String get lyricsErrorNotFound => 'Lyrics not found';
-
-  @override
-  String get lyricsErrorLoadFailed => 'Failed to load lyrics';
 
   @override
   String get lyricsErrorNetwork => 'Please check your internet connection';
@@ -624,9 +458,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String dateFormat(Object day, Object month, Object year) {
     return '$year-$month-$day';
   }
-
-  @override
-  String get deleteAllTooltip => 'Delete All';
 
   @override
   String get radioTitle => 'Radio';
@@ -1062,20 +893,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get radioNoFavoritesDesc => 'Tap ♡ on a channel to add it';
 
   @override
-  String get radioRemovedFromFavorites => 'Removed from favorites';
-
-  @override
-  String get radioAddedToFavoritesToast => 'Added to favorites';
-
-  @override
-  String get radioConnecting => 'Connecting...';
-
-  @override
-  String radioPopularCount(Object count) {
-    return '$count popular stations';
-  }
-
-  @override
   String get radioLoadingPopular => 'Loading popular stations...';
 
   @override
@@ -1087,30 +904,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get radioLoadingSchedule => 'Loading schedule...';
 
   @override
-  String get radioScheduleChannelSwitch => 'Scheduled Channel Switch';
-
-  @override
-  String radioMaxSchedules(Object count) {
-    return 'Max 5 ($count/5)';
-  }
-
-  @override
-  String get radioSelectTime => 'Select Time';
-
-  @override
-  String get radioSetSchedule => 'Set Schedule';
-
-  @override
   String get radioBroadcastSchedule => 'Schedule';
 
   @override
   String get radioPlayFirst => 'Please play a radio station first';
-
-  @override
-  String get radioCancelAllSchedules => 'Cancel All Schedules';
-
-  @override
-  String get radioScheduleSetToast => 'Schedule has been set';
 
   @override
   String radioScheduleCompleteToast(Object time, Object title) {
@@ -1469,11 +1266,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get end => 'End';
-
-  @override
-  String rangeFormat(Object end, Object seconds, Object start) {
-    return 'Range: $start ~ $end ($seconds sec)';
-  }
 
   @override
   String get deselectAll => 'Deselect All';

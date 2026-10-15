@@ -96,18 +96,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get album => 'アルバム';
 
   @override
-  String get addToPlaylist => 'プレイリストに追加';
-
-  @override
-  String get addToFavorites => 'お気に入りに追加';
-
-  @override
-  String get removeFromFavorites => 'お気に入りから削除';
-
-  @override
-  String get setRingtone => '着信音に設定';
-
-  @override
   String get share => '共有';
 
   @override
@@ -133,9 +121,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get repeatAll => '全曲リピート';
-
-  @override
-  String get themeColor => 'テーマカラー';
 
   @override
   String get textSize => '文字サイズ';
@@ -177,9 +162,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get playMusic => '音楽を再生してみてください';
 
   @override
-  String get clearAll => 'すべて削除';
-
-  @override
   String get clearRecent => '最近の再生をすべて削除';
 
   @override
@@ -187,18 +169,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get playAll => 'すべて再生';
-
-  @override
-  String get addedToFavorites => 'お気に入りに追加しました';
-
-  @override
-  String get removedFromFavorites => 'お気に入りから削除しました';
-
-  @override
-  String get songSaved => '曲情報を保存しました';
-
-  @override
-  String get swipeToChange => 'スワイプで曲を変更';
 
   @override
   String get noAlbums => 'アルバムがありません';
@@ -225,13 +195,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get playing => '再生中...';
 
   @override
-  String get ringtoneSet => '着信音を設定しました！🎵';
-
-  @override
   String get ringtoneFailed => '着信音の設定に失敗しました';
-
-  @override
-  String get promoUnlocked => '🎉 広告が削除されました！';
 
   @override
   String get promoInvalid => '無効なコードです';
@@ -258,9 +222,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get deleteSong => '曲を削除';
 
   @override
-  String get deleteSongConfirm => 'この曲を削除しますか？\n端末から完全に削除されます。';
-
-  @override
   String get deleted => '削除しました';
 
   @override
@@ -270,25 +231,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get playNext => '次に再生';
 
   @override
-  String get addedToQueue => '次に再生されます';
-
-  @override
-  String get noPlaylists => 'プレイリストがありません。\nプレイリストタブで作成してください。';
-
-  @override
-  String get addedToPlaylist => 'プレイリストに追加しました';
-
-  @override
   String get searchHint => '曲、アーティスト、アルバムを検索...';
 
   @override
   String get timerCancel => 'タイマーをキャンセル';
-
-  @override
-  String get minutesAfterEnd => '分後に停止';
-
-  @override
-  String get hoursAfterEnd => '時間後に停止';
 
   @override
   String get set => '設定';
@@ -310,9 +256,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get off => 'オフ';
-
-  @override
-  String get sosWorking => '動作中...';
 
   @override
   String get flashlightError => '懐中電灯エラー';
@@ -424,34 +367,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get styleCD => 'CD回転';
 
   @override
-  String get styleCDDesc => 'クラシックなCD回転アニメーション';
-
-  @override
-  String get styleCassette => 'カセットテープ';
-
-  @override
-  String get styleCassetteDesc => 'レトロなカセットテープスタイル';
-
-  @override
   String get styleCard => 'アルバムアートカード';
-
-  @override
-  String get styleCardDesc => 'シンプルなアルバムアートカード';
-
-  @override
-  String get styleVisualizer => '波形ビジュアライザー';
-
-  @override
-  String get styleVisualizerDesc => '音波アニメーション';
-
-  @override
-  String get styleGradient => 'グラデーション';
-
-  @override
-  String get styleGradientDesc => 'アルバムアートカラーグラデーション背景';
-
-  @override
-  String get themeColorHint => '設定で背景色を変更できます';
 
   @override
   String get hourWord => '時間';
@@ -485,72 +401,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get selectAll => 'すべて選択';
 
   @override
-  String get deleteSelected => '選択を削除';
-
-  @override
-  String deleteSelectedConfirm(Object count) {
-    return '$count曲を削除しますか？\n端末から完全に削除されます。';
-  }
-
-  @override
-  String deletedCount(Object count) {
-    return '$count件削除しました';
-  }
-
-  @override
   String get noVideosFound => '動画が見つかりません';
 
   @override
-  String videoCount(Object count) {
-    return '$count件';
-  }
-
-  @override
   String get rename => '名前を変更';
-
-  @override
-  String get deleteVideoTitle => '動画を削除';
-
-  @override
-  String deleteVideoConfirm(Object name) {
-    return '$nameを削除しますか？';
-  }
-
-  @override
-  String get nameChanged => '名前が変更されました';
-
-  @override
-  String renameFailed(Object error) {
-    return '名前変更に失敗しました: $error';
-  }
-
-  @override
-  String deleteFailedWithError(Object error) {
-    return '削除に失敗しました: $error';
-  }
-
-  @override
-  String get videoPermissionRequired => '動画アクセス権限が必要です';
-
-  @override
-  String get videoPermissionMessage => '動画を表示するには\nアクセス権限が必要です。';
-
-  @override
-  String get openSettings => '設定を開く';
-
-  @override
-  String deleteSongConfirmFormat(Object title) {
-    return '$titleを削除しますか？\n端末から完全に削除されます。';
-  }
 
   @override
   String get playTime => '再生時間';
 
   @override
   String get path => 'パス';
-
-  @override
-  String get newPlaylist => '新しいプレイリスト';
 
   @override
   String get playlistNameHint => 'プレイリスト名';
@@ -560,17 +420,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get playlistLabel => 'プレイリスト';
-
-  @override
-  String get renamePlaylistTitle => '名前を変更';
-
-  @override
-  String get deletePlaylistTitle => 'プレイリストを削除';
-
-  @override
-  String deletePlaylistConfirm(Object name) {
-    return '$nameを削除しますか？';
-  }
 
   @override
   String get change => '変更';
@@ -585,19 +434,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get lyricsLoading => '歌詞を読み込み中...';
 
   @override
-  String get lyricsNotFound => '歌詞が見つかりません';
-
-  @override
-  String get lyricsSearchPrompt => '歌詞を検索してみてください';
-
-  @override
-  String get lyricsSearchButton => '歌詞検索';
-
-  @override
   String get lyricsErrorNotFound => '歌詞が見つかりません';
-
-  @override
-  String get lyricsErrorLoadFailed => '歌詞の読み込みに失敗しました';
 
   @override
   String get lyricsErrorNetwork => 'インターネット接続をご確認ください';
@@ -619,9 +456,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String dateFormat(Object day, Object month, Object year) {
     return '$year年$month月$day日';
   }
-
-  @override
-  String get deleteAllTooltip => 'すべて削除';
 
   @override
   String get radioTitle => 'ラジオ';
@@ -1056,20 +890,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get radioNoFavoritesDesc => 'チャンネル一覧で♡をタップして追加してみてください';
 
   @override
-  String get radioRemovedFromFavorites => 'お気に入りから削除しました';
-
-  @override
-  String get radioAddedToFavoritesToast => 'お気に入りに追加しました';
-
-  @override
-  String get radioConnecting => '接続中...';
-
-  @override
-  String radioPopularCount(Object count) {
-    return '人気放送$count件';
-  }
-
-  @override
   String get radioLoadingPopular => '人気放送を読み込み中...';
 
   @override
@@ -1081,30 +901,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get radioLoadingSchedule => '編成表を読み込み中...';
 
   @override
-  String get radioScheduleChannelSwitch => '予約チャンネル切替';
-
-  @override
-  String radioMaxSchedules(Object count) {
-    return '最大5個 ($count/5)';
-  }
-
-  @override
-  String get radioSelectTime => '時間を選択';
-
-  @override
-  String get radioSetSchedule => '予約設定';
-
-  @override
   String get radioBroadcastSchedule => '編成表';
 
   @override
   String get radioPlayFirst => 'まずラジオを再生してください';
-
-  @override
-  String get radioCancelAllSchedules => 'すべての予約をキャンセル';
-
-  @override
-  String get radioScheduleSetToast => '予約が設定されました';
 
   @override
   String radioScheduleCompleteToast(Object time, Object title) {
@@ -1463,11 +1263,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get end => '終了';
-
-  @override
-  String rangeFormat(Object end, Object seconds, Object start) {
-    return '範囲: $start ~ $end ($seconds秒)';
-  }
 
   @override
   String get deselectAll => '選択解除';

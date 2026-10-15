@@ -96,18 +96,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get album => '앨범';
 
   @override
-  String get addToPlaylist => '재생목록에 추가';
-
-  @override
-  String get addToFavorites => '즐겨찾기 추가';
-
-  @override
-  String get removeFromFavorites => '즐겨찾기 제거';
-
-  @override
-  String get setRingtone => '벨소리로 설정';
-
-  @override
   String get share => '공유';
 
   @override
@@ -133,9 +121,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get repeatAll => '전체 반복';
-
-  @override
-  String get themeColor => '테마 색상';
 
   @override
   String get textSize => '글자 크기';
@@ -177,9 +162,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get playMusic => '음악을 재생해보세요';
 
   @override
-  String get clearAll => '전체 삭제';
-
-  @override
   String get clearRecent => '최근 재생 전체 삭제';
 
   @override
@@ -187,18 +169,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get playAll => '전체 재생';
-
-  @override
-  String get addedToFavorites => '즐겨찾기에 추가됐습니다';
-
-  @override
-  String get removedFromFavorites => '즐겨찾기에서 제거됐습니다';
-
-  @override
-  String get songSaved => '곡 정보가 저장되었습니다';
-
-  @override
-  String get swipeToChange => '스와이프로 곡 변경';
 
   @override
   String get noAlbums => '앨범이 없습니다';
@@ -225,13 +195,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get playing => '재생 중...';
 
   @override
-  String get ringtoneSet => '벨소리가 설정됐습니다! 🎵';
-
-  @override
   String get ringtoneFailed => '벨소리 설정에 실패했습니다';
-
-  @override
-  String get promoUnlocked => '🎉 광고가 제거되었습니다!';
 
   @override
   String get promoInvalid => '올바르지 않은 코드입니다';
@@ -258,9 +222,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get deleteSong => '곡 삭제';
 
   @override
-  String get deleteSongConfirm => '을(를) 삭제할까요?\n기기에서 영구 삭제됩니다.';
-
-  @override
   String get deleted => '삭제됐습니다';
 
   @override
@@ -270,25 +231,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get playNext => '다음에 재생';
 
   @override
-  String get addedToQueue => '다음에 재생됩니다';
-
-  @override
-  String get noPlaylists => '재생목록이 없습니다.\n재생목록 탭에서 먼저 만들어주세요.';
-
-  @override
-  String get addedToPlaylist => '에 추가됐습니다';
-
-  @override
   String get searchHint => '곡, 아티스트, 앨범 검색...';
 
   @override
   String get timerCancel => '타이머 취소';
-
-  @override
-  String get minutesAfterEnd => '분 후 종료';
-
-  @override
-  String get hoursAfterEnd => '시간 후 종료';
 
   @override
   String get set => '설정';
@@ -310,9 +256,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get off => '꺼짐';
-
-  @override
-  String get sosWorking => '작동 중...';
 
   @override
   String get flashlightError => '손전등 오류';
@@ -423,34 +366,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get styleCD => 'CD 회전';
 
   @override
-  String get styleCDDesc => '클래식한 CD 회전 애니메이션';
-
-  @override
-  String get styleCassette => '카세트 테이프';
-
-  @override
-  String get styleCassetteDesc => '레트로 카세트 테이프';
-
-  @override
   String get styleCard => '앨범아트 카드';
-
-  @override
-  String get styleCardDesc => '심플한 앨범아트 카드형';
-
-  @override
-  String get styleVisualizer => '파형 비주얼라이저';
-
-  @override
-  String get styleVisualizerDesc => '음파 애니메이션';
-
-  @override
-  String get styleGradient => '그라데이션';
-
-  @override
-  String get styleGradientDesc => '앨범아트 색상 그라데이션 배경';
-
-  @override
-  String get themeColorHint => '설정에서 배경색을 바꿀 수 있어요';
 
   @override
   String get hourWord => '시간';
@@ -484,72 +400,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get selectAll => '전체선택';
 
   @override
-  String get deleteSelected => '선택 삭제';
-
-  @override
-  String deleteSelectedConfirm(Object count) {
-    return '$count개 곡을 삭제할까요?\n기기에서 영구 삭제됩니다.';
-  }
-
-  @override
-  String deletedCount(Object count) {
-    return '$count개 삭제됐습니다';
-  }
-
-  @override
   String get noVideosFound => '동영상이 없습니다';
 
   @override
-  String videoCount(Object count) {
-    return '$count개';
-  }
-
-  @override
   String get rename => '이름 변경';
-
-  @override
-  String get deleteVideoTitle => '동영상 삭제';
-
-  @override
-  String deleteVideoConfirm(Object name) {
-    return '$name을 삭제할까요?';
-  }
-
-  @override
-  String get nameChanged => '이름이 변경됐습니다';
-
-  @override
-  String renameFailed(Object error) {
-    return '이름 변경 실패: $error';
-  }
-
-  @override
-  String deleteFailedWithError(Object error) {
-    return '삭제 실패: $error';
-  }
-
-  @override
-  String get videoPermissionRequired => '동영상 접근 권한 필요';
-
-  @override
-  String get videoPermissionMessage => '동영상을 보려면\n접근 권한이 필요합니다.';
-
-  @override
-  String get openSettings => '설정 열기';
-
-  @override
-  String deleteSongConfirmFormat(Object title) {
-    return '$title을(를) 삭제할까요?\n기기에서 영구 삭제됩니다.';
-  }
 
   @override
   String get playTime => '재생 시간';
 
   @override
   String get path => '경로';
-
-  @override
-  String get newPlaylist => '새 재생목록';
 
   @override
   String get playlistNameHint => '재생목록 이름';
@@ -559,17 +419,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get playlistLabel => '재생목록';
-
-  @override
-  String get renamePlaylistTitle => '이름 변경';
-
-  @override
-  String get deletePlaylistTitle => '재생목록 삭제';
-
-  @override
-  String deletePlaylistConfirm(Object name) {
-    return '$name을 삭제할까요?';
-  }
 
   @override
   String get change => '변경';
@@ -584,19 +433,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get lyricsLoading => '가사를 불러오는 중...';
 
   @override
-  String get lyricsNotFound => '가사를 찾을 수 없습니다';
-
-  @override
-  String get lyricsSearchPrompt => '가사를 검색해보세요';
-
-  @override
-  String get lyricsSearchButton => '가사 검색';
-
-  @override
   String get lyricsErrorNotFound => '가사를 찾을 수 없습니다';
-
-  @override
-  String get lyricsErrorLoadFailed => '가사 로딩 실패';
 
   @override
   String get lyricsErrorNetwork => '인터넷 연결을 확인해주세요';
@@ -618,9 +455,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String dateFormat(Object day, Object month, Object year) {
     return '$year년 $month월 $day일';
   }
-
-  @override
-  String get deleteAllTooltip => '전체 삭제';
 
   @override
   String get radioTitle => '라디오';
@@ -1055,20 +889,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get radioNoFavoritesDesc => '채널 목록에서 ♡를 눌러 추가해 보세요';
 
   @override
-  String get radioRemovedFromFavorites => '즐겨찾기에서 제거했습니다';
-
-  @override
-  String get radioAddedToFavoritesToast => '즐겨찾기에 추가했습니다';
-
-  @override
-  String get radioConnecting => '접속 중...';
-
-  @override
-  String radioPopularCount(Object count) {
-    return '인기 방송 $count개';
-  }
-
-  @override
   String get radioLoadingPopular => '인기 방송을 불러오는 중...';
 
   @override
@@ -1080,30 +900,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get radioLoadingSchedule => '편성표를 불러오는 중...';
 
   @override
-  String get radioScheduleChannelSwitch => '예약 채널 전환';
-
-  @override
-  String radioMaxSchedules(Object count) {
-    return '최대 5개 ($count/5)';
-  }
-
-  @override
-  String get radioSelectTime => '시간 선택';
-
-  @override
-  String get radioSetSchedule => '예약 설정';
-
-  @override
   String get radioBroadcastSchedule => '편성표';
 
   @override
   String get radioPlayFirst => '먼저 라디오를 재생해주세요';
-
-  @override
-  String get radioCancelAllSchedules => '전체 예약 취소';
-
-  @override
-  String get radioScheduleSetToast => '예약이 설정되었습니다';
 
   @override
   String radioScheduleCompleteToast(Object time, Object title) {
@@ -1462,11 +1262,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get end => '끝';
-
-  @override
-  String rangeFormat(Object end, Object seconds, Object start) {
-    return '구간: $start ~ $end ($seconds초)';
-  }
 
   @override
   String get deselectAll => '선택 해제';

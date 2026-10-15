@@ -1455,8 +1455,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                       children: [
                         _buildBottomBarItem(
                           context,
-                          icon: null,
-                          customIcon: '<path d="M18 4L22 8L18 12" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 6H5.5C7 6 8 6.7 9 8L11 11" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 20L22 16L18 12" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 18H5.5C7 18 8 17.3 9 16L15 8C16 6.7 17 6 18.5 6H22" stroke-linecap="round" stroke-linejoin="round"/>',
+                          icon: CupertinoIcons.shuffle,
                           label: AppLocalizations.of(context)!.shuffle,
                           isActive: playerProvider.isShuffled,
                           onTap: () {

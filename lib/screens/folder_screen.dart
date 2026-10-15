@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../models/folder.dart';
@@ -247,7 +248,7 @@ class FolderDetailScreen extends StatelessWidget {
                       context.read<PlayerProvider>().playFromList(folder.songs, 0);
                       Navigator.pop(context);
                     },
-                    icon: Icon(Icons.play_arrow, color: baseColor.withOpacity(0.6), size: 26),
+                    icon: Icon(CupertinoIcons.play_fill, color: baseColor.withOpacity(0.5), size: 20),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
@@ -258,7 +259,7 @@ class FolderDetailScreen extends StatelessWidget {
                       context.read<PlayerProvider>().playFromList(songs, 0);
                       Navigator.pop(context);
                     },
-                    icon: Icon(Icons.shuffle, color: baseColor.withOpacity(0.6), size: 20),
+                    icon: Icon(CupertinoIcons.shuffle, color: baseColor.withOpacity(0.5), size: 17),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),

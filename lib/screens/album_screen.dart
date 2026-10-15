@@ -2,6 +2,7 @@ import '../utils/no_album_helper.dart';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/player_provider.dart';
@@ -253,7 +254,7 @@ class AlbumDetailScreen extends StatelessWidget {
                           context.read<PlayerProvider>().playFromList(album.songs, 0, isPlayAllAction: true);
                           Navigator.pop(context);
                         },
-                        icon: const Icon(Icons.play_arrow, color: Colors.white60, size: 26),
+                        icon: const Icon(CupertinoIcons.play_fill, color: Color(0x80FFFFFF), size: 20),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                       ),
@@ -264,7 +265,7 @@ class AlbumDetailScreen extends StatelessWidget {
                           context.read<PlayerProvider>().playFromList(songs, 0, isPlayAllAction: true);
                           Navigator.pop(context);
                         },
-                        icon: const Icon(Icons.shuffle, color: Colors.white60, size: 20),
+                        icon: const Icon(CupertinoIcons.shuffle, color: Color(0x80FFFFFF), size: 17),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                       ),

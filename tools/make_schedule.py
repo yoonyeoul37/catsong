@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # 라디오 편성표 자동 만들기 → assets/schedule.json
-# CBS 음악FM · CBS 표준FM · YTN 라디오 · 경인방송 · FEBC 극동방송 · TBS FM · TBS eFM · JTV 매직FM
+# CBS 음악FM · CBS 표준FM · YTN 라디오 · 경인방송 · FEBC 극동방송 · TBS FM · TBS eFM · JTV 매직FM · 국악FM
 # (각 방송국 홈페이지 편성표 + 사진이 있는 곳은 프로그램 사진)
 # CBS · YTN · FEBC · TBS는 '오늘' 편성만 줘서 매일 돌리면 그날 요일 칸이 새로 바뀌고,
-# 경인방송 · JTV는 일주일치를 한 번에 가져와요
+# 경인방송 · JTV · 국악FM은 일주일치를 한 번에 가져와요
 # 실행: python tools/make_schedule.py   (GitHub에서는 매일 새벽 자동으로)
 import json, sys, datetime, urllib.request, os, re, html as htmllib
 
@@ -27,7 +27,13 @@ def fetch(url, referer, ajax=False):
         h['X-Requested-With'] = 'XMLHttpRequest'
     req = urllib.request.Request(url, headers=h)
     with urllib.request.urlopen(req, timeout=30) as r:
-        return r.read().decode('utf-8', errors='replace')
+        raw = r.read()
+        m = re.search(r'charset=([\w-]+)', r.headers.get('Content-Type', ''), re.I) \
+            or re.search(r'charset=["\']?([\w-]+)', raw[:3000].decode('ascii', 'ignore'), re.I)
+        try:
+            return raw.decode(m.group(1) if m else 'utf-8', errors='replace')
+        except LookupError:
+            return raw.decode('utf-8', errors='replace')
 
 
 def get_json(url, referer):
@@ -283,6 +289,81 @@ def sbs_images(week):
                 p['image'] = pics[key(p['title'])]
 
 
+# ───────── 국악FM ─────────
+GUGAK = 'https://www.igbf.kr/gugak_web/'
+
+
+def gugak_images():
+    # 오늘 편성 화면의 프로그램 링크 → 프로그램 페이지의 큰 사진
+    page = fetch(GUGAK + '?sub_num=786', 'https://www.igbf.kr/')
+    pics = {}
+    for idx, name in re.findall(r'radio_program_main_sub\.jsp\?idx=(\w+)[^"]*">(.*?)</a>', page, re.S):
+        name = base_title(text_of(name))
+        if not name or name in pics:
+            continue
+        try:
+            prog = fetch(GUGAK + f'radio/radio_program_main_sub.jsp?idx={idx}&sub_num=787', GUGAK + '?sub_num=786')
+        except Exception:
+            continue
+        img = re.search(r'<img src="(/DataFiles/Radio/PROG/[^"]+)"[^>]*class="bg"', prog) \
+            or re.search(r'<img src="(/DataFiles/Radio/PROG/[^"]+)"', prog)
+        if img:
+            pics[name] = 'https://www.igbf.kr' + img.group(1)
+    return pics
+
+
+def gugak_day(d):
+    xml = fetch(GUGAK + f'radio/ajax/radio_schedule_process.jsp?today={d:%Y%m%d}', GUGAK + '?sub_num=786')
+    rows = []
+    for item in re.findall(r'<SCH_INFO_LIST>(.*?)</SCH_INFO_LIST>', xml, re.S):
+        def v(tag):
+            m = re.search(rf'<{tag}>(.*?)</{tag}>', item, re.S)
+            return text_of(m.group(1)) if m else ''
+        st, et = v('SCH_BROD_ST'), v('SCH_BROD_ET')
+        sd, ed = v('SCH_ST_DATE'), v('SCH_ET_DATE')
+        if not (len(st) == 4 and len(et) == 4 and v('SCH_PROG_NAME')):
+            continue
+        if sd and ed and not (sd <= f'{d:%Y%m%d}' <= ed):
+            continue
+        rows.append({'title': v('SCH_PROG_NAME'), 'start': f'{st[:2]}:{st[2:]}',
+                     'end': f'{et[:2]}:{et[2:]}'.replace('24:00', '00:00'), 'loc': v('SCH_LOC')})
+    if not rows:
+        return []
+    # 전국 방송만 (광주 등 지역 방송 칸은 빼기): 자정 첫 프로그램과 같은 지역 번호
+    first = min(rows, key=lambda r: r['start'])['loc']
+    progs = [{k: r[k] for k in ('title', 'start', 'end')} for r in rows if r['loc'] == first]
+    return clean_day(progs)
+
+
+def gugak():
+    week = {}
+    start = today_kst()
+    for k in range(7):  # 일주일치: 요일 칸마다 가까운 날
+        d = start + datetime.timedelta(days=k)
+        key = day_key(d)
+        if key in week:
+            continue
+        try:
+            progs = gugak_day(d)
+        except Exception as e:
+            print(f'  (국악FM {d} 못 가져옴: {e})')
+            continue
+        if len(progs) >= 5:
+            week[key] = progs
+    if not week:
+        return {}
+    try:
+        pics = gugak_images()
+    except Exception as e:
+        print(f'  (국악FM 사진 못 가져옴: {e})')
+        pics = {}
+    for progs in week.values():
+        for p in progs:
+            if base_title(p['title']) in pics:
+                p['image'] = pics[base_title(p['title'])]
+    return {'국악FM': week}
+
+
 def fill_images(week):
     # 재방송처럼 사진이 없는 칸: 같은 프로그램 이름의 사진을 빌려 쓰기 (다른 요일 것도)
     pics = {}
@@ -296,7 +377,7 @@ def fill_images(week):
                 p['image'] = pics[base_title(p['title'])]
 
 
-SOURCES = [('CBS', cbs), ('YTN', ytn), ('경인방송', ifm), ('FEBC', febc), ('TBS', tbs), ('JTV', jtv)]
+SOURCES = [('CBS', cbs), ('YTN', ytn), ('경인방송', ifm), ('FEBC', febc), ('TBS', tbs), ('JTV', jtv), ('국악FM', gugak)]
 
 
 def main():

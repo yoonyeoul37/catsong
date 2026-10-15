@@ -3146,5 +3146,339 @@
         "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2023/07/06/ixC1688612209429-640-360.jpg"
       }
     ]
+  },
+  "국악FM": {
+    "friday": [
+      {
+        "title": "송지원의 국악산책(재)",
+        "start": "00:00",
+        "end": "02:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/cc[1].jpg"
+      },
+      {
+        "title": "흐르는 음악처럼 [광주]",
+        "start": "02:00",
+        "end": "05:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/국악방송_라디오_개별프로그램_흐르는음악처럼[1].jpg"
+      },
+      {
+        "title": "솔바람 물소리 [대전]",
+        "start": "05:00",
+        "end": "07:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/solC.jpg"
+      },
+      {
+        "title": "이한철의 창호에 드린 햇살",
+        "start": "07:00",
+        "end": "09:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/sunshine.jpg"
+      },
+      {
+        "title": "송지원의 국악산책",
+        "start": "09:00",
+        "end": "11:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/cc[1].jpg"
+      },
+      {
+        "title": "박혜진의 문화시대",
+        "start": "11:00",
+        "end": "12:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/pc.jpg"
+      },
+      {
+        "title": "음악이 흐르는 마루 [전주]",
+        "start": "12:00",
+        "end": "14:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/marooC.jpg"
+      },
+      {
+        "title": "바투의 상사디야",
+        "start": "14:00",
+        "end": "16:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/btwo.png"
+      },
+      {
+        "title": "노래가 좋다",
+        "start": "16:00",
+        "end": "18:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/n_center[10].jpg"
+      },
+      {
+        "title": "맛있는 라디오",
+        "start": "18:00",
+        "end": "19:30",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/mrCc.jpg"
+      },
+      {
+        "title": "양준모의 당신을 위한 노래",
+        "start": "19:30",
+        "end": "20:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/song.jpg"
+      },
+      {
+        "title": "FM국악당 [광주]",
+        "start": "20:00",
+        "end": "21:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/광주_fm국악당[2].jpg"
+      },
+      {
+        "title": "황인찬의 글과 음악의 온도",
+        "start": "21:00",
+        "end": "22:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/htemp.jpg"
+      },
+      {
+        "title": "이세준의 음악이 좋은 밤",
+        "start": "22:00",
+        "end": "00:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/night.jpg"
+      }
+    ],
+    "saturday": [
+      {
+        "title": "송지원의 국악산책(재)",
+        "start": "00:00",
+        "end": "02:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/cc[1].jpg"
+      },
+      {
+        "title": "흐르는 음악처럼 [광주]",
+        "start": "02:00",
+        "end": "05:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/국악방송_라디오_개별프로그램_흐르는음악처럼[1].jpg"
+      },
+      {
+        "title": "솔바람 물소리 [대전]",
+        "start": "05:00",
+        "end": "07:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/solC.jpg"
+      },
+      {
+        "title": "이한철의 창호에 드린 햇살",
+        "start": "07:00",
+        "end": "09:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/sunshine.jpg"
+      },
+      {
+        "title": "송지원의 국악산책",
+        "start": "09:00",
+        "end": "11:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/cc[1].jpg"
+      },
+      {
+        "title": "은영선의 함께 걷는 길",
+        "start": "11:00",
+        "end": "12:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/함께c.jpg"
+      },
+      {
+        "title": "음악이 흐르는 마루 [전주]",
+        "start": "12:00",
+        "end": "14:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/marooC.jpg"
+      },
+      {
+        "title": "황애리의 주말엔 라디오 [광주]",
+        "start": "14:00",
+        "end": "16:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/j_cc_1500.jpg"
+      },
+      {
+        "title": "풍류가 좋다 [광주]",
+        "start": "16:00",
+        "end": "18:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/pr_cc_1500.jpg"
+      },
+      {
+        "title": "FM국악당 [대전]",
+        "start": "20:00",
+        "end": "21:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/부산_fm국악당.jpg"
+      },
+      {
+        "title": "은영선의 함께 걷는 길(재)",
+        "start": "21:00",
+        "end": "22:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/함께c.jpg"
+      },
+      {
+        "title": "풍류가 좋다(재)",
+        "start": "22:00",
+        "end": "00:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/pr_cc_1500[1].jpg"
+      }
+    ],
+    "sunday": [
+      {
+        "title": "송지원의 국악산책(재)",
+        "start": "00:00",
+        "end": "02:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/cc[1].jpg"
+      },
+      {
+        "title": "흐르는 음악처럼 [광주]",
+        "start": "02:00",
+        "end": "05:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/국악방송_라디오_개별프로그램_흐르는음악처럼[1].jpg"
+      },
+      {
+        "title": "솔바람 물소리 [대전]",
+        "start": "05:00",
+        "end": "07:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/solC.jpg"
+      },
+      {
+        "title": "이한철의 창호에 드린 햇살",
+        "start": "07:00",
+        "end": "09:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/sunshine.jpg"
+      },
+      {
+        "title": "송지원의 국악산책",
+        "start": "09:00",
+        "end": "11:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/cc[1].jpg"
+      },
+      {
+        "title": "박혜진의 문화시대",
+        "start": "11:00",
+        "end": "12:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/pc.jpg"
+      },
+      {
+        "title": "음악이 흐르는 마루 [전주]",
+        "start": "12:00",
+        "end": "14:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/marooC.jpg"
+      },
+      {
+        "title": "바투의 상사디야",
+        "start": "14:00",
+        "end": "16:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/btwo.png"
+      },
+      {
+        "title": "노래가 좋다",
+        "start": "16:00",
+        "end": "18:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/n_center[10].jpg"
+      },
+      {
+        "title": "맛있는 라디오",
+        "start": "18:00",
+        "end": "19:30",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/mrCc.jpg"
+      },
+      {
+        "title": "양준모의 당신을 위한 노래",
+        "start": "19:30",
+        "end": "20:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/song.jpg"
+      },
+      {
+        "title": "FM국악당",
+        "start": "20:00",
+        "end": "21:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/gugakdangC[2].jpg"
+      },
+      {
+        "title": "황인찬의 글과 음악의 온도",
+        "start": "21:00",
+        "end": "22:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/htemp.jpg"
+      },
+      {
+        "title": "이세준의 음악이 좋은 밤",
+        "start": "22:00",
+        "end": "00:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/night.jpg"
+      }
+    ],
+    "weekday": [
+      {
+        "title": "송지원의 국악산책(재)",
+        "start": "00:00",
+        "end": "02:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/cc[1].jpg"
+      },
+      {
+        "title": "흐르는 음악처럼 [광주]",
+        "start": "02:00",
+        "end": "05:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/국악방송_라디오_개별프로그램_흐르는음악처럼[1].jpg"
+      },
+      {
+        "title": "솔바람 물소리 [대전]",
+        "start": "05:00",
+        "end": "07:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/solC.jpg"
+      },
+      {
+        "title": "이한철의 창호에 드린 햇살",
+        "start": "07:00",
+        "end": "09:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/sunshine.jpg"
+      },
+      {
+        "title": "송지원의 국악산책",
+        "start": "09:00",
+        "end": "11:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/cc[1].jpg"
+      },
+      {
+        "title": "박혜진의 문화시대",
+        "start": "11:00",
+        "end": "12:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/pc.jpg"
+      },
+      {
+        "title": "음악이 흐르는 마루 [전주]",
+        "start": "12:00",
+        "end": "14:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/marooC.jpg"
+      },
+      {
+        "title": "바투의 상사디야",
+        "start": "14:00",
+        "end": "16:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/btwo.png"
+      },
+      {
+        "title": "노래가 좋다",
+        "start": "16:00",
+        "end": "18:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/n_center[10].jpg"
+      },
+      {
+        "title": "맛있는 라디오",
+        "start": "18:00",
+        "end": "19:30",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/mrCc.jpg"
+      },
+      {
+        "title": "양준모의 당신을 위한 노래",
+        "start": "19:30",
+        "end": "20:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/song.jpg"
+      },
+      {
+        "title": "FM국악당",
+        "start": "20:00",
+        "end": "21:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/gugakdangC[2].jpg"
+      },
+      {
+        "title": "황인찬의 글과 음악의 온도",
+        "start": "21:00",
+        "end": "22:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/htemp.jpg"
+      },
+      {
+        "title": "이세준의 음악이 좋은 밤",
+        "start": "22:00",
+        "end": "00:00",
+        "image": "https://www.igbf.kr/DataFiles/Radio/PROG/night.jpg"
+      }
+    ]
   }
 }

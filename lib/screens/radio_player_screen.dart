@@ -2183,13 +2183,13 @@ class _FloatButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 32, height: 32,
+        width: 29, height: 29, // 홈 위쪽 버튼과 같게
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: baseColor.withOpacity(0.07),
           border: Border.all(color: baseColor.withOpacity(0.08)),
         ),
-        child: Center(child: child),
+        child: Center(child: Transform.scale(scale: 13 / 16, child: child)), // 아이콘 16 → 13
       ),
     );
   }

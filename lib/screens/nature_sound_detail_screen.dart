@@ -724,13 +724,13 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                             }
                           },
                           child: Container(
-                            width: 32,
-                            height: 32,
+                            width: 29,
+                            height: 29,
                             decoration: BoxDecoration(
                               color: Colors.black.withOpacity(0.38),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 16),
+                            child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 13),
                           ),
                         ),
                         const Spacer(),
@@ -740,23 +740,23 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                             Navigator.of(context).popUntil((route) => route.isFirst);
                           },
                           child: Container(
-                            width: 32,
-                            height: 32,
+                            width: 29,
+                            height: 29,
                             decoration: BoxDecoration(color: Colors.black.withOpacity(0.38), shape: BoxShape.circle),
-                            child: const Icon(Icons.home_rounded, color: Colors.white, size: 16),
+                            child: const Icon(Icons.home_rounded, color: Colors.white, size: 13),
                           ),
                         ),
                         const SizedBox(width: 8),
                         GestureDetector(
                           onTap: () => _toggleFavorite(currentName),
                           child: Container(
-                            width: 32,
-                            height: 32,
+                            width: 29,
+                            height: 29,
                             decoration: BoxDecoration(color: Colors.black.withOpacity(0.38), shape: BoxShape.circle),
                             child: HeartPop(
                               on: isFavorite,
                               child: Icon(isFavorite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                                  color: isFavorite ? const Color(0xFFE05A4F) : Colors.white, size: 16),
+                                  color: isFavorite ? const Color(0xFFE05A4F) : Colors.white, size: 13),
                             ),
                           ),
                         ),
@@ -767,11 +767,11 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                             context.read<ThemeProvider>().setDarkMode(!isDarkMode);
                           },
                           child: Container(
-                            width: 32,
-                            height: 32,
+                            width: 29,
+                            height: 29,
                             decoration: BoxDecoration(color: Colors.black.withOpacity(0.38), shape: BoxShape.circle),
                             child: Icon(isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-                                color: Colors.white, size: 16),
+                                color: Colors.white, size: 13),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -982,20 +982,20 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                             );
                           },
                           child: Container(
-                            width: 32,
-                            height: 32,
+                            width: 29,
+                            height: 29,
                             decoration: BoxDecoration(color: Colors.black.withOpacity(0.38), shape: BoxShape.circle),
-                            child: const Icon(Icons.more_vert, color: Colors.white, size: 16),
+                            child: const Icon(Icons.more_vert, color: Colors.white, size: 13),
                           ),
                         ),
                         const SizedBox(width: 8),
                         GestureDetector(
                           onTap: () => _showExitConfirmDialog(context),
                           child: Container(
-                            width: 32,
-                            height: 32,
+                            width: 29,
+                            height: 29,
                             decoration: BoxDecoration(color: Colors.black.withOpacity(0.38), shape: BoxShape.circle),
-                            child: const Icon(Icons.power_settings_new_rounded, color: Colors.white, size: 16),
+                            child: const Icon(Icons.power_settings_new_rounded, color: Colors.white, size: 13),
                           ),
                         ),
                       ],

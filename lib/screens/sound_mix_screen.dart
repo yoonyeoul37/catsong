@@ -753,10 +753,10 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 34,
-        height: 34,
+        width: 29, // 홈 위쪽 버튼과 같게
+        height: 29,
         decoration: BoxDecoration(color: baseColor.withOpacity(0.07), shape: BoxShape.circle),
-        child: Icon(icon, color: baseColor, size: 17),
+        child: Icon(icon, color: baseColor, size: 13),
       ),
     );
   }

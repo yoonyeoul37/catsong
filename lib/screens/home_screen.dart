@@ -3811,14 +3811,14 @@ class _AppBarCircleButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 32,
-        height: 32,
+        width: 29,
+        height: 29,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: baseColor.withOpacity(0.07),
           border: Border.all(color: baseColor.withOpacity(0.08)),
         ),
-        child: Icon(icon, color: baseColor, size: 16),
+        child: Icon(icon, color: baseColor, size: 13),
       ),
     );
   }

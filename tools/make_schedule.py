@@ -242,14 +242,81 @@ def tbs_one(path):
     return merged
 
 
+DAYS = {'월': 0, '화': 1, '수': 2, '목': 3, '금': 4, '토': 5, '일': 6,
+        'mon': 0, 'tue': 1, 'wed': 2, 'thu': 3, 'fri': 4, 'sat': 5, 'sun': 6,
+        '周一': 0, '周二': 1, '周三': 2, '周四': 3, '周五': 4, '周六': 5, '周日': 6}
+
+
+def tbs_programs(list_path):
+    # 프로그램 목록 화면: 사진 · 이름 · 요일 · 시간  (예: 함춘호의 포크송 월-금 10:00-12:00)
+    page = fetch(f'https://tbs.seoul.kr/{list_path}', 'https://tbs.seoul.kr/')
+    page = re.sub(r'<script.*?</script>|<style.*?</style>', '', page, flags=re.S | re.I)
+    out = []
+    parts = re.split(r'(?=<img\s)', page)
+    for part in parts:
+        src = re.match(r'<img[^>]+src=["\']([^"\']*/common/images/thumb/[^"\']+)["\']', part)
+        if not src:
+            continue
+        text = text_of(part[part.find('>') + 1:])
+        tm = re.search(r'(\d{1,2}:\d{2})\s*[-~]\s*(\d{1,2}:\d{2})', text)
+        if not tm:
+            continue
+        head = text[:tm.start()]
+        dm = re.search(r'(周[一二三四五六日]|[월화수목금토일]|Mon|Tue|Wed|Thu|Fri|Sat|Sun)\s*(?:-|~|至)\s*'
+                       r'(周[一二三四五六日]|[월화수목금토일]|Mon|Tue|Wed|Thu|Fri|Sat|Sun)', head, re.I)
+        days = set(range(7))
+        if dm:
+            a, b = DAYS[dm.group(1).lower() if dm.group(1)[0].isascii() else dm.group(1)], \
+                   DAYS[dm.group(2).lower() if dm.group(2)[0].isascii() else dm.group(2)]
+            days = set(range(a, b + 1)) if a <= b else set(range(a, 7)) | set(range(0, b + 1))
+            head = head[:dm.start()]
+        name = head.strip(' ,')
+        img = src.group(1).replace('//', '/').replace('https:/', 'https://').replace('http:/', 'http://')
+        out.append({'name': name, 'start': tm.group(1).zfill(5), 'end': tm.group(2).zfill(5), 'days': days,
+                    'image': img if img.startswith('http') else 'https://tbs.seoul.kr' + img})
+    return out
+
+
+def tbs_images(progs, plist, day):
+    def key(t):
+        return re.sub(r'[\s,.·!?~\-()（）]', '', t).lower()
+
+    def mins(t):
+        return int(t[:2]) * 60 + int(t[3:5])
+    for p in progs:
+        # 1) 이름이 맞으면 (재방송 포함)
+        for q in plist:
+            words = [w for w in re.split(r'\s+', q['name']) if len(w) >= 2]
+            name_hit = key(q['name']) and (key(q['name']) in key(p['title']) or key(p['title']) in key(q['name']))
+            tail_hit = len(words) >= 2 and key(' '.join(words[-2:])) in key(p['title'])  # "Summer Lee Diverse Voices"
+            if name_hit or tail_hit:
+                p['image'] = q['image']
+                break
+        if p.get('image'):
+            continue
+        # 2) 요일 · 시간이 맞으면 (4시간 넘는 긴 칸은 빼고)
+        for q in plist:
+            s, e = mins(q['start']), mins(q['end'])
+            if e <= s or e - s > 240 or day.weekday() not in q['days']:
+                continue
+            if s <= mins(p['start']) < e:
+                p['image'] = q['image']
+                break
+
+
 def tbs():
     out = {}
-    for station, path in (('TBS FM', 'fm'), ('TBS eFM', 'eFm')):
+    for station, path, list_path in (('TBS FM', 'fm', 'fm/programsDay.do'),
+                                     ('TBS eFM', 'eFm', 'eFm/programsDaily.do')):
         try:
             progs = tbs_one(path)
         except Exception as e:
             print(f'  ({station} 못 가져옴: {e})')
             continue
+        try:
+            tbs_images(progs, tbs_programs(list_path), today_kst())
+        except Exception as e:
+            print(f'  ({station} 사진 못 가져옴: {e})')
         if len(progs) >= 5:
             out[station] = {day_key(today_kst()): progs}
     return out

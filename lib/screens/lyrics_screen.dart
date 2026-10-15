@@ -1671,7 +1671,10 @@ class _LyricsScreenState extends State<LyricsScreen> {
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                               ),
-                              child: Text(tr.searchAgain, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(tr.searchAgain, maxLines: 1, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
+                              ),
                             ),
                           ),
                         ),
@@ -1686,7 +1689,10 @@ class _LyricsScreenState extends State<LyricsScreen> {
                                 side: BorderSide(color: ink.withOpacity(0.35), width: 1.2),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                               ),
-                              child: Text(tr.addManually, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(tr.addManually, maxLines: 1, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
+                              ),
                             ),
                           ),
                         ),

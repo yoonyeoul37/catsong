@@ -79,7 +79,10 @@ class EqualizerScreen extends StatelessWidget {
                       side: BorderSide(color: c.line),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
-                    child: Text(l.reset, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600)),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(l.reset, maxLines: 1, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600)),
+                    ),
                   ),
                 ),
               ),
@@ -98,7 +101,10 @@ class EqualizerScreen extends StatelessWidget {
                       shadowColor: Colors.black.withOpacity(0.25),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
-                    child: Text(tr.saveCurrentEq, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(tr.saveCurrentEq, maxLines: 1, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+                    ),
                   ),
                 ),
               ),

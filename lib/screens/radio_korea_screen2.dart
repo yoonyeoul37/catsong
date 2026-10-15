@@ -144,15 +144,20 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
             borderRadius: BorderRadius.circular(8),
           ),
           alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Text(
-            label,
-            style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily, 
-              color: selected
-                  ? (isDarkMode ? const Color(0xFF24221F) : Colors.white)
-                  : baseColor.withOpacity(0.7),
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+          // 글자가 커도 한 줄 (넘치면 칸에 맞게 살짝 줄임)
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              maxLines: 1,
+              style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
+                color: selected
+                    ? (isDarkMode ? const Color(0xFF24221F) : Colors.white)
+                    : baseColor.withOpacity(0.7),
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ),

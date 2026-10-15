@@ -3554,7 +3554,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get cardsReopened => 'カードを再表示しました';
 
   @override
-  String get allClosedToday => '今日はすべて閉じました・';
+  String get allClosedToday => '今日は閉じました・';
 
   @override
   String get showAgain => 'もう一度見る ›';

@@ -2418,7 +2418,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ringtoneFailedMsg => 'Couldn\'t set the ringtone';
 
   @override
-  String get saveCurrentEq => 'Save current settings';
+  String get saveCurrentEq => 'Save settings';
 
   @override
   String get eqNeedsPlay => 'Play a song once to use the equalizer';
@@ -3710,7 +3710,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cardsReopened => 'Cards are back on';
 
   @override
-  String get allClosedToday => 'All closed for today · ';
+  String get allClosedToday => 'Closed today · ';
 
   @override
   String get showAgain => 'Show again ›';

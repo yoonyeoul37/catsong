@@ -287,7 +287,7 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                          color: sub, fontSize: 12, decoration: TextDecoration.lineThrough)),
+                                          color: sub, fontSize: 12)),
                                   const SizedBox(height: 6),
                                   // 정리 후 (진하게)
                                   Text(it.clean.title,

@@ -230,14 +230,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   descWidget = GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: _reopenMainCards,
-                    child: Text.rich(
-                      TextSpan(children: [
-                        TextSpan(text: tr.allClosedToday),
-                        TextSpan(text: tr.showAgain, style: TextStyle(color: point, fontWeight: FontWeight.w700)),
-                      ]),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: descStyle.copyWith(color: _sTextHint(isDarkMode)),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text.rich(
+                        TextSpan(children: [
+                          TextSpan(text: tr.allClosedToday),
+                          TextSpan(text: tr.showAgain, style: TextStyle(color: point, fontWeight: FontWeight.w700)),
+                        ]),
+                        maxLines: 1,
+                        style: descStyle.copyWith(color: _sTextHint(isDarkMode)),
+                      ),
                     ),
                   );
                 }
@@ -669,9 +672,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: [
                     Row(
                       children: [
-                        Text(tr.accentColor, style: TextStyle(color: _sText(d), fontSize: 14.5)),
-                        if (t.pointColorName != null)
-                          Text(' (${pointColorName(t.pointColorName!)})', style: TextStyle(color: _sTextHint(d), fontSize: 13)),
+                        // 제목 (색 이름) — 글자가 커도 한 줄, 넘치면 …
+                        Flexible(
+                          child: Text.rich(
+                            TextSpan(children: [
+                              TextSpan(text: tr.accentColor),
+                              if (t.pointColorName != null)
+                                TextSpan(
+                                    text: ' (${pointColorName(t.pointColorName!)})',
+                                    style: TextStyle(color: _sTextHint(d), fontSize: 13)),
+                            ]),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: _sText(d), fontSize: 14.5),
+                          ),
+                        ),
                         // ⓘ 누르면 바뀌는 곳 말풍선
                         GestureDetector(
                           behavior: HitTestBehavior.opaque,

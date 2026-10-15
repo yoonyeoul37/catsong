@@ -3074,7 +3074,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Stack(
         children: [
       Padding(
-        padding: const EdgeInsets.fromLTRB(20, 10, 34, 10),
+        padding: const EdgeInsets.fromLTRB(20, 8, 34, 8),
         child: AnimatedOpacity(
         opacity: ready ? 1 : 0,
         duration: const Duration(milliseconds: 250),

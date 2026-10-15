@@ -1040,8 +1040,9 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                         final imgH = box.maxHeight < cap ? box.maxHeight : cap;
                         final programImage = radioProvider.currentProgram?['image'] as String?;
                         final hasImage = programImage != null && programImage.isNotEmpty;
-                        final scheduleLoading = !_scheduleTimedOut &&
-                            radioProvider.scheduleList.isEmpty &&
+                        // 지금 방송이 정해지기 전에는 기본 이미지 대신 로딩 칸 (편성표 목록이 먼저 와도)
+                        final scheduleLoading = _isKoreanBroadcast(current.name) && // 편성표 있는 방송만 (해외 등은 바로 기본 이미지)
+                            !_scheduleTimedOut &&
                             radioProvider.currentProgram == null;
                         final timeStr = radioProvider.currentProgram != null
                             ? _ProgramCard.getTimeStr(radioProvider.currentProgram!, radioProvider)
@@ -1069,6 +1070,14 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                 height: imgH,
                                 fit: BoxFit.cover,
                                 headers: const {'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Mobile Safari/537.36'}, // 일부 방송국은 브라우저처럼 물어봐야 사진을 줌
+                                // 사진 받는 동안: 빈칸 대신 로딩 칸과 같은 색
+                                frameBuilder: (fCtx, child, frame, sync) => frame == null && !sync
+                                    ? Container(
+                                        width: double.infinity,
+                                        height: imgH,
+                                        color: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
+                                      )
+                                    : child,
                                 errorBuilder: (errCtx, err, stack) {
                                   debugPrint('[편성사진] 못 불러옴: $programImage → $err');
                                   return RadioMoodPlaceholder(height: imgH);

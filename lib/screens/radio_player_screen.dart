@@ -351,8 +351,6 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         radio.fetchMbcSchedule(stationName);
       } else if (stationName == 'SBS 파워FM' || stationName == 'SBS 러브FM') {
         radio.fetchSbsSchedule(stationName);
-      } else if (stationName == 'BBS 불교방송') {
-        radio.fetchBbsSchedule();
       } else if (stationName.contains('KBS')) {
         radio.fetchSchedule(stationName);
       }

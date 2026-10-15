@@ -3934,5 +3934,765 @@
         "image": "https://www.obs.co.kr/admin/data/program/_radio_poster/R004_2305081916.png"
       }
     ]
+  },
+  "BBS 불교방송": {
+    "friday": [
+      {
+        "title": "송담스님의 현대인을 위한 참선(재)",
+        "start": "00:00",
+        "end": "00:40"
+      },
+      {
+        "title": "영인스님의 천수경(재)",
+        "start": "00:40",
+        "end": "01:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "경전공부",
+        "start": "01:00",
+        "end": "01:25",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "우리들의 아침, 운성입니다",
+        "start": "01:25",
+        "end": "01:45",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "혜주스님의 생명을 위한 명상",
+        "start": "01:45",
+        "end": "02:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "새벽 명상",
+        "start": "04:00",
+        "end": "04:30",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "행복을 찾는 108배",
+        "start": "04:30",
+        "end": "05:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "아침 예불",
+        "start": "05:00",
+        "end": "05:25",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "경전공부",
+        "start": "05:25",
+        "end": "05:50",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "불교의 숨결",
+        "start": "05:50",
+        "end": "06:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "송담스님의 현대인을 위한 참선",
+        "start": "06:00",
+        "end": "06:40"
+      },
+      {
+        "title": "우리들의 아침, 운성입니다",
+        "start": "06:40",
+        "end": "07:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "BBS 뉴스",
+        "start": "07:00",
+        "end": "07:20",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "정혜승의 아침저널",
+        "start": "07:20",
+        "end": "09:00"
+      },
+      {
+        "title": "좋은 아침 성전입니다",
+        "start": "09:00",
+        "end": "09:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "5분 명상",
+        "start": "09:55",
+        "end": "10:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "거룩한 만남",
+        "start": "10:00",
+        "end": "10:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "신행 365일",
+        "start": "10:55",
+        "end": "11:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "무명을 밝히고",
+        "start": "11:00",
+        "end": "12:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "정오종합뉴스",
+        "start": "12:00",
+        "end": "12:10",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "이효주의 싱싱라디오",
+        "start": "12:10",
+        "end": "14:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "송봉주의 음악 두시",
+        "start": "14:00",
+        "end": "15:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "5분 명상",
+        "start": "15:55",
+        "end": "16:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "팝 포 유",
+        "start": "16:00",
+        "end": "17:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "경제와 생활뉴스",
+        "start": "17:00",
+        "end": "17:05",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "팝 포 유",
+        "start": "17:05",
+        "end": "18:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "운문사 우리말 저녁예불",
+        "start": "18:00",
+        "end": "18:20",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "뉴스의 정석",
+        "start": "18:20",
+        "end": "19:00"
+      },
+      {
+        "title": "별빛 아름다운 저녁, 주석입니다",
+        "start": "19:00",
+        "end": "20:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "각밀스님의 염화미소",
+        "start": "20:55",
+        "end": "21:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "밤의 창가에서",
+        "start": "21:00",
+        "end": "23:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "한밤의 BGM",
+        "start": "23:00",
+        "end": "23:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "5분 명상",
+        "start": "23:55",
+        "end": "00:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      }
+    ],
+    "saturday": [
+      {
+        "title": "송담스님의 현대인을 위한 참선(재)",
+        "start": "00:00",
+        "end": "00:40"
+      },
+      {
+        "title": "영인스님의 천수경(재)",
+        "start": "00:40",
+        "end": "01:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "경전공부",
+        "start": "01:00",
+        "end": "01:25",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "우리들의 아침, 운성입니다",
+        "start": "01:25",
+        "end": "01:45",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "혜주스님의 생명을 위한 명상",
+        "start": "01:45",
+        "end": "02:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "새벽 명상",
+        "start": "04:00",
+        "end": "04:30",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "행복을 찾는 108배",
+        "start": "04:30",
+        "end": "05:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "아침 예불",
+        "start": "05:00",
+        "end": "05:25",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "경전공부",
+        "start": "05:25",
+        "end": "05:50",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "불교의 숨결",
+        "start": "05:50",
+        "end": "06:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "송담스님의 현대인을 위한 참선",
+        "start": "06:00",
+        "end": "06:40"
+      },
+      {
+        "title": "우리들의 아침, 운성입니다",
+        "start": "06:40",
+        "end": "07:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "대행스님의 행복한 삶을 위한 법문",
+        "start": "07:00",
+        "end": "08:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "세계는 한 가족",
+        "start": "08:00",
+        "end": "09:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "좋은 아침 성전입니다",
+        "start": "09:00",
+        "end": "09:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "5분 명상",
+        "start": "09:55",
+        "end": "10:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "다시 듣고 싶은 명법문",
+        "start": "10:00",
+        "end": "10:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "신행 365일",
+        "start": "10:55",
+        "end": "11:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "아름다운 초대",
+        "start": "11:00",
+        "end": "12:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "이효주의 싱싱라디오",
+        "start": "12:00",
+        "end": "14:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "김중연의 트로트 연구소",
+        "start": "14:00",
+        "end": "15:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "5분 명상",
+        "start": "15:55",
+        "end": "16:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "인연 IN 가요",
+        "start": "16:00",
+        "end": "17:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "현주스님의 AI 불고리즘 라디오",
+        "start": "17:00",
+        "end": "18:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "운문사 우리말 저녁예불",
+        "start": "18:00",
+        "end": "18:20",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "배재수의 사람과 세상",
+        "start": "18:20",
+        "end": "19:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "달빛, 뮤직 만다라",
+        "start": "19:00",
+        "end": "21:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "세계음악여행",
+        "start": "21:00",
+        "end": "23:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "한밤의 BGM",
+        "start": "23:00",
+        "end": "23:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "5분 명상",
+        "start": "23:55",
+        "end": "00:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      }
+    ],
+    "sunday": [
+      {
+        "title": "송담스님의 현대인을 위한 참선(재)",
+        "start": "00:00",
+        "end": "00:40"
+      },
+      {
+        "title": "영인스님의 천수경(재)",
+        "start": "00:40",
+        "end": "01:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "경전공부",
+        "start": "01:00",
+        "end": "01:25",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "우리들의 아침, 운성입니다",
+        "start": "01:25",
+        "end": "01:45",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "혜주스님의 생명을 위한 명상",
+        "start": "01:45",
+        "end": "02:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "새벽 명상",
+        "start": "04:00",
+        "end": "04:30",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "행복을 찾는 108배",
+        "start": "04:30",
+        "end": "05:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "아침 예불",
+        "start": "05:00",
+        "end": "05:25",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "경전공부",
+        "start": "05:25",
+        "end": "05:50",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "불교의 숨결",
+        "start": "05:50",
+        "end": "06:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "송담스님의 현대인을 위한 참선",
+        "start": "06:00",
+        "end": "06:40"
+      },
+      {
+        "title": "우리들의 아침, 운성입니다",
+        "start": "06:40",
+        "end": "07:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "BBS초대석",
+        "start": "07:00",
+        "end": "08:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "인생은 아름다워",
+        "start": "08:00",
+        "end": "09:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "좋은 아침 성전입니다",
+        "start": "09:00",
+        "end": "09:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "5분 명상",
+        "start": "09:55",
+        "end": "10:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "라디오 법회",
+        "start": "10:00",
+        "end": "10:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "신행 365일",
+        "start": "10:55",
+        "end": "11:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "아름다운 초대",
+        "start": "11:00",
+        "end": "12:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "이효주의 싱싱라디오",
+        "start": "12:00",
+        "end": "14:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "김중연의 트로트 연구소",
+        "start": "14:00",
+        "end": "15:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "5분 명상",
+        "start": "15:55",
+        "end": "16:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "인연 IN 가요",
+        "start": "16:00",
+        "end": "17:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "룸비니 동산",
+        "start": "17:00",
+        "end": "17:30",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "장병의 시간",
+        "start": "17:30",
+        "end": "18:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "운문사 우리말 저녁예불",
+        "start": "18:00",
+        "end": "18:20",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "BBS 낭독살롱",
+        "start": "18:20",
+        "end": "19:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "달빛, 뮤직 만다라",
+        "start": "19:00",
+        "end": "21:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "세계음악여행",
+        "start": "21:00",
+        "end": "23:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "한밤의 BGM",
+        "start": "23:00",
+        "end": "23:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "5분 명상",
+        "start": "23:55",
+        "end": "00:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      }
+    ],
+    "weekday": [
+      {
+        "title": "송담스님의 현대인을 위한 참선(재)",
+        "start": "00:00",
+        "end": "00:45"
+      },
+      {
+        "title": "영인스님의 천수경(재)",
+        "start": "00:40",
+        "end": "01:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "경전공부",
+        "start": "01:00",
+        "end": "01:25",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "우리들의 아침, 운성입니다",
+        "start": "01:25",
+        "end": "01:45",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "혜주스님의 생명을 위한 명상",
+        "start": "01:45",
+        "end": "02:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "새벽 명상",
+        "start": "04:00",
+        "end": "04:30",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "행복을 찾는 108배",
+        "start": "04:30",
+        "end": "05:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "아침 예불",
+        "start": "05:00",
+        "end": "05:25",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "경전공부",
+        "start": "05:25",
+        "end": "05:50",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "불교의 숨결",
+        "start": "05:50",
+        "end": "06:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "송담스님의 현대인을 위한 참선",
+        "start": "06:00",
+        "end": "06:40"
+      },
+      {
+        "title": "우리들의 아침, 운성입니다",
+        "start": "06:40",
+        "end": "07:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "BBS 뉴스",
+        "start": "07:00",
+        "end": "07:20",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "정혜승의 아침저널",
+        "start": "07:20",
+        "end": "09:00"
+      },
+      {
+        "title": "좋은 아침 성전입니다",
+        "start": "09:00",
+        "end": "09:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "5분 명상",
+        "start": "09:55",
+        "end": "10:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "원영스님의 마음 Talk",
+        "start": "10:00",
+        "end": "10:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "신행 365일",
+        "start": "10:55",
+        "end": "11:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "무명을 밝히고",
+        "start": "11:00",
+        "end": "12:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "정오종합뉴스",
+        "start": "12:00",
+        "end": "12:10",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "이효주의 싱싱라디오",
+        "start": "12:10",
+        "end": "14:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "송봉주의 음악 두시",
+        "start": "14:00",
+        "end": "15:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "5분 명상",
+        "start": "15:55",
+        "end": "16:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "팝 포 유",
+        "start": "16:00",
+        "end": "17:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "경제와 생활뉴스",
+        "start": "17:00",
+        "end": "17:05",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "팝 포 유",
+        "start": "17:05",
+        "end": "18:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "운문사 우리말 저녁예불",
+        "start": "18:00",
+        "end": "18:20",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "뉴스의 정석",
+        "start": "18:20",
+        "end": "19:00"
+      },
+      {
+        "title": "별빛 아름다운 저녁, 주석입니다",
+        "start": "19:00",
+        "end": "20:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "각밀스님의 염화미소",
+        "start": "20:55",
+        "end": "21:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "밤의 창가에서",
+        "start": "21:00",
+        "end": "23:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "한밤의 BGM",
+        "start": "23:00",
+        "end": "23:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      },
+      {
+        "title": "5분 명상",
+        "start": "23:55",
+        "end": "00:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
+      }
+    ]
   }
 }

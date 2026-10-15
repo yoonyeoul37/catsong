@@ -29,12 +29,24 @@ def old_ssl():
     return c
 
 
-def fetch(url, referer, ajax=False, old=False):
+def no_check_ssl():
+    # 인증서 설정이 잘못된 홈페이지(BBS)용 — 앱도 BBS만 이렇게 열었어요 (편성표 읽기만 함)
+    c = ssl.create_default_context()
+    c.check_hostname = False
+    c.verify_mode = ssl.CERT_NONE
+    return c
+
+
+def fetch(url, referer, ajax=False, old=False, data=None, insecure=False):
     h = {'User-Agent': UA, 'Referer': referer, 'Accept-Language': 'ko-KR,ko;q=0.9'}
     if ajax:
         h['X-Requested-With'] = 'XMLHttpRequest'
-    req = urllib.request.Request(url, headers=h)
-    with urllib.request.urlopen(req, timeout=30, context=old_ssl() if old else None) as r:
+    body = urllib.parse.urlencode(data).encode() if data is not None else None
+    if body is not None:
+        h['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+    req = urllib.request.Request(url, headers=h, data=body)
+    ctx = old_ssl() if old else no_check_ssl() if insecure else None
+    with urllib.request.urlopen(req, timeout=30, context=ctx) as r:
         raw = r.read()
         m = re.search(r'charset=([\w-]+)', r.headers.get('Content-Type', ''), re.I) \
             or re.search(r'charset=["\']?([\w-]+)', raw[:3000].decode('ascii', 'ignore'), re.I)
@@ -422,6 +434,73 @@ def obs():
     return {'OBS 라디오': week} if week else {}
 
 
+# ───────── BBS 불교방송 (모바일 편성표: 날짜마다) ─────────
+BBS = 'https://m.bbsi.co.kr/M/'
+
+
+def bbs_day(d):
+    page = fetch(BBS + 'sub/06_schedule/ajaxSch.html', BBS + '?ACT=SCHEDULE', ajax=True,
+                 data={'Gubun': 'RADIO', 'SchDate': f'{d:%Y-%m-%d}'}, insecure=True)
+    progs = []
+    for li in re.findall(r'<li>(.*?)</li>', page, re.S):
+        se = re.search(r'(\d{1,2}:\d{2})\s*~\s*(\d{1,2}:\d{2})', li)  # 주석 안 "04:00 ~ 04:30"
+        t = re.search(r'<span class="time">\s*(\d{1,2}:\d{2})', li)
+        n = re.search(r'<span class="txt">(.*?)</span>', li, re.S)
+        if not (t and n):
+            continue
+        title = text_of(n.group(1))
+        if not title:
+            continue
+        p = {'title': title, 'start': t.group(1).zfill(5), 'end': se.group(2).zfill(5) if se else ''}
+        code = re.search(r'ProgramCode=(\d+)', li)
+        if code:
+            p['code'] = code.group(1)
+        progs.append(p)
+    return clean_day(progs)
+
+
+def bbs_images(codes):
+    # 프로그램 홈 화면에 있는 프로그램 사진 (없으면 기본 이미지)
+    pics = {}
+    for code in codes:
+        try:
+            page = fetch(f'https://www.bbsi.co.kr/?ACT=RADIO&MODE=HOME&ProgramCode={code}', 'https://www.bbsi.co.kr/',
+                         insecure=True)
+        except Exception:
+            continue
+        m = re.search(r'(https?:)?//m\.bbsi\.co\.kr/M/UploadProgramImg/[\w.\-]+', page)
+        if m:
+            u = m.group(0)
+            pics[code] = u if u.startswith('http') else 'https:' + u
+    return pics
+
+
+def bbs():
+    week = {}
+    start = today_kst()
+    for k in range(7):  # 일주일치: 요일 칸마다 가까운 날
+        d = start + datetime.timedelta(days=k)
+        key = day_key(d)
+        if key in week:
+            continue
+        try:
+            progs = bbs_day(d)
+        except Exception as e:
+            print(f'  (BBS {d} 못 가져옴: {e})')
+            continue
+        if len(progs) >= 5:
+            week[key] = progs
+    if not week:
+        return {}
+    pics = bbs_images(sorted({p['code'] for v in week.values() for p in v if p.get('code')}))
+    for progs in week.values():
+        for p in progs:
+            code = p.pop('code', None)
+            if code in pics:
+                p['image'] = pics[code]
+    return {'BBS 불교방송': week}
+
+
 
 def fill_images(week):
     # 재방송처럼 사진이 없는 칸: 같은 프로그램 이름의 사진을 빌려 쓰기 (다른 요일 것도)
@@ -436,7 +515,7 @@ def fill_images(week):
                 p['image'] = pics[base_title(p['title'])]
 
 
-SOURCES = [('CBS', cbs), ('YTN', ytn), ('경인방송', ifm), ('FEBC', febc), ('TBS', tbs), ('JTV', jtv), ('국악FM', gugak), ('OBS', obs)]
+SOURCES = [('CBS', cbs), ('YTN', ytn), ('경인방송', ifm), ('FEBC', febc), ('TBS', tbs), ('JTV', jtv), ('국악FM', gugak), ('OBS', obs), ('BBS', bbs)]
 
 
 def main():

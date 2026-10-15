@@ -290,7 +290,7 @@ class RadioMiniPlayer extends StatelessWidget {
                         // × (닫기): 재생 중에도 누르면 바로 멈추고 닫힘
                         IconButton(
                           onPressed: () => _close(context),
-                          icon: Icon(Icons.close, color: baseColor.withOpacity(0.45)),
+                          icon: Icon(Icons.close_rounded, color: baseColor.withOpacity(0.45)),
                           iconSize: 20,
                           padding: const EdgeInsets.all(4),
                           constraints: const BoxConstraints(minWidth: 32, minHeight: 32),

@@ -78,6 +78,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void initState() {
     super.initState();
     HomeCardPref.load();
+    MainCardPref.load();
     SharedPreferences.getInstance().then((p) {
       final z = p.getDouble('helpZoom');
       if (z != null && mounted) setState(() => _zoom = z.clamp(1.0, 1.6));
@@ -194,6 +195,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildTile(context, icon: Icons.style_outlined, title: l.playerStyle, desc: '원하는 재생 화면을 선택하세요', onTap: () => _showPlayerStyleDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.font_download_outlined, title: l.fontChange, desc: '원하는 글꼴을 선택하세요', onTap: () => _showFontDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.text_fields, title: l.textSize, desc: '글자 크기를 조절하세요', onTap: () => _showTextSizeDialog(context), primaryColor: primaryColor),
+          // 메인 홈 맨 위 카드 (나만의 색·라디오·팁) — 다시 켜면 닫은 카드도 다시 나와요
+          ValueListenableBuilder<bool>(
+            valueListenable: MainCardPref.on,
+            builder: (context, on, _) => _buildTile(context,
+                icon: Icons.campaign_outlined,
+                title: '메인 알림 카드',
+                desc: '메인 화면 맨 위 카드예요. 다시 켜면 닫은 카드도 나와요',
+                onTap: () => MainCardPref.setOn(!on),
+                primaryColor: primaryColor,
+                trailing: Switch(value: on, onChanged: (v) => MainCardPref.setOn(v), activeColor: primaryColor, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
+          ),
           ValueListenableBuilder<bool>(
             valueListenable: HomeCardPref.on,
             builder: (context, on, _) => _buildTile(context,

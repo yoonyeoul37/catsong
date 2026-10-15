@@ -54,6 +54,7 @@ import '../providers/theme_provider.dart';
 import 'nature_sounds_screen.dart';
 import 'nature_sound_detail_screen.dart';
 import 'radio_player_screen.dart';
+import 'radio_korea_screen2.dart' show niceKoreanStationNow;
 import '../utils/nature_sound_catalog.dart';
 import '../utils/paran_photo.dart';
 import '../utils/no_album_helper.dart';
@@ -375,21 +376,201 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  /// 크림 카드 + 색 고리 + 문구 + [바꾸기] + ✕ (홈 사진 카드와 같은 모서리·그림자)
-  Widget _buildColorTip(bool isDark) {
+  // ───── 메인 홈 카드: 나만의 색 → 지금 방송 → 오늘의 팁 (✕ 누르면 다음 카드, 내일 다시 처음부터) ─────
+  Set<String> _homeClosed = {}; // 오늘 ✕로 닫은 카드 ('radio', 'tip')
+  final Set<String> _programAsked = {}; // 방송마다 편성표는 한 번만 받기
+
+  static String _homeDay(DateTime d) =>
+      '${d.year}${d.month.toString().padLeft(2, '0')}${d.day.toString().padLeft(2, '0')}';
+
+  Future<void> _loadHomeClosed() async {
+    final p = await SharedPreferences.getInstance();
+    final today = p.getString('main_card_closed_day') == _homeDay(DateTime.now());
+    final list = today ? (p.getStringList('main_card_closed') ?? const <String>[]) : const <String>[];
+    if (mounted) setState(() => _homeClosed = list.toSet());
+  }
+
+  /// ✕ → 오늘은 닫고 바로 다음 카드 (내일 다시 처음부터)
+  Future<void> _closeHomeCard(String key) async {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    setState(() => _homeClosed = {..._homeClosed, key});
+    final p = await SharedPreferences.getInstance();
+    await p.setString('main_card_closed_day', _homeDay(DateTime.now()));
+    await p.setStringList('main_card_closed', _homeClosed.toList());
+  }
+
+  void _onMainCardPref() {
+    if (mounted) setState(() {});
+  }
+
+  /// 설정에서 다시 켜면: 오늘 닫은 카드·나만의 색 카드 다시 불러오기
+  void _onMainCardReopen() {
+    _loadHomeClosed();
+    _checkColorTip();
+  }
+
+  /// 홈 카드 방송의 지금 프로그램 받아 오기 (편성표 있는 국내 방송만)
+  void _askProgram(RadioProvider radio, RadioStation s) {
+    final n = s.name;
+    if (!_programAsked.add(n)) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      try {
+        if (n == 'MBC 표준FM' || n == 'MBC FM4U') {
+          radio.fetchMbcSchedule(n);
+        } else if (n == 'SBS 파워FM' || n == 'SBS 러브FM') {
+          radio.fetchSbsSchedule(n);
+        } else if (n == 'CBS 음악FM' || n == 'CBS 표준FM') {
+          radio.fetchJsonSchedule(n);
+        } else if (s.streamUrl.contains('cfpwwwapi.kbs.co.kr')) {
+          radio.fetchScheduleByUrl(n, s.streamUrl);
+        }
+      } catch (_) {}
+    });
+  }
+
+  // 메인 홈 팁 (음악 탭 TIP과 안 겹치게 음악 말고 다른 기능만)
+  static const _mainTips = <(String, String, String, String)>[
+    ('바탕화면 위젯을 놓아 보세요', '바탕화면을 꾹 → 위젯 → 파란소리', 'Add the home screen widget', 'Long-press home screen → Widgets'),
+    ('아침 알람으로 깨워 드려요', '음악·라디오·자연 소리로 일어나요', 'Wake up with Paransori', 'Music, radio or nature sounds'),
+    ('원하는 시간에 라디오 켜기', '라디오 재생 화면 아래 [예약]', 'Schedule the radio', 'Tap Schedule under the radio player'),
+    ('TV·스피커로 소리 보내기', '같은 Wi-Fi라면 재생 화면 ⋮ 메뉴에서', 'Play on your TV or speaker', 'Same Wi-Fi → player ⋮ menu'),
+    ('잠들 땐 수면 타이머', '재생 화면 아래 [수면]을 눌러요', 'Sleep timer for bedtime', 'Tap Sleep under the player'),
+  ];
+
+  Widget _buildHomeCard(bool isDark) {
+    if (!MainCardPref.on.value) return const SizedBox.shrink(); // 설정에서 끔
     final isKo = Localizations.localeOf(context).languageCode == 'ko';
     final card = isDark ? const Color(0xFF32302C) : const Color(0xFFFBF8F2);
+    final now = DateTime.now();
+    final day = DateTime(now.year, now.month, now.day).difference(DateTime(2024, 1, 1)).inDays;
+
+    // 라디오 추천: 안 들어 본 방송 (아래 '최근에 들었어요'와 안 겹치게) — 국내 방송이라 한국어일 때만
+    final radio = context.watch<RadioProvider>();
+    final cur = radio.currentStation?.name;
+    final pick = isKo
+        ? niceKoreanStationNow(skip: {for (final r in radio.recentlyListened) r.name, if (cur != null) cur}, day: day)
+        : null;
+
+    // 오늘 카드 차례 (점 개수 = 오늘 카드 수 · 닫은 카드도 점 자리는 그대로)
+    final deck = <String>[
+      if (_showColorTip || _homeClosed.contains('color')) 'color',
+      if (pick != null) 'radio',
+      'tip',
+    ];
+    final open = deck.where((k) => k == 'color' ? _showColorTip : !_homeClosed.contains(k)).toList();
+    if (open.isEmpty) return const SizedBox.shrink(); // 다 닫으면 오늘은 카드 없음 (내일 다시 처음부터)
+    final key = open.first;
+    final dot = deck.indexOf(key);
+    final dots = deck.length;
+
+    // ① 나만의 색 (나오는 조건은 예전 그대로)
+    if (key == 'color') return _buildColorTip(isDark, dot: dot, dots: dots);
+
+    // ② 이런 방송은 어때요?
+    if (key == 'radio' && pick != null) {
+      final s = pick;
+      _askProgram(radio, s);
+      final p = radio.currentProgramFor(s.name);
+      final prog = (radio.nowPlayingFor(s.name) ?? p?['program_title'] ?? p?['title'] ?? '').toString().trim();
+      final h = now.hour;
+      final mood = (h >= 5 && h < 11)
+          ? '아침을 여는 방송이에요'
+          : (h >= 11 && h < 17)
+              ? '낮에 듣기 좋은 방송이에요'
+              : (h >= 17 && h < 22)
+                  ? '저녁에 듣기 좋은 방송이에요'
+                  : '밤에 듣기 좋은 잔잔한 방송이에요';
+      return _homeInfoCard(
+        isDark: isDark,
+        lead: _LiveBadge(hole: card),
+        label: '이런 방송은 어때요?',
+        title: s.name,
+        sub: prog.isNotEmpty ? '지금 · $prog' : mood,
+        action: '듣기',
+        onAction: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => RadioPlayerScreen(station: s, openedFromList: false)),
+        ),
+        onClose: () => _closeHomeCard('radio'),
+        dot: dot,
+        dots: dots,
+      );
+    }
+
+    // ③ 오늘의 팁 (하루에 하나씩)
+    final i = day % _mainTips.length;
+    final t = _mainTips[i];
+    return _homeInfoCard(
+      isDark: isDark,
+      lead: _TipBadge(hole: card),
+      label: isKo ? '오늘의 팁' : 'TIP',
+      title: isKo ? t.$1 : t.$3,
+      sub: isKo ? t.$2 : t.$4,
+      action: i == 1 ? (isKo ? '설정' : 'Set') : null,
+      onAction: i == 1
+          ? () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AlarmScreen()))
+          : null,
+      onClose: () => _closeHomeCard('tip'),
+      dot: dot,
+      dots: dots,
+    );
+  }
+
+  /// 카드 오른쪽 위 작은 ✕ (보이는 건 작게, 누르는 자리는 넉넉하게) — 알림 카드 모두 같은 모양
+  Widget _cardCloseX(Color color, VoidCallback onTap) => GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: SizedBox(
+          width: 32,
+          height: 32,
+          child: Icon(Icons.close_rounded, size: 15, color: color),
+        ),
+      );
+
+  /// 카드 아래 작은 점 (지금 카드는 길쭉하게)
+  Widget _cardDots(int index, int count, Color on, Color off) => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (var k = 0; k < count; k++) ...[
+            if (k > 0) const SizedBox(width: 4),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              width: k == index ? 12 : 5,
+              height: 5,
+              decoration: BoxDecoration(
+                color: k == index ? on : off,
+                borderRadius: BorderRadius.circular(3),
+              ),
+            ),
+          ],
+        ],
+      );
+
+  /// 메인 홈 카드 모양 (✕는 오른쪽 위, 점은 가운데 아래)
+  Widget _homeInfoCard({
+    required bool isDark,
+    required Widget lead,
+    required String label,
+    required String title,
+    required String sub,
+    String? action,
+    VoidCallback? onAction,
+    VoidCallback? onClose,
+    int dot = 0,
+    int dots = 1,
+  }) {
+    final card = isDark ? const Color(0xFF32302C) : const Color(0xFFFBF8F2);
     final ink = isDark ? const Color(0xFFF4EFE5) : const Color(0xFF17140F);
-    final sub = isDark ? const Color(0xFFA29A8B) : const Color(0xFF746C60);
+    final subC = isDark ? const Color(0xFFA29A8B) : const Color(0xFF746C60);
     final point = context.watch<ThemeProvider>().primaryColor;
     final accent = _readable(
         point.value == 0xFF2589E8
             ? (isDark ? const Color(0xFF6FB0FF) : const Color(0xFF2F7DE8))
             : point,
         isDark);
+    final showDots = dots > 1;
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.fromLTRB(14, 10, 4, 10),
       decoration: BoxDecoration(
         color: card,
         borderRadius: BorderRadius.circular(10),
@@ -407,60 +588,96 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      child: Row(
+      // ✕·점이 카드 안쪽에 있어야 눌려서: 여백은 글자 줄에만 주고 ✕·점은 카드 모서리 기준으로
+      child: Stack(
         children: [
-          // 색 고리 (강조 색상 10가지)
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 6, offset: const Offset(0, 2))],
-            ),
-            child: _SpinRing(hole: card),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(isKo ? '강조 색상' : 'Accent color',
-                    maxLines: 1,
-                    style: TextStyle(color: accent, fontSize: 10, height: 1.1, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
-                const SizedBox(height: 2),
-                Text(isKo ? '나만의 색으로 꾸며보세요' : 'Make it your color',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: ink, fontSize: 13.5, height: 1.15, fontWeight: FontWeight.w700)),
-                const SizedBox(height: 3),
-                Text(isKo ? '숲 · 노을 · 벚꽃 등 10가지 색' : '10 colors like Forest, Sunset, Blossom',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: sub, fontSize: 11.5, height: 1.15)),
+          Padding(
+            padding: EdgeInsets.fromLTRB(14, 14, onClose == null ? 14 : 34, showDots ? 18 : 14),
+            child: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 6, offset: const Offset(0, 2))],
+                ),
+                child: lead,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: accent, fontSize: 10, height: 1.1, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
+                    const SizedBox(height: 2),
+                    Text(title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: ink, fontSize: 13.5, height: 1.15, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 3),
+                    Text(sub,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: subC, fontSize: 11.5, height: 1.15)),
+                  ],
+                ),
+              ),
+              if (action != null && onAction != null) ...[
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    onAction();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                    decoration: BoxDecoration(color: ink, borderRadius: BorderRadius.circular(14)),
+                    child: Text(action, style: TextStyle(color: card, fontSize: 12.5, fontWeight: FontWeight.w700)),
+                  ),
+                ),
               ],
+            ],
+          ),
+          ),
+          // ✕ 오른쪽 위 모서리
+          if (onClose != null)
+            Positioned(top: 2, right: 2, child: _cardCloseX(subC, onClose)),
+          // 점: 카드 아래 가운데
+          if (showDots)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 6,
+              child: Center(child: _cardDots(dot, dots, accent, subC.withOpacity(0.35))),
             ),
-          ),
-          const SizedBox(width: 6),
-          GestureDetector(
-            onTap: () {
-              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              _openColorSheet();
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-              decoration: BoxDecoration(color: ink, borderRadius: BorderRadius.circular(14)),
-              child: Text(isKo ? '꾸미기' : 'Try it', style: TextStyle(color: card, fontSize: 12.5, fontWeight: FontWeight.w700)),
-            ),
-          ),
-          IconButton(
-            onPressed: _finishColorTip,
-            icon: Icon(Icons.close_rounded, color: sub, size: 17),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 34, minHeight: 34),
-          ),
         ],
       ),
+    );
+  }
+
+  /// 나만의 색 카드 (메인 홈 카드와 같은 모양 · 색 고리 + [꾸미기])
+  Widget _buildColorTip(bool isDark, {int dot = 0, int dots = 1}) {
+    final isKo = Localizations.localeOf(context).languageCode == 'ko';
+    final card = isDark ? const Color(0xFF32302C) : const Color(0xFFFBF8F2);
+    return _homeInfoCard(
+      isDark: isDark,
+      lead: _SpinRing(hole: card),
+      label: isKo ? '강조 색상' : 'Accent color',
+      title: isKo ? '나만의 색으로 꾸며보세요' : 'Make it your color',
+      sub: isKo ? '숲 · 노을 · 벚꽃 등 10가지 색' : '10 colors like Forest, Sunset, Blossom',
+      action: isKo ? '꾸미기' : 'Try it',
+      onAction: _openColorSheet,
+      onClose: () {
+        _finishColorTip();
+        _closeHomeCard('color');
+      },
+      dot: dot,
+      dots: dots,
     );
   }
 
@@ -592,6 +809,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadRecentSearches();
+    _loadHomeClosed(); // 메인 홈 카드: 오늘 닫은 것
+    MainCardPref.load().then((_) => _onMainCardPref());
+    MainCardPref.on.addListener(_onMainCardPref);
+    MainCardPref.reopened.addListener(_onMainCardReopen);
     WidgetGo.target.addListener(_onWidgetGo); // 앱이 켜져 있을 때 위젯 바로가기
     HomeScreen.goHome.addListener(_onGoHome); // 집 아이콘 → 메인 홈
     _songListController.addListener(_updateCurrentGroup); // 스크롤하면 오른쪽 초성 파랗게 따라감
@@ -763,6 +984,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     WidgetGo.target.removeListener(_onWidgetGo);
     HomeScreen.goHome.removeListener(_onGoHome);
+    MainCardPref.on.removeListener(_onMainCardPref);
+    MainCardPref.reopened.removeListener(_onMainCardReopen);
     _searchController.dispose();
     _recentSaveTimer?.cancel();
     _songListController.dispose();
@@ -1918,7 +2141,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (_showColorTip) _buildColorTip(isDarkMode),
+          _buildHomeCard(isDarkMode), // 나만의 색 → 지금 방송 → 오늘의 팁
           Row(
             children: [
               Icon(Icons.tune_rounded, size: 18, color: baseColor.withOpacity(0.7)),
@@ -2847,9 +3070,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       // 모서리·그림자 없이 양옆 끝까지
       margin: const EdgeInsets.only(bottom: 4),
-      padding: const EdgeInsets.fromLTRB(20, 10, 8, 10),
       decoration: BoxDecoration(color: card),
-      child: AnimatedOpacity(
+      // ✕가 카드 안쪽에 있어야 눌려서: 여백은 글자 줄에만
+      child: Stack(
+        children: [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(20, 10, 34, 10),
+        child: AnimatedOpacity(
         opacity: ready ? 1 : 0,
         duration: const Duration(milliseconds: 250),
         child: Row(
@@ -2905,15 +3132,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ],
-          // ✕ = 오늘만 숨기기
-          IconButton(
-            onPressed: _closeDailyCard,
-            icon: Icon(Icons.close_rounded, color: sub, size: 17),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 34, minHeight: 34),
-          ),
         ],
       ),
+      ),
+      ),
+          // ✕ = 오늘만 숨기기 (오른쪽 위 모서리 · 메인 홈 카드와 같은 모양)
+          Positioned(top: 0, right: 2, child: _cardCloseX(sub, _closeDailyCard)),
+        ],
       ),
     );
   }
@@ -4009,4 +4234,114 @@ class _SpinRingState extends State<_SpinRing> with SingleTickerProviderStateMixi
       child: CustomPaint(painter: _ColorRingPainter(hole: widget.hole)),
     );
   }
+}
+
+// ───── 메인 홈 카드 왼쪽 동그라미 그림 ─────
+
+/// 지금 방송 중: 색 고리 + 빨간 점에서 전파가 퍼짐
+class _LiveBadge extends StatefulWidget {
+  final Color hole;
+  const _LiveBadge({required this.hole});
+
+  @override
+  State<_LiveBadge> createState() => _LiveBadgeState();
+}
+
+class _LiveBadgeState extends State<_LiveBadge> with SingleTickerProviderStateMixin {
+  late final AnimationController _c =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 2000))..repeat();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _c,
+      builder: (_, __) => CustomPaint(painter: _LivePainter(hole: widget.hole, t: _c.value)),
+    );
+  }
+}
+
+class _LivePainter extends CustomPainter {
+  final Color hole;
+  final double t;
+  const _LivePainter({required this.hole, required this.t});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final r = size.shortestSide / 2;
+    final c = size.center(Offset.zero);
+    final rect = Rect.fromCircle(center: c, radius: r);
+    canvas.drawCircle(
+        c,
+        r,
+        Paint()
+          ..shader = const SweepGradient(colors: [
+            Color(0xFFE07A4F),
+            Color(0xFFD46A8C),
+            Color(0xFF8A6FD1),
+            Color(0xFF3F51A3),
+            Color(0xFF1F9AA0),
+            Color(0xFFE07A4F),
+          ]).createShader(rect));
+    canvas.drawCircle(c, r - 4, Paint()..color = hole);
+    const red = Color(0xFFFF6B5E);
+    for (final d in [0.0, 0.5]) {
+      final k = (t + d) % 1.0;
+      canvas.drawCircle(
+          c,
+          4 + k * 9,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2
+            ..color = red.withOpacity((1 - k) * 0.8));
+    }
+    canvas.drawCircle(c, 4, Paint()..color = red);
+  }
+
+  @override
+  bool shouldRepaint(covariant _LivePainter old) => old.t != t || old.hole != hole;
+}
+
+/// 오늘의 팁: 네 가지 색 고리 + 작은 네모 넷
+class _TipBadge extends StatelessWidget {
+  final Color hole;
+  const _TipBadge({required this.hole});
+
+  @override
+  Widget build(BuildContext context) => CustomPaint(painter: _TipPainter(hole: hole));
+}
+
+class _TipPainter extends CustomPainter {
+  final Color hole;
+  const _TipPainter({required this.hole});
+
+  static const _colors = [Color(0xFF3E8E6A), Color(0xFFC4962C), Color(0xFFE07A4F), Color(0xFF2589E8)];
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final r = size.shortestSide / 2;
+    final c = size.center(Offset.zero);
+    final rect = Rect.fromCircle(center: c, radius: r);
+    const sweep = math.pi / 2;
+    for (var i = 0; i < 4; i++) {
+      canvas.drawArc(rect, -math.pi / 2 + i * sweep, sweep + 0.01, true, Paint()..color = _colors[i]);
+    }
+    canvas.drawCircle(c, r - 4, Paint()..color = hole);
+    const s = 7.0, g = 2.0;
+    for (var i = 0; i < 4; i++) {
+      final x = c.dx - s - g / 2 + (i % 2) * (s + g);
+      final y = c.dy - s - g / 2 + (i ~/ 2) * (s + g);
+      canvas.drawRRect(
+          RRect.fromRectAndRadius(Rect.fromLTWH(x, y, s, s), const Radius.circular(2)),
+          Paint()..color = _colors[i]);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _TipPainter old) => old.hole != hole;
 }

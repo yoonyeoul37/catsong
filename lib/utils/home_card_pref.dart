@@ -45,3 +45,32 @@ class HomeCardPref {
     return false;
   }
 }
+
+/// 메인 홈 맨 위 카드 (나만의 색·라디오·팁) 켜기/끄기 — 홈 화면과 설정 화면이 같이 씀
+class MainCardPref {
+  static final on = ValueNotifier<bool>(true);
+  static final reopened = ValueNotifier<int>(0); // 다시 켤 때마다 +1 → 홈이 닫은 카드 다시 불러오기
+  static bool _loaded = false;
+
+  static Future<void> load() async {
+    if (_loaded) return;
+    _loaded = true;
+    final p = await SharedPreferences.getInstance();
+    on.value = p.getBool('mainCardOn') ?? true;
+  }
+
+  static Future<void> setOn(bool v) async {
+    on.value = v;
+    final p = await SharedPreferences.getInstance();
+    await p.setBool('mainCardOn', v);
+    if (v) {
+      // 다시 켜면 오늘 닫은 카드와 나만의 색 카드도 다시 나오게
+      await p.remove('main_card_closed_day');
+      await p.remove('main_card_closed');
+      await p.remove('color_tip_hide_until');
+      await p.remove('color_tip_closed');
+      await p.remove('color_tip_done');
+      reopened.value++;
+    }
+  }
+}

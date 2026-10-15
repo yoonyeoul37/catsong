@@ -245,12 +245,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
       final i = koreanStations.indexWhere((k) => k.name == r.name);
       if (i >= 0) return i;
     }
-    const defaults = [
-      ['KBS 제1라디오', 'MBC 표준FM', 'SBS 러브FM'], // 아침: 뉴스·아침 방송
-      ['MBC FM4U', 'KBS Cool FM', 'SBS 파워FM'], // 낮: 가요
-      ['SBS 파워FM', 'KBS 해피FM', 'MBC FM4U'], // 저녁: 퇴근길 음악
-      ['KBS Classic FM', 'CBS 음악FM', 'MBC 올댓뮤직'], // 밤: 잔잔한 음악
-    ];
+    const defaults = niceDefaults;
     for (final n in defaults[s]) {
       if (n == cur) continue;
       final i = koreanStations.indexWhere((k) => k.name == n);
@@ -1113,6 +1108,33 @@ class _StationTile extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 시간대별 '지금 듣기 좋은' 기본 방송 (아침·낮·저녁·밤) — 라디오 목록 맨 위 카드와 메인 홈 카드가 같이 씀
+const niceDefaults = [
+  ['KBS 제1라디오', 'MBC 표준FM', 'SBS 러브FM'], // 아침: 뉴스·아침 방송
+  ['MBC FM4U', 'KBS Cool FM', 'SBS 파워FM'], // 낮: 가요
+  ['SBS 파워FM', 'KBS 해피FM', 'MBC FM4U'], // 저녁: 퇴근길 음악
+  ['KBS Classic FM', 'CBS 음악FM', 'MBC 올댓뮤직'], // 밤: 잔잔한 음악
+];
+
+/// 메인 홈 카드용: 안 들어 본 국내 방송 하나 (지금 시간대 추천 → 다른 시간대 추천 → 전체 목록 순서)
+/// skip: 최근에 들은 방송·지금 듣는 방송 / 모두 들어 봤으면 null
+RadioStation? niceKoreanStationNow({Set<String> skip = const {}, int day = 0}) {
+  final h = DateTime.now().hour;
+  final s = (h >= 5 && h < 11) ? 0 : (h >= 11 && h < 17) ? 1 : (h >= 17 && h < 22) ? 2 : 3;
+  final names = <String>[
+    ...niceDefaults[s],
+    for (var k = 1; k < 4; k++) ...niceDefaults[(s + k) % 4],
+  ];
+  for (final n in names) {
+    if (skip.contains(n)) continue;
+    final i = koreanStations.indexWhere((k) => k.name == n);
+    if (i >= 0) return _RadioKoreaScreenState._toRadioStation(koreanStations[i]);
+  }
+  final rest = koreanStations.where((k) => !skip.contains(k.name)).toList();
+  if (rest.isEmpty) return null;
+  return _RadioKoreaScreenState._toRadioStation(rest[day % rest.length]);
 }
 
 class _KStation {

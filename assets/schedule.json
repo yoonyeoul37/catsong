@@ -3998,7 +3998,8 @@
       {
         "title": "우리들의 아침, 운성입니다",
         "start": "01:25",
-        "end": "01:45"
+        "end": "01:45",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
       },
       {
         "title": "혜주스님의 생명을 위한 명상",
@@ -4045,7 +4046,8 @@
       {
         "title": "우리들의 아침, 운성입니다",
         "start": "06:40",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
       },
       {
         "title": "BBS 뉴스",
@@ -4188,7 +4190,8 @@
       {
         "title": "우리들의 아침, 운성입니다",
         "start": "01:25",
-        "end": "01:45"
+        "end": "01:45",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
       },
       {
         "title": "혜주스님의 생명을 위한 명상",
@@ -4235,7 +4238,8 @@
       {
         "title": "우리들의 아침, 운성입니다",
         "start": "06:40",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
       },
       {
         "title": "대행스님의 행복한 삶을 위한 법문",
@@ -4365,7 +4369,8 @@
       {
         "title": "우리들의 아침, 운성입니다",
         "start": "01:25",
-        "end": "01:45"
+        "end": "01:45",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
       },
       {
         "title": "혜주스님의 생명을 위한 명상",
@@ -4412,7 +4417,8 @@
       {
         "title": "우리들의 아침, 운성입니다",
         "start": "06:40",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
       },
       {
         "title": "BBS초대석",
@@ -4548,7 +4554,8 @@
       {
         "title": "우리들의 아침, 운성입니다",
         "start": "01:25",
-        "end": "01:45"
+        "end": "01:45",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
       },
       {
         "title": "혜주스님의 생명을 위한 명상",
@@ -4595,7 +4602,8 @@
       {
         "title": "우리들의 아침, 운성입니다",
         "start": "06:40",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
       },
       {
         "title": "BBS 뉴스",
@@ -4714,6 +4722,598 @@
         "title": "5분 명상",
         "start": "23:55",
         "end": "00:00"
+      }
+    ]
+  },
+  "CPBC 가톨릭": {
+    "friday": [
+      {
+        "title": "라디오 고해소 비밀번호 1053",
+        "start": "00:00",
+        "end": "01:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2025/07/09/JZH1752026615052-1280-720.jpg"
+      },
+      {
+        "title": "그대에게 평화를 김슬애입니다(재)",
+        "start": "01:00",
+        "end": "01:45",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2026/04/26/kix1777202951678-1280-720.jpg"
+      },
+      {
+        "title": "묵주기도",
+        "start": "01:45",
+        "end": "02:00",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/S9l1784849297482.jpg"
+      },
+      {
+        "title": "매일미사",
+        "start": "05:00",
+        "end": "06:00",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/HUH1784849042791.jpg"
+      },
+      {
+        "title": "삼종기도",
+        "start": "06:00",
+        "end": "06:03",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/EAt1784849082479.jpg"
+      },
+      {
+        "title": "그대에게 평화를 김슬애입니다",
+        "start": "06:03",
+        "end": "06:50",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2026/04/26/kix1777202951678-1280-720.jpg"
+      },
+      {
+        "title": "오늘의 강론",
+        "start": "06:50",
+        "end": "07:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/11/16/N8W1668579687696-1280-720.jpg"
+      },
+      {
+        "title": "오수진의 행복을 여는 아침",
+        "start": "07:00",
+        "end": "09:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2023/10/29/jHV1698553416330-1280-720.png"
+      },
+      {
+        "title": "참 좋은 오늘, 은빛수녀입니다",
+        "start": "09:00",
+        "end": "10:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/04/28/J5X1714291774256-1280-720.jpg"
+      },
+      {
+        "title": "장일범의 유쾌한 클래식",
+        "start": "10:00",
+        "end": "12:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/12/02/uZo1669945230080-1280-720.jpg"
+      },
+      {
+        "title": "cpbc 정오종합뉴스",
+        "start": "12:00",
+        "end": "12:15",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/HHq1784849801840.jpg"
+      },
+      {
+        "title": "신부님 신부님 우리 신부님",
+        "start": "12:15",
+        "end": "14:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2025/10/27/84N1761531951294-1280-720.jpg"
+      },
+      {
+        "title": "2시N뮤직 김빛나입니다",
+        "start": "14:00",
+        "end": "15:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/10/27/8x41730007010053-1280-720.jpg"
+      },
+      {
+        "title": "2시N뮤직 김빛나입니다",
+        "start": "15:00",
+        "end": "16:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/10/27/8x41730007010053-1280-720.jpg"
+      },
+      {
+        "title": "기도의 오솔길 전영금 수녀입니다",
+        "start": "16:00",
+        "end": "16:50",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/10/27/7yh1730003113408-1280-720.jpg"
+      },
+      {
+        "title": "cpbc오디오드라마, 성인이 된 미디어 사도 카를로 아쿠티스",
+        "start": "16:50",
+        "end": "17:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2026/09/30/ogt1790730630426-1280-720.jpg"
+      },
+      {
+        "title": "신나라의 달콤한 5시",
+        "start": "17:00",
+        "end": "18:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/10/28/FMZ1730079144695-1280-720.jpg"
+      },
+      {
+        "title": "평화의 기도",
+        "start": "18:00",
+        "end": "18:03",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/PzD1784849189755.jpg"
+      },
+      {
+        "title": "김준일의 시사천국",
+        "start": "18:03",
+        "end": "19:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2026/04/24/N6F1777029215764-1280-720.jpg"
+      },
+      {
+        "title": "음악이 있는 저녁풍경 김형중입니다",
+        "start": "19:00",
+        "end": "21:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/10/29/Uog1730160581015-1280-720.jpg"
+      },
+      {
+        "title": "한반도 평화를 위한 기도",
+        "start": "21:00",
+        "end": "21:02",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/Nnm1784849237369.jpg"
+      },
+      {
+        "title": "당신을 위한 BGM",
+        "start": "21:02",
+        "end": "23:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2023/12/08/tV41702021948899-1280-720.png"
+      },
+      {
+        "title": "기도의 오솔길 전영금 수녀입니다(재)",
+        "start": "23:00",
+        "end": "23:50",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/10/27/7yh1730003113408-1280-720.jpg"
+      },
+      {
+        "title": "오늘의 강론(재)",
+        "start": "23:50",
+        "end": "00:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/11/16/N8W1668579687696-1280-720.jpg"
+      }
+    ],
+    "saturday": [
+      {
+        "title": "라디오 고해소 비밀번호 1053",
+        "start": "00:00",
+        "end": "01:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2025/07/09/JZH1752026615052-1280-720.jpg"
+      },
+      {
+        "title": "그대에게 평화를 김슬애입니다(재)",
+        "start": "01:03",
+        "end": "01:45",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2026/04/26/kix1777202951678-1280-720.jpg"
+      },
+      {
+        "title": "묵주기도",
+        "start": "01:45",
+        "end": "02:00",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/S9l1784849297482.jpg"
+      },
+      {
+        "title": "매일미사",
+        "start": "05:00",
+        "end": "06:00",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/HUH1784849042791.jpg"
+      },
+      {
+        "title": "삼종기도",
+        "start": "06:00",
+        "end": "06:03",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/EAt1784849082479.jpg"
+      },
+      {
+        "title": "그대에게 평화를 김슬애입니다",
+        "start": "06:03",
+        "end": "06:50",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2026/04/26/kix1777202951678-1280-720.jpg"
+      },
+      {
+        "title": "오늘의 강론",
+        "start": "06:50",
+        "end": "07:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/11/16/N8W1668579687696-1280-720.jpg"
+      },
+      {
+        "title": "오수진의 행복을 여는 아침",
+        "start": "07:00",
+        "end": "09:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2023/10/29/jHV1698553416330-1280-720.png"
+      },
+      {
+        "title": "참 좋은 오늘, 은빛수녀입니다",
+        "start": "09:00",
+        "end": "10:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/04/28/J5X1714291774256-1280-720.jpg"
+      },
+      {
+        "title": "장일범의 유쾌한 클래식",
+        "start": "10:00",
+        "end": "12:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/12/02/uZo1669945230080-1280-720.jpg"
+      },
+      {
+        "title": "이인혜의 아름다운 사랑 아름다운 나눔",
+        "start": "12:00",
+        "end": "13:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/12/27/vBT1672089359049-1280-720.jpg"
+      },
+      {
+        "title": "토요특집  신부들의 수다",
+        "start": "13:00",
+        "end": "14:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/12/30/kSP1672362835879-1280-720.jpg"
+      },
+      {
+        "title": "ONSO LIVE in 명동 with 2시N뮤직",
+        "start": "14:00",
+        "end": "16:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/10/27/8x41730007010053-1280-720.jpg"
+      },
+      {
+        "title": "기도의 오솔길 이헌준 신부입니다",
+        "start": "16:00",
+        "end": "16:50",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2025/10/27/6pc1761530599737-1280-720.jpg"
+      },
+      {
+        "title": "오늘의 강론(재)",
+        "start": "16:50",
+        "end": "17:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/11/16/N8W1668579687696-1280-720.jpg"
+      },
+      {
+        "title": "cpbc오디오드라마, 성인이 된 미디어 사도 카를로 아쿠티스(재)",
+        "start": "17:00",
+        "end": "18:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2026/09/30/ogt1790730630426-1280-720.jpg"
+      },
+      {
+        "title": "평화의 기도",
+        "start": "18:00",
+        "end": "18:03",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/PzD1784849189755.jpg"
+      },
+      {
+        "title": "이웃집 라디오",
+        "start": "18:03",
+        "end": "19:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2025/10/26/z3J1761455826846-1280-720.jpg"
+      },
+      {
+        "title": "성기완의 명동연가",
+        "start": "19:00",
+        "end": "21:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/12/29/zcA1672300316748-1280-720.jpg"
+      },
+      {
+        "title": "한반도 평화를 위한 기도",
+        "start": "21:00",
+        "end": "21:02",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/Nnm1784849237369.jpg"
+      },
+      {
+        "title": "당신을 위한 BGM",
+        "start": "21:02",
+        "end": "23:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2023/12/08/tV41702021948899-1280-720.png"
+      },
+      {
+        "title": "기도의 오솔길 이헌준 신부입니다(재)",
+        "start": "23:00",
+        "end": "23:50",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2025/10/27/6pc1761530599737-1280-720.jpg"
+      },
+      {
+        "title": "오늘의 강론(재)",
+        "start": "23:50",
+        "end": "00:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/11/16/N8W1668579687696-1280-720.jpg"
+      }
+    ],
+    "sunday": [
+      {
+        "title": "라디오 고해소 비밀번호 1053",
+        "start": "00:00",
+        "end": "01:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2025/07/09/JZH1752026615052-1280-720.jpg"
+      },
+      {
+        "title": "그대에게 평화를 김슬애입니다(재)",
+        "start": "01:00",
+        "end": "01:45",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2026/04/26/kix1777202951678-1280-720.jpg"
+      },
+      {
+        "title": "묵주기도",
+        "start": "01:45",
+        "end": "02:00",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/S9l1784849297482.jpg"
+      },
+      {
+        "title": "매일미사",
+        "start": "05:00",
+        "end": "06:00",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/HUH1784849042791.jpg"
+      },
+      {
+        "title": "삼종기도",
+        "start": "06:00",
+        "end": "06:03",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/EAt1784849082479.jpg"
+      },
+      {
+        "title": "그대에게 평화를 김슬애입니다",
+        "start": "06:03",
+        "end": "06:50",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2026/04/26/kix1777202951678-1280-720.jpg"
+      },
+      {
+        "title": "공동의 집, 지구",
+        "start": "06:50",
+        "end": "07:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2023/10/31/kDr1698738361530-1280-720.png"
+      },
+      {
+        "title": "박동호 신부의 사회교리",
+        "start": "07:00",
+        "end": "08:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2023/10/31/2Am1698737652454-1280-720.png"
+      },
+      {
+        "title": "이 주의 책",
+        "start": "08:00",
+        "end": "09:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/04/28/yBY1714292329296-1280-720.jpg"
+      },
+      {
+        "title": "참 좋은 오늘, 은빛수녀입니다",
+        "start": "09:00",
+        "end": "10:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/04/28/J5X1714291774256-1280-720.jpg"
+      },
+      {
+        "title": "이준형의 비욘드클래식",
+        "start": "10:00",
+        "end": "12:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2023/12/08/d4S1702021469564-1280-720.png"
+      },
+      {
+        "title": "이인혜의 아름다운 사랑 아름다운 나눔",
+        "start": "12:00",
+        "end": "13:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/12/27/vBT1672089359049-1280-720.jpg"
+      },
+      {
+        "title": "성경약방",
+        "start": "13:00",
+        "end": "14:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/11/06/NxR1730872332504-1280-720.jpg"
+      },
+      {
+        "title": "오석준 신부의 생명은 사랑입니다",
+        "start": "14:00",
+        "end": "15:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2025/12/03/Gfe1764736607297-1280-720.jpg"
+      },
+      {
+        "title": "군종의 시간",
+        "start": "15:00",
+        "end": "16:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/12/13/09V1670923267192-1280-720.jpg"
+      },
+      {
+        "title": "기도의 오솔길 이헌준 신부입니다",
+        "start": "16:00",
+        "end": "16:50",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2025/10/27/6pc1761530599737-1280-720.jpg"
+      },
+      {
+        "title": "공동의 집, 지구(재)",
+        "start": "16:50",
+        "end": "17:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2023/10/31/kDr1698738361530-1280-720.png"
+      },
+      {
+        "title": "최대환 신부의 음악서재",
+        "start": "17:00",
+        "end": "18:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/12/19/lom1671434105978-1280-720.jpg"
+      },
+      {
+        "title": "평화의 기도",
+        "start": "18:00",
+        "end": "18:03",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/PzD1784849189755.jpg"
+      },
+      {
+        "title": "최대환 신부의 음악서재",
+        "start": "18:03",
+        "end": "19:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/12/19/lom1671434105978-1280-720.jpg"
+      },
+      {
+        "title": "성기완의 명동연가",
+        "start": "19:00",
+        "end": "21:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/12/29/zcA1672300316748-1280-720.jpg"
+      },
+      {
+        "title": "한반도 평화를 위한 기도",
+        "start": "21:00",
+        "end": "21:02",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/Nnm1784849237369.jpg"
+      },
+      {
+        "title": "이준형의 비욘드클래식(재)",
+        "start": "21:02",
+        "end": "23:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2023/12/08/d4S1702021469564-1280-720.png"
+      },
+      {
+        "title": "기도의 오솔길 이헌준 신부입니다(재)",
+        "start": "23:00",
+        "end": "23:50",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2025/10/27/6pc1761530599737-1280-720.jpg"
+      },
+      {
+        "title": "공동의 집, 지구(재)",
+        "start": "23:50",
+        "end": "00:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2023/10/31/kDr1698738361530-1280-720.png"
+      }
+    ],
+    "weekday": [
+      {
+        "title": "이 주의 책(재)",
+        "start": "00:00",
+        "end": "01:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/04/28/yBY1714292329296-1280-720.jpg"
+      },
+      {
+        "title": "그대에게 평화를 김슬애입니다(재)",
+        "start": "01:00",
+        "end": "01:45",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2026/04/26/kix1777202951678-1280-720.jpg"
+      },
+      {
+        "title": "묵주기도",
+        "start": "01:45",
+        "end": "02:00",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/S9l1784849297482.jpg"
+      },
+      {
+        "title": "매일미사",
+        "start": "05:00",
+        "end": "06:00",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/HUH1784849042791.jpg"
+      },
+      {
+        "title": "삼종기도",
+        "start": "06:00",
+        "end": "06:03",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/EAt1784849082479.jpg"
+      },
+      {
+        "title": "그대에게 평화를 김슬애입니다",
+        "start": "06:03",
+        "end": "06:50",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2026/04/26/kix1777202951678-1280-720.jpg"
+      },
+      {
+        "title": "오늘의 강론",
+        "start": "06:50",
+        "end": "07:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/11/16/N8W1668579687696-1280-720.jpg"
+      },
+      {
+        "title": "오수진의 행복을 여는 아침",
+        "start": "07:00",
+        "end": "09:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2023/10/29/jHV1698553416330-1280-720.png"
+      },
+      {
+        "title": "참 좋은 오늘, 은빛수녀입니다",
+        "start": "09:00",
+        "end": "10:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/04/28/J5X1714291774256-1280-720.jpg"
+      },
+      {
+        "title": "장일범의 유쾌한 클래식",
+        "start": "10:00",
+        "end": "11:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/12/02/uZo1669945230080-1280-720.jpg"
+      },
+      {
+        "title": "장일범의 유쾌한 클래식",
+        "start": "11:00",
+        "end": "12:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/12/02/uZo1669945230080-1280-720.jpg"
+      },
+      {
+        "title": "cpbc 정오종합뉴스",
+        "start": "12:00",
+        "end": "12:15",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/HHq1784849801840.jpg"
+      },
+      {
+        "title": "신부님 신부님 우리 신부님",
+        "start": "12:15",
+        "end": "13:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2025/10/27/84N1761531951294-1280-720.jpg"
+      },
+      {
+        "title": "신부님 신부님 우리 신부님",
+        "start": "13:00",
+        "end": "14:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2025/10/27/84N1761531951294-1280-720.jpg"
+      },
+      {
+        "title": "2시N뮤직 김빛나입니다",
+        "start": "14:00",
+        "end": "16:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/10/27/8x41730007010053-1280-720.jpg"
+      },
+      {
+        "title": "기도의 오솔길 전영금 수녀입니다",
+        "start": "16:00",
+        "end": "16:50",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/10/27/7yh1730003113408-1280-720.jpg"
+      },
+      {
+        "title": "cpbc오디오드라마, 성인이 된 미디어 사도 카를로 아쿠티스",
+        "start": "16:50",
+        "end": "17:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2026/09/30/ogt1790730630426-1280-720.jpg"
+      },
+      {
+        "title": "신나라의 달콤한 5시",
+        "start": "17:00",
+        "end": "18:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/10/28/FMZ1730079144695-1280-720.jpg"
+      },
+      {
+        "title": "평화의 기도",
+        "start": "18:00",
+        "end": "18:03",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/PzD1784849189755.jpg"
+      },
+      {
+        "title": "김준일의 시사천국",
+        "start": "18:03",
+        "end": "19:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2026/04/24/N6F1777029215764-1280-720.jpg"
+      },
+      {
+        "title": "음악이 있는 저녁풍경 김형중입니다",
+        "start": "19:00",
+        "end": "21:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/10/29/Uog1730160581015-1280-720.jpg"
+      },
+      {
+        "title": "한반도 평화를 위한 기도",
+        "start": "21:00",
+        "end": "21:02",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/Nnm1784849237369.jpg"
+      },
+      {
+        "title": "당신을 위한 BGM",
+        "start": "21:02",
+        "end": "23:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2023/12/08/tV41702021948899-1280-720.png"
+      },
+      {
+        "title": "기도의 오솔길 전영금 수녀입니다(재)",
+        "start": "23:00",
+        "end": "23:50",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/10/27/7yh1730003113408-1280-720.jpg"
+      },
+      {
+        "title": "오늘의 강론(재)",
+        "start": "23:50",
+        "end": "00:00",
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2022/11/16/N8W1668579687696-1280-720.jpg"
       }
     ]
   }

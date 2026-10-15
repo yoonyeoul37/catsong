@@ -1,0 +1,41 @@
+[FM] 상태 200 · 글자 수 2 · 편성 0개 · 지금: 
+[RADIO] 상태 200 · 글자 수 40914 · 편성 32개 · 지금: Start English(영어회화 레벨1)
+[EBSFM] 상태 200 · 글자 수 2 · 편성 0개 · 지금: 
+[RFM] 상태 200 · 글자 수 2 · 편성 0개 · 지금: 
+[EBSRADIO] 상태 200 · 글자 수 2 · 편성 0개 · 지금: 
+[FMRADIO] 상태 200 · 글자 수 2 · 편성 0개 · 지금: 
+[IRADIO] 상태 200 · 글자 수 151025 · 편성 120개 · 지금: 김대균 토익킹
+============================================================
+https://www.ebs.co.kr/onair → 상태 200 · 글자 수 93232
+  채널 후보 TV
+  주소 후보 /onair/scheduleNew
+  주소 후보 /schedule?channelCd=EBSE&amp;onor=EBSE
+  주소 후보 /schedule?channelCd=EBSU&amp;onor=EBSU
+  주소 후보 /schedule?channelCd=IRADIO&amp;onor=IRADIO
+  주소 후보 /schedule?channelCd=PLUS1&amp;onor=PLUS1
+  주소 후보 /schedule?channelCd=PLUS2&amp;onor=PLUS2
+  주소 후보 /schedule?channelCd=RADIO&amp;onor=RADIO
+  주소 후보 /schedule?channelCd=tv&amp;onor=tv
+  주소 후보 /schedule?channelCd=tv2&amp;onor=tv2
+  주소 후보 https://static.ebs.co.kr/www/common/img/category/tv/nav_top_schedule.gif
+  주소 후보 https://www.ebs.co.kr/schedule
+  주소 후보 https://www.ebs.co.kr/schedule/channelGuide
+  주소 후보 https://www.ebs.co.kr/schedule?channelCd=tv&onor=tv
+============================================================
+https://www.ebs.co.kr/onair/radio → 상태 200 · 글자 수 11514
+============================================================
+https://www.ebs.co.kr/radio/home → 상태 200 · 글자 수 131314
+  채널 후보 RADIO
+  주소 후보 /onair/scheduleNew.json
+  주소 후보 /schedule?channelCd=EBSE&amp;onor=EBSE
+  주소 후보 /schedule?channelCd=EBSU&amp;onor=EBSU
+  주소 후보 /schedule?channelCd=IRADIO&amp;onor=IRADIO
+  주소 후보 /schedule?channelCd=PLUS1&amp;onor=PLUS1
+  주소 후보 /schedule?channelCd=PLUS2&amp;onor=PLUS2
+  주소 후보 /schedule?channelCd=RADIO&amp;onor=RADIO
+  주소 후보 /schedule?channelCd=tv&amp;onor=tv
+  주소 후보 /schedule?channelCd=tv2&amp;onor=tv2
+  주소 후보 https://static.ebs.co.kr/www/common/img/category/tv/nav_top_schedule.gif
+  주소 후보 https://www.ebs.co.kr/schedule
+  주소 후보 https://www.ebs.co.kr/schedule/channelGuide
+  주소 후보 https://www.ebs.co.kr/schedule?channelCd=tv&onor=tv

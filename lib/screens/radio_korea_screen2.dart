@@ -101,8 +101,11 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
       radio.fetchMbcSchedule('MBC FM4U');
       radio.fetchSbsSchedule('SBS 파워FM');
       radio.fetchSbsSchedule('SBS 러브FM');
-      radio.fetchJsonSchedule('CBS 음악FM');
-      radio.fetchJsonSchedule('CBS 표준FM');
+      // 편성표 파일(schedule.json)에 있는 방송은 전부 미리 (없는 방송은 알아서 건너뜀)
+      for (final station in koreanStations) {
+        radio.fetchJsonSchedule(station.name);
+      }
+      radio.fetchEbsFmSchedule();
       radio.fetchKfnSchedule();
       radio.fetchEbsBandiSchedule();
     });

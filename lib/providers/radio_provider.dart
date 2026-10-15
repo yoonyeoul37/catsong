@@ -1807,7 +1807,7 @@ class RadioProvider extends ChangeNotifier {
     const stationName = 'EBS FM';
     try {
       final response = await http.get(
-        Uri.parse('https://www.ebs.co.kr/onair/scheduleNew.json?channelCodeString=FM&mode=newlist'),
+        Uri.parse('https://www.ebs.co.kr/onair/scheduleNew.json?channelCodeString=RADIO&mode=newlist'),
         headers: {'User-Agent': 'Mozilla/5.0'},
       ).timeout(const Duration(seconds: 10));
 
@@ -1823,6 +1823,9 @@ class RadioProvider extends ChangeNotifier {
               'program_title': title,
               'start_time': start,
               'end_time': end,
+              // 프로그램 사진 (EBS는 앞부분 빠진 주소로 줌)
+              if ((now['thumbnail7'] ?? '').toString().isNotEmpty)
+                'image': 'https://static.ebs.co.kr/images${now['thumbnail7']}',
             };
             _nowPlayingMap[stationName] = title;
           }
@@ -1892,6 +1895,8 @@ class RadioProvider extends ChangeNotifier {
             'program_title': title,
             'start_time': start,
             'end_time': end,
+            if ((item['thumbnail7'] ?? '').toString().isNotEmpty)
+              'image': 'https://static.ebs.co.kr/images${item['thumbnail7']}',
           });
         }
         _scheduleListMap[stationName] = schedules;
@@ -2080,6 +2085,28 @@ class RadioProvider extends ChangeNotifier {
       }
     }
 
+    // 국방FM · EBS: 받아 둔 편성표(시간 "07:00" 모양)로 '지금 프로그램' 넘기기
+    for (final stationName in const ['국방FM', 'EBS 반디', 'EBS FM']) {
+      final list = _scheduleListMap[stationName];
+      if (list == null || list.isEmpty) continue;
+      for (final s in list) {
+        final st = s['start_time'] as String? ?? '';
+        final en = s['end_time'] as String? ?? '';
+        if (st.length < 5 || en.length < 5) continue;
+        final inRange = en.compareTo(st) > 0
+            ? (st.compareTo(nowHHMM) <= 0 && nowHHMM.compareTo(en) < 0)
+            : (st.compareTo(nowHHMM) <= 0 || nowHHMM.compareTo(en) < 0); // 자정 넘는 프로그램
+        if (!inRange) continue;
+        final title = s['program_title'] as String? ?? '';
+        if (title.isNotEmpty && _nowPlayingMap[stationName] != title) {
+          _currentProgramMap[stationName] = Map<String, dynamic>.from(s);
+          _nowPlayingMap[stationName] = title;
+          changed = true;
+        }
+        break;
+      }
+    }
+
     // 편성표 파일(schedule.json) 방송국: 듣는 동안 시간이 지나면 '지금 프로그램'도 다음 것으로
     for (final stationName in _scheduleService.stationNames) {
       if (!_scheduleListMap.containsKey(stationName)) continue;
@@ -2112,10 +2139,16 @@ class RadioProvider extends ChangeNotifier {
       },
     );
     _scheduleDisplayTimer?.cancel();
-    _scheduleDisplayTimer = Timer.periodic(
-      const Duration(minutes: 1),
-          (_) => _updateCurrentPrograms(),
-    );
+    // 프로그램은 매 분 0초에 바뀌니까: 다음 분 0초(+1초 여유)에 맞춰 시작해서, 그 뒤로 매 분 같은 때 확인
+    final now = DateTime.now();
+    final toNextMinute = Duration(seconds: 61 - now.second, milliseconds: -now.millisecond);
+    _scheduleDisplayTimer = Timer(toNextMinute, () {
+      _updateCurrentPrograms();
+      _scheduleDisplayTimer = Timer.periodic(
+        const Duration(minutes: 1),
+            (_) => _updateCurrentPrograms(),
+      );
+    });
   }
 
   Future<void> selectBroadcaster(RadioBroadcaster broadcaster) async {

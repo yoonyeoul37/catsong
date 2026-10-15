@@ -1,0 +1,708 @@
+############################################################
+■ CPBC 라디오 편성 데이터
+  https://static.apis.cpbc.co.kr/radio-api/schedule/01/20261016 → 상태 200 · 글자 수 32951
+    종류 dict · 칸 25개
+    --- 첫 칸 통째로 ---
+{
+ "id": "6ac3a25061914c8e77fdedfb",
+ "broadcastDate": "20261016",
+ "startTime": "05:00",
+ "endTime": "06:00",
+ "broadcastTime": {
+  "startAt": "202610160500",
+  "endAt": "202610160600"
+ },
+ "program": {
+  "id": "6a4df555b1af9bd147d4efbd",
+  "title": "매일미사",
+  "description": "매일 05:00~06:00",
+  "synopsis": "",
+  "targetAge": 12,
+  "color": "#E98800",
+  "images": {
+   "horizontal": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/HUH1784849042791.jpg",
+   "vertical": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/08/aUX1783493894788.jpg",
+   "square": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/08/me21783493906858.jpg",
+   "visual": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/08/ofK1783493917577.jpg"
+  },
+  "cciProgramImage": null
+ },
+ "urls": {
+  "replay": "",
+  "home": "",
+  "facebook": "",
+  "talk": "https://app-radio.cpbc.co.kr/talk.html?uid=6a5448c7b1af9bd147d79f13",
+  "aod": "",
+  "rss": "",
+  "playlist": "",
+  "bora": ""
+ },
+ "visibleRadio": {
+  "enabled": false,
+  "streamUrl": ""
+ },
+ "isOnAir": false,
+ "isNotification": false,
+ "flags": {
+  "isLive": false,
+  "isReplay": false,
+  "isOriginal": false,
+  "isSignLanguage": false,
+  "isSubstituteProgramming": false
+ },
+ "sort": 0,
+ "bookmark": {
+  "programId": "6a4df555b1af9bd147d4efbd",
+  "isBookmarked": false,
+  "info": null
+ }
+}
+    --- 앞 25칸 요약 ---
+    05:00 ~ 06:00 | 매일미사 | https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/HUH1784849042791.jpg
+    06:00 ~ 06:03 | 삼종기도 | https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/EAt1784849082479.jpg
+    06:03 ~ 06:50 | 그대에게 평화를 김슬애입니다 | https://img.cpbc.co.kr/cpbc_cms/2026/04/26/kix1777202951678-1280-720.jpg
+    06:50 ~ 07:00 | 오늘의 강론 | https://img.cpbc.co.kr/cpbc_cms/2022/11/16/N8W1668579687696-1280-720.jpg
+    07:00 ~ 09:00 | 오수진의 행복을 여는 아침 | https://img.cpbc.co.kr/cpbc_cms/2023/10/29/jHV1698553416330-1280-720.png
+    09:00 ~ 10:00 | 참 좋은 오늘, 은빛수녀입니다 | https://img.cpbc.co.kr/cpbc_cms/2024/04/28/J5X1714291774256-1280-720.jpg
+    10:00 ~ 12:00 | 장일범의 유쾌한 클래식 | https://img.cpbc.co.kr/cpbc_cms/2022/12/02/uZo1669945230080-1280-720.jpg
+    12:00 ~ 12:15 | cpbc 정오종합뉴스 | https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/HHq1784849801840.jpg
+    12:15 ~ 14:00 | 신부님 신부님 우리 신부님 | https://img.cpbc.co.kr/cpbc_cms/2025/10/27/84N1761531951294-1280-720.jpg
+    14:00 ~ 15:00 | 2시N뮤직 김빛나입니다 | https://img.cpbc.co.kr/cpbc_cms/2024/10/27/8x41730007010053-1280-720.jpg
+    15:00 ~ 16:00 | 2시N뮤직 김빛나입니다 | https://img.cpbc.co.kr/cpbc_cms/2024/10/27/8x41730007010053-1280-720.jpg
+    16:00 ~ 16:50 | 기도의 오솔길 전영금 수녀입니다 | https://img.cpbc.co.kr/cpbc_cms/2024/10/27/7yh1730003113408-1280-720.jpg
+    16:50 ~ 17:00 | cpbc오디오드라마, 성인이 된 미디어 사도 카를로 아쿠티스 | https://img.cpbc.co.kr/cpbc_cms/2026/09/30/ogt1790730630426-1280-720.jpg
+    17:00 ~ 18:00 | 신나라의 달콤한 5시 | https://img.cpbc.co.kr/cpbc_cms/2024/10/28/FMZ1730079144695-1280-720.jpg
+    18:00 ~ 18:03 | 평화의 기도 | https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/PzD1784849189755.jpg
+    18:03 ~ 19:00 | 김준일의 시사천국 | https://img.cpbc.co.kr/cpbc_cms/2026/04/24/N6F1777029215764-1280-720.jpg
+    19:00 ~ 21:00 | 음악이 있는 저녁풍경 김형중입니다 | https://img.cpbc.co.kr/cpbc_cms/2024/10/29/Uog1730160581015-1280-720.jpg
+    21:00 ~ 21:02 | 한반도 평화를 위한 기도 | https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/Nnm1784849237369.jpg
+    21:02 ~ 23:00 | 당신을 위한 BGM | https://img.cpbc.co.kr/cpbc_cms/2023/12/08/tV41702021948899-1280-720.png
+    23:00 ~ 23:50 | 기도의 오솔길 전영금 수녀입니다(재) | https://img.cpbc.co.kr/cpbc_cms/2024/10/27/7yh1730003113408-1280-720.jpg
+    23:50 ~ 24:00 | 오늘의 강론(재) | https://img.cpbc.co.kr/cpbc_cms/2022/11/16/N8W1668579687696-1280-720.jpg
+    24:00 ~ 25:00 | 라디오 고해소 비밀번호 1053 | https://img.cpbc.co.kr/cpbc_cms/2025/07/09/JZH1752026615052-1280-720.jpg
+    25:03 ~ 25:45 | 그대에게 평화를 김슬애입니다(재) | https://img.cpbc.co.kr/cpbc_cms/2026/04/26/kix1777202951678-1280-720.jpg
+    25:45 ~ 26:00 | 묵주기도 | https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/S9l1784849297482.jpg
+    26:00 ~ 28:59 | 방송시간이 아닙니다 | https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/6wu1784849324519.jpg
+  https://apis.cpbc.co.kr/radio-api/schedule/20261016 → 상태 200 · 글자 수 18567
+    종류 list · 칸 30개
+    --- 첫 칸 통째로 ---
+{
+ "RDO_GUST_NM": null,
+ "CHN_CD": "02",
+ "BROAD_CODE": "02",
+ "START_DATE": "2026-10-16T00:00:00.000Z",
+ "END_DATE": "2026-10-16T00:59:00.000Z",
+ "START_TIME": "00:00",
+ "END_TIME": "00:59",
+ "PROGRAM_IMAGE": "https://img.cpbc.co.kr/cpbc_cms/2022/12/28/1x31672227488494-1280-720.jpg",
+ "TITLE": "라디오 고해소 비밀번호 1053",
+ "ONAIR_FLAG": "N",
+ "LIVE_FLAG": "N",
+ "SUBSTITUTION_FLAG": "N",
+ "TARGET_AGE": 0,
+ "SECTION": "RA",
+ "BROAD_CODE2": "0010010000",
+ "HOMEPAGE_URL": "https://program.cpbc.co.kr/radio/confession_radio",
+ "VOD_URL": "https://program.cpbc.co.kr/radio/confession_radio/aods/15524946",
+ "PROGRAMCODE": "confession_radio",
+ "PROGRAMID": "C0000009834",
+ "LIV_YN": "N",
+ "REW_YN": "N",
+ "ORI_YN": "N",
+ "CAM_YN": "N",
+ "ON_AIR_YN": "N",
+ "HND_YN": "N",
+ "SCD_DSC": "N"
+}
+    --- 앞 25칸 요약 ---
+    2026-10-16T00:00:00.000Z ~ 2026-10-16T00:59:00.000Z | None | None
+    2026-10-16T01:00:00.000Z ~ 2026-10-16T01:44:00.000Z | None | None
+    2026-10-16T01:45:00.000Z ~ 2026-10-16T01:59:00.000Z | None | None
+    2026-10-16T02:00:00.000Z ~ 2026-10-16T04:59:00.000Z | None | None
+    2026-10-16T05:00:00.000Z ~ 2026-10-16T05:59:00.000Z | None | None
+    2026-10-16T06:00:00.000Z ~ 2026-10-16T06:02:00.000Z | None | None
+    2026-10-16T06:03:00.000Z ~ 2026-10-16T06:49:00.000Z | None | None
+    2026-10-16T06:50:00.000Z ~ 2026-10-16T06:59:00.000Z | None | None
+    2026-10-16T07:00:00.000Z ~ 2026-10-16T07:59:00.000Z | None | None
+    2026-10-16T08:00:00.000Z ~ 2026-10-16T08:59:00.000Z | None | None
+    2026-10-16T09:00:00.000Z ~ 2026-10-16T09:59:00.000Z | None | None
+    2026-10-16T10:00:00.000Z ~ 2026-10-16T10:59:00.000Z | None | None
+    2026-10-16T11:00:00.000Z ~ 2026-10-16T11:59:00.000Z | None | None
+    2026-10-16T12:00:00.000Z ~ 2026-10-16T12:14:00.000Z | None | None
+    2026-10-16T12:15:00.000Z ~ 2026-10-16T12:59:00.000Z | None | None
+    2026-10-16T13:00:00.000Z ~ 2026-10-16T13:59:00.000Z | None | None
+    2026-10-16T14:00:00.000Z ~ 2026-10-16T14:59:00.000Z | None | None
+    2026-10-16T15:00:00.000Z ~ 2026-10-16T15:59:00.000Z | None | None
+    2026-10-16T16:00:00.000Z ~ 2026-10-16T16:49:00.000Z | None | None
+    2026-10-16T16:50:00.000Z ~ 2026-10-16T16:59:00.000Z | None | None
+    2026-10-16T17:00:00.000Z ~ 2026-10-16T17:59:00.000Z | None | None
+    2026-10-16T18:00:00.000Z ~ 2026-10-16T18:02:00.000Z | None | None
+    2026-10-16T18:03:00.000Z ~ 2026-10-16T18:59:00.000Z | None | None
+    2026-10-16T19:00:00.000Z ~ 2026-10-16T19:59:00.000Z | None | None
+    2026-10-16T20:00:00.000Z ~ 2026-10-16T20:59:00.000Z | None | None
+############################################################
+■ TBN 경인 첫 화면 편성
+  상태 200 · 글자 수 227258
+    06:00 굿모닝 코리아 MC : 서현진 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=411
+    08:52 tbn 특별기획 우리의 생명이 가장 중요합니다. MC : 윤유선 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=420
+    11:00 김경식의 오토쇼 으라차차 MC : 김경식 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=474
+    12:05 김효진, 양상국의 12시에 만나요 MC : 김효진,양상국 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=515
+    20:00 김승현의 가요본색 MC : 김승현 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=503
+    22:00 행복한 밤, tbn과 함께 MC : 최지은 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=521
+    24:00 tbn플레이리스트  ←  /program/main.tbn?area_code=1&amp;forum_seq=504
+    05:00 tbn명예의전당  ←  /program/main.tbn?area_code=1&amp;forum_seq=528
+    06:00 즐거운 주말 아침 MC : 박진희 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=478
+    08:00 신나는 라디오, 박수림입니다. MC : 박수림 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=508
+    10:00 tbn 뮤직쇼 MC : 박찬송 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=509
+    18:00 선우경의 주말특급 MC : 선우경 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=479
+    20:00 원미연의 가요본색 MC : 원미연 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=510
+    22:00 행복한 밤, tbn과 함께 MC : 신채이 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=522
+    07:00 출발! 전남광주대행진 MC : 노희설 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=170
+    09:00 스튜디오 973 (전남광주) MC : 허수진 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=171
+    14:05 tbn 차차차 (전남광주) MC : 정인택.박슬기 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=172
+    16:05 오혜빈의 청춘가요 MC : 오혜빈 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=505
+    17:00 tbn 남도매거진 MC : 박유리 아나운서 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=498
+    18:05 달리는 라디오 (전남광주) MC : 최용규, 서예원 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=174
+    12:00 김정아의 에브리뮤직 MC : 김정아 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=525
+    14:00 tbn 차차차 (전남광주주말) MC : 오원화 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=524
+    16:00 문애란의 뮤직라떼 MC : 문애란 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=523
+    07:00 출발! 부산대행진 MC : 김은미 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=158
+    09:00 스튜디오 949 MC : 정소라 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=159
+    14:05 (월) 월요특급 빵빵한 2시 MC : 한주형, 오대웅  ←  /program/main.tbn?area_code=2&amp;forum_seq=161
+    14:05 (화~금) 빵빵한 2시 MC : 한주형&nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=161
+    14:05 (금) 금요특급 빵빵한 2시 MC : 한주형, 이병호  ←  /program/main.tbn?area_code=2&amp;forum_seq=161
+    16:05 tbn 부산매거진 MC : 조면주 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=162
+    18:05 (월~목) 달리는 라디오 (부산) MC : 강세민 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=163
+    17:00 (금) 금요특급 달리는 라디오 MC : 강세민, 김지현 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=163
+    12:00 tbn 차차차 (부산주말) MC : 김초희 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=302
+    14:00 굿뮤직 MC : 김현민 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=506
+    16:00 주말 N 어떤가요 MC : 노주원 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=507
+    07:00 출발! 대구대행진 MC : 류강국 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=181
+    09:00 스튜디오 1039 MC : 이영미 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=238
+    14:05 tbn 차차차 (대구) MC : 이소영 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=183
+    16:05 tbn 대구매거진 MC : 이정윤 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=373
+    17:00 행복충전5시! MC : 이윤민 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=527
+    18:05 달리는 라디오 (대구) MC : 차정훈, 김영아 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=185
+    12:00 주말 N 나들이, 문가빈입니다 MC : 문가빈 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=480
+    14:00 tbn 차차차 (대구주말) MC : 신혜림 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=372
+    16:00 문채희의 뮤직 큐 MC : 문채희 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=446
+    07:00 출발! 경인대행진 MC : 김란아 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=203
+    09:00 스튜디오 1005 MC : 장수정 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=204
+    14:05 tbn 차차차 (경인) MC : 박미선 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=206
+    16:05 황순유의 4시의 라디오 MC : 황순유 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=481
+    17:00 달리는 라디오 (경인) MC : 권계현 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=208
+    19:00 7시의 가요산책 MC : 김수산 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=531
+    12:00 홍지영의 주말엔 12시 MC : 홍지영 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=482
+    14:00 2시의 음악여행 MC : 우병헌 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=323
+    16:00 4시엔 함께 가요 MC : 강민규 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=483
+    07:00 출발! 대전대행진 MC : 김동혁 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=5&amp;forum_seq=192
+    09:00 스튜디오 1029 MC : 안미소 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=5&amp;forum_seq=193
+    14:05 tbn 차차차 (대전) MC : 윤희영 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=5&amp;forum_seq=194
+    16:05 tbn 충청매거진 MC : 이영주 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=5&amp;forum_seq=263
+    18:05 달리는 라디오 (대전) MC : 김윤경 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=5&amp;forum_seq=196
+    12:00 주말엔 놀자! MC : 장은영 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=5&amp;forum_seq=297
+    14:00 레트로 하이웨이  ←  /program/main.tbn?area_code=5&amp;forum_seq=530
+    16:00 달리는 오락실 MC : 정지현 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=5&amp;forum_seq=502
+    07:00 출발! 울산대행진 MC : 김지은 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=9&amp;forum_seq=290
+    09:00 스튜디오 1041 MC : 문지혜 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=9&amp;forum_seq=292
+    14:05 tbn 차차차 (울산) MC : 임성준, 김은비 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=9&amp;forum_seq=306
+    16:05 tbn 울산매거진 MC : 피현아 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=9&amp;forum_seq=368
+    18:05 달리는 라디오 (울산) MC : 고태연 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=9&amp;forum_seq=291
+    12:00 주말을 부탁해 MC : 김수영 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=9&amp;forum_seq=486
+    14:00 오후의 발견 MC : 김준원, 정은지 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=9&amp;forum_seq=311
+    16:00 4시엔 울랄라 MC : 조윤정 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=9&amp;forum_seq=487
+    07:00 출발! 강원대행진 MC : 안수경 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=214
+    09:00 스튜디오 1059 (강원) MC : 김정은 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=362
+    14:05 tbn 차차차 (강원) MC : 이지은 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=216
+    16:05 tbn 강원매거진 MC : 고유림 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=265
+    17:00 달리는 라디오 (강원) MC : 안하늬, 이제헌 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=218
+    19:00 이수형의 럭키세븐 MC : 이수형 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=536
+    12:00 이한의 친한친구 MC : 이한 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=516
+    14:00 두시N휴게소 MC : 이경미 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=484
+    16:00 여휴만만 MC : 김수경 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=485
+    07:00 출발! 충북대행진 MC : 김성관 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=13&amp;forum_seq=431
+    09:00 스튜디오1033 MC : 최하나 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=13&amp;forum_seq=432
+    14:05 tbn 차차차(충북) MC : 이웅호, 조영원 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=13&amp;forum_seq=433
+    16:05 tbn충북매거진 MC : 송민수 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=13&amp;forum_seq=435
+    18:05 달리는 라디오 (충북) MC : 오은정 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=13&amp;forum_seq=434
+    12:00 tbn 리듬하이 MC : MC킴 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=13&amp;forum_seq=437
+    14:00 이효림의 음악정원 MC : 이효림 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=13&amp;forum_seq=456
+    16:00 tbn 뮤직스테이션 MC : 유다정 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=13&amp;forum_seq=488
+    07:00 출발! 충남대행진 MC : 장원나 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=14&amp;forum_seq=535
+    16:05 tbn 충남매거진 MC : 윤지나 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=14&amp;forum_seq=534
+    18:05 달리는 라디오 (충남) MC : 윤소영 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=14&amp;forum_seq=533
+    07:00 출발! 전북대행진 MC : 조준모 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=8&amp;forum_seq=224
+    09:00 스튜디오 1025 MC : 홍혜정 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=8&amp;forum_seq=225
+    14:05 tbn 차차차 (전북) MC : 이백희, 강세련 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=8&amp;forum_seq=227
+    16:05 tbn 전북 매거진 MC : 김선혜 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=8&amp;forum_seq=361
+    18:05 달리는 라디오 (전북) MC : 이재훈, 이진영 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=8&amp;forum_seq=229
+    12:00 tbn 차차차 (전북주말) MC : 장금선 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=8&amp;forum_seq=489
+    14:00 2시의 팝스테이션 MC : 송정란 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=8&amp;forum_seq=458
+    16:00 주말엔 행복 주파수 MC : 정소연 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=8&amp;forum_seq=305
+    07:00 출발! 경북대행진 MC : 이윤재 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=335
+    09:00 스튜디오 1035 MC : 김도연 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=366
+    14:05 tbn 차차차 (경북) MC : 김준혜 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=388
+    16:05 tbn 경북매거진 MC : 우지민 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=365
+    17:00 달리는 라디오 (경북) MC : 박용수, 유은정 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=345
+    19:00 가요시대 MC : 박은희 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=445
+    12:00 주말, 열두시에 만나요 MC : 엄지혜 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=337
+    14:00 권오성의 Run2U MC : 권오성 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=490
+    16:00 주말산책 MC : 강다윤 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=491
+    07:00 출발! 경남대행진 MC : 김혜란 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=10&amp;forum_seq=319
+    09:00 스튜디오 955 (경남) MC : 김수민 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=10&amp;forum_seq=320
+    14:05 tbn 차차차 (경남) MC : 정나미 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=10&amp;forum_seq=324
+    16:05 tbn 경남매거진 MC : 박은현 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=10&amp;forum_seq=325
+    18:05 달리는 라디오 (경남) MC : 장리나, 황규인 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=10&amp;forum_seq=321
+    12:00 tbn경남, 컬러풀 라디오 MC : 박지혜 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=10&amp;forum_seq=329
+    14:00 두시의 트롯팡팡 MC : 오승철 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=10&amp;forum_seq=493
+    16:00 다정한 오후, 이설희입니다 MC : 이설희 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=10&amp;forum_seq=494
+    07:00 출발! 제주 대행진 MC : 임서영 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=12&amp;forum_seq=393
+    09:00 스튜디오 1055(제주) MC : 유혜정 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=12&amp;forum_seq=395
+    14:05 tbn 차차차(제주) MC : 김형찬, 이현애 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=12&amp;forum_seq=396
+    16:05 tbn 제주매거진 MC : 박지연 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=12&amp;forum_seq=397
+    18:05 달리는 라디오 (제주) MC : 김광빈, 장혜진 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=12&amp;forum_seq=399
+    12:00 tbn 차차차(제주주말) MC : 도현아 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=12&amp;forum_seq=404
+    14:00 2시의 뮤직테라피 MC : 우상임 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=12&amp;forum_seq=496
+    16:00 아무튼 오후 네시 MC : 박현정 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=12&amp;forum_seq=497
+    출발! 경인대행진 -->  ←  /program/main.tbn?area_code=6&amp;forum_seq=203
+    NOW 출발! 경인대행진 07:00 ~ 08:52  ←  /program/main.tbn?area_code=6&amp;forum_seq=203
+    NEXT tbn 특별기획 우리의 생명이 가장 중요합니다. 08:52 ~ 08:55  ←  /program/main.tbn?area_code=6&amp;forum_seq=420
+    스튜디오 1005 09:00 ~ 10:55  ←  /program/main.tbn?area_code=6&amp;forum_seq=204
+    출발! 경인대행진 07:00~08:52  ←  /program/main.tbn?area_code=6&forum_seq=203
+    스튜디오 1005 09:00~10:55  ←  /program/main.tbn?area_code=6&forum_seq=204
+    김효진, 양상국의 12시에 만나요 12:05~13:55  ←  /program/main.tbn?area_code=1&forum_seq=515
+    tbn차차차 14:05~15:55  ←  /program/main.tbn?area_code=6&forum_seq=206
+    황순유의 4시의 라디오 16:05~16:55  ←  /program/main.tbn?area_code=6&forum_seq=481
+    달리는 라디오 17:00~18:52  ←  /program/main.tbn?area_code=6&forum_seq=208
+    7시의 가요산책 19:00~19:55  ←  /program/main.tbn?area_code=6&forum_seq=531
+    김승현의 가요본색 20:00~21:55  ←  /program/main.tbn?area_code=1&forum_seq=503
+    행복한 밤, tbn과 함께 22:00~23:59  ←  /program/main.tbn?area_code=1&forum_seq=521
+  --- 첫 프로그램 링크 근처 HTML ---
+경북</a></li>
+												<li><a href="javascript:;">경남</a></li>
+												<li><a href="javascript:;">제주</a></li>
+											</ul>
+											
+											<script>
+											$(function(){
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												$("#gnb .depth02 .sch-select > ul > li").eq(5).addClass("on");
+												$("#gnb .depth02 .gnb-sch-wrap > ul > li").eq(5).show().siblings().hide();
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											$("#gnb .depth02 .sch-select > ul > li").click(function(){
+												$(this).addClass("on").siblings().removeClass("on");
+												$("#gnb .depth02 .gnb-sch-wrap > ul > li").eq($(this).index()).show().siblings().hide();
+												$(".header-wrap").stop().animate({"height":$("#gnb .depth02 .gnb-sch-wrap > ul > li").eq($(this).index()).height() + 184}, 200);
+											});
+											});
+											</script>
+
+										</div>
+									</div>
+									<div class="gnb-sch-wrap">
+										<ul>
+											<li>
+												<p class="tts">서울</p>
+												<div class="program_list">
+													<div class="weekday">
+														<p>평일프로그램</p>
+														<ul>
+														    
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=411">
+																	    <strong>06:00</strong><span>굿모닝 코리아</span>
+																	    <span>MC : 서현진
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=420">
+																	    <strong>08:52</strong><span>tbn 특별기획 우리의 생명이 가장 중요합니다.</span>
+																	    <span>MC : 윤유선
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=474">
+																	    <strong>11:00</strong><span>김경식의 오토쇼 으라차차</span>
+																	    <span>MC : 김경식
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=515">
+																	    <strong>12:05</strong><span>김효진, 양상국의 12시에 만나요</span>
+																	    <span>MC : 김효진,양상국
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=503">
+																	    <strong>20:00</st
+############################################################
+■ TBN 울산 첫 화면 편성
+  상태 200 · 글자 수 226697
+    06:00 굿모닝 코리아 MC : 서현진 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=411
+    08:52 tbn 특별기획 우리의 생명이 가장 중요합니다. MC : 윤유선 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=420
+    11:00 김경식의 오토쇼 으라차차 MC : 김경식 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=474
+    12:05 김효진, 양상국의 12시에 만나요 MC : 김효진,양상국 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=515
+    20:00 김승현의 가요본색 MC : 김승현 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=503
+    22:00 행복한 밤, tbn과 함께 MC : 최지은 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=521
+    24:00 tbn플레이리스트  ←  /program/main.tbn?area_code=1&amp;forum_seq=504
+    05:00 tbn명예의전당  ←  /program/main.tbn?area_code=1&amp;forum_seq=528
+    06:00 즐거운 주말 아침 MC : 박진희 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=478
+    08:00 신나는 라디오, 박수림입니다. MC : 박수림 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=508
+    10:00 tbn 뮤직쇼 MC : 박찬송 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=509
+    18:00 선우경의 주말특급 MC : 선우경 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=479
+    20:00 원미연의 가요본색 MC : 원미연 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=510
+    22:00 행복한 밤, tbn과 함께 MC : 신채이 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=1&amp;forum_seq=522
+    07:00 출발! 전남광주대행진 MC : 노희설 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=170
+    09:00 스튜디오 973 (전남광주) MC : 허수진 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=171
+    14:05 tbn 차차차 (전남광주) MC : 정인택.박슬기 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=172
+    16:05 오혜빈의 청춘가요 MC : 오혜빈 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=505
+    17:00 tbn 남도매거진 MC : 박유리 아나운서 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=498
+    18:05 달리는 라디오 (전남광주) MC : 최용규, 서예원 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=174
+    12:00 김정아의 에브리뮤직 MC : 김정아 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=525
+    14:00 tbn 차차차 (전남광주주말) MC : 오원화 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=524
+    16:00 문애란의 뮤직라떼 MC : 문애란 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=3&amp;forum_seq=523
+    07:00 출발! 부산대행진 MC : 김은미 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=158
+    09:00 스튜디오 949 MC : 정소라 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=159
+    14:05 (월) 월요특급 빵빵한 2시 MC : 한주형, 오대웅  ←  /program/main.tbn?area_code=2&amp;forum_seq=161
+    14:05 (화~금) 빵빵한 2시 MC : 한주형&nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=161
+    14:05 (금) 금요특급 빵빵한 2시 MC : 한주형, 이병호  ←  /program/main.tbn?area_code=2&amp;forum_seq=161
+    16:05 tbn 부산매거진 MC : 조면주 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=162
+    18:05 (월~목) 달리는 라디오 (부산) MC : 강세민 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=163
+    17:00 (금) 금요특급 달리는 라디오 MC : 강세민, 김지현 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=163
+    12:00 tbn 차차차 (부산주말) MC : 김초희 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=302
+    14:00 굿뮤직 MC : 김현민 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=506
+    16:00 주말 N 어떤가요 MC : 노주원 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=2&amp;forum_seq=507
+    07:00 출발! 대구대행진 MC : 류강국 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=181
+    09:00 스튜디오 1039 MC : 이영미 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=238
+    14:05 tbn 차차차 (대구) MC : 이소영 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=183
+    16:05 tbn 대구매거진 MC : 이정윤 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=373
+    17:00 행복충전5시! MC : 이윤민 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=527
+    18:05 달리는 라디오 (대구) MC : 차정훈, 김영아 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=185
+    12:00 주말 N 나들이, 문가빈입니다 MC : 문가빈 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=480
+    14:00 tbn 차차차 (대구주말) MC : 신혜림 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=372
+    16:00 문채희의 뮤직 큐 MC : 문채희 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=4&amp;forum_seq=446
+    07:00 출발! 경인대행진 MC : 김란아 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=203
+    09:00 스튜디오 1005 MC : 장수정 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=204
+    14:05 tbn 차차차 (경인) MC : 박미선 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=206
+    16:05 황순유의 4시의 라디오 MC : 황순유 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=481
+    17:00 달리는 라디오 (경인) MC : 권계현 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=208
+    19:00 7시의 가요산책 MC : 김수산 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=531
+    12:00 홍지영의 주말엔 12시 MC : 홍지영 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=482
+    14:00 2시의 음악여행 MC : 우병헌 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=323
+    16:00 4시엔 함께 가요 MC : 강민규 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=6&amp;forum_seq=483
+    07:00 출발! 대전대행진 MC : 김동혁 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=5&amp;forum_seq=192
+    09:00 스튜디오 1029 MC : 안미소 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=5&amp;forum_seq=193
+    14:05 tbn 차차차 (대전) MC : 윤희영 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=5&amp;forum_seq=194
+    16:05 tbn 충청매거진 MC : 이영주 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=5&amp;forum_seq=263
+    18:05 달리는 라디오 (대전) MC : 김윤경 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=5&amp;forum_seq=196
+    12:00 주말엔 놀자! MC : 장은영 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=5&amp;forum_seq=297
+    14:00 레트로 하이웨이  ←  /program/main.tbn?area_code=5&amp;forum_seq=530
+    16:00 달리는 오락실 MC : 정지현 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=5&amp;forum_seq=502
+    07:00 출발! 울산대행진 MC : 김지은 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=9&amp;forum_seq=290
+    09:00 스튜디오 1041 MC : 문지혜 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=9&amp;forum_seq=292
+    14:05 tbn 차차차 (울산) MC : 임성준, 김은비 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=9&amp;forum_seq=306
+    16:05 tbn 울산매거진 MC : 피현아 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=9&amp;forum_seq=368
+    18:05 달리는 라디오 (울산) MC : 고태연 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=9&amp;forum_seq=291
+    12:00 주말을 부탁해 MC : 김수영 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=9&amp;forum_seq=486
+    14:00 오후의 발견 MC : 김준원, 정은지 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=9&amp;forum_seq=311
+    16:00 4시엔 울랄라 MC : 조윤정 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=9&amp;forum_seq=487
+    07:00 출발! 강원대행진 MC : 안수경 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=214
+    09:00 스튜디오 1059 (강원) MC : 김정은 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=362
+    14:05 tbn 차차차 (강원) MC : 이지은 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=216
+    16:05 tbn 강원매거진 MC : 고유림 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=265
+    17:00 달리는 라디오 (강원) MC : 안하늬, 이제헌 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=218
+    19:00 이수형의 럭키세븐 MC : 이수형 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=536
+    12:00 이한의 친한친구 MC : 이한 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=516
+    14:00 두시N휴게소 MC : 이경미 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=484
+    16:00 여휴만만 MC : 김수경 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=7&amp;forum_seq=485
+    07:00 출발! 충북대행진 MC : 김성관 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=13&amp;forum_seq=431
+    09:00 스튜디오1033 MC : 최하나 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=13&amp;forum_seq=432
+    14:05 tbn 차차차(충북) MC : 이웅호, 조영원 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=13&amp;forum_seq=433
+    16:05 tbn충북매거진 MC : 송민수 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=13&amp;forum_seq=435
+    18:05 달리는 라디오 (충북) MC : 오은정 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=13&amp;forum_seq=434
+    12:00 tbn 리듬하이 MC : MC킴 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=13&amp;forum_seq=437
+    14:00 이효림의 음악정원 MC : 이효림 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=13&amp;forum_seq=456
+    16:00 tbn 뮤직스테이션 MC : 유다정 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=13&amp;forum_seq=488
+    07:00 출발! 충남대행진 MC : 장원나 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=14&amp;forum_seq=535
+    16:05 tbn 충남매거진 MC : 윤지나 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=14&amp;forum_seq=534
+    18:05 달리는 라디오 (충남) MC : 윤소영 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=14&amp;forum_seq=533
+    07:00 출발! 전북대행진 MC : 조준모 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=8&amp;forum_seq=224
+    09:00 스튜디오 1025 MC : 홍혜정 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=8&amp;forum_seq=225
+    14:05 tbn 차차차 (전북) MC : 이백희, 강세련 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=8&amp;forum_seq=227
+    16:05 tbn 전북 매거진 MC : 김선혜 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=8&amp;forum_seq=361
+    18:05 달리는 라디오 (전북) MC : 이재훈, 이진영 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=8&amp;forum_seq=229
+    12:00 tbn 차차차 (전북주말) MC : 장금선 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=8&amp;forum_seq=489
+    14:00 2시의 팝스테이션 MC : 송정란 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=8&amp;forum_seq=458
+    16:00 주말엔 행복 주파수 MC : 정소연 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=8&amp;forum_seq=305
+    07:00 출발! 경북대행진 MC : 이윤재 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=335
+    09:00 스튜디오 1035 MC : 김도연 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=366
+    14:05 tbn 차차차 (경북) MC : 김준혜 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=388
+    16:05 tbn 경북매거진 MC : 우지민 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=365
+    17:00 달리는 라디오 (경북) MC : 박용수, 유은정 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=345
+    19:00 가요시대 MC : 박은희 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=445
+    12:00 주말, 열두시에 만나요 MC : 엄지혜 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=337
+    14:00 권오성의 Run2U MC : 권오성 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=490
+    16:00 주말산책 MC : 강다윤 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=11&amp;forum_seq=491
+    07:00 출발! 경남대행진 MC : 김혜란 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=10&amp;forum_seq=319
+    09:00 스튜디오 955 (경남) MC : 김수민 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=10&amp;forum_seq=320
+    14:05 tbn 차차차 (경남) MC : 정나미 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=10&amp;forum_seq=324
+    16:05 tbn 경남매거진 MC : 박은현 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=10&amp;forum_seq=325
+    18:05 달리는 라디오 (경남) MC : 장리나, 황규인 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=10&amp;forum_seq=321
+    12:00 tbn경남, 컬러풀 라디오 MC : 박지혜 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=10&amp;forum_seq=329
+    14:00 두시의 트롯팡팡 MC : 오승철 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=10&amp;forum_seq=493
+    16:00 다정한 오후, 이설희입니다 MC : 이설희 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=10&amp;forum_seq=494
+    07:00 출발! 제주 대행진 MC : 임서영 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=12&amp;forum_seq=393
+    09:00 스튜디오 1055(제주) MC : 유혜정 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=12&amp;forum_seq=395
+    14:05 tbn 차차차(제주) MC : 김형찬, 이현애 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=12&amp;forum_seq=396
+    16:05 tbn 제주매거진 MC : 박지연 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=12&amp;forum_seq=397
+    18:05 달리는 라디오 (제주) MC : 김광빈, 장혜진 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=12&amp;forum_seq=399
+    12:00 tbn 차차차(제주주말) MC : 도현아 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=12&amp;forum_seq=404
+    14:00 2시의 뮤직테라피 MC : 우상임 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=12&amp;forum_seq=496
+    16:00 아무튼 오후 네시 MC : 박현정 &nbsp;&nbsp;  ←  /program/main.tbn?area_code=12&amp;forum_seq=497
+    출발! 울산대행진 -->  ←  /program/main.tbn?area_code=9&amp;forum_seq=290
+    NOW 출발! 울산대행진 07:00 ~ 08:52  ←  /program/main.tbn?area_code=9&amp;forum_seq=290
+    NEXT tbn 특별기획 우리의 생명이 가장 중요합니다. 08:52 ~ 08:55  ←  /program/main.tbn?area_code=9&amp;forum_seq=420
+    스튜디오 1041 09:00 ~ 10:55  ←  /program/main.tbn?area_code=9&amp;forum_seq=292
+    출발! 울산대행진 07:00~08:52  ←  /program/main.tbn?area_code=9&forum_seq=290
+    스튜디오1041 09:00~10:55  ←  /program/main.tbn?area_code=9&forum_seq=292
+    김효진, 양상국의 12시에 만나요 12:05~13:55  ←  /program/main.tbn?area_code=1&forum_seq=515
+    tbn차차차 14:05~15:55  ←  /program/main.tbn?area_code=9&forum_seq=306
+    tbn울산매거진 16:05~17:55  ←  /program/main.tbn?area_code=9&forum_seq=368
+    달리는 라디오 18:05~19:55  ←  /program/main.tbn?area_code=9&forum_seq=291
+    김승현의 가요본색 20:00~21:55  ←  /program/main.tbn?area_code=1&forum_seq=503
+    행복한 밤, tbn과 함께 22:00~23:59  ←  /program/main.tbn?area_code=1&forum_seq=521
+  --- 첫 프로그램 링크 근처 HTML ---
+경북</a></li>
+												<li><a href="javascript:;">경남</a></li>
+												<li><a href="javascript:;">제주</a></li>
+											</ul>
+											
+											<script>
+											$(function(){
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												$("#gnb .depth02 .sch-select > ul > li").eq(8).addClass("on");
+												$("#gnb .depth02 .gnb-sch-wrap > ul > li").eq(8).show().siblings().hide();
+											
+											
+											
+											
+											
+											
+											
+											
+											$("#gnb .depth02 .sch-select > ul > li").click(function(){
+												$(this).addClass("on").siblings().removeClass("on");
+												$("#gnb .depth02 .gnb-sch-wrap > ul > li").eq($(this).index()).show().siblings().hide();
+												$(".header-wrap").stop().animate({"height":$("#gnb .depth02 .gnb-sch-wrap > ul > li").eq($(this).index()).height() + 184}, 200);
+											});
+											});
+											</script>
+
+										</div>
+									</div>
+									<div class="gnb-sch-wrap">
+										<ul>
+											<li>
+												<p class="tts">서울</p>
+												<div class="program_list">
+													<div class="weekday">
+														<p>평일프로그램</p>
+														<ul>
+														    
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=411">
+																	    <strong>06:00</strong><span>굿모닝 코리아</span>
+																	    <span>MC : 서현진
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=420">
+																	    <strong>08:52</strong><span>tbn 특별기획 우리의 생명이 가장 중요합니다.</span>
+																	    <span>MC : 윤유선
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=474">
+																	    <strong>11:00</strong><span>김경식의 오토쇼 으라차차</span>
+																	    <span>MC : 김경식
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=515">
+																	    <strong>12:05</strong><span>김효진, 양상국의 12시에 만나요</span>
+																	    <span>MC : 김효진,양상국
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=503">
+																	    <strong>20:00</st
+############################################################
+■ BeFM 첫 화면 프로그램 목록
+opup/HWEbgLsmf9YIULlf_1.jpg"   alt="동년배 현황
+
+연애
+결혼
+육아
+내 집 마련
+
+나 : 뉴스 팟캐스트 하다" ></a></li>
+							</ul>
+						</div>
+						<div class="control">
+							<button class="btn_prev3">이전</button>
+							<button class="btn_next3">다음</button>
+						</div>
+						<div class="page_box">
+							<button class="btn_stop0">정지</button>
+							<button class="btn_start0">시작</button>
+							<div class="pagination"></div>
+						</div>
+					</div>
+					<!-- //팝업슬라이드 -->
+					<!-- 작은팝업 슬라이드 -->
+					<div class="small_pop_wrap">
+						<h2>Event Zone</h2>
+						<div class="swiper-container small_pop_slide">
+							<ul class="swiper-wrapper">
+							
+	<li class="swiper-slide"><a href="https://forms.gle/TdQ8DapNATA9eBdB8" title="새창으로이동" target="_blank"><img loading="lazy" src="/fileupload/popup/PlotsbnGAAS7JgB.jpg"   alt="MyBusan &amp; BeFM 아이디어 공모전
+
+Yout Idea, A Better Busan!
+
+2026.09.17. - 11.15.
+여러분의 아이디어로 더 편리하고 유익한 서비스를 함께 만들어갑니다.
+
+여러분의 아이디어를 들려주세요!
+
+MyBusan 홈페이지부터 BeFM 유튜브 콘텐츠 까지, 더 편리하고 유익한 서비스를 만들어갈 수 있는 여러분의 다양한 아이디어를 기다립니다!
+
+작은 아이디어 하나가 더 나은 서비스를 만듭니다.
+
+더보기+" ></a></li>
+	<li class="swiper-slide"><a href="https://www.befm.or.kr/program/template.php?midx=77&amp;pg=allstar&amp;mode=view&amp;page=1&amp;intnum=17077"><img loading="lazy" src="/fileupload/popup/h4VqS6owKGWQOqBkxn7.jpg"  alt="부산영어방송 / BeFm
+All-Star English
+영어는 쉽게! 선물은 푸짐하게!
+올스타로 선물 받으면서 재밌게 영어하자!
+신민수 BeFM
+부기 부산시 소등 캐릭터
+김조한 R&amp;B황제
+All-Star 참여 프로그램
+1) 두뇌로 참여하기
+Easy Peasy Quiz
+2) 목소리로 참여하기
+이 노래 끝을 잡고~
+더보기" ></a></li>
+	<li class="swiper-slide"><a href="https://forms.gle/AmwArveNPK33p9ng6"><img loading="lazy" src="/fileupload/popup/tdUb1b5uaTgiXbExHp.png"  alt="" ></a></li>
+	<li class="swiper-slide"><a href="https://www.youtube.com/@befm" title="새창으로이동" target="_blank"><img loading="lazy" src="/fileupload/popup/jUL56TvxZADYhqZTt.jpg"   alt="내 손 안에 보는 미디어
+Watch Our Media in the palm of your hand
+(1) 유튜브에서 부산영어방송을 검색하고 구독 눌러주세요.
+(2) 기본 카메라를 켜 QR코드를 비추면 유튜브로 바로 연결됩니다. 
+QR코드 (http://www.youtube.com/@befm로 이동 )
+" ></a></li>
+							</ul>
+						</div>
+						<div class="control">
+							<button class="btn_stop">정지</button>
+							<button class="btn_start">시작</button>
+							<div class="pagination2"></div>
+						</div>
+					</div>
+					<!-- //작은팝업 슬라이드 -->
+					<!-- 홍보 프로그램 -->
+					<div class="content_box clearfix">
+					<!-- 오늘의 회화 -->
+					
+					<div class="m_ad_program">
+						<div class="list_box">
+							<a href="/program/template.php?midx=89&pg=morning&cn=morning_sp" target="_blank" title="새창열림">
+								<span class="img_box img06"></span>
+								<h3>Special Interview</h3>
+								<p>Morning Wave in Busan </p>
+							</a>
+						</div>
+						<!-- <div class="list_box">
+							<a href="/sub/template.php?midx=124&evtcode=school2_2022">
+								<span class="img_box img04"></span>
+								<h3>내가 만드는 학교 뉴스!</h3>
+								<p>BeFM School Reporters</p>
+							</a>
+						</div> -->
+						<div class="list_box">
+							<a href="/program/template.php?midx=89&pg=worldwide&cn=scent" target="_blank" title="새창열림">
+								<span class="img_box img10"></span>
+								<h3>The Interview</h3>
+								<p>Busan Worldwide</p>
+							</a>
+						</div>
+						<div class="list_box">
+							<a href="/program/template.php?midx=89&pg=4mybusan&cn=onthemic" target="_blank" title="새창열림">
+								<span class="img_box img08"></span>
+								<h3>On the Mic</h3>
+								<p>4 My Busan</p>
+							</a>
+						</div>
+						<div class="list_box">
+							<a href="/program/template.php?midx=89&pg=sweetdate&cn=reboot_guest" target="_blank" title="새창열림">
+								<span class="img_box img09"></span>
+								<h3 class="fon_17">Guest Segments</h3>
+								<p>Sweet Date</p>
+							</a>
+						</div> 
+					</div>
+					<!-- //홍보 프로그램 -->
+
+					<!-- 배너존 -->
+<!-- 					<div class="mban_snsevent">
+						<div class="content_box">  
+							<a href="/sub/template.php?midx=49&mode=view&intnum=3272" class="txt_box">
+							   <strong class="txt">BeFM 홈페이지 SNS 공유 이벤트</strong>
+							</a>   
+						</div>
+					</div> 
+					 -->
+					<!-- <div class="m_ban_wrap2" id="m_ban_wrap2">
+						<div class="bg_blue"></div>
+						<div class="content_box">  
+							<a href="/program/main.php?pg=school2" class="m_banl txt_box">
+							   <p>내가 만드는 학교 뉴스!</p>
+							   <h3>BeFM School Reporters</h3>
+							</a>          
+							<a href="/sub/template.php?midx=131" class="m_banr txt_box">
+							   <p><strong>BeFM</strong> 부산영어방송</p>
+                               <h3>BeFM 무료진로체험</h3>
+								<p><strong>참여기간</strong> : 2020년1월 6일 ~ 12월 31일</p>
+							</a>       
+						</div>
+					</div>-->
+					<!-- <div class="m_today_convo_

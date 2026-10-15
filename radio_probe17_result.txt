@@ -1,0 +1,309 @@
+############################################################
+■ CPBC
+  https://www.cpbc.co.kr/javascript/cpbc-home-desktop-1.0.0.min.js → 상태 200 · 글자 수 188034
+    주소 //apis.cpbc.co.kr
+    주소 //apis.cpbc.co.kr/broadplan-api/cpbc_broadplan?brd_ymd=${a}&chn_cd=01
+    주소 //apis.cpbc.co.kr/broadplan-api/cpbc_broadplan?brd_ymd=${e}&chn_cd=01
+    주소 //apis.cpbc.co.kr/curation-api/recommend/${t}?jwt-token=
+    주소 //apis.cpbc.co.kr/main-api/section/aod/category/${i?.getSelected()?.id||
+    주소 //apis.cpbc.co.kr/main-api/section/vod/category/${i?.getSelected()?.id||
+    주소 //apis.cpbc.co.kr/play-api/1.0/push/buckets?jwt-token=${e.jwt}&offset=${t}&limit=
+    주소 //apis.cpbc.co.kr/play-api/1.0/sbs_myvods/programs?jwt-token=
+    주소 //apis.cpbc.co.kr/play-api/1.0/sbs_myvods?jwt-token=${this.view.member.jwt}&offset=${e}&limit=
+    주소 //apis.cpbc.co.kr/play-api/1.0/sbs_program/like/programs?jwt-token=${this.view.member.jwt}&offset=${e}&limit=
+    주소 //apis.cpbc.co.kr/play-api/1.0/sbs_vodall/likecount/CP_${t.programId}?jwt-token=
+    주소 //apis.cpbc.co.kr/radio-api/schedule/
+    주소 //img.cpbc.co.kr/default/noimage/270X152.jpg
+    주소 //news-api.cpbc.co.kr/article/list?cnbc_category=${e}&page=${t}&limit=
+    주소 //news-api.cpbc.co.kr/category/list
+    주소 //program.cpbc.co.kr/advertise/${i}/${a}/${r}
+    주소 //static.apis.cpbc.co.kr/main-api/section/program/fm?keyword_index=${e.id}&offset=${s}&limit=
+    주소 //static.apis.cpbc.co.kr/main-api/section/program/tv?keyword_index=${e.id}&offset=${s}&limit=
+    주소 //static.apis.cpbc.co.kr/main-api/section/theme/${t}/program/${e}?offset=${s}&limit=
+    주소 //static.apis.cpbc.co.kr/main-api/section/theme/id/${e}?offset=${i}&limit=
+    주소 //static.apis.cpbc.co.kr/main-api/section/theme/list/aod?keyword_index=${e.id}&offset=${s}&limit=
+    주소 //static.apis.cpbc.co.kr/main-api/section/theme/list/vod?keyword_index=${e.id}&offset=${s}&limit=
+    주소 //static.apis.cpbc.co.kr/play-api/1.0/onair/channel/radio
+    주소 //static.apis.cpbc.co.kr/play-api/1.0/onair/channel/tv
+    주소 //static.apis.cpbc.co.kr/radio-api/schedule/01/
+    주소 //static.cpbc.co.kr/main/index.json
+    주소 //static.cpbc.co.kr/main/section/aod.json
+    주소 //static.cpbc.co.kr/main/section/custom.json
+    주소 //static.cpbc.co.kr/main/section/library.json
+    주소 //static.cpbc.co.kr/main/section/onair.json
+    주소 //static.cpbc.co.kr/main/section/support.json
+    주소 //static.cpbc.co.kr/main/section/vod.json
+    주소 https://img.cpbc.co.kr/default/noimage/270X152.jpg
+    주소 https://img.cpbc.co.kr/default/onair.jpg
+    주소 https://mass.cpbc.co.kr
+    주소 https://member.cpbc.co.kr/home/L01.html?return_url=
+    주소 https://member.cpbc.co.kr/home/mypage/M02.html
+    주소 https://news-api.cpbc.co.kr/menu/menuTemporaryArticleList?type=libraryMenuArticle
+    주소 https://news.cpbc.co.kr/article/${e.mediaid}?div=lib-kw
+    주소 https://static.cpbc.co.kr/common/javascript/talkplus-js-0.3.4.js
+    … am:e.program_title,image:e.image_url,target:e.target,href:e.link_url,popupPlayable:e.is_player}))]:this.view.offset=-1}}),customElements.define("cpbc-onair",class extends HTMLElement{constructor(){super(),CpbcBase.import(this),CpbcNet.import(this),CpbcCuration.import(this),CpbcGnb.import(this),CpbcPath.i
+    … (this),CpbcGnb.import(this),CpbcPath.import(this),CpbcSeo.import(this),this.view={channel:"",player:{title:"",startTime:"",endTime:"",homePageUrl:""},schedule:{items:[]},curation:{items:[]}},this.state={isopen_chat:{TV:!0,RADIO:!0}}}async connectedCallback(){try{this.render(),this.view.channel=this.querySel
+    … channel=this.querySelector("cpbc-tab").getSelected(),await this.fetch(),this.renderPlayer(),this.renderChatting(),this.renderRadioBanner(),this.renderSchedule(),this.renderCuration(),this.seo.setTitle(`온에어 : ${this.view.channel.title} : cpbc플러스`)}catch(e){this.log(e)}}render(){try{this.innerHTML=`<div> 
+    …  <div id="${this.uuid}-chatting"></div> </div> <div id="${this.uuid}-radio-banner"></div> <div id="${this.uuid}-schedule"></div> <div id="${this.uuid}-curation"></div> </div>`;var e=this.querySelector("cpbc-tab");e.updateItems((()=>{var e=[{id:"tv",tit
+    … ters.find(e=>"channel"===e.key)?.value||"tv";return e.forEach(e=>{e.selected=e.id===t}),e})()),e.addEventListener("clicked",async e=>{location.href="/onair.html?channel="+e.detail.selected.id})}catch(e){this.log(e)}}renderPlayer(){try{var e=this.querySelector(`#${this.uuid}-player`);let{channel:s,player:
+    … erySelector(`#${this.uuid}-player`);let{channel:s,player:t}=this.view;e.innerHTML=`<div class="playerBlock_w"> <div class="playerModuleWrap_onair"> <div class="playerModuleVideo"> <cpbc-live-player channel="${s.id}" poster="${t?.image|
+    … h(e){this.log(e)}}renderRadioBanner(){try{var e=this.querySelector(`#${this.uuid}-radio-banner`);"RADIO"===this.view.channel.title?e.innerHTML="<cpbc-onair-radio-banner></cpbc-onair-radio-banner>":e.innerHTML=""}catch(e){this.log(e)}}renderSchedule(){try{var e=this.querySelector(`#${this.uuid}-schedule`)
+    … dioBanner(){try{var e=this.querySelector(`#${this.uuid}-radio-banner`);"RADIO"===this.view.channel.title?e.innerHTML="<cpbc-onair-radio-banner></cpbc-onair-radio-banner>":e.innerHTML=""}catch(e){this.log(e)}}renderSchedule(){try{var e=this.querySelector(`#${this.uuid}-schedule`),t=this.view.schedule;e.in
+    … nner`);"RADIO"===this.view.channel.title?e.innerHTML="<cpbc-onair-radio-banner></cpbc-onair-radio-banner>":e.innerHTML=""}catch(e){this.log(e)}}renderSchedule(){try{var e=this.querySelector(`#${this.uuid}-schedule`),t=this.view.schedule;e.innerHTML="<cpbc-onair-schedule></cpbc-onair-schedule>",e.querySelect
+    … cpbc-onair-radio-banner></cpbc-onair-radio-banner>":e.innerHTML=""}catch(e){this.log(e)}}renderSchedule(){try{var e=this.querySelector(`#${this.uuid}-schedule`),t=this.view.schedule;e.innerHTML="<cpbc-onair-schedule></cpbc-onair-schedule>",e.querySelector("cpbc-onair-schedule").updateItems(t.items)}catch(e)
+    … ></cpbc-onair-radio-banner>":e.innerHTML=""}catch(e){this.log(e)}}renderSchedule(){try{var e=this.querySelector(`#${this.uuid}-schedule`),t=this.view.schedule;e.innerHTML="<cpbc-onair-schedule></cpbc-onair-schedule>",e.querySelector("cpbc-onair-schedule").updateItems(t.items)}catch(e){this.log(e)}}renderCur
+    … :e.innerHTML=""}catch(e){this.log(e)}}renderSchedule(){try{var e=this.querySelector(`#${this.uuid}-schedule`),t=this.view.schedule;e.innerHTML="<cpbc-onair-schedule></cpbc-onair-schedule>",e.querySelector("cpbc-onair-schedule").updateItems(t.items)}catch(e){this.log(e)}}renderCuration(){try{let t=this.qu
+    … erHTML=""}catch(e){this.log(e)}}renderSchedule(){try{var e=this.querySelector(`#${this.uuid}-schedule`),t=this.view.schedule;e.innerHTML="<cpbc-onair-schedule></cpbc-onair-schedule>",e.querySelector("cpbc-onair-schedule").updateItems(t.items)}catch(e){this.log(e)}}renderCuration(){try{let t=this.querySelect
+    … e){this.log(e)}}renderSchedule(){try{var e=this.querySelector(`#${this.uuid}-schedule`),t=this.view.schedule;e.innerHTML="<cpbc-onair-schedule></cpbc-onair-schedule>",e.querySelector("cpbc-onair-schedule").updateItems(t.items)}catch(e){this.log(e)}}renderCuration(){try{let t=this.querySelector(`#${this.u
+    … s.log(e)}}renderSchedule(){try{var e=this.querySelector(`#${this.uuid}-schedule`),t=this.view.schedule;e.innerHTML="<cpbc-onair-schedule></cpbc-onair-schedule>",e.querySelector("cpbc-onair-schedule").updateItems(t.items)}catch(e){this.log(e)}}renderCuration(){try{let t=this.querySelector(`#${this.uuid}-cura
+    … r e=this.querySelector(`#${this.uuid}-schedule`),t=this.view.schedule;e.innerHTML="<cpbc-onair-schedule></cpbc-onair-schedule>",e.querySelector("cpbc-onair-schedule").updateItems(t.items)}catch(e){this.log(e)}}renderCuration(){try{let t=this.querySelector(`#${this.uuid}-curation`);var e=this.view.curatio
+    … is.querySelector(`#${this.uuid}-schedule`),t=this.view.schedule;e.innerHTML="<cpbc-onair-schedule></cpbc-onair-schedule>",e.querySelector("cpbc-onair-schedule").updateItems(t.items)}catch(e){this.log(e)}}renderCuration(){try{let t=this.querySelector(`#${this.uuid}-curation`);var e=this.view.curation;t.inner
+    … eplaceAll(" ","").replaceAll(".",""),r={tv:`//apis.cpbc.co.kr/broadplan-api/cpbc_broadplan?brd_ymd=${a}&chn_cd=01`,radio:"//apis.cpbc.co.kr/radio-api/schedule/"+a}[e.id],c=null,l=([t,c]=await Promise.all([this.net.get(r),this.net.get("//static.cpbc.co.kr/main/section/onair.json")]),t.map(e=>{let t={now:s.ge
+    … io:"//apis.cpbc.co.kr/radio-api/schedule/"+a}[e.id],c=null,l=([t,c]=await Promise.all([this.net.get(r),this.net.get("//static.cpbc.co.kr/main/section/onair.json")]),t.map(e=>{let t={now:s.getTime(),start:new Date(e.START_DATE).getTime()+i,end:new Date(e.END_DATE).getTime()+i};return{programId:e.PROGRAMID
+    … .HOMEPAGE_URL,progress:t.start<=t.now&&t.now<t.end?100*(t.now-t.start)/(t.end-t.start):0}}));this.view.player=l.find(e=>0<e.progress)||null,this.view.schedule.items=l,this.view.curation.items=c.map((e,t)=>this.curation.parse(e,t)),this.view.channel=this.querySelector("cpbc-tab").getSelected()}catch(e){this.
+    … e(e,t)),this.view.channel=this.querySelector("cpbc-tab").getSelected()}catch(e){this.log(e),location.href="/40X.html"}}}),customElements.define("cpbc-onair-radio-banner",class extends HTMLElement{constructor(){super(),CpbcBase.import(this),this.view={items:[]},this.state={swiper:null}}async connectedCall
+    … 기</a> </div> </div>`,this.dispatchEvent(new CustomEvent("rendered"))}catch(e){this.log(e)}}}),customElements.define("cpbc-onair-schedule",class extends HTMLElement{constructor(){super(),CpbcBase.import(this),this.view={items:[]},this.state={swiper:null}}async connectedCallback
+    …  </div> </div>`,this.dispatchEvent(new CustomEvent("rendered"))}catch(e){this.log(e)}}}),customElements.define("cpbc-onair-schedule",class extends HTMLElement{constructor(){super(),CpbcBase.import(this),this.view={items:[]},this.state={swiper:null}}async connectedCallback(){try{th
+    … g(e)}}render(){try{this.innerHTML=`<div class="contentBlock_w"> <div class="titleline_w titleflex"> <div class="titlelineTitle">편성표</div> <a href="/schedule.html" class="titleLineText">전체편성표</a> </div> <div class="listModule_w_schedule"></div> 
+    … L=`<div class="contentBlock_w"> <div class="titleline_w titleflex"> <div class="titlelineTitle">편성표</div> <a href="/schedule.html" class="titleLineText">전체편성표</a> </div> <div class="listModule_w_schedule"></div> </div>`,this.dispatchEvent(new Cus
+    …  <div class="titleline_w titleflex"> <div class="titlelineTitle">편성표</div> <a href="/schedule.html" class="titleLineText">전체편성표</a> </div> <div class="listModule_w_schedule"></div> </div>`,this.dispatchEvent(new CustomEvent("rendered"))}catch(e){th
+    … s="titlelineTitle">편성표</div> <a href="/schedule.html" class="titleLineText">전체편성표</a> </div> <div class="listModule_w_schedule"></div> </div>`,this.dispatchEvent(new CustomEvent("rendered"))}catch(e){this.log(e)}}renderItems(){try{var e=this.view.items;this.querySelec
+    … div>`,this.dispatchEvent(new CustomEvent("rendered"))}catch(e){this.log(e)}}renderItems(){try{var e=this.view.items;this.querySelector(".listModule_w_schedule").innerHTML=`<div class="listModuleSlider"> <cpbc-arrow type="1" title="다음" direction="next"></cpbc-arrow> <div class="SliderCont
+    … r{title:e,startTime:t,endTime:s,progress:i}=e;return`<div class="listModuleItem swiper-slide"> <div tabindex="0" class="boxModuleWrap_schedule ${0<i?"current":""}"> <div class="boxModuleInfo"> <strong class="boxModuleTitle">${e}</strong> 
+    … ickable:!1},navigation:{nextEl:s,prevEl:i}}),this.state.swiper.slideTo(this.view.items.findIndex(e=>0<e.progress),1e3)}}),customElements.define("cpbc-schedule-media",class extends HTMLElement{constructor(){super(),CpbcBase.import(this),CpbcPath.import(this),this.view={items:[{id:"tv",title:"TV",selected:!0}
+    … se.import(this),CpbcPath.import(this),this.view={items:[{id:"tv",title:"TV",selected:!0},{id:"radio",title:"RADIO",selected:!1},{id:"weekly",title:"주간편성표",selected:!1}]}}async connectedCallback(){try{let t=this.path.get().parameters.find(e=>"channel"===e.key)?.value||"tv";this.view.items.forEach(e=>{e
+    … ("rendered"))}catch(e){this.log(e)}}getSelected(){try{return this.view.items.find(e=>e.selected)}catch(e){this.log(e)}}}),customElements.define("cpbc-schedule-program",class extends HTMLElement{constructor(){super(),CpbcBase.import(this),CpbcNet.import(this),this.view={channel:"",date:"",today:!1,items:[]}}
+    … s.view;var t=await this.net.get({tv:`//apis.cpbc.co.kr/broadplan-api/cpbc_broadplan?brd_ymd=${e}&chn_cd=01`,radio:"//static.apis.cpbc.co.kr/radio-api/schedule/01/"+e}[i]);switch(i){case"tv":this.view.items=t.filter(e=>0<e.TITLE.length).map(e=>{let t={now:a.getTime(),start:new Date(e.START_DATE).getTime()+s,
+    … e:e.TITLE,section:e.SECTION||"",image:e.PROGRAM_IMAGE||{tv:"https://img.cpbc.co.kr/default/noimage/270X152.jpg",radio:"https://img.cpbc.co.kr/default/onair.jpg"}[i],startTime:new Intl.DateTimeFormat(navigator.language,{hour:"numeric",minute:"2-digit"}).format(new Date(new Date(t.start))),endTime:new Intl
+    … tart:t.getTime(),end:s.getTime()};return{title:e.program?.title||"",section:"RA",image:e.program?.images?.horizontal||"https://img.cpbc.co.kr/default/onair.jpg",startTime:new Intl.DateTimeFormat(navigator.language,{hour:"numeric",minute:"2-digit"}).format(t),endTime:new Intl.DateTimeFormat(navigator.lang
+    … e:new Intl.DateTimeFormat(navigator.language,{hour:"numeric",minute:"2-digit"}).format(s),homeUrl:e.urls?.home||"",vodUrl:e.urls?.replay||"",live:e.isOnAir,replay:!1,origin:!1,radioCam:e.visibleRadio?.enabled,sign:!1,replaced:!1,age:"all",progress:i.start<=i.now&&i.now<i.end?100*(i.now-i.start)/(i.end-i.
+    … ress:i.start<=i.now&&i.now<i.end?100*(i.now-i.start)/(i.end-i.start):0}})}this.render()}catch(e){this.log(e)}}ready(){try{this.innerHTML=`<div class="scheduler_programs_w"> ${_.range(10).map(()=>`<div class="scheduler_program_w"> <div class="scheduler_program_inner"> 
+    … :0}})}this.render()}catch(e){this.log(e)}}ready(){try{this.innerHTML=`<div class="scheduler_programs_w"> ${_.range(10).map(()=>`<div class="scheduler_program_w"> <div class="scheduler_program_inner"> <div class="scheduler_program_original"> <div clas
+    … ){try{this.innerHTML=`<div class="scheduler_programs_w"> ${_.range(10).map(()=>`<div class="scheduler_program_w"> <div class="scheduler_program_inner"> <div class="scheduler_program_original"> <div class="scheduler_program_time"> 
+    … "> ${_.range(10).map(()=>`<div class="scheduler_program_w"> <div class="scheduler_program_inner"> <div class="scheduler_program_original"> <div class="scheduler_program_time"> <cpbc-placeholder width="80" height="30" color="lightg
+    … rogram_w"> <div class="scheduler_program_inner"> <div class="scheduler_program_original"> <div class="scheduler_program_time"> <cpbc-placeholder width="80" height="30" color="lightgrey"></cpbc-placeholder> </div> 
+    …  <cpbc-placeholder width="80" height="30" color="lightgrey"></cpbc-placeholder> </div> <div class="scheduler_program_info"> <a href="#" onclick="return false;" class="spi_programhome_link"> <div class="spi_title_w">
+    … </cpbc-placeholder> </div> </a> </div> </div> <div class="schedule_button_w"> <cpbc-placeholder width="100" height="46" color="lightgrey"></cpbc-placeholder> </div> </d
+    …  </div>`).join("")} </div>`}catch(e){this.log(e)}}render(){let{channel:b,today:g,items:e}=this.view;try{this.innerHTML=`<div class="scheduler_programs_w"> ${e.map(e=>{let{title:t,section:s,image:i,startTime:a,homeUrl:r,vodUrl:c,live:l,replay:n,origin:o,radioCam:d,sign:p,replaced:
+    … ection:s,image:i,startTime:a,homeUrl:r,vodUrl:c,live:l,replay:n,origin:o,radioCam:d,sign:p,replaced:h,age:u,progress:v}=e,m=g&&0<v;return`<div class="scheduler_program_w ${m?"scheduler_onair":""}"> <div class="scheduler_program_inner"> <div class="scheduler_program_original"> 
+    … e:a,homeUrl:r,vodUrl:c,live:l,replay:n,origin:o,radioCam:d,sign:p,replaced:h,age:u,progress:v}=e,m=g&&0<v;return`<div class="scheduler_program_w ${m?"scheduler_onair":""}"> <div class="scheduler_program_inner"> <div class="scheduler_program_original"> <div cla
+    … l:r,vodUrl:c,live:l,replay:n,origin:o,radioCam:d,sign:p,replaced:h,age:u,progress:v}=e,m=g&&0<v;return`<div class="scheduler_program_w ${m?"scheduler_onair":""}"> <div class="scheduler_program_inner"> <div class="scheduler_program_original"> <div class="sch
+    … adioCam:d,sign:p,replaced:h,age:u,progress:v}=e,m=g&&0<v;return`<div class="scheduler_program_w ${m?"scheduler_onair":""}"> <div class="scheduler_program_inner"> <div class="scheduler_program_original"> <div class="scheduler_program_time"> 
+    … <v;return`<div class="scheduler_program_w ${m?"scheduler_onair":""}"> <div class="scheduler_program_inner"> <div class="scheduler_program_original"> <div class="scheduler_program_time"> <span class="spt_standard">${a.split(" ")[0]}</span> 
+    … air":""}"> <div class="scheduler_program_inner"> <div class="scheduler_program_original"> <div class="scheduler_program_time"> <span class="spt_standard">${a.split(" ")[0]}</span> <strong class="spt_hours">${a.split(" ")
+    … rd">${a.split(" ")[0]}</span> <strong class="spt_hours">${a.split(" ")[1]}</strong> ${m?'<em class="spt_label_onair">방송중</em>':""} </div> <div class="scheduler_program_info"> <a ${0<r.length?`href="${r}"`:'hre
+    … ${a.split(" ")[1]}</strong> ${m?'<em class="spt_label_onair">방송중</em>':""} </div> <div class="scheduler_program_info"> <a ${0<r.length?`href="${r}"`:'href="#" onclick="return false;"'} class="spi_programhome_link"> 
+    …  <strong class="spi_title">${t}</strong> ${"tv"===b?`<div class="spi_title_icons"> ${l?'<div class="scheduler_label_w_type_live">생</div>':""} ${n?'<div class="scheduler_label_w_type_rerun">재</div>':""} ${o?
+    … ss="spi_title_icons"> ${l?'<div class="scheduler_label_w_type_live">생</div>':""} ${n?'<div class="scheduler_label_w_type_rerun">재</div>':""} ${o?'<div class="scheduler_label_w_type_nowair">본</div>':""} ${
+    … e_live">생</div>':""} ${n?'<div class="scheduler_label_w_type_rerun">재</div>':""} ${o?'<div class="scheduler_label_w_type_nowair">본</div>':""} ${d?'<div class="scheduler_label_w_type_bora">보라</div>':""} ${
+    … rerun">재</div>':""} ${o?'<div class="scheduler_label_w_type_nowair">본</div>':""} ${d?'<div class="scheduler_label_w_type_bora">보라</div>':""} ${p?'<div class="scheduler_label_w_type_signair">수</div>':""} $
+    … nowair">본</div>':""} ${d?'<div class="scheduler_label_w_type_bora">보라</div>':""} ${p?'<div class="scheduler_label_w_type_signair">수</div>':""} ${h?'<div class="scheduler_label_w_type_change">교</div>':""} 
+    … ora">보라</div>':""} ${p?'<div class="scheduler_label_w_type_signair">수</div>':""} ${h?'<div class="scheduler_label_w_type_change">교</div>':""} ${u?`<div class="scheduler_label_w_type_${u}">${u}</div>`:""} </
+    … gnair">수</div>':""} ${h?'<div class="scheduler_label_w_type_change">교</div>':""} ${u?`<div class="scheduler_label_w_type_${u}">${u}</div>`:""} </div>`:""} </div> <div class="spi_img_w"> 
+    …  </div>`:""} </div> </a> </div> </div> <div class="schedule_button_w"> ${0<m?`<a href="/onair.html?channel=${b}" class="schedule_btn_type2">온에어 보기</a>`:_.isString(c)&&0<c.length?`<a href="${c
+    …  </a> </div> </div> <div class="schedule_button_w"> ${0<m?`<a href="/onair.html?channel=${b}" class="schedule_btn_type2">온에어 보기</a>`:_.isString(c)&&0<c.length?`<a href="${c}" class="schedule_btn_type1">${{BR:"다시보기",RA:"다시듣기"
+    …  </div> </div> <div class="schedule_button_w"> ${0<m?`<a href="/onair.html?channel=${b}" class="schedule_btn_type2">온에어 보기</a>`:_.isString(c)&&0<c.length?`<a href="${c}" class="schedule_btn_type1">${{BR:"다시보기",RA:"다시듣기"}[s]}</a>`:""} </di
+    … > ${0<m?`<a href="/onair.html?channel=${b}" class="schedule_btn_type2">온에어 보기</a>`:_.isString(c)&&0<c.length?`<a href="${c}" class="schedule_btn_type1">${{BR:"다시보기",RA:"다시듣기"}[s]}</a>`:""} </div> </div> </div>`}).join("")} </div>`,this.disp
+    …  </div>`}).join("")} </div>`,this.dispatchEvent(new CustomEvent("rendered"))}catch(e){this.log(e)}}}),customElements.define("cpbc-schedule",class extends HTMLElement{constructor(){super(),CpbcBase.import(this),CpbcPath.import(this),CpbcSeo.import(this),this.view={channel:"",date:""}}asyn
+    … value||"tv",this.render(),"weekly"===this.view.channel?this.renderBoard():(this.renderWeekly(),this.view.date=this.parseDate(this.querySelector("cpbc-schedule-weekly").getSelected().id),this.renderProgram()),this.seo.setTitle(`편성표 : ${this.view.channel.toUpperCase()} : cpbc플러스`)}catch(e){this.log(e)}}render
+    … is.renderWeekly(),this.view.date=this.parseDate(this.querySelector("cpbc-schedule-weekly").getSelected().id),this.renderProgram()),this.seo.setTitle(`편성표 : ${this.view.channel.toUpperCase()} : cpbc플러스`)}catch(e){this.log(e)}}render(){try{var e=this.view.channel;this.innerHTML=`<div class="cpbc_schedul
+    … tle(`편성표 : ${this.view.channel.toUpperCase()} : cpbc플러스`)}catch(e){this.log(e)}}render(){try{var e=this.view.channel;this.innerHTML=`<div class="cpbc_scheduler_wrap"> <div class="cpbc_scheduler_w"> <h3 class="titleline_text_w"> <em class="titleline_text">편성표</em> 
+    … } : cpbc플러스`)}catch(e){this.log(e)}}render(){try{var e=this.view.channel;this.innerHTML=`<div class="cpbc_scheduler_wrap"> <div class="cpbc_scheduler_w"> <h3 class="titleline_text_w"> <em class="titleline_text">편성표</em> </h3> <cpbc-schedule-media><
+    … ss="cpbc_scheduler_wrap"> <div class="cpbc_scheduler_w"> <h3 class="titleline_text_w"> <em class="titleline_text">편성표</em> </h3> <cpbc-schedule-media></cpbc-schedule-media> <div id="${this.uuid}-weekly"></div> <div id=
+    … s="cpbc_scheduler_w"> <h3 class="titleline_text_w"> <em class="titleline_text">편성표</em> </h3> <cpbc-schedule-media></cpbc-schedule-media> <div id="${this.uuid}-weekly"></div> <div id="${this.uuid}-program"></div> <div id="
+    …  <h3 class="titleline_text_w"> <em class="titleline_text">편성표</em> </h3> <cpbc-schedule-media></cpbc-schedule-media> <div id="${this.uuid}-weekly"></div> <div id="${this.uuid}-program"></div> <div id="${this.uuid}-board"></
+    … .includes(e)?`<div> <div class="notice_content_w"> <ul class="nc_list_w"> <li class="nc_list_inner">본 편성표는 방송사 사정에 따라 변경 될 수 있습니다.</li> <li class="nc_list_inner">TV 다시보기 동영상은 방송 종료 후 업데이트 됩니다.</li> </ul> </
+    … > <li class="nc_list_inner">TV 다시보기 동영상은 방송 종료 후 업데이트 됩니다.</li> </ul> </div> <ul class="scheduler_definition_w"> <li class="sd_inner"> <div class="sd_term"><div class="scheduler_label_w_type_live">생</div></div> 
+    …  </div> <ul class="scheduler_definition_w"> <li class="sd_inner"> <div class="sd_term"><div class="scheduler_label_w_type_live">생</div></div> <div class="sd_description">생방송</div> </li> <li class="sd_inner">
+    …  <div class="sd_description">생방송</div> </li> <li class="sd_inner"> <div class="sd_term"><div class="scheduler_label_w_type_rerun">재</div></div> <div class="sd_description">재방송</div> </li> <!--<li class="sd_in
+    … v class="sd_description">재방송</div> </li> <!--<li class="sd_inner"> <div class="sd_term"><div class="scheduler_label_w_type_hd">HD</div></div> <div class="sd_description">HD방송</div> </li> <li class="sd_inner">
+    … <div class="sd_description">HD방송</div> </li> <li class="sd_inner"> <div class="sd_term"><div class="scheduler_label_w_type_uhd">U</div></div> <div class="sd_description">UHD방송</div> </li> <li class="sd_inner"
+    … div class="sd_description">UHD방송</div> </li> <li class="sd_inner"> <div class="sd_term"><div class="scheduler_label_w_type_51">5.1</div></div> <div class="sd_description">5.1채널</div> </li>--> <li class="sd_in
+    …  class="sd_description">5.1채널</div> </li>--> <li class="sd_inner"> <div class="sd_term"><div class="scheduler_label_w_type_nowair">본</div></div> <div class="sd_description">본방송</div> </li> <li class="sd_inner
+    …  <div class="sd_description">본방송</div> </li> <li class="sd_inner"> <div class="sd_term"><div class="scheduler_label_w_type_bora">보라</div></div> <div class="sd_description">보이는 라디오</div> </li> <!--<li class="s
+    … ass="sd_description">보이는 라디오</div> </li> <!--<li class="sd_inner"> <div class="sd_term"><div class="scheduler_label_w_type_txtair">자</div></div> <div class="sd_description">자막방송</div> </li>--> <li class="sd_i
+    … v class="sd_description">자막방송</div> </li>--> <li class="sd_inner"> <div class="sd_term"><div class="scheduler_label_w_type_noonair">NO-ON</div></div> <div class="sd_description">온에어불가</div> </li> <li class="s
+    … 자막방송</div> </li>--> <li class="sd_inner"> <div class="sd_term"><div class="scheduler_label_w_type_noonair">NO-ON</div></div> <div class="sd_description">온에어불가</div> </li> <li class="sd_inner"> 
+    … div class="sd_description">온에어불가</div> </li> <li class="sd_inner"> <div class="sd_term"><div class="scheduler_label_w_type_signair">수</div></div> <div class="sd_description">한국수어</div> </li> <!--<li class="sd
+    …  class="sd_description">한국수어</div> </li> <!--<li class="sd_inner"> <div class="sd_term"><div class="scheduler_label_w_type_explain">해</div></div> <div class="sd_description">해설방송</div> </li> <li class="sd_inn
+    … <div class="sd_description">해설방송</div> </li> <li class="sd_inner"> <div class="sd_term"><div class="scheduler_label_w_type_splace">M</div></div> <div class="sd_description">수도권방송</div> </li>--> <li class="sd_
+    …  class="sd_description">수도권방송</div> </li>--> <li class="sd_inner"> <div class="sd_term"><div class="scheduler_label_w_type_change"><span class="icn_scheduler icon_change_small"><i class="ir">교체편성</i></span></div></div> <div class="sd_descri
+    …  </li>--> <li class="sd_inner"> <div class="sd_term"><div class="scheduler_label_w_type_change"><span class="icn_scheduler icon_change_small"><i class="ir">교체편성</i></span></div></div> <div class="sd_description">교체편성</div> </li> 
+    … ner"> <div class="sd_term"><div class="scheduler_label_w_type_change"><span class="icn_scheduler icon_change_small"><i class="ir">교체편성</i></span></div></div> <div class="sd_description">교체편성</div> </li> <li class="sd_inner_type2"> 
+    … _type_change"><span class="icn_scheduler icon_change_small"><i class="ir">교체편성</i></span></div></div> <div class="sd_description">교체편성</div> </li> <li class="sd_inner_type2"> <div class="sd_term"> <ul class="label_
+    …  <div class="sd_term"> <ul class="label_list_w"> <li class="label_list_inner"><div class="scheduler_label_w_type_all"><i class="hide">시청등급</i>All</div></li> <li class="label_list_inner"><div class="scheduler_label_w_type_7"><i
+    … _inner"><div class="scheduler_label_w_type_all"><i class="hide">시청등급</i>All</div></li> <li class="label_list_inner"><div class="scheduler_label_w_type_7"><i class="hide">시청등급</i>7</div></li> <li class="label_list_inner"><div class="scheduler_label_w_type_12"><i cl
+    … list_inner"><div class="scheduler_label_w_type_7"><i class="hide">시청등급</i>7</div></li> <li class="label_list_inner"><div class="scheduler_label_w_type_12"><i class="hide">시청등급</i>12</div></li> <li class="label_list_inner"><div class="scheduler_label_w_type_15"><i 
+    … st_inner"><div class="scheduler_label_w_type_12"><i class="hide">시청등급</i>12</div></li> <li class="label_list_inner"><div class="scheduler_label_w_type_15"><i class="hide">시청등급</i>15</div></li> <li class="label_list_inner"><div class="scheduler_label_w_type_19"><i 
+    … st_inner"><div class="scheduler_label_w_type_15"><i class="hide">시청등급</i>15</div></li> <li class="label_list_inner"><div class="scheduler_label_w_type_19"><i class="hide">시청등급</i>19</div></li> </ul> </div> <div class="sd_descripti
+    … d_description">시청등급</div> </li> </ul> </div>`:""} </div> </div>`,this.querySelector("cpbc-schedule-media").addEventListener("clicked",e=>{location.href="/schedule.html?channel="+e.detail.selected.id})}catch(e){this.log(e)}}renderWeekly(){try{var e=
+    … ul> </div>`:""} </div> </div>`,this.querySelector("cpbc-schedule-media").addEventListener("clicked",e=>{location.href="/schedule.html?channel="+e.detail.selected.id})}catch(e){this.log(e)}}renderWeekly(){try{var e=this.querySelector(`#${this.uuid}-weekly`);e.innerHTML="<cpbc-sc
+    … le.html?channel="+e.detail.selected.id})}catch(e){this.log(e)}}renderWeekly(){try{var e=this.querySelector(`#${this.uuid}-weekly`);e.innerHTML="<cpbc-schedule-weekly></cpbc-schedule-weekly>",e.querySelector("cpbc-schedule-weekly").addEventListener("changed",e=>{this.view.date=this.parseDate(e.detail.selecte
+    … ail.selected.id})}catch(e){this.log(e)}}renderWeekly(){try{var e=this.querySelector(`#${this.uuid}-weekly`);e.innerHTML="<cpbc-schedule-weekly></cpbc-schedule-weekly>",e.querySelector("cpbc-schedule-weekly").addEventListener("changed",e=>{this.view.date=this.parseDate(e.detail.selected.id),this.renderProgra
+    … renderWeekly(){try{var e=this.querySelector(`#${this.uuid}-weekly`);e.innerHTML="<cpbc-schedule-weekly></cpbc-schedule-weekly>",e.querySelector("cpbc-schedule-weekly").addEventListener("changed",e=>{this.view.date=this.parseDate(e.detail.selected.id),this.renderProgram()})}catch(e){this.log(e)}}renderProgra
+    … am(){try{var e=this.querySelector(`#${this.uuid}-program`),{channel:t,date:s}=this.view,i=s===this.parseDate((new Date).getTime());e.innerHTML=`<cpbc-schedule-program channel="${t}" date="${s}" ${i?"today":""}></cpbc-schedule-program>`}catch(e){this.log(e)}}renderBoard(){try{new SBSBoardModule({board_code:"
+    … :t,date:s}=this.view,i=s===this.parseDate((new Date).getTime());e.innerHTML=`<cpbc-schedule-program channel="${t}" date="${s}" ${i?"today":""}></cpbc-schedule-program>`}catch(e){this.log(e)}}renderBoard(){try{new SBSBoardModule({board_code:"schedule_weekly",program_section:"EC",root_element_name:this.uuid+"
+    … -program channel="${t}" date="${s}" ${i?"today":""}></cpbc-schedule-program>`}catch(e){this.log(e)}}renderBoard(){try{new SBSBoardModule({board_code:"schedule_weekly",program_section:"EC",root_element_name:this.uuid+"-board",root_element_type:"I",domain:"cpbc.co.kr"}).init()}catch(e){this.log(e)}}parseDate(
+    … eFormat("ko",{year:"numeric",day:"2-digit",month:"2-digit"}).format(new Date(e)).replaceAll(" ","").replaceAll(".","")}}),customElements.define("cpbc-schedule-weekly",class extends HTMLElement{constructor(){super(),CpbcBase.import(this),this.view={date:new Date,items:[]}}async connectedCallback(){try{this.r
+    … (){try{this.innerHTML=`<div class="weekly_button_w"> <div class="weekly_button_inner"> <button class="wb_prev"><span class="icn_scheduler icon_arrow_weekly"><i class="ir">이전 한주 날짜 보기</i></span></button> <div id="${this.uuid}-items"></div> <button class="wb_next"
+    … y"><i class="ir">이전 한주 날짜 보기</i></span></button> <div id="${this.uuid}-items"></div> <button class="wb_next"><span class="icn_scheduler icon_arrow_weekly"><i class="ir">이전 한주 날짜 보기</i></span></button> <div class="wb_button_w"> <div class="schedule_button_w">
+    … class="icn_scheduler icon_arrow_weekly"><i class="ir">이전 한주 날짜 보기</i></span></button> <div class="wb_button_w"> <div class="schedule_button_w"> <a href="#" onclick="return false;" class="schedule_btn_type3">오늘</a> </div> <div class="sched
+    … utton> <div class="wb_button_w"> <div class="schedule_button_w"> <a href="#" onclick="return false;" class="schedule_btn_type3">오늘</a> </div> <div class="schedule_button_w"> <div class="schedule_button_inner" id="datepicke
+    … edule_button_w"> <a href="#" onclick="return false;" class="schedule_btn_type3">오늘</a> </div> <div class="schedule_button_w"> <div class="schedule_button_inner" id="datepicker_test_weekly"> <span class="schedule_date_w"><input typ
+    … lick="return false;" class="schedule_btn_type3">오늘</a> </div> <div class="schedule_button_w"> <div class="schedule_button_inner" id="datepicker_test_weekly"> <span class="schedule_date_w"><input type="date" class="schedule_btn_type4-1" title="달력 
+    …  <div class="schedule_button_w"> <div class="schedule_button_inner" id="datepicker_test_weekly"> <span class="schedule_date_w"><input type="date" class="schedule_btn_type4-1" title="달력 레이어 열기"></span> </div> </div> </div> 
+    …  <div class="schedule_button_inner" id="datepicker_test_weekly"> <span class="schedule_date_w"><input type="date" class="schedule_btn_type4-1" title="달력 레이어 열기"></span> </div> </div> </div> </div> </div>`,this.querySele
+    … w.date=new Date(e.getTime()+864e5*this.view.items.length),this.updateItems(),this.renderItems(),this.dispatchChanged()}),this.querySelector('a[class="schedule_btn_type3"]').addEventListener("click",()=>{this.view.date=new Date,this.updateItems(),this.renderItems(),this.dispatchChanged()}),this.querySelector
+    …  <div class="boxModuleDate">...</div> </div> </a> </div>`;case 3:return`<div class="boxModuleWrap_onair"> <a href="#" onclick="return false;" class="boxModuleLink"> <div class="boxModuleImage"> <cpbc-placeholder
+    …  <div class="boxModuleDate">${l}</div> </div> </a> </div>`;case 3:return`<div class="boxModuleWrap_onair"> <a ${o?"":`href="${i}" target="${a}"`} class="boxModuleLink"> <div class="boxModuleImage"> <img src="${t}
+    …  <div class="boxModuleDate">...</div> </div> </a> </div>`;case 3:return`<div class="boxModuleWrap_onair"> <a href="#" onclick="return false;" class="boxModuleLink"> <div class="boxModuleImage"> <cpbc-placeholder
+    …  <div class="boxModuleDate">${l}</div> </div> </a> </div>`;case 3:return`<div class="boxModuleWrap_onair"> <a ${o?"":`href="${i}" target="${a}"`} class="boxModuleLink"> <div class="boxModuleImage"> <img src="${t}
+    … c-visual-item",class extends HTMLElement{constructor(){super(),CpbcBase.import(this),this.view={programId:"",title:"",description:"",image:"",logo:"",onair:!1,items:[]}}static get observedAttributes(){return["program-id","title","description","image","logo"]}attributeChangedCallback(t,e,s){try{this.parse
+    … =e,this.renderItems()}catch(e){this.log(e)}}render(){try{var{title:e,description:t,image:s,logo:i}=this.view;this.innerHTML=`<div class=""><!-- 관련컨텐츠 편성타입만 클래스 추가 --> <div class="topSpotContent-info"> <img src="${i}" class="topSpotTitle-img" alt="${e}"> ${_.isString(e
+    … e)}}}),customElements.define("cpbc-main-visual",class extends HTMLElement{constructor(){super(),CpbcBase.import(this),CpbcNet.import(this),this.view={onair:{items:[]},items:[]},this.state={swiper:null}}async connectedCallback(){try{await this.fetchOnair(),this.render()}catch(e){this.log(e)}}updateItems(e
+    … ull}}async connectedCallback(){try{await this.fetchOnair(),this.render()}catch(e){this.log(e)}}updateItems(e){try{this.view.items=e.map(e=>(this.view.onair.items.includes(e.programId)&&(e.items=[{title:"온에어 보기",href:"/onair.html",activated:!0,fresh:!1},...e.items]),e)),this.renderItems(),this.executeSwip
+    … er()}catch(e){this.log(e)}}updateItems(e){try{this.view.items=e.map(e=>(this.view.onair.items.includes(e.programId)&&(e.items=[{title:"온에어 보기",href:"/onair.html",activated:!0,fresh:!1},...e.items]),e)),this.renderItems(),this.executeSwiper()}catch(e){this.log(e)}}render(){try{var e=1<this.view.items.leng
+    … .updateItems(s)})})}catch(e){this.log(e)}}async fetchOnair(){try{var e,t;[e,t]=await Promise.all([this.net.get("//static.apis.cpbc.co.kr/play-api/1.0/onair/channel/tv"),this.net.get("//static.apis.cpbc.co.kr/play-api/1.0/onair/channel/radio")]),this.view.onair.items=[e.onair.info.programid,t.onair.info.p
+    … t;[e,t]=await Promise.all([this.net.get("//static.apis.cpbc.co.kr/play-api/1.0/onair/channel/tv"),this.net.get("//static.apis.cpbc.co.kr/play-api/1.0/onair/channel/radio")]),this.view.onair.items=[e.onair.info.programid,t.onair.info.programid]}catch(e){this.log(e)}}executeSwiper(){var e=""===this.querySe
+    … t.get("//static.apis.cpbc.co.kr/play-api/1.0/onair/channel/tv"),this.net.get("//static.apis.cpbc.co.kr/play-api/1.0/onair/channel/radio")]),this.view.onair.items=[e.onair.info.programid,t.onair.info.programid]}catch(e){this.log(e)}}executeSwiper(){var e=""===this.querySelector("cpbc-visual-toggle")?.getA
+    … .apis.cpbc.co.kr/play-api/1.0/onair/channel/tv"),this.net.get("//static.apis.cpbc.co.kr/play-api/1.0/onair/channel/radio")]),this.view.onair.items=[e.onair.info.programid,t.onair.info.programid]}catch(e){this.log(e)}}executeSwiper(){var e=""===this.querySelector("cpbc-visual-toggle")?.getAttribute("enabl
+    … pi/1.0/onair/channel/tv"),this.net.get("//static.apis.cpbc.co.kr/play-api/1.0/onair/channel/radio")]),this.view.onair.items=[e.onair.info.programid,t.onair.info.programid]}catch(e){this.log(e)}}executeSwiper(){var e=""===this.querySelector("cpbc-visual-toggle")?.getAttribute("enabled")||!1,t=1<this.view.
+  https://static.cpbc.co.kr/gnb/javascript/cpbc-gnb-desktop-1.0.0.js → 상태 200 · 글자 수 48180
+    주소 //apis.cpbc.co.kr/bbs/V2.0/basic/board/lists?offset=0&limit=1&action_type=json&board_code=main_sp_notice
+    주소 //static.cpbc.co.kr/gnb/api/desktop-gnb.json
+    주소 //www.cpbc.co.kr
+    주소 http://www.cpbc.co.kr/me.html
+    주소 http://www.dgcpbc.co.kr/
+    주소 http://www.djcpbc.co.kr/
+    주소 https://2022refugee.cpbc.co.kr/
+    주소 https://ccm.cpbc.co.kr
+    주소 https://contents.cpbc.co.kr/
+    주소 https://cpbccamp.com/
+    주소 https://image.cpbc.co.kr/imomp/imOMP.SBSi.SaaS.Cloud.CPBC.pdf
+    주소 https://jjs.cpbc.co.kr
+    주소 https://member.cpbc.co.kr/home/L01.html?return_url=${returnUrl}
+    주소 https://member.cpbc.co.kr/home/L01_A.html?return_url=${returnUrl}&mode=logout
+    주소 https://news.cpbc.co.kr/inform.html
+    주소 https://news.cpbc.co.kr/newspaper.html
+    주소 https://news.cpbc.co.kr/newspaperSupport.html
+    주소 https://pope.cpbc.co.kr/
+    주소 https://program.cpbc.co.kr/tv/choir/main
+    주소 https://program.cpbc.co.kr/tv/notice/board/10922946?cmd=view&page=1&board_no=62
+    주소 https://program.cpbc.co.kr/tv/notice/board/2580946?cmd=view&page=1&board_no=${parsed.list[0].BOARD_SEQ}
+    주소 https://program.cpbc.co.kr/tv/notice/boards/2580946
+    주소 https://program.cpbc.co.kr/tv/notice/boards/2589946
+    주소 https://program.cpbc.co.kr/tv/notice/boards/3694946
+    주소 https://program.cpbc.co.kr/tv/notice/view/2585946
+    주소 https://program.cpbc.co.kr/tv/notice/view/2902946
+    주소 https://saint.cpbc.co.kr
+    주소 https://sanacutis.cpbc.co.kr
+    주소 https://search.cpbc.co.kr
+    주소 https://search.cpbc.co.kr/?keyword=${encodeURIComponent(keyword)}
+    주소 https://seven.cpbc.co.kr/
+    주소 https://static.cpbc.co.kr/common/javascript/log/1.0.0/log_module.min.js
+    주소 https://web.cpbc.co.kr/ad/newspaper.html
+    주소 https://web.cpbc.co.kr/ad/page/newspaper.html
+    주소 https://web.cpbc.co.kr/christmas/
+    주소 https://web.cpbc.co.kr/company/page/main.html
+    주소 https://web.cpbc.co.kr/company/page/page2.html
+    주소 https://web.cpbc.co.kr/cpbc-policy/copyright.html
+    주소 https://web.cpbc.co.kr/cpbc-policy/ethic.html
+    주소 https://web.cpbc.co.kr/cpbc-policy/personalpolicies.html
+    … iv> </a> <div id="${this.uuid}-member" class="gothermenu_link"></div> <a href="https://www.cpbc.co.kr/schedule.html" class="gothermenu_link"> <div class="glist_text">편성표</div> </a> <a href="https://www.cpbc.co.
+    … ermenu_link"></div> <a href="https://www.cpbc.co.kr/schedule.html" class="gothermenu_link"> <div class="glist_text">편성표</div> </a> <a href="https://www.cpbc.co.kr/onair.html" class="gothermenu_link"> <div class="glist_
+    … ml" class="gothermenu_link"> <div class="glist_text">편성표</div> </a> <a href="https://www.cpbc.co.kr/onair.html" class="gothermenu_link"> <div class="glist_text">온에어</div> </a> </div> </div> 
+  https://static.cpbc.co.kr/player/javascript/cpbc-player-1.0.0.js → 상태 200 · 글자 수 154695
+    주소 //apis.cpbc.co.kr/play-api/1.0/sbs_myvod/time
+    주소 //log-collector.cpbc.co.kr/v2
+    주소 //m.cpbc.co.kr/gate.html?id=${programCode}
+    주소 //program.cpbc.co.kr/tv/${programCode}/vods/${menuId}
+    주소 //static.apis.cpbc.co.kr/play-api/1.0/sbs_vodall/contents/${programId}/${mediaId}?sort=old&absolute_show=Y&srsdiv=01
+    주소 //static.apis.cpbc.co.kr/program-api/1.0/menu/${this.view.programCode}
+    주소 //static.cpbc.co.kr/player/javascript/hls-1.3.4.min.js
+    주소 https://member.cpbc.co.kr/home/L01.html?return_url=${encodeURIComponent(location.href)}
+    주소 https://member.cpbc.co.kr/mobile/login.php?return_url=${encodeURIComponent(location.href)}
+    …  const { member, channel, past } = this.view; const fetched = await this.net.get(`//apis.cpbc.co.kr/play-api/2.0/onair/channel/${channel}?jwt-token=${member?.jwt || ''}&ssl=${location.protocol === 'https:' ? 'Y' : 'N'}`); const onair = fetched.onair; // TODO: 소스
+    … apis.cpbc.co.kr/play-api/2.0/onair/channel/${channel}?jwt-token=${member?.jwt || ''}&ssl=${location.protocol === 'https:' ? 'Y' : 'N'}`); const onair = fetched.onair; // TODO: 소스정리 필요 CpbcPlayerGlobal.state.data = onair; this.view.poster = onair.info.thumbimg; this.view.preview =
+    … play-api/2.0/onair/channel/${channel}?jwt-token=${member?.jwt || ''}&ssl=${location.protocol === 'https:' ? 'Y' : 'N'}`); const onair = fetched.onair; // TODO: 소스정리 필요 CpbcPlayerGlobal.state.data = onair; this.view.poster = onair.info.thumbimg; this.view.preview = { Y: tr
+    …  || ''}&ssl=${location.protocol === 'https:' ? 'Y' : 'N'}`); const onair = fetched.onair; // TODO: 소스정리 필요 CpbcPlayerGlobal.state.data = onair; this.view.poster = onair.info.thumbimg; this.view.preview = { Y: true, N: false }[fetched.onair.info.preview_yn]; 
+    … === 'https:' ? 'Y' : 'N'}`); const onair = fetched.onair; // TODO: 소스정리 필요 CpbcPlayerGlobal.state.data = onair; this.view.poster = onair.info.thumbimg; this.view.preview = { Y: true, N: false }[fetched.onair.info.preview_yn]; this.view.source = past ? 
+    … lobal.state.data = onair; this.view.poster = onair.info.thumbimg; this.view.preview = { Y: true, N: false }[fetched.onair.info.preview_yn]; this.view.source = past ? 'https://onair1.cpbc.co.kr:8888/tv/smil:live.smil/playlist.m3u8' : onair.source.mediasource.mediaur
+    … mbimg; this.view.preview = { Y: true, N: false }[fetched.onair.info.preview_yn]; this.view.source = past ? 'https://onair1.cpbc.co.kr:8888/tv/smil:live.smil/playlist.m3u8' : onair.source.mediasource.mediaurl; await this.render(); await this.loadHls(); t
+    …  N: false }[fetched.onair.info.preview_yn]; this.view.source = past ? 'https://onair1.cpbc.co.kr:8888/tv/smil:live.smil/playlist.m3u8' : onair.source.mediasource.mediaurl; await this.render(); await this.loadHls(); this.net.post('//log-collector.cpbc.co.kr/v2', { he
+    …  M: 'v', F: 'm' }[member?.gender] || '', date: parseInt(member?.birthyear) + 1000 || 1000, programId: onair.info.programid, programTitle: onair.info.title, contentType: 'live', contentGroup: { tv: 'vod', 
+    … member?.gender] || '', date: parseInt(member?.birthyear) + 1000 || 1000, programId: onair.info.programid, programTitle: onair.info.title, contentType: 'live', contentGroup: { tv: 'vod', radio: 'aod' }[channel], 
+    … : 'v', F: 'm' }[member?.gender] || '', date: parseInt(member?.birthyear) + 1000 || 1000, programId: onair.info.programid, programTitle: onair.info.title, contentType: 'live-status', contentGroup: { tv: 'vo
+    … ?.gender] || '', date: parseInt(member?.birthyear) + 1000 || 1000, programId: onair.info.programid, programTitle: onair.info.title, contentType: 'live-status', contentGroup: { tv: 'vod', radio: 'aod' }[cha
+    … ion = position; // TODO: 연동규격 정립 또는 하드코딩 결졍 필요.. //let url = this._data[this.position].link; let url = window.location.pathname.indexOf('onair.html') > -1 ? 'https://adservice.sbs.co.kr/NetInsight/vast/cpbc/cpbc_player/live@preroll' : 'https://adservice.sbs.co.kr/NetInsight/vast/cpbc/cpbc_pl
+    … ber= //& c.x.section=03 //& c.x.channel=TV //& c.x.clip= //& c.x.program= //& c.x.category=01 //& c.x.onair=1 //& c.x.paid=0 // ad_sbs.cmparam let params = new URLSearchParams(cmparam); // ad_25.cmdata const cmdata = CpbcPl
+    … m', cmdata.programid); params.set('c.x.clip', cmdata.clipid); params.set('c.x.number', cmdata.contentnumber); params.set('c.x.onair', params.get('c.x.onair') ? params.get('c.x.onair') : ''); params.set('c.x.paid', params.get('c.x.paid') ? params.get('c.x.paid') : ''); 
+    …  params.set('c.x.clip', cmdata.clipid); params.set('c.x.number', cmdata.contentnumber); params.set('c.x.onair', params.get('c.x.onair') ? params.get('c.x.onair') : ''); params.set('c.x.paid', params.get('c.x.paid') ? params.get('c.x.paid') : ''); params.set('c.x.vodt
+    … p', cmdata.clipid); params.set('c.x.number', cmdata.contentnumber); params.set('c.x.onair', params.get('c.x.onair') ? params.get('c.x.onair') : ''); params.set('c.x.paid', params.get('c.x.paid') ? params.get('c.x.paid') : ''); params.set('c.x.vodtype', params.get('c.x.vodt
+    … programid: cmdata.programid, clipid: cmdata.clipid, contentnumber: cmdata.contentnumber, targetnation: cmdata.targetnation, isonair: cmdata.isonair, ispay: cmdata.ispay, vodtype: cmdata.vodtype, broaddate: cmdata.broaddate, playtime: cmdata.playtime, 
+    … a.programid, clipid: cmdata.clipid, contentnumber: cmdata.contentnumber, targetnation: cmdata.targetnation, isonair: cmdata.isonair, ispay: cmdata.ispay, vodtype: cmdata.vodtype, broaddate: cmdata.broaddate, playtime: cmdata.playtime, starttime: cmdat
+############################################################
+■ TBN
+  main.tbn → 상태 200 (https://www.tbn.or.kr/main.tbn) · 글자 수 228691
+    링크 [경인   FM100.5 MHz] https://www.tbn.or.kr/main.tbn?area_code=6
+    링크 [울산   FM104.1 MHz] https://www.tbn.or.kr/main.tbn?area_code=9
+    링크 [편성표] https://www.tbn.or.kr/broadcast/program.tbn?BOARD_ID=P001&amp;page_code=1&amp;area_code=1
+    링크 [경인] javascript:;
+    링크 [울산] javascript:;
+    링크 [07:00  출발! 경인대행진   M] https://www.tbn.or.kr/program/main.tbn?area_code=6&amp;forum_seq=203
+    링크 [14:05  tbn 차차차 (경인) ] https://www.tbn.or.kr/program/main.tbn?area_code=6&amp;forum_seq=206
+    링크 [17:00  달리는 라디오 (경인) ] https://www.tbn.or.kr/program/main.tbn?area_code=6&amp;forum_seq=208
+    링크 [07:00  출발! 울산대행진   M] https://www.tbn.or.kr/program/main.tbn?area_code=9&amp;forum_seq=290
+    링크 [14:05  tbn 차차차 (울산) ] https://www.tbn.or.kr/program/main.tbn?area_code=9&amp;forum_seq=306
+    링크 [16:05  tbn 울산매거진   M] https://www.tbn.or.kr/program/main.tbn?area_code=9&amp;forum_seq=368
+    링크 [18:05  달리는 라디오 (울산) ] https://www.tbn.or.kr/program/main.tbn?area_code=9&amp;forum_seq=291
+    링크 [출발! 경인대행진  -->] https://www.tbn.or.kr/program/main.tbn?area_code=6&amp;forum_seq=203
+    링크 [출발! 울산대행진  -->] https://www.tbn.or.kr/program/main.tbn?area_code=9&amp;forum_seq=290
+    링크 [tbn울산ㅣtbn차차차    14:0] https://www.youtube.com/live/a8QTEowJGzc?si=vZlbMAB-jd_X1vmd
+    링크 [[tbn울산교통방송]프리랜서 작가 모] https://www.tbn.or.kr/notice/recruitinfo_freelancer_view.tbn?BOARD_ID=N016&amp;area_code=1&amp;BOARD_SEQ=10023316
+  [편성표 후보] https://www.tbn.or.kr/broadcast/program.tbn?BOARD_ID=P001&amp;page_code=1&amp;area_code=1 → 상태 200 · 글자 수 5731
+  (시간 모양 글자 없음)
+############################################################
+■ BeFM
+  홈 → 상태 200 · 글자 수 44372
+    링크 [Special Program] https://www.befm.or.kr/program/main.php?pg=special
+    링크 [방송 편성규약] https://www.befm.or.kr/sub/template.php?midx=47&amp;lang=ko
+    링크 [Special Program] https://www.befm.or.kr/program/main.php?pg=special
+    링크 [방송 편성규약] https://www.befm.or.kr/sub/template.php?midx=47&amp;lang=ko
+    링크 [] https://www.befm.or.kr/program/template.php?midx=77&amp;pg=allstar&amp;mode=view&amp;page=1&amp;intnum=17077
+    링크 [Special Interview   Morni] https://www.befm.or.kr/program/template.php?midx=89&pg=morning&cn=morning_sp
+    링크 [내가 만드는 학교 뉴스!   BeFM Scho] https://www.befm.or.kr/sub/template.php?midx=124&evtcode=school2_2022
+    링크 [The Interview   Busan Wor] https://www.befm.or.kr/program/template.php?midx=89&pg=worldwide&cn=scent
+    링크 [On the Mic   4 My Busan] https://www.befm.or.kr/program/template.php?midx=89&pg=4mybusan&cn=onthemic
+    링크 [Guest Segments   Sweet Da] https://www.befm.or.kr/program/template.php?midx=89&pg=sweetdate&cn=reboot_guest
+    링크 [내가 만드는 학교 뉴스!   BeFM Scho] https://www.befm.or.kr/program/main.php?pg=school2
+    링크 [평소-->] https://befm.or.kr/program/template.php?midx=76&pg=school2
+    링크 [Open Studio_ Oct. 15th - ] https://www.befm.or.kr/program/template.php?midx=133&amp;mode=view&amp;intnum=18551&amp;pg=allstar
+    링크 [CHEN JianYing 영화감독 261014] https://www.befm.or.kr/program/template.php?midx=133&amp;mode=view&amp;intnum=18550&amp;pg=chinese
+    링크 [ZHAO SiQi 콘텐츠 크리에이터 26101] https://www.befm.or.kr/program/template.php?midx=133&amp;mode=view&amp;intnum=18549&amp;pg=chinese
+    링크 [조위수 부산외대 K문화교육전공학과장 26100] https://www.befm.or.kr/program/template.php?midx=133&amp;mode=view&amp;intnum=18548&amp;pg=chinese
+    링크 [김병진 부산앵커센터장] https://www.befm.or.kr/program/template.php?midx=133&amp;mode=view&amp;intnum=18547&amp;pg=worldwide
+    링크 [박상화 푸드트래블 대표] https://www.befm.or.kr/program/template.php?midx=133&amp;mode=view&amp;intnum=18545&amp;pg=worldwide
+    링크 [방민준·제성주 부산소프트웨어마이스터고등학교 V] https://www.befm.or.kr/program/template.php?midx=133&amp;mode=view&amp;intnum=18544&amp;pg=worldwide
+    링크 [Daniel MATTES Producer of] https://www.befm.or.kr/program/template.php?midx=133&amp;mode=view&amp;intnum=18543&amp;pg=worldwide
+    링크 [All-Star English      MON] https://www.befm.or.kr/program/main.php?pg=allstar
+    링크 [4 My Busan      MON-FRI  ] https://www.befm.or.kr/program/main.php?pg=4mybusan
+    링크 [BeFM Kids Club      SAT  ] https://www.befm.or.kr/program/main.php?pg=kidsclub
+    링크 [BeFM School Reporters    ] https://www.befm.or.kr/program/main.php?pg=school2
+    링크 [Busan Worldwide      MON-] https://www.befm.or.kr/program/main.php?pg=worldwide
+    링크 [Cine Concerto      SAT-SU] https://www.befm.or.kr/program/main.php?pg=cine
+    링크 [All-Star English      MON] https://www.befm.or.kr/program/main.php?pg=allstar
+    링크 [4 My Busan      MON-FRI  ] https://www.befm.or.kr/program/main.php?pg=4mybusan
+    링크 [Busan Worldwide      MON-] https://www.befm.or.kr/program/main.php?pg=worldwide
+    링크 [Morning Wave In Busan    ] https://www.befm.or.kr/program/main.php?pg=morning
+    링크 [Sweet Date      MON-FRI  ] https://www.befm.or.kr/program/main.php?pg=sweetdate
+    링크 [釜山华语知音      MON-FRI   23:] https://www.befm.or.kr/program/main.php?pg=chinese
+    링크 [4 My Busan      MON-FRI  ] https://www.befm.or.kr/program/main.php?pg=4mybusan
+    링크 [BeFM Kids Club      SAT  ] https://www.befm.or.kr/program/main.php?pg=kidsclub
+    링크 [BeFM School Reporters    ] https://www.befm.or.kr/program/main.php?pg=school2
+    링크 [Cine Concerto      SAT-SU] https://www.befm.or.kr/program/main.php?pg=cine
+    링크 [Hello, Vietnam      SAT-S] https://www.befm.or.kr/program/main.php?pg=vietnam
+    링크 [News Rewind      SAT   10] https://www.befm.or.kr/program/main.php?pg=rewind
+  [후보] https://www.befm.or.kr/sub/template.php?midx=7&lang=ko → 상태 200 · 글자 수 15481
+  (시간 모양 글자 없음)
+  [후보] https://www.befm.or.kr/sub/schedule.php?lang=ko → 상태 200 · 글자 수 92
+  (시간 모양 글자 없음)

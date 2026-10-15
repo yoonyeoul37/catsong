@@ -567,13 +567,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final card = isDark ? const Color(0xFF32302C) : const Color(0xFFFBF8F2);
     final ink = isDark ? const Color(0xFFF4EFE5) : const Color(0xFF17140F);
     final subC = isDark ? const Color(0xFFA29A8B) : const Color(0xFF746C60);
-    final point = context.watch<ThemeProvider>().primaryColor;
-    final accent = _readable(
-        point.value == 0xFF2589E8
-            ? (isDark ? const Color(0xFF6FB0FF) : const Color(0xFF2F7DE8))
-            : point,
-        isDark);
-    final showDots = dots > 1;
+    final showDots = dots > 1; // 색은 왼쪽 동그라미 그림만 (이름표·점은 회색·먹색)
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -618,7 +612,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text(label,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: accent, fontSize: 10, height: 1.1, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
+                        style: TextStyle(color: subC, fontSize: 10, height: 1.1, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
                     const SizedBox(height: 2),
                     Text(title,
                         maxLines: 1,
@@ -658,7 +652,7 @@ class _HomeScreenState extends State<HomeScreen> {
               left: 0,
               right: 0,
               bottom: 6,
-              child: Center(child: _cardDots(dot, dots, accent, subC.withOpacity(0.35))),
+              child: Center(child: _cardDots(dot, dots, ink, subC.withOpacity(0.3))),
             ),
         ],
       ),

@@ -3645,7 +3645,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get voiceGuide => '音声案内';
 
   @override
-  String get voiceGuideInfo => 'アプリの起動・終了時に短いあいさつが流れます（韓国語のみ）。';
+  String get voiceGuideInfo => 'アプリの起動・終了時に短いあいさつが流れます（準備中）。';
 
   @override
   String get infoTodaySong => '今日の一曲';

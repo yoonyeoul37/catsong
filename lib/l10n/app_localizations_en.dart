@@ -3805,7 +3805,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get voiceGuideInfo =>
-      'A short greeting plays when you open or close the app (Korean only).';
+      'A short greeting plays when you open or close the app (coming soon).';
 
   @override
   String get infoTodaySong => 'Song of the day';

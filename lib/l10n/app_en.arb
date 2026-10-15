@@ -1250,7 +1250,7 @@
   "soundEffect": "Sound effects",
   "soundEffectInfo": "A soft drop sound when you edit, save or delete. Vibrates in vibrate mode and stays silent when muted.",
   "voiceGuide": "Voice greeting",
-  "voiceGuideInfo": "A short greeting plays when you open or close the app (Korean only).",
+  "voiceGuideInfo": "A short greeting plays when you open or close the app (coming soon).",
   "infoTodaySong": "Song of the day",
   "infoTodaySongD": "Picks one of your songs each day",
   "infoLongTime": "Listen again",

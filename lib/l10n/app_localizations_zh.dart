@@ -3642,7 +3642,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get voiceGuide => '语音问候';
 
   @override
-  String get voiceGuideInfo => '打开或关闭应用时播放简短问候（仅韩语）。';
+  String get voiceGuideInfo => '打开或关闭应用时播放简短问候（即将推出）。';
 
   @override
   String get infoTodaySong => '今日一曲';
@@ -7738,7 +7738,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get voiceGuide => '語音問候';
 
   @override
-  String get voiceGuideInfo => '開啟或關閉應用程式時播放簡短問候（僅韓語）。';
+  String get voiceGuideInfo => '開啟或關閉應用程式時播放簡短問候（即將推出）。';
 
   @override
   String get infoTodaySong => '今日一曲';

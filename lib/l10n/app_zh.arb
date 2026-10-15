@@ -1168,7 +1168,7 @@
   "soundEffect": "音效",
   "soundEffectInfo": "编辑、保存、删除完成时用水滴声提示。振动模式下振动，静音时不出声。",
   "voiceGuide": "语音问候",
-  "voiceGuideInfo": "打开或关闭应用时播放简短问候（仅韩语）。",
+  "voiceGuideInfo": "打开或关闭应用时播放简短问候（即将推出）。",
   "infoTodaySong": "今日一曲",
   "infoTodaySongD": "每天从你的音乐中挑一首",
   "infoLongTime": "好久没听",

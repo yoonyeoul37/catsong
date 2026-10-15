@@ -551,8 +551,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final cardBox = _cardBoxOf(box);
     final cardRect = cardBox != null ? cardBox.localToGlobal(Offset.zero, ancestor: ovBox) & cardBox.size : null;
     final top = (cardRect?.bottom ?? iconPos.dy + box.size.height) + 10;
-    // 줄이 화면 아래쪽에 있으면 말풍선을 카드 위로 (아래 시스템 버튼과 안 겹치게)
-    final above = (cardRect?.center.dy ?? iconPos.dy) > ovBox.size.height * 0.5;
+    // 말풍선은 카드 위·아래 중 자리가 더 넓은 쪽으로 (위 상태바 · 아래 시스템 버튼과 안 겹치게)
+    final pad = MediaQuery.of(context).padding;
+    final spaceBelow = ovBox.size.height - top - pad.bottom - 12;
+    final spaceAbove = (cardRect?.top ?? iconPos.dy) - 10 - pad.top - 12;
+    final above = spaceAbove > spaceBelow;
+    // 그래도 길면 말풍선 안에서 위아래로 밀어서 보기
+    final maxH = (above ? spaceAbove : spaceBelow).clamp(160.0, double.infinity).toDouble();
     final bottomGap = ovBox.size.height - (cardRect?.top ?? iconPos.dy) + 10;
 
     // 소리: 효과음 켜져 있으면 톡 (폰이 진동 모드면 진동, 무음이면 조용) / 꺼져 있으면 평소 터치 진동
@@ -594,6 +599,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               items: items,
               foot: foot,
               tailX: iconCx - 16,
+              maxHeight: maxH,
               isDark: d,
               onClose: _hideBubble,
               onClosed: _removeBubbleNow,
@@ -664,6 +670,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Row(
                       children: [
                         Text(tr.accentColor, style: TextStyle(color: _sText(d), fontSize: 14.5)),
+                        if (t.pointColorName != null)
+                          Text(' (${pointColorName(t.pointColorName!)})', style: TextStyle(color: _sTextHint(d), fontSize: 13)),
                         // ⓘ 누르면 바뀌는 곳 말풍선
                         GestureDetector(
                           behavior: HitTestBehavior.opaque,
@@ -686,7 +694,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ],
                 ),
               ),
-              Text(t.pointColorName ?? '', style: TextStyle(color: _sTextHint(d), fontSize: 12.5)),
+
             ],
           ),
           const SizedBox(height: 12),
@@ -1283,10 +1291,12 @@ class _InfoBubble extends StatefulWidget {
   final bool isDark;
   final VoidCallback onClose;
   final VoidCallback onClosed;
+  final double maxHeight; // 이보다 길면 안에서 스크롤
   final bool tailDown; // true면 말풍선이 위에 있고 꼬리가 아래(ⓘ 쪽)를 가리킴
   const _InfoBubble({
     super.key,
     this.tailDown = false,
+    this.maxHeight = 600,
     this.title,
     this.text,
     this.items,
@@ -1357,6 +1367,7 @@ class _InfoBubbleState extends State<_InfoBubble> with SingleTickerProviderState
               ),
               Container(
                 padding: const EdgeInsets.fromLTRB(18, 12, 12, 14),
+                constraints: BoxConstraints(maxHeight: widget.maxHeight),
                 decoration: BoxDecoration(
                   color: bg,
                   borderRadius: BorderRadius.circular(16),
@@ -1396,50 +1407,61 @@ class _InfoBubbleState extends State<_InfoBubble> with SingleTickerProviderState
                         ),
                       ],
                     ),
-                    if (items.isNotEmpty) ...[
-                      const SizedBox(height: 6),
-                      for (var i = 0; i < items.length; i++) ...[
-                        if (i > 0) Container(height: 1, margin: const EdgeInsets.only(right: 6), color: fg.withOpacity(0.12)),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 7, 6, 7),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 9,
-                                height: 9,
-                                margin: const EdgeInsets.only(top: 6),
-                                decoration: BoxDecoration(color: point, shape: BoxShape.circle),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Text.rich(
-                                  TextSpan(children: [
-                                    TextSpan(text: items[i].$1, style: const TextStyle(fontWeight: FontWeight.w700)),
-                                    const TextSpan(text: '  '),
-                                    TextSpan(text: items[i].$2, style: TextStyle(color: fg.withOpacity(0.75))),
-                                  ]),
-                                  style: TextStyle(color: fg, fontSize: 14, height: 1.5),
+                    // 설명 목록: 길면 말풍선 안에서 위아래로 밀어서 보기
+                    Flexible(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                          if (items.isNotEmpty) ...[
+                            const SizedBox(height: 6),
+                            for (var i = 0; i < items.length; i++) ...[
+                              if (i > 0) Container(height: 1, margin: const EdgeInsets.only(right: 6), color: fg.withOpacity(0.12)),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 7, 6, 7),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 9,
+                                      height: 9,
+                                      margin: const EdgeInsets.only(top: 6),
+                                      decoration: BoxDecoration(color: point, shape: BoxShape.circle),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text.rich(
+                                        TextSpan(children: [
+                                          TextSpan(text: items[i].$1, style: const TextStyle(fontWeight: FontWeight.w700)),
+                                          const TextSpan(text: '  '),
+                                          TextSpan(text: items[i].$2, style: TextStyle(color: fg.withOpacity(0.75))),
+                                        ]),
+                                        style: TextStyle(color: fg, fontSize: 14, height: 1.5),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
-                          ),
+                          ],
+                          if (widget.foot != null) ...[
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Icon(Icons.info_outline_rounded, size: 15, color: fg.withOpacity(0.65)),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(widget.foot!,
+                                      style: TextStyle(color: fg.withOpacity(0.65), fontSize: 12.5)),
+                                ),
+                              ],
+                            ),
+                          ],
+                          ],
                         ),
-                      ],
-                    ],
-                    if (widget.foot != null) ...[
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Icon(Icons.info_outline_rounded, size: 15, color: fg.withOpacity(0.65)),
-                          const SizedBox(width: 6),
-                          Expanded(
-                            child: Text(widget.foot!,
-                                style: TextStyle(color: fg.withOpacity(0.65), fontSize: 12.5)),
-                          ),
-                        ],
                       ),
-                    ],
+                    ),
                   ],
                 ),
               ),

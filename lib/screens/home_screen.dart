@@ -798,7 +798,10 @@ class _HomeScreenState extends State<HomeScreen> {
             elevation: 0,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           ),
-          child: Text(tr.done, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700)),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(tr.done, maxLines: 1, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700)),
+          ),
         ),
       ),
     );

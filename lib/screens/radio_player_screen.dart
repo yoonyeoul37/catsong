@@ -753,7 +753,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                               : RadioCountryStationsScreen(country: country);
                                   Navigator.of(context).pushReplacement(
                                     PageRouteBuilder(
-                                      pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.25)), child: listScreen), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
+                                      pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: radioTextScaler(context)), child: listScreen), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
                                       transitionsBuilder: (context, animation, secondaryAnimation, child) =>
                                           FadeTransition(opacity: animation, child: child),
                                       transitionDuration: const Duration(milliseconds: 250),

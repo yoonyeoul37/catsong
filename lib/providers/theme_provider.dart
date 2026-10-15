@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+
+/// 라디오 목록 화면 글자 크기 — 글자 크기 '보통'일 때 지금처럼 1.25,
+/// 앱 글자 크기 설정과 좁은 폰 자동 줄임(main.dart와 같은 계산)도 같이 따라가게
+TextScaler radioTextScaler(BuildContext context) {
+  final t = Provider.of<ThemeProvider>(context, listen: false).textScale;
+  final fit = (MediaQuery.sizeOf(context).width / 400).clamp(0.85, 1.0);
+  return TextScaler.linear(1.25 * (t / 1.12) * fit);
+}
 
 class ThemeProvider extends ChangeNotifier {
   Color _primaryColor = const Color(0xFF2589E8); // 포인트 색 (기본: 파란소리)

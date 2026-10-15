@@ -1005,6 +1005,8 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                   ),
                   Expanded(
                     child: Center(
+                      // 화면이 짧거나 글자가 크면 이 부분만 위아래로 밀어서 보기
+                      child: SingleChildScrollView(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -1043,6 +1045,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                                     ])),
                           ),
                         ],
+                      ),
                       ),
                     ),
                   ),

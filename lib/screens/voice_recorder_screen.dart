@@ -354,56 +354,66 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
               ),
             ),
             child: SafeArea(
-              child: Column(
-                children: [
-                  // 위쪽: 닫기 · 제목
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          onPressed: _cancel,
-                          icon: Icon(Icons.close, color: Colors.white.withOpacity(0.7)),
-                        ),
-                        Expanded(
-                          child: Center(
-                            child: Text(tr.newRecording,
-                                style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 14.5)),
+              // 화면이 짧거나 글자가 크면 위아래로 밀어서 보기 (평소 모양은 그대로)
+              child: LayoutBuilder(
+                builder: (context, box) => SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: box.maxHeight),
+                    child: IntrinsicHeight(
+                      child: Column(
+                        children: [
+                          // 위쪽: 닫기 · 제목
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  onPressed: _cancel,
+                                  icon: Icon(Icons.close, color: Colors.white.withOpacity(0.7)),
+                                ),
+                                Expanded(
+                                  child: Center(
+                                    child: Text(tr.newRecording,
+                                        style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 14.5)),
+                                  ),
+                                ),
+                                const SizedBox(width: 48),
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 48),
-                      ],
+                          const Spacer(flex: 2),
+                          _statusPill(),
+                          const SizedBox(height: 18),
+                          // 큰 시간
+                          Text(
+                            _timeText,
+                            style: GoogleFonts.quicksand(
+                              color: Colors.white,
+                              fontSize: 58,
+                              fontWeight: FontWeight.w300,
+                              letterSpacing: 1,
+                              fontFeatures: const [FontFeature.tabularFigures()],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          _timerChip(),
+                          const SizedBox(height: 28),
+                          // 파형
+                          SizedBox(
+                            height: 150,
+                            width: double.infinity,
+                            child: CustomPaint(
+                              painter: _WavePainter(List.of(_levels), active: _state == _RecState.recording),
+                            ),
+                          ),
+                          const Spacer(flex: 3),
+                          _controls(),
+                          const SizedBox(height: 40),
+                        ],
+                      ),
                     ),
                   ),
-                  const Spacer(flex: 2),
-                  _statusPill(),
-                  const SizedBox(height: 18),
-                  // 큰 시간
-                  Text(
-                    _timeText,
-                    style: GoogleFonts.quicksand(
-                      color: Colors.white,
-                      fontSize: 58,
-                      fontWeight: FontWeight.w300,
-                      letterSpacing: 1,
-                      fontFeatures: const [FontFeature.tabularFigures()],
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  _timerChip(),
-                  const SizedBox(height: 28),
-                  // 파형
-                  SizedBox(
-                    height: 150,
-                    width: double.infinity,
-                    child: CustomPaint(
-                      painter: _WavePainter(List.of(_levels), active: _state == _RecState.recording),
-                    ),
-                  ),
-                  const Spacer(flex: 3),
-                  _controls(),
-                  const SizedBox(height: 40),
-                ],
+                ),
               ),
             ),
           ),

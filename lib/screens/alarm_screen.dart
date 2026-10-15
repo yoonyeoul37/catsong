@@ -621,7 +621,10 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
                 elevation: 0,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: Text(tr.save, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(tr.save, maxLines: 1, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+              ),
             ),
           ),
         ),

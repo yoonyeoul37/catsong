@@ -45,7 +45,7 @@ class OverseasRadioView extends StatelessWidget {
         : RadioCountryStationsScreen(country: country);
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        pageBuilder: (ctx, __, ___) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: const TextScaler.linear(1.25)), child: listScreen), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
+        pageBuilder: (ctx, __, ___) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: radioTextScaler(ctx)), child: listScreen), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
         transitionsBuilder: (_, animation, __, child) =>
             FadeTransition(opacity: animation, child: child),
         transitionDuration: const Duration(milliseconds: 250),
@@ -129,235 +129,245 @@ class OverseasRadioView extends StatelessWidget {
               child: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  children: [
-                    // 위: 닫기 / 즐겨찾기
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () => _close(context),
-                          icon: const Icon(Icons.keyboard_arrow_down_rounded,
-                              color: Colors.white, size: 28),
-                        ),
-                        const Spacer(),
-                        // 전원: 종료 확인창
-                        if (onExit != null)
-                          IconButton(
-                            onPressed: onExit,
-                            icon: const Icon(Icons.power_settings_new_rounded,
-                                color: Color(0xFFE8877E), size: 20),
-                          ),
-                        // 홈: 처음 화면까지 한 번에
-                        IconButton(
-                          onPressed: () {
-                            _vibrate();
-                            Navigator.of(context).popUntil((route) => route.isFirst);
-                          },
-                          icon: const Icon(Icons.home_rounded,
-                              color: Colors.white, size: 20),
-                        ),
-                        // TV로 듣기 (연결되면 하늘색)
-                        if (onCast != null)
-                          AnimatedBuilder(
-                            animation: CastService.instance,
-                            builder: (context, _) => IconButton(
-                              onPressed: onCast,
-                              icon: Icon(
-                                CastService.instance.isConnected ? Icons.cast_connected : Icons.cast,
-                                color: CastService.instance.isConnected ? const Color(0xFF7FB8F0) : Colors.white,
-                                size: 19,
+                // 화면이 짧거나 글자가 크면 위아래로 밀어서 보기 (평소 모양은 그대로)
+                child: LayoutBuilder(
+                  builder: (context, box) => SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(minHeight: box.maxHeight),
+                      child: IntrinsicHeight(
+                        child: Column(
+                          children: [
+                            // 위: 닫기 / 즐겨찾기
+                            Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () => _close(context),
+                                  icon: const Icon(Icons.keyboard_arrow_down_rounded,
+                                      color: Colors.white, size: 28),
+                                ),
+                                const Spacer(),
+                                // 전원: 종료 확인창
+                                if (onExit != null)
+                                  IconButton(
+                                    onPressed: onExit,
+                                    icon: const Icon(Icons.power_settings_new_rounded,
+                                        color: Color(0xFFE8877E), size: 20),
+                                  ),
+                                // 홈: 처음 화면까지 한 번에
+                                IconButton(
+                                  onPressed: () {
+                                    _vibrate();
+                                    Navigator.of(context).popUntil((route) => route.isFirst);
+                                  },
+                                  icon: const Icon(Icons.home_rounded,
+                                      color: Colors.white, size: 20),
+                                ),
+                                // TV로 듣기 (연결되면 하늘색)
+                                if (onCast != null)
+                                  AnimatedBuilder(
+                                    animation: CastService.instance,
+                                    builder: (context, _) => IconButton(
+                                      onPressed: onCast,
+                                      icon: Icon(
+                                        CastService.instance.isConnected ? Icons.cast_connected : Icons.cast,
+                                        color: CastService.instance.isConnected ? const Color(0xFF7FB8F0) : Colors.white,
+                                        size: 19,
+                                      ),
+                                    ),
+                                  ),
+                                // 더보기: 공유 / 앱 평가 / 설정 / 방송국 홈페이지
+                                IconButton(
+                                  onPressed: () {
+                                    _vibrate();
+                                    showMoreMenuSheet(
+                                      context,
+                                      shareText: tr.radioShareText(station.name),
+                                      shareSubtitle: tr.radioShareSub,
+                                      stationHomepage: station.homepage,
+                                    );
+                                  },
+                                  icon: const Icon(Icons.more_vert_rounded,
+                                      color: Colors.white, size: 24),
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
+                            // 큰 로고
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(logoSize * 0.2),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.35),
+                                    blurRadius: 30,
+                                    offset: const Offset(0, 12),
+                                  ),
+                                ],
+                              ),
+                              child: StationLogo(
+                                logoUrl: station.logoUrl,
+                                name: station.name,
+                                size: logoSize,
+                                fontSize: logoSize * 0.22,
                               ),
                             ),
-                          ),
-                        // 더보기: 공유 / 앱 평가 / 설정 / 방송국 홈페이지
-                        IconButton(
-                          onPressed: () {
-                            _vibrate();
-                            showMoreMenuSheet(
-                              context,
-                              shareText: tr.radioShareText(station.name),
-                              shareSubtitle: tr.radioShareSub,
-                              stationHomepage: station.homepage,
-                            );
-                          },
-                          icon: const Icon(Icons.more_vert_rounded,
-                              color: Colors.white, size: 24),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    // 큰 로고
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(logoSize * 0.2),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.35),
-                            blurRadius: 30,
-                            offset: const Offset(0, 12),
-                          ),
-                        ],
-                      ),
-                      child: StationLogo(
-                        logoUrl: station.logoUrl,
-                        name: station.name,
-                        size: logoSize,
-                        fontSize: logoSize * 0.22,
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-                    // 이름
-                    Text(
-                      station.name,
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: -0.3,
-                      ),
-                    ),
-                    if (sub.isNotEmpty) ...[
-                      const SizedBox(height: 6),
-                      Text(
-                        sub,
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            color: Colors.white.withOpacity(0.65), fontSize: 14),
-                      ),
-                    ],
-                    const SizedBox(height: 14),
-                    // LIVE 표시 (접속 중이면 작은 로딩)
-                    SizedBox(
-                      height: 16,
-                      child: isLoading
-                          ? const SizedBox(
-                        width: 14,
-                        height: 14,
-                        child: CircularProgressIndicator(
-                            strokeWidth: 1.5, color: Colors.white70),
-                      )
-                          : Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 6,
-                            height: 6,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: isPlaying
-                                  ? const Color(0xFFE8877E)
-                                  : Colors.white38,
+                            const SizedBox(height: 32),
+                            // 이름
+                            Text(
+                              station.name,
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.3,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            'LIVE',
-                            style: TextStyle(
-                              color: isPlaying
-                                  ? const Color(0xFFF2B8B2)
-                                  : Colors.white38,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1.2,
+                            if (sub.isNotEmpty) ...[
+                              const SizedBox(height: 6),
+                              Text(
+                                sub,
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: Colors.white.withOpacity(0.65), fontSize: 14),
+                              ),
+                            ],
+                            const SizedBox(height: 14),
+                            // LIVE 표시 (접속 중이면 작은 로딩)
+                            SizedBox(
+                              height: 16,
+                              child: isLoading
+                                  ? const SizedBox(
+                                width: 14,
+                                height: 14,
+                                child: CircularProgressIndicator(
+                                    strokeWidth: 1.5, color: Colors.white70),
+                              )
+                                  : Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: 6,
+                                    height: 6,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: isPlaying
+                                          ? const Color(0xFFE8877E)
+                                          : Colors.white38,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'LIVE',
+                                    style: TextStyle(
+                                      color: isPlaying
+                                          ? const Color(0xFFF2B8B2)
+                                          : Colors.white38,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 1.2,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 16),
+                            MountainEqBars(isPlaying: isPlaying),
+                            const Spacer(),
+                            // 아래 조작 버튼
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    _vibrate();
+                                    showModalBottomSheet(
+                                      context: context,
+                                      backgroundColor: Colors.transparent,
+                                      barrierColor: Colors.black.withOpacity(0.7),
+                                      isScrollControlled: true,
+                                      useSafeArea: true,
+                                      builder: (_) => const SleepTimerSheet(),
+                                    );
+                                  },
+                                  icon: Icon(
+                                    Icons.bedtime_outlined,
+                                    color: radio.isSleepTimerActive
+                                        ? const Color(0xFF2F7DE8)
+                                        : Colors.white70,
+                                    size: 24,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () => _move(context, -1),
+                                  icon: const Icon(Icons.skip_previous_rounded,
+                                      color: Colors.white, size: 40),
+                                ),
+                                GestureDetector(
+                                  onTap: isLoading
+                                      ? null
+                                      : () {
+                                    _vibrate();
+                                    final cast = CastService.instance;
+                                    if (cast.isConnected) {
+                                      cast.tvPlaying ? cast.pause() : cast.play(); // TV를 멈추고/재생
+                                    } else {
+                                      context.read<RadioProvider>().togglePlayPause();
+                                    }
+                                  },
+                                  child: Container(
+                                    width: 72,
+                                    height: 72,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: isLoading
+                                        ? const Padding(
+                                      padding: EdgeInsets.all(24),
+                                      child: CircularProgressIndicator(
+                                          strokeWidth: 2, color: Colors.black54),
+                                    )
+                                        : Icon(
+                                      isPlaying
+                                          ? Icons.pause_rounded
+                                          : Icons.play_arrow_rounded,
+                                      color: Colors.black,
+                                      size: 38,
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () => _move(context, 1),
+                                  icon: const Icon(Icons.skip_next_rounded,
+                                      color: Colors.white, size: 40),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    _vibrate();
+                                    context.read<RadioProvider>().toggleFavorite(station);
+                                  },
+                                  icon: HeartPop(
+                                    on: isFav,
+                                    child: Icon(
+                                      isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                                      color: isFav ? const Color(0xFFE05A4F) : Colors.white70,
+                                      size: 24,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 28),
+                          ],
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    MountainEqBars(isPlaying: isPlaying),
-                    const Spacer(),
-                    // 아래 조작 버튼
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            _vibrate();
-                            showModalBottomSheet(
-                              context: context,
-                              backgroundColor: Colors.transparent,
-                              barrierColor: Colors.black.withOpacity(0.7),
-                              isScrollControlled: true,
-                              useSafeArea: true,
-                              builder: (_) => const SleepTimerSheet(),
-                            );
-                          },
-                          icon: Icon(
-                            Icons.bedtime_outlined,
-                            color: radio.isSleepTimerActive
-                                ? const Color(0xFF2F7DE8)
-                                : Colors.white70,
-                            size: 24,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () => _move(context, -1),
-                          icon: const Icon(Icons.skip_previous_rounded,
-                              color: Colors.white, size: 40),
-                        ),
-                        GestureDetector(
-                          onTap: isLoading
-                              ? null
-                              : () {
-                            _vibrate();
-                            final cast = CastService.instance;
-                            if (cast.isConnected) {
-                              cast.tvPlaying ? cast.pause() : cast.play(); // TV를 멈추고/재생
-                            } else {
-                              context.read<RadioProvider>().togglePlayPause();
-                            }
-                          },
-                          child: Container(
-                            width: 72,
-                            height: 72,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: isLoading
-                                ? const Padding(
-                              padding: EdgeInsets.all(24),
-                              child: CircularProgressIndicator(
-                                  strokeWidth: 2, color: Colors.black54),
-                            )
-                                : Icon(
-                              isPlaying
-                                  ? Icons.pause_rounded
-                                  : Icons.play_arrow_rounded,
-                              color: Colors.black,
-                              size: 38,
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () => _move(context, 1),
-                          icon: const Icon(Icons.skip_next_rounded,
-                              color: Colors.white, size: 40),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            _vibrate();
-                            context.read<RadioProvider>().toggleFavorite(station);
-                          },
-                          icon: HeartPop(
-                            on: isFav,
-                            child: Icon(
-                              isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                              color: isFav ? const Color(0xFFE05A4F) : Colors.white70,
-                              size: 24,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 28),
-                  ],
+                  ),
                 ),
               ),
             ),

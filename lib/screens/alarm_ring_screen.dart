@@ -367,7 +367,10 @@ class _AlarmRingScreenState extends State<AlarmRingScreen> {
                           elevation: 0,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
                         ),
-                        child: Text(tr.turnOff, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(tr.turnOff, maxLines: 1, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -381,7 +384,10 @@ class _AlarmRingScreenState extends State<AlarmRingScreen> {
                           side: BorderSide(color: _cream.withOpacity(0.3), width: 1.2),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
                         ),
-                        child: Text(tr.snooze5, style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600)),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(tr.snooze5, maxLines: 1, style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600)),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 6),

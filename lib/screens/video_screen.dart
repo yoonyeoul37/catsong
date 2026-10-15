@@ -477,12 +477,17 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
 
   // 영상 칸들 (최신순·오래된순이면 날짜마다 작은 제목)
   List<Widget> _videoSlivers(VideoProvider p, Color baseColor) {
+    // 칸 비율: 글자 크기 '보통'이면 지금처럼 1.18, 글자를 키우면 제목 자리만 그만큼 더 높게
+    final cellW = (MediaQuery.sizeOf(context).width - 34) / 2; // 양옆 12 + 가운데 10
+    final textUp = (context.read<ThemeProvider>().textScale / 1.12).clamp(1.0, 2.0);
+    final cellH = cellW / 1.18 + (cellW / 1.18 - cellW * 9 / 16) * (textUp - 1);
+    final cellRatio = cellW / cellH;
     Widget grid(List<Video> list, double top, {String dateMode = 'full'}) => SliverPadding(
           padding: EdgeInsets.fromLTRB(12, top, 12, 8),
           sliver: SliverGrid(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 1.18, // 16:9 사진 + 제목 두 줄
+              childAspectRatio: cellRatio, // 16:9 사진 + 제목 두 줄
               crossAxisSpacing: 10,
               mainAxisSpacing: 14,
             ),

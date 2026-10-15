@@ -205,7 +205,10 @@ Future<void> _editText() async {
                         side: BorderSide(color: line),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                       ),
-                      child: Text(tr.revert, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(tr.revert, maxLines: 1, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                      ),
                     ),
                   ),
                 ),
@@ -221,7 +224,10 @@ Future<void> _editText() async {
                         elevation: 0,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                       ),
-                      child: Text(tr.apply, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(tr.apply, maxLines: 1, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                      ),
                     ),
                   ),
                 ),

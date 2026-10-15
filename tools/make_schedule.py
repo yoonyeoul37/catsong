@@ -278,28 +278,20 @@ def tbs_programs(list_path):
 
 
 def tbs_images(progs, plist, day):
+    # 제목으로만 맞추기 (시간으로 맞추면 편성이 바뀐 날 다른 프로그램 사진이 붙어서 안 씀)
     def key(t):
         return re.sub(r'[\s,.·!?~\-()（）]', '', t).lower()
-
-    def mins(t):
-        return int(t[:2]) * 60 + int(t[3:5])
     for p in progs:
-        # 1) 이름이 맞으면 (재방송 포함)
+        t = key(p['title'])
         for q in plist:
-            words = [w for w in re.split(r'\s+', q['name']) if len(w) >= 2]
-            name_hit = key(q['name']) and (key(q['name']) in key(p['title']) or key(p['title']) in key(q['name']))
-            tail_hit = len(words) >= 2 and key(' '.join(words[-2:])) in key(p['title'])  # "Summer Lee Diverse Voices"
-            if name_hit or tail_hit:
-                p['image'] = q['image']
-                break
-        if p.get('image'):
-            continue
-        # 2) 요일 · 시간이 맞으면 (4시간 넘는 긴 칸은 빼고)
-        for q in plist:
-            s, e = mins(q['start']), mins(q['end'])
-            if e <= s or e - s > 240 or day.weekday() not in q['days']:
-                continue
-            if s <= mins(p['start']) < e:
+            words = [w for w in re.split(r'\s+', q['name']) if w]
+            cands = [q['name']]
+            if len(words) >= 2:
+                cands.append(' '.join(words[-2:]))  # "Summer Lee Diverse Voices" → "Diverse Voices"
+            if words and len(key(words[-1])) >= 4:
+                cands.append(words[-1])  # "강지연의 머니특별시" → "머니특별시"
+            cands += re.findall(r'\(([^)]{4,})\)', q['name'])  # "首尔, 我來了 (Coming to Seoul)" → "Coming to Seoul"
+            if any(key(c) and (key(c) in t or t in key(c)) for c in cands):
                 p['image'] = q['image']
                 break
 

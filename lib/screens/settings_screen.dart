@@ -20,6 +20,7 @@ import 'bulk_clean_screen.dart';
 import 'bulk_art_screen.dart';
 import 'player_screen.dart' show showPlayerStyleMenu;
 import '../utils/home_card_pref.dart';
+import '../utils/point_color.dart';
 import 'settings_help_screen.dart';
 import 'policy_web_screen.dart';
 import '../services/loudness.dart';
@@ -57,6 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   static const _zoomLevels = [1.0, 1.2, 1.4];
   static const _zoomNames = ['기본', '크게', '아주 크게'];
   double _zoom = 1.0;
+  bool _mainReopened = false; // '다시 보기' 누른 뒤 2초 동안 "카드를 다시 켰어요"
 
   int get _zoomIndex {
     var best = 0;
@@ -195,16 +197,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildTile(context, icon: Icons.style_outlined, title: l.playerStyle, desc: '원하는 재생 화면을 선택하세요', onTap: () => _showPlayerStyleDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.font_download_outlined, title: l.fontChange, desc: '원하는 글꼴을 선택하세요', onTap: () => _showFontDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.text_fields, title: l.textSize, desc: '글자 크기를 조절하세요', onTap: () => _showTextSizeDialog(context), primaryColor: primaryColor),
-          // 메인 홈 맨 위 카드 (나만의 색·라디오·팁) — 다시 켜면 닫은 카드도 다시 나와요
+          // 메인 홈 맨 위 카드 (나만의 색·라디오·팁) — 오늘 다 닫았으면 설명 끝에 '다시 보기 ›'
           ValueListenableBuilder<bool>(
             valueListenable: MainCardPref.on,
-            builder: (context, on, _) => _buildTile(context,
-                icon: Icons.campaign_outlined,
-                title: '메인 알림 카드',
-                desc: '메인 화면 맨 위 카드예요. 다시 켜면 닫은 카드도 나와요',
-                onTap: () => MainCardPref.setOn(!on),
-                primaryColor: primaryColor,
-                trailing: Switch(value: on, onChanged: (v) => MainCardPref.setOn(v), activeColor: primaryColor, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
+            builder: (context, on, _) => ValueListenableBuilder<bool>(
+              valueListenable: MainCardPref.allClosedToday,
+              builder: (context, allClosed, _) {
+                final closed = on && allClosed && !_mainReopened;
+                final point = pointColorOf(context);
+                const descStyle = TextStyle(fontSize: 11.5);
+                Widget? descWidget;
+                if (_mainReopened) {
+                  // 누른 뒤 2초: 그 자리에서 바로 알려 주기
+                  descWidget = Text('카드를 다시 켰어요',
+                      maxLines: 1, style: descStyle.copyWith(color: point, fontWeight: FontWeight.w700));
+                } else if (closed) {
+                  descWidget = GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: _reopenMainCards,
+                    child: Text.rich(
+                      TextSpan(children: [
+                        const TextSpan(text: '오늘은 모두 닫았어요 · '),
+                        TextSpan(text: '다시 보기 ›', style: TextStyle(color: point, fontWeight: FontWeight.w700)),
+                      ]),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: descStyle.copyWith(color: _sTextHint(isDarkMode)),
+                    ),
+                  );
+                }
+                return _buildTile(context,
+                    icon: Icons.campaign_outlined,
+                    title: '메인 알림 카드',
+                    desc: '메인 화면 맨 위에 방송 추천·팁을 보여줘요',
+                    descWidget: descWidget,
+                    onTap: () => MainCardPref.setOn(!on),
+                    primaryColor: primaryColor,
+                    trailing: Switch(value: on, onChanged: (v) => MainCardPref.setOn(v), activeColor: primaryColor, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap));
+              },
+            ),
           ),
           ValueListenableBuilder<bool>(
             valueListenable: HomeCardPref.on,
@@ -297,6 +328,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       ),
     );
+  }
+
+  /// '다시 보기 ›': 오늘 닫은 메인 알림 카드 다시 켜기 → 설명 자리에 2초 동안 "카드를 다시 켰어요"
+  void _reopenMainCards() {
+    // 효과음: 켜져 있으면 물방울 "똑" (진동 모드면 진동, 무음이면 조용) / 꺼져 있으면 터치 진동
+    if (context.read<ThemeProvider>().feedbackSoundEnabled) {
+      const MethodChannel('kr.ssing.catsong/media')
+          .invokeMethod('feedbackSound', {'low': false})
+          .catchError((Object _) => null);
+    } else {
+      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    }
+    MainCardPref.reopenToday();
+    setState(() => _mainReopened = true);
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) setState(() => _mainReopened = false);
+    });
   }
 
   // ───────── B안 부품 ─────────
@@ -688,6 +736,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required VoidCallback onTap, required Color primaryColor,
     Widget? trailing, bool isFirst = false, bool isLast = false,
     Widget? titleExtra, // 이름 바로 옆 (예: ⓘ)
+    Widget? descWidget, // 설명 대신 보여 줄 것 (예: '다시 보기 ›')
   }) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     // 같은 묶음은 흰 카드 하나로 (위·아래 끝만 둥글게)
@@ -730,6 +779,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         if (desc != null) ...[
                           const SizedBox(height: 2),
+                          descWidget ??
                           Text(desc,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,

@@ -458,6 +458,11 @@ class _HomeScreenState extends State<HomeScreen> {
       'tip',
     ];
     final open = deck.where((k) => k == 'color' ? _showColorTip : !_homeClosed.contains(k)).toList();
+    // 다 닫았는지 설정 화면에 알려 주기 (그리는 중엔 못 바꿔서 그린 다음에)
+    final allClosed = open.isEmpty;
+    if (MainCardPref.allClosedToday.value != allClosed) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => MainCardPref.allClosedToday.value = allClosed);
+    }
     if (open.isEmpty) return const SizedBox.shrink(); // 다 닫으면 오늘은 카드 없음 (내일 다시 처음부터)
     final key = open.first;
     final dot = deck.indexOf(key);

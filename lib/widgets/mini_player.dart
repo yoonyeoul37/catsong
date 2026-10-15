@@ -92,7 +92,9 @@ class MiniPlayer extends StatelessWidget {
           ),
         );
       },
-      child: ClipRRect(
+      child: Stack(
+        children: [
+      ClipRRect(
         borderRadius: const BorderRadius.only(
           topLeft: Radius.zero,
           topRight: Radius.zero,
@@ -124,7 +126,7 @@ class MiniPlayer extends StatelessWidget {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.fromLTRB(12, 0, 22, 0), // 버튼은 오른쪽으로 · ✕는 오른쪽 위 작게
                     child: Row(
                       children: [
                         // 앨범아트
@@ -306,14 +308,6 @@ class MiniPlayer extends StatelessWidget {
                               ),
                             ),
                           ),
-                        // × (닫기): 재생 중에도 누르면 바로 멈추고 닫힘
-                        IconButton(
-                            onPressed: () => _close(context),
-                            icon: Icon(Icons.close_rounded, color: baseColor.withOpacity(0.45)),
-                            iconSize: 20,
-                            padding: const EdgeInsets.all(4),
-                            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                          ),
                       ],
                     ),
                   ),
@@ -322,6 +316,10 @@ class MiniPlayer extends StatelessWidget {
             ),
           ),
         ),
+      ),
+          // × (닫기): 오른쪽 위 작게 · 재생 중에도 누르면 바로 멈추고 닫힘
+          Positioned(top: 4, right: 2, child: _MiniCloseX(onTap: () => _close(context))),
+        ],
       ),
     );
   }
@@ -375,4 +373,21 @@ class _MiniTitle extends StatelessWidget {
       );
     });
   }
+}
+
+/// 미니플레이어 오른쪽 위 작은 ✕ (보이는 건 작게, 누르는 자리는 넉넉하게)
+class _MiniCloseX extends StatelessWidget {
+  final VoidCallback onTap;
+  const _MiniCloseX({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: SizedBox(
+          width: 26,
+          height: 26,
+          child: Icon(Icons.close_rounded, size: 14, color: const Color(0xFFF4EFE5).withOpacity(0.45)),
+        ),
+      );
 }

@@ -63,14 +63,21 @@ class MainCardPref {
     on.value = v;
     final p = await SharedPreferences.getInstance();
     await p.setBool('mainCardOn', v);
-    if (v) {
-      // 다시 켜면 오늘 닫은 카드와 나만의 색 카드도 다시 나오게
-      await p.remove('main_card_closed_day');
-      await p.remove('main_card_closed');
-      await p.remove('color_tip_hide_until');
-      await p.remove('color_tip_closed');
-      await p.remove('color_tip_done');
-      reopened.value++;
-    }
+    if (v) await reopenToday(); // 다시 켜면 닫은 카드도 다시
+  }
+
+  /// 오늘 카드를 다 닫았는지 (홈 화면이 알려 줌 → 설정에 [다시 보기])
+  static final allClosedToday = ValueNotifier<bool>(false);
+
+  /// [다시 보기]: 오늘 닫은 카드와 나만의 색 카드 다시 나오게 (스위치는 그대로)
+  static Future<void> reopenToday() async {
+    final p = await SharedPreferences.getInstance();
+    await p.remove('main_card_closed_day');
+    await p.remove('main_card_closed');
+    await p.remove('color_tip_hide_until');
+    await p.remove('color_tip_closed');
+    await p.remove('color_tip_done');
+    allClosedToday.value = false;
+    reopened.value++;
   }
 }

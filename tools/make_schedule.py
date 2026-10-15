@@ -5,7 +5,7 @@
 # CBS · YTN · FEBC · TBS는 '오늘' 편성만 줘서 매일 돌리면 그날 요일 칸이 새로 바뀌고,
 # 경인방송 · JTV · 국악FM은 일주일치를 한 번에 가져와요
 # 실행: python tools/make_schedule.py   (GitHub에서는 매일 새벽 자동으로)
-import json, sys, datetime, urllib.request, urllib.parse, os, re, html as htmllib
+import json, sys, ssl, datetime, urllib.request, urllib.parse, os, re, html as htmllib
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'schedule.json')
 UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36'
@@ -21,12 +21,20 @@ def today_kst():
     return datetime.datetime.now(KST).date()
 
 
-def fetch(url, referer, ajax=False):
+def old_ssl():
+    # 옛날 보안 방식 홈페이지(OBS)도 열 수 있게 (편성표 읽기만 함)
+    c = ssl.create_default_context()
+    c.set_ciphers('DEFAULT@SECLEVEL=0')
+    c.options |= getattr(ssl, 'OP_LEGACY_SERVER_CONNECT', 0x4)
+    return c
+
+
+def fetch(url, referer, ajax=False, old=False):
     h = {'User-Agent': UA, 'Referer': referer, 'Accept-Language': 'ko-KR,ko;q=0.9'}
     if ajax:
         h['X-Requested-With'] = 'XMLHttpRequest'
     req = urllib.request.Request(url, headers=h)
-    with urllib.request.urlopen(req, timeout=30) as r:
+    with urllib.request.urlopen(req, timeout=30, context=old_ssl() if old else None) as r:
         raw = r.read()
         m = re.search(r'charset=([\w-]+)', r.headers.get('Content-Type', ''), re.I) \
             or re.search(r'charset=["\']?([\w-]+)', raw[:3000].decode('ascii', 'ignore'), re.I)
@@ -365,6 +373,56 @@ def gugak():
     return {'국악FM': week}
 
 
+# ───────── OBS 라디오 (경인방송과 같은 모양의 편성표) ─────────
+def obs_day(d):
+    page = fetch(f'https://www.obs.co.kr/schedule/?type=radio&year={d.year}&month={d.month:02d}&day={d.day:02d}',
+                 'https://www.obs.co.kr/schedule/?type=radio', old=True)
+    i = page.find('tbl_radio_schedule')
+    table = page[i:] if i >= 0 else page
+    progs = []
+    for row in re.findall(r'<tr[^>]*>(.*?)</tr>', table, re.S):
+        t = re.search(r'class="[^"]*\btime"[^>]*>\s*(\d{1,2}:\d{2})', row)
+        n = re.search(r'font-weight:\s*bold[^>]*>(.*?)</div>', row, re.S)
+        if not (t and n):
+            continue
+        title = text_of(n.group(1))
+        if not title:
+            continue
+        p = {'title': title, 'start': t.group(1).zfill(5), 'end': ''}
+        img = re.search(r'<img[^>]+src="([^"]*/admin/data/program/[^"]+)"', row)
+        if img:
+            u = img.group(1)
+            p['image'] = u if u.startswith('http') else 'https://www.obs.co.kr' + u
+        progs.append(p)
+    merged = []
+    for p in clean_day(progs):  # "굿모닝 OBS 1부·2부·3부" → 한 칸으로
+        p['title'] = re.sub(r'\s*\d+부$', '', p['title'])
+        if merged and merged[-1]['title'] == p['title'] and merged[-1]['end'] == p['start']:
+            merged[-1]['end'] = p['end']
+        else:
+            merged.append(p)
+    return merged
+
+
+def obs():
+    week = {}
+    start = today_kst()
+    for k in range(7):  # 일주일치: 요일 칸마다 가까운 날
+        d = start + datetime.timedelta(days=k)
+        key = day_key(d)
+        if key in week:
+            continue
+        try:
+            progs = obs_day(d)
+        except Exception as e:
+            print(f'  (OBS {d} 못 가져옴: {e})')
+            continue
+        if len(progs) >= 5:
+            week[key] = progs
+    return {'OBS 라디오': week} if week else {}
+
+
+
 def fill_images(week):
     # 재방송처럼 사진이 없는 칸: 같은 프로그램 이름의 사진을 빌려 쓰기 (다른 요일 것도)
     pics = {}
@@ -378,7 +436,7 @@ def fill_images(week):
                 p['image'] = pics[base_title(p['title'])]
 
 
-SOURCES = [('CBS', cbs), ('YTN', ytn), ('경인방송', ifm), ('FEBC', febc), ('TBS', tbs), ('JTV', jtv), ('국악FM', gugak)]
+SOURCES = [('CBS', cbs), ('YTN', ytn), ('경인방송', ifm), ('FEBC', febc), ('TBS', tbs), ('JTV', jtv), ('국악FM', gugak), ('OBS', obs)]
 
 
 def main():

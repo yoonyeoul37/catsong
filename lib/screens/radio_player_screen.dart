@@ -386,7 +386,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         name == 'TBS FM' ||
         name == 'TBS eFM' ||
         name == 'JTV 매직FM' ||
-        name == '국악FM';
+        name == '국악FM' ||
+        name == 'OBS 라디오';
   }
 
   String _getBroadcaster(String name) {
@@ -2748,7 +2749,8 @@ class _ScheduleListSheet extends StatelessWidget {
 
     final now = DateTime.now();
     final nowM = _wrap(now.hour * 60 + now.minute);
-    final current = items.where((e) => e.start <= nowM && nowM < e.end).toList();
+    // 새벽에 시작해 6시를 넘기는 프로그램(예: 05:00~07:00)도 지금 방송으로 찾기
+    final current = items.where((e) => [nowM, nowM + 1440].any((t) => e.start <= t && t < e.end)).toList();
     final cur = current.isEmpty ? null : current.first;
     final upcoming = items.where((e) => e.start > nowM).toList();
     final nextStart = upcoming.isEmpty ? null : upcoming.first.start;

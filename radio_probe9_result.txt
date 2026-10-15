@@ -1,0 +1,197 @@
+[OBS 라디오 화면] https://www.obs.co.kr/schedule/?type=radio&year=2026&month=10&day=16 · 글자 수 84352
+chedule?type=radio&year=2026&month=10&day=23">
+				<img src="/renewal/assets/img/desktop/btn_next_white.png" alt="" style="width: 18px; margin-top: 35px; margin-left: 45px;"/>
+			</a>
+		</div>
+	</div>
+
+	
+	<div class="schedule">
+		<div class="print_current_date">2026-10-16 금요일 편성표</div>
+		<table id="tbl_radio_schedule">
+			<colgroup>
+				<col style="width:150px"/>
+				<col style="width:200px"/>
+				<col style="width:680px"/>
+				<col style="width:170px"/>
+			</colgroup>
+								<tr>
+						<td class=" time">00:00</td>
+						<td class=""><img class="radio_pgm_img" src="/admin/data/program/_radio_poster/R004_2305081916.png" alt="이미지" style="width:130px; height: 130px;margin :5px; border-radius:10px;"/></td>
+						<td class="ft_01" style="position: relative">
+							<div style="font-size: 22px; color:#222; font-weight: bold; width:600px; margin:20px 10px 10px -30px"><a href="/radio/?lnb=home&id=R004">(재) 모닝브레이크 3부</a></div>
+							<div class="ellipsis_2" style="font-size: 15px;"></div>
+							<div style="position: absolute; bottom: 15px;margin :10px">
+															</div>
+						</td>
+						<td class="">
+							
+													</td>
+					</tr>
+										<tr>
+						<td class=" time">01:00</td>
+						<td class=""><img class="radio_pgm_img" src="/admin/data/program/_radio_poster/R005_2305081916.png" alt="이미지" style="width:130px; height: 130px;margin :5px; border-radius:10px;"/></td>
+						<td class="ft_01" style="position: relative">
+							<div style="font-size: 22px; color:#222; font-weight: bold; width:600px; margin:20px 10px 10px -30px"><a href="/radio/?lnb=home&id=R005">(재) 오늘의 기후 1부</a></div>
+							<div class="ellipsis_2" style="font-size: 15px;"></div>
+							<div style="position: absolute; bottom: 15px;margin :10px">
+															</div>
+						</td>
+						<td class="">
+							
+													</td>
+					</tr>
+										<tr>
+						<td class=" time">02:00</td>
+						<td class=""><img class="radio_pgm_img" src="/admin/data/program/_radio_poster/R005_2305081916.png" alt="이미지" style="width:130px; height: 130px;margin :5px; border-radius:10px;"/></td>
+						<td class="ft_01" style="position: relative">
+							<div style="font-size: 22px; color:#222; font-weight: bold; width:600px; margin:20px 10px 10px -30px"><a href="/radio/?lnb=home&id=R005">(재) 오늘의 기후 2부</a></div>
+							<div class="ellipsis_2" style="font-size: 15px;"></div>
+							<div style="position: absolute; bottom: 15px;margin :10px">
+															</div>
+						</td>
+						<td class="">
+							
+													</td>
+					</tr>
+										<tr>
+						<td class=" time">03:00</td>
+						<td class=""><img class="radio_pgm_img" src="/admin/data/program/_radio_poster/R011_2305081916.png" alt="이미지" style="width:130px; height: 130px;margin :5px; border-radius:10px;"/></td>
+						<td class="ft_01" style="position: relative">
+							<div style="font-size: 22px; color:#222; font-weight: bold; width:600px; margin:20px 10px 10px -30px"><a href="/radio/?lnb=home&id=R011">(재) 돈키오테</a></div>
+							<div class="ellipsis_2" style="font-size: 15px;"></div>
+							<div style="position: absolute; bottom: 15px;margin :10px">
+															</div>
+						</td>
+						<td class="">
+							
+													</td>
+					</tr>
+										<tr>
+						<td class=" time">04:00</td>
+						<td class=""><img class="radio_pgm_img" src="/admin/data/program/_radio_poster/R007_2305081916.png" alt="이미지" style="width:130px; height: 130px;margin :5px; border-radius:10px;"/></td>
+						<td class="ft_01" style="position: relative">
+							<div style="font-size: 22px; color:#222; font-weight: bold; width:600px; margin:20px 10px 10px -30px"><a href="/radio/?lnb=home&id=R007">(재) 뮤직 EXPRESS 1부</a></div>
+							<div class="ellipsis_2" style="font-size: 15px;"></div>
+							<div style="position: absolute; bottom: 15px;margin :10px">
+															</div>
+						</td>
+						<td class="">
+							
+													</td>
+					</tr>
+										<tr>
+						<td class=" time">05:00</td>
+						<td class=""><img class="radio_pgm_img" src="/admin/data/program/_radio_poster/R007_2305081916.png" alt="이미지" style="width:130px; height: 130px;margin :5px; border-radius:10px;"/></td>
+						<td class="ft_01" style="position: relative">
+							<div style="font-size: 22px; color:#222; font-weight: bold; width:600px; margin:20px 10px 10px -30px"><a href="/ra
+--- 사진 후보 전부 ---
+  /admin/data/program/_radio_poster/R004_2305081916.png
+  /admin/data/program/_radio_poster/R005_2305081916.png
+  /admin/data/program/_radio_poster/R005_2305081916.png
+  /admin/data/program/_radio_poster/R011_2305081916.png
+  /admin/data/program/_radio_poster/R007_2305081916.png
+  /admin/data/program/_radio_poster/R007_2305081916.png
+  /admin/data/program/_radio_poster/R001_2305081916.png
+  /admin/data/program/_radio_poster/R003_2305081916.png
+  /admin/data/program/_radio_poster/R003_2305081916.png
+  /admin/data/program/_radio_poster/R003_2305081916.png
+  /admin/data/program/_radio_poster/R003_2305081916.png
+  /admin/data/program/_radio_poster/R004_2305081916.png
+  /admin/data/program/_radio_poster/R004_2305081916.png
+  /admin/data/program/_radio_poster/R036_2305081916.png
+  /admin/data/program/_radio_poster/R004_2305081916.png
+  /admin/data/program/_radio_poster/R004_2305081916.png
+  /admin/data/program/_radio_poster/R011_2305081916.png
+  /admin/data/program/_radio_poster/R011_2305081916.png
+  /admin/data/program/_radio_poster/R028_2305081916.png
+  /admin/data/program/_radio_poster/R007_2305081916.png
+  /admin/data/program/_radio_poster/R007_2305081916.png
+  /admin/data/program/_radio_poster/R007_2305081916.png
+  /admin/data/program/_radio_poster/R007_2305081916.png
+  /admin/data/program/_radio_poster/R033_2305081916.png
+  /admin/data/program/_radio_poster/R038_2305081916.png
+  /admin/data/program/_radio_poster/R038_2305081916.png
+  /admin/data/program/_radio_poster/R038_2305081916.png
+  /admin/data/program/_radio_poster/R038_2305081916.png
+  /admin/data/program/_radio_poster/R034_2305081916.png
+  /admin/data/program/_radio_poster/R053_2305081916.png
+  /admin/data/program/_radio_poster/R053_2305081916.png
+  /admin/data/program/_radio_poster/R053_2305081916.png
+  /admin/data/program/_radio_poster/R053_2305081916.png
+  /admin/data/program/_radio_poster/R005_2305081916.png
+  /admin/data/program/_radio_poster/R005_2305081916.png
+  /admin/data/program/_radio_poster/R005_2305081916.png
+  /admin/data/program/_radio_poster/R005_2305081916.png
+  /admin/data/program/_radio_poster/R051_2305081916.png
+  /admin/data/program/_radio_poster/R051_2305081916.png
+  /admin/data/program/_radio_poster/R051_2305081916.png
+  /admin/data/program/_radio_poster/R051_2305081916.png
+  /admin/data/program/_radio_poster/R054_2305081916.png
+  /admin/data/program/_radio_poster/R043_2305081916.png
+  /admin/data/program/_radio_poster/R004_2305081916.png
+  /admin/data/program/_radio_poster/R004_2305081916.png
+  /renewal/assets/img/radio/parts/icon_viewvideo.png
+  /images/2016/login/btn_close.png
+  /images/2016/login/login_title04.png
+  /images/2016/login/title_id.png
+  /images/2016/login/title_pwd.png
+  /images/2016/login/btn_join.png
+  /images/2016/login/btn_find.png
+  /images/login/login_ad.jpg
+  /images/login/login_ad1.jpg
+--- 배경 사진 후보 ---
+  /images/20111220_bgcom.png
+  /renewal/assets/img/desktop/sch_icon_onair.jpg
+  /renewal/assets/img/desktop/icon-sns.png
+  /renewal/assets/img/desktop/icon-sns.png
+  /renewal/assets/img/desktop/icon-sns.png
+  /renewal/assets/img/desktop/allmenu.png
+  /images/login/loginbox_bg.png
+============================================================
+[지금 만든 schedule.json 의 OBS 라디오 금요일]
+  00:00~01:00  (재) 모닝브레이크 3부
+  01:00~02:00  (재) 오늘의 기후 1부
+  02:00~03:00  (재) 오늘의 기후 2부
+  03:00~04:00  (재) 돈키오테
+  04:00~05:00  (재) 뮤직 EXPRESS 1부
+  05:00~06:00  (재) 뮤직 EXPRESS 2부
+  06:00~07:00  오늘의 음악
+  07:00~07:30  김준호의 굿모닝 OBS 1부
+  07:30~08:00  김준호의 굿모닝 OBS 2부
+  08:00~08:30  김준호의 굿모닝 OBS 3부
+  08:30~09:00  김준호의 굿모닝 OBS 4부
+  09:00~09:30  모닝브레이크 1부
+  09:30~10:00  모닝브레이크 2부
+  10:00~10:04  OBS라디오 10시 뉴스
+  10:04~10:30  모닝브레이크 3부
+  10:30~11:00  모닝브레이크 4부
+  11:00~11:30  돈키오테 1부
+  11:30~12:00  돈키오테 2부
+  12:00~12:04  OBS라디오 정오 뉴스
+  12:04~12:30  뮤직 EXPRESS 1부
+  12:30~13:00  뮤직 EXPRESS 2부
+  13:00~13:30  뮤직 EXPRESS 3부
+  13:30~14:00  뮤직 EXPRESS 4부
+  14:00~14:04  OBS라디오 2시 뉴스
+  14:04~14:30  이창명의 특송 1부
+  14:30~15:00  이창명의 특송 2부
+  15:00~15:30  이창명의 특송 3부
+  15:30~16:00  이창명의 특송 4부
+  16:00~16:04  OBS라디오 4시 뉴스
+  16:04~16:30  파워라이브 1부
+  16:30~17:00  파워라이브 2부
+  17:00~17:30  파워라이브 3부
+  17:30~18:00  파워라이브 4부
+  18:00~18:30  오늘의 기후 1부
+  18:30~19:00  오늘의 기후 2부
+  19:00~19:30  오늘의 기후 3부
+  19:30~20:00  오늘의 기후 4부
+  20:00~20:30  우리들의 여행스케치 1부
+  20:30~21:00  우리들의 여행스케치 2부
+  21:00~21:30  우리들의 여행스케치 3부
+  21:30~22:00  우리들의 여행스케치 4부
+  22:00~22:30  OBS 뉴스10
+  22:30~23:00  나만의 Playlist
+  23:00~23:30  (재) 모닝브레이크 1부
+  23:30~00:00  (재) 모닝브레이크 2부

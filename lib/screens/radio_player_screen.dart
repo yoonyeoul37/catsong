@@ -1061,7 +1061,11 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                 width: double.infinity,
                                 height: imgH,
                                 fit: BoxFit.cover,
-                                errorBuilder: (errCtx, err, stack) => RadioMoodPlaceholder(height: imgH),
+                                headers: const {'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Mobile Safari/537.36'}, // 일부 방송국은 브라우저처럼 물어봐야 사진을 줌
+                                errorBuilder: (errCtx, err, stack) {
+                                  debugPrint('[편성사진] 못 불러옴: $programImage → $err');
+                                  return RadioMoodPlaceholder(height: imgH);
+                                },
                               )
                                   : RadioMoodPlaceholder(height: imgH),
                               Positioned(
@@ -1954,6 +1958,7 @@ class _NextProgramLineState extends State<_NextProgramLine> {
               width: s,
               height: s,
               fit: BoxFit.cover,
+              headers: const {'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Mobile Safari/537.36'}, // 일부 방송국은 브라우저처럼 물어봐야 사진을 줌
               errorBuilder: (errCtx, err, stack) => Container(
                 width: s,
                 height: s,

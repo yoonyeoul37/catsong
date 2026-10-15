@@ -577,7 +577,9 @@ class RadioProvider extends ChangeNotifier {
             'start_time': program['start'],
             'end_time': program['end'],
             'is_rerun': false,
+            'image': program['image'], // 편성표 파일에 사진이 있으면 (CBS)
           };
+
           _nowPlayingMap[station.name] = program['title'] as String? ?? '';
           notifyListeners();
         }
@@ -586,6 +588,7 @@ class RadioProvider extends ChangeNotifier {
               'program_title': p['title'],
               'start_time': p['start'],
               'end_time': p['end'],
+              'image': p['image'],
             }).toList();
         notifyListeners();
       }
@@ -1897,6 +1900,7 @@ class RadioProvider extends ChangeNotifier {
         'start_time': program['start'],
         'end_time': program['end'],
         'is_rerun': false,
+        'image': program['image'], // 편성표 파일에 사진이 있으면 (CBS)
       };
       _nowPlayingMap[stationName] = program['title'] as String? ?? '';
     }
@@ -1905,6 +1909,7 @@ class RadioProvider extends ChangeNotifier {
           'program_title': p['title'],
           'start_time': p['start'],
           'end_time': p['end'],
+          'image': p['image'],
         }).toList();
     notifyListeners();
     if (_currentStation?.name == stationName) {

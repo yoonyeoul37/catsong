@@ -379,7 +379,13 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         name == '국방FM' ||
         name == 'EBS 반디' ||
         name == 'EBS FM' ||
-        name == 'BBS 불교방송';
+        name == 'BBS 불교방송' ||
+        name == 'YTN 라디오' ||
+        name == '경인방송' ||
+        name == 'FEBC 극동방송' ||
+        name == 'TBS FM' ||
+        name == 'TBS eFM' ||
+        name == 'JTV 매직FM';
   }
 
   String _getBroadcaster(String name) {

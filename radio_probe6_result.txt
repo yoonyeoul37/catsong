@@ -1,0 +1,780 @@
+######################################################################
+■ CPBC 홈페이지 링크 · 스크립트
+  상태 200 · 글자 수 932
+  스크립트 /javascript/cpbc-app.js
+######################################################################
+■ TBN 홈페이지 링크 · 스크립트
+  상태 200 · 글자 수 2198
+  스크립트 /js/board.js
+  스크립트 /js/common.js
+  스크립트 /js/default.js
+  스크립트 /js/html5shiv.js
+  스크립트 /js/jquery-1.7.1.min.js
+  스크립트 /js/jquery-ui.min.js
+  스크립트 /js/respond.min.js
+  스크립트 /js/slick.min.js
+======================================================================
+[CPBC 추측 주소] https://www.cpbc.co.kr/radio/schedule
+  상태 None · 글자 수 25
+  HTTP Error 404: Not Found
+======================================================================
+[CPBC 추측 주소] https://www.cpbc.co.kr/schedule
+  상태 None · 글자 수 25
+  HTTP Error 404: Not Found
+======================================================================
+[CPBC 추측 주소] https://www.cpbc.co.kr/schedule/radio
+  상태 None · 글자 수 25
+  HTTP Error 404: Not Found
+======================================================================
+[CPBC 추측 주소] https://www.cpbc.co.kr/radio
+  상태 None · 글자 수 25
+  HTTP Error 404: Not Found
+######################################################################
+======================================================================
+[FEBC 오늘] https://seoul.febc.net/radio/schedule
+  상태 200 · 글자 수 181887
+-accordion">
+              <div class="accordion-item component-collapse"                
+                data-state="close"
+                data-init="false"
+              >
+                <div class="accordions-link-area">
+                  <div class="area-txt">
+                    <span class="time">00:00</span>
+                    
+                  </div>
+                  <div class="accordions-link-bx">
+                    <div class="img-bx">
+                      <a href="/program/9591/general">                    
+                      <img src="/fileupload/ogImage/202410/479414af-a918-4fbc-b86e-1eed8979b66b.png" />
+                      </a>
+                      <div class="label-group mo-show">
+                        
+                        
+                      </div>
+                      
+                    </div>
+                    <div class=
+  --- 함수 fnCalendarDate ---
+  (함수 fnCalendarDate 없음)
+  ▶ 시간·사진·제목 묶음 25개 (처음 40개)
+    00:00 | 별처럼 빛나는 그대에게 | /fileupload/ogImage/202410/479414af-a918-4fbc-b86e-1eed8979b66b.png
+    00:00 | 나영환의 달빛가스펠 | /fileupload/ogImage/202411/22cfb63e-c695-4423-9759-50a419351461.png
+    01:00 | 샬롬, 대한민국입니다 | /fileupload/ogImage/202506/e8839f70-c9ae-40e0-bca1-435f69b5f5ae.jpg
+    02:00 | 복음의 메아리 | /fileupload/ogImage/202410/6e7fc3e7-7e1d-4053-b7be-2b47f3f5e81f.png
+    03:00 | 복음의 메아리 | /fileupload/ogImage/202410/6e7fc3e7-7e1d-4053-b7be-2b47f3f5e81f.png
+    04:00 | 내 영혼에 햇빛 비치니 | /fileupload/ogImage/202410/a8a5e1ef-f8e5-42b3-906e-5fc4c6705180.png
+    05:00 | 주님과 이 아침을 | /fileupload/ogImage/202410/6503ce2f-0846-49bb-afc0-0d9785a832d4.png
+    06:00 | 좋은 아침입니다 | /fileupload/ogImage/202410/657cfb7e-da62-4085-9d54-2799b54049c2.png
+    07:00 | 힘찬 라디오 | /fileupload/ogImage/202608/4b196afa-dbbe-4a64-b17a-9d392b4d4560.jpg
+    08:00 | 사랑의 뜰안 | /fileupload/ogImage/202604/b8aa6346-fb69-4aca-8157-3094f98de443.jpg
+    09:00 | 사랑의 뜰안 | /fileupload/ogImage/202604/b8aa6346-fb69-4aca-8157-3094f98de443.jpg
+    10:00 | 소망의 기도 | /fileupload/ogImage/202504/8c7e37fe-2d7f-429f-add9-33c58a910e75.png
+    11:00 | 소망의 찬양 | /fileupload/ogImage/202609/abcbc0c9-1476-47cf-adf3-53d33af74a29.jpg
+    12:00 | 만나고 싶은 사람 듣고 싶은 이야기 | /fileupload/ogImage/202606/c86fe1fb-e361-4e87-82ba-59006892a7df.jpg
+    13:00 | 오후의 열린 광장 | /assets/dev/template_04_pc.png
+    14:00 | 오후의 열린 광장 | /assets/dev/template_04_pc.png
+    15:00 | 같이 걸어가기 | /fileupload/ogImage/202511/4ed0bb6e-6207-457a-8b92-fb88d2efb9be.jpg
+    16:00 | 같이 걸어가기 | /fileupload/ogImage/202511/4ed0bb6e-6207-457a-8b92-fb88d2efb9be.jpg
+    17:00 | 성경의 무림고수를 찾아서 | /fileupload/ogImage/202410/dbe3dc55-cf32-4285-8cc9-5e9369dc90f6.png
+    18:00 | 찬양의 동산 | /fileupload/ogImage/202408/55faae1c-383d-4e8f-950e-e09f8f2154d1.png
+    19:00 | 찬양이 가득한 세상 | /fileupload/ogImage/202505/f250dfa9-4d25-4b39-95a2-cbe56ee3e459.jpg
+    20:00 | 은혜의 찬송 | /fileupload/ogImage/202412/2753be72-40cb-4231-9505-366e75fcf25c.png
+    21:00 | 찬양BGM | /fileupload/ogImage/202410/66694d02-242d-461d-a123-b2e7e6cc5e4c.png
+    22:30 | 이브닝 프레이즈 | /fileupload/ogImage/202503/b8e3aec0-e4f5-46fe-9b7f-8f586fc5a0b5.jpg
+    23:00 | 김도현의 샬롬나잇 | /fileupload/ogImage/202410/45856677-7281-4526-bff1-f020fda7236f.png
+======================================================================
+[FEBC 내일 (date)] https://seoul.febc.net/radio/schedule?date=2026-10-17
+  상태 200 · 글자 수 181887
+-accordion">
+              <div class="accordion-item component-collapse"                
+                data-state="close"
+                data-init="false"
+              >
+                <div class="accordions-link-area">
+                  <div class="area-txt">
+                    <span class="time">00:00</span>
+                    
+                  </div>
+                  <div class="accordions-link-bx">
+                    <div class="img-bx">
+                      <a href="/program/9591/general">                    
+                      <img src="/fileupload/ogImage/202410/479414af-a918-4fbc-b86e-1eed8979b66b.png" />
+                      </a>
+                      
+######################################################################
+======================================================================
+[국악 편성 페이지 함수] https://www.igbf.kr/gugak_web/?sub_num=786
+  상태 200 · 글자 수 85245
+              <th scope="col"><img src="/gugak_web/img/common/title_schedule_all.png" alt="전국방송"></th>
+                        <th scope="col"><img src="/gugak_web/img/common/title_schedule_gwangju.png" alt="광주국악방송"></th>
+                    </tr>
+                </thead>
+                <tbody id="schedule">
+					<tr>
+				<tr><td>00:00~02:00</td>
+<td colspan='2'>
+
+							<a href="/gugak_web/radio/radio_program_main_sub.jsp?idx=RD2016002490&sub_num=787">송지원의 국악산책(재)</a>
+							   </td>
+  --- 함수 goSchedulePage ---
+  (함수 goSchedulePage 없음)
+  --- 함수 RadioSchedule ---
+  (함수 RadioSchedule 없음)
+  --- 함수 WeeklySchedule ---
+  (함수 WeeklySchedule 없음)
+======================================================================
+[국악 ajax today=20261016] https://www.igbf.kr/gugak_web/radio/ajax/radio_schedule_action.jsp?today=20261016
+  상태 200 · 글자 수 411
+
+
+
+<script src="/masterpage/C2S/comm/js/comm.js"></script> 
+<script src="/masterpage/C2S/comm/js/prototype-1.7.js"></script>
+<script>
+	var target 	= "radio_schedule_process.jsp?today=20261016";
+	var param 	= "";
+	
+	var getList = function () {
+		var ajax	= new Ajax.Request(target, {method: 'post', parameters: param, onSuccess: parent.showScheduleList, onFailure: Error});
+	}
+	getList();
+</script> 
+======================================================================
+[국악 ajax today=2026-10-16] https://www.igbf.kr/gugak_web/radio/ajax/radio_schedule_action.jsp?today=2026-10-16
+  상태 200 · 글자 수 413
+
+
+
+<script src="/masterpage/C2S/comm/js/comm.js"></script> 
+<script src="/masterpage/C2S/comm/js/prototype-1.7.js"></script>
+<script>
+	var target 	= "radio_schedule_process.jsp?today=2026-10-16";
+	var param 	= "";
+	
+	var getList = function () {
+		var ajax	= new Ajax.Request(target, {method: 'post', parameters: param, onSuccess: parent.showScheduleList, onFailure: Error});
+	}
+	getList();
+</script> 
+======================================================================
+[국악 ajax today=] https://www.igbf.kr/gugak_web/radio/ajax/radio_schedule_action.jsp?today=
+  상태 200 · 글자 수 404
+
+
+
+<script src="/masterpage/C2S/comm/js/comm.js"></script> 
+<script src="/masterpage/C2S/comm/js/prototype-1.7.js"></script>
+<script>
+	var target 	= "radio_schedule_process.jsp?today=0";
+	var param 	= "";
+	
+	var getList = function () {
+		var ajax	= new Ajax.Request(target, {method: 'post', parameters: param, onSuccess: parent.showScheduleList, onFailure: Error});
+	}
+	getList();
+</script> 
+======================================================================
+[국악 프로그램 페이지(사진)] https://www.igbf.kr/gugak_web/radio/radio_program_main_sub.jsp?idx=RD2015002113&sub_num=787
+  상태 200 · 글자 수 65819
+<!-- End Google Tag Manager (noscript) -->
+
+
+
+
+	
+	<div id="viewport">
+
+		<div id="header">
+			<!-- 230822 
+			<div class="tp_bnr" >
+				<a class="tp_bnr_link" href="https://docs.google.com/forms/d/e/1FAIpQLSf8ieeE-YDGs_JTauDw7yw0iofcGQSn1SBbCk0UOOjk1qoxBA/viewform" target="_blank">
+					<img src="/gugak_web/thd_img/main21/21top.png"/>
+				</a>
+			</div>
+			<!-- 230822 -->
+			<!-- 230313 Top Info 추가
+			<div class="top_info">
+				<a href="https://www.igbf.kr/gugak_web/?sub_num=760&state=view&idx=205006" target="_blank">3월 20일 국악방송 홈페이지 회원제도가 폐지됩니다.<span class="btn_top_more">+more</span></a>
+			</div>
+			<!-- //230313 Top Info 추가-->
+			<!-- 상단 로그인, sns 버튼 영역 -->
+			<div class="util-wrap">
+				<!-- 회원 메뉴 -->
+				
+				
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+   
+
+
+
+
+
+
+
+
+
+
+<!-- <div style="margin:0px; padding:0px;height:150px;width:100%;text-align:center;">
+<img style="vertical-align:top;width:1000px;height:150px" src="/gugak_web/img/aod/topBanner1.jpg" alt="공모배너" usemap="#Map1" border="0"/>
+<map name="Map1">
+    <area shape="rect" coords="0,0,10
+  --- 사진 후보 ---
+  /gugak_web/thd_img/main21/21top.png
+  /gugak_web/img/aod/topBanner1.jpg
+  /gugak_web/thd_img/common/logo.png
+  /gugak_web/thd_img/main21/logo_igbf.png
+  /gugak_web/thd_img/main21/chn_all_new_2.gif
+  /gugak_web/thd_img/main21/chn_kt_new_3.png
+  /gugak_web/thd_img/main21/chn_sk.png
+  /gugak_web/thd_img/main21/chn_lg.png
+  /gugak_web/thd_img/main21/ico_menu.png
+  /gugak_web/thd_img/common/mmtr.png
+  /DataFiles/Radio/PROG/sunshine.jpg
+  /gugak_web/img/sns_ico_kakao_ch.png
+  /gugak_web/img/sns_ico_insta.png
+  /gugak_web/img/sns_ico_pp.png
+  /gugak_web/img/sns_ico_youtube.png
+  /gugak_web/img/common/20th_ban.jpg
+  /gugak_web/img/common/footer_web_award.gif
+  /gugak_web/img/common/footer_link_01.gif
+  /gugak_web/img/common/footer_link_03.gif
+  /gugak_web/img/common/footer_link_01.gif
+  /gugak_web/img/common/family.svg
+  /gugak_web/img/common/footer_link_03.gif
+######################################################################
+======================================================================
+[TBS] https://tbs.seoul.kr/fm/schedule.do
+  상태 200 · 글자 수 31695
+
+	            <tr>
+	                <th scope="col">심야</th>
+	                <th scope="col">프로그램 정보</th>
+	                <th scope="col">진행자</th>
+	            </tr>
+			</thead>
+			<tbody>
+	            
+	            
+	            
+				
+				
+				
+	            <tr>
+	                <td>00:00</td>
+	                <td class="tleft">
+	                	권순우의 새벽공감 1부
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>00:30</td>
+	                <td class="tleft">
+	                	권순우의 새벽공감 2부
+	                </td>
+	                <td>권순우</td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>01:00</td>
+	                <td class="tleft">
+	                	TBS와 함께 01 1부
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>01:30</td>
+	                <td class="tleft">
+	                	TBS와 함께 01 2부
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>02:00</td>
+	                <td class="tleft">
+	                	TBS와 함께 02 1부
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>02:30</td>
+	                <td class="tleft">
+	                	TBS와 함께 02 2부
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>03:00</td>
+	                <td class="tleft">
+	                	TBS와 함께 03 1부
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>03:30</td>
+	                <td class="tleft">
+	                	TBS와 함께 03 2부
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>04:00</td>
+	                <td class="tleft">
+	                	TBS와 함께 04 1부
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>04:30</td>
+	                <td class="tleft">
+	                	TBS와 함께 04 2부
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+	            
+	 
+  --- 함수 fn_getScheduleByWeek ---
+function fn_getScheduleByWeek(date) {
+	var f = document.scheduleForm;
+	
+	f.onDate.value = date;
+	f.action = "/fm/schedule.do";
+	f.submit();
+}
+
+/**
+ * "<" or ">" 클릭 편성표 조회
+ */
+function fn_getScheduleBeforeOrAfter(flag, date) {
+	var f = document.scheduleForm;
+	
+	// 왼쪽 클릭
+	if (flag == "L") {
+		f.onDate.value = gfn_addDay(date, -1);
+	} else {
+		f.onDate.value = gfn_addDay(date, 1);
+	}
+	
+	f.action = "/fm/schedule.do";
+	f.submit();
+}
+
+
+//달력
+ $(function() {
+ 	var nowday = new Date();
+ 	
+     $( "#testDatepicker" ).datepicker({
+     	defaultDate: new Date("yy", "mm", "dd"),
+     	dateFormat: "yy.mm.dd",
+     	showButtonPanel: true,
+         dayNames: ['일','월','화','수','목','금','토'],
+  		dayNamesShort: ['일','월','화','수','목','금','토'],
+  		dayNamesMin: ['일','월','화','수','목','금','토'],  
+         monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+         monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+         closeText: '닫기',
+  		prevText: '이전달',
+  		nextText: '다음달',
+  		currentText: '오늘',
+  		showMonthAfterYear:true,
+  		minDate: -7,
+     	maxDate:13,
+     	
+     	onSelect: function(date) { //달력에서 날짜
+  --- 사진 후보 ---
+  /common/images/gnb/btnAll.png
+  /common/images/gnb/search.png
+  /common/images/gnb/logo.png
+  /common/images/btn/btnPrev4.png
+  /common/images/btn/btnPlay4.png
+  /common/images/btn/btnStop4.png
+  /common/images/btn/btnNext4.png
+  /common/images/tv/btnPrint.png
+  /common/images/tv/btnPrint.png
+  /common/images/news/btnSelect.png
+  /common/images/news/btnSelect.png
+  /common/images/tv/btnPrint.png
+  /common/images/footer/logo2.png
+======================================================================
+[TBS] https://tbs.seoul.kr/eFm/schedule.do
+  상태 200 · 글자 수 33461
+>
+	        <tbody>
+	            <tr>
+	                <th scope="col">MidNight</th>
+	                <th scope="col">Program</th>
+	                <th scope="col">Presenter</th>
+	            </tr>
+
+				
+	            
+	            
+				
+				
+				
+	            <tr>
+	                <td>00:00</td>
+	                <td class="tleft">
+	                	Morning Groove 23 (Rerun) 3
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>00:30</td>
+	                <td class="tleft">
+	                	Morning Groove 23 (Rerun) 4
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>01:00</td>
+	                <td class="tleft">
+	                	MIXTAPE 1013 01 (Rerun) 1
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>01:30</td>
+	                <td class="tleft">
+	                	MIXTAPE 1013 01 (Rerun) 2
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>02:00</td>
+	                <td class="tleft">
+	                	10121013 02 (Rerun) 1
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>02:30</td>
+	                <td class="tleft">
+	                	10121013 02 (Rerun) 2
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>03:00</td>
+	                <td class="tleft">
+	                	10121013 02 (Rerun) 3
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>03:30</td>
+	                <td class="tleft">
+	                	10121013 02 (Rerun) 4
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>04:00</td>
+	                <td class="tleft">
+	                	首爾我來了 (Coming to Seoul) 04 (Rerun) 1
+	                </td>
+	                <td></td>
+	            </tr>
+	            
+	            
+				
+				
+				
+				
+				
+	            <tr>
+	                <td>04:30</td>
+	                <td class="tleft">
+	                	首爾我來了 (Coming to Seoul) 04 (Rerun) 2
+	 
+  --- 함수 fn_getScheduleByWeek ---
+function fn_getScheduleByWeek(date) {
+	var f = document.scheduleForm;
+	
+	f.onDate.value = date;
+	f.action = "/eFm/schedule.do";
+	f.submit();
+}
+
+/**
+ * "<" or ">" 클릭 편성표 조회
+ */
+function fn_getScheduleBeforeOrAfter(flag, date) {
+	var f = document.scheduleForm;
+	
+	// 왼쪽 클릭
+	if (flag == "L") {
+		f.onDate.value = gfn_addDay(date, -1);
+	} else {
+		f.onDate.value = gfn_addDay(date, 1);
+	}
+	
+	f.action = "/eFm/schedule.do";
+	f.submit();
+}
+ 
+//달력
+ $(function() {
+ 	var nowday = new Date();
+ 	
+     $( "#testDatepicker" ).datepicker({
+     	defaultDate: new Date("yy", "mm", "dd"),
+     	dateFormat: "yy.mm.dd",
+     	showButtonPanel: true,
+         dayNames: ['일','월','화','수','목','금','토'],
+  		dayNamesShort: ['일','월','화','수','목','금','토'],
+  		dayNamesMin: ['일','월','화','수','목','금','토'],  
+         monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+         monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+         closeText: '닫기',
+  		prevText: '이전달',
+  		nextText: '다음달',
+  		currentText: '오늘',
+  		showMonthAfterYear:true,
+  		minDate: -7,
+     	maxDate:13,
+     	
+     	onSelect: function(date) { //달력에서 날
+  --- 사진 후보 ---
+  /common/images/gnb/btnAll.png
+  /common/images/gnb/search.png
+  /common/images/gnb/logo.png
+  /common/images/news/youtube.png
+  /common/images/news/btnFacebook.png
+  /common/images/news/btnTwitter.png
+  /common/images/news/btninstar.png
+  /common/images/btn/btnPrev4.png
+  /common/images/btn/btnPlay4.png
+  /common/images/btn/btnStop4.png
+  /common/images/btn/btnNext4.png
+  /common/images/tv/btnPrint.png
+  /common/images/tv/btnPrint.png
+  /common/images/efm/btnChoice.png
+  /common/images/news/btnSelect.png
+  /common/images/tv/btnPrint.png
+  /common/images/footer/logo2.png
+######################################################################
+======================================================================
+[JTV 라디오] https://www.jtv.co.kr/page/00027.php?t=radio
+  상태 200 · 글자 수 31229
+
+                <colgroup>
+                    <col width="20%">
+                    <col width="50%">
+                    <col width="15%">
+                    <col width="15%">
+                </colgroup>
+                <tbody>
+                <tr class="plocal">
+                    <td class="time">시간</td>
+                    <td class="title_tv">월요일 ~ 금요일</td>
+                    <td class="title_tv_sat">토요일</td>
+                    <td class="title_tv_sun">일요일</td>
+                </tr>
+                <tr>
+                    <td class="time">05:00</td>
+                    <td class="title_tv" colspan="3">이인권의 펀펀투데이</td>
+                </tr>
+                <tr>
+                    <td class="time">07:00</td>
+                    <td class="title_tv" colspan="3">김영철의 파워 FM</td>
+                </tr>
+                <tr>
+                    <td class="time">09:00</td>
+                    <td class="title_tv" colspan="3">아름다운 이 아침, 봉태규입니다</td>
+                </tr>
+                <tr class="plocal">
+                    <td class="time">11:00</td>
+                    <td class="title_tv" colspan="2">901 Play List</td>
+                    <td class="title_tv_sun">신명 우리가락</td>
+                </tr>
+                <tr>
+                    <td class="time">12:00</td>
+                    <td class="title_tv" colspan="3">12시엔 주현영</td>
+                </tr>
+                <tr>
+                    <td class="time">14:00</td>
+                    <td class="title_tv" colspan="3">두시탈출 컬투쇼</td>
+                </tr>
+                <tr class="plocal">
+                    <td class="time">16:00</td>
+                    <td class="title_tv" colspan="2">우리가 사랑한 순간들</td>
+                    <td class="title_tv_sun">마음 한 조각, 일요일 오후 장서원입니다</td>
+                </tr>
+                <tr class="plocal">
+                    <td class="time">18:00</td>
+                    <td class="title_tv" colspan="2">루크의 유니버스</td>
+                    <td class="title_tv_sun">스포츠 익스프레스</td>
+                </tr>
+                <tr>
+                    <td class="time">20:00</td>
+                    <td class="title_tv" colspan="3">영스트리트</td>
+                </tr>
+                <tr>
+                    <td class="time">22:00</td>
+                    <td class="title_tv" colspan="3">배성재의 텐</td>
+                </tr>
+                <tr>
+                    <td class="time">23:00</td>
+                    <td class="title_tv" colspan="3">딘딘의 뮤직하이</td>
+                </tr>
+                <tr>
+                    <td class="time">01:00</td>
+                    <td class="title_tv" colspan="3">애프터클럽</td>
+                </tr>
+                <tr class="plocal">
+                    <td class="time">03:00</td>
+      
+  --- 사진 후보 ---
+  https://www.jtv.co.kr/theme/2026-jtv/img/common/daum-jtv.gif
+  https://www.jtv.co.kr/theme/2026-jtv/img/common/logo.png
+  https://www.jtv.co.kr/theme/2026-jtv/img/common/ico-top-ka.png
+  https://www.jtv.co.kr/theme/2026-jtv/img/common/ico-top-fb.png
+  https://www.jtv.co.kr/theme/2026-jtv/img/common/ico-top-ytube.png
+  https://www.jtv.co.kr/theme/2026-jtv/img/common/ico-top-news.png
+  https://www.jtv.co.kr/theme/2026-jtv/img/common/logo_fixed.png
+  https://www.jtv.co.kr/theme/2026-jtv/img/common/logo.png
+  https://www.jtv.co.kr/theme/2026-jtv/img/common/logo_fixed.png

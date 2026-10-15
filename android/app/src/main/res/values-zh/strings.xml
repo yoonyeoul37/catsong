@@ -1,4 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">paransori</string>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">音乐 · 广播 · 自然</string>
+    <string name="widget_loading">正在加载…</string>
+    <string name="widget_wait">请稍候</string>
+    <string name="widget_play_music">播放一些音乐吧</string>
+    <string name="tab_music">音乐</string>
+    <string name="tab_radio">广播</string>
+    <string name="tab_nature">自然</string>
+    <string name="tab_sleep">睡眠</string>
+    <string name="widget_recent_empty">最近收听的内容会显示在这里</string>
+    <string name="sample_song">喜欢的歌曲</string>
+    <string name="sample_artist">歌手</string>
+    <string name="sample_station">广播电台</string>
+    <string name="sample_rain">雨声</string>
+    <string name="sample_nature">自然声音</string>
+    <string name="alarm_channel">早晨闹钟</string>
+    <string name="alarm_channel_desc">Paransori 早晨闹钟</string>
+    <string name="alarm_quiet_channel">早晨闹钟（打开画面）</string>
+    <string name="alarm_quiet_desc">在锁屏上方打开闹钟画面时</string>
+    <string name="alarm_text">点按打开闹钟画面</string>
+    <string name="headset_channel">耳机连接通知</string>
+    <string name="action_play">播放</string>
+    <string name="resume_ask">要继续收听吗？</string>
+    <string name="rec_channel">录音</string>
+    <string name="rec_channel_desc">录音时在通知栏显示</string>
+    <string name="rec_title_paused">Paransori 录音已暂停</string>
+    <string name="rec_title_on">Paransori 正在录音</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · 点按继续录音</string>
+    <string name="rec_tap_back">点按返回录音画面</string>
+    <string name="rec_resume">继续</string>
+    <string name="rec_pause">暂停</string>
+    <string name="rec_done">完成</string>
 </resources>

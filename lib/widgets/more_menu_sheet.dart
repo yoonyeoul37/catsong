@@ -16,6 +16,7 @@ import '../screens/bulk_art_screen.dart';
 import '../screens/settings_help_screen.dart';
 import '../screens/alarm_screen.dart';
 import '../services/alarm_service.dart';
+import '../l10n/locale_holder.dart';
 
 const String _kStoreUrl =
     'https://play.google.com/store/apps/details?id=kr.ssing.catsong';
@@ -87,8 +88,8 @@ class _LineIcon extends StatelessWidget {
 ///                     "방송국 홈페이지" 줄이 하나 더 나온다.
 void showMoreMenuSheet(
     BuildContext context, {
-      String shareText = '파란소리 앱으로 음악 들어요! 🎧',
-      String shareSubtitle = '파란소리를 소개해보세요.',
+      String? shareText,
+      String? shareSubtitle,
       String? stationHomepage,
       bool showSongTools = false, // 홈에서만: 곡 정보 한꺼번에 정리
     }) {
@@ -123,14 +124,14 @@ void showMoreMenuSheet(
       ),
       child: _MoreMenuSheet(
       isDarkMode: isDarkMode,
-      shareSubtitle: shareSubtitle,
+      shareSubtitle: shareSubtitle ?? tr.moreShareSub,
       hasHomepage: stationHomepage != null && stationHomepage.isNotEmpty,
       showSongTools: showSongTools,
       onCleanSongs: () => openPage(ctx, MaterialPageRoute(builder: (_) => const BulkCleanScreen())),
       onFindArt: () => openPage(ctx, MaterialPageRoute(builder: (_) => const BulkArtScreen())),
       onShare: () {
         Navigator.pop(ctx);
-        Share.share('$shareText\n$_kStoreUrl');
+        Share.share('${shareText ?? tr.shareAppMessage}\n$_kStoreUrl');
       },
       onRate: () async {
         Navigator.pop(ctx);
@@ -297,15 +298,15 @@ class _MoreMenuSheet extends StatelessWidget {
                     _MenuCard(
                       p: p,
                       icon: _kIconSparkle,
-                      title: '음악 정보 일괄 정리',
-                      subtitle: '지저분한 제목·가수를 깔끔하게 정리해요.',
+                      title: tr.moreCleanTitle,
+                      subtitle: tr.moreCleanSub,
                       onTap: onCleanSongs,
                     ),
                     _MenuCard(
                       p: p,
                       icon: _kIconImage,
-                      title: '앨범 사진 자동 찾기',
-                      subtitle: '앨범 사진 없는 곡에 사진을 넣어요.',
+                      title: tr.moreArtTitle,
+                      subtitle: tr.moreArtSub,
                       onTap: onFindArt,
                     ),
                   ],
@@ -315,32 +316,32 @@ class _MoreMenuSheet extends StatelessWidget {
                     builder: (context, a, _) => _MenuCard(
                       p: p,
                       icon: _kIconAlarm,
-                      title: '아침 알람',
+                      title: tr.moreAlarmTitle,
                       subtitle: a != null && a.enabled
-                          ? '${AlarmService.nextLabel(a)} · ${a.label}'
-                          : '좋아하는 노래·라디오·자연으로 깨워 드려요',
+                          ? '${AlarmService.nextLabel(a)} · ${AlarmService.labelOf(a)}'
+                          : tr.moreAlarmSub,
                       onTap: onAlarm,
                     ),
                   ),
                   _MenuCard(
                     p: p,
                     icon: _kIconShare,
-                    title: '친구에게 공유하기',
+                    title: tr.menuShareTitle,
                     subtitle: shareSubtitle,
                     onTap: onShare,
                   ),
                   _MenuCard(
                     p: p,
                     icon: _kIconStar,
-                    title: '앱 평가하기',
-                    subtitle: '좋은 평가가 큰 힘이 됩니다.',
+                    title: tr.menuRateTitle,
+                    subtitle: tr.moreRateSub,
                     onTap: onRate,
                   ),
                   _MenuCard(
                     p: p,
                     icon: _kIconGear,
-                    title: '설정',
-                    subtitle: '앱 환경을 설정해요.',
+                    title: tr.settings,
+                    subtitle: tr.moreSettingsSub,
                     onTap: onSettings,
                   ),
                   // 한 번도 안 열어봤으면 작은 점
@@ -349,8 +350,8 @@ class _MoreMenuSheet extends StatelessWidget {
                     builder: (context, seen, _) => _MenuCard(
                       p: p,
                       icon: _kIconHelp,
-                      title: '설정 도움말',
-                      subtitle: '권한·배터리·알림 설정 방법을 알려드려요.',
+                      title: tr.moreHelpTitle,
+                      subtitle: tr.moreHelpSub,
                       onTap: onHelp,
                       dot: !seen,
                     ),
@@ -359,8 +360,8 @@ class _MoreMenuSheet extends StatelessWidget {
                     _MenuCard(
                       p: p,
                       icon: _kIconGlobe,
-                      title: '방송국 홈페이지',
-                      subtitle: '공식 홈페이지로 이동해요.',
+                      title: tr.moreHomepageTitle,
+                      subtitle: tr.moreHomepageSub,
                       onTap: onHomepage,
                     ),
                 ]),
@@ -585,7 +586,7 @@ class _BrandCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      '오늘도 파란소리와 함께',
+                      tr.brandLine1,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -597,7 +598,7 @@ class _BrandCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      '당신의 하루에 편안한 소리를 더합니다.',
+                      tr.brandLine2,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: fg.withOpacity(0.65), fontSize: 11.5),

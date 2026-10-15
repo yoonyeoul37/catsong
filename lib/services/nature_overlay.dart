@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/player_provider.dart';
 import '../providers/sound_mix_provider.dart';
 import 'cast_service.dart';
+import '../l10n/locale_holder.dart';
+import '../utils/nature_sound_catalog.dart';
 
 /// 음악 위에 자연소리(빗소리·파도 등)를 살짝 깔아서 같이 듣기
 /// - 음악이 재생될 때만 같이 나오고, 음악을 멈추면 같이 멈춤
@@ -48,10 +50,10 @@ class NatureOverlay extends ChangeNotifier {
 
   /// 메뉴 오른쪽에 보여줄 요약 (예: 빗소리 / 빗소리 외 1 / 끔)
   String get summary {
-    final on = [for (final e in _vol.entries) if (e.value > 0) variantOf(e.key)];
-    if (on.isEmpty) return '끔';
+    final on = [for (final e in _vol.entries) if (e.value > 0) natureName(variantOf(e.key))];
+    if (on.isEmpty) return tr.off;
     if (on.length == 1) return on.first;
-    return '${on.first} 외 ${on.length - 1}개';
+    return tr.andNMore(on.first, on.length - 1);
   }
 
   /// 지금 꺼져 있고, 지난번에 섞은 게 있으면 true → 창에 [다시 켜기]
@@ -59,10 +61,10 @@ class NatureOverlay extends ChangeNotifier {
 
   /// 예: "빗소리" / "빗소리 외 1개"
   String get lastSummary {
-    final on = [for (final e in _last.entries) if (e.value > 0) variantOf(e.key)];
+    final on = [for (final e in _last.entries) if (e.value > 0) natureName(variantOf(e.key))];
     if (on.isEmpty) return '';
     if (on.length == 1) return on.first;
-    return '${on.first} 외 ${on.length - 1}개';
+    return tr.andNMore(on.first, on.length - 1);
   }
 
   /// 지난번 섞기 그대로 다시 켜기
@@ -83,7 +85,8 @@ class NatureOverlay extends ChangeNotifier {
   }
 
   /// 예: "잔잔한 파도와 함께" / "빗소리 외 1개와 함께"
-  String get withLabel => '${withJosa(summary)} 함께';
+  String get withLabel =>
+      tr.localeName.startsWith('ko') ? '${withJosa(summary)} 함께' : tr.withNature(summary);
 
   /// 음악 플레이어와 연결 (PlayerProvider가 만들어질 때 한 번)
   void attach(PlayerProvider p) {
@@ -240,9 +243,9 @@ void showNatureOverlaySheet(BuildContext context) {
                 children: [
                   const Icon(Icons.forest_outlined, color: blue, size: 22),
                   const SizedBox(width: 8),
-                  const Expanded(
-                    child: Text('자연 소리 믹스',
-                        style: TextStyle(color: Color(0xFF17140F), fontSize: 16, fontWeight: FontWeight.w700)),
+                  Expanded(
+                    child: Text(tr.natureMix,
+                        style: const TextStyle(color: Color(0xFF17140F), fontSize: 16, fontWeight: FontWeight.w700)),
                   ),
                   if (o.anyOn)
                     TextButton(
@@ -250,7 +253,7 @@ void showNatureOverlaySheet(BuildContext context) {
                         HapticFeedback.selectionClick();
                         o.allOff();
                       },
-                      child: const Text('모두 끄기', style: TextStyle(color: Color(0xFF8A857B))),
+                      child: Text(tr.turnAllOff, style: const TextStyle(color: Color(0xFF8A857B))),
                     ),
                   // ✕ 닫기 (다른 창들과 같은 자리)
                   IconButton(
@@ -267,7 +270,7 @@ void showNatureOverlaySheet(BuildContext context) {
                     ? Text.rich(
                         TextSpan(children: [
                           TextSpan(
-                            text: o.songTitle ?? '음악',
+                            text: o.songTitle ?? tr.musicLabel,
                             style: const TextStyle(color: Color(0xFF17140F), fontWeight: FontWeight.w600),
                           ),
                           TextSpan(text: ' · ${o.withLabel}'),
@@ -277,7 +280,7 @@ void showNatureOverlaySheet(BuildContext context) {
                         style: const TextStyle(color: Color(0xFF8A857B), fontSize: 12.5),
                       )
                     : Text(
-                        o.musicPlaying ? '음악 위에 자연소리를 살짝 깔아 같이 들어요' : '음악이 재생될 때 같이 나와요',
+                        o.musicPlaying ? tr.overlayOnHint : tr.overlayIdleHint,
                         style: const TextStyle(color: Color(0xFF8A857B), fontSize: 12.5),
                       ),
               ),
@@ -295,8 +298,8 @@ void showNatureOverlaySheet(BuildContext context) {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('지난번 섞기',
-                                style: TextStyle(color: Color(0xFF8A857B), fontSize: 11.5)),
+                            Text(tr.lastMix,
+                                style: const TextStyle(color: Color(0xFF8A857B), fontSize: 11.5)),
                             const SizedBox(height: 2),
                             Text(o.lastSummary,
                                 maxLines: 1,
@@ -321,8 +324,8 @@ void showNatureOverlaySheet(BuildContext context) {
                             padding: const EdgeInsets.symmetric(horizontal: 14),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           ),
-                          child: const Text('다시 켜기',
-                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                          child: Text(tr.turnBackOn,
+                              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
                         ),
                       ),
                     ],
@@ -347,7 +350,7 @@ void showNatureOverlaySheet(BuildContext context) {
                                 children: [
                                   Row(
                                     children: [
-                                      Text(k,
+                                      Text(natureName(k),
                                           style: TextStyle(
                                               color: const Color(0xFF17140F)
                                                   .withOpacity(o.volumeOf(k) > 0 ? 1 : 0.6),
@@ -357,7 +360,7 @@ void showNatureOverlaySheet(BuildContext context) {
                                       // 종류 고르기 (여러 개 있을 때만)
                                       if ((NatureOverlay.variants[k]?.length ?? 0) > 1)
                                         PopupMenuButton<String>(
-                                          tooltip: '종류 고르기',
+                                          tooltip: tr.pickType,
                                           onSelected: (v) => o.setVariant(k, v),
                                           // 자연소리 창은 항상 베이지라서 메뉴도 흰 카드 + 먹색 글자로 고정
                                           color: Colors.white,
@@ -375,7 +378,7 @@ void showNatureOverlaySheet(BuildContext context) {
                                                           : null,
                                                     ),
                                                     const SizedBox(width: 6),
-                                                    Text(name,
+                                                    Text(natureName(name),
                                                         style: TextStyle(
                                                             color: const Color(0xFF17140F),
                                                             fontSize: 14,
@@ -396,7 +399,7 @@ void showNatureOverlaySheet(BuildContext context) {
                                             child: Row(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                Text(o.variantOf(k),
+                                                Text(natureName(o.variantOf(k)),
                                                     style: const TextStyle(
                                                         color: Color(0xFF5A5348), fontSize: 12)),
                                                 const Icon(Icons.expand_more, size: 16, color: Color(0xFF8A857B)),

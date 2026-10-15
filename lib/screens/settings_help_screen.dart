@@ -11,6 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../providers/theme_provider.dart';
 import '../services/alarm_service.dart';
 import '../widgets/paran_toast.dart';
+import '../l10n/locale_holder.dart';
 
 /// 설정 도움말을 한 번이라도 열어봤는지 (⋮ 메뉴의 작은 점 표시용)
 class HelpSeen {
@@ -46,51 +47,51 @@ class _HelpTopic {
       {this.ios, this.note, required this.path, this.iosPath, this.exactAlarm = false});
 }
 
-const _topics = <_HelpTopic>[
+List<_HelpTopic> get _topics => [
   _HelpTopic(
     Icons.perm_media_outlined,
-    '음악·동영상 불러오기',
-    '음악이나 동영상이 목록에 나타나지 않을 때',
-    ['[설정 열기] 선택', '[권한] 선택', '[음악 및 오디오]와 [사진 및 동영상] 허용'],
-    ios: ['[설정 열기] 선택', '[미디어 및 Apple Music]과 [사진] 켜기', '앱으로 돌아오기'],
-    note: '허용한 뒤 앱으로 돌아오면 목록이 바로 나타나요.',
-    path: '설정 → 애플리케이션 → 파란소리 → 권한 → 음악 및 오디오 / 사진 및 동영상',
-    iosPath: '설정 → 파란소리 → 미디어 및 Apple Music · 사진',
+    tr.helpMediaTitle,
+    tr.helpMediaWhen,
+    [tr.helpStepOpen, tr.helpStepPerm, tr.helpStepMediaAllow],
+    ios: [tr.helpStepOpen, tr.helpStepIosMedia, tr.helpStepBack],
+    note: tr.helpMediaNote,
+    path: tr.helpMediaPath,
+    iosPath: tr.helpMediaIosPath,
   ),
   _HelpTopic(
     Icons.battery_charging_full_rounded,
-    '백그라운드 재생',
-    '화면을 껐을 때 음악이 멈추는 경우',
-    ['[설정 열기] 선택', '[배터리] 선택', '[제한 없음] 선택'],
-    note: '화면을 꺼도 음악과 라디오가 끊기지 않도록 도와줘요.\n휴대폰에 따라 "최적화 안 함" 등 다른 이름으로 표시될 수 있어요.',
-    path: '설정 → 애플리케이션 → 파란소리 → 배터리 → 제한 없음',
+    tr.helpBgTitle,
+    tr.helpBgWhen,
+    [tr.helpStepOpen, tr.helpStepBattery, tr.helpStepUnrestricted],
+    note: tr.helpBgNote,
+    path: tr.helpBgPath,
   ),
   _HelpTopic(
     Icons.alarm_rounded,
-    '아침 알람',
-    '알람이 울리지 않거나 지연되는 경우',
-    ['[설정 열기] 선택', '[알람 및 리마인더] 허용', '앱으로 돌아오기'],
-    note: '"백그라운드 재생"의 배터리 설정도 함께 해 두면 알람이 더 정확하게 울려요.',
-    path: '설정 → 애플리케이션 → 파란소리 → 알람 및 리마인더 → 허용',
+    tr.helpAlarmTitle,
+    tr.helpAlarmWhen,
+    [tr.helpStepOpen, tr.helpStepAlarmAllow, tr.helpStepBack],
+    note: tr.helpAlarmNote,
+    path: tr.helpAlarmPath,
     exactAlarm: true,
   ),
   _HelpTopic(
     Icons.notifications_none_rounded,
-    '잠금 화면 재생 버튼',
-    '잠금 화면이나 알림창에 재생 버튼이 표시되지 않을 때',
-    ['[설정 열기] 선택', '[알림] 선택', '[알림 허용] 켜기'],
-    ios: ['[설정 열기] 선택', '[알림] 선택', '[알림 허용] 켜기'],
-    note: '알림을 허용해야 잠금 화면과 알림창에 재생 버튼이 표시돼요.',
-    path: '설정 → 애플리케이션 → 파란소리 → 알림 → 알림 허용',
-    iosPath: '설정 → 파란소리 → 알림 → 알림 허용',
+    tr.helpLockTitle,
+    tr.helpLockWhen,
+    [tr.helpStepOpen, tr.helpStepNotif, tr.helpStepNotifAllow],
+    ios: [tr.helpStepOpen, tr.helpStepNotif, tr.helpStepNotifAllow],
+    note: tr.helpLockNote,
+    path: tr.helpLockPath,
+    iosPath: tr.helpLockIosPath,
   ),
   _HelpTopic(
     Icons.music_note_outlined,
-    '벨소리 설정',
-    '벨소리나 알림음을 설정할 수 없을 때',
-    ['[설정 열기] 선택', '[시스템 설정 변경] 선택', '[허용] 켜기'],
-    note: '허용한 뒤 벨소리 설정을 다시 시도해 보세요.',
-    path: '설정 → 애플리케이션 → 파란소리 → 시스템 설정 변경 → 허용',
+    tr.helpRingTitle,
+    tr.helpRingWhen,
+    [tr.helpStepOpen, tr.helpStepModify, tr.helpStepAllowOn],
+    note: tr.helpRingNote,
+    path: tr.helpRingPath,
   ),
 ];
 
@@ -107,7 +108,7 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
 
   // 돋보기: 이 화면 글자만 크게 (기본 → 크게 → 아주 크게, 기억)
   static const _levels = [1.0, 1.2, 1.4];
-  static const _levelNames = ['기본', '크게', '아주 크게'];
+  static List<String> get _levelNames => [tr.zoomDefault, tr.zoomLarge, tr.zoomXLarge];
   double _zoom = 1.0;
   final Map<int, Offset> _pointers = {};
   double? _pinchStartDist;
@@ -207,7 +208,7 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
       ok = await openAppSettings();
     } catch (_) {}
     if (!ok && mounted) {
-      showParanToast(context, '설정 화면을 열 수 없어요. 아래 "직접 설정하기" 순서대로 이동해 주세요');
+      showParanToast(context, tr.helpCantOpen);
     }
   }
 
@@ -233,14 +234,14 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
       final p = await _pkg;
       ver = '${p.version} (${p.buildNumber})';
     } catch (_) {}
-    final body = '어떤 문제가 있나요?\n(여기에 적어 주세요)\n\n\n\n'
-        '── 아래는 자동으로 들어가요 ──\n'
-        '휴대폰 모델: $model\n'
-        '${Platform.isIOS ? '시스템' : '안드로이드'}: $os\n'
-        '앱 버전: 파란소리 $ver';
+    final body = '${tr.mailBodyAsk}\n\n\n\n'
+        '${tr.mailBodyAuto}\n'
+        '${tr.mailModel}: $model\n'
+        '${Platform.isIOS ? tr.mailSystem : tr.mailAndroid}: $os\n'
+        '${tr.mailAppVersion}: Paransori $ver';
     // (+ 대신 %20 으로: 메일 앱에 + 가 그대로 보이는 것 방지)
     final uri = Uri.parse('mailto:$_contactMail'
-        '?subject=${Uri.encodeComponent('[파란소리 문의]')}'
+        '?subject=${Uri.encodeComponent(tr.mailSubject)}'
         '&body=${Uri.encodeComponent(body)}');
     var ok = false;
     try {
@@ -248,7 +249,7 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
     } catch (_) {}
     if (!ok && mounted) {
       await Clipboard.setData(const ClipboardData(text: _contactMail));
-      if (mounted) showParanToast(context, '메일 앱을 찾을 수 없어 주소를 복사했어요 ($_contactMail)');
+      if (mounted) showParanToast(context, tr.mailCopied(_contactMail));
     }
   }
 
@@ -272,7 +273,7 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
       appBar: AppBar(
         backgroundColor: bg,
         elevation: 0,
-        title: Text('설정 도움말',
+        title: Text(tr.moreHelpTitle,
             style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w600, letterSpacing: -0.3)),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
@@ -312,7 +313,7 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-                  child: Text('앱 사용 중 문제가 발생하면 아래 안내를 확인하세요.',
+                  child: Text(tr.helpIntro,
                       style: TextStyle(color: hint, fontSize: 12.5)),
                 ),
                 for (var ti = 0; ti < _topics.length; ti++)
@@ -425,7 +426,7 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Text('직접 설정하기',
+                                                  Text(tr.setManually,
                                                       style: TextStyle(
                                                           color: hint, fontSize: 11.5, fontWeight: FontWeight.w600)),
                                                   const SizedBox(height: 3),
@@ -447,8 +448,8 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
                                                   shape: RoundedRectangleBorder(
                                                       borderRadius: BorderRadius.circular(12)),
                                                 ),
-                                                child: const Text('설정 열기',
-                                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                                                child: Text(tr.openSettings,
+                                                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
                                               ),
                                             ),
                                           ],
@@ -483,10 +484,10 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('추가 도움이 필요하신가요?',
+                                Text(tr.needMoreHelp,
                                     style: TextStyle(color: ink, fontSize: 14.5, fontWeight: FontWeight.w700)),
                                 const SizedBox(height: 2),
-                                Text('휴대폰 모델과 문제 상황을 알려주세요.',
+                                Text(tr.tellUsModel,
                                     style: TextStyle(color: hint, fontSize: 12, height: 1.4)),
                               ],
                             ),
@@ -506,8 +507,8 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           ),
                           icon: const Icon(Icons.edit_outlined, size: 19),
-                          label: const Text('이메일 문의',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                          label: Text(tr.emailUs,
+                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
                         ),
                       ),
                       const SizedBox(height: 8),

@@ -81,9 +81,9 @@ void main() async {
   final simpleHandler = SimpleAudioHandler(playerProvider);
   globalAudioHandler = await AudioService.init(
     builder: () => simpleHandler,
-    config: const AudioServiceConfig(
+    config: AudioServiceConfig(
       androidNotificationChannelId: 'kr.ssing.catsong.audio',
-      androidNotificationChannelName: '파란소리',
+      androidNotificationChannelName: tr.appName,
       androidNotificationOngoing: false,
       androidStopForegroundOnPause: false,
       androidNotificationIcon: 'mipmap/ic_launcher',
@@ -241,7 +241,7 @@ class MyApp extends StatelessWidget {
         builder: (context, themeProvider, child) {
           return MaterialApp(
             navigatorKey: AlarmService.navKey, // 알람 화면 띄우기용
-            title: '파란소리',
+            onGenerateTitle: (c) => AppLocalizations.of(c)!.appName,
             debugShowCheckedModeBanner: false,
             localizationsDelegates: const [
               AppLocalizations.delegate,
@@ -254,7 +254,20 @@ class MyApp extends StatelessWidget {
               Locale('en'),
               Locale('ja'),
               Locale('zh'),
+              Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
             ],
+            // 중국어: 대만·홍콩·마카오 → 번체, 그 밖 → 간체 / 지원 안 하는 언어 → 영어
+            localeListResolutionCallback: (locales, supported) {
+              for (final l in locales ?? const <Locale>[]) {
+                if (l.languageCode == 'zh') {
+                  final hant = l.scriptCode == 'Hant' ||
+                      (l.scriptCode == null && const ['TW', 'HK', 'MO'].contains(l.countryCode));
+                  return hant ? const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant') : const Locale('zh');
+                }
+                if (const ['ko', 'en', 'ja'].contains(l.languageCode)) return Locale(l.languageCode);
+              }
+              return const Locale('en');
+            },
             theme: AppTheme.buildTheme(themeProvider.primaryColor).copyWith(
               textTheme: themeProvider.fontFamily == 'default'
                   ? AppTheme.buildTheme(themeProvider.primaryColor)
@@ -808,11 +821,10 @@ class _IntroViewState extends State<_IntroView> with TickerProviderStateMixin {
       AnimationController(vsync: this, duration: const Duration(milliseconds: 1100));
   bool _started = false;
   // 켤 때마다 인사말 한 줄을 무작위로
-  final String _line = _greetingLines[Random().nextInt(5)];
+  final int _lineNo = Random().nextInt(5);
   String get _greet {
-    final ko = Localizations.localeOf(context).languageCode == 'ko';
-    final i = _greetingLines.indexOf(_line);
-    return ko ? _line : _greetingLinesEn[i];
+    final l = AppLocalizations.of(context)!;
+    return [l.greetLine1, l.greetLine2, l.greetLine3, l.greetLine4, l.greetLine5][_lineNo];
   }
 
   // 소리 파형: 막대 20개 높이 · 색 (홈 카드 색: 살구 → 보라 → 흰 → 연두 → 살구)
@@ -978,22 +990,6 @@ class _IntroViewState extends State<_IntroView> with TickerProviderStateMixin {
     );
   }
 }
-
-/// 첫인사 인사말 (켤 때마다 하나씩 무작위) — 번역할 때 일본어·중국어 추가
-const _greetingLines = <String>[
-  '오늘도 좋은 소리와 함께해요',
-  '반가워요, 잠시 쉬어가요',
-  '편안한 하루 되세요',
-  '오늘 하루도 반가워요',
-  '마음이 쉬어가는 곳, 파란소리',
-];
-const _greetingLinesEn = <String>[
-  'Welcome back',
-  'Good sounds, good day',
-  'Take a moment for yourself',
-  'Your sounds are waiting',
-  'Relax and listen',
-];
 
 class _WavePainter extends CustomPainter {
   final Color color;

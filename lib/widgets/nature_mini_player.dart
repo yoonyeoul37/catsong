@@ -7,6 +7,8 @@ import '../utils/paran_photo.dart';
 import '../providers/player_provider.dart';
 import '../providers/theme_provider.dart';
 import '../screens/nature_sound_detail_screen.dart';
+import '../l10n/locale_holder.dart';
+import '../utils/nature_sound_catalog.dart';
 
 const _natureSoundMeta = <String, Map<String, dynamic>>{
   '파도소리': {'icon': Icons.waves, 'color': Color(0xFF4A7BA6)},
@@ -137,11 +139,11 @@ class NatureMiniPlayer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // 이름이 길면 좌우로 흐르게
-                        _MiniTitle(isPlaying ? '$name 재생 중' : '$name 일시정지',
+                        _MiniTitle(isPlaying ? tr.naturePlaying(natureName(name)) : tr.naturePaused(natureName(name)),
                             const TextStyle(
                                 color: baseColor, fontSize: 14, fontWeight: FontWeight.w600)),
                         const SizedBox(height: 2),
-                        Text('자연소리', style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 12)),
+                        Text(tr.natureSounds, style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 12)),
                       ],
                     ),
                   ),

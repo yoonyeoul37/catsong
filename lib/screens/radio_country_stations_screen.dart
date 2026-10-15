@@ -20,6 +20,7 @@ import 'radio_player_screen.dart';
 import 'radio_home_screen.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/theme_provider.dart';
+import '../l10n/locale_holder.dart';
 
 class RadioCountryStationsScreen extends StatefulWidget {
   final RadioCountry country;
@@ -139,7 +140,7 @@ class _RadioCountryStationsScreenState
       final keys = grouped.keys.toList()..sort();
       if (keys.isEmpty) {
         return Center(
-          child: Text('지역 정보가 있는 방송국이 없어요',
+          child: Text(tr.noRegionStations,
               style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 14)),
         );
       }
@@ -149,7 +150,7 @@ class _RadioCountryStationsScreenState
       final favs = radioProvider.favorites;
       if (favs.isEmpty) {
         return Center(
-          child: Text('하트를 눌러 즐겨찾기에 추가해보세요',
+          child: Text(tr.favAddHint,
               style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 14)),
         );
       }
@@ -175,7 +176,7 @@ class _RadioCountryStationsScreenState
           .toList();
       if (recent.isEmpty) {
         return Center(
-          child: Text('최근 들은 방송이 없어요',
+          child: Text(tr.noRecentStations,
               style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 14)),
         );
       }
@@ -240,12 +241,12 @@ class _RadioCountryStationsScreenState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '${list.length}개 채널',
+                  tr.channelsCount(list.length),
                   style: TextStyle(color: baseColor.withOpacity(0.38), fontSize: 12),
                 ),
                 const SizedBox(height: 14),
                 Text(
-                  key,
+                  key == '기타' ? tr.categoryEtc : key,
                   style: TextStyle(
                     color: baseColor,
                     fontSize: 17,
@@ -325,8 +326,96 @@ class _RadioCountryStationsScreenState
   String _langName(String raw) {
     final k = raw.toLowerCase().trim();
     if (k.isEmpty) return '';
-    return _langKo[k] ?? (k[0].toUpperCase() + k.substring(1));
+    final loc = tr.localeName;
+    final map = loc.startsWith('ko')
+        ? _langKo
+        : loc.startsWith('ja')
+            ? _langJa
+            : loc == 'zh_Hant'
+                ? _langZhHant
+                : loc.startsWith('zh')
+                    ? _langZh
+                    : const <String, String>{};
+    return map[k] ?? (k[0].toUpperCase() + k.substring(1));
   }
+
+  static const Map<String, String> _langJa = {
+    'english': '英語', 'spanish': 'スペイン語', 'portuguese': 'ポルトガル語', 'french': 'フランス語',
+    'german': 'ドイツ語', 'italian': 'イタリア語', 'hindi': 'ヒンディー語', 'tamil': 'タミル語',
+    'telugu': 'テルグ語', 'malayalam': 'マラヤーラム語', 'bengali': 'ベンガル語', 'marathi': 'マラーティー語',
+    'kannada': 'カンナダ語', 'punjabi': 'パンジャーブ語', 'gujarati': 'グジャラート語', 'urdu': 'ウルドゥー語',
+    'japanese': '日本語', 'chinese': '中国語', 'mandarin': '中国語', 'cantonese': '広東語',
+    'korean': '韓国語', 'vietnamese': 'ベトナム語', 'thai': 'タイ語', 'indonesian': 'インドネシア語',
+    'malay': 'マレー語', 'javanese': 'ジャワ語', 'arabic': 'アラビア語', 'russian': 'ロシア語',
+    'ukrainian': 'ウクライナ語', 'dutch': 'オランダ語', 'catalan': 'カタルーニャ語', 'basque': 'バスク語',
+    'galician': 'ガリシア語', 'swiss german': 'スイスドイツ語', 'romansh': 'ロマンシュ語', 'turkish': 'トルコ語',
+    'polish': 'ポーランド語', 'swedish': 'スウェーデン語', 'welsh': 'ウェールズ語', 'irish': 'アイルランド語',
+    'filipino': 'フィリピン語', 'tagalog': 'タガログ語', 'persian': 'ペルシャ語', 'hebrew': 'ヘブライ語',
+    'greek': 'ギリシャ語',
+  };
+
+  static const Map<String, String> _langZh = {
+    'english': '英语', 'spanish': '西班牙语', 'portuguese': '葡萄牙语', 'french': '法语',
+    'german': '德语', 'italian': '意大利语', 'hindi': '印地语', 'tamil': '泰米尔语',
+    'telugu': '泰卢固语', 'malayalam': '马拉雅拉姆语', 'bengali': '孟加拉语', 'marathi': '马拉地语',
+    'kannada': '卡纳达语', 'punjabi': '旁遮普语', 'gujarati': '古吉拉特语', 'urdu': '乌尔都语',
+    'japanese': '日语', 'chinese': '中文', 'mandarin': '普通话', 'cantonese': '粤语',
+    'korean': '韩语', 'vietnamese': '越南语', 'thai': '泰语', 'indonesian': '印尼语',
+    'malay': '马来语', 'javanese': '爪哇语', 'arabic': '阿拉伯语', 'russian': '俄语',
+    'ukrainian': '乌克兰语', 'dutch': '荷兰语', 'catalan': '加泰罗尼亚语', 'basque': '巴斯克语',
+    'galician': '加利西亚语', 'swiss german': '瑞士德语', 'romansh': '罗曼什语', 'turkish': '土耳其语',
+    'polish': '波兰语', 'swedish': '瑞典语', 'welsh': '威尔士语', 'irish': '爱尔兰语',
+    'filipino': '菲律宾语', 'tagalog': '他加禄语', 'persian': '波斯语', 'hebrew': '希伯来语',
+    'greek': '希腊语',
+  };
+
+  static const Map<String, String> _langZhHant = {
+    'english': '英語', 'spanish': '西班牙語', 'portuguese': '葡萄牙語', 'french': '法語',
+    'german': '德語', 'italian': '義大利語', 'hindi': '印地語', 'tamil': '坦米爾語',
+    'telugu': '泰盧固語', 'malayalam': '馬拉雅拉姆語', 'bengali': '孟加拉語', 'marathi': '馬拉地語',
+    'kannada': '卡納達語', 'punjabi': '旁遮普語', 'gujarati': '古吉拉特語', 'urdu': '烏爾都語',
+    'japanese': '日語', 'chinese': '中文', 'mandarin': '國語', 'cantonese': '粵語',
+    'korean': '韓語', 'vietnamese': '越南語', 'thai': '泰語', 'indonesian': '印尼語',
+    'malay': '馬來語', 'javanese': '爪哇語', 'arabic': '阿拉伯語', 'russian': '俄語',
+    'ukrainian': '烏克蘭語', 'dutch': '荷蘭語', 'catalan': '加泰隆尼亞語', 'basque': '巴斯克語',
+    'galician': '加利西亞語', 'swiss german': '瑞士德語', 'romansh': '羅曼什語', 'turkish': '土耳其語',
+    'polish': '波蘭語', 'swedish': '瑞典語', 'welsh': '威爾斯語', 'irish': '愛爾蘭語',
+    'filipino': '菲律賓語', 'tagalog': '他加祿語', 'persian': '波斯語', 'hebrew': '希伯來語',
+    'greek': '希臘語',
+  };
+
+  /// 칩 아래 글자 (저장은 한국어 그대로, 화면엔 언어에 맞게)
+  String _subLabel(String v) => switch (v) {
+        _popMost => tr.popMost,
+        _popTrend => tr.popTrend,
+        '즐겨찾기' => tr.favorites,
+        '최근청취' => tr.recentListened,
+        '저장한 곡' => tr.savedSongs,
+        '뉴스' => tr.genreNews,
+        '토크' => tr.genreTalk,
+        '스포츠' => tr.genreSports,
+        '팝' => tr.genrePop,
+        '인기곡' => tr.genreHits,
+        '록' => tr.genreRock,
+        '재즈' => tr.genreJazz,
+        '클래식' => tr.genreClassical,
+        '댄스·일렉' => tr.genreDance,
+        '힙합' => tr.genreHiphop,
+        'R&B·소울' => tr.genreRnb,
+        '라틴' => tr.genreLatin,
+        '컨트리' => tr.genreCountry,
+        '올디스' => tr.genreOldies,
+        '라운지' => tr.genreLounge,
+        '포크' => tr.genreFolk,
+        '블루스' => tr.genreBlues,
+        '레게' => tr.genreReggae,
+        '메탈' => tr.genreMetal,
+        '종교' => tr.genreReligious,
+        '어린이' => tr.genreKids,
+        '볼리우드' => tr.genreBollywood,
+        '세르타네주' => tr.genreSertanejo,
+        _ => v,
+      };
 
   /// 방송국 지역 이름을 하나로 맞추기 (대소문자·띄어쓰기·미국 주 약자)
   String _stateOf(RadioStation s) => RadioProvider.normState(s.state ?? '', widget.country.code);
@@ -396,7 +485,7 @@ class _RadioCountryStationsScreenState
       'region': _optionsFor('region', all, radio),
       'lang': _optionsFor('lang', all, radio),
     };
-    const names = {'mine': '내 라디오', 'pop': '인기', 'genre': '장르', 'region': '지역', 'lang': '언어'};
+    final names = {'mine': tr.myRadio, 'pop': tr.popularTab, 'genre': tr.genreTab, 'region': tr.regionTab, 'lang': tr.languageTab};
     final chips = ['mine', 'pop', for (final k in ['genre', 'region', 'lang']) if (opts[k]!.isNotEmpty) k];
     final popOpts = _hasTrend(all, radio) ? const [(_popMost, 0), (_popTrend, 0)] : const <(String, int)>[];
     final code = widget.country.code;
@@ -527,7 +616,7 @@ class _RadioCountryStationsScreenState
                       padding: const EdgeInsets.symmetric(vertical: 2),
                       child: Text.rich(
                         TextSpan(children: [
-                          TextSpan(text: cur[i].$1),
+                          TextSpan(text: _subLabel(cur[i].$1)),
                           if (cur[i].$2 > 0)
                             TextSpan(
                               text: ' ${cur[i].$2}',
@@ -611,14 +700,14 @@ class _RadioCountryStationsScreenState
       }
     }
     if (pick != null) {
-      why = '주사위가 고른 방송';
+      why = tr.heroDicePick;
     } else {
-      why = '인기 1위';
+      why = tr.heroTopN(1);
       // ② 이 나라에서 들었던 방송 (지금 듣는 건 빼기)
       for (final r in radio.recentlyListened) {
         if (r.countryCode == code && r.stationUuid != curUuid) {
           pick = r;
-          why = '최근 들은 방송';
+          why = tr.heroRecent;
           break;
         }
       }
@@ -631,14 +720,14 @@ class _RadioCountryStationsScreenState
           }
         }
         pick ??= all.first;
-        why = all.indexOf(pick) <= 0 ? '인기 1위' : '인기 ${all.indexOf(pick) + 1}위';
+        why = tr.heroTopN(all.indexOf(pick) <= 0 ? 1 : all.indexOf(pick) + 1);
       }
     }
     final st = pick!;
     // 사진·이름표: 그 나라 현지 시간 기준
     final h = _localHour(code) ?? DateTime.now().hour;
     final slot = h >= 5 && h < 11 ? 0 : h >= 11 && h < 17 ? 1 : h >= 17 && h < 22 ? 2 : 3;
-    const slotName = ['아침', '낮', '저녁', '밤'];
+    final slotName = [tr.slotMorning, tr.slotDay, tr.slotEvening, tr.slotNight];
     const photos = [
       'assets/radio_hero_morning.jpg',
       'assets/radio_hero_day.jpg',
@@ -649,10 +738,14 @@ class _RadioCountryStationsScreenState
     final last = cname.isEmpty ? 0 : cname.codeUnitAt(cname.length - 1);
     final hangul = last >= 0xAC00 && last <= 0xD7A3;
     final josa = hangul ? (((last - 0xAC00) % 28) != 0 ? '은' : '는') : '';
-    final label = why == '주사위가 고른 방송' ? why : '지금 $cname$josa ${slotName[slot]} · $why';
+    final label = why == tr.heroDicePick
+        ? why
+        : tr.localeName.startsWith('ko')
+            ? '지금 $cname$josa ${slotName[slot]} · $why'
+            : tr.heroNowIn(cname, slotName[slot], why);
     final sub = [
       if (st.state?.trim().isNotEmpty ?? false) st.state!.trim(),
-      ..._genresOf(st).take(1),
+      ..._genresOf(st).take(1).map(_subLabel),
     ].join(' · ');
     final point = context.watch<ThemeProvider>().primaryColor;
     final accent = point.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : point;
@@ -795,11 +888,11 @@ class _RadioCountryStationsScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('다시 듣기',
+          Text(tr.dailyListenAgain,
               style: TextStyle(color: baseColor.withOpacity(0.45), fontSize: 12, fontWeight: FontWeight.w700)),
           const SizedBox(height: 10),
           SizedBox(
-            height: 78,
+            height: 62 + MediaQuery.textScalerOf(context).scale(16),
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
@@ -873,7 +966,7 @@ class _RadioCountryStationsScreenState
             child: CircularProgressIndicator(strokeWidth: 2, color: baseColor.withOpacity(0.35)),
           ),
           const SizedBox(width: 8),
-          Text('방송을 더 불러오는 중', style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 12)),
+          Text(tr.loadingMoreStations, style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 12)),
         ],
       ),
     );
@@ -903,8 +996,8 @@ class _RadioCountryStationsScreenState
             (s.state?.trim().isNotEmpty ?? false) ? s.state!.trim() : c.displayName,
             if (time != null) time,
           ].join(' · '),
-          programLabel: '지금 나오는 곡',
-          emptyProgram: '곡 정보가 아직 없어요',
+          programLabel: tr.nowPlayingSong,
+          emptyProgram: tr.noSongInfoYet,
           program: (r) =>
               r.currentStation?.stationUuid == s.stationUuid ? (r.streamTitle ?? '').trim() : '',
         ),
@@ -1336,10 +1429,10 @@ class _RadioCountryStationsScreenState
                         Expanded(
                           child: Text(
                           _isTrend
-                              ? '요즘 듣는 사람이 늘어난 순'
+                              ? tr.trendingSort
                               : _chip == 'pop' && _query.isEmpty
-                              ? '방송 ${_fmtNum(radioProvider.getCountryStationCount(widget.country.code) ?? stations.length)}개 · 인기순'
-                              : '${_fmtNum(stations.length)}개',
+                              ? tr.stationsPopular(_fmtNum(radioProvider.getCountryStationCount(widget.country.code) ?? stations.length))
+                              : tr.countStr(_fmtNum(stations.length)),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -1450,7 +1543,7 @@ String? _localTimeText(String code) {
   }
   final t = now.add(Duration(minutes: (off * 60).round()));
   final h12 = t.hour % 12 == 0 ? 12 : t.hour % 12;
-  return '현지 ${t.hour < 12 ? '오전' : '오후'} $h12:${t.minute.toString().padLeft(2, '0')}';
+  return tr.localTime(tr.timeAmPm(t.hour < 12 ? tr.am : tr.pm, '$h12:${t.minute.toString().padLeft(2, '0')}'));
 }
 
 /// 현지 시각의 '시' (모르는 나라는 null) — 사진 카드 아침·낮·저녁·밤용

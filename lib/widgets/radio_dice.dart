@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../models/radio_station.dart';
 import '../providers/radio_provider.dart';
 import '../providers/theme_provider.dart';
+import '../l10n/locale_holder.dart';
 
 /// 주사위 판에 올릴 방송 하나
 class DiceStation {
@@ -20,8 +21,8 @@ class DiceStation {
   final String Function(RadioProvider radio) program;
   final double weight; // 나올 확률 (1 = 보통, 0.3 = 덜 나옴)
   final double badgeSize; // 로고 칸 글자 크기 (국기는 크게)
-  final String programLabel; // 카드 아래 작은 제목
-  final String emptyProgram; // 정보가 없을 때
+  final String? programLabel; // 카드 아래 작은 제목 (없으면 '지금 하는 프로그램')
+  final String? emptyProgram; // 정보가 없을 때 (없으면 '편성 정보가 없어요')
   /// 로고 칸에 넣을 사진 주소 (없으면 '' → 글자)
   final String Function(RadioProvider radio)? image;
 
@@ -32,8 +33,8 @@ class DiceStation {
     required this.program,
     this.weight = 1.0,
     this.badgeSize = 10.5,
-    this.programLabel = '지금 하는 프로그램',
-    this.emptyProgram = '편성 정보가 없어요',
+    this.programLabel,
+    this.emptyProgram,
     this.image,
   });
 }
@@ -231,9 +232,9 @@ class _DiceBoardState extends State<_DiceBoard> with TickerProviderStateMixin {
                       child: AnimatedOpacity(
                         duration: const Duration(milliseconds: 250),
                         opacity: _cur == null ? 0.8 : 0,
-                        child: const Text('어느 방송이 나올까요?',
+                        child: Text(tr.diceWhich,
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white, fontSize: 12.5, fontWeight: FontWeight.w700)),
+                            style: const TextStyle(color: Colors.white, fontSize: 12.5, fontWeight: FontWeight.w700)),
                       ),
                     ),
                     // 주사위 + 그림자
@@ -348,7 +349,9 @@ class _StationInfo extends StatelessWidget {
   const _StationInfo({required this.item, required this.face, required this.onAgain, this.onOpen});
 
   // 1이, 2가, 3이, 4가, 5가, 6이
-  static String _got(int n) => '$n${const {1: '이', 3: '이', 6: '이'}[n] ?? '가'} 나왔어요!';
+  static String _got(int n) => tr.localeName.startsWith('ko')
+      ? '$n${const {1: '이', 3: '이', 6: '이'}[n] ?? '가'} 나왔어요!'
+      : tr.diceGot(n);
 
   @override
   Widget build(BuildContext context) {
@@ -444,7 +447,7 @@ class _StationInfo extends StatelessWidget {
                         ),
                         _MiniBars(color: point),
                         const SizedBox(width: 5),
-                        Text('재생 중', style: TextStyle(color: point, fontSize: 11, fontWeight: FontWeight.w800)),
+                        Text(tr.nowPlayingBadge, style: TextStyle(color: point, fontSize: 11, fontWeight: FontWeight.w800)),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -456,9 +459,9 @@ class _StationInfo extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(item.programLabel, style: const TextStyle(color: hint, fontSize: 11.5)),
+                              Text(item.programLabel ?? tr.diceProgramLabel, style: const TextStyle(color: hint, fontSize: 11.5)),
                               const SizedBox(height: 1),
-                              Text(program.isEmpty ? item.emptyProgram : program,
+                              Text(program.isEmpty ? (item.emptyProgram ?? tr.diceNoProgram) : program,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -484,7 +487,7 @@ class _StationInfo extends StatelessWidget {
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                       onAgain();
                     },
-                    label: '다시 던지기',
+                    label: tr.rollAgain,
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -496,7 +499,7 @@ class _StationInfo extends StatelessWidget {
                       radio.toggleFavorite(item.station);
                     },
                     icon: fav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                    label: '즐겨찾기',
+                    label: tr.favorites,
                   ),
                 ),
               ],
@@ -909,29 +912,29 @@ class _RadioDiceIntroState extends State<RadioDiceIntro> with TickerProviderStat
                               },
                             ),
                             const SizedBox(height: 14),
-                            const Text('오늘은 어떤 라디오를\n들어볼까요?',
+                            Text(tr.diceTitle,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 17.5,
                                     fontWeight: FontWeight.w800,
                                     height: 1.4,
                                     letterSpacing: -0.4)),
                             const SizedBox(height: 4),
-                            Text('주사위를 던져\n새로운 방송을 만나보세요.',
+                            Text(tr.diceSub,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.white.withOpacity(0.88), fontSize: 13.5, height: 1.5)),
                             const SizedBox(height: 14),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
                               decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(999)),
-                              child: const Row(
+                              child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  RollDiceIcon(size: 19, color: Color(0xFF17140F)),
-                                  SizedBox(width: 7),
-                                  Text('주사위 던지기',
-                                      style: TextStyle(
+                                  const RollDiceIcon(size: 19, color: Color(0xFF17140F)),
+                                  const SizedBox(width: 7),
+                                  Text(tr.rollDice,
+                                      style: const TextStyle(
                                           color: Color(0xFF17140F), fontSize: 14, fontWeight: FontWeight.w800)),
                                 ],
                               ),

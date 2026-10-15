@@ -93,7 +93,7 @@
                     android:shadowColor="#66000000"
                     android:shadowDy="1"
                     android:shadowRadius="4"
-                    android:text="파란소리"
+                    android:text="@string/app_name"
                     android:textColor="#FFFFFF"
                     android:textSize="14.5sp"
                     android:textStyle="bold" />
@@ -107,7 +107,7 @@
                     android:shadowColor="#66000000"
                     android:shadowDy="1"
                     android:shadowRadius="4"
-                    android:text="음악 · 라디오 · 자연을 들어보세요"
+                    android:text="@string/widget_idle_sub"
                     android:textColor="#D9FFFFFF"
                     android:textSize="11.5sp" />
 
@@ -182,7 +182,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="음악"
+                android:text="@string/tab_music"
                 android:textColor="@color/paran_w_ink"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -208,7 +208,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="라디오"
+                android:text="@string/tab_radio"
                 android:textColor="@color/paran_w_ink"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -234,7 +234,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="자연"
+                android:text="@string/tab_nature"
                 android:textColor="@color/paran_w_ink"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -260,7 +260,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="수면"
+                android:text="@string/tab_sleep"
                 android:textColor="@color/paran_w_ink"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -284,7 +284,7 @@
             android:layout_marginTop="4dp"
             android:background="@drawable/paran_widget_chip"
             android:gravity="center"
-            android:text="최근에 들은 게 여기에 나와요"
+            android:text="@string/widget_recent_empty"
             android:textColor="@color/paran_w_sub"
             android:textSize="11.5sp"
             android:visibility="gone" />
@@ -315,7 +315,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="좋아하는 노래"
+                android:text="@string/sample_song"
                 android:textColor="@color/paran_w_ink"
                 android:textSize="12.5sp" />
 
@@ -327,7 +327,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:maxWidth="110dp"
-                android:text="가수"
+                android:text="@string/sample_artist"
                 android:textColor="@color/paran_w_sub"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -358,7 +358,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="라디오 방송"
+                android:text="@string/sample_station"
                 android:textColor="@color/paran_w_ink"
                 android:textSize="12.5sp" />
 
@@ -370,7 +370,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:maxWidth="110dp"
-                android:text="라디오"
+                android:text="@string/tab_radio"
                 android:textColor="@color/paran_w_sub"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -401,7 +401,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="빗소리"
+                android:text="@string/sample_rain"
                 android:textColor="@color/paran_w_ink"
                 android:textSize="12.5sp" />
 
@@ -413,7 +413,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:maxWidth="110dp"
-                android:text="자연소리"
+                android:text="@string/sample_nature"
                 android:textColor="@color/paran_w_sub"
                 android:textSize="11sp" />
         </LinearLayout>

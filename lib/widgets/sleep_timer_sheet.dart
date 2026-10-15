@@ -8,6 +8,7 @@ import '../l10n/app_localizations.dart';
 import 'paran_toast.dart';
 import 'paran_dialog.dart';
 import '../providers/theme_provider.dart';
+import '../l10n/locale_holder.dart';
 
 // ── 라디오 창 색 (라이트: 베이지 · 다크: 어두운 갈색) — 창을 그릴 때마다 다크 모드인지 맞춤 ──
 bool _rdDark = false;
@@ -167,10 +168,10 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                 ),
               ),
             ] else ...[
-              Text('몇 시간 몇 분 후 정지할까요?',
+              Text(tr.sleepAskDuration,
                   style: TextStyle(color: _rInk, fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 3),
-              Text('끝나기 1분 전부터 천천히 작아져요', style: TextStyle(color: _rSub, fontSize: 12)),
+              Text(tr.sleepFadeHint, style: TextStyle(color: _rSub, fontSize: 12)),
               SizedBox(
                 height: 180,
                 child: CupertinoTheme(

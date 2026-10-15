@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../utils/paran_photo.dart';
 import '../utils/nature_sound_catalog.dart';
+import '../l10n/locale_holder.dart';
 import '../utils/greeting_images.dart';
 import '../widgets/farewell_title.dart';
 import '../providers/theme_provider.dart';
@@ -307,7 +308,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
     } catch (e) {
       debugPrint('=== 자연소리 재생 오류: $e ===');
       if (mounted) {
-        showParanToast(context, '소리를 재생하지 못했어요', error: true);
+        showParanToast(context, tr.soundPlayFailed, error: true);
       }
     }
   }
@@ -389,7 +390,9 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
         farewellAsset = 'assets/farewell_ja.mp3';
         break;
       case 'zh':
-        smallText = '与Paransori相伴的时光，\n您开心吗?\n\n欢迎随时回来，\n我们会用美好的声音迎接您。\n再见啦!';
+        smallText = Localizations.localeOf(context).scriptCode == 'Hant'
+            ? '與Paransori相伴的時光，\n您開心嗎?\n\n歡迎隨時回來，\n我們會用美好的聲音迎接您。\n再見啦!'
+            : '与Paransori相伴的时光，\n您开心吗?\n\n欢迎随时回来，\n我们会用美好的声音迎接您。\n再见啦!';
         farewellAsset = 'assets/farewell_zh.mp3';
         break;
       default:
@@ -575,13 +578,13 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: '자연',
+                        text: tr.natureTitle1,
                         style: GoogleFonts.doHyeon(
                             // 기본 포인트 색이면 파랑, 다른 색이면 먹색 (홈 로고와 같은 규칙)
                             color: context.watch<ThemeProvider>().primaryColor.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : baseColor, fontSize: 20),
                       ),
                       TextSpan(
-                        text: ' 휴식',
+                        text: tr.natureTitle2,
                         style: GoogleFonts.doHyeon(
                             color: baseColor, fontSize: 20),
                       ),
@@ -597,7 +600,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
             ),
             const SizedBox(height: 0),
             Text(
-              '마음이 편안해지는 소리를 들어보세요',
+              tr.natureSub,
               style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 11.5),
             ),
           ],
@@ -647,7 +650,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                         ),
                         alignment: Alignment.center,
                         child: Text(
-                          '$category($count)',
+                          '${category == '전체' ? tr.all : natureName(category)}($count)',
                           style: TextStyle(
                             color: isSelected
                                 ? (isDarkMode ? const Color(0xFF24221F) : Colors.white)
@@ -710,10 +713,10 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                 final soundColor = soundColors[primary.category] ?? primaryColor;
                 final isGroupPlaying = variants.any((v) => playerProvider.natureSoundName == v.name) &&
                     playerProvider.isPlaying;
-                final displayTitle = isMulti ? categoryName : primary.name;
+                final displayTitle = natureName(isMulti ? categoryName : primary.name);
                 // 설명은 짧게: "3가지 버전" (듣는 중이면 뒤에 붙이기)
-                final baseDesc = isMulti ? '${variants.length}가지 버전' : primary.description;
-                final displayDescription = isGroupPlaying ? '$baseDesc · 듣는 중' : baseDesc;
+                final baseDesc = isMulti ? tr.versionsCount(variants.length) : natureDesc(primary.name, primary.description);
+                final displayDescription = isGroupPlaying ? '$baseDesc · ${tr.listeningNow}' : baseDesc;
 
                 return GestureDetector(
                   onTap: variants.every((v) => !v.isReady)
@@ -893,7 +896,7 @@ class _VariantPickerSheet extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text('$categoryName 버전 고르기',
+                child: Text(tr.pickVersion(natureName(categoryName)),
                     style: TextStyle(color: baseColor, fontSize: 17, fontWeight: FontWeight.bold)),
               ),
               ParanCloseX(onTap: () => Navigator.pop(context)), // 닫기
@@ -925,11 +928,11 @@ class _VariantPickerSheet extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(v.name,
+                            Text(natureName(v.name),
                                 style: TextStyle(
                                     color: baseColor, fontSize: 14, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 2),
-                            Text(v.description,
+                            Text(natureDesc(v.name, v.description),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(color: baseColor.withOpacity(0.45), fontSize: 11)),

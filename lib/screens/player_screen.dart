@@ -44,6 +44,7 @@ import '../widgets/cast_sheets.dart';
 import '../widgets/artist_info_sheet.dart';
 import '../services/nature_overlay.dart';
 import '../l10n/app_localizations.dart';
+import '../l10n/locale_holder.dart';
 import 'package:flutter/services.dart';
 import '../providers/theme_provider.dart';
 import '../main.dart' show globalAudioHandler;
@@ -249,9 +250,9 @@ class _PlayerScreenState extends State<PlayerScreen>
           children: [
             Icon(Icons.check_circle_rounded, color: pointColorOf(context, onDark: false), size: 22),
             const SizedBox(width: 10),
-            const Expanded(
-              child: Text('파란포토로 바꿨어요',
-                  style: TextStyle(color: Color(0xFF17140F), fontSize: 14.5, fontWeight: FontWeight.w700)),
+            Expanded(
+              child: Text(tr.paranPhotoSwitched,
+                  style: const TextStyle(color: Color(0xFF17140F), fontSize: 14.5, fontWeight: FontWeight.w700)),
             ),
             TextButton(
               onPressed: () {
@@ -261,7 +262,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                 _saveStyle(prev);
               },
               style: TextButton.styleFrom(foregroundColor: pointColorOf(context, onDark: false)),
-              child: Text(prev == 3 ? '앨범으로 되돌리기' : '시디롬으로 되돌리기',
+              child: Text(prev == 3 ? tr.backToAlbum : tr.backToCd,
                   style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
             ),
           ],
@@ -307,16 +308,16 @@ class _PlayerScreenState extends State<PlayerScreen>
                             child: paranPhoto(_nightBgPath, thumb: true, width: 56, height: 56, fit: BoxFit.cover),
                           ),
                           const SizedBox(width: 14),
-                          const Expanded(
+                          Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('파란포토로 들어볼까요?',
-                                    style: TextStyle(
+                                Text(tr.paranSuggestTitle,
+                                    style: const TextStyle(
                                         color: Color(0xFF17140F), fontSize: 15.5, fontWeight: FontWeight.w800)),
-                                SizedBox(height: 4),
-                                Text('예쁜 사진 위로 음악이 흘러요',
-                                    style: TextStyle(color: Color(0xFF8A857B), fontSize: 12.5)),
+                                const SizedBox(height: 4),
+                                Text(tr.paranSuggestSub,
+                                    style: const TextStyle(color: Color(0xFF8A857B), fontSize: 12.5)),
                               ],
                             ),
                           ),
@@ -331,7 +332,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                               setState(() => _showParanSuggest = false);
                             },
                             style: TextButton.styleFrom(foregroundColor: const Color(0xFF8A857B)),
-                            child: const Text('괜찮아요', style: TextStyle(fontSize: 13.5)),
+                            child: Text(tr.noThanks, style: const TextStyle(fontSize: 13.5)),
                           ),
                           const SizedBox(width: 6),
                           ElevatedButton(
@@ -344,7 +345,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                               padding: const EdgeInsets.symmetric(horizontal: 20),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
-                            child: const Text('구경하기', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
+                            child: Text(tr.takeALook, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
                           ),
                         ],
                       ),
@@ -667,6 +668,16 @@ class _PlayerScreenState extends State<PlayerScreen>
 
   // ───── 파란포토: 자동(시간대) · 랜덤 · 고정 ─────
 
+  /// 사진 묶음 이름 (저장은 한국어 그대로, 화면엔 언어에 맞게)
+  static String _rangeLabel(String k) => switch (k) {
+        '전체' => tr.all,
+        '하트' => tr.photoHearts,
+        '내 사진' => tr.myPhotos,
+        '고른 사진' => tr.pickedPhotos,
+        '파란포토' => tr.paranPhoto,
+        _ => k,
+      };
+
   /// 지금 시각의 시간대 (노을은 계절 따라: 여름 19시 · 겨울 17시 · 그 밖 18시부터 1시간 반)
   static String _timeCategory([DateTime? now]) {
     final t = now ?? DateTime.now();
@@ -756,7 +767,7 @@ class _PlayerScreenState extends State<PlayerScreen>
 
     showParanSheet(
       context,
-      title: '파란포토',
+      title: tr.paranPhoto,
       // 제목 옆에 작게: 무엇을 하는 곳인지
       header: Padding(
         padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
@@ -780,13 +791,13 @@ class _PlayerScreenState extends State<PlayerScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('파란포토',
+                    Text(tr.paranPhoto,
                         style: GoogleFonts.doHyeon( // 홈과 같은 글꼴
                           color: dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F),
                           fontSize: 19,
                         )),
                     const SizedBox(height: 1),
-                    Text('나만의 재생 화면 꾸미기',
+                    Text(tr.paranPhotoSub,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -933,9 +944,15 @@ class _PlayerScreenState extends State<PlayerScreen>
                   children: [
                     Icon(Icons.add_rounded, color: sub, size: 26),
                     const SizedBox(height: 4),
-                    Text('사진 추가', style: TextStyle(color: sub, fontSize: 11.5, fontWeight: FontWeight.w600)),
+                    Text(tr.addPhoto,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: sub, fontSize: 11.5, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 1),
-                    Text('세로형 사진을 추천해요', style: TextStyle(color: sub.withOpacity(0.75), fontSize: 9.5)),
+                    Text(tr.portraitBest,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: sub.withOpacity(0.75), fontSize: 9.5)),
                   ],
                 ),
               ),
@@ -1022,10 +1039,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text((_photoMode == 1) ? '랜덤' : '고정',
+                              Text((_photoMode == 1) ? tr.photoRandom : tr.photoFixed,
                                   style: TextStyle(color: ink, fontSize: 14, fontWeight: FontWeight.w600)),
                               const SizedBox(height: 2),
-                              Text((_photoMode == 1) ? '곡이 바뀌면 배경도 바뀝니다.' : '배경 사진이 고정됩니다.',
+                              Text((_photoMode == 1) ? tr.photoRandomSub : tr.photoFixedSub,
                                   style: TextStyle(color: sub, fontSize: 11.5)),
                             ],
                           ),
@@ -1082,7 +1099,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                             child: ClipRRect(borderRadius: BorderRadius.circular(10), child: coverOf(c)),
                           ),
                           const SizedBox(height: 5),
-                          Text(c,
+                          Text(_rangeLabel(c),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -1105,7 +1122,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   onTap: () => setSheet(() => manage = !manage),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(12, 10, 4, 0),
-                    child: Text(manage ? '완료' : '관리',
+                    child: Text(manage ? tr.done : tr.manage,
                         style: TextStyle(
                             color: manage ? Theme.of(ctx).colorScheme.primary : sub,
                             fontSize: 12.5,
@@ -1117,7 +1134,7 @@ class _PlayerScreenState extends State<PlayerScreen>
             if (tiles.isEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 28),
-                child: Text('준비 중이에요',
+                child: Text(tr.comingSoon,
                     textAlign: TextAlign.center, style: TextStyle(color: sub, fontSize: 13)),
               )
             else
@@ -1152,7 +1169,7 @@ class _PlayerScreenState extends State<PlayerScreen>
         : paranPhoto(_nightBgPath, thumb: true, fit: BoxFit.cover);
     return Row(
       children: [
-        for (final t in const [(0, '컬러'), (1, '흑백'), (2, '세피아'), (3, '필름')]) ...[
+        for (final t in [(0, tr.toneColor), (1, tr.toneBw), (2, tr.toneSepia), (3, tr.toneFilm)]) ...[
           if (t.$1 > 0) const SizedBox(width: 8),
           Expanded(
             child: GestureDetector(
@@ -1247,7 +1264,7 @@ class _PlayerScreenState extends State<PlayerScreen>
         frame.image.dispose();
         codec.dispose();
         if (landscape) {
-          if (mounted) showParanToast(context, '가로 사진은 가운데 부분만 보여요. 세로로 찍은 사진이 가장 잘 어울려요');
+          if (mounted) showParanToast(context, tr.landscapeHint);
           return;
         }
       } catch (_) {}
@@ -1471,7 +1488,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                           customIcon: playerProvider.loopMode == LoopMode.one
                               ? '<path d="M17 2L21 6L17 10" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11V9C3 7.3 4.3 6 6 6H21" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 22L3 18L7 14" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 13V15C21 16.7 19.7 18 18 18H3" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 10V14M13 10L11 10V14L13 14" stroke-linecap="round" stroke-linejoin="round"/>'
                               : '<path d="M17 2L21 6L17 10" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11V9C3 7.3 4.3 6 6 6H21" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 22L3 18L7 14" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 13V15C21 16.7 19.7 18 18 18H3" stroke-linecap="round" stroke-linejoin="round"/>',
-                          label: '반복',
+                          label: tr.repeat,
                           isActive: playerProvider.loopMode != LoopMode.off,
                           onTap: () {
                             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -1481,7 +1498,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                         _buildBottomBarItem(
                           context,
                           icon: Icons.nightlight_round,
-                          label: '수면',
+                          label: tr.radioSleep,
                           isActive: playerProvider.isSleepTimerActive,
                           onTap: () {
                             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -1509,7 +1526,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                           _buildBottomBarItem(
                             context,
                             icon: CupertinoIcons.camera,
-                            label: '사진',
+                            label: tr.photo,
                             isActive: false,
                             showNew: !_photoBtnSeen,
                             onTap: () {
@@ -1714,7 +1731,7 @@ class _PlayerScreenState extends State<PlayerScreen>
       animation: CastService.instance,
       builder: (context, _) {
         final cast = CastService.instance;
-        final label = cast.isConnected ? '${cast.device!.name}에서 재생 중' : 'TV로 듣기';
+        final label = cast.isConnected ? tr.castPlayingNow(cast.device!.name) : tr.listenOnTv;
         return Padding(
           padding: const EdgeInsets.only(top: 2, bottom: 8),
           child: GestureDetector(
@@ -1954,20 +1971,20 @@ class _PlayerScreenState extends State<PlayerScreen>
                       isDark: isDark,
                       song: song,
                       actions: [
-                        MenuQuickAction(fav ? CupertinoIcons.heart_fill : CupertinoIcons.heart, '즐겨찾기', () {
+                        MenuQuickAction(fav ? CupertinoIcons.heart_fill : CupertinoIcons.heart, tr.favorites, () {
                           const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                           music.toggleFavorite(song);
                         }),
-                        MenuQuickAction(Icons.playlist_add, '재생목록', () {
+                        MenuQuickAction(Icons.playlist_add, tr.playlistLabel, () {
                           _showAddToPlaylistDialog(context, song, primaryColor);
                         }),
                         // 공유·편집: 메뉴는 그대로 두고 위에 띄움 → 돌아오면 메뉴가 그대로
-                        MenuQuickAction(Icons.share, '공유', () async {
+                        MenuQuickAction(Icons.share, tr.share, () async {
                           if (song.uri != null) {
                             await Share.shareXFiles([XFile(song.uri!)], text: song.titleDisplay);
                           }
                         }),
-                        MenuQuickAction(Icons.edit, '정보 수정', () {
+                        MenuQuickAction(Icons.edit, tr.editInfo, () {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => EditSongScreen(song: song)));
                         }),
                       ],
@@ -1978,7 +1995,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   _playerSheetItem(
                     ctx,
                     Icons.shuffle_rounded,
-                    '랜덤 재생',
+                    tr.shufflePlay,
                     accent,
                     baseColor,
                         () {
@@ -1990,7 +2007,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   _playerSheetItem(
                     ctx,
                     Icons.repeat_rounded,
-                    '반복 재생',
+                    tr.repeatPlay,
                     accent,
                     baseColor,
                         () {
@@ -2003,7 +2020,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   _playerSheetItem(
                     ctx,
                     Icons.nightlight_round,
-                    '수면 타이머',
+                    tr.sleepTimer,
                     accent,
                     baseColor,
                         () {
@@ -2019,7 +2036,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   ),
                   ]),
                   MenuCard(isDark: isDark, children: [
-                  _playerSheetItem(ctx, Icons.style, '재생 화면', accent, baseColor, () async {
+                  _playerSheetItem(ctx, Icons.style, tr.playerScreen, accent, baseColor, () async {
                     if (!_hasSeenParanPhoto) {
                       setState(() => _hasSeenParanPhoto = true);
                       SharedPreferences.getInstance().then((p) => p.setBool('hasSeenParanPhoto', true));
@@ -2028,10 +2045,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                     // 고르고 돌아오면 메뉴의 스타일 썸네일도 바로 바뀌게
                     if (ctx.mounted) setSheet(() {});
                   }, trailing: _sheetStyleThumbs(song)),
-                  _playerSheetItem(ctx, Icons.speed, '재생 속도', accent, baseColor, () {
+                  _playerSheetItem(ctx, Icons.speed, tr.playbackSpeed, accent, baseColor, () {
                     _showSpeedDialog(context, context.read<PlayerProvider>(), primaryColor);
                   }, trailing: _sheetValue(_sheetSpeedLabel(playerProvider.playbackSpeed)), arrow: true),
-                  _playerSheetItem(ctx, Icons.lyrics_outlined, '가사 보기', accent, baseColor, () {
+                  _playerSheetItem(ctx, Icons.lyrics_outlined, tr.viewLyrics, accent, baseColor, () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const LyricsScreen()));
                   }, arrow: true),
                   // 🌿 자연소리 섞기 (음악 위에 빗소리·파도 등을 깔기)
@@ -2040,7 +2057,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                     builder: (_, __) => _playerSheetItem(
                       ctx,
                       Icons.forest_outlined,
-                      '자연 소리 믹스',
+                      tr.natureMix,
                       accent,
                       baseColor,
                       () {
@@ -2053,21 +2070,21 @@ class _PlayerScreenState extends State<PlayerScreen>
                   ]),
                   MenuCard(isDark: isDark, children: [
                   // 들어갔다 나오면 메뉴가 그대로 있게 (메뉴를 닫지 않고 위에 띄움)
-                  _playerSheetItem(ctx, Icons.music_note, '벨소리 설정', accent, baseColor, () {
+                  _playerSheetItem(ctx, Icons.music_note, tr.ringtone, accent, baseColor, () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => RingtoneScreen(initialSong: song)));
                   }, arrow: true),
-                  _playerSheetItem(ctx, Icons.content_cut, '오디오 자르기', accent, baseColor, () {
+                  _playerSheetItem(ctx, Icons.content_cut, tr.trimAudio, accent, baseColor, () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => RingtoneScreen(initialSong: song, trimMode: true)));
                   }, arrow: true),
-                  _playerSheetItem(ctx, Icons.info_outline, '파일 정보', accent, baseColor, () {
+                  _playerSheetItem(ctx, Icons.info_outline, tr.fileInfo, accent, baseColor, () {
                     SongListTile.showInfo(context, song);
                   }, arrow: true),
                   _playerSheetItem(ctx, Icons.equalizer, AppLocalizations.of(context)!.equalizer, accent, baseColor, () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const EqualizerScreen()));
                   }, arrow: true),
                   // 설정 바로가기 (뒤로가기 한 번이면 메뉴로 돌아옴)
-                  _playerSheetItem(ctx, Icons.settings_outlined, '설정', accent, baseColor, () {
+                  _playerSheetItem(ctx, Icons.settings_outlined, tr.settings, accent, baseColor, () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen()));
                   }, arrow: true),
                   ]),
@@ -2141,13 +2158,13 @@ class _PlayerScreenState extends State<PlayerScreen>
 
   static String _sheetSleepLabel(PlayerProvider p) {
     final end = p.sleepTimerEnd;
-    if (!p.isSleepTimerActive || end == null) return '꺼짐';
+    if (!p.isSleepTimerActive || end == null) return tr.off;
     final secs = end.difference(DateTime.now()).inSeconds;
     final m = (secs / 60).ceil().clamp(1, 100000);
-    if (m < 60) return '$m분 후 중지';
+    if (m < 60) return tr.sleepStopInMin(m);
     final h = m ~/ 60;
     final r = m % 60;
-    return r == 0 ? '$h시간 후 중지' : '$h시간 $r분 후 중지';
+    return r == 0 ? tr.sleepStopInHour(h) : tr.sleepStopInHourMin(h, r);
   }
 
   static String _sheetSpeedLabel(double speed) {
@@ -2213,9 +2230,9 @@ class _PlayerScreenState extends State<PlayerScreen>
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          chip('끔', LoopMode.off),
-          chip('한 곡', LoopMode.one),
-          chip('전체', LoopMode.all),
+          chip(tr.repeatOffChip, LoopMode.off),
+          chip(tr.repeatOneChip, LoopMode.one),
+          chip(tr.all, LoopMode.all),
         ],
       ),
     );
@@ -2333,8 +2350,8 @@ class _PlayerScreenState extends State<PlayerScreen>
       mainAxisSize: MainAxisSize.min,
       children: [
         box(1, 'CD', cd),
-        box(6, '파란포토', photo, isNew: showNew),
-        box(3, '앨범 사진', album),
+        box(6, tr.paranPhoto, photo, isNew: showNew),
+        box(3, tr.albumArt, album),
       ],
     );
   }
@@ -3024,12 +3041,12 @@ class _PlayerScreenState extends State<PlayerScreen>
               Navigator.push(context, MaterialPageRoute(builder: (_) => const LyricsScreen()));
             },
             behavior: HitTestBehavior.opaque,
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // 누르기 쉽게 자리만 넓게
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), // 누르기 쉽게 자리만 넓게
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('가사 보기',
+                  Text(tr.viewLyrics,
                       style: TextStyle(
                           color: Colors.white60, fontSize: 13, fontWeight: FontWeight.w500, letterSpacing: 0.3)),
                   SizedBox(width: 1),
@@ -3263,11 +3280,11 @@ class _PlayerScreenState extends State<PlayerScreen>
                       Expanded(
                         child: Column(
                           children: [
-                            Text('몇 시간 몇 분 후 정지할까요?',
+                            Text(tr.sleepAskDuration,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 3),
-                            Text('끝나기 1분 전부터 천천히 작아져요',
+                            Text(tr.sleepFadeHint,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: textColor.withOpacity(0.5), fontSize: 12)),
                           ],
@@ -3350,7 +3367,9 @@ class _PlayerScreenState extends State<PlayerScreen>
         farewellAsset = 'assets/farewell_ja.mp3';
         break;
       case 'zh':
-        smallText = '与Paransori相伴的时光，\n您开心吗?\n\n欢迎随时回来，\n我们会用美好的声音迎接您。\n再见啦!';
+        smallText = Localizations.localeOf(context).scriptCode == 'Hant'
+            ? '與Paransori相伴的時光，\n您開心嗎?\n\n歡迎隨時回來，\n我們會用美好的聲音迎接您。\n再見啦!'
+            : '与Paransori相伴的时光，\n您开心吗?\n\n欢迎随时回来，\n我们会用美好的声音迎接您。\n再见啦!';
         farewellAsset = 'assets/farewell_zh.mp3';
         break;
       default:
@@ -3586,7 +3605,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     final l = AppLocalizations.of(context)!;
     final styles = [
       (1, l.styleCD, Icons.album_outlined),
-      (6, '파란포토', Icons.photo_outlined),
+      (6, tr.paranPhoto, Icons.photo_outlined),
       (3, l.styleCard, Icons.image_outlined),
     ];
     return showParanSheet(
@@ -3598,7 +3617,7 @@ class _PlayerScreenState extends State<PlayerScreen>
             ParanRow(
               icon: st.$3,
               title: st.$2,
-              trailingText: st.$1 == 6 ? '추천' : null,
+              trailingText: st.$1 == 6 ? tr.recommended : null,
               selected: current == st.$1,
               onTap: () {
                 current = st.$1;
@@ -3615,7 +3634,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   spacing: 6,
                   runSpacing: 6,
                   children: [
-                    for (final e in const ['기본', '폴라로이드', '테이프', '겹친 사진', '둥근 테두리'].asMap().entries)
+                    for (final e in [tr.printBasic, tr.printPolaroid, tr.printTape, tr.printStacked, tr.printRounded].asMap().entries)
                       GestureDetector(
                         onTap: () {
                           printStyle = e.key;
@@ -3667,29 +3686,29 @@ List<Widget> playerSettingRows(
     // TV로 듣기 (곡이 재생 중일 때만)
     if (p.currentSong != null) castMenuRow(context, textColor),
     _PlayerScreenState._playerSheetItem(
-      context, Icons.shuffle_rounded, '랜덤 재생', accent, textColor,
+      context, Icons.shuffle_rounded, tr.shufflePlay, accent, textColor,
       () { vib(); p.toggleShuffle(); },
       trailing: _PlayerScreenState._sheetMiniSwitch(p.isShuffled),
     ),
     _PlayerScreenState._playerSheetItem(
-      context, Icons.repeat_rounded, '반복 재생', accent, textColor,
+      context, Icons.repeat_rounded, tr.repeatPlay, accent, textColor,
       () { vib(); p.toggleLoopMode(); },
       trailing: _PlayerScreenState._sheetRepeatChips(p),
       trailingTappable: true,
     ),
     _PlayerScreenState._playerSheetItem(
-      context, Icons.nightlight_round, '수면 타이머', accent, textColor,
+      context, Icons.nightlight_round, tr.sleepTimer, accent, textColor,
       () { vib(); showPlayerSleepMenu(context); },
       trailing: _PlayerScreenState._sheetValue(_PlayerScreenState._sheetSleepLabel(p)),
       arrow: true,
     ),
     _PlayerScreenState._playerSheetItem(
-      context, Icons.style, '재생 화면', accent, textColor,
+      context, Icons.style, tr.playerScreen, accent, textColor,
       () async { await showPlayerStyleMenu(context); onStyleChanged(); },
       trailing: _PlayerScreenState._styleThumbs(song, style, bgPath, bgIsFile, showNew: showNew),
     ),
     _PlayerScreenState._playerSheetItem(
-      context, Icons.speed, '재생 속도', accent, textColor,
+      context, Icons.speed, tr.playbackSpeed, accent, textColor,
       () { showPlayerSpeedMenu(context); },
       trailing: _PlayerScreenState._sheetValue(_PlayerScreenState._sheetSpeedLabel(p.playbackSpeed)),
       arrow: true,
@@ -3699,7 +3718,7 @@ List<Widget> playerSettingRows(
       AnimatedBuilder(
         animation: NatureOverlay.instance,
         builder: (_, __) => _PlayerScreenState._playerSheetItem(
-          context, Icons.forest_outlined, '자연 소리 믹스', accent, textColor,
+          context, Icons.forest_outlined, tr.natureMix, accent, textColor,
           () { showNatureOverlaySheet(context); },
           trailing: _PlayerScreenState._sheetValue(NatureOverlay.instance.summary),
           arrow: true,
@@ -3718,7 +3737,7 @@ Widget castMenuRow(BuildContext context, Color textColor) {
       return _PlayerScreenState._playerSheetItem(
         context,
         Icons.sensors_rounded,
-        'TV로 듣기',
+        tr.listenOnTv,
         on ? pointColorOf(context) : const Color(0xFF8A8378),
         textColor,
         () {
@@ -3737,7 +3756,7 @@ Widget castMenuRow(BuildContext context, Color textColor) {
             });
           }
         },
-        trailing: on ? _PlayerScreenState._sheetValue(cast.device?.name ?? '연결됨') : null,
+        trailing: on ? _PlayerScreenState._sheetValue(cast.device?.name ?? tr.connected) : null,
         arrow: true,
       );
     },
@@ -4419,11 +4438,11 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
                       Expanded(
                         child: Column(
                           children: [
-                            Text('몇 시간 몇 분 후 정지할까요?',
+                            Text(tr.sleepAskDuration,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 3),
-                            Text('끝나기 1분 전부터 천천히 작아져요',
+                            Text(tr.sleepFadeHint,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: textColor.withOpacity(0.5), fontSize: 12)),
                           ],

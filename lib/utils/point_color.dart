@@ -1,6 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
+import '../l10n/locale_holder.dart';
+
+/// 강조 색 이름 (저장은 한국어 이름 그대로, 화면에는 언어에 맞게)
+String pointColorName(String ko) => switch (ko) {
+      '파란소리' => tr.colorParansori,
+      '숲' => tr.colorForest,
+      '노을' => tr.colorSunset,
+      '라벤더' => tr.colorLavender,
+      '먹색' => tr.colorInk,
+      '벚꽃' => tr.colorBlossom,
+      '바다' => tr.colorOcean,
+      '햇살' => tr.colorSunlight,
+      '와인' => tr.colorWine,
+      '밤하늘' => tr.colorNightSky,
+      _ => ko,
+    };
 
 /// 포인트 색 꺼내기 — 앱 어디서든 이것 하나만 쓰기 (화면마다 파랑이 달라지지 않게)
 /// - 기본(파란소리)이면: 밝은 바탕 #2F7DE8 (로고 파랑) / 어두운 바탕 #6FB0FF

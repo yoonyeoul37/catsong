@@ -18,6 +18,7 @@ import 'player_provider.dart' show SimpleAudioHandler, PlayerProvider;
 import '../services/schedule_service.dart';
 import '../l10n/locale_holder.dart';
 import '../screens/radio_korea_screen2.dart' show koreanStationDesc;
+import '../l10n/locale_holder.dart';
 
 enum RadioPlayerState { idle, loading, playing, paused, error }
 
@@ -340,7 +341,7 @@ class RadioProvider extends ChangeNotifier {
       debugPrint('media_kit 오류: $error');
       // 실제로 소리가 계속 나오고 있으면(mpv 자체 재연결 성공) 무시 - 순간적인 네트워크 흔들림
       if (error.isNotEmpty && !_player.state.playing) {
-        _errorMessage = '방송을 불러올 수 없습니다.\n다른 채널을 선택해 주세요.';
+        _errorMessage = tr.stationLoadFailed;
         _isActuallyPlaying = false;
         _setPlayerState(RadioPlayerState.error);
       }
@@ -590,7 +591,7 @@ class RadioProvider extends ChangeNotifier {
       }
     } catch (e) {
       debugPrint('라디오 재생 실패: $e');
-      _errorMessage = '방송을 불러올 수 없습니다.\n다른 채널을 선택해 주세요.';
+      _errorMessage = tr.stationLoadFailed;
       _setPlayerState(RadioPlayerState.error);
     }
   }
@@ -746,8 +747,8 @@ class RadioProvider extends ChangeNotifier {
           if (key.isEmpty || !_countryNameKeys.add(key)) continue; // 인기 많은 쪽 하나만 남김
           final lang = (m['language'] ?? '').toString().split(',').first.trim();
           if (lang.isNotEmpty) _stationLanguage[s.stationUuid] = lang;
-          final tr = m['clicktrend'];
-          if (tr is num) _stationTrend[s.stationUuid] = tr.toInt();
+          final trend = m['clicktrend'];
+          if (trend is num) _stationTrend[s.stationUuid] = trend.toInt();
           added.add(s);
         }
         _mergeFavoriteFlags(added);
@@ -938,8 +939,8 @@ class RadioProvider extends ChangeNotifier {
               if (key.isEmpty || !_countryNameKeys.add(key)) continue;
               final lang = (m['language'] ?? '').toString().split(',').first.trim();
               if (lang.isNotEmpty) _stationLanguage[s.stationUuid] = lang;
-              final tr = m['clicktrend'];
-              if (tr is num) _stationTrend[s.stationUuid] = tr.toInt();
+              final trend = m['clicktrend'];
+              if (trend is num) _stationTrend[s.stationUuid] = trend.toInt();
               added.add(s);
             }
             break;
@@ -2457,8 +2458,8 @@ class ScheduledStation {
   String get timeString {
     final h = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
     final m = time.minute.toString().padLeft(2, '0');
-    final period = time.period == DayPeriod.am ? '오전' : '오후';
-    return '$period $h:$m';
+    final period = time.period == DayPeriod.am ? tr.am : tr.pm;
+    return tr.timeAmPm(period, '$h:$m');
   }
 
   Map<String, dynamic> toJson() => {

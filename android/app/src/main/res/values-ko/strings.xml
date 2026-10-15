@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">파란소리</string>
+    <string name="widget_idle_sub">음악 · 라디오 · 자연을 들어보세요</string>
+    <string name="widget_loading">불러오는 중…</string>
+    <string name="widget_wait">잠시만 기다려 주세요</string>
+    <string name="widget_play_music">음악을 재생해보세요</string>
+    <string name="tab_music">음악</string>
+    <string name="tab_radio">라디오</string>
+    <string name="tab_nature">자연</string>
+    <string name="tab_sleep">수면</string>
+    <string name="widget_recent_empty">최근에 들은 게 여기에 나와요</string>
+    <string name="sample_song">좋아하는 노래</string>
+    <string name="sample_artist">가수</string>
+    <string name="sample_station">라디오 방송</string>
+    <string name="sample_rain">빗소리</string>
+    <string name="sample_nature">자연소리</string>
+    <string name="alarm_channel">아침 알람</string>
+    <string name="alarm_channel_desc">파란소리 아침 알람</string>
+    <string name="alarm_quiet_channel">아침 알람 (화면 열기)</string>
+    <string name="alarm_quiet_desc">잠금화면 위로 알람 화면을 열 때</string>
+    <string name="alarm_text">눌러서 알람 화면 열기</string>
+    <string name="headset_channel">이어폰 연결 알림</string>
+    <string name="action_play">재생</string>
+    <string name="resume_ask">이어서 들을까요?</string>
+    <string name="rec_channel">녹음</string>
+    <string name="rec_channel_desc">녹음 중일 때 알림창에 표시</string>
+    <string name="rec_title_paused">파란소리 녹음 일시정지</string>
+    <string name="rec_title_on">파란소리 녹음 중</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · 탭해서 이어서 녹음</string>
+    <string name="rec_tap_back">탭하면 녹음 화면으로 돌아가요</string>
+    <string name="rec_resume">이어서</string>
+    <string name="rec_pause">일시정지</string>
+    <string name="rec_done">완료</string>
+</resources>

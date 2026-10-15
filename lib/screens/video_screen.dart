@@ -21,6 +21,7 @@ import 'video_trim_screen.dart';
 import '../services/cast_service.dart';
 import '../widgets/cast_sheets.dart';
 import 'settings_help_screen.dart';
+import '../l10n/locale_holder.dart';
 
 // 이어보기: 동영상마다 멈춘 곳 기억 (폰에 저장 + 바로 쓰게 메모리에도)
 class VideoResume {
@@ -53,9 +54,9 @@ Future<void> shareVideo(BuildContext context, Video video) async {
   if (video.duration > 10 * 60 * 1000) {
     final ok = await showParanConfirm(
       context,
-      title: '긴 동영상이에요',
-      message: '10분이 넘는 영상은 카카오톡으로 안 보내질 수 있어요.\n구글 드라이브나 메일로 보내면 잘 가요.',
-      confirmLabel: '보내기',
+      title: tr.longVideoTitle,
+      message: tr.longVideoMsg,
+      confirmLabel: tr.send,
     );
     if (!ok || !context.mounted) return;
   }
@@ -71,13 +72,13 @@ Future<void> shareVideo(BuildContext context, Video video) async {
 Future<bool> deleteVideosFlow(BuildContext context, List<Video> targets, {bool isAll = false}) async {
   if (targets.isEmpty) return false;
   final n = targets.length;
-  final what = (isAll || n > 1) ? '동영상 $n개를' : '이 동영상을';
+  final many = isAll || n > 1;
   final pick = await showParanChoice(
     context,
-    title: '$what 삭제할까요?',
-    message: '휴지통으로 옮겨져요. 30일 뒤에 완전히 지워져요.',
-    confirmLabel: '휴지통으로',
-    extraLabel: '영구 삭제',
+    title: many ? tr.deleteVideosTitle(n) : tr.deleteVideoTitle,
+    message: tr.trashInfo,
+    confirmLabel: tr.toTrash,
+    extraLabel: tr.deleteForever,
     danger: true,
   );
   if (pick == 0 || !context.mounted) return false;
@@ -85,9 +86,9 @@ Future<bool> deleteVideosFlow(BuildContext context, List<Video> targets, {bool i
     // 영구 삭제: 되살릴 수 없다고 한 번 더 확인
     final ok = await showParanConfirm(
       context,
-      title: '영구 삭제할까요?',
-      message: '$what 영구 삭제하면 되살릴 수 없어요.',
-      confirmLabel: '영구 삭제',
+      title: tr.deleteForeverTitle,
+      message: many ? tr.deleteVideosForeverMsg(n) : tr.deleteVideoForeverMsg,
+      confirmLabel: tr.deleteForever,
       danger: true,
     );
     if (!ok || !context.mounted) return false;
@@ -101,35 +102,49 @@ Future<bool> deleteVideosFlow(BuildContext context, List<Video> targets, {bool i
     if (!context.mounted) return true;
     context.read<VideoProvider>().loadVideos(quiet: true);
     showActionFeedback(context,
-        type: ActionFeedbackType.deleted, message: pick == 1 ? '삭제했어요' : '영구 삭제했어요');
+        type: ActionFeedbackType.deleted, message: pick == 1 ? tr.fbDeleted : tr.deletedForever);
     return true;
   } catch (e) {
-    if (context.mounted) showParanToast(context, '삭제하지 못했어요', error: true);
+    if (context.mounted) showParanToast(context, tr.couldNotDelete, error: true);
     return false;
   }
 }
 
 // 정렬 이름
-const Map<String, String> _kSortLabels = {
-  'new': '최신순',
-  'old': '오래된순',
-  'name': '이름순',
-  'long': '긴 영상순',
-  'short': '짧은 영상순',
+Map<String, String> get _kSortLabels => {
+  'new': tr.sortNewest,
+  'old': tr.sortOldest,
+  'name': tr.sortByName,
+  'long': tr.sortLongVideo,
+  'short': tr.sortShortVideo,
 };
+
+// 날짜 글자 (언어에 맞게)
+String _wd(DateTime d) {
+  final w = tr.weekdaysShort.split(',');
+  return w.length == 7 ? w[d.weekday - 1] : '';
+}
+
+String _hm(int h, int mi) =>
+    tr.timeAmPm(h < 12 ? tr.am : tr.pm, '${h % 12 == 0 ? 12 : h % 12}:${mi.toString().padLeft(2, '0')}');
+
+String _monthName(int m) {
+  final names = tr.monthNames.split(',');
+  return names.length == 12 ? names[m - 1] : '$m';
+}
 
 // 묶음 제목: 오늘 / 어제는 날짜별, 그 전은 월별 (10월 / 2025년 10월) → 한 칸만 남는 줄이 거의 없게
 String _dayLabel(int ms) {
-  if (ms <= 0) return '날짜 모름';
+  if (ms <= 0) return tr.dateUnknown;
   final d = DateTime.fromMillisecondsSinceEpoch(ms);
   final now = DateTime.now();
   final day = DateTime(d.year, d.month, d.day);
   final today = DateTime(now.year, now.month, now.day);
   final diff = today.difference(day).inDays;
-  if (diff == 0) return '오늘';
-  if (diff == 1) return '어제';
-  if (d.year == now.year) return '${d.month}월';
-  return '${d.year}년 ${d.month}월';
+  if (diff == 0) return tr.today;
+  if (diff == 1) return tr.yesterday;
+  if (d.year == now.year) return _monthName(d.month);
+  return tr.yearMonth('${d.year}', _monthName(d.month));
 }
 
 class VideoScreen extends StatefulWidget {
@@ -212,7 +227,7 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(left: 4),
-                        child: Text('정렬',
+                        child: Text(tr.sortLabel,
                             style: TextStyle(color: sub, fontSize: 12, fontWeight: FontWeight.w600)),
                       ),
                     ),
@@ -326,7 +341,7 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 4),
-                      child: Text('동영상 관리', style: TextStyle(color: sub, fontSize: 12, fontWeight: FontWeight.w600)),
+                      child: Text(tr.videoManage, style: TextStyle(color: sub, fontSize: 12, fontWeight: FontWeight.w600)),
                     ),
                     const Spacer(),
                     IconButton(
@@ -343,10 +358,10 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
                     decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(14)),
                     child: Column(
                       children: [
-                        action(Icons.check_box_outlined, '여러 개 선택하기', ink, bg,
+                        action(Icons.check_box_outlined, tr.selectMultiple, ink, bg,
                             () => setState(() => _selectMode = true)),
                         Divider(height: 1, thickness: 1, color: line),
-                        action(Icons.delete_outline_rounded, '전체 삭제', red, red.withOpacity(0.1),
+                        action(Icons.delete_outline_rounded, tr.deleteAll, red, red.withOpacity(0.1),
                             () => deleteVideosFlow(context, List.of(list), isAll: true)),
                       ],
                     ),
@@ -375,7 +390,7 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
           constraints: const BoxConstraints(minWidth: 34, minHeight: 34),
         ),
         const SizedBox(width: 4),
-        Text('${_selected.length}개 선택',
+        Text(tr.selectedCount2(_selected.length),
             style: TextStyle(color: baseColor, fontSize: 15, fontWeight: FontWeight.w700)),
         const Spacer(),
         TextButton(
@@ -392,7 +407,7 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
               }
             });
           },
-          child: Text(all ? '선택 해제' : '전체 선택', style: TextStyle(color: baseColor.withOpacity(0.75))),
+          child: Text(all ? tr.deselect : tr.selectAllShort, style: TextStyle(color: baseColor.withOpacity(0.75))),
         ),
       ],
     );
@@ -447,11 +462,11 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
         child: Row(
           children: [
             // 고른 걸 한 번에 다 풀기 (막대·동그라미도 같이 사라짐)
-            btn(Icons.remove_done_rounded, '선택 해제', _endSelect),
-            btn(Icons.share_outlined, '공유', () async {
+            btn(Icons.remove_done_rounded, tr.deselect, _endSelect),
+            btn(Icons.share_outlined, tr.share, () async {
               await Share.shareXFiles([for (final v in picked) XFile(v.uri)]);
             }),
-            btn(Icons.delete_outline, '삭제', () async {
+            btn(Icons.delete_outline, tr.delete, () async {
               if (await deleteVideosFlow(context, picked, isAll: true) && mounted) _endSelect();
             }, color: barRed),
           ],
@@ -507,7 +522,7 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
                   color: baseColor.withOpacity(0.75), fontSize: 13, fontWeight: FontWeight.w800, letterSpacing: -0.2)),
         ),
       ));
-      out.add(grid(bucket, 0, dateMode: (cur == '오늘' || cur == '어제') ? 'time' : 'day'));
+      out.add(grid(bucket, 0, dateMode: (cur == tr.today || cur == tr.yesterday) ? 'time' : 'day'));
     }
 
     for (final v in p.videos) {
@@ -600,20 +615,20 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Text('폰에 있는 동영상을 불러올게요',
+                  Text(tr.videoPermTitle,
                       textAlign: TextAlign.center,
                       style: TextStyle(color: ink, fontSize: 16.5, fontWeight: FontWeight.w700, letterSpacing: -0.3)),
                   const SizedBox(height: 6),
-                  Text('동영상 접근을 한 번만 허용해 주세요',
+                  Text(tr.videoPermSub,
                       textAlign: TextAlign.center, style: TextStyle(color: hint, fontSize: 13)),
                   const SizedBox(height: 22),
-                  step(1, '아래 설정에서 허용하기 누르기', note: '파란소리 앱 설정이 바로 열려요'),
-                  step(2, '권한 → 사진 및 동영상 누르기'),
-                  step(3, '허용 고르고 돌아오기', note: '돌아오면 바로 목록이 나와요'),
+                  step(1, tr.videoPermStep1, note: tr.videoPermStep1Note),
+                  step(2, tr.videoPermStep2),
+                  step(3, tr.videoPermStep3, note: tr.videoPermStep3Note),
                   // 버튼 대신 직접 찾아갈 때 (폰 회사마다 메뉴 이름이 조금 달라요)
                   Padding(
                     padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
-                    child: Text('직접 찾아갈 때: 설정 → 애플리케이션(앱) → 파란소리 → 권한 → 사진 및 동영상',
+                    child: Text(tr.videoPermManual,
                         textAlign: TextAlign.center,
                         style: TextStyle(color: hint, fontSize: 11.5, height: 1.5)),
                   ),
@@ -631,8 +646,8 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
                         elevation: 0,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
                       ),
-                      child: const Text('설정에서 허용하기',
-                          style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700)),
+                      child: Text(tr.allowInSettings,
+                          style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700)),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -641,12 +656,12 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
                       onPressed: () => Navigator.push(
                           context, MaterialPageRoute(builder: (_) => const SettingsHelpScreen())),
                       style: TextButton.styleFrom(foregroundColor: hint),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('다른 설정 도움말 보기', style: TextStyle(fontSize: 12.5)),
-                          SizedBox(width: 2),
-                          Icon(Icons.chevron_right_rounded, size: 16),
+                          Text(tr.otherSetupHelp, style: const TextStyle(fontSize: 12.5)),
+                          const SizedBox(width: 2),
+                          const Icon(Icons.chevron_right_rounded, size: 16),
                         ],
                       ),
                     ),
@@ -731,7 +746,7 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(_kSortLabels[videoProvider.sort] ?? '최신순',
+                                  Text(_kSortLabels[videoProvider.sort] ?? tr.sortNewest,
                                       style: TextStyle(
                                           color: baseColor.withOpacity(0.6), fontSize: 13, fontWeight: FontWeight.w600)),
                                   const SizedBox(width: 2),
@@ -776,14 +791,11 @@ class _VideoScreenState extends State<VideoScreen> with WidgetsBindingObserver {
   final y = int.parse(m[1]!), mo = int.parse(m[2]!), d = int.parse(m[3]!);
   final h = int.parse(m[4]!), mi = int.parse(m[5]!);
   if (y < 2000 || mo < 1 || mo > 12 || d < 1 || d > 31 || h > 23 || mi > 59) return null;
-  const week = ['월', '화', '수', '목', '금', '토', '일'];
-  final wd = week[DateTime(y, mo, d).weekday - 1];
-  final ampm = h < 12 ? '오전' : '오후';
-  final h12 = h % 12 == 0 ? 12 : h % 12;
+  final wd = _wd(DateTime(y, mo, d));
   return (
-    date: '$y년 $mo월 $d일 ($wd)',
-    time: '$ampm $h12:${mi.toString().padLeft(2, '0')}',
-    day: '$d일 ($wd)',
+    date: tr.dateYMDW('$y', '$mo', '$d', wd),
+    time: _hm(h, mi),
+    day: tr.dateDW('$d', wd),
   );
 }
 
@@ -939,16 +951,16 @@ class _VideoTileState extends State<_VideoTile> {
                   decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(14)),
                   child: Column(
                     children: [
-                      action(Icons.ios_share_rounded, '공유하기', ink, bg,
+                      action(Icons.ios_share_rounded, tr.shareAction, ink, bg,
                           isDarkMode ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348),
                           () => shareVideo(context, widget.video)),
                       Divider(height: 1, thickness: 1, color: line),
-                      action(Icons.content_cut_rounded, '잘라서 보내기', ink, bg,
+                      action(Icons.content_cut_rounded, tr.trimAndSend, ink, bg,
                           isDarkMode ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348),
                           () => Navigator.push(
                               context, MaterialPageRoute(builder: (_) => VideoTrimScreen(video: widget.video)))),
                       Divider(height: 1, thickness: 1, color: line),
-                      action(Icons.music_note_rounded, '음악으로 저장', ink, bg,
+                      action(Icons.music_note_rounded, tr.saveAsMusic, ink, bg,
                           isDarkMode ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348),
                           () => showSaveAudioSheet(context, widget.video)),
                       Divider(height: 1, thickness: 1, color: line),
@@ -985,9 +997,9 @@ class _VideoTileState extends State<_VideoTile> {
       await vp.carrySeen(widget.video.uri, newName); // 이름 바꿔도 NEW 안 붙게
       vp.loadVideos();
       if (!context.mounted) return;
-      showActionFeedback(context, type: ActionFeedbackType.edited, message: '이름을 바꿨어요');
+      showActionFeedback(context, type: ActionFeedbackType.edited, message: tr.renamed);
     } catch (e) {
-      showParanToast(context, '이름을 바꾸지 못했어요', error: true);
+      showParanToast(context, tr.renameFailed, error: true);
     }
   }
 
@@ -1139,19 +1151,16 @@ class _VideoTileState extends State<_VideoTile> {
                   final ms = context.read<VideoProvider>().dateOf(widget.video.uri);
                   if (ms > 0) {
                     final d = DateTime.fromMillisecondsSinceEpoch(ms);
-                    const week = ['월', '화', '수', '목', '금', '토', '일'];
-                    final wd = week[d.weekday - 1];
-                    final ampm = d.hour < 12 ? '오전' : '오후';
-                    final h12 = d.hour % 12 == 0 ? 12 : d.hour % 12;
-                    time = '$ampm $h12:${d.minute.toString().padLeft(2, '0')}';
+                    final wd = _wd(d);
+                    time = _hm(d.hour, d.minute);
                     // 위 묶음 제목과 겹치는 건 빼기 (올해면 연도 빼고)
                     first = widget.dateMode == 'time'
                         ? time
                         : widget.dateMode == 'day'
-                            ? '${d.day}일 ($wd)'
+                            ? tr.dateDW('${d.day}', wd)
                             : d.year == DateTime.now().year
-                                ? '${d.month}월 ${d.day}일 ($wd)'
-                                : '${d.year}.${d.month}.${d.day} ($wd)';
+                                ? tr.dateMDW('${d.month}', '${d.day}', wd)
+                                : tr.dateYMDdotW('${d.year}', '${d.month}', '${d.day}', wd);
                   }
                 }
                 final hasName = cd == null; // 이름 바꾼 영상·다운받은 영상
@@ -1310,12 +1319,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
       // 이미 TV에 연결돼 있으면 (음악 보내던 중 등) 같은 TV로 바로
       final ok = await send((s) =>
           cast.castVideo(path: widget.video.uri, title: widget.video.titleDisplay, startSec: s));
-      if (!ok && mounted) showParanToast(context, 'TV로 보내지 못했어요. 다시 시도해 주세요.', error: true);
+      if (!ok && mounted) showParanToast(context, tr.castFailedRetry, error: true);
       return;
     }
     showCastPickerSheet(
       context,
-      title: 'TV로 보기',
+      title: tr.watchOnTv,
       onPick: (d) => send((s) =>
           cast.connectVideo(d, path: widget.video.uri, title: widget.video.titleDisplay, startSec: s)),
     );
@@ -1344,7 +1353,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
         children: [
           const Icon(Icons.tv_rounded, color: Colors.white70, size: 46),
           const SizedBox(height: 12),
-          Text('${cast.device?.name ?? 'TV'}에서 보는 중',
+          Text(tr.watchingOn(cast.device?.name ?? 'TV'),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
@@ -1372,8 +1381,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
           const SizedBox(height: 20),
           GestureDetector(
             onTap: _backToPhone,
-            child: const Text('폰에서 이어 보기',
-                style: TextStyle(
+            child: Text(tr.continueOnPhone,
+                style: const TextStyle(
                     color: Colors.white70,
                     fontSize: 13,
                     decoration: TextDecoration.underline,
@@ -1469,10 +1478,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
               // 제목 + ✕
               Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Padding(
-                      padding: EdgeInsets.only(left: 4),
-                      child: Text('재생 속도', style: TextStyle(color: sub, fontSize: 12, fontWeight: FontWeight.w600)),
+                      padding: const EdgeInsets.only(left: 4),
+                      child: Text(tr.playbackSpeed, style: const TextStyle(color: sub, fontSize: 12, fontWeight: FontWeight.w600)),
                     ),
                   ),
                   IconButton(
@@ -1502,7 +1511,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
                             children: [
                               Expanded(
                                 child: Text(
-                                  speeds[i] == 1.0 ? '${_speedLabel(speeds[i])}  보통' : _speedLabel(speeds[i]),
+                                  speeds[i] == 1.0 ? '${_speedLabel(speeds[i])}  ${tr.speedNormal}' : _speedLabel(speeds[i]),
                                   style: TextStyle(
                                     color: _speed == speeds[i] ? primary : ink,
                                     fontSize: 14.5,
@@ -1540,7 +1549,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
     _vib();
     final pos = _videoPlayerController.value.position.inMilliseconds;
     if (_loopA == null || pos <= _loopA! + 500) {
-      showParanToast(context, _loopA == null ? 'A를 먼저 정해 주세요' : 'A보다 뒤에서 눌러 주세요');
+      showParanToast(context, _loopA == null ? tr.setAFirst : tr.pressAfterA);
       return;
     }
     setState(() => _loopB = pos);
@@ -1560,8 +1569,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
   Widget _loopBar() {
     final primary = Theme.of(context).colorScheme.primary;
     final hint = _loopA == null
-        ? 'A를 정해 주세요'
-        : (_loopB == null ? 'B를 정하면 반복돼요' : '반복 중');
+        ? tr.setAHint
+        : (_loopB == null ? tr.setBHint : tr.looping);
     Widget btn(String label, String sub, bool set, VoidCallback onTap) => Expanded(
           child: InkWell(
             onTap: onTap,
@@ -1596,8 +1605,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
             children: [
               Icon(Icons.repeat_rounded, size: 16, color: primary),
               const SizedBox(width: 6),
-              const Text('구간 반복',
-                  style: TextStyle(color: Color(0xFFF3EFE7), fontSize: 13, fontWeight: FontWeight.w700)),
+              Text(tr.abRepeat,
+                  style: const TextStyle(color: Color(0xFFF3EFE7), fontSize: 13, fontWeight: FontWeight.w700)),
               const Spacer(),
               Text(hint, style: const TextStyle(color: Colors.white54, fontSize: 11.5)),
             ],
@@ -1605,11 +1614,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
           const SizedBox(height: 10),
           Row(
             children: [
-              btn('A 지정', _fmtMs(_loopA), _loopA != null, _setLoopA),
+              btn(tr.setA, _fmtMs(_loopA), _loopA != null, _setLoopA),
               const SizedBox(width: 8),
-              btn('B 지정', _fmtMs(_loopB), _loopB != null, _setLoopB),
+              btn(tr.setB, _fmtMs(_loopB), _loopB != null, _setLoopB),
               const SizedBox(width: 8),
-              btn('끄기', '반복 끝', false, () {
+              btn(tr.turnOff, tr.loopEnd, false, () {
                 _vib();
                 _loopOff();
               }),
@@ -1752,12 +1761,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
                     ),
                   );
               return [
-                item(Icons.ios_share_rounded, '공유하기', 'share'),
-                item(Icons.headphones_rounded, '소리만 듣기', 'audioOnly', on: _audioOnly),
-                item(Icons.speed_rounded, '재생 속도 (${_speedLabel(_speed)})', 'speed'),
-                item(Icons.repeat_rounded, '구간 반복', 'loop', on: _loopOn),
-                item(Icons.content_cut_rounded, '잘라서 보내기', 'trim'),
-                item(Icons.music_note_rounded, '음악으로 저장', 'toMusic'),
+                item(Icons.ios_share_rounded, tr.shareAction, 'share'),
+                item(Icons.headphones_rounded, tr.audioOnly, 'audioOnly', on: _audioOnly),
+                item(Icons.speed_rounded, tr.playbackSpeedWith(_speedLabel(_speed)), 'speed'),
+                item(Icons.repeat_rounded, tr.abRepeat, 'loop', on: _loopOn),
+                item(Icons.content_cut_rounded, tr.trimAndSend, 'trim'),
+                item(Icons.music_note_rounded, tr.saveAsMusic, 'toMusic'),
                 item(Icons.edit_outlined, AppLocalizations.of(context)!.rename, 'rename'),
                 item(Icons.delete_outline_rounded, AppLocalizations.of(context)!.delete, 'delete', danger: true),
               ];
@@ -1771,7 +1780,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
                 setState(() => _audioOnly = !_audioOnly);
                 (await SharedPreferences.getInstance()).setBool('videoAudioOnly', _audioOnly);
                 if (context.mounted) {
-                  showParanToast(context, _audioOnly ? '화면을 꺼도 소리가 계속 나와요' : '앱을 나가면 멈춰요');
+                  showParanToast(context, _audioOnly ? tr.audioOnlyOn : tr.audioOnlyOff);
                 }
                 return;
               }
@@ -1814,7 +1823,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
                   await vp.carrySeen(widget.video.uri, newName); // 이름 바꿔도 NEW 안 붙게
                   vp.loadVideos(quiet: true);
                   if (!context.mounted) return;
-                  showActionFeedback(context, type: ActionFeedbackType.edited, message: '이름을 바꿨어요');
+                  showActionFeedback(context, type: ActionFeedbackType.edited, message: tr.renamed);
                   Navigator.pop(context);
                 }
               } else if (value == 'delete') {
@@ -1879,7 +1888,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with WidgetsBindi
                                       Icon(_seekSide < 0 ? Icons.fast_rewind_rounded : Icons.fast_forward_rounded,
                                           color: Colors.white, size: 26),
                                       const SizedBox(height: 2),
-                                      Text('$_seekSec초',
+                                      Text(tr.secondsValue('$_seekSec'),
                                           style: const TextStyle(
                                               color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700)),
                                     ],

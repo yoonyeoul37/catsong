@@ -1,4 +1,5 @@
 import 'song.dart';
+import '../l10n/locale_holder.dart';
 
 /// 통화 녹음 파일 하나 (일반 음악과 따로 관리)
 /// 삼성 파일 이름 예: "통화 녹음 101호 김명○_250530_121928.m4a"
@@ -37,7 +38,7 @@ class CallRecording {
           int.parse(t.substring(4, 6)),
         );
         final n = v.group(1)!.trim();
-        return CallRecording(path: path, name: n.isEmpty ? '녹음' : n, dateTime: dt, isVoice: true);
+        return CallRecording(path: path, name: n.isEmpty ? tr.recDefaultName : n, dateTime: dt, isVoice: true);
       }
       return CallRecording(path: path, name: base, dateTime: fallbackTime, isVoice: true);
     }
@@ -55,7 +56,7 @@ class CallRecording {
         int.parse(t.substring(4, 6)),
       );
       final name = m.group(1)!.trim();
-      return CallRecording(path: path, name: name.isEmpty ? '알 수 없음' : name, dateTime: dt);
+      return CallRecording(path: path, name: name.isEmpty ? tr.unknownShort : name, dateTime: dt);
     }
     return CallRecording(path: path, name: base, dateTime: fallbackTime);
   }
@@ -64,7 +65,7 @@ class CallRecording {
   Song toSong(int index, {String? title}) => Song(
     id: -100000 - index,
     title: title ?? name, // 내가 바꾼 제목이 있으면 그걸로
-    artist: isVoice ? '음성 녹음' : '통화 녹음',
+    artist: isVoice ? tr.voiceRec : tr.callRec,
     album: '',
     uri: path,
     duration: durationMs,
@@ -72,22 +73,24 @@ class CallRecording {
 
   /// 예: 5월 30일 (금) 오후 12:19
   String get dateLabel {
-    const days = ['월', '화', '수', '목', '금', '토', '일'];
+    final days = tr.weekdaysShort.split(',');
     final h = dateTime.hour;
-    final ampm = h < 12 ? '오전' : '오후';
+    final ampm = h < 12 ? tr.am : tr.pm;
     final h12 = h % 12 == 0 ? 12 : h % 12;
     final mm = dateTime.minute.toString().padLeft(2, '0');
     final now = DateTime.now();
-    final year = dateTime.year != now.year ? '${dateTime.year}년 ' : '';
-    return '$year${dateTime.month}월 ${dateTime.day}일 (${days[dateTime.weekday - 1]}) $ampm $h12:$mm';
+    final wd = days.length == 7 ? days[dateTime.weekday - 1] : '';
+    return dateTime.year != now.year
+        ? tr.recDateYear('${dateTime.year}', '${dateTime.month}', '${dateTime.day}', wd, ampm, '$h12:$mm')
+        : tr.recDate('${dateTime.month}', '${dateTime.day}', wd, ampm, '$h12:$mm');
   }
 
   /// 예: 1분 23초 / 45초 / 1시간 2분
   String get durationLabel {
     if (durationMs <= 0) return '';
     final s = durationMs ~/ 1000;
-    if (s >= 3600) return '${s ~/ 3600}시간 ${(s % 3600) ~/ 60}분';
-    if (s >= 60) return '${s ~/ 60}분 ${s % 60}초';
-    return '$s초';
+    if (s >= 3600) return tr.durHM(s ~/ 3600, (s % 3600) ~/ 60);
+    if (s >= 60) return tr.durMS(s ~/ 60, s % 60);
+    return tr.durS(s);
   }
 }

@@ -185,7 +185,7 @@ class PlayerWidget : AppWidgetProvider() {
                 } else if (call.method == "updateWidget") {
                     val mgr = AppWidgetManager.getInstance(app)
                     for (id in allIds(app)) updateAppWidget(app, mgr, id,
-                        call.argument<String>("title") ?: "파란소리",
+                        call.argument<String>("title") ?: app.getString(R.string.app_name),
                         call.argument<String>("artist") ?: "",
                         call.argument<Boolean>("isPlaying") ?: false,
                         call.argument<String>("schedule") ?: "")
@@ -256,9 +256,9 @@ class PlayerWidget : AppWidgetProvider() {
             val big = appWidgetManager.getAppWidgetInfo(appWidgetId)?.provider?.className == PlayerWidget2::class.java.name
             val views = RemoteViews(context.packageName, if (big) R.layout.widget_player2 else R.layout.widget_player)
             views.setTextViewText(R.id.widget_title,
-                if (loading) "불러오는 중…" else if (empty) "파란소리" else t)
+                if (loading) context.getString(R.string.widget_loading) else if (empty) context.getString(R.string.app_name) else t)
             views.setTextViewText(R.id.widget_artist,
-                if (loading) "잠시만 기다려 주세요" else if (empty) "음악 · 라디오 · 자연을 들어보세요" else a)
+                if (loading) context.getString(R.string.widget_wait) else if (empty) context.getString(R.string.widget_idle_sub) else a)
             views.setTextViewText(R.id.widget_schedule, s)
             views.setViewVisibility(R.id.widget_schedule, if (loading || s.isEmpty()) View.GONE else View.VISIBLE)
             views.setImageViewResource(R.id.widget_play_pause,

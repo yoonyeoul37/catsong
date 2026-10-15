@@ -13,6 +13,8 @@ import '../widgets/paran_dialog.dart';
 import '../widgets/paran_toast.dart';
 import '../widgets/action_feedback.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../l10n/locale_holder.dart';
+import '../utils/nature_sound_catalog.dart';
 
 /// 아침 알람 맞추기 (더보기 메뉴에서)
 class AlarmScreen extends StatefulWidget {
@@ -46,10 +48,10 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
     if (await AlarmService.canExact()) {
       if (mounted) _save();
     } else if (mounted) {
-      showParanToast(context, '알람 및 리마인더를 허용해야 울릴 수 있어요');
+      showParanToast(context, tr.alarmNeedExact);
     }
   }
-  static const _dayNames = ['월', '화', '수', '목', '금', '토', '일'];
+  static List<String> get _dayNames => tr.weekdaysShort.split(',');
 
   void _vib() => const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
 
@@ -70,7 +72,7 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
     final music = context.read<MusicProvider>();
     final all = music.allSongs.where((s) => !music.isCallRecordingPath(s.uri)).toList();
     if (all.isEmpty) {
-      showParanToast(context, '폰에 있는 노래가 없어요');
+      showParanToast(context, tr.noSongsOnPhone);
       return;
     }
     final d = context.read<ThemeProvider>().isDarkMode;
@@ -116,7 +118,7 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.only(left: 4),
-                          child: Text('알람 곡 고르기',
+                          child: Text(tr.pickAlarmSong,
                               style: TextStyle(
                                   color: ink, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
                         ),
@@ -130,7 +132,7 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
                     style: TextStyle(color: ink, fontSize: 14.5),
                     cursorColor: ink,
                     decoration: InputDecoration(
-                      hintText: '제목이나 가수로 찾기',
+                      hintText: tr.searchTitleOrArtist,
                       hintStyle: TextStyle(color: hint, fontSize: 14),
                       prefixIcon: Icon(Icons.search_rounded, color: hint, size: 20),
                       filled: true,
@@ -150,7 +152,7 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
                   const SizedBox(height: 10),
                   Expanded(
                     child: list.isEmpty
-                        ? Center(child: Text('찾는 곡이 없어요', style: TextStyle(color: hint, fontSize: 13)))
+                        ? Center(child: Text(tr.noMatchingSong, style: TextStyle(color: hint, fontSize: 13)))
                         : ListView.builder(
                             itemCount: list.length,
                             itemBuilder: (_, i) {
@@ -213,19 +215,19 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
   void _pickPlaylist() {
     final lists = context.read<PlaylistProvider>().playlists;
     if (lists.isEmpty) {
-      showParanToast(context, '재생목록을 먼저 만들어 주세요');
+      showParanToast(context, tr.makePlaylistFirst);
       return;
     }
     showParanSheet(
       context,
-      title: '재생목록 고르기',
+      title: tr.pickPlaylist,
       builder: (ctx, setSheet) => ParanCard(
         children: [
           for (final p in lists)
             ParanRow(
               icon: Icons.queue_music_rounded,
               title: p.name,
-              trailingText: '${p.songs.length}곡',
+              trailingText: tr.songsCount(p.songs.length),
               selected: _a.kind == 'playlist' && _a.refId == p.id,
               onTap: () {
                 setState(() {
@@ -245,12 +247,12 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
   void _pickRadio() {
     final favs = context.read<RadioProvider>().favorites;
     if (favs.isEmpty) {
-      showParanToast(context, '라디오 즐겨찾기에 채널을 먼저 담아 주세요');
+      showParanToast(context, tr.addFavStationFirst);
       return;
     }
     showParanSheet(
       context,
-      title: '라디오 채널 고르기',
+      title: tr.pickRadioChannel,
       builder: (ctx, setSheet) => ParanCard(
         children: [
           for (final s in favs)
@@ -276,13 +278,13 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
   void _pickNature() {
     showParanSheet(
       context,
-      title: '자연 소리 고르기',
+      title: tr.pickNatureSound,
       builder: (ctx, setSheet) => ParanCard(
         children: [
           for (final n in PlayerProvider.natureSoundOrder)
             ParanRow(
               icon: Icons.forest_outlined,
-              title: n['name']!,
+              title: natureName(n['name']!),
               selected: _a.kind == 'nature' && _a.refId == n['name'],
               onTap: () {
                 setState(() {
@@ -308,9 +310,9 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
     if (!ok) {
       final go = await showParanConfirm(
         context,
-        title: '알람 권한이 필요해요',
-        message: '정해진 시간에 깨우려면 "알람 및 리마인더"를 허용해 주세요. 허용하고 돌아오면 바로 저장돼요.',
-        confirmLabel: '설정 열기',
+        title: tr.alarmPermTitle,
+        message: tr.alarmPermMsg,
+        confirmLabel: tr.openSettings,
       );
       if (go) {
         _waitPerm = true;
@@ -327,17 +329,17 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
       if (!await AlarmService.canFullScreen() && mounted) {
         final go = await showParanConfirm(
           context,
-          title: '잠금화면에 알람 화면 띄우기',
-          message: '"전체 화면 알림"을 허용하면 잠금화면 위로 알람 화면이 바로 떠요. 허용 안 해도 알람 소리는 울려요.',
-          confirmLabel: '설정 열기',
-          cancelLabel: '나중에',
+          title: tr.fullScreenTitle,
+          message: tr.fullScreenMsg,
+          confirmLabel: tr.openSettings,
+          cancelLabel: tr.later,
         );
         if (go) AlarmService.openFullScreenSettings();
       }
       // 배터리 사용 "제한 없음" 부탁 (한 번만)
       if (mounted) {
         await HeadsetResume.askBattery(context, 'alarm',
-            '정해진 시간에 알람 곡을 틀려면 배터리 사용을 "제한 없음"으로 해 주는 게 좋아요.\n허용 안 해도 대부분 잘 울리지만, 일부 폰은 절전 때문에 늦을 수 있어요.');
+            tr.alarmBatteryAsk);
       }
     }
     if (!mounted) return;
@@ -346,7 +348,7 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
       context,
       type: ActionFeedbackType.saved,
       icon: _a.enabled ? Icons.alarm_rounded : Icons.alarm_off_rounded,
-      message: _a.enabled ? '${AlarmService.nextLabel(_a)}에 깨워 드릴게요' : '알람을 껐어요',
+      message: _a.enabled ? tr.wakeYouAt(AlarmService.nextLabel(_a)) : tr.alarmOffDone,
     );
     Navigator.pop(context);
   }
@@ -431,7 +433,7 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
         backgroundColor: bg,
         elevation: 0,
         scrolledUnderElevation: 0,
-        title: Text('아침 알람',
+        title: Text(tr.moreAlarmTitle,
             style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w600, letterSpacing: -0.3)),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
@@ -452,9 +454,9 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('알람', style: TextStyle(color: ink, fontSize: 15, fontWeight: FontWeight.w600)),
+                        Text(tr.alarmLabel, style: TextStyle(color: ink, fontSize: 15, fontWeight: FontWeight.w600)),
                         const SizedBox(height: 2),
-                        Text(_a.enabled ? '$next에 울려요' : '꺼져 있어요',
+                        Text(_a.enabled ? tr.ringsAt(next) : tr.offNow,
                             style: TextStyle(color: hint, fontSize: 12.5)),
                       ],
                     ),
@@ -478,7 +480,7 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
                 child: Column(
                   children: [
                     box([
-                      head('시간'),
+                      head(tr.timeLabel),
                       SizedBox(
                         height: 170,
                         child: CupertinoTheme(
@@ -501,7 +503,7 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
                     ]),
                     // 반복 요일
                     box([
-                      head('반복', AlarmService.daysText(_a.days)),
+                      head(tr.repeatLabel, AlarmService.daysText(_a.days)),
                       const SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -525,45 +527,50 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
                                   color: _a.days.contains(i) ? ink : Colors.transparent,
                                   border: Border.all(color: _a.days.contains(i) ? ink : line, width: 1.2),
                                 ),
-                                child: Text(_dayNames[i - 1],
-                                    style: TextStyle(
-                                        color: _a.days.contains(i) ? onInk : ink,
-                                        fontSize: 13.5,
-                                        fontWeight: FontWeight.w600)),
+                                padding: const EdgeInsets.symmetric(horizontal: 4),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(_dayNames[i - 1],
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                          color: _a.days.contains(i) ? onInk : ink,
+                                          fontSize: 13.5,
+                                          fontWeight: FontWeight.w600)),
+                                ),
                               ),
                             ),
                         ],
                       ),
                       const SizedBox(height: 10),
-                      Text('요일을 하나도 안 고르면 한 번만 울려요', style: TextStyle(color: hint, fontSize: 12)),
+                      Text(tr.noDaysOnce, style: TextStyle(color: hint, fontSize: 12)),
                     ]),
                     // 깨울 소리
                     box([
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
-                        child: head('알람 소리'),
+                        child: head(tr.alarmSound),
                       ),
-                      soundRow(Icons.music_note_rounded, '한 곡', _a.kind == 'song', _pickSong,
-                          sub: _a.kind == 'song' ? _a.label : '고른 노래 하나를 반복해서', more: true),
-                      soundRow(Icons.shuffle_rounded, '음악 전체 랜덤', _a.kind == 'music_all',
+                      soundRow(Icons.music_note_rounded, tr.oneSong, _a.kind == 'song', _pickSong,
+                          sub: _a.kind == 'song' ? _a.label : tr.oneSongSub, more: true),
+                      soundRow(Icons.shuffle_rounded, tr.alarmMusicAll, _a.kind == 'music_all',
                           () => _pickMusic('music_all', '음악 전체 랜덤')),
-                      soundRow(Icons.favorite_border_rounded, '음악 즐겨찾기 랜덤', _a.kind == 'music_fav',
+                      soundRow(Icons.favorite_border_rounded, tr.alarmMusicFav, _a.kind == 'music_fav',
                           () => _pickMusic('music_fav', '음악 즐겨찾기 랜덤')),
-                      soundRow(Icons.queue_music_rounded, '재생목록', _a.kind == 'playlist', _pickPlaylist,
+                      soundRow(Icons.queue_music_rounded, tr.playlistLabel, _a.kind == 'playlist', _pickPlaylist,
                           sub: _a.kind == 'playlist' ? _a.label : null, more: true),
-                      soundRow(Icons.radio_rounded, '라디오', _a.kind == 'radio', _pickRadio,
-                          sub: _a.kind == 'radio' ? _a.label : '즐겨찾기한 채널', more: true),
-                      soundRow(Icons.forest_outlined, '자연', _a.kind == 'nature', _pickNature,
-                          sub: _a.kind == 'nature' ? _a.label : '새소리 · 시냇물 · 파도', more: true),
+                      soundRow(Icons.radio_rounded, tr.catRadio, _a.kind == 'radio', _pickRadio,
+                          sub: _a.kind == 'radio' ? _a.label : tr.favChannels, more: true),
+                      soundRow(Icons.forest_outlined, tr.catNature, _a.kind == 'nature', _pickNature,
+                          sub: _a.kind == 'nature' ? natureName(_a.label) : tr.natureExamples, more: true),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
-                        child: Text('작은 소리로 시작해서 30초 동안 천천히 커져요',
+                        child: Text(tr.alarmFadeIn,
                             style: TextStyle(color: hint, fontSize: 12)),
                       ),
                     ], padding: const EdgeInsets.fromLTRB(0, 14, 0, 14)),
                     // 알람 소리 크기 (폰 소리를 줄여 놔도 이 크기로)
                     box([
-                      head('알람 소리 크기', '${(_a.volume * 100).round()}%'),
+                      head(tr.alarmVolume, '${(_a.volume * 100).round()}%'),
                       const SizedBox(height: 6),
                       Row(
                         children: [
@@ -590,7 +597,7 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
                           Icon(Icons.volume_up_rounded, size: 20, color: hint),
                         ],
                       ),
-                      Text('폰 소리를 줄여 놔도 이 크기로 울리고, 끄면 원래대로 돌아가요',
+                      Text(tr.alarmVolumeNote,
                           style: TextStyle(color: hint, fontSize: 12)),
                     ]),
                   ],
@@ -614,7 +621,7 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
                 elevation: 0,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: const Text('저장', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+              child: Text(tr.save, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
             ),
           ),
         ),

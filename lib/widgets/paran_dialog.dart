@@ -4,6 +4,7 @@ import '../utils/point_color.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
+import '../l10n/locale_holder.dart';
 
 /// 파란소리 확인창·입력창 (아래에서 올라오는 카드) — 앱 전체가 같은 모양
 ///
@@ -47,7 +48,7 @@ Future<int?> _paranSheet(
   Widget? body,
   required String confirmLabel,
   bool danger = false,
-  String cancelLabel = '취소',
+  String? cancelLabel,
   String? extraLabel, // 작은 빨간 글씨 버튼 (예: 영구 삭제)
   bool Function()? canConfirm,
 }) {
@@ -122,7 +123,7 @@ Future<int?> _paranSheet(
                 child: TextButton(
                   onPressed: () => Navigator.pop(ctx, 0),
                   style: TextButton.styleFrom(foregroundColor: p.sub),
-                  child: Text(cancelLabel, style: const TextStyle(fontSize: 14)),
+                  child: Text(cancelLabel ?? tr.cancel, style: const TextStyle(fontSize: 14)),
                 ),
               ),
             ],
@@ -140,7 +141,7 @@ Future<bool> showParanConfirm(
   String? message,
   required String confirmLabel,
   bool danger = false,
-  String cancelLabel = '취소',
+  String? cancelLabel,
 }) async {
   final r = await _paranSheet(context,
       title: title, message: message, confirmLabel: confirmLabel, danger: danger, cancelLabel: cancelLabel);
@@ -168,7 +169,7 @@ Future<String?> showParanInput(
   String? message,
   String initial = '',
   String? hint,
-  String confirmLabel = '저장',
+  String? confirmLabel,
 }) async {
   final p = _Pal.of(context);
   final ctrl = TextEditingController(text: initial);
@@ -177,7 +178,7 @@ Future<String?> showParanInput(
     context,
     title: title,
     message: message,
-    confirmLabel: confirmLabel,
+    confirmLabel: confirmLabel ?? tr.save,
     canConfirm: () => ctrl.text.trim().isNotEmpty,
     body: TextField(
       controller: ctrl,

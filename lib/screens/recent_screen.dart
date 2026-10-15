@@ -9,6 +9,7 @@ import '../widgets/song_list_tile.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/paran_dialog.dart';
 import '../widgets/action_feedback.dart';
+import '../l10n/locale_holder.dart';
 
 String _formatPlayedAt(BuildContext context, DateTime dt) {
   final now = DateTime.now();
@@ -190,11 +191,11 @@ class RecentScreen extends StatelessWidget {
       context,
       title: AppLocalizations.of(context)!.clearRecent,
       message: AppLocalizations.of(context)!.clearRecentConfirm,
-      confirmLabel: '지우기',
+      confirmLabel: tr.clearAction,
       danger: true,
     );
     if (!ok || !context.mounted) return;
     context.read<MusicProvider>().clearRecent();
-    showActionFeedback(context, type: ActionFeedbackType.deleted, message: '기록을 지웠어요');
+    showActionFeedback(context, type: ActionFeedbackType.deleted, message: tr.historyCleared);
   }
 }

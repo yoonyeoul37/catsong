@@ -16,6 +16,7 @@ import 'album_eq_overlay.dart';
 import '../providers/theme_provider.dart';
 import '../services/cast_service.dart';
 import '../providers/music_provider.dart';
+import '../l10n/locale_holder.dart';
 
 class MiniPlayer extends StatelessWidget {
   const MiniPlayer({super.key});
@@ -203,7 +204,7 @@ class MiniPlayer extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       CastService.instance.isConnected
-                                          ? '${CastService.instance.device?.name ?? 'TV'}에서 재생'
+                                          ? tr.castPlayingOn(CastService.instance.device?.name ?? 'TV')
                                           : song.artistDisplay,
                                       style: TextStyle(
                                           color: CastService.instance.isConnected

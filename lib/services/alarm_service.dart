@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/alarm_ring_screen.dart';
+import '../l10n/locale_holder.dart';
+import '../utils/nature_sound_catalog.dart';
 
 /// 아침 알람 하나 (시간 · 요일 · 깨울 소리)
 class ParanAlarm {
@@ -125,13 +127,24 @@ class AlarmService {
     return null;
   }
 
-  static const _dayNames = ['월', '화', '수', '목', '금', '토', '일'];
+  static List<String> get _dayNames {
+    final w = tr.weekdaysShort.split(',');
+    return w.length == 7 ? w : const ['월', '화', '수', '목', '금', '토', '일'];
+  }
+
+  /// 알람 소리 이름 (저장은 한국어 그대로, 화면엔 언어에 맞게)
+  static String labelOf(ParanAlarm a) {
+    if (a.kind == 'music_all') return tr.alarmMusicAll;
+    if (a.kind == 'music_fav') return tr.alarmMusicFav;
+    if (a.kind == 'nature') return natureName(a.label);
+    return a.label;
+  }
 
   /// 예: 오전 7:00
   static String timeText(int hour, int minute) {
-    final ampm = hour < 12 ? '오전' : '오후';
+    final ampm = hour < 12 ? tr.am : tr.pm;
     final h = hour % 12 == 0 ? 12 : hour % 12;
-    return '$ampm $h:${minute.toString().padLeft(2, '0')}';
+    return tr.timeAmPm(ampm, '$h:${minute.toString().padLeft(2, '0')}');
   }
 
   /// 예: 내일 오전 7:00 / 월요일 오전 7:00
@@ -140,17 +153,17 @@ class AlarmService {
     if (t == null) return '';
     final now = DateTime.now();
     final diff = DateTime(t.year, t.month, t.day).difference(DateTime(now.year, now.month, now.day)).inDays;
-    final day = diff == 0 ? '오늘' : (diff == 1 ? '내일' : '${_dayNames[t.weekday - 1]}요일');
-    return '$day ${timeText(t.hour, t.minute)}';
+    final day = diff == 0 ? tr.today : (diff == 1 ? tr.tomorrow : tr.weekdayFull(_dayNames[t.weekday - 1]));
+    return tr.alarmNextLabel(day, timeText(t.hour, t.minute));
   }
 
   /// 예: 평일 · 주말 · 매일 · 한 번만 · 월 수 금
   static String daysText(List<int> days) {
     final s = days.toSet();
-    if (s.isEmpty) return '한 번만';
-    if (s.length == 7) return '매일';
-    if (s.length == 5 && s.containsAll([1, 2, 3, 4, 5])) return '평일';
-    if (s.length == 2 && s.containsAll([6, 7])) return '주말';
+    if (s.isEmpty) return tr.alarmOnce;
+    if (s.length == 7) return tr.alarmEveryday;
+    if (s.length == 5 && s.containsAll([1, 2, 3, 4, 5])) return tr.alarmWeekdays;
+    if (s.length == 2 && s.containsAll([6, 7])) return tr.alarmWeekend;
     return [for (var d = 1; d <= 7; d++) if (s.contains(d)) _dayNames[d - 1]].join(' ');
   }
 

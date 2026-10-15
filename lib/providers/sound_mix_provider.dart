@@ -5,6 +5,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/song.dart';
 import '../utils/nature_sound_catalog.dart';
+import '../l10n/locale_holder.dart';
 import 'player_provider.dart';
 
 /// 자연소리 5개(각자 반복 재생, 동시에 섞임) + 선택한 노래들(순서대로 이어서 재생, 끝나면 처음으로)
@@ -91,13 +92,13 @@ class SoundMixProvider extends ChangeNotifier {
   }
 
   String get remainingLabel {
-    if (_sleepEndTime == null) return '타이머';
+    if (_sleepEndTime == null) return tr.timerLabel;
     final remaining = _sleepEndTime!.difference(DateTime.now());
-    if (remaining.isNegative) return '타이머';
+    if (remaining.isNegative) return tr.timerLabel;
     final h = remaining.inHours;
     final m = remaining.inMinutes % 60;
-    if (h > 0) return '$h시간 $m분';
-    return '$m분';
+    if (h > 0) return tr.durHM(h, m);
+    return tr.durM(m);
   }
 
   // ───── 수면 타이머: 끝나기 1분 전부터 천천히 작게 ─────
@@ -247,10 +248,10 @@ class SoundMixProvider extends ChangeNotifier {
 
     final activeNature = <String>[
       for (final entry in natureAssets.keys)
-        if ((_volumes[entry] ?? 0.0) > 0) variantOf(entry),
+        if ((_volumes[entry] ?? 0.0) > 0) natureName(variantOf(entry)),
     ];
-    final title = currentSong?.titleDisplay ?? '나만의 소리 믹스';
-    final subtitle = activeNature.isNotEmpty ? activeNature.join(' · ') : '파란소리 믹스';
+    final title = currentSong?.titleDisplay ?? tr.myMixDefault;
+    final subtitle = activeNature.isNotEmpty ? activeNature.join(' · ') : tr.paransoriMix;
 
     handler.setMixMediaItem(title: title, subtitle: subtitle, song: currentSong);
     handler.setMixPlaybackState(playing: playing);

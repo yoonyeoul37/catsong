@@ -14,6 +14,8 @@ import '../services/loudness.dart';
 import '../services/headset_resume.dart';
 import '../utils/no_album_helper.dart';
 import '../utils/widget_go.dart';
+import '../l10n/locale_holder.dart';
+import '../utils/nature_sound_catalog.dart';
 
 class PlayerProvider extends ChangeNotifier {
   final AudioPlayer _player = AudioPlayer(handleInterruptions: false);
@@ -440,8 +442,8 @@ class PlayerProvider extends ChangeNotifier {
     try {
       final song = currentSong;
       _channel.invokeMethod('updateWidget', {
-        'title': song?.titleDisplay ?? '파란소리',
-        'artist': song?.artistDisplay ?? '음악 · 라디오 · 자연을 들어보세요',
+        'title': song?.titleDisplay ?? tr.appName,
+        'artist': song?.artistDisplay ?? tr.widgetIdle,
         'isPlaying': isPlaying,
       });
     } catch (e) {}
@@ -538,8 +540,8 @@ class PlayerProvider extends ChangeNotifier {
       handler.onNaturePrevious = () => playAdjacentNatureSound(-1);
       handler.updateMediaItem(MediaItem(
         id: assetPath,
-        title: displayName,
-        artist: '자연소리',
+        title: natureName(displayName),
+        artist: tr.natureSounds,
       ));
       MediaArt.attachAsset(handler, MediaArt.natureImage(displayName), assetPath, displayName);
     }
@@ -888,7 +890,7 @@ class SimpleAudioHandler extends BaseAudioHandler {
       id: 'sound_mix',
       title: title,
       artist: subtitle,
-      album: '파란소리 믹스',
+      album: tr.paransoriMix,
     ));
     if (song != null) MediaArt.attachSong(this, song, id: 'sound_mix', title: title);
   }
@@ -920,7 +922,7 @@ class SimpleAudioHandler extends BaseAudioHandler {
       id: url ?? '',
       title: title,
       artist: artist,
-      album: '파란소리 라디오',
+      album: tr.paransoriRadio,
     ));
     MediaArt.attachAsset(this, MediaArt.radioHero(), url ?? '', title);
   }

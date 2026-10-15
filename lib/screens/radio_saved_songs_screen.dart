@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../providers/radio_provider.dart';
 import '../providers/theme_provider.dart';
 import '../widgets/paran_toast.dart';
+import '../l10n/locale_holder.dart';
 
 /// 저장한 곡 화면 (따로 열 때)
 class RadioSavedSongsScreen extends StatelessWidget {
@@ -29,7 +30,7 @@ class RadioSavedSongsScreen extends StatelessWidget {
           },
           icon: Icon(Icons.arrow_back_ios, color: baseColor, size: 20),
         ),
-        title: Text('저장한 곡',
+        title: Text(tr.savedSongs,
             style: TextStyle(color: baseColor, fontSize: 18, fontWeight: FontWeight.bold)),
       ),
       body: const SafeArea(top: false, child: RadioSavedSongsList()),
@@ -62,7 +63,7 @@ class _RadioSavedSongsListState extends State<RadioSavedSongsList> {
     final t = DateTime.tryParse(iso)?.toLocal();
     if (t == null) return '';
     final h12 = t.hour % 12 == 0 ? 12 : t.hour % 12;
-    return '${t.month}월 ${t.day}일 ${t.hour < 12 ? '오전' : '오후'} $h12:${t.minute.toString().padLeft(2, '0')}';
+    return tr.savedDate('${t.month}', '${t.day}', t.hour < 12 ? tr.am : tr.pm, '$h12:${t.minute.toString().padLeft(2, '0')}');
   }
 
   void _vibrate() => const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -72,15 +73,15 @@ class _RadioSavedSongsListState extends State<RadioSavedSongsList> {
     try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } catch (_) {
-      if (mounted) showParanToast(context, '유튜브를 열지 못했어요', error: true);
+      if (mounted) showParanToast(context, tr.youtubeOpenFailed, error: true);
     }
   }
 
   void _remove(Map<String, dynamic> m) {
     final radio = context.read<RadioProvider>();
     final i = radio.removeSavedSong(m);
-    showParanToast(context, '저장한 곡에서 지웠어요',
-        actionLabel: '되돌리기', onAction: () => radio.restoreSavedSong(i, m));
+    showParanToast(context, tr.savedSongDeleted,
+        actionLabel: tr.revertChange, onAction: () => radio.restoreSavedSong(i, m));
   }
 
   void _openSheet(Map<String, dynamic> m, Color baseColor, bool isDark) {
@@ -116,12 +117,12 @@ class _RadioSavedSongsListState extends State<RadioSavedSongsList> {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: baseColor, fontSize: 16, fontWeight: FontWeight.w800)),
                 ),
-                item(Icons.play_circle_outline_rounded, '유튜브에서 찾기', () => _youtube(title)),
-                item(Icons.copy_rounded, '곡 이름 복사', () {
+                item(Icons.play_circle_outline_rounded, tr.searchYoutube, () => _youtube(title)),
+                item(Icons.copy_rounded, tr.copySongName, () {
                   Clipboard.setData(ClipboardData(text: title));
-                  showParanToast(context, '곡 이름을 복사했어요');
+                  showParanToast(context, tr.songNameCopied);
                 }),
-                item(Icons.delete_outline_rounded, '지우기', () => _remove(m), color: const Color(0xFFE05A4F)),
+                item(Icons.delete_outline_rounded, tr.clearAction, () => _remove(m), color: const Color(0xFFE05A4F)),
               ],
             ),
           ),
@@ -142,7 +143,7 @@ class _RadioSavedSongsListState extends State<RadioSavedSongsList> {
           children: [
             Icon(CupertinoIcons.music_note_2, color: baseColor.withOpacity(0.25), size: 40),
             const SizedBox(height: 14),
-            Text('방송에서 나온 곡 옆 ♡를 누르면\n여기에 모여요',
+            Text(tr.savedSongsEmpty,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 14, height: 1.5)),
           ],

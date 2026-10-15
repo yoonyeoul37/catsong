@@ -15,6 +15,7 @@ import '../screens/radio_country_stations_screen.dart';
 import '../screens/radio_home_screen.dart';
 import '../services/cast_service.dart';
 import '../providers/theme_provider.dart';
+import '../l10n/locale_holder.dart';
 
 /// 해외 라디오 상세화면 (애플뮤직 스타일)
 /// 큰 로고 + 이름 + 장르·국가 + LIVE + 흰색 이퀄라이저 + 조작 버튼
@@ -174,8 +175,8 @@ class OverseasRadioView extends StatelessWidget {
                             _vibrate();
                             showMoreMenuSheet(
                               context,
-                              shareText: '지금 ${station.name} 듣고 있어요! 파란소리에서 같이 들어요 🎧',
-                              shareSubtitle: '지금 듣는 방송을 소개해보세요.',
+                              shareText: tr.radioShareText(station.name),
+                              shareSubtitle: tr.radioShareSub,
                               stationHomepage: station.homepage,
                             );
                           },

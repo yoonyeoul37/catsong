@@ -12,6 +12,7 @@ import '../providers/video_provider.dart';
 import '../widgets/action_feedback.dart';
 import '../widgets/paran_dialog.dart';
 import '../widgets/paran_toast.dart';
+import '../l10n/locale_holder.dart';
 
 const _media = MethodChannel('kr.ssing.catsong/media');
 void _vib() => _media.invokeMethod('vibrate');
@@ -27,15 +28,15 @@ Future<bool> saveVideoAudio(BuildContext context, Video video, int startMs, int 
     });
     if (!context.mounted) return saved != null;
     if (saved == null) {
-      showParanToast(context, '음악으로 저장하지 못했어요', error: true);
+      showParanToast(context, tr.saveMusicFailed, error: true);
       return false;
     }
     context.read<MusicProvider>().loadSongs(); // 음악 목록에 바로 보이게
     showActionFeedback(context,
-        type: ActionFeedbackType.saved, message: '음악으로 저장했어요', icon: Icons.music_note_rounded);
+        type: ActionFeedbackType.saved, message: tr.savedAsMusic, icon: Icons.music_note_rounded);
     return true;
   } catch (e) {
-    if (context.mounted) showParanToast(context, '음악으로 저장하지 못했어요', error: true);
+    if (context.mounted) showParanToast(context, tr.saveMusicFailed, error: true);
     return false;
   }
 }
@@ -46,25 +47,25 @@ Future<void> showSaveAudioSheet(BuildContext context, Video video) async {
   final sub = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
   final pick = await showParanSheet<String>(
     context,
-    title: '음악으로 저장',
+    title: tr.saveAsMusic,
     builder: (ctx, setSheet) => Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-          child: Text('영상의 소리만 뽑아서 음악 목록에 넣어요',
+          child: Text(tr.saveMusicSub,
               style: TextStyle(color: sub, fontSize: 13, height: 1.4)),
         ),
         ParanCard(children: [
           ParanRow(
             icon: Icons.music_note_rounded,
-            title: '전체 저장',
+            title: tr.saveWhole,
             trailingText: video.durationFormatted,
             onTap: () => Navigator.pop(ctx, 'all'),
           ),
           ParanRow(
             icon: Icons.content_cut_rounded,
-            title: '구간 골라서 저장',
+            title: tr.savePart,
             onTap: () => Navigator.pop(ctx, 'pick'),
           ),
         ]),
@@ -157,9 +158,9 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
     if (send && _end - _start > 600) {
       final ok = await showParanConfirm(
         context,
-        title: '긴 동영상이에요',
-        message: '10분이 넘는 영상은 카카오톡으로 안 보내질 수 있어요.\n구글 드라이브나 메일로 보내면 잘 가요.',
-        confirmLabel: '보내기',
+        title: tr.longVideoTitle,
+        message: tr.longVideoMsg,
+        confirmLabel: tr.send,
       );
       if (!ok || !mounted) return;
     }
@@ -173,7 +174,7 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
       });
       if (!mounted) return;
       if (saved == null) {
-        showParanToast(context, '자르지 못했어요', error: true);
+        showParanToast(context, tr.trimFailed2, error: true);
         return;
       }
       context.read<VideoProvider>().loadVideos(quiet: true); // 동영상 목록에 바로 보이게
@@ -181,11 +182,11 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
         await Share.shareXFiles([XFile(saved)], text: widget.video.titleDisplay);
       } else {
         showActionFeedback(context,
-            type: ActionFeedbackType.saved, message: '잘라서 저장했어요', icon: Icons.content_cut_rounded);
+            type: ActionFeedbackType.saved, message: tr.trimSaved, icon: Icons.content_cut_rounded);
       }
       if (mounted) Navigator.pop(context);
     } catch (e) {
-      if (mounted) showParanToast(context, '자르지 못했어요', error: true);
+      if (mounted) showParanToast(context, tr.trimFailed2, error: true);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -207,7 +208,7 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
 
   String _len(double sec) {
     final s = sec.round();
-    return s >= 60 ? '${s ~/ 60}분 ${s % 60}초' : '$s초';
+    return s >= 60 ? tr.durMS(s ~/ 60, s % 60) : tr.durS(s);
   }
 
   @override
@@ -310,7 +311,7 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
           systemNavigationBarColor: bg,
           systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
         ),
-        title: Text(widget.audioOnly ? '음악으로 저장' : '잘라서 보내기',
+        title: Text(widget.audioOnly ? tr.saveAsMusic : tr.trimAndSend,
             style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
         leading: IconButton(
           onPressed: () {
@@ -336,7 +337,7 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
                   onPressed: ready && !_busy ? _togglePreview : null,
                   style: subStyle,
                   icon: Icon(_previewing ? Icons.stop_rounded : Icons.play_arrow_rounded, size: 22),
-                  label: Text(_previewing ? '멈추기' : (widget.audioOnly ? '미리 듣기' : '미리 보기'),
+                  label: Text(_previewing ? tr.stop : (widget.audioOnly ? tr.previewListen : tr.previewWatch),
                       style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600)),
                 ),
               ),
@@ -350,7 +351,7 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
                     onPressed: _busy ? null : _saveAudio,
                     style: mainStyle,
                     icon: _busy ? spinner() : const Icon(Icons.music_note_rounded, size: 20),
-                    label: const Text('음악으로 저장', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+                    label: Text(tr.saveAsMusic, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                   ),
                 )
               else
@@ -364,7 +365,7 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
                           onPressed: _busy ? null : () => _cut(send: false),
                           style: subStyle,
                           icon: const Icon(Icons.save_alt_rounded, size: 20),
-                          label: const Text('저장만', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                          label: Text(tr.saveOnly, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                         ),
                       ),
                     ),
@@ -376,7 +377,7 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
                           onPressed: _busy ? null : () => _cut(send: true),
                           style: mainStyle,
                           icon: _busy ? spinner() : const Icon(Icons.ios_share_rounded, size: 20),
-                          label: const Text('보내기', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+                          label: Text(tr.send, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                         ),
                       ),
                     ),
@@ -461,8 +462,8 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
               padding: const EdgeInsets.fromLTRB(4, 12, 4, 0),
               child: Text(
                 widget.audioOnly
-                    ? '고른 구간의 소리만 음악 목록에 저장해요 (Music/Paransori · M4A)'
-                    : '원본은 그대로 두고 잘라낸 영상을 새로 저장해요 (Movies/Paransori)\n다시 압축하지 않아 화질 그대로예요. 시작이 1초쯤 앞당겨질 수 있어요',
+                    ? tr.saveMusicNote
+                    : tr.trimVideoNote,
                 style: TextStyle(color: sub, fontSize: 12, height: 1.5),
               ),
             ),

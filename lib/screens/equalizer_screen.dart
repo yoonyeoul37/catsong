@@ -7,6 +7,7 @@ import '../widgets/paran_dialog.dart';
 import '../widgets/action_feedback.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
+import '../l10n/locale_holder.dart';
 
 /// 이퀄라이저 화면 — 값은 SoundEffects가 들고 있어서 화면을 닫아도 계속 적용·저장돼요
 class EqualizerScreen extends StatelessWidget {
@@ -97,7 +98,7 @@ class EqualizerScreen extends StatelessWidget {
                       shadowColor: Colors.black.withOpacity(0.25),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
-                    child: const Text('지금 설정 저장', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+                    child: Text(tr.saveCurrentEq, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                   ),
                 ),
               ),
@@ -112,7 +113,7 @@ class EqualizerScreen extends StatelessWidget {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(32),
-                child: Text('노래를 한 번 재생하면 이퀄라이저를 쓸 수 있어요',
+                child: Text(tr.eqNeedsPlay,
                     textAlign: TextAlign.center, style: TextStyle(color: c.sub)),
               ),
             );
@@ -124,7 +125,7 @@ class EqualizerScreen extends StatelessWidget {
               children: [
                 // ───── 내 설정 (저장한 것) ─────
                 if (fx.custom.isNotEmpty) ...[
-                  _title(c, '내 설정'),
+                  _title(c, tr.myPresets),
                   card(Wrap(
                     spacing: 6,
                     runSpacing: 6,
@@ -136,7 +137,7 @@ class EqualizerScreen extends StatelessWidget {
                   )),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 6, 20, 0),
-                    child: Text('길게 누르면 지울 수 있어요', style: TextStyle(color: c.sub, fontSize: 11.5)),
+                    child: Text(tr.longPressToDelete, style: TextStyle(color: c.sub, fontSize: 11.5)),
                   ),
                 ],
 
@@ -154,7 +155,7 @@ class EqualizerScreen extends StatelessWidget {
                 ],
 
                 // ───── 직접 맞추기 ─────
-                _title(c, '직접 맞추기'),
+                _title(c, tr.manualAdjust),
                 card(
                   SizedBox(
                     height: 240,
@@ -192,7 +193,7 @@ class EqualizerScreen extends StatelessWidget {
                 ),
 
                 // ───── 저음 강화 · 공간감 ─────
-                _title(c, '효과'),
+                _title(c, tr.effects),
                 card(Column(
                   children: [
                     _strength(context, c, Icons.speaker_outlined, l.bassBooster, l.enhancesBass, fx.bass, fx.setBass),
@@ -285,9 +286,9 @@ class EqualizerScreen extends StatelessWidget {
   void _askSave(BuildContext context, SoundEffects fx) async {
     final name = await showParanInput(
       context,
-      title: '지금 설정 저장',
-      initial: '내 설정 ${fx.custom.length + 1}',
-      hint: '예) 출근길, 잠잘 때',
+      title: tr.saveCurrentEq,
+      initial: tr.myPresetName(fx.custom.length + 1),
+      hint: tr.presetHintExample,
     );
     if (name == null || !context.mounted) return;
     fx.saveCustom(name);
@@ -298,8 +299,8 @@ class EqualizerScreen extends StatelessWidget {
     HapticFeedback.mediumImpact();
     final ok = await showParanConfirm(
       context,
-      title: '"${p.name}"을 지울까요?',
-      confirmLabel: '지우기',
+      title: tr.deletePresetTitle(p.name),
+      confirmLabel: tr.clearAction,
       danger: true,
     );
     if (!ok || !context.mounted) return;

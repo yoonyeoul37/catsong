@@ -13,6 +13,7 @@ import 'voice_recorder_screen.dart';
 import '../widgets/paran_dialog.dart';
 import '../widgets/action_feedback.dart';
 import '../widgets/paran_toast.dart';
+import '../l10n/locale_holder.dart';
 
 /// 통화 녹음 화면 (일반 음악과 따로)
 class CallRecordingsScreen extends StatefulWidget {
@@ -50,7 +51,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
       if (!mounted) return;
       music.loadCallRecordings();
       if (n > 0) {
-        showParanToast(context, '중간에 끊긴 녹음 $n개를 되살렸어요');
+        showParanToast(context, tr.recRecovered(n));
       }
     });
   }
@@ -115,7 +116,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                       },
                       icon: Icon(Icons.close, color: baseColor),
                     ),
-                    Text('${_selected.length}개 선택',
+                    Text(tr.selectedCount2(_selected.length),
                         style: TextStyle(color: baseColor, fontSize: 15, fontWeight: FontWeight.w700)),
                     const Spacer(),
                     TextButton(
@@ -132,7 +133,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                           }
                         });
                       },
-                      child: Text(_selected.length == list.length ? '선택 해제' : '전체 선택',
+                      child: Text(_selected.length == list.length ? tr.deselect : tr.selectAllShort,
                           style: TextStyle(color: baseColor.withOpacity(0.75))),
                     ),
                     // (공유·잠금·삭제는 화면 아래 고정 버튼으로)
@@ -142,7 +143,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                   children: [
                     Icon(Icons.mic_none, color: baseColor.withOpacity(0.55), size: 18),
                     const SizedBox(width: 6),
-                    Text('녹음',
+                    Text(tr.recordings,
                         style: TextStyle(
                             color: baseColor, fontSize: 15, fontWeight: FontWeight.w900, letterSpacing: -0.5)),
                     const SizedBox(width: 8),
@@ -151,14 +152,14 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                     const Spacer(),
                     // 지금 정렬 (누르면 바로 아래 작은 카드)
                     PopupMenuButton<int>(
-                      tooltip: '정렬',
+                      tooltip: tr.sortLabel,
                       position: PopupMenuPosition.under,
                       onSelected: (v) {
                         HapticFeedback.selectionClick();
                         setState(() => _sort = v);
                       },
                       itemBuilder: (_) => [
-                        for (final (v, label) in const [(0, '최신순'), (1, '오래된순'), (2, '긴 통화순')])
+                        for (final (v, label) in [(0, tr.sortNewest), (1, tr.sortOldest), (2, tr.sortLongest)])
                           PopupMenuItem<int>(
                             value: v,
                             height: 42,
@@ -179,7 +180,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(const ['최신순', '오래된순', '긴 통화순'][_sort],
+                            Text([tr.sortNewest, tr.sortOldest, tr.sortLongest][_sort],
                                 style: TextStyle(
                                     color: baseColor.withOpacity(0.5), fontSize: 12.5, fontWeight: FontWeight.w600)),
                             Icon(Icons.keyboard_arrow_down_rounded, color: baseColor.withOpacity(0.5), size: 16),
@@ -223,7 +224,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                     onChanged: (v) => setState(() => _query = v.trim()),
                     style: TextStyle(color: baseColor, fontSize: 14),
                     decoration: InputDecoration(
-                      hintText: '이름, 번호, 제목으로 찾기',
+                      hintText: tr.recSearchHint,
                       hintStyle: TextStyle(color: baseColor.withOpacity(0.35)),
                       prefixIcon: Icon(Icons.search, color: baseColor.withOpacity(0.4), size: 20),
                       isDense: true,
@@ -250,9 +251,9 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                   ),
                   child: Row(
                     children: [
-                      _seg('통화 녹음 (${everything.where((r) => !r.isVoice).length})', !_voice,
+                      _seg(tr.callRecTab(everything.where((r) => !r.isVoice).length), !_voice,
                               () => setState(() => _voice = false), baseColor, isDark),
-                      _seg('음성 녹음 (${everything.where((r) => r.isVoice).length})', _voice,
+                      _seg(tr.voiceRecTab(everything.where((r) => r.isVoice).length), _voice,
                               () => setState(() => _voice = true), baseColor, isDark),
                     ],
                   ),
@@ -271,7 +272,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                       children: [
                         Icon(_voice ? Icons.mic : Icons.call, size: 64, color: baseColor.withOpacity(0.2)),
                         const SizedBox(height: 14),
-                        Text(_voice ? '음성 녹음이 없어요' : '통화 녹음이 없어요',
+                        Text(_voice ? tr.noVoiceRec : tr.noCallRec,
                             style: TextStyle(color: baseColor.withOpacity(0.45), fontSize: 15)),
                         const SizedBox(height: 6),
                         // 안내 문구 (이모지 대신 앱 선 아이콘을 글자 사이에)
@@ -279,15 +280,15 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                             TextSpan(
                               children: _voice
                                   ? [
-                                      const TextSpan(text: '오른쪽 아래 '),
+                                      TextSpan(text: tr.voiceEmptyHint1),
                                       WidgetSpan(
                                         alignment: PlaceholderAlignment.middle,
                                         child: Icon(Icons.mic_none_rounded,
                                             size: 15, color: baseColor.withOpacity(0.3)),
                                       ),
-                                      const TextSpan(text: ' 버튼으로\n바로 녹음할 수 있어요'),
+                                      TextSpan(text: tr.voiceEmptyHint2),
                                     ]
-                                  : const [TextSpan(text: '전화 앱 설정에서 통화 녹음을 켜면\n녹음된 통화가 여기에 모여요')],
+                                  : [TextSpan(text: tr.callEmptyHint)],
                             ),
                             textAlign: TextAlign.center,
                             style: TextStyle(color: baseColor.withOpacity(0.3), fontSize: 12.5, height: 1.5)),
@@ -469,7 +470,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 4),
-                      child: Text('녹음 관리', style: TextStyle(color: sub, fontSize: 12, fontWeight: FontWeight.w600)),
+                      child: Text(tr.recManage, style: TextStyle(color: sub, fontSize: 12, fontWeight: FontWeight.w600)),
                     ),
                     const Spacer(),
                     IconButton(
@@ -486,10 +487,10 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                     decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(14)),
                     child: Column(
                       children: [
-                        action(Icons.check_box_outlined, '여러 개 선택하기', ink, bg,
+                        action(Icons.check_box_outlined, tr.selectMultiple, ink, bg,
                             () => setState(() => _selectMode = true)),
                         Divider(height: 1, thickness: 1, color: line),
-                        action(Icons.delete_outline_rounded, '전체 삭제', red, red.withOpacity(0.1),
+                        action(Icons.delete_outline_rounded, tr.deleteAll, red, red.withOpacity(0.1),
                             () => _confirmTrash(list, isAll: true)),
                       ],
                     ),
@@ -554,12 +555,12 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
       child: Row(
         children: [
           // 고른 걸 한 번에 다 풀기 (동영상 화면과 같게)
-          btn(Icons.remove_done_rounded, '선택 해제', () => setState(() {
+          btn(Icons.remove_done_rounded, tr.deselect, () => setState(() {
                 _selected.clear();
                 _selectMode = false;
               })),
-          btn(Icons.share_outlined, '공유', () => _share(picked)),
-          btn(allLocked ? Icons.lock_open : Icons.lock_outline, allLocked ? '잠금 풀기' : '잠금', () async {
+          btn(Icons.share_outlined, tr.share, () => _share(picked)),
+          btn(allLocked ? Icons.lock_open : Icons.lock_outline, allLocked ? tr.unlock : tr.lock, () async {
             // 다 잠겨 있으면 다 풀고, 아니면 안 잠긴 것만 잠그기
             for (final r in picked) {
               if (music.isRecordingLocked(r.path) == allLocked) await music.toggleRecordingLock(r);
@@ -570,7 +571,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
               _selectMode = false;
             });
           }),
-          btn(Icons.delete_outline, '삭제', () => _confirmTrash(picked, isAll: true), color: barRed),
+          btn(Icons.delete_outline, tr.delete, () => _confirmTrash(picked, isAll: true), color: barRed),
         ],
       ),
       ),
@@ -596,7 +597,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
         if (!mounted) return;
         context.read<MusicProvider>().loadCallRecordings();
         if (saved != null) {
-          showActionFeedback(context, type: ActionFeedbackType.saved, message: '녹음을 저장했어요');
+          showActionFeedback(context, type: ActionFeedbackType.saved, message: tr.recSaved);
         }
       },
       child: Container(
@@ -772,28 +773,28 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
       builder: (ctx, setSheet) => Column(
         children: [
           ParanCard(children: [
-            ParanRow(icon: Icons.share_outlined, title: '공유', onTap: () {
+            ParanRow(icon: Icons.share_outlined, title: tr.share, onTap: () {
               Navigator.pop(ctx);
               _share([r]);
             }),
-            ParanRow(icon: Icons.content_cut_rounded, title: '자르기', onTap: () {
+            ParanRow(icon: Icons.content_cut_rounded, title: tr.trimTitle, onTap: () {
               Navigator.pop(ctx);
               _trim(r);
             }),
-            ParanRow(icon: Icons.edit_outlined, title: '제목 바꾸기', onTap: () {
+            ParanRow(icon: Icons.edit_outlined, title: tr.renameTitle, onTap: () {
               Navigator.pop(ctx);
               _renameDialog(r);
             }),
             ParanRow(
               icon: locked ? Icons.lock_open_rounded : Icons.lock_outline_rounded,
-              title: locked ? '잠금 풀기' : '잠금 (삭제 안 되게)',
+              title: locked ? tr.unlock : tr.lockNoDelete,
               onTap: () async {
                 Navigator.pop(ctx);
                 await music.toggleRecordingLock(r);
                 if (!mounted) return;
                 showActionFeedback(context,
                     type: ActionFeedbackType.saved,
-                    message: locked ? '잠금을 풀었어요' : '잠갔어요',
+                    message: locked ? tr.unlocked : tr.locked,
                     icon: locked ? Icons.lock_open_rounded : Icons.lock_rounded);
               },
             ),
@@ -801,7 +802,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
           ParanCard(children: [
             ParanRow(
               icon: Icons.delete_outline_rounded,
-              title: locked ? '잠긴 녹음은 삭제할 수 없어요' : '삭제',
+              title: locked ? tr.lockedCantDelete : tr.delete,
               danger: true,
               onTap: locked
                   ? null
@@ -831,9 +832,9 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
     final music = context.read<MusicProvider>();
     final name = await showParanInput(
       context,
-      title: '제목 바꾸기',
+      title: tr.renameTitle,
       initial: music.recordingTitle(r),
-      hint: '예) 엄마랑 통화',
+      hint: tr.recRenameHint,
     );
     if (name == null || !mounted) return;
     await music.setRecordingTitle(r, name);
@@ -841,7 +842,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
     // 지금 듣고 있는 녹음이면 미니플레이어·재생화면 제목도 바로 바꾸기
     final cur = context.read<PlayerProvider>().currentSong;
     if (cur != null && cur.uri == r.path) cur.title = music.recordingTitle(r);
-    showActionFeedback(context, type: ActionFeedbackType.edited, message: '이름을 바꿨어요');
+    showActionFeedback(context, type: ActionFeedbackType.edited, message: tr.renamed);
   }
 
   /// 삭제 확인 → 휴지통으로 (잠근 건 빼고)
@@ -850,25 +851,25 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
     final lockedCount = targets.where((r) => music.isRecordingLocked(r.path)).length;
     final count = targets.length - lockedCount;
     if (count == 0) {
-      showParanToast(context, '잠긴 녹음은 삭제할 수 없어요');
+      showParanToast(context, tr.lockedCantDelete);
       return;
     }
     // 큰 버튼: 휴지통으로 / 작은 빨간 글씨: 영구 삭제
     final pick = await showParanChoice(
       context,
-      title: isAll ? '녹음 $count개를 삭제할까요?' : '이 녹음을 삭제할까요?',
+      title: isAll ? tr.deleteRecsTitle(count) : tr.deleteRecTitle,
       message: [
-        '휴지통으로 옮겨져요. 30일 뒤에 완전히 지워져요.',
-        if (lockedCount > 0) '잠긴 녹음 $lockedCount개는 남겨둬요.',
+        tr.trashInfo,
+        if (lockedCount > 0) tr.lockedKept(lockedCount),
       ].join('\n'),
-      confirmLabel: '휴지통으로',
-      extraLabel: '영구 삭제',
+      confirmLabel: tr.toTrash,
+      extraLabel: tr.deleteForever,
       danger: true,
     );
     if (!mounted) return;
     if (pick == 1) {
       final n = await music.trashRecordings(targets);
-      _afterDelete(n, '삭제했어요');
+      _afterDelete(n, tr.fbDeleted);
     } else if (pick == 2) {
       _confirmForever(targets, count);
     }
@@ -879,14 +880,14 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
     final music = context.read<MusicProvider>();
     final ok = await showParanConfirm(
       context,
-      title: '영구 삭제할까요?',
-      message: '녹음 $count개를 영구 삭제하면 되살릴 수 없어요.',
-      confirmLabel: '영구 삭제',
+      title: tr.deleteForeverTitle,
+      message: tr.deleteForeverMsg(count),
+      confirmLabel: tr.deleteForever,
       danger: true,
     );
     if (!ok) return;
     final n = await music.deleteRecordingsForever(targets);
-    _afterDelete(n, '영구 삭제했어요');
+    _afterDelete(n, tr.deletedForever);
   }
 
   void _afterDelete(int n, String msg) {

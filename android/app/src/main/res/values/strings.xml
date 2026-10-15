@@ -1,4 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">파란소리</string>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">Music · Radio · Nature</string>
+    <string name="widget_loading">Loading…</string>
+    <string name="widget_wait">Please wait a moment</string>
+    <string name="widget_play_music">Play some music</string>
+    <string name="tab_music">Music</string>
+    <string name="tab_radio">Radio</string>
+    <string name="tab_nature">Nature</string>
+    <string name="tab_sleep">Sleep</string>
+    <string name="widget_recent_empty">Recently played items show up here</string>
+    <string name="sample_song">Favorite song</string>
+    <string name="sample_artist">Artist</string>
+    <string name="sample_station">Radio station</string>
+    <string name="sample_rain">Rain</string>
+    <string name="sample_nature">Nature sounds</string>
+    <string name="alarm_channel">Morning alarm</string>
+    <string name="alarm_channel_desc">Paransori morning alarm</string>
+    <string name="alarm_quiet_channel">Morning alarm (open screen)</string>
+    <string name="alarm_quiet_desc">When the alarm screen opens over the lock screen</string>
+    <string name="alarm_text">Tap to open the alarm screen</string>
+    <string name="headset_channel">Earphone connected</string>
+    <string name="action_play">Play</string>
+    <string name="resume_ask">Continue listening?</string>
+    <string name="rec_channel">Recording</string>
+    <string name="rec_channel_desc">Shown while recording</string>
+    <string name="rec_title_paused">Paransori · Recording paused</string>
+    <string name="rec_title_on">Paransori · Recording</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · Tap to resume</string>
+    <string name="rec_tap_back">Tap to return to the recording screen</string>
+    <string name="rec_resume">Resume</string>
+    <string name="rec_pause">Pause</string>
+    <string name="rec_done">Done</string>
 </resources>

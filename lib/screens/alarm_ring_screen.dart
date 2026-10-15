@@ -11,6 +11,7 @@ import '../providers/player_provider.dart';
 import '../providers/playlist_provider.dart';
 import '../providers/radio_provider.dart';
 import '../services/alarm_service.dart';
+import '../l10n/locale_holder.dart';
 
 /// 알람이 울릴 때 화면 (잠금화면 위로 뜸) (RING_V3)
 /// - 폰 미디어 볼륨을 알람 소리 크기로 맞추고, 고른 소리를 작게 시작해서 30초쯤 동안 천천히 키움
@@ -29,7 +30,7 @@ class _AlarmRingScreenState extends State<AlarmRingScreen> {
   static const _cream = Color(0xFFF3EFE7);
   static const _ink = Color(0xFF17140F);
   static const _sub = Color(0xFFB8B0A2);
-  static const _days = ['월', '화', '수', '목', '금', '토', '일'];
+  static List<String> get _days => tr.weekdaysShort.split(',');
 
   Timer? _clock;
   Timer? _fade;
@@ -280,8 +281,8 @@ class _AlarmRingScreenState extends State<AlarmRingScreen> {
   Widget build(BuildContext context) {
     final now = DateTime.now();
     final h = now.hour % 12 == 0 ? 12 : now.hour % 12;
-    final ampm = now.hour < 12 ? '오전' : '오후';
-    final greet = now.hour < 12 ? '좋은 아침이에요' : '알람 시간이에요';
+    final ampm = now.hour < 12 ? tr.am : tr.pm;
+    final greet = now.hour < 12 ? tr.goodMorning : tr.alarmTime;
     return PopScope(
       canPop: false, // 뒤로가기로 실수로 닫히지 않게
       child: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -329,7 +330,7 @@ class _AlarmRingScreenState extends State<AlarmRingScreen> {
                       ],
                     ),
                     const SizedBox(height: 6),
-                    Text('${now.month}월 ${now.day}일 ${_days[now.weekday - 1]}요일',
+                    Text(tr.ringDate('${now.month}', '${now.day}', _days[now.weekday - 1]),
                         style: const TextStyle(color: _sub, fontSize: 15)),
                     const Spacer(flex: 2),
                     // 깨우는 소리
@@ -346,7 +347,7 @@ class _AlarmRingScreenState extends State<AlarmRingScreen> {
                           Icon(_icon, size: 18, color: _sub),
                           const SizedBox(width: 8),
                           Flexible(
-                            child: Text(_a.label,
+                            child: Text(AlarmService.labelOf(_a),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(color: _cream, fontSize: 14, fontWeight: FontWeight.w600)),
@@ -366,7 +367,7 @@ class _AlarmRingScreenState extends State<AlarmRingScreen> {
                           elevation: 0,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
                         ),
-                        child: const Text('끄기', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+                        child: Text(tr.turnOff, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -380,14 +381,14 @@ class _AlarmRingScreenState extends State<AlarmRingScreen> {
                           side: BorderSide(color: _cream.withOpacity(0.3), width: 1.2),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
                         ),
-                        child: const Text('5분 뒤 다시', style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600)),
+                        child: Text(tr.snooze5, style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600)),
                       ),
                     ),
                     const SizedBox(height: 6),
                     TextButton(
                       onPressed: _keep,
                       style: TextButton.styleFrom(foregroundColor: _sub),
-                      child: const Text('알람 끄고 계속 듣기', style: TextStyle(fontSize: 13.5)),
+                      child: Text(tr.alarmOffKeep, style: const TextStyle(fontSize: 13.5)),
                     ),
                   ],
                 ),

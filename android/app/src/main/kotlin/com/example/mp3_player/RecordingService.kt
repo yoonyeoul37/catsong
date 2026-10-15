@@ -57,8 +57,8 @@ class RecordingService : Service() {
         val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && nm.getNotificationChannel(CHANNEL_ID) == null) {
             // 일반 중요도(위쪽·상태바에 보임) + 소리·진동 없음
-            val ch = NotificationChannel(CHANNEL_ID, "녹음", NotificationManager.IMPORTANCE_DEFAULT)
-            ch.description = "녹음 중일 때 알림창에 표시"
+            val ch = NotificationChannel(CHANNEL_ID, getString(R.string.rec_channel), NotificationManager.IMPORTANCE_DEFAULT)
+            ch.description = getString(R.string.rec_channel_desc)
             ch.setShowBadge(false)
             ch.setSound(null, null)
             ch.enableVibration(false)
@@ -78,13 +78,13 @@ class RecordingService : Service() {
             Notification.Builder(this)
         }
         b.setSmallIcon(android.R.drawable.ic_btn_speak_now)
-            .setContentTitle(if (paused) "파란소리 녹음 일시정지" else "파란소리 녹음 중")
+            .setContentTitle(if (paused) getString(R.string.rec_title_paused) else getString(R.string.rec_title_on))
             .setContentIntent(open)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
         if (paused) {
             val s = elapsed / 1000
-            b.setContentText(String.format("%02d:%02d · 탭해서 이어서 녹음", s / 60, s % 60))
+            b.setContentText(getString(R.string.rec_tap_resume, s / 60, s % 60))
                 .setUsesChronometer(false)
                 .setShowWhen(false)
         } else {
@@ -92,7 +92,7 @@ class RecordingService : Service() {
             b.setUsesChronometer(true)
                 .setWhen(base)
                 .setShowWhen(true)
-                .setContentText("탭하면 녹음 화면으로 돌아가요")
+                .setContentText(getString(R.string.rec_tap_back))
         }
         // 알림 버튼: 일시정지(또는 이어서) · 완료
         fun pi(a: String) = PendingIntent.getService(
@@ -103,11 +103,11 @@ class RecordingService : Service() {
         @Suppress("DEPRECATION")
         b.addAction(
             if (paused) android.R.drawable.ic_media_play else android.R.drawable.ic_media_pause,
-            if (paused) "이어서" else "일시정지",
+            if (paused) getString(R.string.rec_resume) else getString(R.string.rec_pause),
             pi(if (paused) ACTION_RESUME else ACTION_PAUSE)
         )
         @Suppress("DEPRECATION")
-        b.addAction(android.R.drawable.ic_menu_save, "완료", pi(ACTION_FINISH))
+        b.addAction(android.R.drawable.ic_menu_save, getString(R.string.rec_done), pi(ACTION_FINISH))
         return b.build()
     }
 }

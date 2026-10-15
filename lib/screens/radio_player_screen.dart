@@ -45,6 +45,7 @@ import '../widgets/exit_confirm_dialog.dart';
 import '../widgets/paran_toast.dart';
 import '../widgets/action_feedback.dart';
 import '../widgets/paran_dialog.dart';
+import '../l10n/locale_holder.dart';
 
 double? _parseFrequency(String? freq) {
   if (freq == null || freq.isEmpty) return null;
@@ -103,7 +104,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     }
     final url = radio.lastPlayStationId == station.stationUuid ? radio.lastPlayUrl : null;
     if (url == null) {
-      showParanToast(context, '방송이 나오고 있을 때 TV로 보낼 수 있어요');
+      showParanToast(context, tr.castNeedsPlaying);
       return;
     }
     showCastPickerSheet(context, onPick: (d) async {
@@ -211,7 +212,9 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         farewellAsset = 'assets/farewell_ja.mp3';
         break;
       case 'zh':
-        smallText = '与Paransori相伴的时光，\n您开心吗?\n\n欢迎随时回来，\n我们会用美好的声音迎接您。\n再见啦!';
+        smallText = Localizations.localeOf(context).scriptCode == 'Hant'
+            ? '與Paransori相伴的時光，\n您開心嗎?\n\n歡迎隨時回來，\n我們會用美好的聲音迎接您。\n再見啦!'
+            : '与Paransori相伴的时光，\n您开心吗?\n\n欢迎随时回来，\n我们会用美好的声音迎接您。\n再见啦!';
         farewellAsset = 'assets/farewell_zh.mp3';
         break;
       default:
@@ -561,7 +564,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                               icon: Icons.bedtime_outlined,
                               // 켜져 있으면 "수면" 대신 남은 시간 (예: 28분)
                               label: radioProvider.isSleepTimerActive && radioProvider.sleepRemaining != null
-                                  ? '${radioProvider.sleepRemaining!.inMinutes + 1}분'
+                                  ? tr.durM(radioProvider.sleepRemaining!.inMinutes + 1)
                                   : AppLocalizations.of(context)!.radioSleep,
                               hasIndicator: radioProvider.isSleepTimerActive,
                               primaryColor: primaryColor,
@@ -819,8 +822,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                                       showMoreMenuSheet(
                                         context,
-                                        shareText: '지금 ${current.name} 듣고 있어요! 파란소리에서 같이 들어요 🎧',
-                                        shareSubtitle: '지금 듣는 방송을 소개해보세요.',
+                                        shareText: tr.radioShareText(current.name),
+                                        shareSubtitle: tr.radioShareSub,
                                         stationHomepage: homepage,
                                       );
                                       return;
@@ -1130,7 +1133,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                                     if (title == null || title.isEmpty) return;
                                                     final now = await radioProvider.toggleSavedSong(title, current);
                                                     if (!context.mounted) return;
-                                                    showParanToast(context, now ? '저장한 곡에 넣었어요' : '저장한 곡에서 뺐어요');
+                                                    showParanToast(context, now ? tr.savedSongAdded : tr.savedSongRemoved);
                                                   },
                                                   child: Padding(
                                                     padding: const EdgeInsets.fromLTRB(8, 2, 2, 2),
@@ -1162,7 +1165,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                               }
                                             },
                                             child: Text(
-                                              '문자 참여 #$smsNumber',
+                                              tr.smsJoin(smsNumber),
                                               style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 11),
                                             ),
                                           ),
@@ -1271,8 +1274,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                 const SizedBox(width: 6),
                                 Text(
                                   CastService.instance.tvPlaying
-                                      ? '${CastService.instance.device?.name ?? 'TV'}에서 재생 중'
-                                      : 'TV에서 일시정지',
+                                      ? tr.castPlayingNow(CastService.instance.device?.name ?? 'TV')
+                                      : tr.tvPaused,
                                   style: TextStyle(
                                       color: pointColorOf(context), fontSize: 12, fontWeight: FontWeight.bold),
                                 ),
@@ -1313,7 +1316,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                   const SizedBox(width: 6),
                                   Flexible(
                                     child: Text(
-                                      '비슷한 방송 듣기 · ${radioProvider.similarStation!.name}',
+                                      tr.similarStation(radioProvider.similarStation!.name),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(color: primaryColor, fontSize: 13, fontWeight: FontWeight.w700),
@@ -2339,7 +2342,7 @@ class _NowProgramStripState extends State<_NowProgramStrip> {
                     style: TextStyle(color: strong, fontSize: 12, fontWeight: FontWeight.w700)),
               ),
               const SizedBox(width: 8),
-              Text('${end - nowM}분 남음', style: TextStyle(color: muted, fontSize: 11.5)),
+              Text(tr.minutesLeft(end - nowM), style: TextStyle(color: muted, fontSize: 11.5)),
             ],
           ),
           const SizedBox(height: 7),
@@ -2454,7 +2457,7 @@ class _FavoritesSheet extends StatelessWidget {
                   child: Text(AppLocalizations.of(context)!.favorites,
                       style: TextStyle(color: _rInk, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
                 ),
-                Text('${favorites.length}개', style: TextStyle(color: _rSub, fontSize: 12.5)),
+                Text(tr.countItems(favorites.length), style: TextStyle(color: _rSub, fontSize: 12.5)),
                 const SizedBox(width: 6),
                 ParanCloseX(onTap: () => Navigator.pop(context)), // 닫기
               ],
@@ -2511,7 +2514,7 @@ class _FavoritesSheet extends StatelessWidget {
                                             decoration:
                                                 BoxDecoration(color: Color(0xFFFF6B5E), shape: BoxShape.circle)),
                                         SizedBox(width: 5),
-                                        Text('듣는 중',
+                                        Text(tr.listeningNow,
                                             style: TextStyle(color: _rBg, fontSize: 10, fontWeight: FontWeight.w700)),
                                       ],
                                     ),
@@ -2536,7 +2539,7 @@ class _FavoritesSheet extends StatelessWidget {
                     if (others.isNotEmpty) ...[
                       Padding(
                         padding: EdgeInsets.fromLTRB(4, 0, 4, 6),
-                        child: Text('눌러서 바로 듣기',
+                        child: Text(tr.tapToListen,
                             style: TextStyle(color: _rSub, fontSize: 12, fontWeight: FontWeight.w600)),
                       ),
                       Container(
@@ -2558,7 +2561,7 @@ class _FavoritesSheet extends StatelessWidget {
                                 ),
                                 onDismissed: (_) {
                                   final st = others[i];
-                                  showActionFeedback(context, type: ActionFeedbackType.deleted, message: '즐겨찾기에서 뺐어요');
+                                  showActionFeedback(context, type: ActionFeedbackType.deleted, message: tr.removedFromFav);
                                   Future.microtask(() => radioProvider.toggleFavorite(st));
                                 },
                                 child: InkWell(
@@ -2607,7 +2610,7 @@ class _FavoritesSheet extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(top: 8),
                         child: Center(
-                          child: Text('왼쪽으로 밀면 즐겨찾기에서 빼요', style: TextStyle(color: _rSub, fontSize: 11.5)),
+                          child: Text(tr.swipeToRemoveFav, style: TextStyle(color: _rSub, fontSize: 11.5)),
                         ),
                       ),
                     ],
@@ -2702,10 +2705,10 @@ class _ScheduleListSheet extends StatelessWidget {
 
   static String _part(int mins) {
     final h = (mins % 1440) ~/ 60;
-    if (h < 6) return '새벽';
-    if (h < 12) return '아침';
-    if (h < 18) return '오후';
-    return '저녁 · 밤';
+    if (h < 6) return tr.partDawn;
+    if (h < 12) return tr.partMorning;
+    if (h < 18) return tr.partAfternoon;
+    return tr.partEvening;
   }
 
   @override
@@ -2750,9 +2753,9 @@ class _ScheduleListSheet extends StatelessWidget {
       final before = radioProvider.schedules.length;
       radioProvider.addSchedule(TimeOfDay(hour: (mins % 1440) ~/ 60, minute: (mins % 1440) % 60), station);
       if (radioProvider.schedules.length > before) {
-        showActionFeedback(context, type: ActionFeedbackType.saved, message: '예약했어요', icon: Icons.notifications_active_rounded);
+        showActionFeedback(context, type: ActionFeedbackType.saved, message: tr.scheduledToast, icon: Icons.notifications_active_rounded);
       } else {
-        showParanToast(context, '예약을 더 넣을 수 없어요. 예약 창에서 지난 예약을 지워주세요');
+        showParanToast(context, tr.scheduleFull);
       }
     }
 
@@ -2821,7 +2824,7 @@ class _ScheduleListSheet extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(color: _rLine),
                           ),
-                          child: Text('다음',
+                          child: Text(tr.nextShort,
                               style: TextStyle(color: _rInk, fontSize: 10.5, fontWeight: FontWeight.w700)),
                         ),
                       ],
@@ -2888,7 +2891,7 @@ class _ScheduleListSheet extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(color: _rInk, fontSize: 16.5, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
                     SizedBox(height: 2),
-                    Text('오늘 · ${now.month}월 ${now.day}일 ${['월', '화', '수', '목', '금', '토', '일'][now.weekday - 1]}요일',
+                    Text(tr.todayFull('${now.month}', '${now.day}', tr.weekdaysShort.split(',')[now.weekday - 1]),
                         style: TextStyle(color: _rSub, fontSize: 12)),
                   ],
                 ),
@@ -2927,7 +2930,7 @@ class _ScheduleListSheet extends StatelessWidget {
                               height: 6,
                               decoration: BoxDecoration(color: Color(0xFFFF6B5E), shape: BoxShape.circle)),
                           SizedBox(width: 5),
-                          Text('지금 방송 중',
+                          Text(tr.onAirNow,
                               style: TextStyle(color: _rBg, fontSize: 10.5, fontWeight: FontWeight.w700)),
                         ],
                       ),
@@ -2938,7 +2941,7 @@ class _ScheduleListSheet extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(color: _rBg, fontSize: 16, fontWeight: FontWeight.w800)),
                     SizedBox(height: 3),
-                    Text('${_hm(cur.start)} – ${_hm(cur.end)} · ${cur.end - nowM}분 남음',
+                    Text('${_hm(cur.start)} – ${_hm(cur.end)} · ${tr.minutesLeft(cur.end - nowM)}',
                         style: TextStyle(color: _rBg.withOpacity(0.7), fontSize: 12)),
                     SizedBox(height: 10),
                     ClipRRect(

@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../l10n/app_localizations.dart';
 
 const _base =
     'https://files.ssing.kr/app-images';
@@ -49,9 +50,8 @@ String farewellImageUrl(BuildContext context) =>
 ImageProvider farewellImage(BuildContext context) =>
     AssetImage('assets/bye_${_scenes[_scene]}${_who(context)}.jpg');
 
-/// 끝인사 한 줄 인사: 오늘 장면에 맞게 (한국어 화면은 한국어, 그 밖은 영어)
+/// 끝인사 한 줄 인사: 오늘 장면에 맞게 (화면 언어로)
 String farewellLine(BuildContext context) {
-  const ko = ['좋은 음악과 함께한 하루였어요', '오늘 하루도 수고했어요', '편안한 밤 되세요', '푹 자고 내일 만나요'];
-  const en = ['What a day with good music', 'You did great today', 'Have a peaceful night', 'Sleep well, see you tomorrow'];
-  return (_lang(context) == 'ko' ? ko : en)[_scene];
+  final l = AppLocalizations.of(context)!;
+  return [l.byeLine1, l.byeLine2, l.byeLine3, l.byeLine4][_scene];
 }

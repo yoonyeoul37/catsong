@@ -9,6 +9,7 @@ import '../utils/song_title_cleaner.dart';
 import '../widgets/action_feedback.dart';
 import '../widgets/paran_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../l10n/locale_holder.dart';
 
 const _kBackupKey = 'bulk_clean_backup'; // 마지막으로 한꺼번에 정리하기 전의 원래 제목·가수
 
@@ -68,7 +69,7 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
     // 내 노래 목록에 있는 가수 이름들 → "노래 - 가수" 순서도 알아봄
     final known = music.artists
         .map((x) => x.name.toLowerCase().trim())
-        .where((n) => n.isNotEmpty && !n.contains('unknown') && n != '알 수 없는 아티스트')
+        .where((n) => n.isNotEmpty && !n.contains('unknown') && n != '알 수 없는 아티스트' && n != tr.unknownArtist)
         .toSet();
     final list = <_CleanItem>[];
     for (final s in music.allSongs) {
@@ -88,7 +89,7 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
     setState(() => _working = true);
     final n = await undoBulkClean(music);
     if (!mounted) return;
-    showActionFeedback(context, type: ActionFeedbackType.edited, message: '$n곡을 되돌렸어요');
+    showActionFeedback(context, type: ActionFeedbackType.edited, message: tr.songsReverted(n));
     navigator.pop();
   }
 
@@ -119,9 +120,9 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
     final appCtx = Navigator.of(context, rootNavigator: true).context;
     navigator.pop();
     // 되돌리기 버튼이 있어서 하단 알림으로
-    showActionFeedbackWithUndo(appCtx, message: '${targets.length}곡을 정리했어요', onUndo: () async {
+    showActionFeedbackWithUndo(appCtx, message: tr.songsCleaned(targets.length), onUndo: () async {
       final n = await undoBulkClean(music);
-      showActionFeedback(appCtx, type: ActionFeedbackType.edited, message: '$n곡을 되돌렸어요');
+      showActionFeedback(appCtx, type: ActionFeedbackType.edited, message: tr.songsReverted(n));
     });
   }
 
@@ -136,13 +137,13 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
           Icon(Icons.history_rounded, color: sub, size: 20),
           const SizedBox(width: 10),
           Expanded(
-            child: Text('마지막에 정리한 $_backupCount곡',
+            child: Text(tr.lastCleaned(_backupCount),
                 style: TextStyle(color: ink, fontSize: 13.5, fontWeight: FontWeight.w600)),
           ),
           TextButton(
             onPressed: _working ? null : _undo,
             style: TextButton.styleFrom(foregroundColor: ink),
-            child: const Text('되돌리기', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
+            child: Text(tr.revertChange, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
@@ -168,7 +169,7 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
             onPressed: () => Navigator.pop(context),
             icon: Icon(Icons.arrow_back_ios, color: ink, size: 20),
           ),
-          title: Text('음악 정보 일괄 정리',
+          title: Text(tr.moreCleanTitle,
               style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w700)),
         ),
         body: Center(
@@ -181,9 +182,9 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
                 child: CircularProgressIndicator(strokeWidth: 2.5, color: ink),
               ),
               const SizedBox(height: 16),
-              Text('곡 정보를 읽는 중이에요', style: TextStyle(color: ink, fontSize: 15, fontWeight: FontWeight.w600)),
+              Text(tr.readingSongInfo, style: TextStyle(color: ink, fontSize: 15, fontWeight: FontWeight.w600)),
               const SizedBox(height: 4),
-              Text('잠시만 기다려 주세요', style: TextStyle(color: sub, fontSize: 13)),
+              Text(tr.pleaseWait, style: TextStyle(color: sub, fontSize: 13)),
             ],
           ),
         ),
@@ -201,7 +202,7 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
           onPressed: _working ? null : () => Navigator.pop(context),
           icon: Icon(Icons.arrow_back_ios, color: ink, size: 20),
         ),
-        title: Text('음악 정보 일괄 정리',
+        title: Text(tr.moreCleanTitle,
             style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w700)),
         actions: [
           if (_items.isNotEmpty && !_working)
@@ -212,7 +213,7 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
                 }
               }),
               style: TextButton.styleFrom(foregroundColor: ink),
-              child: Text(allChecked ? '전체 해제' : '전체 선택',
+              child: Text(allChecked ? tr.deselectAllShort : tr.selectAllShort,
                   style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
             ),
         ],
@@ -224,10 +225,10 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
           children: [
             Icon(Icons.auto_awesome_rounded, color: sub, size: 40),
             const SizedBox(height: 14),
-            Text('정리할 곡이 없어요',
+            Text(tr.nothingToClean,
                 style: TextStyle(color: ink, fontSize: 16, fontWeight: FontWeight.w700)),
             const SizedBox(height: 6),
-            Text('모든 곡의 제목·가수가 깔끔해요', style: TextStyle(color: sub, fontSize: 13)),
+            Text(tr.allTidy, style: TextStyle(color: sub, fontSize: 13)),
             if (_backupCount > 0) ...[
               const SizedBox(height: 24),
               _undoCard(card, ink, sub),
@@ -245,7 +246,7 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
                 Icon(Icons.auto_awesome_rounded, color: sub, size: 16),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text('정리할 수 있는 곡 ${_items.length}개 · 체크한 곡만 바꿔요',
+                  child: Text(tr.cleanableCount(_items.length),
                       style: TextStyle(color: sub, fontSize: 13)),
                 ),
               ],
@@ -333,7 +334,7 @@ class _BulkCleanScreenState extends State<BulkCleanScreen> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               ),
               child: Text(
-                _working ? '정리하는 중… $_done / $_checkedCount' : '$_checkedCount곡 정리하기',
+                _working ? tr.cleaningProgress(_done, _checkedCount) : tr.cleanSongsButton(_checkedCount),
                 style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700),
               ),
             ),

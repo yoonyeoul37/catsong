@@ -10,6 +10,7 @@ import '../models/artist.dart';
 import '../models/folder.dart';
 import '../models/call_recording.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import '../l10n/locale_holder.dart';
 
 class MusicProvider extends ChangeNotifier {
   List<Song> _songs = [];
@@ -67,10 +68,10 @@ class MusicProvider extends ChangeNotifier {
       if (granted) {
         await loadSongs();
       } else {
-        _errorMessage = '저장소 접근 권한이 필요합니다.\n설정에서 권한을 허용해 주세요.';
+        _errorMessage = tr.storagePermissionNeeded;
       }
     } catch (e) {
-      _errorMessage = '음악을 불러오는 중 오류가 발생했습니다: $e';
+      _errorMessage = '${tr.musicLoadError}: $e';
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -780,7 +781,7 @@ class MusicProvider extends ChangeNotifier {
       _metaLoading = false; // 곡 정보 다 읽음
       debugPrint('스캔 완료: ${_songs.length}개 곡 발견');
     } catch (e) {
-      _errorMessage = '음악 스캔 오류: $e';
+      _errorMessage = '${tr.musicScanError}: $e';
     } finally {
       _isLoading = false;
       _metaLoading = false;

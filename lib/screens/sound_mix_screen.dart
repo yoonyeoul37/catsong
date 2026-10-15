@@ -16,6 +16,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../widgets/logo_eq_bars.dart';
 import '../widgets/exit_confirm_dialog.dart';
 import '../widgets/paran_dialog.dart';
+import '../l10n/locale_holder.dart';
+import '../utils/nature_sound_catalog.dart';
 
 class SoundMixScreen extends StatefulWidget {
   const SoundMixScreen({super.key});
@@ -77,11 +79,11 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                       Expanded(
                         child: Column(
                           children: [
-                            Text('몇 시간 몇 분 후 정지할까요?',
+                            Text(tr.sleepAskDuration,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 3),
-                            Text('끝나기 1분 전부터 천천히 작아져요',
+                            Text(tr.sleepFadeHint,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: textColor.withOpacity(0.5), fontSize: 12)),
                           ],
@@ -128,7 +130,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                       ),
-                      child: const Text('설정', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(tr.set, style: const TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ),
@@ -140,7 +142,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                         Navigator.pop(ctx);
                         context.read<SoundMixProvider>().setSleepTimer(null);
                       },
-                      child: Text('타이머 끄기', style: TextStyle(color: textColor.withOpacity(0.5))),
+                      child: Text(tr.timerOff, style: TextStyle(color: textColor.withOpacity(0.5))),
                     ),
                   ),
               ],
@@ -191,13 +193,13 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
                         children: [
-                          Text('노래 선택',
+                          Text(tr.pickSongs,
                               style: TextStyle(
                                   color: baseColor, fontSize: 17, fontWeight: FontWeight.bold)),
                           const Spacer(),
                           TextButton(
                             onPressed: () => Navigator.pop(ctx),
-                            child: const Text('완료', style: TextStyle(fontWeight: FontWeight.bold)),
+                            child: Text(tr.done, style: const TextStyle(fontWeight: FontWeight.bold)),
                           ),
                         ],
                       ),
@@ -209,7 +211,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                         onChanged: (_) => setSheetState(() {}),
                         style: TextStyle(color: baseColor),
                         decoration: InputDecoration(
-                          hintText: '제목, 아티스트로 검색',
+                          hintText: tr.searchTitleArtist,
                           hintStyle: TextStyle(color: baseColor.withOpacity(0.35)),
                           prefixIcon: Icon(Icons.search, color: baseColor.withOpacity(0.4), size: 20),
                           filled: true,
@@ -227,7 +229,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                       child: songs.isEmpty
                           ? Center(
                           child: Text(
-                              query.isEmpty ? '내 음악이 없어요' : '검색 결과가 없어요',
+                              query.isEmpty ? tr.noMyMusic : tr.noSearchResults,
                               style: TextStyle(color: baseColor.withOpacity(0.4))))
                           : ListView.builder(
                         itemCount: songs.length,
@@ -304,7 +306,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                 Row(
                   children: [
                     Expanded(
-                      child: Text('$key 고르기',
+                      child: Text(tr.pickVersion(natureName(key)),
                           style: TextStyle(color: baseColor, fontSize: 16, fontWeight: FontWeight.w700)),
                     ),
                     ParanCloseX(onTap: () => Navigator.pop(ctx)), // 닫기
@@ -332,7 +334,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              v,
+                              natureName(v),
                               style: TextStyle(
                                 color: v == selected ? blue : baseColor,
                                 fontSize: 15,
@@ -388,7 +390,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Flexible(
-                          child: Text(label,
+                          child: Text(natureName(label),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(color: baseColor, fontSize: 14, fontWeight: FontWeight.w600)),
@@ -437,7 +439,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
 
     final activeNatureLabels = <String>[
       for (final entry in SoundMixProvider.natureAssets.keys)
-        if ((mix.volumeOf(entry)) > 0) entry,
+        if ((mix.volumeOf(entry)) > 0) natureName(entry),
     ];
     final selectedSongs = mix.selectedSongs;
     final activeLabels = <String>[
@@ -462,13 +464,13 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: '나만의',
+                    text: tr.mixTitle1,
                     style: GoogleFonts.doHyeon(
                         // 기본 포인트 색이면 파랑, 다른 색이면 먹색 (홈 로고와 같은 규칙)
                         color: context.watch<ThemeProvider>().primaryColor.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : baseColor, fontSize: 20, letterSpacing: -0.5),
                   ),
                   TextSpan(
-                    text: ' 소리',
+                    text: tr.mixTitle2,
                     style: GoogleFonts.doHyeon(
                         color: baseColor, fontSize: 20, letterSpacing: -0.5),
                   ),
@@ -524,7 +526,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('나만의 힐링 사운드를 만들어보세요.',
+              Text(tr.mixSub,
                   style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 13, height: 1.5)),
               const SizedBox(height: 20),
               Expanded(
@@ -562,7 +564,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                                 ),
                                 const SizedBox(width: 10),
                                 Expanded(
-                                  child: Text('음악',
+                                  child: Text(tr.musicLabel,
                                       style: TextStyle(
                                           color: baseColor, fontSize: 14, fontWeight: FontWeight.w600)),
                                 ),
@@ -572,7 +574,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                                     children: [
                                       Icon(Icons.add_circle_outline, color: primaryColor, size: 18),
                                       const SizedBox(width: 4),
-                                      Text('추가', style: TextStyle(color: primaryColor, fontSize: 13)),
+                                      Text(tr.addShort, style: TextStyle(color: primaryColor, fontSize: 13)),
                                     ],
                                   ),
                                 ),
@@ -586,7 +588,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                                     Icon(Icons.volume_up_rounded,
                                         size: 15, color: baseColor.withOpacity(0.4)),
                                     const SizedBox(width: 6),
-                                    Text('음악 음량',
+                                    Text(tr.musicVolume,
                                         style: TextStyle(
                                             color: baseColor.withOpacity(0.6), fontSize: 12)),
                                     const Spacer(),
@@ -616,7 +618,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                             if (selectedSongs.isEmpty)
                               Padding(
                                 padding: const EdgeInsets.only(top: 8, left: 44),
-                                child: Text('선택된 노래가 없어요',
+                                child: Text(tr.noSongsPicked,
                                     style: TextStyle(color: baseColor.withOpacity(0.35), fontSize: 12.5)),
                               )
                             else
@@ -653,7 +655,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('현재 재생 중',
+                              Text(tr.nowPlayingMix,
                                   style: TextStyle(
                                       color: baseColor.withOpacity(0.4), fontSize: 11.5)),
                               const SizedBox(height: 4),
@@ -704,7 +706,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                           color: mix.sleepMinutes != null ? primaryColor : baseColor.withOpacity(0.5),
                           size: 18),
                       const SizedBox(width: 8),
-                      Text(mix.sleepMinutes != null ? '${mix.remainingLabel} 후 자동 정지' : '수면 타이머 설정',
+                      Text(mix.sleepMinutes != null ? tr.autoStopIn(mix.remainingLabel) : tr.setSleepTimer,
                           style: TextStyle(
                               color: mix.sleepMinutes != null ? primaryColor : baseColor.withOpacity(0.6),
                               fontSize: 13,
@@ -730,7 +732,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                     }
                   },
                   icon: Icon(mix.isPlaying ? Icons.stop_rounded : Icons.play_arrow_rounded),
-                  label: Text(mix.isPlaying ? '믹스 정지하기' : '믹스 재생하기',
+                  label: Text(mix.isPlaying ? tr.stopMix : tr.playMix,
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,

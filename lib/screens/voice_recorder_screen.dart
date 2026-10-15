@@ -13,6 +13,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import '../providers/player_provider.dart';
 import '../widgets/paran_dialog.dart';
 import '../widgets/paran_toast.dart';
+import '../l10n/locale_holder.dart';
 
 /// 지금 녹음 중인 파일 (되살리기에서 건드리지 않게)
 String? activeRecordingPath;
@@ -137,14 +138,14 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
     HapticFeedback.mediumImpact();
     if (!await _rec.hasPermission()) {
       if (!mounted) return;
-      showParanToast(context, '녹음하려면 마이크 권한이 필요해요');
+      showParanToast(context, tr.micPermissionNeeded);
       return;
     }
     // 알림창에 "녹음 중"을 보여주려면 알림 권한이 필요해요 (안드로이드 13+)
     try {
       final st = await Permission.notification.request();
       if (!st.isGranted && mounted) {
-        showParanToast(context, '알림을 허용하면 알림창에서 녹음 중인 걸 볼 수 있어요');
+        showParanToast(context, tr.recNotifyHint);
       }
     } catch (_) {}
     // 음악이 나오고 있으면 잠깐 멈추기
@@ -280,10 +281,10 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
     if (!mounted) return;
     final ok = await showParanConfirm(
       context,
-      title: '녹음을 지울까요?',
-      message: '지금까지 녹음한 내용이 저장되지 않아요.',
-      confirmLabel: '지우기',
-      cancelLabel: '계속 녹음',
+      title: tr.discardRecTitle,
+      message: tr.discardRecMsg,
+      confirmLabel: tr.clearAction,
+      cancelLabel: tr.keepRecording,
       danger: true,
     );
     if (ok != true) {
@@ -366,7 +367,7 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
                         ),
                         Expanded(
                           child: Center(
-                            child: Text('새 녹음',
+                            child: Text(tr.newRecording,
                                 style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 14.5)),
                           ),
                         ),
@@ -415,16 +416,16 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
   Widget _timerChip() {
     String label;
     if (_limit == null) {
-      label = '타이머 없음';
+      label = tr.noTimer;
     } else if (_state == _RecState.idle) {
-      label = '${_limitText(_limit!)} 녹음하면 자동 저장';
+      label = tr.autoSaveAfter(_limitText(_limit!));
     } else {
       final left = _limit! - _watch.elapsed;
       final s = left.isNegative ? 0 : left.inSeconds;
       final h = s ~/ 3600;
       final mm = ((s ~/ 60) % 60).toString().padLeft(2, '0');
       final ss = (s % 60).toString().padLeft(2, '0');
-      label = '${h > 0 ? '$h:$mm:$ss' : '$mm:$ss'} 후 자동 저장';
+      label = tr.autoSaveIn(h > 0 ? '$h:$mm:$ss' : '$mm:$ss');
     }
     return GestureDetector(
       onTap: _state == _RecState.saving ? null : _pickTimer,
@@ -451,8 +452,8 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
   String _limitText(Duration d) {
     final h = d.inHours;
     final m = d.inMinutes % 60;
-    if (h == 0) return '$m분';
-    return m == 0 ? '$h시간' : '$h시간 $m분';
+    if (h == 0) return tr.durM(m);
+    return m == 0 ? tr.durH(h) : tr.durHM(h, m);
   }
 
   /// 타이머 고르기: 빠른 버튼 + 시간·분 휠 (음악 수면 타이머처럼)
@@ -464,7 +465,7 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
       Navigator.pop(ctx);
       // 이미 지난 시간을 고르면 바로 저장되지 않게
       if (d != null && _watch.elapsed >= d) {
-        showParanToast(context, '이미 그보다 오래 녹음했어요');
+        showParanToast(context, tr.alreadyLonger);
         return;
       }
       setState(() => _limit = d);
@@ -486,8 +487,8 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('이만큼 녹음되면 자동으로 저장',
-                    style: TextStyle(color: Colors.white70, fontSize: 13.5)),
+                Text(tr.autoSaveWhen,
+                    style: const TextStyle(color: Colors.white70, fontSize: 13.5)),
                 const SizedBox(height: 12),
                 // 빠른 버튼
                 Row(
@@ -540,7 +541,7 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                         ),
-                        child: const Text('타이머 끄기'),
+                        child: Text(tr.timerOff),
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -554,7 +555,7 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                         ),
-                        child: const Text('설정'),
+                        child: Text(tr.set),
                       ),
                     ),
                   ],
@@ -570,10 +571,10 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
   /// 상태 표시: ● 녹음 중 / 일시정지 / 준비됐어요
   Widget _statusPill() {
     final (label, dot) = switch (_state) {
-      _RecState.idle => ('준비됐어요', Colors.white38),
-      _RecState.recording => ('녹음 중', _red),
-      _RecState.paused => (_interrupted ? '통화 중 · 끝나면 이어서 녹음' : '일시정지', const Color(0xFFFFC857)),
-      _RecState.saving => ('저장 중…', _sky),
+      _RecState.idle => (tr.recReady, Colors.white38),
+      _RecState.recording => (tr.recRecording, _red),
+      _RecState.paused => (_interrupted ? tr.recPausedCall : tr.recPaused, const Color(0xFFFFC857)),
+      _RecState.saving => (tr.saving, _sky),
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
@@ -603,9 +604,9 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _smallBtn(Icons.delete_outline, '지우기', started ? _cancel : null),
+        _smallBtn(Icons.delete_outline, tr.clearAction, started ? _cancel : null),
         _mainBtn(),
-        _smallBtn(Icons.check, '완료', started ? _finish : null, highlight: true),
+        _smallBtn(Icons.check, tr.done, started ? _finish : null, highlight: true),
       ],
     );
   }

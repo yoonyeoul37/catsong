@@ -21,6 +21,8 @@ import '../widgets/exit_confirm_dialog.dart';
 import 'nature_sounds_screen.dart';
 import '../widgets/paran_dialog.dart';
 import '../widgets/heart_pop.dart';
+import '../l10n/locale_holder.dart';
+import '../utils/nature_sound_catalog.dart';
 
 class NatureSoundDetailScreen extends StatefulWidget {
   final String name;
@@ -199,13 +201,13 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
   }
 
   String _formatRemaining() {
-    if (_sleepEndTime == null) return '타이머';
+    if (_sleepEndTime == null) return tr.timerLabel;
     final remaining = _sleepEndTime!.difference(DateTime.now());
-    if (remaining.isNegative) return '타이머';
+    if (remaining.isNegative) return tr.timerLabel;
     final h = remaining.inHours;
     final m = remaining.inMinutes % 60;
-    if (h > 0) return '$h시간 $m분';
-    return '$m분';
+    if (h > 0) return tr.durHM(h, m);
+    return tr.durM(m);
   }
 
   void _showCustomMinutesDialog(bool isDarkMode) {
@@ -232,11 +234,11 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                       Expanded(
                         child: Column(
                           children: [
-                            Text('몇 시간 몇 분 후 정지할까요?',
+                            Text(tr.sleepAskDuration,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 3),
-                            Text('끝나기 1분 전부터 천천히 작아져요',
+                            Text(tr.sleepFadeHint,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: textColor.withOpacity(0.5), fontSize: 12)),
                           ],
@@ -283,7 +285,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                       ),
-                      child: const Text('설정', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(tr.set, style: const TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ),
@@ -295,7 +297,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                         Navigator.pop(ctx);
                         _setSleepTimer(null);
                       },
-                      child: Text('타이머 끄기', style: TextStyle(color: textColor.withOpacity(0.5))),
+                      child: Text(tr.timerOff, style: TextStyle(color: textColor.withOpacity(0.5))),
                     ),
                   ),
               ],
@@ -780,7 +782,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                             showMoreMenuSheet(
                               context,
-                              shareText: '파란소리 자연소리로 편안한 시간 보내요 🌊',
+                              shareText: tr.natureShareText,
                             );
                             return;
                             showModalBottomSheet(
@@ -1017,7 +1019,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                             child: Icon(currentIcon, size: 70, color: Colors.white),
                           ),
                           const SizedBox(height: 28),
-                          Text(currentName,
+                          Text(natureName(currentName),
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 26,
@@ -1029,7 +1031,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                           const SizedBox(height: 8),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 32),
-                            child: Text(currentDescription,
+                            child: Text(natureDesc(currentName, currentDescription),
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                     color: Colors.white,
@@ -1110,7 +1112,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                               children: [
                                 Icon(Icons.graphic_eq_rounded, color: Colors.white.withOpacity(0.7), size: 22),
                                 const SizedBox(height: 4),
-                                Text('믹스', style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 10)),
+                                Text(tr.mixShort, style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 10)),
                               ],
                             ),
                           ),

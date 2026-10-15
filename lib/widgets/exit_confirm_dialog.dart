@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 import '../l10n/app_localizations.dart';
 import 'photo_dialog.dart' show ParanBanner;
+import '../l10n/locale_holder.dart';
 
 /// 종료 확인창 (홈·음악·라디오·자연소리 공통)
 /// 위: 그림(아래로 스며듦) + 경계 가운데 Paransori / 가운데: "종료하시겠어요?" / 아래: 계속 듣기 · 종료
@@ -39,7 +40,7 @@ Future<bool> showExitConfirm(BuildContext context) async {
                 children: [
                   // 질문은 크고 굵게
                   Text(
-                    '종료하시겠어요?',
+                    tr.exitConfirmTitle,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: titleColor, fontSize: 20, fontWeight: FontWeight.w800, letterSpacing: -0.4),
@@ -71,7 +72,10 @@ Future<bool> showExitConfirm(BuildContext context) async {
                               elevation: 3,
                               shadowColor: Colors.black.withOpacity(isDark ? 0.5 : 0.12),
                             ),
-                            child: Text(l.radioExitKeepListening, style: const TextStyle(fontSize: 14.5)),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(l.radioExitKeepListening, maxLines: 1, style: const TextStyle(fontSize: 14.5)),
+                            ),
                           ),
                         ),
                       ),
@@ -92,8 +96,12 @@ Future<bool> showExitConfirm(BuildContext context) async {
                               elevation: 6,
                               shadowColor: primary.withOpacity(0.45),
                             ),
-                            child: Text(l.radioExitConfirmButton,
-                                style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold)),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(l.radioExitConfirmButton,
+                                  maxLines: 1,
+                                  style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold)),
+                            ),
                           ),
                         ),
                       ),

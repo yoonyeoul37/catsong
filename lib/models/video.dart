@@ -1,3 +1,5 @@
+import '../l10n/locale_holder.dart';
+
 class Video {
   final int id;
   final String title;
@@ -13,7 +15,7 @@ class Video {
     this.thumbnail,
   });
 
-  String get titleDisplay => title.isEmpty ? '제목 없음' : title;
+  String get titleDisplay => title.isEmpty ? tr.noTitle : title;
 
   String get durationFormatted {
     if (duration <= 0) return '0:00';

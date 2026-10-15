@@ -9,6 +9,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/song.dart';
 import '../providers/theme_provider.dart';
+import '../l10n/locale_holder.dart';
 
 /// 재생 화면: 가수 이름 누르기 / 위로 밀기 → 가수·곡 정보 카드
 /// 정보: Deezer(곡·앨범·가수 사진) · MusicBrainz(작사·작곡, 결성) · Wikipedia(소개)
@@ -704,7 +705,44 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
   static String _date(String ymd) {
     final p = ymd.split('-');
     if (p.length < 3) return ymd;
-    return '${p[0]}년 ${int.tryParse(p[1]) ?? p[1]}월 ${int.tryParse(p[2]) ?? p[2]}일';
+    return tr.dateFormat(p[0], '${int.tryParse(p[1]) ?? p[1]}', '${int.tryParse(p[2]) ?? p[2]}');
+  }
+
+  // ── 저장은 한국어 그대로, 화면엔 언어에 맞게 ──
+  static String _kindLabel(String k) => switch (k) {
+        '앨범' => tr.fieldAlbum,
+        '싱글' => tr.kindSingle,
+        '모음집' => tr.kindCompilation,
+        '라이브' => tr.kindLive,
+        _ => k,
+      };
+  static String _roleLabel(String r) => switch (r) {
+        '작사' => tr.roleLyrics,
+        '작곡' => tr.roleComposer,
+        '작사·작곡' => tr.roleWriter,
+        '편곡' => tr.roleArranger,
+        '프로듀서' => tr.roleProducer,
+        _ => r,
+      };
+  static String _typeLabel(String t) => switch (t) {
+        '솔로' => tr.artistSolo,
+        '그룹' => tr.artistGroup,
+        _ => t,
+      };
+  static String _countryLabel(String v) {
+    if (tr.localeName.startsWith('ko')) return v;
+    var code = v;
+    for (final e in _ArtistApi._countries.entries) {
+      if (e.value == v) code = e.key;
+    }
+    return switch (code) {
+      'KR' => tr.countryKR, 'US' => tr.countryUS, 'GB' => tr.countryGB, 'JP' => tr.countryJP,
+      'CA' => tr.countryCA, 'AU' => tr.countryAU, 'SE' => tr.countrySE, 'FR' => tr.countryFR,
+      'DE' => tr.countryDE, 'CN' => tr.countryCN, 'TW' => tr.countryTW, 'IE' => tr.countryIE,
+      'NO' => tr.countryNO, 'NZ' => tr.countryNZ, 'IT' => tr.countryIT, 'ES' => tr.countryES,
+      'BR' => tr.countryBR, 'HK' => tr.countryHK,
+      _ => v,
+    };
   }
 
   @override
@@ -744,7 +782,7 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
               top: -8,
               child: IconButton(
                 onPressed: () => Navigator.pop(context),
-                tooltip: '닫기',
+                tooltip: tr.close,
                 icon: Icon(Icons.close_rounded, color: hint, size: 24),
               ),
             ),
@@ -760,7 +798,7 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
           children: [
             SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2, color: ink)),
             const SizedBox(height: 14),
-            Text('${widget.song.artistDisplay} 정보를 찾는 중…', style: TextStyle(color: hint, fontSize: 13)),
+            Text(tr.findingArtistInfo(widget.song.artistDisplay), style: TextStyle(color: hint, fontSize: 13)),
           ],
         ),
       ));
@@ -772,11 +810,11 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
           children: [
             Icon(Icons.travel_explore_rounded, color: hint, size: 40),
             const SizedBox(height: 14),
-            Text('이 곡의 정보를 찾지 못했어요',
+            Text(tr.songInfoNotFound,
                 style: TextStyle(color: ink, fontSize: 15, fontWeight: FontWeight.w700)),
             const SizedBox(height: 6),
             Text(
-              _unknownArtist ? '곡 정보 수정에서 가수 이름을 넣으면 찾을 수 있어요' : '가수 이름이나 제목이 정확하면 더 잘 찾아요',
+              _unknownArtist ? tr.addArtistToSearch : tr.accurateNamesHelp,
               textAlign: TextAlign.center,
               style: TextStyle(color: hint, fontSize: 12.5),
             ),
@@ -793,7 +831,7 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   icon: const Icon(Icons.refresh_rounded, size: 19),
-                  label: const Text('다시 찾기', style: TextStyle(fontWeight: FontWeight.w700)),
+                  label: Text(tr.searchAgain, style: const TextStyle(fontWeight: FontWeight.w700)),
                 ),
               ),
             ],
@@ -803,12 +841,12 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
     } else {
       // ── 가수 머리 ──
       final metaParts = <String>[
-        if (info.type != null) info.type!,
-        if (info.country != null) info.country!,
+        if (info.type != null) _typeLabel(info.type!),
+        if (info.country != null) _countryLabel(info.country!),
         if (info.formed != null)
-          '${info.formed}년 결성'
+          tr.artistFormed('${info.formed}')
         else if (info.firstYear != null)
-          '첫 앨범 ${info.firstYear}년',
+          tr.artistFirstAlbum('${info.firstYear}'),
       ];
       children.add(Row(
         children: [
@@ -845,7 +883,7 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
       ));
       final chips = <String>[
         if (info.genre != null) info.genre!,
-        if (info.albumCount != null) '앨범 ${info.albumCount}장',
+        if (info.albumCount != null) tr.albumCountChip(info.albumCount!),
       ];
       if (chips.isNotEmpty) {
         children.add(Padding(
@@ -897,11 +935,11 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
                     Row(
                       children: [
                         if (long)
-                          Text(_bioOpen ? '접기' : '더 보기',
+                          Text(_bioOpen ? tr.showLess : tr.showMore,
                               style: TextStyle(color: ink, fontSize: 12.5, fontWeight: FontWeight.w700)),
                         if (info.bioTranslated) ...[
                           const Spacer(),
-                          Text('자동 번역', style: TextStyle(color: hint, fontSize: 11.5)),
+                          Text(tr.autoTranslated, style: TextStyle(color: hint, fontSize: 11.5)),
                         ],
                       ],
                     ),
@@ -915,17 +953,17 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
 
       // ── 지금 듣는 곡 ──
       final rows = <(String, String)>[
-        if (info.release != null) ('발매일', _date(info.release!)),
+        if (info.release != null) (tr.releaseDate, _date(info.release!)),
         for (final role in const ['작사', '작곡', '작사·작곡', '편곡', '프로듀서'])
-          if (info.credits[role] != null) (role, info.credits[role]!.join(', ')),
-        if (info.genre != null) ('장르', info.genre!),
+          if (info.credits[role] != null) (_roleLabel(role), info.credits[role]!.join(', ')),
+        if (info.genre != null) (tr.genre, info.genre!),
       ];
       final albumLine = [
         if (info.album != null && info.album!.isNotEmpty) '《${info.album}》',
-        if (info.trackNo != null) '${info.trackNo}번째 곡',
+        if (info.trackNo != null) tr.trackNumber('${info.trackNo}'),
       ].join(' · ');
       final localArt = widget.song.albumArt;
-      children.add(section('지금 듣는 곡'));
+      children.add(section(tr.nowListening));
       children.add(Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(16)),
@@ -978,7 +1016,7 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: 64,
+                        width: 76,
                         child: Text(r.$1, style: TextStyle(color: hint, fontSize: 12.5)),
                       ),
                       Expanded(child: Text(r.$2, style: TextStyle(color: ink, fontSize: 13.5))),
@@ -992,7 +1030,7 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
                     children: [
                       SizedBox(width: 12, height: 12, child: CircularProgressIndicator(strokeWidth: 1.5, color: hint)),
                       const SizedBox(width: 8),
-                      Text('작사·작곡 찾는 중…', style: TextStyle(color: hint, fontSize: 12)),
+                      Text(tr.findingCredits, style: TextStyle(color: hint, fontSize: 12)),
                     ],
                   ),
                 ),
@@ -1007,10 +1045,10 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
           padding: const EdgeInsets.fromLTRB(4, 18, 4, 8),
           child: Row(
             children: [
-              Text('이 가수의 앨범', style: TextStyle(color: hint, fontSize: 12, fontWeight: FontWeight.w700)),
+              Text(tr.artistAlbums, style: TextStyle(color: hint, fontSize: 12, fontWeight: FontWeight.w700)),
               const SizedBox(width: 6),
               Flexible(
-                child: Text('(일부 오류가 있을 수 있어요)',
+                child: Text(tr.mayHaveErrors,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: hint.withOpacity(0.75), fontSize: 11)),
@@ -1050,7 +1088,7 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(color: ink, fontSize: 12.5, fontWeight: FontWeight.w600)),
-                    Text([a.year, a.kind].where((s) => s.isNotEmpty).join(' · '),
+                    Text([a.year, _kindLabel(a.kind)].where((s) => s.isNotEmpty).join(' · '),
                         maxLines: 1, style: TextStyle(color: hint, fontSize: 11.5)),
                   ],
                 ),
@@ -1065,10 +1103,10 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
         padding: const EdgeInsets.only(top: 18),
         child: Column(
           children: [
-            Text('정보: Deezer · Apple · MusicBrainz · Genius · Wikipedia',
+            Text('${tr.sourcesLabel}: Deezer · Apple · MusicBrainz · Genius · Wikipedia',
                 textAlign: TextAlign.center, style: TextStyle(color: hint, fontSize: 11.5)),
             const SizedBox(height: 2),
-            Text('찾지 못한 항목은 보이지 않아요',
+            Text(tr.hiddenIfNotFound,
                 textAlign: TextAlign.center, style: TextStyle(color: hint, fontSize: 11.5)),
             if (info.bioUrl != null)
               TextButton(
@@ -1078,7 +1116,7 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
                   } catch (_) {}
                 },
                 style: TextButton.styleFrom(foregroundColor: sub),
-                child: const Text('Wikipedia에서 더 보기 ›', style: TextStyle(fontSize: 12.5)),
+                child: Text(tr.moreOnWikipedia, style: const TextStyle(fontSize: 12.5)),
               ),
           ],
         ),

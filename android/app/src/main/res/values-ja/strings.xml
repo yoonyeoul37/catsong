@@ -1,4 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">音楽・ラジオ・自然</string>
+    <string name="widget_loading">読み込み中…</string>
+    <string name="widget_wait">少々お待ちください</string>
+    <string name="widget_play_music">音楽を再生してみてください</string>
+    <string name="tab_music">音楽</string>
+    <string name="tab_radio">ラジオ</string>
+    <string name="tab_nature">自然</string>
+    <string name="tab_sleep">スリープ</string>
+    <string name="widget_recent_empty">最近聴いたものがここに表示されます</string>
+    <string name="sample_song">お気に入りの曲</string>
+    <string name="sample_artist">歌手</string>
+    <string name="sample_station">ラジオ局</string>
+    <string name="sample_rain">雨の音</string>
+    <string name="sample_nature">自然の音</string>
+    <string name="alarm_channel">朝のアラーム</string>
+    <string name="alarm_channel_desc">Paransori 朝のアラーム</string>
+    <string name="alarm_quiet_channel">朝のアラーム（画面を開く）</string>
+    <string name="alarm_quiet_desc">ロック画面の上にアラーム画面を開くとき</string>
+    <string name="alarm_text">タップしてアラーム画面を開く</string>
+    <string name="headset_channel">イヤホン接続のお知らせ</string>
+    <string name="action_play">再生</string>
+    <string name="resume_ask">続きを聴きますか？</string>
+    <string name="rec_channel">録音</string>
+    <string name="rec_channel_desc">録音中に通知に表示</string>
+    <string name="rec_title_paused">Paransori 録音一時停止中</string>
+    <string name="rec_title_on">Paransori 録音中</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · タップして録音を再開</string>
+    <string name="rec_tap_back">タップで録音画面に戻ります</string>
+    <string name="rec_resume">再開</string>
+    <string name="rec_pause">一時停止</string>
+    <string name="rec_done">完了</string>
 </resources>

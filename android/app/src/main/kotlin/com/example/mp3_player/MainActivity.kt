@@ -313,7 +313,7 @@ class MainActivity : AudioServiceActivity() {
             val nm = getSystemService(NOTIFICATION_SERVICE) as android.app.NotificationManager
             if (Build.VERSION.SDK_INT >= 26 && nm.getNotificationChannel("paran_headset") == null) {
                 val ch = android.app.NotificationChannel(
-                    "paran_headset", "이어폰 연결 알림", android.app.NotificationManager.IMPORTANCE_HIGH)
+                    "paran_headset", getString(R.string.headset_channel), android.app.NotificationManager.IMPORTANCE_HIGH)
                 ch.setSound(null, null) // 소리 없이 위에 살짝만
                 ch.enableVibration(false)
                 nm.createNotificationChannel(ch)
@@ -333,7 +333,7 @@ class MainActivity : AudioServiceActivity() {
                 .setContentIntent(pi)
                 .setAutoCancel(true)
                 .addAction(android.app.Notification.Action.Builder(
-                    null as android.graphics.drawable.Icon?, "재생", pi).build())
+                    null as android.graphics.drawable.Icon?, getString(R.string.action_play), pi).build())
             if (Build.VERSION.SDK_INT >= 26) b.setTimeoutAfter(5 * 60 * 1000L) // 5분 지나면 저절로 사라짐
             nm.notify(headsetNotiId, b.build())
         } catch (_: Exception) {}
@@ -1044,7 +1044,7 @@ class MainActivity : AudioServiceActivity() {
                     android.os.Process.killProcess(android.os.Process.myPid())
                 }
                 "showHeadsetAsk" -> {
-                    showHeadsetAsk(call.argument<String>("title") ?: "이어서 들을까요?",
+                    showHeadsetAsk(call.argument<String>("title") ?: getString(R.string.resume_ask),
                         call.argument<String>("text") ?: "")
                     result.success(true)
                 }
@@ -1118,8 +1118,8 @@ class MainActivity : AudioServiceActivity() {
                     result.success(true)
                 }
                 "updateWidget" -> {
-                    val title = call.argument<String>("title") ?: "파란소리"
-                    val artist = call.argument<String>("artist") ?: "음악을 재생해보세요"
+                    val title = call.argument<String>("title") ?: getString(R.string.app_name)
+                    val artist = call.argument<String>("artist") ?: getString(R.string.widget_play_music)
                     val isPlaying = call.argument<Boolean>("isPlaying") ?: false
                     val schedule = call.argument<String>("schedule") ?: ""
                     val appWidgetManager = android.appwidget.AppWidgetManager.getInstance(this)

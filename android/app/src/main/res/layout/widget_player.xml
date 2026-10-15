@@ -93,7 +93,7 @@
                     android:shadowColor="#66000000"
                     android:shadowDy="1"
                     android:shadowRadius="4"
-                    android:text="파란소리"
+                    android:text="@string/app_name"
                     android:textColor="#FFFFFF"
                     android:textSize="14.5sp"
                     android:textStyle="bold" />
@@ -107,7 +107,7 @@
                     android:shadowColor="#66000000"
                     android:shadowDy="1"
                     android:shadowRadius="4"
-                    android:text="음악 · 라디오 · 자연을 들어보세요"
+                    android:text="@string/widget_idle_sub"
                     android:textColor="#D9FFFFFF"
                     android:textSize="11.5sp" />
 
@@ -183,7 +183,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="음악"
+                android:text="@string/tab_music"
                 android:textColor="@color/paran_w_ink"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -209,7 +209,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="라디오"
+                android:text="@string/tab_radio"
                 android:textColor="@color/paran_w_ink"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -235,7 +235,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="자연"
+                android:text="@string/tab_nature"
                 android:textColor="@color/paran_w_ink"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -261,7 +261,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="수면"
+                android:text="@string/tab_sleep"
                 android:textColor="@color/paran_w_ink"
                 android:textSize="11sp" />
         </LinearLayout>

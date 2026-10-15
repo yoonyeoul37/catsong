@@ -19,6 +19,7 @@ import '../providers/theme_provider.dart';
 import 'radio_home_screen.dart';
 import '../widgets/radio_dice.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../l10n/locale_holder.dart';
 enum _ViewMode { all, broadcaster, region, recent }
 
 class RadioKoreaScreen extends StatefulWidget {
@@ -329,7 +330,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(diceI >= 0 ? '주사위가 고른 방송' : '지금 듣기 좋은',
+                            Text(diceI >= 0 ? tr.heroDicePick : tr.niceNow,
                                 textScaler: TextScaler.noScaling,
                                 style: TextStyle(color: accent, fontSize: 10.5, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
                             const SizedBox(height: 1),
@@ -388,9 +389,9 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                                         Container(
                                           padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
                                           decoration: BoxDecoration(color: ink, borderRadius: BorderRadius.circular(11)),
-                                          child: const Text('던져보세요!',
+                                          child: Text(tr.tryRolling,
                                               textScaler: TextScaler.noScaling,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   color: Color(0xFFF4EFE5), fontSize: 12, fontWeight: FontWeight.w700)),
                                         ),
                                         // 꼬리 (주사위 쪽)
@@ -498,7 +499,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
     if (recent.isEmpty) {
       return Center(
         child: Text(
-          '최근 들은 방송이 없어요',
+          tr.noRecentStations,
           style: TextStyle(color: baseColor.withOpacity(0.35), fontSize: 14),
         ),
       );
@@ -510,7 +511,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
       itemBuilder: (context, i) {
         final station = recent[i];
         final lastListened = station.lastListened;
-        const weekdays = ['월', '화', '수', '목', '금', '토', '일'];
+        final weekdays = tr.weekdaysShort.split(',');
         final timeStr = lastListened != null
             ? '${lastListened.year}.${lastListened.month.toString().padLeft(2, '0')}.${lastListened.day.toString().padLeft(2, '0')}(${weekdays[lastListened.weekday - 1]}) ${lastListened.hour.toString().padLeft(2, '0')}:${lastListened.minute.toString().padLeft(2, '0')}'
             : '';
@@ -569,6 +570,20 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
 
   Color primaryColorOf(BuildContext context) => Theme.of(context).colorScheme.primary;
 
+  /// 지역 이름 (저장은 한국어 그대로, 화면엔 언어에 맞게)
+  static String _regionLabel(String r) => switch (r) {
+        '수도권' => tr.regionCapital,
+        '부산/경남' => tr.regionBusanGyeongnam,
+        '대구/경북' => tr.regionDaeguGyeongbuk,
+        '광주/전남' => tr.regionGwangjuJeonnam,
+        '전북' => tr.regionJeonbuk,
+        '대전/충남' => tr.regionDaejeonChungnam,
+        '충북' => tr.regionChungbuk,
+        '강원' => tr.regionGangwon,
+        '제주' => tr.regionJeju,
+        _ => r,
+      };
+
   Widget _buildRegionGrid(BuildContext context) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
@@ -616,12 +631,12 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  region,
+                  _regionLabel(region),
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 4),
-                Text('$count개 채널',
+                Text(tr.channelsCount(count),
                     style: const TextStyle(color: Colors.white70, fontSize: 11)),
               ],
             ),
@@ -724,10 +739,10 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                   ),
                   child: Row(
                     children: [
-                      _toggleButton('전체', _ViewMode.all, isDarkMode),
-                      _toggleButton('방송사별', _ViewMode.broadcaster, isDarkMode),
-                      _toggleButton('지역별', _ViewMode.region, isDarkMode),
-                      _toggleButton('최근청취', _ViewMode.recent, isDarkMode),
+                      _toggleButton(tr.all, _ViewMode.all, isDarkMode),
+                      _toggleButton(tr.byBroadcaster, _ViewMode.broadcaster, isDarkMode),
+                      _toggleButton(tr.byRegion, _ViewMode.region, isDarkMode),
+                      _toggleButton(tr.recentListened, _ViewMode.recent, isDarkMode),
                     ],
                   ),
                 ),
@@ -769,7 +784,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        Text('국가선택',
+                        Text(tr.selectCountryShort,
                             style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily, color: baseColor, fontSize: 13, fontWeight: FontWeight.w700)),
                         Container(
                           width: 1,
@@ -780,7 +795,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                         const Text('🇰🇷', style: TextStyle(fontSize: 16)),
                         const SizedBox(width: 6),
                         Expanded(
-                          child: Text('한국',
+                          child: Text(tr.countryKR,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily, 
@@ -1372,7 +1387,7 @@ class _BroadcasterGridScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  key,
+                  key == '기타' ? tr.categoryEtc : key,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 17,
@@ -1381,7 +1396,7 @@ class _BroadcasterGridScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${stations.length}개 채널',
+                  tr.channelsCount(stations.length),
                   style: TextStyle(
                     color: Colors.white.withOpacity(_cardColors.containsKey(key) ? 0.7 : 0.6),
                     fontSize: 11,
@@ -1454,7 +1469,7 @@ class _BroadcasterStationList extends StatelessWidget {
           },
           icon: Icon(Icons.arrow_back_ios, color: baseColor, size: 20),
         ),
-        title: Text(broadcaster,
+        title: Text(broadcaster == '기타' ? tr.categoryEtc : _RadioKoreaScreenState._regionLabel(broadcaster),
             style: TextStyle(color: baseColor, fontSize: 18, fontWeight: FontWeight.bold)),
       ),
       body: SafeArea(

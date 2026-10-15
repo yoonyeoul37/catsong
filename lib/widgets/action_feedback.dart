@@ -4,6 +4,7 @@ import '../utils/point_color.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
+import '../l10n/locale_holder.dart';
 
 /// 완료 피드백 종류
 enum ActionFeedbackType { edited, deleted, saved, added, canceled }
@@ -12,7 +13,7 @@ enum ActionFeedbackType { edited, deleted, saved, added, canceled }
 void showActionFeedbackWithUndo(
   BuildContext context, {
   required String message,
-  String subMessage = '마음에 안 들면 원래대로 돌릴 수 있어요',
+  String? subMessage,
   required Future<void> Function() onUndo,
   int seconds = 8,
 }) {
@@ -33,7 +34,7 @@ void showActionFeedbackWithUndo(
   entry = OverlayEntry(
     builder: (_) => _UndoFeedback(
       message: message,
-      subMessage: subMessage,
+      subMessage: subMessage ?? tr.undoHint,
       isDark: isDark,
       seconds: seconds,
       onUndo: onUndo,
@@ -183,7 +184,7 @@ class _UndoFeedbackState extends State<_UndoFeedback> with TickerProviderStateMi
                                     side: BorderSide(color: line),
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                   ),
-                                  child: const Text('원래대로',
+                                  child: Text(tr.undo,
                                       style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600)),
                                 ),
                               ),
@@ -201,7 +202,7 @@ class _UndoFeedbackState extends State<_UndoFeedback> with TickerProviderStateMi
                                     elevation: 0,
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                   ),
-                                  child: const Text('확인',
+                                  child: Text(tr.ok,
                                       style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
                                 ),
                               ),
@@ -324,15 +325,15 @@ class _ActionFeedbackState extends State<_ActionFeedback> with SingleTickerProvi
     const red = Color(0xFFE05A4F);
     switch (widget.type) {
       case ActionFeedbackType.edited:
-        return (Icons.check_circle_rounded, blue, '수정했어요');
+        return (Icons.check_circle_rounded, blue, tr.fbEdited);
       case ActionFeedbackType.deleted:
-        return (Icons.delete_rounded, red, '삭제했어요');
+        return (Icons.delete_rounded, red, tr.fbDeleted);
       case ActionFeedbackType.saved:
-        return (Icons.check_circle_rounded, blue, '저장했어요');
+        return (Icons.check_circle_rounded, blue, tr.fbSaved);
       case ActionFeedbackType.added:
-        return (Icons.add_circle_rounded, blue, '추가했어요');
+        return (Icons.add_circle_rounded, blue, tr.fbAdded);
       case ActionFeedbackType.canceled:
-        return (Icons.heart_broken_rounded, const Color(0xFF8A8378), '취소했어요');
+        return (Icons.heart_broken_rounded, const Color(0xFF8A8378), tr.fbCanceled);
     }
   }
 

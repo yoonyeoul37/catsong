@@ -7,6 +7,7 @@ import '../providers/music_provider.dart';
 import '../providers/theme_provider.dart';
 import '../services/music_lookup.dart';
 import '../widgets/action_feedback.dart';
+import '../l10n/locale_holder.dart';
 
 /// 앨범 사진 한꺼번에 찾기: 앨범 사진 없는 곡마다 인터넷에서 후보를 찾아 보여주고, 체크한 곡만 넣음
 class BulkArtScreen extends StatefulWidget {
@@ -114,7 +115,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w800)),
               const SizedBox(height: 4),
-              Text('맞는 앨범 사진을 골라주세요', style: TextStyle(color: sub, fontSize: 12.5)),
+              Text(tr.pickRightArt, style: TextStyle(color: sub, fontSize: 12.5)),
               const SizedBox(height: 12),
               Flexible(
                 child: ListView.separated(
@@ -167,7 +168,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
                 child: TextButton(
                   onPressed: () => Navigator.pop(ctx),
                   style: TextButton.styleFrom(foregroundColor: sub),
-                  child: const Text('닫기'),
+                  child: Text(tr.close),
                 ),
               ),
             ],
@@ -200,7 +201,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
         await music.setCustomArt(it.song, bytes);
         // 앨범 이름이 비어 있으면 같이 채우기 (제목·가수는 그대로)
         final album = it.song.albumDisplay;
-        if (album.isEmpty || album.contains('알 수 없') || album.toLowerCase().contains('unknown')) {
+        if (album.isEmpty || album.contains('알 수 없') || album == tr.unknownAlbum || album.toLowerCase().contains('unknown')) {
           await music.updateSongInfo(it.song, album: it.pick!.album);
         }
         ok++;
@@ -208,7 +209,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
       if (!mounted) return;
       setState(() => _done++);
     }
-    showActionFeedback(context, type: ActionFeedbackType.saved, message: '$ok곡에 사진을 넣었어요');
+    showActionFeedback(context, type: ActionFeedbackType.saved, message: tr.artAdded(ok));
     navigator.pop();
   }
 
@@ -228,7 +229,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
         onPressed: _working ? null : () => Navigator.pop(context),
         icon: Icon(Icons.arrow_back_ios, color: ink, size: 20),
       ),
-      title: Text('앨범 사진 자동 찾기',
+      title: Text(tr.moreArtTitle,
           style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w700)),
       actions: actions,
     );
@@ -244,9 +245,9 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
             children: [
               SizedBox(width: 28, height: 28, child: CircularProgressIndicator(strokeWidth: 2.5, color: ink)),
               const SizedBox(height: 16),
-              Text('곡 정보를 읽는 중이에요', style: TextStyle(color: ink, fontSize: 15, fontWeight: FontWeight.w600)),
+              Text(tr.readingSongInfo, style: TextStyle(color: ink, fontSize: 15, fontWeight: FontWeight.w600)),
               const SizedBox(height: 4),
-              Text('잠시만 기다려 주세요', style: TextStyle(color: sub, fontSize: 13)),
+              Text(tr.pleaseWait, style: TextStyle(color: sub, fontSize: 13)),
             ],
           ),
         ),
@@ -268,7 +269,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
               }
             }),
             style: TextButton.styleFrom(foregroundColor: ink),
-            child: Text(allChecked ? '전체 해제' : '전체 선택',
+            child: Text(allChecked ? tr.deselectAllShort : tr.selectAllShort,
                 style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           ),
       ]),
@@ -279,10 +280,10 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
           children: [
             Icon(Icons.photo_library_outlined, color: sub, size: 40),
             const SizedBox(height: 14),
-            Text('앨범 사진이 없는 곡이 없어요',
+            Text(tr.noSongsWithoutArt,
                 style: TextStyle(color: ink, fontSize: 16, fontWeight: FontWeight.w700)),
             const SizedBox(height: 6),
-            Text('모든 곡에 앨범 사진이 있어요', style: TextStyle(color: sub, fontSize: 13)),
+            Text(tr.allHaveArt, style: TextStyle(color: sub, fontSize: 13)),
           ],
         ),
       )
@@ -301,8 +302,8 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
                 Expanded(
                   child: Text(
                     _searchingAll
-                        ? '인터넷에서 찾는 중… $_searchedCount / ${_items.length}'
-                        : '앨범 사진 없는 곡 ${_items.length}개 · 찾은 곡 ${found.length}개',
+                        ? tr.searchingOnline(_searchedCount, _items.length)
+                        : tr.artSummary(_items.length, found.length),
                     style: TextStyle(color: sub, fontSize: 13),
                   ),
                 ),
@@ -369,7 +370,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
                                 Text(
                                   p != null
                                       ? '${p.artist} · ${p.album}'
-                                      : (it.searched ? '인터넷에서 못 찾았어요' : '찾는 중…'),
+                                      : (it.searched ? tr.notFoundOnline : tr.searching),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(color: sub, fontSize: 12.5),
@@ -382,7 +383,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
                             IconButton(
                               onPressed: _working ? null : () => _choose(it, isDark, ink, sub),
                               icon: Icon(Icons.swap_horiz_rounded, color: sub, size: 22),
-                              tooltip: '다른 후보',
+                              tooltip: tr.otherCandidates,
                             ),
                         ],
                       ),
@@ -415,7 +416,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               ),
               child: Text(
-                _working ? '넣는 중… $_done / $_checkedCount' : '$_checkedCount곡에 앨범 사진 넣기',
+                _working ? tr.addingProgress(_done, _checkedCount) : tr.addArtButton(_checkedCount),
                 style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700),
               ),
             ),

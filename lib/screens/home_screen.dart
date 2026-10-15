@@ -48,6 +48,8 @@ import 'radio_home_screen.dart';
 import '../widgets/radio_mini_player.dart';
 import '../providers/radio_provider.dart';
 import '../l10n/app_localizations.dart';
+import '../l10n/locale_holder.dart';
+import '../utils/point_color.dart' show pointColorName;
 import 'package:marquee/marquee.dart';
 import 'package:flutter/services.dart';
 import '../providers/theme_provider.dart';
@@ -273,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(width: 7),
               Text(
-                '새로 들어온 곡',
+                tr.homeNewSongs,
                 style: TextStyle(
                   color: isDark ? Colors.white.withOpacity(0.85) : const Color(0xFF4A443B),
                   fontSize: 14.5,
@@ -429,12 +431,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // 메인 홈 팁 (음악 탭 TIP과 안 겹치게 음악 말고 다른 기능만)
-  static const _mainTips = <(String, String, String, String)>[
-    ('바탕화면 위젯을 놓아 보세요', '바탕화면을 꾹 → 위젯 → 파란소리', 'Add the home screen widget', 'Long-press home screen → Widgets'),
-    ('아침 알람으로 깨워 드려요', '음악·라디오·자연 소리로 일어나요', 'Wake up with Paransori', 'Music, radio or nature sounds'),
-    ('원하는 시간에 라디오 켜기', '라디오 재생 화면 아래 [예약]', 'Schedule the radio', 'Tap Schedule under the radio player'),
-    ('TV·스피커로 소리 보내기', '같은 Wi-Fi라면 재생 화면 ⋮ 메뉴에서', 'Play on your TV or speaker', 'Same Wi-Fi → player ⋮ menu'),
-    ('잠들 땐 수면 타이머', '재생 화면 아래 [수면]을 눌러요', 'Sleep timer for bedtime', 'Tap Sleep under the player'),
+  static List<(String, String)> get _mainTips => [
+    (tr.homeTipWidgetTitle, tr.homeTipWidgetSub),
+    (tr.homeTipAlarmTitle, tr.homeTipAlarmSub),
+    (tr.homeTipScheduleTitle, tr.homeTipScheduleSub),
+    (tr.homeTipCastTitle, tr.homeTipCastSub),
+    (tr.homeTipSleepTitle, tr.homeTipSleepSub),
   ];
 
   Widget _buildHomeCard(bool isDark) {
@@ -503,15 +505,16 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     // ③ 오늘의 팁 (하루에 하나씩)
-    final i = day % _mainTips.length;
-    final t = _mainTips[i];
+    final tips = _mainTips;
+    final i = day % tips.length;
+    final t = tips[i];
     return _homeInfoCard(
       isDark: isDark,
       lead: _TipBadge(hole: card),
-      label: isKo ? '오늘의 팁' : 'TIP',
-      title: isKo ? t.$1 : t.$3,
-      sub: isKo ? t.$2 : t.$4,
-      action: i == 1 ? (isKo ? '설정' : 'Set') : null,
+      label: tr.homeTodayTip,
+      title: t.$1,
+      sub: t.$2,
+      action: i == 1 ? tr.set : null,
       onAction: i == 1
           ? () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AlarmScreen()))
           : null,
@@ -661,15 +664,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// 나만의 색 카드 (메인 홈 카드와 같은 모양 · 색 고리 + [꾸미기])
   Widget _buildColorTip(bool isDark, {int dot = 0, int dots = 1}) {
-    final isKo = Localizations.localeOf(context).languageCode == 'ko';
     final card = isDark ? const Color(0xFF32302C) : const Color(0xFFFBF8F2);
     return _homeInfoCard(
       isDark: isDark,
       lead: _SpinRing(hole: card),
-      label: isKo ? '강조 색상' : 'Accent color',
-      title: isKo ? '나만의 색으로 꾸며보세요' : 'Make it your color',
-      sub: isKo ? '숲 · 노을 · 벚꽃 등 10가지 색' : '10 colors like Forest, Sunset, Blossom',
-      action: isKo ? '꾸미기' : 'Try it',
+      label: tr.accentColor,
+      title: tr.homeColorTitle,
+      sub: tr.homeColorSub,
+      action: tr.homeColorAction,
       onAction: _openColorSheet,
       onClose: () {
         _finishColorTip();
@@ -687,10 +689,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final sub = dark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
     final sheetBg = dark ? const Color(0xFF32302C) : const Color(0xFFF4EFE5);
-    final isKo = Localizations.localeOf(context).languageCode == 'ko';
     await showParanSheet(
       context,
-      title: isKo ? '강조 색상' : 'Accent color',
+      title: tr.accentColor,
       // 창 머리 B안: 작은 '강조 색상'(지금 강조 색) + 도현체 큰 질문
       header: Builder(builder: (c) {
         final p = c.watch<ThemeProvider>().primaryColor;
@@ -700,10 +701,10 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(isKo ? '강조 색상' : 'Accent color',
+              Text(tr.accentColor,
                   style: TextStyle(color: label, fontSize: 10.5, fontWeight: FontWeight.w800, letterSpacing: 0.8)),
               const SizedBox(height: 3),
-              Text(isKo ? '오늘 기분에 어울리는 색은?' : 'What color fits your mood today?',
+              Text(tr.homeColorQuestion,
                   textScaler: TextScaler.noScaling,
                   style: GoogleFonts.doHyeon(color: ink, fontSize: 21)),
             ],
@@ -736,7 +737,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: on ? DecoratedBox(decoration: BoxDecoration(shape: BoxShape.circle, color: c)) : null,
                   ),
                   const SizedBox(height: 6),
-                  Text(isKo ? name : (_colorNameEn[name] ?? name),
+                  Text(pointColorName(name),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -777,7 +778,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Icon(Icons.info_outline_rounded, size: 16, color: sub),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text(isKo ? '설정 → 꾸미기 → 강조 색상에서\n다시 변경할 수 있습니다.' : 'You can change it again\nanytime in Settings.',
+                    child: Text(tr.homeColorHint,
                         style: TextStyle(color: sub, fontSize: 12.5, height: 1.45)),
                   ),
                 ],
@@ -797,7 +798,7 @@ class _HomeScreenState extends State<HomeScreen> {
             elevation: 0,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           ),
-          child: Text(isKo ? '완료' : 'Done', style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700)),
+          child: Text(tr.done, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700)),
         ),
       ),
     );
@@ -1042,9 +1043,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void _showSetStartScreenDialog(BuildContext context, StartScreenType type, String label) async {
     final ok = await showParanConfirm(
       context,
-      title: '앱 시작 화면으로 설정할까요?',
-      message: '파란소리를 실행할 때 이 화면을 가장 먼저 보여드려요.',
-      confirmLabel: '설정하기',
+      title: tr.homeStartTitle,
+      message: tr.homeStartMessage,
+      confirmLabel: tr.homeStartConfirm,
     );
     if (!ok || !context.mounted) return;
     context.read<StartScreenProvider>().setStartScreen(type);
@@ -1139,7 +1140,9 @@ class _HomeScreenState extends State<HomeScreen> {
         farewellAsset = 'assets/farewell_ja.mp3';
         break;
       case 'zh':
-        smallText = '与Paransori相伴的时光，\n您开心吗?\n\n欢迎随时回来，\n我们会用美好的声音迎接您。\n再见啦!';
+        smallText = Localizations.localeOf(context).scriptCode == 'Hant'
+            ? '與Paransori相伴的時光，\n您開心嗎?\n\n歡迎隨時回來，\n我們會用美好的聲音迎接您。\n再見啦!'
+            : '与Paransori相伴的时光，\n您开心吗?\n\n欢迎随时回来，\n我们会用美好的声音迎接您。\n再见啦!';
         farewellAsset = 'assets/farewell_zh.mp3';
         break;
       default:
@@ -1239,9 +1242,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void _showMultiDeleteDialog(BuildContext context, MusicProvider musicProvider) async {
     final ok = await showParanConfirm(
       context,
-      title: '${_selectedSongIds.length}곡을 삭제할까요?',
-      message: '선택한 곡이 폰에서 지워져요',
-      confirmLabel: '삭제',
+      title: tr.deleteSongsTitle(_selectedSongIds.length),
+      message: tr.deleteSongsMessage,
+      confirmLabel: tr.delete,
       danger: true,
     );
     if (!ok || !context.mounted) return;
@@ -1262,9 +1265,9 @@ class _HomeScreenState extends State<HomeScreen> {
     musicProvider.loadSongs();
     if (context.mounted) {
       if (successCount > 0) {
-        showActionFeedback(context, type: ActionFeedbackType.deleted, message: '$successCount곡을 삭제했어요');
+        showActionFeedback(context, type: ActionFeedbackType.deleted, message: tr.deletedSongsToast(successCount));
       } else {
-        showParanToast(context, '삭제하지 못했어요', error: true);
+        showParanToast(context, tr.couldNotDelete, error: true);
       }
     }
   }
@@ -1479,20 +1482,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                   height: 1.0,
                                   letterSpacing: 0.2)),
                         ),
-                      Text('sori',
-                          style: GoogleFonts.quicksand(
-                              color: logoInk,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              height: 1.0,
-                              letterSpacing: 0.2)),
+                      Transform.translate(
+                        offset: const Offset(0, -3), // Paran과 sori 사이를 살짝 좁게
+                        child: Text('sori',
+                            style: GoogleFonts.quicksand(
+                                color: logoInk,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                height: 1.0,
+                                letterSpacing: 0.2)),
+                      ),
                     ],
                   ),
             if (!isKorean) ...[
               const SizedBox(width: 6),
               Padding(
                 // 해외는 아래 Sori 옆에 붙게 (파란 Paran과 안 겹치게)
-                padding: const EdgeInsets.only(top: 23, bottom: 4),
+                padding: const EdgeInsets.only(top: 20, bottom: 7),
                 child: _LogoEqBars(color: logoBarColor),
               ),
             ],
@@ -1671,18 +1677,18 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 menuCard(
                                   icon: Icons.share_outlined,
-                                  title: '친구에게 공유하기',
-                                  subtitle: '파란소리를 친구에게\n소개해보세요.',
+                                  title: tr.menuShareTitle,
+                                  subtitle: tr.menuShareSub,
                                   onTap: () {
                                     Navigator.pop(ctx);
-                                    Share.share('파란소리 앱으로 음악 들어요! 🎧\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                                    Share.share('${tr.shareAppMessage}\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
                                   },
                                 ),
                                 const SizedBox(width: 12),
                                 menuCard(
                                   icon: Icons.star_border_rounded,
-                                  title: '앱 평가하기',
-                                  subtitle: '좋은 평가가\n큰 힘이 됩니다.',
+                                  title: tr.menuRateTitle,
+                                  subtitle: tr.menuRateSub,
                                   onTap: () async {
                                     Navigator.pop(ctx);
                                     final uri = Uri.parse('https://play.google.com/store/apps/details?id=kr.ssing.catsong');
@@ -1701,8 +1707,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 menuCard(
                                   icon: Icons.settings_outlined,
-                                  title: '설정',
-                                  subtitle: '앱 환경을\n설정할 수 있어요.',
+                                  title: tr.settings,
+                                  subtitle: tr.menuSettingsSub,
                                   onTap: () {
                                     Navigator.pop(ctx);
                                     Navigator.push(
@@ -1720,8 +1726,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 const SizedBox(width: 12),
                                 menuCard(
                                   icon: Icons.settings_input_antenna_rounded,
-                                  title: '방송국 바로가기',
-                                  subtitle: '다양한 라디오 방송을\n바로 들어보세요.',
+                                  title: tr.menuRadioTitle,
+                                  subtitle: tr.menuRadioSub,
                                   onTap: () {
                                     Navigator.pop(ctx);
                                     pushRadioEntry(context);
@@ -1867,7 +1873,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           children: [
             Expanded(
-              child: Text('최근 검색',
+              child: Text(tr.recentSearches,
                   style: TextStyle(color: base.withOpacity(0.45), fontSize: 12.5, fontWeight: FontWeight.w700)),
             ),
             TextButton(
@@ -1876,7 +1882,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 setState(() => _recentSearches = []);
                 _saveRecentSearches();
               },
-              child: Text('전체 지우기', style: TextStyle(color: base.withOpacity(0.4), fontSize: 12)),
+              child: Text(tr.clearAll, style: TextStyle(color: base.withOpacity(0.4), fontSize: 12)),
             ),
           ],
         ),
@@ -2000,14 +2006,14 @@ class _HomeScreenState extends State<HomeScreen> {
     final startScreen = context.watch<StartScreenProvider>().startScreen;
 
     final categories = [
-      _DashboardCategory('음악', '내 음악 · MP3 플레이어', 'assets/music_bg.jpg', StartScreenType.music, () {
+      _DashboardCategory(tr.catMusic, tr.catMusicSub, 'assets/music_bg.jpg', StartScreenType.music, () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         setState(() => _showMusicLibrary = true);
       }),
-      _DashboardCategory('라디오', '국내외 라디오 · 즐겨찾기', 'assets/radio_bg.jpg', StartScreenType.radio, () {
+      _DashboardCategory(tr.catRadio, tr.catRadioSub, 'assets/radio_bg.jpg', StartScreenType.radio, () {
         pushRadioEntry(context);
       }),
-      _DashboardCategory('자연', '비 · 바람 · 숲 · 파도', 'assets/nature_bg.jpg', StartScreenType.nature, () {
+      _DashboardCategory(tr.catNature, tr.catNatureSub, 'assets/nature_bg.jpg', StartScreenType.nature, () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         Navigator.push(
           context,
@@ -2020,7 +2026,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
       }),
-      _DashboardCategory('휴식 · 집중', '백색소음 · 집중 소리 (준비중)', 'assets/sleep_bg.jpg', StartScreenType.sleep, () {
+      _DashboardCategory(tr.catRest, tr.catRestSub, 'assets/sleep_bg.jpg', StartScreenType.sleep, () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         Navigator.push(
           context,
@@ -2104,7 +2110,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final recommended = <(String, String, VoidCallback)>[
       for (final s in naturePicks)
         (
-          s.name,
+          natureName(s.name),
           natureImage(s),
           () => Navigator.push(
                 context,
@@ -2121,7 +2127,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
         ),
       (
-        todayRadio.$1,
+        Localizations.localeOf(context).languageCode == 'ko'
+            ? todayRadio.$1
+            : (const {'KBS 클래식FM': 'KBS Classic FM', '국악FM': 'Gugak FM', 'CBS 음악FM': 'CBS Music FM'}[todayRadio.$1] ?? todayRadio.$2),
         'assets/rest_radio.jpg',
         () => Navigator.push(
               context,
@@ -2145,7 +2153,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Icon(Icons.tune_rounded, size: 18, color: baseColor.withOpacity(0.7)),
               const SizedBox(width: 6),
-              Text('이런 소리는 어때요?',
+              Text(tr.homeSoundsHeader,
                   style: GoogleFonts.doHyeon( // 로고와 같은 글꼴
                       color: baseColor, fontSize: 16.5, fontWeight: FontWeight.w400)),
             ],
@@ -2308,7 +2316,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Icon(Icons.volume_up_rounded, size: 18, color: baseColor.withOpacity(0.7)),
               const SizedBox(width: 6),
-              Text('잠시 쉬어가요',
+              Text(tr.homeRestHeader,
                   style: GoogleFonts.doHyeon( // 로고와 같은 글꼴
                       color: baseColor, fontSize: 16.5, fontWeight: FontWeight.w400)),
             ],
@@ -2396,7 +2404,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Icon(Icons.headphones_rounded, size: 18, color: baseColor.withOpacity(0.7)),
                 const SizedBox(width: 6),
-                Text('최근에 들었어요',
+                Text(tr.homeRecentHeader,
                     style: GoogleFonts.doHyeon( // 로고와 같은 글꼴
                         color: baseColor, fontSize: 16.5, fontWeight: FontWeight.w400)),
               ],
@@ -2430,14 +2438,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: const Icon(Icons.graphic_eq_rounded, color: Color(0xFF2C6BB3), size: 19),
                     ),
                     const SizedBox(height: 10),
-                    Text('최근 들은 곡이 없어요',
+                    Text(tr.homeRecentEmpty,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: isDarkMode ? Colors.white : const Color(0xFF15304D),
                             fontSize: 13,
                             fontWeight: FontWeight.w700)),
                     const SizedBox(height: 3),
-                    Text('30초 이상 들은 곡·라디오·자연이 여기에 모여요',
+                    Text(tr.homeRecentEmptySub,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: isDarkMode ? Colors.white60 : const Color(0xFF7891A8),
@@ -2632,12 +2640,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             const SizedBox(height: 6),
-                            Text(item.title,
+                            Text(item.type == RecentContentType.nature ? natureName(item.title) : item.title,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     color: baseColor, fontSize: 11, fontWeight: FontWeight.w600)),
-                            Text(item.subtitle,
+                            Text(item.subtitle == '자연소리' ? tr.natureSounds : item.subtitle == '라디오' ? tr.catRadio : item.subtitle,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -2665,7 +2673,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _countMessy(MusicProvider music) {
     final known = music.artists
         .map((x) => x.name.toLowerCase().trim())
-        .where((n) => n.isNotEmpty && !n.contains('unknown') && n != '알 수 없는 아티스트')
+        .where((n) => n.isNotEmpty && !n.contains('unknown') && n != '알 수 없는 아티스트' && n != tr.unknownArtist)
         .toSet();
     var n = 0;
     var bestCut = 0;
@@ -2735,12 +2743,12 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('곡 정리',
+                Text(tr.cleanLabel,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: accent, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
                 const SizedBox(height: 1),
-                Text('곡 제목 $n개를 깔끔하게',
+                Text(tr.cleanTitle(n),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w600)),
@@ -2775,7 +2783,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               minimumSize: const Size(0, 32),
             ),
-            child: const Text('나중에', style: TextStyle(fontSize: 12.5)),
+            child: Text(tr.later, style: const TextStyle(fontSize: 12.5)),
           ),
           const SizedBox(width: 2),
           GestureDetector(
@@ -2787,7 +2795,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
               decoration: BoxDecoration(color: ink, borderRadius: BorderRadius.circular(14)),
-              child: Text('정리하기', style: TextStyle(color: bg, fontSize: 12.5, fontWeight: FontWeight.w700)),
+              child: Text(tr.cleanAction, style: TextStyle(color: bg, fontSize: 12.5, fontWeight: FontWeight.w700)),
             ),
           ),
         ],
@@ -2864,19 +2872,19 @@ class _HomeScreenState extends State<HomeScreen> {
       final Song s;
       if (often.isNotEmpty && (preferOften || missed.isEmpty)) {
         s = often[math.Random(day * 4 + slot).nextInt(often.length)];
-        label = '${const ['아침에', '낮에', '저녁에', '밤에'][slot]} 자주 듣던 곡';
+        label = [tr.dailyOftenMorning, tr.dailyOftenDay, tr.dailyOftenEvening, tr.dailyOftenNight][slot];
       } else if (missed.isNotEmpty) {
         s = missed[math.Random(day).nextInt(missed.length)];
-        label = '오랜만에 듣는 곡';
+        label = tr.dailyLongTime;
       } else {
         s = songs[math.Random(day).nextInt(songs.length)];
-        label = '오늘의 곡';
+        label = tr.dailySongOfDay;
       }
       final i = songs.indexWhere((x) => x.uri == s.uri);
       cardSongs.add(s);
       icon = Icons.album_outlined;
       lead = _cardArt(s, 40, isDark);
-      title = '오늘은 이 곡 어때요';
+      title = tr.dailyHowAboutThis;
       subLine = Text.rich(
         TextSpan(children: [
           TextSpan(text: s.titleDisplay, style: TextStyle(color: ink, fontWeight: FontWeight.w600)),
@@ -2886,13 +2894,13 @@ class _HomeScreenState extends State<HomeScreen> {
         overflow: TextOverflow.ellipsis,
         style: TextStyle(color: sub, fontSize: 11.5),
       );
-      action = '듣기';
+      action = tr.listen;
       onAction = () => context.read<PlayerProvider>().playFromList(i >= 0 ? songs : [s], i >= 0 ? i : 0);
     } else if (kind == 1) {
       // ② 한 달 동안 안 들은 곡 (섞어서 틀기)
       cardSongs.addAll(notPlayed.take(3));
       icon = Icons.history_rounded;
-      label = '다시 듣기';
+      label = tr.dailyListenAgain;
       lead = SizedBox(
         width: 50,
         height: 40,
@@ -2911,10 +2919,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       );
-      title = '한 달 동안 안 들은 곡 ${notPlayed.length}개';
-      subLine = Text('오랜만에 다시 들어볼까요',
+      title = tr.dailyNotPlayedTitle(notPlayed.length);
+      subLine = Text(tr.dailyNotPlayedSub,
           maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: sub, fontSize: 11.5));
-      action = '틀기';
+      action = tr.dailyShufflePlay;
       onAction = () {
         final list = List<Song>.from(notPlayed)..shuffle();
         context.read<PlayerProvider>().playFromList(list, 0);
@@ -2924,7 +2932,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final top = weekTop!;
       cardSongs.add(top);
       icon = Icons.bar_chart_rounded;
-      label = '내 기록';
+      label = tr.dailyMyStats;
       lead = Container(
         width: 40,
         height: 40,
@@ -2948,17 +2956,17 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       );
-      title = '최근 7일 동안 $weekCount번 들었어요';
+      title = tr.dailyWeekCount(weekCount);
       subLine = Text.rich(
         TextSpan(children: [
-          const TextSpan(text: '가장 많이 들은 곡  '),
+          TextSpan(text: '${tr.dailyMostPlayed}  '),
           TextSpan(text: top.titleDisplay, style: TextStyle(color: ink, fontWeight: FontWeight.w600)),
         ]),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(color: sub, fontSize: 11.5),
       );
-      action = '듣기';
+      action = tr.listen;
       onAction = () {
         final i = songs.indexWhere((s) => s.uri == top.uri);
         context.read<PlayerProvider>().playFromList(i >= 0 ? songs : [top], i >= 0 ? i : 0);
@@ -2967,14 +2975,14 @@ class _HomeScreenState extends State<HomeScreen> {
       // ④ 시간대 추천 (자연소리)
       final h = now.hour;
       final (IconData ic, String t, String sound, String line) = h >= 5 && h < 11
-          ? (Icons.wb_sunny_outlined, '상쾌한 아침이에요', '새소리', '새소리로 하루를 시작해요')
+          ? (Icons.wb_sunny_outlined, tr.dailyMorningTitle, '새소리', tr.dailyMorningLine)
           : h >= 11 && h < 17
-              ? (Icons.local_cafe_outlined, '잠깐 쉬어가요', '시냇물', '시냇물 소리 들으며 한숨 돌려요')
+              ? (Icons.local_cafe_outlined, tr.dailyDayTitle, '시냇물', tr.dailyDayLine)
               : h >= 17 && h < 21
-                  ? (Icons.waves_rounded, '오늘도 수고했어요', '파도소리', '파도소리 틀어놓고 쉬어요')
-                  : (Icons.bedtime_outlined, '늦은 밤엔 잔잔하게', '빗소리', '빗소리 틀어놓고 쉬어요');
+                  ? (Icons.waves_rounded, tr.dailyEveningTitle, '파도소리', tr.dailyEveningLine)
+                  : (Icons.bedtime_outlined, tr.dailyNightTitle, '빗소리', tr.dailyNightLine);
       icon = ic;
-      label = '지금 이 시간';
+      label = tr.dailyRightNow;
       const natureImg = {
         '새소리': 'assets/nature_bird_bg.png',
         '시냇물': 'assets/nature_stream_bg.png',
@@ -3004,14 +3012,14 @@ class _HomeScreenState extends State<HomeScreen> {
           maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: sub, fontSize: 11.5));
       final found = PlayerProvider.natureSoundOrder.where((e) => e['name'] == sound);
       if (found.isNotEmpty) {
-        action = '듣기';
+        action = tr.listen;
         final url = found.first['assetPath']!;
         onAction = () => context.read<PlayerProvider>().playNatureSound(url, sound);
       }
     } else if (kind == 5) {
       // ⑥ 내일 아침 알람
       icon = Icons.alarm_rounded;
-      label = '내일 알람';
+      label = tr.infoAlarm;
       final hm = RegExp(r'\d{1,2}:\d{2}').firstMatch(alarmNext)?.group(0);
       lead = Container(
         width: 40,
@@ -3027,24 +3035,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w800, height: 1.0)),
                   ),
                   const SizedBox(height: 2),
-                  Text(alarmNext.contains('내일') ? '내일' : '오늘',
+                  Text(alarmNext.contains(tr.tomorrow) ? tr.tomorrow : tr.today,
                       style: TextStyle(color: sub, fontSize: 8.5, height: 1.0)),
                 ],
               ),
       );
-      title = '$alarmNext에 깨워 드릴게요';
-      subLine = Text(alarm!.label,
+      title = tr.wakeYouAt(alarmNext);
+      subLine = Text(AlarmService.labelOf(alarm!),
           maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: sub, fontSize: 11.5));
-      action = '바꾸기';
+      action = tr.changeAction;
       onAction = () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AlarmScreen()));
     } else {
       // ③ 기능 알려주기 (돌아올 때마다 다른 팁)
-      const tips = <(IconData, String, String)>[
-        (Icons.battery_charging_full_rounded, '화면 꺼도 계속 들어요', "배터리를 '제한 없음'으로 바꿔 주세요"),
-        (Icons.notifications_active_outlined, '노래로 벨소리 만들기', '곡 ⋮ 메뉴에서 바로 만들어요'),
-        (Icons.movie_outlined, '동영상 노래만 저장', "동영상 ⋮ 메뉴에서 '음악으로 저장'"),
-        (Icons.water_drop_outlined, '음악에 빗소리 더하기', '재생 화면 ⋮ 메뉴 → 자연 소리 믹스'),
-        (Icons.format_quote_rounded, '가사 한 줄 공유', '가사를 꾹 누르면 카드로 보내요'),
+      final tips = <(IconData, String, String)>[
+        (Icons.battery_charging_full_rounded, tr.dailyTipBatteryTitle, tr.dailyTipBatterySub),
+        (Icons.notifications_active_outlined, tr.dailyTipRingtoneTitle, tr.dailyTipRingtoneSub),
+        (Icons.movie_outlined, tr.dailyTipVideoTitle, tr.dailyTipVideoSub),
+        (Icons.water_drop_outlined, tr.dailyTipMixTitle, tr.dailyTipMixSub),
+        (Icons.format_quote_rounded, tr.dailyTipLyricsTitle, tr.dailyTipLyricsSub),
       ];
       final tip = tips[(day ~/ 5) % tips.length];
       icon = tip.$1;
@@ -3058,7 +3066,7 @@ class _HomeScreenState extends State<HomeScreen> {
           maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: sub, fontSize: 11.5));
       // 배터리 팁만: [설정] 누르면 파란소리 앱 설정이 바로 열림
       if (tip.$1 == Icons.battery_charging_full_rounded) {
-        action = '설정';
+        action = tr.set;
         onAction = () => openAppSettings();
       }
     }
@@ -3092,7 +3100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: accent, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
                 const SizedBox(height: 1),
-                if (title == '오늘은 이 곡 어때요')
+                if (title == tr.dailyHowAboutThis)
                   // 큰 물음표가 통통 튀기
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -3162,10 +3170,10 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!ask || !mounted) return;
     final off = await showParanConfirm(
       context,
-      title: '오늘의 카드를 끌까요?',
-      message: '설정 → 홈 추천 카드에서 언제든 다시 켤 수 있어요',
-      confirmLabel: '끄기',
-      cancelLabel: '계속 볼래요',
+      title: tr.dailyOffTitle,
+      message: tr.dailyOffMessage,
+      confirmLabel: tr.turnOff,
+      cancelLabel: tr.dailyOffKeep,
     );
     if (off) HomeCardPref.setOn(false);
   }
@@ -3291,7 +3299,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(color: baseColor.withOpacity(0.18), width: 0.8),
                           ),
-                          child: Text('통화녹음 ›',
+                          child: Text(tr.callRecordingsChip,
                               style: TextStyle(color: baseColor.withOpacity(0.65), fontSize: 12)),
                         ),
                       ),
@@ -3320,7 +3328,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                       final next = !_byArtist;
                       _setSortByArtist(next);
-                      showParanToast(context, next ? '가수 이름순으로 정렬했어요' : '제목순으로 정렬했어요',
+                      showParanToast(context, next ? tr.sortedByArtist : tr.sortedByTitle,
                           duration: const Duration(milliseconds: 1500));
                     },
                     child: Padding(
@@ -3330,7 +3338,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Icon(Icons.swap_vert, size: 17, color: baseColor.withOpacity(0.55)),
                           const SizedBox(width: 2),
-                          Text(_byArtist ? '가수' : '제목',
+                          Text(_byArtist ? tr.sortArtist : tr.sortTitle,
                               style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 12.5)),
                         ],
                       ),
@@ -3394,7 +3402,7 @@ class _HomeScreenState extends State<HomeScreen> {
               final List<(String?, int)> entries = newOnes.isEmpty
                   ? baseEntries
                   : [
-                      ('새로 들어온 곡', -3),
+                      (tr.homeNewSongs, -3),
                       for (var k = 0; k < newOnes.length; k++) (null, k),
                       for (final e in baseEntries) e.$2 >= 0 ? (e.$1, e.$2 + newOnes.length) : e,
                     ];
@@ -4067,10 +4075,10 @@ Color _readable(Color c, bool isDark) {
 String _recentGroup(DateTime t) {
   final now = DateTime.now();
   final days = DateTime(now.year, now.month, now.day).difference(DateTime(t.year, t.month, t.day)).inDays;
-  if (days <= 0) return '오늘';
-  if (days == 1) return '어제';
-  if (days <= 3) return '3일 안';
-  return '일주일 안';
+  if (days <= 0) return tr.today;
+  if (days == 1) return tr.yesterday;
+  if (days <= 3) return tr.within3Days;
+  return tr.withinWeek;
 }
 
 /// 라디오: 들은 시간대 사진 (아침 5–11 · 낮 11–17 · 저녁 17–22 · 밤)
@@ -4168,11 +4176,6 @@ class _BounceQState extends State<_BounceQ> with SingleTickerProviderStateMixin 
   }
 }
 
-/// 강조 색상 이름 (영어 화면용)
-const Map<String, String> _colorNameEn = {
-  '파란소리': 'Paransori', '숲': 'Forest', '노을': 'Sunset', '라벤더': 'Lavender', '먹색': 'Ink',
-  '벚꽃': 'Blossom', '바다': 'Ocean', '햇살': 'Sunlight', '와인': 'Wine', '밤하늘': 'Night sky',
-};
 
 /// 강조 색상 10가지를 한 바퀴로 (가운데는 카드 색 구멍)
 class _ColorRingPainter extends CustomPainter {

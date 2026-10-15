@@ -5,6 +5,7 @@ import 'paran_dialog.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
+import '../l10n/locale_holder.dart';
 
 // ── TV 창 색 (라이트: 베이지 · 다크: 어두운 갈색) — 창을 열 때 다크 모드인지 맞춤 ──
 bool _tvDark = false;
@@ -19,7 +20,7 @@ Color get _cLine => _tvDark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
 /// TV 찾아서 고르기 (라디오 화면에서 사용)
 /// onPick: 고른 TV로 보내기 → 성공하면 true
 void showCastPickerSheet(BuildContext context,
-    {required Future<bool> Function(CastDevice) onPick, String title = 'TV로 듣기'}) {
+    {required Future<bool> Function(CastDevice) onPick, String? title}) {
   _tvDark = context.read<ThemeProvider>().isDarkMode; // 다크 모드 맞추기
   showModalBottomSheet(
     context: context,
@@ -49,7 +50,7 @@ void showCastPickerSheet(BuildContext context,
                 Row(
                   children: [
                     Expanded(
-                      child: Text(title,
+                      child: Text(title ?? tr.listenOnTv,
                           style: TextStyle(color: _cInk, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
                     ),
                     ParanCloseX(onTap: () => Navigator.pop(ctx)),
@@ -71,7 +72,7 @@ void showCastPickerSheet(BuildContext context,
                               child: CircularProgressIndicator(strokeWidth: 2, color: _cSub),
                             ),
                             const SizedBox(width: 10),
-                            Text('같은 와이파이의 TV를 찾고 있어요', style: TextStyle(color: _cSub, fontSize: 13)),
+                            Text(tr.searchingTv, style: TextStyle(color: _cSub, fontSize: 13)),
                           ],
                         ),
                       );
@@ -84,10 +85,10 @@ void showCastPickerSheet(BuildContext context,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('TV를 못 찾았어요',
+                            Text(tr.tvNotFound,
                                 style: TextStyle(color: _cInk, fontSize: 15, fontWeight: FontWeight.w700)),
                             const SizedBox(height: 4),
-                            Text('TV가 켜져 있고 같은 와이파이인지 확인해 주세요',
+                            Text(tr.tvCheckWifi,
                                 style: TextStyle(color: _cSub, fontSize: 12.5, height: 1.5)),
                             const SizedBox(height: 12),
                             GestureDetector(
@@ -95,7 +96,7 @@ void showCastPickerSheet(BuildContext context,
                                 const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                                 setSheet(() => search = CastService.instance.discover());
                               },
-                              child: Text('다시 찾기',
+                              child: Text(tr.searchAgain,
                                   style: TextStyle(
                                       color: _cInk,
                                       fontSize: 14,
@@ -117,7 +118,7 @@ void showCastPickerSheet(BuildContext context,
                               Navigator.pop(ctx);
                               final ok = await onPick(d);
                               if (!ok && context.mounted) {
-                                showParanToast(context, 'TV로 보내지 못했어요. 다시 시도해 주세요.', error: true);
+                                showParanToast(context, tr.castFailedRetry, error: true);
                               }
                             },
                             child: Container(
@@ -144,7 +145,7 @@ void showCastPickerSheet(BuildContext context,
                             children: [
                               Icon(Icons.wifi_rounded, color: _cSub, size: 14),
                               const SizedBox(width: 6),
-                              Text('같은 와이파이의 TV만 보여요', style: TextStyle(color: _cSub, fontSize: 12)),
+                              Text(tr.sameWifiOnly, style: TextStyle(color: _cSub, fontSize: 12)),
                             ],
                           ),
                         ),
@@ -194,7 +195,7 @@ void showCastControlSheet(BuildContext context, {String? nowPlaying}) {
                     style: TextStyle(color: _cInk, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
                 const SizedBox(height: 3),
                 Text(
-                  nowPlaying ?? (cast.tvPlaying ? 'TV에서 재생 중' : 'TV에서 일시정지'),
+                  nowPlaying ?? (cast.tvPlaying ? tr.tvPlayingShort : tr.tvPaused),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -222,7 +223,7 @@ void showCastControlSheet(BuildContext context, {String? nowPlaying}) {
                     Navigator.pop(ctx);
                     await cast.disconnect();
                   },
-                  child: Text('연결 끊기',
+                  child: Text(tr.disconnect,
                       style: TextStyle(color: _cSub, fontSize: 13, decoration: TextDecoration.underline)),
                 ),
               ],

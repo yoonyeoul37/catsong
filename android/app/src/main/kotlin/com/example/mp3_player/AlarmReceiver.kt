@@ -172,8 +172,8 @@ class AlarmReceiver : BroadcastReceiver() {
 
         if (Build.VERSION.SDK_INT >= 26) {
             if (nm.getNotificationChannel(CHANNEL_ID) == null) {
-                val ch = NotificationChannel(CHANNEL_ID, "아침 알람", NotificationManager.IMPORTANCE_HIGH).apply {
-                    description = "파란소리 아침 알람"
+                val ch = NotificationChannel(CHANNEL_ID, ctx.getString(R.string.alarm_channel), NotificationManager.IMPORTANCE_HIGH).apply {
+                    description = ctx.getString(R.string.alarm_channel_desc)
                     // 알람 소리로 (무음·진동 모드에서도 들리게)
                     setSound(alarmUri, AudioAttributes.Builder()
                         .setUsage(AudioAttributes.USAGE_ALARM)
@@ -186,8 +186,8 @@ class AlarmReceiver : BroadcastReceiver() {
                 nm.createNotificationChannel(ch)
             }
             if (nm.getNotificationChannel(QUIET_CHANNEL_ID) == null) {
-                val ch = NotificationChannel(QUIET_CHANNEL_ID, "아침 알람 (화면 열기)", NotificationManager.IMPORTANCE_HIGH).apply {
-                    description = "잠금화면 위로 알람 화면을 열 때"
+                val ch = NotificationChannel(QUIET_CHANNEL_ID, ctx.getString(R.string.alarm_quiet_channel), NotificationManager.IMPORTANCE_HIGH).apply {
+                    description = ctx.getString(R.string.alarm_quiet_desc)
                     setSound(null, null)
                     enableVibration(false)
                     lockscreenVisibility = Notification.VISIBILITY_PUBLIC
@@ -209,8 +209,8 @@ class AlarmReceiver : BroadcastReceiver() {
             }
         }
         b.setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle("아침 알람")
-            .setContentText("눌러서 알람 화면 열기")
+            .setContentTitle(ctx.getString(R.string.alarm_channel))
+            .setContentText(ctx.getString(R.string.alarm_text))
             .setCategory(Notification.CATEGORY_ALARM)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
             .setFullScreenIntent(pi, true)

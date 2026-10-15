@@ -1,4 +1,5 @@
 import 'song.dart';
+import '../l10n/locale_holder.dart';
 
 class Album {
   final String name;
@@ -11,7 +12,7 @@ class Album {
     required this.songs,
   });
 
-  String get displayName => name.isEmpty ? '알 수 없는 앨범' : name;
-  String get displayArtist => artist.isEmpty ? '알 수 없는 아티스트' : artist;
+  String get displayName => name.isEmpty ? tr.unknownAlbum : name;
+  String get displayArtist => artist.isEmpty ? tr.unknownArtist : artist;
   int get songCount => songs.length;
 }

@@ -9,6 +9,7 @@ import 'paran_toast.dart';
 import 'paran_dialog.dart';
 import 'package:flutter/services.dart';
 import '../providers/theme_provider.dart';
+import '../l10n/locale_holder.dart';
 
 // ── 라디오 창 색 (라이트: 베이지 · 다크: 어두운 갈색) — 창을 그릴 때마다 다크 모드인지 맞춤 ──
 bool _rdDark = false;
@@ -39,10 +40,10 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
     var target = DateTime(now.year, now.month, now.day, t.hour, t.minute);
     if (!target.isAfter(now)) target = target.add(Duration(days: 1));
     final d = target.difference(now);
-    if (d.inMinutes < 60) return '${d.inMinutes}분 뒤';
+    if (d.inMinutes < 60) return tr.inMinutes(d.inMinutes);
     final h = d.inHours;
     final m = d.inMinutes % 60;
-    return m == 0 ? '$h시간 뒤' : '$h시간 $m분 뒤';
+    return m == 0 ? tr.inHours(h) : tr.inHoursMinutes(h, m);
   }
 
   TimeOfDay _after(int minutes) {
@@ -148,7 +149,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Expanded(
-                    child: Text('예약',
+                    child: Text(tr.scheduleTitle,
                         style: TextStyle(color: _rInk, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
                   ),
                   Text('${schedules.length} / 5', style: TextStyle(color: _rSub, fontSize: 12.5)),
@@ -159,21 +160,21 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(4, 4, 4, 0),
-              child: Text('정한 시간이 되면 그 방송으로 바꿔줘요', style: TextStyle(color: _rSub, fontSize: 12.5)),
+              child: Text(tr.scheduleSub, style: TextStyle(color: _rSub, fontSize: 12.5)),
             ),
 
             // ───── 내 예약 ─────
             if (schedules.isNotEmpty) ...[
-              section('내 예약',
+              section(tr.mySchedules,
                   right: GestureDetector(
                     onTap: () async {
                       final ok = await showParanConfirm(context,
-                          title: '예약을 전부 취소할까요?', confirmLabel: '전체 취소', danger: true);
+                          title: tr.cancelAllSchedulesTitle, confirmLabel: tr.cancelAll, danger: true);
                       if (!ok || !context.mounted) return;
                       radioProvider.clearSchedules();
-                      showActionFeedback(context, type: ActionFeedbackType.deleted, message: '예약을 취소했어요');
+                      showActionFeedback(context, type: ActionFeedbackType.deleted, message: tr.schedulesCanceled);
                     },
-                    child: Text('전체 취소',
+                    child: Text(tr.cancelAll,
                         style: TextStyle(color: Color(0xFFE05A4F), fontSize: 12, fontWeight: FontWeight.w600)),
                   )),
               Container(
@@ -193,7 +194,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(schedules[i].time.period == DayPeriod.am ? '오전' : '오후',
+                                    Text(schedules[i].time.period == DayPeriod.am ? tr.am : tr.pm,
                                         style: TextStyle(color: _rSub, fontSize: 10.5, fontWeight: FontWeight.w600)),
                                     Text(
                                         '${schedules[i].time.hourOfPeriod == 0 ? 12 : schedules[i].time.hourOfPeriod}:${schedules[i].time.minute.toString().padLeft(2, '0')}',
@@ -210,7 +211,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(color: _rInk, fontSize: 14, fontWeight: FontWeight.w600)),
                                     SizedBox(height: 2),
-                                    Text(schedules[i].triggered ? '바꿨어요 ✓' : _until(schedules[i].time),
+                                    Text(schedules[i].triggered ? tr.switchedCheck : _until(schedules[i].time),
                                         style: TextStyle(color: _rSub, fontSize: 11.5)),
                                   ],
                                 ),
@@ -234,14 +235,14 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
 
             // ───── 새 예약 (1 시간 → 2 방송) ─────
             if (canAdd) ...[
-              section('새 예약'),
+              section(tr.newSchedule),
               Container(
                 padding: EdgeInsets.all(12),
                 decoration: BoxDecoration(color: _rCard, borderRadius: BorderRadius.circular(14)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _step(1, '몇 시에?'),
+                    _step(1, tr.whatTime),
                     // 시간 칸: 누르면 시계로 직접 맞추기
                     GestureDetector(
                       onTap: _pickTime,
@@ -252,7 +253,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                           children: [
                             Expanded(
                               child: Text(
-                                _selectedTime != null ? _formatTime(_selectedTime!) : '시간 고르기',
+                                _selectedTime != null ? _formatTime(_selectedTime!) : tr.pickTime,
                                 style: TextStyle(
                                   color: _selectedTime != null ? _rInk : _rSub,
                                   fontSize: _selectedTime != null ? 22 : 15,
@@ -268,15 +269,15 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                     SizedBox(height: 8),
                     Row(
                       children: [
-                        _quick('30분 뒤', _after(30)),
+                        _quick(tr.quick30min, _after(30)),
                         SizedBox(width: 6),
-                        _quick('1시간 뒤', _after(60)),
+                        _quick(tr.quick1hour, _after(60)),
                         SizedBox(width: 6),
-                        _quick('아침 7시', TimeOfDay(hour: 7, minute: 0)),
+                        _quick(tr.quick7am, TimeOfDay(hour: 7, minute: 0)),
                       ],
                     ),
                     SizedBox(height: 14),
-                    _step(2, '어떤 방송?'),
+                    _step(2, tr.whichStation),
                     if (stationList.isEmpty)
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
@@ -330,7 +331,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                             children: [
                               Icon(Icons.format_list_bulleted_rounded, color: _rSub, size: 16),
                               SizedBox(width: 5),
-                              Text('편성표에서 프로그램으로 고르기',
+                              Text(tr.pickFromSchedule,
                                   style: TextStyle(color: _rSub, fontSize: 12, decoration: TextDecoration.underline)),
                             ],
                           ),
@@ -353,7 +354,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                             _selectedStation = null;
                           });
                           showActionFeedback(context,
-                              type: ActionFeedbackType.saved, message: '예약했어요', icon: Icons.schedule_rounded);
+                              type: ActionFeedbackType.saved, message: tr.scheduledToast, icon: Icons.schedule_rounded);
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
@@ -365,13 +366,13 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                     shadowColor: Colors.black.withOpacity(0.25),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                   ),
-                  child: Text('예약하기', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                  child: Text(tr.scheduleAction, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
                 ),
               ),
             ] else
               Padding(
                 padding: EdgeInsets.fromLTRB(4, 14, 4, 0),
-                child: Text('예약은 5개까지예요. 지난 예약을 지우면 새로 넣을 수 있어요',
+                child: Text(tr.scheduleLimit,
                     style: TextStyle(color: _rSub, fontSize: 12.5)),
               ),
           ],
@@ -383,8 +384,8 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
   String _formatTime(TimeOfDay time) {
     final h = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
     final m = time.minute.toString().padLeft(2, '0');
-    final period = time.period == DayPeriod.am ? '오전' : '오후';
-    return '$period $h:$m';
+    final period = time.period == DayPeriod.am ? tr.am : tr.pm;
+    return tr.timeAmPm(period, '$h:$m');
   }
 }
 class _ScheduleListBottomSheet extends StatelessWidget {

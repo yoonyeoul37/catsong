@@ -10,6 +10,7 @@ import '../theme/app_theme.dart';
 import '../screens/radio_player_screen.dart';
 import 'dart:math' as math;
 import '../services/cast_service.dart';
+import '../l10n/locale_holder.dart';
 
 class RadioMiniPlayer extends StatelessWidget {
   const RadioMiniPlayer({super.key});
@@ -155,12 +156,12 @@ class RadioMiniPlayer extends StatelessWidget {
                                 children: [
                                   Text(
                                     isLoading
-                                        ? '접속 중...'
+                                        ? tr.radioConnecting
                                         : radioProvider.playerState == RadioPlayerState.error
-                                        ? '나오지 않아요'
+                                        ? tr.radioNotPlaying
                                         : isPlaying
                                         ? '● LIVE'
-                                        : '일시정지',
+                                        : tr.pausedShort,
                                     style: TextStyle(
                                       // LIVE는 어디서나 빨강 (생방송 표시)
                                       color: isPlaying
@@ -179,7 +180,7 @@ class RadioMiniPlayer extends StatelessWidget {
                                         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                                         radioProvider.playSimilar();
                                       },
-                                      child: Text('비슷한 방송 듣기 ›',
+                                      child: Text(tr.similarStationShort,
                                           style: TextStyle(
                                               color: Theme.of(context).colorScheme.primary,
                                               fontSize: 12,

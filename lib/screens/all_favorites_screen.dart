@@ -9,6 +9,7 @@ import '../widgets/station_tile.dart';
 import 'favorites_screen.dart';
 import 'nature_sound_detail_screen.dart';
 import '../utils/nature_sound_catalog.dart';
+import '../l10n/locale_holder.dart';
 
 class AllFavoritesScreen extends StatefulWidget {
   const AllFavoritesScreen({super.key});
@@ -90,7 +91,7 @@ class _AllFavoritesScreenState extends State<AllFavoritesScreen>
           icon: Icon(Icons.arrow_back_ios, color: baseColor, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text('즐겨찾기',
+        title: Text(tr.favoritesTitle,
             style: TextStyle(color: baseColor, fontSize: 18, fontWeight: FontWeight.bold)),
         bottom: TabBar(
           controller: _tabController,
@@ -108,10 +109,10 @@ class _AllFavoritesScreenState extends State<AllFavoritesScreen>
           overlayColor: const WidgetStatePropertyAll(Colors.transparent),
           splashFactory: NoSplash.splashFactory,
           tabs: [
-            Tab(text: '음악($musicFavCount)'),
-            Tab(text: '라디오($radioFavCount)'),
-            Tab(text: '자연소리(${natureFavList.length})'),
-            const Tab(text: '휴식 · 집중(0)'),
+            Tab(text: tr.tabWithCount(tr.catMusic, musicFavCount)),
+            Tab(text: tr.tabWithCount(tr.catRadio, radioFavCount)),
+            Tab(text: tr.tabWithCount(tr.natureSounds, natureFavList.length)),
+            Tab(text: tr.tabWithCount(tr.catRest, 0)),
           ],
         ),
       ),
@@ -123,7 +124,7 @@ class _AllFavoritesScreenState extends State<AllFavoritesScreen>
             builder: (context, radioProvider, _) {
               final favorites = radioProvider.favorites;
               if (favorites.isEmpty) {
-                return _emptyState(baseColor, '즐겨찾는 라디오가 없어요');
+                return _emptyState(baseColor, tr.noFavRadio);
               }
               return ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -135,7 +136,7 @@ class _AllFavoritesScreenState extends State<AllFavoritesScreen>
             },
           ),
           natureFavList.isEmpty
-              ? _emptyState(baseColor, '즐겨찾는 자연소리가 없어요')
+              ? _emptyState(baseColor, tr.noFavNature)
               : ListView.separated(
             padding: const EdgeInsets.all(16),
             itemCount: natureFavList.length,
@@ -179,13 +180,13 @@ class _AllFavoritesScreenState extends State<AllFavoritesScreen>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(sound['name'],
+                            Text(natureName(sound['name']),
                                 style: TextStyle(
                                     color: baseColor,
                                     fontSize: 14.5,
                                     fontWeight: FontWeight.w600)),
                             const SizedBox(height: 2),
-                            Text(sound['description'],
+                            Text(natureDesc(sound['name'], sound['description']),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -200,7 +201,7 @@ class _AllFavoritesScreenState extends State<AllFavoritesScreen>
               );
             },
           ),
-          _emptyState(baseColor, '휴식 · 집중 기능은 준비중이에요'),
+          _emptyState(baseColor, tr.restFocusSoon),
         ],
       ),
     );

@@ -20,6 +20,7 @@ import '../widgets/paran_dialog.dart';
 import '../providers/theme_provider.dart';
 import '../widgets/paran_toast.dart';
 import '../widgets/lyrics_card_sheet.dart';
+import '../l10n/locale_holder.dart';
 
 /// 가사 배경 사진 (수파베이스 app-images/lyrics) — 목록은 list.json 으로 앱 업데이트 없이 바꿀 수 있어요
 const _kLyricsBgBase =
@@ -139,7 +140,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
       Future.delayed(const Duration(milliseconds: 1500), () {
         if (!mounted) return;
         p.setBool('lyricsCardHint', true);
-        showParanToast(context, '가사를 꾹 누르면 카드로 만들어 공유할 수 있어요');
+        showParanToast(context, tr.lyricsCardHint);
       });
     });
     SharedPreferences.getInstance().then((p) {
@@ -248,7 +249,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
         frame.image.dispose();
         codec.dispose();
         if (landscape) {
-          if (mounted) showParanToast(context, '가로 사진은 가운데 부분만 보여요. 세로로 찍은 사진이 가장 잘 어울려요');
+          if (mounted) showParanToast(context, tr.landscapeHint);
           return;
         }
       } catch (_) {}
@@ -352,7 +353,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
       line = lp.plainLyrics.split('\n').map((l) => l.trim()).firstWhere((t) => t.isNotEmpty, orElse: () => '');
     }
     if (line.isEmpty) {
-      showParanToast(context, '가사가 있어야 카드를 만들 수 있어요');
+      showParanToast(context, tr.lyricsNeededForCard);
       return;
     }
     _openCard(line, pp);
@@ -382,14 +383,14 @@ class _LyricsScreenState extends State<LyricsScreen> {
   void _pickTextSize() {
     showParanSheet(
       context,
-      title: '가사 글자 크기',
+      title: tr.lyricsTextSize,
       builder: (ctx, setSheet) {
         final dark = context.read<ThemeProvider>().isDarkMode;
         final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
         final onInk = dark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
         final card = dark ? const Color(0xFF32302C) : Colors.white;
         final line = dark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
-        const labels = ['작게', '보통', '크게'];
+        final labels = [tr.small, tr.sizeMedium, tr.large];
         const sample = [15.0, 19.0, 23.0];
         return Padding(
           padding: const EdgeInsets.only(bottom: 4),
@@ -420,7 +421,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                           SizedBox(
                             height: 28,
                             child: Center(
-                              child: Text('가',
+                              child: Text(tr.textSample,
                                   style: TextStyle(
                                       color: _sizeStep == i ? onInk : ink,
                                       fontSize: sample[i],
@@ -450,16 +451,16 @@ class _LyricsScreenState extends State<LyricsScreen> {
   void _pickOffset(LyricsProvider lp) {
     showParanSheet(
       context,
-      title: '가사 박자 맞추기',
+      title: tr.lyricsSyncTitle,
       builder: (ctx, setSheet) {
         final ms = lp.offsetMs;
-        final now = '${ms > 0 ? '+' : ''}${(ms / 1000).toStringAsFixed(1)}초';
+        final now = tr.secondsValue('${ms > 0 ? '+' : ''}${(ms / 1000).toStringAsFixed(1)}');
         return ParanCard(
           children: [
-            ParanInfoRow(label: '지금', value: ms == 0 ? '맞춘 적 없음' : now),
+            ParanInfoRow(label: tr.nowLabel, value: ms == 0 ? tr.notAdjusted : now),
             ParanRow(
               icon: Icons.fast_forward_rounded,
-              title: '가사를 빨리 (+0.5초)',
+              title: tr.lyricsEarlier,
               onTap: () async {
                 await lp.nudgeOffset(500);
                 setSheet(() {});
@@ -467,7 +468,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
             ),
             ParanRow(
               icon: Icons.fast_rewind_rounded,
-              title: '가사를 늦게 (−0.5초)',
+              title: tr.lyricsLater,
               onTap: () async {
                 await lp.nudgeOffset(-500);
                 setSheet(() {});
@@ -475,7 +476,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
             ),
             ParanRow(
               icon: Icons.restart_alt_rounded,
-              title: '원래대로',
+              title: tr.revert,
               onTap: () async {
                 await lp.resetOffset();
                 setSheet(() {});
@@ -576,7 +577,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(lp.hasManual ? '가사 직접 고치기' : '가사 직접 넣기',
+                              Text(lp.hasManual ? tr.lyricsEdit : tr.lyricsAdd,
                                   style: TextStyle(
                                       color: ink, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
                               const SizedBox(height: 3),
@@ -610,7 +611,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                     style: TextStyle(color: ink, fontSize: 14.5, height: 1.5),
                     cursorColor: ink,
                     decoration: InputDecoration(
-                      hintText: '가사를 붙여넣어 주세요\n[00:12.34] 처럼 시간이 있으면 노래에 맞춰 나와요',
+                      hintText: tr.lyricsPasteHint,
                       hintMaxLines: 3,
                       hintStyle: TextStyle(color: sub, fontSize: 13.5, height: 1.5),
                       filled: true,
@@ -640,7 +641,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                         },
                         style: TextButton.styleFrom(foregroundColor: ink),
                         icon: const Icon(Icons.content_paste_rounded, size: 18),
-                        label: const Text('붙여넣기', style: TextStyle(fontWeight: FontWeight.w600)),
+                        label: Text(tr.paste, style: const TextStyle(fontWeight: FontWeight.w600)),
                       ),
                       const Spacer(),
                       if (ctrl.text.isNotEmpty)
@@ -650,7 +651,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                             setSheet(() {});
                           },
                           style: TextButton.styleFrom(foregroundColor: sub),
-                          child: const Text('비우기'),
+                          child: Text(tr.clearText),
                         ),
                     ],
                   ),
@@ -668,7 +669,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                         elevation: 0,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                       ),
-                      child: const Text('저장', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15.5)),
+                      child: Text(tr.save, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15.5)),
                     ),
                   ),
                 ],
@@ -681,7 +682,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
     );
     if (saved == true) {
       await lp.saveManualLyrics(song.titleDisplay, song.artistDisplay, ctrl.text);
-      if (mounted) showParanToast(context, '이 노래 가사로 저장했어요');
+      if (mounted) showParanToast(context, tr.lyricsSaved);
     }
   }
 
@@ -691,9 +692,9 @@ class _LyricsScreenState extends State<LyricsScreen> {
     if (song == null) return;
     final ok = await showParanConfirm(
       context,
-      title: '직접 넣은 가사를 지울까요?',
-      message: '지우면 인터넷에서 다시 찾아요',
-      confirmLabel: '지우기',
+      title: tr.lyricsDeleteTitle,
+      message: tr.lyricsDeleteMessage,
+      confirmLabel: tr.clearAction,
       danger: true,
     );
     if (!ok) return;
@@ -706,7 +707,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
     _manageMy = false;
     showParanSheet(
       context,
-      title: '가사 배경',
+      title: tr.lyricsBg,
       // 제목: 카메라 아이콘 칸 + '가사 배경'(도현) + 설명 (파란포토 창과 같은 모양)
       header: Padding(
         padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
@@ -729,13 +730,13 @@ class _LyricsScreenState extends State<LyricsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('가사 배경',
+                    Text(tr.lyricsBg,
                         style: GoogleFonts.doHyeon(
                           color: dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F),
                           fontSize: 19,
                         )),
                     const SizedBox(height: 1),
-                    Text('나만의 가사 화면 꾸미기',
+                    Text(tr.lyricsBgSub,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -805,8 +806,8 @@ class _LyricsScreenState extends State<LyricsScreen> {
                         Container(
                           color: AppTheme.background,
                           alignment: Alignment.center,
-                          child: const Text('사진 없이',
-                              style: TextStyle(color: Colors.white70, fontSize: 11.5, fontWeight: FontWeight.w600)),
+                          child: Text(tr.noPhoto,
+                              style: const TextStyle(color: Colors.white70, fontSize: 11.5, fontWeight: FontWeight.w600)),
                         )
                       else
                         CachedNetworkImage(
@@ -851,9 +852,15 @@ class _LyricsScreenState extends State<LyricsScreen> {
                   children: [
                     Icon(Icons.add_rounded, color: sub, size: 26),
                     const SizedBox(height: 4),
-                    Text('사진 추가', style: TextStyle(color: sub, fontSize: 11.5, fontWeight: FontWeight.w600)),
+                    Text(tr.addPhoto,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: sub, fontSize: 11.5, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 1),
-                    Text('세로형 사진을 추천해요', style: TextStyle(color: sub.withOpacity(0.75), fontSize: 9.5)),
+                    Text(tr.portraitBest,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: sub.withOpacity(0.75), fontSize: 9.5)),
                   ],
                 ),
               ),
@@ -947,10 +954,10 @@ class _LyricsScreenState extends State<LyricsScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(_random ? '랜덤' : '고정',
+                              Text(_random ? tr.photoRandom : tr.photoFixed,
                                   style: TextStyle(color: ink, fontSize: 14, fontWeight: FontWeight.w600)),
                               const SizedBox(height: 2),
-                              Text(_random ? '곡이 바뀌면 배경도 바뀝니다.' : '배경 사진이 고정됩니다.',
+                              Text(_random ? tr.photoRandomSub : tr.photoFixedSub,
                                   style: TextStyle(color: sub, fontSize: 11.5)),
                             ],
                           ),
@@ -970,12 +977,12 @@ class _LyricsScreenState extends State<LyricsScreen> {
               ],
             ),
             // ── 내 사진 ──
-            header('내 사진',
+            header(tr.myPhotos,
                 trailing: _myPhotos.isEmpty
                     ? null
                     : GestureDetector(
                         onTap: () => setSheet(() => _manageMy = !_manageMy),
-                        child: Text(_manageMy ? '완료' : '관리',
+                        child: Text(_manageMy ? tr.done : tr.manage,
                             style: TextStyle(
                                 color: _manageMy ? Theme.of(ctx).colorScheme.primary : sub,
                                 fontSize: 12.5,
@@ -991,7 +998,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
               children: [if (!_manageMy) addTile(), for (final f in _myPhotos) myTile(f)],
             ),
             // ── 파란소리 사진 ──
-            header('파란소리 사진'),
+            header(tr.paransoriPhotos),
             GridView.count(
               crossAxisCount: 3,
               shrinkWrap: true,
@@ -1030,7 +1037,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
             : Container(color: AppTheme.background);
     return Row(
       children: [
-        for (final t in const [(0, '컬러'), (1, '흑백'), (2, '세피아'), (3, '필름')]) ...[
+        for (final t in [(0, tr.toneColor), (1, tr.toneBw), (2, tr.toneSepia), (3, tr.toneFilm)]) ...[
           if (t.$1 > 0) const SizedBox(width: 8),
           Expanded(
             child: GestureDetector(
@@ -1178,12 +1185,12 @@ class _LyricsScreenState extends State<LyricsScreen> {
                   }
                 },
                 itemBuilder: (_) => [
-                  if (lp.hasLyrics) _menuItem(Icons.format_size_rounded, '가사 글자 크기', 'size'),
-                  if (lp.lyrics.isNotEmpty) _menuItem(Icons.timer_outlined, '박자 맞추기', 'offset'),
+                  if (lp.hasLyrics) _menuItem(Icons.format_size_rounded, tr.lyricsTextSize, 'size'),
+                  if (lp.lyrics.isNotEmpty) _menuItem(Icons.timer_outlined, tr.lyricsSyncShort, 'offset'),
                   // 직접 넣은 가사가 있으면 그게 먼저라서 "다시 찾기" 대신 "지우기"
-                  if (!lp.hasManual) _menuItem(Icons.refresh, '가사 다시 찾기', 'refresh'),
-                  _menuItem(Icons.edit_note_rounded, lp.hasManual ? '가사 직접 고치기' : '가사 직접 넣기', 'edit'),
-                  if (lp.hasManual) _menuItem(Icons.delete_outline_rounded, '직접 넣은 가사 지우기', 'delete'),
+                  if (!lp.hasManual) _menuItem(Icons.refresh, tr.lyricsRefetch, 'refresh'),
+                  _menuItem(Icons.edit_note_rounded, lp.hasManual ? tr.lyricsEdit : tr.lyricsAdd, 'edit'),
+                  if (lp.hasManual) _menuItem(Icons.delete_outline_rounded, tr.lyricsDeleteMine, 'delete'),
                 ],
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
@@ -1513,14 +1520,14 @@ class _LyricsScreenState extends State<LyricsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text('${_selTexts.length}줄 골랐어요',
+                              Text(tr.linesSelected(_selTexts.length),
                                   style: const TextStyle(
                                       color: Color(0xFF17140F), fontSize: 14, fontWeight: FontWeight.w700)),
                               const SizedBox(height: 2),
-                              const Text('다른 줄을 누르면 거기까지 · 최대 5줄',
+                              Text(tr.linesSelectHint,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Color(0xFF8A8378), fontSize: 11)),
+                                  style: const TextStyle(color: Color(0xFF8A8378), fontSize: 11)),
                             ],
                           ),
                         ),
@@ -1539,7 +1546,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 14),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           ),
-                          child: const Text('카드 만들기', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
+                          child: Text(tr.makeCard, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
                         ),
                       ],
                     ),
@@ -1633,14 +1640,14 @@ class _LyricsScreenState extends State<LyricsScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      noNet ? '인터넷 연결을 확인해 주세요' : '이 노래 가사를 아직 못 찾았어요',
+                      noNet ? tr.checkInternet : tr.lyricsNotFoundYet,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: ink, fontSize: 16.5, fontWeight: FontWeight.w700, letterSpacing: -0.3, shadows: shadow),
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      noNet ? '연결되면 다시 찾아볼 수 있어요' : '다시 찾거나, 가사를 직접 넣을 수 있어요',
+                      noNet ? tr.retryWhenOnline : tr.lyricsNotFoundSub,
                       textAlign: TextAlign.center,
                       style: TextStyle(color: sub, fontSize: 13, height: 1.4, shadows: shadow),
                     ),
@@ -1664,7 +1671,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                               ),
-                              child: const Text('다시 찾기', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
+                              child: Text(tr.searchAgain, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
                             ),
                           ),
                         ),
@@ -1679,7 +1686,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                                 side: BorderSide(color: ink.withOpacity(0.35), width: 1.2),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                               ),
-                              child: const Text('직접 넣기', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
+                              child: Text(tr.addManually, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
                             ),
                           ),
                         ),

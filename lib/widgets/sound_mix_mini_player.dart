@@ -7,6 +7,8 @@ import '../providers/sound_mix_provider.dart';
 import '../providers/player_provider.dart';
 import '../providers/theme_provider.dart';
 import '../screens/sound_mix_screen.dart';
+import '../l10n/locale_holder.dart';
+import '../utils/nature_sound_catalog.dart';
 
 class SoundMixMiniPlayer extends StatelessWidget {
   const SoundMixMiniPlayer({super.key});
@@ -24,10 +26,10 @@ class SoundMixMiniPlayer extends StatelessWidget {
 
     final activeNames = [
       for (final entry in SoundMixProvider.natureAssets.keys)
-        if (mix.volumeOf(entry) > 0) entry,
+        if (mix.volumeOf(entry) > 0) natureName(entry),
       if (mix.currentSong != null) mix.currentSong!.titleDisplay,
     ];
-    final subtitle = activeNames.isEmpty ? '믹스 재생 중' : activeNames.join(' · ');
+    final subtitle = activeNames.isEmpty ? tr.mixPlaying : activeNames.join(' · ');
 
     return GestureDetector(
       // 아래로 휙 쓸어내리면 미니플레이어 닫기
@@ -72,7 +74,7 @@ class SoundMixMiniPlayer extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('나만의 소리 믹스',
+                        Text(tr.myMixDefault,
                             style: TextStyle(
                                 color: baseColor, fontSize: 14, fontWeight: FontWeight.w600)),
                         const SizedBox(height: 2),

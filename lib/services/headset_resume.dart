@@ -12,12 +12,14 @@ import '../providers/recent_content_provider.dart';
 import '../providers/music_provider.dart';
 import '../models/recent_content_entry.dart';
 import '../models/radio_station.dart';
+import '../l10n/locale_holder.dart';
+import '../utils/nature_sound_catalog.dart';
 
 /// 이어폰·블루투스를 연결하면 듣던 것 이어서 듣기
 /// 0 끄기 · 1 알림으로 묻기 · 2 바로 재생 (작게 시작해서 천천히 커짐)
 class HeadsetResume {
   static final mode = ValueNotifier<int>(0);
-  static const names = ['끄기', '알림으로 묻기', '바로 재생'];
+  static List<String> get names => [tr.headsetOff, tr.headsetAsk, tr.headsetPlay];
   static const _ch = MethodChannel('kr.ssing.catsong/media');
   static PlayerProvider? _pp;
   static RadioProvider? _radio;
@@ -43,10 +45,10 @@ class HeadsetResume {
       await p.setBool('battery_ask_$key', true);
       final go = await showParanConfirm(
         context,
-        title: '배터리 사용을 "제한 없음"으로',
+        title: tr.batteryTitle,
         message: why,
-        confirmLabel: '허용하기',
-        cancelLabel: '나중에',
+        confirmLabel: tr.allowAction,
+        cancelLabel: tr.later,
       );
       if (go) await _ch.invokeMethod('requestBatteryOptimization');
     } catch (_) {}
@@ -70,7 +72,7 @@ class HeadsetResume {
     final st = radio.currentStation;
     if (st != null) return ('radio', st.name);
     final nature = pp.natureSoundName;
-    if (nature != null) return ('nature', nature);
+    if (nature != null) return ('nature', natureName(nature));
     final song = pp.currentSong;
     if (song != null) return ('music', '${song.titleDisplay} · ${song.artistDisplay}');
     return null;
@@ -87,7 +89,7 @@ class HeadsetResume {
     if (t == null) return;
     if (mode.value == 1) {
       try {
-        await _ch.invokeMethod('showHeadsetAsk', {'title': '이어서 들을까요?', 'text': t.$2});
+        await _ch.invokeMethod('showHeadsetAsk', {'title': tr.resumeAsk, 'text': t.$2});
       } catch (_) {}
     } else {
       await Future.delayed(const Duration(milliseconds: 900)); // 소리 길이 이어폰으로 바뀔 시간
@@ -310,16 +312,16 @@ class HeadsetResume {
         }
         for (final s in [...radio.recentlyListened, ...radio.favorites]) {
           if (s.stationUuid == now) continue;
-          add('radio', s.stationUuid, s.name, (s.country?.isNotEmpty ?? false) ? s.country! : '라디오');
+          add('radio', s.stationUuid, s.name, (s.country?.isNotEmpty ?? false) ? s.country! : tr.catRadio);
         }
       } else if (kind == 'nature') {
         final now = pp.natureSoundName;
         for (final x in r.entries) {
-          if (x.type == RecentContentType.nature && x.title != now) add('nature', x.key, x.title, '자연소리');
+          if (x.type == RecentContentType.nature && x.title != now) add('nature', x.key, natureName(x.title), tr.natureSounds);
         }
         for (final s in PlayerProvider.natureSoundOrder) {
           if (s['name'] == now) continue;
-          add('nature', s['assetPath']!, s['name']!, '자연소리');
+          add('nature', s['assetPath']!, natureName(s['name']!), tr.natureSounds);
         }
       } else {
         final now = pp.natureSoundName == null ? pp.currentSong?.uri : null;

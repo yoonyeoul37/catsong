@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/theme_provider.dart';
 import 'paran_dialog.dart';
 import 'paran_toast.dart';
+import '../l10n/locale_holder.dart';
 
 /// 카드 배경 사진 하나 (가사 화면과 같은 사진들)
 class LyricsCardPhoto {
@@ -168,14 +169,14 @@ Future<void> _editText() async {
             Row(
               children: [
                 Expanded(
-                  child: Text('글자 고치기',
+                  child: Text(tr.editText,
                       style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
                 ),
                 ParanCloseX(onTap: () => Navigator.pop(ctx)),
               ],
             ),
             const SizedBox(height: 4),
-            Text('엔터로 줄을 바꿀 수 있어요', style: TextStyle(color: sub, fontSize: 12)),
+            Text(tr.enterNewLine, style: TextStyle(color: sub, fontSize: 12)),
             const SizedBox(height: 12),
             Container(
               decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(14)),
@@ -204,7 +205,7 @@ Future<void> _editText() async {
                         side: BorderSide(color: line),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                       ),
-                      child: const Text('원래대로', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                      child: Text(tr.revert, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                     ),
                   ),
                 ),
@@ -220,7 +221,7 @@ Future<void> _editText() async {
                         elevation: 0,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                       ),
-                      child: const Text('적용', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                      child: Text(tr.apply, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
                     ),
                   ),
                 ),
@@ -247,8 +248,8 @@ double _scale = 1.0; // 글자 크기 (작게 0.85 · 보통 1 · 크게 1.15)
 int _ratio = 2; // 비율 (기본 4:5)
 int _titlePos = 1; // 제목·가수: 0 위 · 1 아래 · 2 숨기기
 
-static const _fonts = ['깔끔', '편지', '손글씨', '귀여움'];
-static const _ratios = <(String, double)>[('스토리 9:16', 9 / 16), ('피드 1:1', 1.0), ('4:5', 4 / 5)];
+static List<String> get _fonts => [tr.fontClean, tr.fontLetter, tr.fontHand, tr.fontCute];
+static List<(String, double)> get _ratios => [(tr.ratioStory, 9 / 16), (tr.ratioFeed, 1.0), ('4:5', 4 / 5)];
 
 /// 고른 글꼴로 바꾸기 (f를 주면 그 글꼴로 — 글꼴 고르는 칸 미리보기용)
 TextStyle _fontStyle(TextStyle s, [int? f]) {
@@ -458,7 +459,7 @@ await file.writeAsBytes(data.buffer.asUint8List(), flush: true);
 await Share.shareXFiles([XFile(file.path, mimeType: 'image/png')]);
 } catch (e) {
 debugPrint('가사 카드 공유 오류: $e');
-if (mounted) showParanToast(context, '카드를 만들지 못했어요. 다시 해주세요.', error: true);
+if (mounted) showParanToast(context, tr.cardMakeFailed, error: true);
 } finally {
 if (mounted) setState(() => _busy = false);
 }
@@ -478,7 +479,7 @@ await p.setStringList('lyricsMyPhotos', _myList);
 await _useMine(x.path);
 } catch (e) {
 debugPrint('사진 고르기 오류: $e');
-if (mounted) showParanToast(context, '사진을 불러오지 못했어요', error: true);
+if (mounted) showParanToast(context, tr.photoLoadFailed, error: true);
 }
 }
 
@@ -658,7 +659,7 @@ const SizedBox(height: 14),
 Row(
 children: [
 Expanded(
-child: Text('가사 카드',
+child: Text(tr.lyricsCard,
 style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
 ),
 ParanCloseX(onTap: () => Navigator.pop(context)),
@@ -668,7 +669,7 @@ const SizedBox(height: 4),
 // 안내: 다른 줄 고르는 법
 Align(
   alignment: Alignment.centerLeft,
-  child: Text('가사를 길게 눌러 여러 줄을 선택하세요', style: TextStyle(color: sub, fontSize: 12)),
+  child: Text(tr.lyricsCardSelectHint, style: TextStyle(color: sub, fontSize: 12)),
 ),
 const SizedBox(height: 12),
   // 카드 미리보기
@@ -683,12 +684,12 @@ const SizedBox(height: 12),
   // 탭: 배경 · 글꼴 · 비율 · 제목
   Row(
     children: [
-      for (final (i, label, icon) in const [
-        (0, '배경', Icons.photo_outlined),
-        (1, '글꼴', Icons.text_fields_rounded),
-        (2, '비율', Icons.crop_rounded),
-        (3, '제목', Icons.title_rounded),
-        (4, '글자', Icons.edit_rounded),
+      for (final (i, label, icon) in [
+        (0, tr.tabBackdrop, Icons.photo_outlined),
+        (1, tr.tabFont, Icons.text_fields_rounded),
+        (2, tr.tabRatio, Icons.crop_rounded),
+        (3, tr.tabTitle, Icons.title_rounded),
+        (4, tr.tabText, Icons.edit_rounded),
       ])
         Expanded(
           child: GestureDetector(
@@ -706,6 +707,8 @@ const SizedBox(height: 12),
                 Icon(icon, size: 20, color: _tab == i ? ink : sub),
                 const SizedBox(height: 3),
                 Text(label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         color: _tab == i ? ink : sub,
                         fontSize: 11.5,
@@ -750,11 +753,11 @@ const SizedBox(height: 12),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('가나다',
+                              Text(tr.fontSample,
                                   style: _fontStyle(
                                       TextStyle(color: ink, fontSize: 15, fontWeight: FontWeight.w700), i)),
                               const SizedBox(height: 2),
-                              Text(_fonts[i], style: TextStyle(color: sub, fontSize: 10.5)),
+                              Text(_fonts[i], maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: sub, fontSize: 10.5)),
                             ],
                           ),
                         ),
@@ -766,9 +769,9 @@ const SizedBox(height: 12),
               const SizedBox(height: 10),
               Row(
                 children: [
-                  pill('가운데', !_left, () => setState(() => _left = false)),
+                  pill(tr.alignCenter, !_left, () => setState(() => _left = false)),
                   const SizedBox(width: 6),
-                  pill('왼쪽', _left, () => setState(() => _left = true)),
+                  pill(tr.alignLeft, _left, () => setState(() => _left = true)),
                   const Spacer(),
                   pill('A-', _scale < 1, () => setState(() => _scale = 0.85)),
                   const SizedBox(width: 6),
@@ -798,9 +801,9 @@ const SizedBox(height: 12),
                     child: Wrap(
                       spacing: 6,
                       children: [
-                        pill('위', _titlePos == 0, () => setState(() => _titlePos = 0)),
-                        pill('아래', _titlePos == 1, () => setState(() => _titlePos = 1)),
-                        pill('숨기기', _titlePos == 2, () => setState(() => _titlePos = 2)),
+                        pill(tr.posTop, _titlePos == 0, () => setState(() => _titlePos = 0)),
+                        pill(tr.posBottom, _titlePos == 1, () => setState(() => _titlePos = 1)),
+                        pill(tr.posHide, _titlePos == 2, () => setState(() => _titlePos = 2)),
                       ],
                     ),
                   )
@@ -810,12 +813,12 @@ const SizedBox(height: 12),
                       Row(
                         children: [
                           if (widget.photos.isNotEmpty) ...[
-                            chip('사진', _BgKind.photo, () => setState(() => _kind = _BgKind.photo)),
+                            chip(tr.photo, _BgKind.photo, () => setState(() => _kind = _BgKind.photo)),
                             const SizedBox(width: 6),
                           ],
-                          chip('색', _BgKind.color, () => setState(() => _kind = _BgKind.color)),
+                          chip(tr.colorChip, _BgKind.color, () => setState(() => _kind = _BgKind.color)),
                           const SizedBox(width: 6),
-                          chip('내 사진', _BgKind.mine, () {
+                          chip(tr.myPhotos, _BgKind.mine, () {
                             if (_mine != null) {
                               setState(() => _kind = _BgKind.mine);
                             } else if (_myList.isNotEmpty) {
@@ -859,7 +862,7 @@ const SizedBox(height: 12),
           else
             const Icon(Icons.ios_share_rounded, size: 19),
           const SizedBox(width: 8),
-          Text(_busy ? '카드 만드는 중…' : '공유하기',
+          Text(_busy ? tr.makingCard : tr.shareAction,
               style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700)),
         ],
       ),

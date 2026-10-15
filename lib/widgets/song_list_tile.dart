@@ -27,6 +27,7 @@ import 'package:share_plus/share_plus.dart';
 import 'dart:io';
 import '../providers/theme_provider.dart';
 import '../utils/no_album_helper.dart';
+import '../l10n/locale_holder.dart';
 
 class SongListTile extends StatelessWidget {
   final Song song;
@@ -175,7 +176,7 @@ class SongListTile extends StatelessWidget {
                     // 누르면 세는 기준 알려주기
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: () => showParanToast(context, '30초 이상 들은 횟수예요'),
+                      onTap: () => showParanToast(context, tr.playCountHint),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -346,17 +347,17 @@ class SongListTile extends StatelessWidget {
                   song: song,
                   isDark: isDarkMode,
                   actions: [
-                    MenuQuickAction(isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart, '즐겨찾기', () {
+                    MenuQuickAction(isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart, tr.favorites, () {
                       _handleMenuAction(context, 'favorite');
                     }),
-                    MenuQuickAction(Icons.playlist_add, '재생목록', () {
+                    MenuQuickAction(Icons.playlist_add, tr.playlistLabel, () {
                       _handleMenuAction(context, 'playlist');
                     }),
                     // 공유·편집: 메뉴는 그대로 두고 위에 띄움 → 돌아오면 메뉴가 그대로
-                    MenuQuickAction(Icons.share, '공유', () {
+                    MenuQuickAction(Icons.share, tr.share, () {
                       _handleMenuAction(context, 'share');
                     }),
-                    MenuQuickAction(Icons.edit, '정보 수정', () {
+                    MenuQuickAction(Icons.edit, tr.editInfo, () {
                       _handleMenuAction(context, 'edit');
                     }),
                   ],
@@ -367,8 +368,8 @@ class SongListTile extends StatelessWidget {
                       keepOpen: true,
                       afterTap: () => setSheet(() => addedNext = true),
                       trailing: addedNext
-                          ? const Text('추가됨 ✓',
-                              style: TextStyle(color: accent, fontSize: 12.5, fontWeight: FontWeight.w600))
+                          ? Text(tr.addedCheck,
+                              style: const TextStyle(color: accent, fontSize: 12.5, fontWeight: FontWeight.w600))
                           : null),
                 ]),
                 MenuCard(isDark: isDarkMode, children: [
@@ -391,9 +392,9 @@ class SongListTile extends StatelessWidget {
                 ]),
                 MenuCard(isDark: isDarkMode, children: [
                   // 들어갔다 나오면 메뉴가 그대로 있게 (keepOpen)
-                  _sheetItem(context, Icons.music_note, '벨소리 설정', 'ringtone', accent, baseColor, isDarkMode, arrow: true, keepOpen: true),
-                  _sheetItem(context, Icons.content_cut, '오디오 자르기', 'trim', accent, baseColor, isDarkMode, arrow: true, keepOpen: true),
-                  _sheetItem(context, Icons.info_outline, '파일 정보', 'info', accent, baseColor, isDarkMode, arrow: true, keepOpen: true),
+                  _sheetItem(context, Icons.music_note, tr.ringtone, 'ringtone', accent, baseColor, isDarkMode, arrow: true, keepOpen: true),
+                  _sheetItem(context, Icons.content_cut, tr.trimAudio, 'trim', accent, baseColor, isDarkMode, arrow: true, keepOpen: true),
+                  _sheetItem(context, Icons.info_outline, tr.fileInfo, 'info', accent, baseColor, isDarkMode, arrow: true, keepOpen: true),
                   _sheetItem(context, Icons.equalizer, AppLocalizations.of(context)!.equalizer, 'equalizer', accent, baseColor, isDarkMode, arrow: true, keepOpen: true),
                 ]),
                 MenuCard(isDark: isDarkMode, children: [
@@ -544,9 +545,9 @@ class SongListTile extends StatelessWidget {
     final failText = AppLocalizations.of(context)!.deleteFailed;
     final ok = await showParanConfirm(
       appCtx,
-      title: '이 곡을 삭제할까요?',
-      message: "'${song.titleDisplay}'이(가) 폰에서 지워져요",
-      confirmLabel: '삭제',
+      title: tr.deleteSongTitle,
+      message: tr.deleteSongMessage(song.titleDisplay),
+      confirmLabel: tr.delete,
       danger: true,
     );
     if (!ok) return;
@@ -562,7 +563,7 @@ class SongListTile extends StatelessWidget {
         }
       }
     } catch (e) {
-      showParanToast(appCtx, '삭제하지 못했어요', error: true);
+      showParanToast(appCtx, tr.couldNotDelete, error: true);
     }
   }
 

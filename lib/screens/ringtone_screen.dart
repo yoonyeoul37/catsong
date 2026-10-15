@@ -9,6 +9,7 @@ import '../l10n/app_localizations.dart';
 import '../widgets/action_feedback.dart';
 import '../widgets/paran_toast.dart';
 import '../providers/theme_provider.dart';
+import '../l10n/locale_holder.dart';
 
 class RingtoneScreen extends StatefulWidget {
   final Song? initialSong;
@@ -152,7 +153,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
           systemNavigationBarColor: bg,
           systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
         ),
-        title: Text(widget.trimMode ? '자르기' : AppLocalizations.of(context)!.ringtone,
+        title: Text(widget.trimMode ? tr.trimTitle : AppLocalizations.of(context)!.ringtone,
             style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -0.3)),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
@@ -182,7 +183,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                         ),
                         icon: Icon(_isPlaying ? Icons.stop_rounded : Icons.play_arrow_rounded, size: 22),
-                        label: Text(_isPlaying ? AppLocalizations.of(context)!.playing : '미리 듣기',
+                        label: Text(_isPlaying ? AppLocalizations.of(context)!.playing : tr.previewListen,
                             style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600)),
                       ),
                     ),
@@ -208,7 +209,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                                 width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: bg))
                             : Icon(widget.trimMode ? Icons.content_cut_rounded : Icons.notifications_active_rounded,
                                 size: 20),
-                        label: Text(widget.trimMode ? '잘라서 저장' : '벨소리로 지정',
+                        label: Text(widget.trimMode ? tr.trimAndSave : tr.setAsRingtone,
                             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                       ),
                     ),
@@ -285,7 +286,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         timeChip(_formatTime(_startValue.toInt())),
-                        Text('${(_endValue - _startValue).toInt()}초',
+                        Text(tr.secondsValue('${(_endValue - _startValue).toInt()}'),
                             style: TextStyle(color: sub, fontSize: 12.5)),
                         timeChip(_formatTime(_endValue.toInt())),
                       ],
@@ -313,7 +314,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
     if (uri == null) return;
     final ext = uri.split('.').last.toLowerCase();
     if (!['mp3', 'm4a', 'aac', 'mp4'].contains(ext)) {
-      showParanToast(context, 'mp3, m4a 파일만 자를 수 있어요');
+      showParanToast(context, tr.onlyMp3M4a);
       return;
     }
     await _previewPlayer.stop();
@@ -341,13 +342,13 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
       if (!context.mounted) return;
       if (saved != null) {
         context.read<MusicProvider>().loadSongs(); // 목록에 새 파일이 보이게
-        showActionFeedback(context, type: ActionFeedbackType.saved, message: '잘랐어요', icon: Icons.content_cut_rounded);
+        showActionFeedback(context, type: ActionFeedbackType.saved, message: tr.trimmed, icon: Icons.content_cut_rounded);
       } else {
-        showParanToast(context, '자르기에 실패했어요', error: true);
+        showParanToast(context, tr.trimFailed, error: true);
       }
     } catch (e) {
       if (!context.mounted) return;
-      showParanToast(context, '자르기에 실패했어요', error: true);
+      showParanToast(context, tr.trimFailed, error: true);
     } finally {
       if (mounted) setState(() => _isProcessing = false);
     }
@@ -368,16 +369,16 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
       });
       if (result == 'ok' || result == true) {
         showActionFeedback(context,
-            type: ActionFeedbackType.saved, message: '벨소리로 지정했어요', icon: Icons.notifications_active_rounded);
+            type: ActionFeedbackType.saved, message: tr.ringtoneSet, icon: Icons.notifications_active_rounded);
       } else if (result == 'permission') {
         // 허용 화면이 열렸어요 → 켜고 돌아와서 다시 누르면 됨
-        showParanToast(context, '"시스템 설정 변경"을 허용으로 켜고 돌아와서 다시 눌러주세요',
+        showParanToast(context, tr.allowModifySettings,
             duration: const Duration(seconds: 5));
       } else {
         showParanToast(context, AppLocalizations.of(context)!.ringtoneFailed, error: true);
       }
     } catch (e) {
-      showParanToast(context, '벨소리를 지정하지 못했어요', error: true);
+      showParanToast(context, tr.ringtoneFailedMsg, error: true);
     } finally {
       setState(() => _isProcessing = false);
     }

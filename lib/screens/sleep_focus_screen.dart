@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 import '../widgets/logo_eq_bars.dart';
+import '../l10n/locale_holder.dart';
 
 class SleepFocusScreen extends StatefulWidget {
   const SleepFocusScreen({super.key});
@@ -13,6 +14,15 @@ class SleepFocusScreen extends StatefulWidget {
 }
 
 class _SleepFocusScreenState extends State<SleepFocusScreen> {
+  /// 칸 이름 (저장은 한국어 그대로, 화면엔 언어에 맞게)
+  static String _catLabel(String c) => switch (c) {
+        '전체' => tr.all,
+        '휴식' => tr.restLabel,
+        '집중' => tr.focusLabel,
+        '백색소음' => tr.whiteNoise,
+        '기타' => tr.categoryEtc,
+        _ => c,
+      };
   String _selectedCategory = '전체';
 
   @override
@@ -49,13 +59,13 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: '휴식',
+                        text: tr.restLabel,
                         style: GoogleFonts.doHyeon(
                             // 기본 포인트 색이면 파랑, 다른 색이면 먹색 (홈 로고와 같은 규칙)
                             color: context.watch<ThemeProvider>().primaryColor.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : baseColor, fontSize: 19),
                       ),
                       TextSpan(
-                        text: ' · 집중',
+                        text: tr.focusTitlePart,
                         style: GoogleFonts.doHyeon(
                             color: baseColor, fontSize: 19),
                       ),
@@ -70,9 +80,14 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
               ],
             ),
             const SizedBox(height: 0),
-            Text(
-              '편안한 소리로 쉬고, 마음을 모아 집중해 보세요',
-              style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 11.5),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                tr.restFocusSub,
+                maxLines: 1,
+                style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 11.5),
+              ),
             ),
           ],
         ),
@@ -111,7 +126,9 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              category,
+                              _catLabel(category),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: isSelected
                                     ? (isDarkMode ? const Color(0xFF24221F) : Colors.white)
@@ -136,7 +153,7 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
                           size: 56, color: baseColor.withOpacity(0.25)),
                       const SizedBox(height: 16),
                       Text(
-                        '준비중입니다',
+                        tr.comingSoonTitle,
                         style: TextStyle(
                           color: baseColor.withOpacity(0.55),
                           fontSize: 24,
@@ -145,7 +162,7 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '$_selectedCategory 콘텐츠를 곧 만나보실 수 있어요',
+                        tr.comingSoonCategory(_catLabel(_selectedCategory)),
                         style: TextStyle(
                           color: baseColor.withOpacity(0.4),
                           fontSize: 13,

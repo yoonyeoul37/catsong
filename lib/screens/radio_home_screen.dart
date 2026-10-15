@@ -19,6 +19,7 @@ import 'radio_country_stations_screen.dart';
 import '../l10n/app_localizations.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:permission_handler/permission_handler.dart';
+import '../l10n/locale_holder.dart';
 
 
 /// 라디오 진입 시 호출. 내 폰의 국가 설정에 맞는 방송국 목록이 있으면
@@ -106,7 +107,7 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
     final localeId = switch (lang) {
       'ko' => 'ko_KR',
       'ja' => 'ja_JP',
-      'zh' => 'zh_CN',
+      'zh' => Localizations.localeOf(context).scriptCode == 'Hant' ? 'zh_TW' : 'zh_CN',
       _ => 'en_US',
     };
     setState(() => _isListening = true);
@@ -165,7 +166,7 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
               decoration: InputDecoration(
                 border: InputBorder.none,
                 isDense: true,
-                hintText: isKo ? '국가 검색' : 'Search country',
+                hintText: tr.searchCountry,
                 hintStyle: TextStyle(color: hint, fontSize: 15),
               ),
             ),
@@ -213,7 +214,7 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
             children: [
               Icon(Icons.search_off_rounded, size: 40, color: base.withOpacity(0.25)),
               const SizedBox(height: 12),
-              Text(isKo ? '찾는 나라가 없어요' : 'No country found',
+              Text(tr.noCountryFound,
                   style: TextStyle(color: base.withOpacity(0.45), fontSize: 14)),
             ],
           ),
@@ -324,12 +325,20 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
           child: Row(
             children: [
               Text(
-                (isKo ? continentLabelsKo[continent] : continentLabels[continent]) ?? continent,
+                ({
+                  'ASIA': tr.continentAsia,
+                  'EUROPE': tr.continentEurope,
+                  'NORTH_AMERICA': tr.continentNorthAmerica,
+                  'SOUTH_AMERICA': tr.continentSouthAmerica,
+                  'MIDDLE_EAST': tr.continentMiddleEast,
+                  'AFRICA': tr.continentAfrica,
+                  'OCEANIA': tr.continentOceania,
+                }[continent] ?? (isKo ? continentLabelsKo[continent] : continentLabels[continent])) ?? continent,
                 style: TextStyle(
                   color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.45),
                   fontSize: 11.5,
                   fontWeight: FontWeight.w700,
-                  letterSpacing: isKo ? 0 : 1.2,
+                  letterSpacing: tr.localeName == 'en' ? 1.2 : 0,
                 ),
               ),
               const SizedBox(width: 10),
@@ -547,7 +556,7 @@ class _MyCountryCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(isKo ? '현재 국가' : 'Current country',
+                    Text(tr.currentCountry,
                         style: TextStyle(color: fg.withOpacity(0.6), fontSize: 11)),
                     const SizedBox(height: 2),
                     Text(country.displayName,

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/video.dart';
+import '../l10n/locale_holder.dart';
 
 class VideoProvider extends ChangeNotifier {
   List<Video> _videos = [];
@@ -185,7 +186,7 @@ class VideoProvider extends ChangeNotifier {
           final map = Map<String, dynamic>.from(item);
           foundVideos.add(Video(
             id: idCounter++,
-            title: map['title'] ?? '제목 없음',
+            title: map['title'] ?? tr.noTitle,
             uri: map['uri'] ?? '',
             duration: map['duration'] ?? 0,
           ));
@@ -209,7 +210,7 @@ class VideoProvider extends ChangeNotifier {
       debugPrint('비디오 스캔 완료: ${_videos.length}개');
       debugPrint('비디오 목록: ${foundVideos.map((v) => v.title).toList()}');
     } catch (e) {
-      _errorMessage = '비디오 스캔 오류: $e';
+      _errorMessage = '${tr.videoScanError}: $e';
       debugPrint('비디오 스캔 오류: $e');
     } finally {
       _isLoading = false;

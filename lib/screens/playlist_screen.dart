@@ -14,6 +14,7 @@ import '../providers/theme_provider.dart';
 import '../widgets/paran_dialog.dart';
 import '../widgets/action_feedback.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../l10n/locale_holder.dart';
 
 // 재생목록 위쪽 그림 (수파베이스 app-images/covers 폴더)
 const _kCoverBase =
@@ -193,33 +194,33 @@ class PlaylistScreen extends StatelessWidget {
   void _showCreateDialog(BuildContext context) async {
     final name = await showParanInput(
       context,
-      title: '새 재생목록',
+      title: tr.newPlaylist,
       hint: AppLocalizations.of(context)!.playlistNameHint,
-      confirmLabel: '만들기',
+      confirmLabel: tr.create,
     );
     if (name == null || !context.mounted) return;
     context.read<PlaylistProvider>().createPlaylist(name);
-    showActionFeedback(context, type: ActionFeedbackType.added, message: '재생목록을 만들었어요');
+    showActionFeedback(context, type: ActionFeedbackType.added, message: tr.playlistCreated);
   }
 
   void _showRenameDialog(BuildContext context, Playlist playlist) async {
     final name = await showParanInput(
       context,
-      title: '재생목록 이름 바꾸기',
+      title: tr.renamePlaylist,
       initial: playlist.name,
-      confirmLabel: '바꾸기',
+      confirmLabel: tr.renameAction,
     );
     if (name == null || !context.mounted) return;
     context.read<PlaylistProvider>().renamePlaylist(playlist.id, name);
-    showActionFeedback(context, type: ActionFeedbackType.edited, message: '이름을 바꿨어요');
+    showActionFeedback(context, type: ActionFeedbackType.edited, message: tr.renamed);
   }
 
   void _showDeleteDialog(BuildContext context, Playlist playlist) async {
     final ok = await showParanConfirm(
       context,
-      title: '재생목록을 삭제할까요?',
-      message: "'${playlist.name}' 재생목록이 지워져요 (노래 파일은 그대로예요)",
-      confirmLabel: '삭제',
+      title: tr.deletePlaylistTitle,
+      message: tr.deletePlaylistMessage(playlist.name),
+      confirmLabel: tr.delete,
       danger: true,
     );
     if (!ok || !context.mounted) return;
@@ -312,7 +313,7 @@ class PlaylistDetailScreen extends StatelessWidget {
                                 fontWeight: FontWeight.w900,
                                 letterSpacing: -0.5)),
                         const SizedBox(height: 4),
-                        Text('재생목록 • ${playlist.songCount}곡',
+                        Text('${tr.playlistLabel} • ${tr.songsCount(playlist.songCount)}',
                             style: TextStyle(
                                 color: baseColor.withOpacity(0.6), fontSize: 13)),
                       ],

@@ -11,6 +11,7 @@ import '../utils/song_title_cleaner.dart';
 import '../services/music_lookup.dart';
 import '../widgets/action_feedback.dart';
 import '../widgets/paran_toast.dart';
+import '../l10n/locale_holder.dart';
 
 class EditSongScreen extends StatefulWidget {
   final Song song;
@@ -61,7 +62,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
         .read<MusicProvider>()
         .artists
         .map((x) => x.name.toLowerCase().trim())
-        .where((n) => n.isNotEmpty && !n.contains('unknown') && n != '알 수 없는 아티스트')
+        .where((n) => n.isNotEmpty && !n.contains('unknown') && n != '알 수 없는 아티스트' && n != tr.unknownArtist)
         .toSet();
     _cleaned = SongTitleCleaner.clean(_origTitle, _origArtist, knownArtists: known);
     _canClean = _cleaned.title != _origTitle || _cleaned.artist != _origArtist;
@@ -87,7 +88,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
     if (!mounted) return;
     setState(() => _searching = false);
     if (results.isEmpty) {
-      showParanToast(context, '인터넷에서 이 곡을 찾지 못했어요');
+      showParanToast(context, tr.songNotFoundOnline);
       return;
     }
     final isDark = context.read<ThemeProvider>().isDarkMode;
@@ -133,9 +134,9 @@ class _EditSongScreenState extends State<EditSongScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('이 곡이 맞나요?', style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w800)),
+                Text(tr.isThisTheSong, style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 4),
-                Text('찾는 곡을 선택하면 제목·가수·앨범·앨범 사진이 채워져요',
+                Text(tr.pickSongHint,
                     style: TextStyle(color: sub, fontSize: 12.5)),
                 const SizedBox(height: 12),
                 Flexible(
@@ -194,7 +195,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
                   child: TextButton(
                     onPressed: () => Navigator.pop(ctx),
                     style: TextButton.styleFrom(foregroundColor: sub),
-                    child: const Text('찾는 곡이 없어요'),
+                    child: Text(tr.noMatchingSong),
                   ),
                 ),
               ],
@@ -216,7 +217,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
       // 가수: 지금 한글인데 고른 게 영어면 한글 그대로 (아이유 → IU 방지)
       final curArtist = _artistController.text.trim();
       final keepKorean =
-          hangul.hasMatch(curArtist) && !hangul.hasMatch(picked.artist) && !curArtist.contains('알 수 없');
+          hangul.hasMatch(curArtist) && !hangul.hasMatch(picked.artist) && !curArtist.contains('알 수 없') && curArtist != tr.unknownArtist;
       _artistController.text = keepKorean ? curArtist : picked.artist;
       _albumController.text = picked.album;
       _pickedArt = picked.artUrl;
@@ -299,7 +300,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
                   icon: _searching
                       ? SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: ink))
                       : const Icon(Icons.travel_explore_rounded, size: 20),
-                  label: Text(_searching ? '찾는 중…' : '인터넷에서 정확한 정보 찾기',
+                  label: Text(_searching ? tr.searching : tr.findInfoOnline,
                       style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600)),
                 ),
               ),
@@ -359,14 +360,14 @@ class _EditSongScreenState extends State<EditSongScreen> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        _cleanedOn ? '제목·가수를 자동으로 정리했어요' : '원래 제목·가수예요',
+                        _cleanedOn ? tr.autoCleaned : tr.originalInfo,
                         style: TextStyle(color: ink, fontSize: 13),
                       ),
                     ),
                     TextButton(
                       onPressed: _toggleClean,
                       style: TextButton.styleFrom(foregroundColor: ink),
-                      child: Text(_cleanedOn ? '원래대로' : '다시 정리',
+                      child: Text(_cleanedOn ? tr.revert : tr.cleanAgain,
                           style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
                     ),
                   ],
@@ -384,28 +385,28 @@ class _EditSongScreenState extends State<EditSongScreen> {
                     Icon(Icons.travel_explore_rounded, color: sub, size: 18),
                     const SizedBox(width: 10),
                     Expanded(
-                      child: Text('검색 결과를 넣었어요', style: TextStyle(color: ink, fontSize: 13)),
+                      child: Text(tr.searchResultApplied, style: TextStyle(color: ink, fontSize: 13)),
                     ),
                     TextButton(
                       onPressed: _undoPick,
                       style: TextButton.styleFrom(foregroundColor: ink),
-                      child: const Text('되돌리기', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                      child: Text(tr.revertChange, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
                     ),
                   ],
                 ),
               ),
             ],
-            section('곡 정보'),
+            section(tr.songInfoSection),
             // 제목 · 아티스트 · 앨범을 흰 카드 하나에
             Container(
               decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(16)),
               child: Column(
                 children: [
-                  _field('제목', _titleController, ink, sub),
+                  _field(tr.title, _titleController, ink, sub),
                   Divider(height: 1, thickness: 0.5, indent: 16, color: line),
-                  _field('아티스트', _artistController, ink, sub),
+                  _field(tr.fieldArtist, _artistController, ink, sub),
                   Divider(height: 1, thickness: 0.5, indent: 16, color: line),
-                  _field('앨범', _albumController, ink, sub),
+                  _field(tr.fieldAlbum, _albumController, ink, sub),
                 ],
               ),
             ),

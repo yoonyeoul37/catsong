@@ -1900,6 +1900,23 @@ class RadioProvider extends ChangeNotifier {
           });
         }
         _scheduleListMap[stationName] = schedules;
+        // 지금 방송에 사진이 없으면: 편성표 목록에서 같은 제목(없으면 지금 시간)의 사진
+        final curMap = _currentProgramMap[stationName];
+        if (curMap != null && curMap['image'] == null) {
+          final n = DateTime.now();
+          final nowHM = '${n.hour.toString().padLeft(2, '0')}:${n.minute.toString().padLeft(2, '0')}';
+          for (final s in schedules) {
+            final sameTitle = s['program_title'] == curMap['program_title'];
+            final st = s['start_time'] as String;
+            final en = s['end_time'] as String;
+            final nowIn = st.compareTo(nowHM) <= 0 && nowHM.compareTo(en) < 0;
+            if (s['image'] != null && (sameTitle || nowIn)) {
+              curMap['image'] = s['image'];
+              break;
+            }
+          }
+        }
+        debugPrint('[EBS 반디 사진] 지금: ${curMap?['program_title']} → ${curMap?['image']}');
         notifyListeners();
       }
     } catch (e) {

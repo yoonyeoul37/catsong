@@ -116,6 +116,9 @@ class ScheduleService {
     }
   }
 
+  /// 편성표 파일에 들어 있는 방송국 이름들 (CBS · YTN · 경인방송 등)
+  Iterable<String> get stationNames => _scheduleData.keys;
+
   bool hasSchedule(String stationName) {
     return _scheduleData.containsKey(stationName);
   }

@@ -708,5 +708,1181 @@
         "end": "02:00"
       }
     ]
+  },
+  "YTN 라디오": {
+    "friday": [
+      {
+        "title": "YTN24",
+        "start": "00:00",
+        "end": "00:20"
+      },
+      {
+        "title": "한밤의 BGM 여행 1부",
+        "start": "00:20",
+        "end": "01:00",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0240.jpg"
+      },
+      {
+        "title": "YTN24",
+        "start": "01:00",
+        "end": "01:20"
+      },
+      {
+        "title": "한밤의 BGM 여행 2부",
+        "start": "01:20",
+        "end": "02:00",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0240.jpg"
+      },
+      {
+        "title": "YTN24",
+        "start": "02:00",
+        "end": "02:20"
+      },
+      {
+        "title": "한밤의 BGM 여행 3부",
+        "start": "02:20",
+        "end": "03:00",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0240.jpg"
+      },
+      {
+        "title": "YTN24",
+        "start": "03:00",
+        "end": "03:20"
+      },
+      {
+        "title": "한밤의 BGM 여행 4부",
+        "start": "03:20",
+        "end": "04:00",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0240.jpg"
+      },
+      {
+        "title": "뉴스퀘어 4AM",
+        "start": "04:00",
+        "end": "04:20"
+      },
+      {
+        "title": "한밤의 BGM 여행 5부",
+        "start": "04:20",
+        "end": "05:00",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0240.jpg"
+      },
+      {
+        "title": "뉴스START",
+        "start": "05:00",
+        "end": "05:25"
+      },
+      {
+        "title": "듀에토의 더 클래식",
+        "start": "05:25",
+        "end": "05:45",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0446.jpg"
+      },
+      {
+        "title": "이원화 변호사의 사건X파일",
+        "start": "05:45",
+        "end": "06:00",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0459.jpg"
+      },
+      {
+        "title": "뉴스START",
+        "start": "06:00",
+        "end": "06:18"
+      },
+      {
+        "title": "100년의 소리 : 간호로 지킨 나라",
+        "start": "06:18",
+        "end": "06:20",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0447.jpg"
+      },
+      {
+        "title": "굿모닝 경제 매거진 해 봅시다",
+        "start": "06:20",
+        "end": "06:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0489.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "06:57",
+        "end": "07:00"
+      },
+      {
+        "title": "YTN 뉴스FM 아침 7시 뉴스",
+        "start": "07:00",
+        "end": "07:10"
+      },
+      {
+        "title": "장성철의 뉴스명당 1~2부",
+        "start": "07:10",
+        "end": "07:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0214.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "07:57",
+        "end": "08:00"
+      },
+      {
+        "title": "장성철의 뉴스명당 3~4부",
+        "start": "08:00",
+        "end": "08:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0214.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "08:57",
+        "end": "09:00"
+      },
+      {
+        "title": "YTN 뉴스FM 아침 9시 뉴스",
+        "start": "09:00",
+        "end": "09:10"
+      },
+      {
+        "title": "조태현의 생생경제 1~2부",
+        "start": "09:10",
+        "end": "09:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0206.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "09:57",
+        "end": "10:00"
+      },
+      {
+        "title": "뉴스퀘어 10AM",
+        "start": "10:00",
+        "end": "10:15"
+      },
+      {
+        "title": "조인섭 변호사의 상담소",
+        "start": "10:15",
+        "end": "10:30",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0463.jpg"
+      },
+      {
+        "title": "슬기로운 라디오생활 1부",
+        "start": "10:30",
+        "end": "10:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0433.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "10:57",
+        "end": "11:00"
+      },
+      {
+        "title": "슬기로운 라디오생활 2~3부",
+        "start": "11:00",
+        "end": "11:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0433.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "11:57",
+        "end": "12:00"
+      },
+      {
+        "title": "YTN 뉴스FM 정오뉴스",
+        "start": "12:00",
+        "end": "12:08"
+      },
+      {
+        "title": "톡톡! 뉴스와 상식",
+        "start": "12:08",
+        "end": "12:10",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0245.jpg"
+      },
+      {
+        "title": "뉴스NOW",
+        "start": "12:10",
+        "end": "12:55"
+      },
+      {
+        "title": "100년의 소리 : 간호로 지킨 나라",
+        "start": "12:55",
+        "end": "12:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0447.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "12:57",
+        "end": "13:00"
+      },
+      {
+        "title": "뉴스NOW",
+        "start": "13:00",
+        "end": "13:40"
+      },
+      {
+        "title": "이원화 변호사의 사건X파일",
+        "start": "13:40",
+        "end": "13:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0459.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "13:57",
+        "end": "14:00"
+      },
+      {
+        "title": "뉴스퀘어 2PM",
+        "start": "14:00",
+        "end": "14:55"
+      },
+      {
+        "title": "톡톡! 뉴스와 상식",
+        "start": "14:55",
+        "end": "14:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0245.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "14:57",
+        "end": "15:00"
+      },
+      {
+        "title": "뉴스퀘어 2PM",
+        "start": "15:00",
+        "end": "15:40"
+      },
+      {
+        "title": "조인섭 변호사의 상담소",
+        "start": "15:40",
+        "end": "15:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0463.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "15:57",
+        "end": "16:00"
+      },
+      {
+        "title": "뉴스ON",
+        "start": "16:00",
+        "end": "16:20"
+      },
+      {
+        "title": "굿머니 굿라이프",
+        "start": "16:20",
+        "end": "16:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0342.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "16:57",
+        "end": "17:00"
+      },
+      {
+        "title": "(돌아온) 이동형의 뉴스 정면승부 1~2부",
+        "start": "17:00",
+        "end": "17:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0263.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "17:57",
+        "end": "18:00"
+      },
+      {
+        "title": "(돌아온) 이동형의 뉴스 정면승부 3부",
+        "start": "18:00",
+        "end": "18:30",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0263.jpg"
+      },
+      {
+        "title": "YTN 뉴스FM 저녁 뉴스",
+        "start": "18:30",
+        "end": "18:43"
+      },
+      {
+        "title": "100년의 소리 : 간호로 지킨 나라",
+        "start": "18:43",
+        "end": "18:45",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0447.jpg"
+      },
+      {
+        "title": "이원화 변호사의 사건X파일",
+        "start": "18:45",
+        "end": "18:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0459.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "18:57",
+        "end": "19:00"
+      },
+      {
+        "title": "뉴스PLUS",
+        "start": "19:00",
+        "end": "19:57"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "19:57",
+        "end": "20:00"
+      },
+      {
+        "title": "뉴스퀘어 8PM",
+        "start": "20:00",
+        "end": "20:20"
+      },
+      {
+        "title": "듀에토의 더 클래식",
+        "start": "20:20",
+        "end": "20:40",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0446.jpg"
+      },
+      {
+        "title": "조인섭 변호사의 상담소",
+        "start": "20:40",
+        "end": "21:00",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0463.jpg"
+      },
+      {
+        "title": "뉴스퀘어 8PM",
+        "start": "21:00",
+        "end": "21:20"
+      },
+      {
+        "title": "굿머니 굿라이프",
+        "start": "21:20",
+        "end": "21:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0342.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "21:57",
+        "end": "22:00"
+      },
+      {
+        "title": "뉴스NIGHT",
+        "start": "22:00",
+        "end": "23:38"
+      },
+      {
+        "title": "톡톡! 뉴스와 상식",
+        "start": "23:38",
+        "end": "23:40",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0245.jpg"
+      },
+      {
+        "title": "듀에토의 더 클래식",
+        "start": "23:40",
+        "end": "00:00",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0446.jpg"
+      }
+    ],
+    "weekday": [
+      {
+        "title": "YTN24",
+        "start": "00:00",
+        "end": "00:20"
+      },
+      {
+        "title": "한밤의 BGM 여행 1부",
+        "start": "00:20",
+        "end": "01:00",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0240.jpg"
+      },
+      {
+        "title": "YTN24",
+        "start": "01:00",
+        "end": "01:20"
+      },
+      {
+        "title": "한밤의 BGM 여행 2부",
+        "start": "01:20",
+        "end": "02:00",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0240.jpg"
+      },
+      {
+        "title": "YTN24",
+        "start": "02:00",
+        "end": "02:20"
+      },
+      {
+        "title": "한밤의 BGM 여행 3부",
+        "start": "02:20",
+        "end": "03:00",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0240.jpg"
+      },
+      {
+        "title": "YTN24",
+        "start": "03:00",
+        "end": "03:20"
+      },
+      {
+        "title": "한밤의 BGM 여행 4부",
+        "start": "03:20",
+        "end": "04:00",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0240.jpg"
+      },
+      {
+        "title": "뉴스퀘어 4AM",
+        "start": "04:00",
+        "end": "04:20"
+      },
+      {
+        "title": "한밤의 BGM 여행 5부",
+        "start": "04:20",
+        "end": "05:00",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0240.jpg"
+      },
+      {
+        "title": "뉴스START",
+        "start": "05:00",
+        "end": "05:25"
+      },
+      {
+        "title": "듀에토의 더 클래식",
+        "start": "05:25",
+        "end": "05:45",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0446.jpg"
+      },
+      {
+        "title": "이원화 변호사의 사건X파일",
+        "start": "05:45",
+        "end": "06:00",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0459.jpg"
+      },
+      {
+        "title": "뉴스START",
+        "start": "06:00",
+        "end": "06:18"
+      },
+      {
+        "title": "100년의 소리 : 간호로 지킨 나라",
+        "start": "06:18",
+        "end": "06:20",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0447.jpg"
+      },
+      {
+        "title": "굿모닝 경제 매거진 해 봅시다",
+        "start": "06:20",
+        "end": "06:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0489.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "06:57",
+        "end": "07:00"
+      },
+      {
+        "title": "YTN 뉴스FM 아침 7시 뉴스",
+        "start": "07:00",
+        "end": "07:10"
+      },
+      {
+        "title": "장성철의 뉴스명당 1~2부",
+        "start": "07:10",
+        "end": "07:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0214.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "07:57",
+        "end": "08:00"
+      },
+      {
+        "title": "장성철의 뉴스명당 3~4부",
+        "start": "08:00",
+        "end": "08:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0214.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "08:57",
+        "end": "09:00"
+      },
+      {
+        "title": "YTN 뉴스FM 아침 9시 뉴스",
+        "start": "09:00",
+        "end": "09:10"
+      },
+      {
+        "title": "조태현의 생생경제 1~2부",
+        "start": "09:10",
+        "end": "09:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0206.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "09:57",
+        "end": "10:00"
+      },
+      {
+        "title": "뉴스퀘어 10AM",
+        "start": "10:00",
+        "end": "10:15"
+      },
+      {
+        "title": "조인섭 변호사의 상담소",
+        "start": "10:15",
+        "end": "10:30",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0463.jpg"
+      },
+      {
+        "title": "슬기로운 라디오생활 1부",
+        "start": "10:30",
+        "end": "10:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0433.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "10:57",
+        "end": "11:00"
+      },
+      {
+        "title": "슬기로운 라디오생활 2~3부",
+        "start": "11:00",
+        "end": "11:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0433.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "11:57",
+        "end": "12:00"
+      },
+      {
+        "title": "YTN 뉴스FM 정오뉴스",
+        "start": "12:00",
+        "end": "12:08"
+      },
+      {
+        "title": "톡톡! 뉴스와 상식",
+        "start": "12:08",
+        "end": "12:10",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0245.jpg"
+      },
+      {
+        "title": "뉴스NOW",
+        "start": "12:10",
+        "end": "12:55"
+      },
+      {
+        "title": "100년의 소리 : 간호로 지킨 나라",
+        "start": "12:55",
+        "end": "12:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0447.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "12:57",
+        "end": "13:00"
+      },
+      {
+        "title": "뉴스NOW",
+        "start": "13:00",
+        "end": "13:40"
+      },
+      {
+        "title": "이원화 변호사의 사건X파일",
+        "start": "13:40",
+        "end": "13:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0459.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "13:57",
+        "end": "14:00"
+      },
+      {
+        "title": "뉴스퀘어 2PM",
+        "start": "14:00",
+        "end": "14:55"
+      },
+      {
+        "title": "톡톡! 뉴스와 상식",
+        "start": "14:55",
+        "end": "14:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0245.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "14:57",
+        "end": "15:00"
+      },
+      {
+        "title": "뉴스퀘어 2PM",
+        "start": "15:00",
+        "end": "15:40"
+      },
+      {
+        "title": "조인섭 변호사의 상담소",
+        "start": "15:40",
+        "end": "15:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0463.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "15:57",
+        "end": "16:00"
+      },
+      {
+        "title": "뉴스ON",
+        "start": "16:00",
+        "end": "16:20"
+      },
+      {
+        "title": "굿머니 굿라이프",
+        "start": "16:20",
+        "end": "16:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0342.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "16:57",
+        "end": "17:00"
+      },
+      {
+        "title": "(돌아온) 이동형의 뉴스 정면승부 1~2부",
+        "start": "17:00",
+        "end": "17:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0263.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "17:57",
+        "end": "18:00"
+      },
+      {
+        "title": "(돌아온) 이동형의 뉴스 정면승부 3부",
+        "start": "18:00",
+        "end": "18:30",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0263.jpg"
+      },
+      {
+        "title": "YTN 뉴스FM 저녁 뉴스",
+        "start": "18:30",
+        "end": "18:43"
+      },
+      {
+        "title": "100년의 소리 : 간호로 지킨 나라",
+        "start": "18:43",
+        "end": "18:45",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0447.jpg"
+      },
+      {
+        "title": "이원화 변호사의 사건X파일",
+        "start": "18:45",
+        "end": "18:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0459.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "18:57",
+        "end": "19:00"
+      },
+      {
+        "title": "뉴스PLUS",
+        "start": "19:00",
+        "end": "19:57"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "19:57",
+        "end": "20:00"
+      },
+      {
+        "title": "뉴스퀘어 8PM",
+        "start": "20:00",
+        "end": "20:20"
+      },
+      {
+        "title": "듀에토의 더 클래식",
+        "start": "20:20",
+        "end": "20:40",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0446.jpg"
+      },
+      {
+        "title": "조인섭 변호사의 상담소",
+        "start": "20:40",
+        "end": "21:00",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0463.jpg"
+      },
+      {
+        "title": "뉴스퀘어 8PM",
+        "start": "21:00",
+        "end": "21:20"
+      },
+      {
+        "title": "굿머니 굿라이프",
+        "start": "21:20",
+        "end": "21:57",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0342.jpg"
+      },
+      {
+        "title": "57분 날씨와 교통",
+        "start": "21:57",
+        "end": "22:00"
+      },
+      {
+        "title": "뉴스NIGHT",
+        "start": "22:00",
+        "end": "23:38"
+      },
+      {
+        "title": "톡톡! 뉴스와 상식",
+        "start": "23:38",
+        "end": "23:40",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0245.jpg"
+      },
+      {
+        "title": "듀에토의 더 클래식",
+        "start": "23:40",
+        "end": "00:00",
+        "image": "https://imgradio.ytn.co.kr/program_info/pro_img2_0446.jpg"
+      }
+    ],
+    "saturday": [],
+    "sunday": []
+  },
+  "경인방송": {
+    "friday": [
+      {
+        "title": "당신의 BGM",
+        "start": "00:00",
+        "end": "06:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/be0cbf510c304095be069a8a09205dec.jpg"
+      },
+      {
+        "title": "K-POP AI MUSIC GUIDE",
+        "start": "06:00",
+        "end": "07:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/04/ee3fed1e70bbb8506b2f6d13fe62ec59.png"
+      },
+      {
+        "title": "굿모닝 인천 박주언입니다",
+        "start": "07:00",
+        "end": "07:55",
+        "image": "https://www.ifm.kr/uploads/files/202604/03/a54409a07999277a651fa8230a91ad96.png"
+      },
+      {
+        "title": "ifm 영어뉴스",
+        "start": "07:55",
+        "end": "08:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/05/8bf0d888ac5d14b26c4331b2197cb5a1.png"
+      },
+      {
+        "title": "8시 뉴스",
+        "start": "08:00",
+        "end": "08:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/36197d0dccc81eccd99547fd0ec8020d.jpg"
+      },
+      {
+        "title": "굿모닝 인천 박주언입니다",
+        "start": "08:05",
+        "end": "09:00",
+        "image": "https://www.ifm.kr/uploads/files/202604/03/a54409a07999277a651fa8230a91ad96.png"
+      },
+      {
+        "title": "모닝테라스",
+        "start": "09:00",
+        "end": "10:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/04/2db0cc71bb7d4151c72899945eb6adba.png"
+      },
+      {
+        "title": "ifm 영어뉴스",
+        "start": "10:00",
+        "end": "10:05",
+        "image": "https://www.ifm.kr/uploads/files/202601/05/8bf0d888ac5d14b26c4331b2197cb5a1.png"
+      },
+      {
+        "title": "모닝테라스",
+        "start": "10:05",
+        "end": "11:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/04/2db0cc71bb7d4151c72899945eb6adba.png"
+      },
+      {
+        "title": "머니풀 투데이",
+        "start": "11:00",
+        "end": "12:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/04/94e586490b4b62d2e62dedecabef09ef.png"
+      },
+      {
+        "title": "12시 뉴스",
+        "start": "12:00",
+        "end": "12:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/b9a608079ad7a9d58bf8107e81525e4d.jpg"
+      },
+      {
+        "title": "박현준의 라디오 가가",
+        "start": "12:05",
+        "end": "14:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/767b9ac3f863898ce96af7c9ca792f21.jpg"
+      },
+      {
+        "title": "2시 뉴스",
+        "start": "14:00",
+        "end": "14:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/144f8d7ccf5fa6deadd449271aed3bd5.jpg"
+      },
+      {
+        "title": "언제나 좋은날 채리입니다",
+        "start": "14:05",
+        "end": "16:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/9cd88082220bc0ba8bcedbb1922b0f2d.jpg"
+      },
+      {
+        "title": "4시 뉴스",
+        "start": "16:00",
+        "end": "16:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/370b20e013549596bce636fc6c103be0.jpg"
+      },
+      {
+        "title": "always 인천 배칠수입니다",
+        "start": "16:05",
+        "end": "18:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/7eab5497493ae321a2c767d2569f320d.jpg"
+      },
+      {
+        "title": "6시 뉴스",
+        "start": "18:00",
+        "end": "18:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/d3a37c96838aaea1299d48a3f35c8643.jpg"
+      },
+      {
+        "title": "박성용의 시선공감",
+        "start": "18:05",
+        "end": "20:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/82979e00b77e0a97f74e32ae59e02e03.jpg"
+      },
+      {
+        "title": "포근한 밤 김경옥입니다",
+        "start": "20:00",
+        "end": "22:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/1b1d561788d6cb2fba9673e864574957.jpg"
+      },
+      {
+        "title": "델리스파이스의 뮤직시티",
+        "start": "22:00",
+        "end": "00:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/58416a427230479f81be22675b9ac0fa.jpg"
+      }
+    ],
+    "saturday": [
+      {
+        "title": "당신의 BGM",
+        "start": "00:00",
+        "end": "06:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/be0cbf510c304095be069a8a09205dec.jpg"
+      },
+      {
+        "title": "K-POP AI MUSIC GUIDE",
+        "start": "06:00",
+        "end": "07:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/04/ee3fed1e70bbb8506b2f6d13fe62ec59.png"
+      },
+      {
+        "title": "굿모닝 인천, 박주언입니다(재)",
+        "start": "07:00",
+        "end": "08:00",
+        "image": "https://www.ifm.kr/uploads/files/202604/03/a54409a07999277a651fa8230a91ad96.png"
+      },
+      {
+        "title": "이슈&피플",
+        "start": "08:00",
+        "end": "09:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/02/2a9b00d4ccc61773df91bfc5d0791b4a.png"
+      },
+      {
+        "title": "모닝테라스",
+        "start": "09:00",
+        "end": "11:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/04/2db0cc71bb7d4151c72899945eb6adba.png"
+      },
+      {
+        "title": "머니풀 투데이",
+        "start": "11:00",
+        "end": "12:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/04/94e586490b4b62d2e62dedecabef09ef.png"
+      },
+      {
+        "title": "12시 뉴스",
+        "start": "12:00",
+        "end": "12:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/b9a608079ad7a9d58bf8107e81525e4d.jpg"
+      },
+      {
+        "title": "박현준의 라디오 가가",
+        "start": "12:05",
+        "end": "14:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/767b9ac3f863898ce96af7c9ca792f21.jpg"
+      },
+      {
+        "title": "2시 뉴스",
+        "start": "14:00",
+        "end": "14:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/144f8d7ccf5fa6deadd449271aed3bd5.jpg"
+      },
+      {
+        "title": "언제나 좋은날 채리입니다",
+        "start": "14:05",
+        "end": "16:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/9cd88082220bc0ba8bcedbb1922b0f2d.jpg"
+      },
+      {
+        "title": "4시 뉴스",
+        "start": "16:00",
+        "end": "16:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/370b20e013549596bce636fc6c103be0.jpg"
+      },
+      {
+        "title": "always 인천 배칠수입니다",
+        "start": "16:05",
+        "end": "18:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/7eab5497493ae321a2c767d2569f320d.jpg"
+      },
+      {
+        "title": "6시 뉴스",
+        "start": "18:00",
+        "end": "18:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/d3a37c96838aaea1299d48a3f35c8643.jpg"
+      },
+      {
+        "title": "여기는 인천항, 유동현입니다",
+        "start": "18:05",
+        "end": "19:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/73d66dd9c74459c953548aed14c0801a.jpg"
+      },
+      {
+        "title": "이실아의 SKY 907",
+        "start": "19:00",
+        "end": "20:00",
+        "image": "https://www.ifm.kr/uploads/files/202607/22/a5618af6a8b03487bc7eb1e6ec5209e7.png"
+      },
+      {
+        "title": "포근한 밤 김경옥입니다",
+        "start": "20:00",
+        "end": "22:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/1b1d561788d6cb2fba9673e864574957.jpg"
+      },
+      {
+        "title": "델리스파이스의 뮤직시티",
+        "start": "22:00",
+        "end": "00:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/58416a427230479f81be22675b9ac0fa.jpg"
+      }
+    ],
+    "sunday": [
+      {
+        "title": "당신의 BGM",
+        "start": "00:00",
+        "end": "06:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/be0cbf510c304095be069a8a09205dec.jpg"
+      },
+      {
+        "title": "K-POP AI MUSIC GUIDE",
+        "start": "06:00",
+        "end": "07:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/04/ee3fed1e70bbb8506b2f6d13fe62ec59.png"
+      },
+      {
+        "title": "굿모닝 인천, 박주언입니다(재)",
+        "start": "07:00",
+        "end": "08:00",
+        "image": "https://www.ifm.kr/uploads/files/202604/03/a54409a07999277a651fa8230a91ad96.png"
+      },
+      {
+        "title": "머니카운터",
+        "start": "08:00",
+        "end": "09:00",
+        "image": "https://www.ifm.kr/uploads/files/202607/22/4499ac3f684b52e34a297450a8d96e46.png"
+      },
+      {
+        "title": "모닝테라스",
+        "start": "09:00",
+        "end": "11:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/04/2db0cc71bb7d4151c72899945eb6adba.png"
+      },
+      {
+        "title": "머니풀 투데이",
+        "start": "11:00",
+        "end": "12:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/04/94e586490b4b62d2e62dedecabef09ef.png"
+      },
+      {
+        "title": "12시 뉴스",
+        "start": "12:00",
+        "end": "12:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/b9a608079ad7a9d58bf8107e81525e4d.jpg"
+      },
+      {
+        "title": "박현준의 라디오 가가",
+        "start": "12:05",
+        "end": "14:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/767b9ac3f863898ce96af7c9ca792f21.jpg"
+      },
+      {
+        "title": "2시 뉴스",
+        "start": "14:00",
+        "end": "14:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/144f8d7ccf5fa6deadd449271aed3bd5.jpg"
+      },
+      {
+        "title": "언제나 좋은날 채리입니다",
+        "start": "14:05",
+        "end": "16:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/9cd88082220bc0ba8bcedbb1922b0f2d.jpg"
+      },
+      {
+        "title": "4시 뉴스",
+        "start": "16:00",
+        "end": "16:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/370b20e013549596bce636fc6c103be0.jpg"
+      },
+      {
+        "title": "always 인천 배칠수입니다",
+        "start": "16:05",
+        "end": "18:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/7eab5497493ae321a2c767d2569f320d.jpg"
+      },
+      {
+        "title": "6시 뉴스",
+        "start": "18:00",
+        "end": "18:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/d3a37c96838aaea1299d48a3f35c8643.jpg"
+      },
+      {
+        "title": "이선정의 뮤직스케치",
+        "start": "18:05",
+        "end": "20:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/02/b91b0fa8a186a93fae179633d0c1fdbe.png"
+      },
+      {
+        "title": "포근한 밤 김경옥입니다",
+        "start": "20:00",
+        "end": "22:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/1b1d561788d6cb2fba9673e864574957.jpg"
+      },
+      {
+        "title": "델리스파이스의 뮤직시티",
+        "start": "22:00",
+        "end": "00:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/58416a427230479f81be22675b9ac0fa.jpg"
+      }
+    ],
+    "weekday": [
+      {
+        "title": "당신의 BGM",
+        "start": "00:00",
+        "end": "06:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/be0cbf510c304095be069a8a09205dec.jpg"
+      },
+      {
+        "title": "K-POP AI MUSIC GUIDE",
+        "start": "06:00",
+        "end": "07:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/04/ee3fed1e70bbb8506b2f6d13fe62ec59.png"
+      },
+      {
+        "title": "굿모닝 인천 박주언입니다",
+        "start": "07:00",
+        "end": "07:55",
+        "image": "https://www.ifm.kr/uploads/files/202604/03/a54409a07999277a651fa8230a91ad96.png"
+      },
+      {
+        "title": "ifm 영어뉴스",
+        "start": "07:55",
+        "end": "08:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/05/8bf0d888ac5d14b26c4331b2197cb5a1.png"
+      },
+      {
+        "title": "8시 뉴스",
+        "start": "08:00",
+        "end": "08:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/36197d0dccc81eccd99547fd0ec8020d.jpg"
+      },
+      {
+        "title": "굿모닝 인천 박주언입니다",
+        "start": "08:05",
+        "end": "09:00",
+        "image": "https://www.ifm.kr/uploads/files/202604/03/a54409a07999277a651fa8230a91ad96.png"
+      },
+      {
+        "title": "모닝테라스",
+        "start": "09:00",
+        "end": "10:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/04/2db0cc71bb7d4151c72899945eb6adba.png"
+      },
+      {
+        "title": "ifm 영어뉴스",
+        "start": "10:00",
+        "end": "10:05",
+        "image": "https://www.ifm.kr/uploads/files/202601/05/8bf0d888ac5d14b26c4331b2197cb5a1.png"
+      },
+      {
+        "title": "모닝테라스",
+        "start": "10:05",
+        "end": "11:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/04/2db0cc71bb7d4151c72899945eb6adba.png"
+      },
+      {
+        "title": "머니풀 투데이",
+        "start": "11:00",
+        "end": "12:00",
+        "image": "https://www.ifm.kr/uploads/files/202601/04/94e586490b4b62d2e62dedecabef09ef.png"
+      },
+      {
+        "title": "12시 뉴스",
+        "start": "12:00",
+        "end": "12:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/b9a608079ad7a9d58bf8107e81525e4d.jpg"
+      },
+      {
+        "title": "박현준의 라디오 가가",
+        "start": "12:05",
+        "end": "14:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/767b9ac3f863898ce96af7c9ca792f21.jpg"
+      },
+      {
+        "title": "2시 뉴스",
+        "start": "14:00",
+        "end": "14:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/144f8d7ccf5fa6deadd449271aed3bd5.jpg"
+      },
+      {
+        "title": "언제나 좋은날 채리입니다",
+        "start": "14:05",
+        "end": "16:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/9cd88082220bc0ba8bcedbb1922b0f2d.jpg"
+      },
+      {
+        "title": "4시 뉴스",
+        "start": "16:00",
+        "end": "16:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/370b20e013549596bce636fc6c103be0.jpg"
+      },
+      {
+        "title": "always 인천 배칠수입니다",
+        "start": "16:05",
+        "end": "18:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/7eab5497493ae321a2c767d2569f320d.jpg"
+      },
+      {
+        "title": "6시 뉴스",
+        "start": "18:00",
+        "end": "18:05",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/d3a37c96838aaea1299d48a3f35c8643.jpg"
+      },
+      {
+        "title": "박성용의 시선공감",
+        "start": "18:05",
+        "end": "20:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/82979e00b77e0a97f74e32ae59e02e03.jpg"
+      },
+      {
+        "title": "포근한 밤 김경옥입니다",
+        "start": "20:00",
+        "end": "22:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/1b1d561788d6cb2fba9673e864574957.jpg"
+      },
+      {
+        "title": "델리스파이스의 뮤직시티",
+        "start": "22:00",
+        "end": "00:00",
+        "image": "https://www.ifm.kr/uploads/files/202507/02/58416a427230479f81be22675b9ac0fa.jpg"
+      }
+    ]
   }
 }

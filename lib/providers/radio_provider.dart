@@ -2066,6 +2066,15 @@ class RadioProvider extends ChangeNotifier {
       }
     }
 
+    // 편성표 파일(schedule.json) 방송국: 듣는 동안 시간이 지나면 '지금 프로그램'도 다음 것으로
+    for (final stationName in _scheduleService.stationNames) {
+      if (!_scheduleListMap.containsKey(stationName)) continue;
+      final p = _scheduleService.getCurrentProgram(stationName);
+      if (p != null && _nowPlayingMap[stationName] != p['title']) {
+        fetchJsonSchedule(stationName); // 지금 프로그램 · 사진 · 오늘 편성표 다시 맞추기
+      }
+    }
+
     if (changed) notifyListeners();
   }
 

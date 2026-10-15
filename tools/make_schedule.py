@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # 라디오 편성표 자동 만들기 → assets/schedule.json
-# 지금은 CBS 음악FM · CBS 표준FM (CBS 홈페이지 편성표 데이터 + 프로그램 사진)
-# CBS는 '오늘' 편성만 주기 때문에, 매일 돌리면 그날 요일 칸이 새로 바뀌어요
+# CBS 음악FM · CBS 표준FM · YTN 라디오 · 경인방송 (각 방송국 홈페이지 편성표 + 프로그램 사진)
+# CBS · YTN은 '오늘' 편성만 줘서 매일 돌리면 그날 요일 칸이 새로 바뀌고, 경인방송은 일주일치를 한 번에 가져와요
 # 실행: python tools/make_schedule.py   (GitHub에서는 매일 새벽 자동으로)
-import json, sys, datetime, urllib.request, os, re
+import json, sys, datetime, urllib.request, os, re, html as htmllib
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'schedule.json')
 UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36'
+KST = datetime.timezone(datetime.timedelta(hours=9))  # GitHub 서버는 해외 시간이라 한국 날짜로 맞추기
 
 # CBS 데이터의 방송 번호 → 앱의 방송국 이름
 CBS_MEDIA = {'radio001': 'CBS 음악FM', 'radio002': 'CBS 표준FM'}
@@ -14,12 +15,21 @@ CBS_MEDIA = {'radio001': 'CBS 음악FM', 'radio002': 'CBS 표준FM'}
 CBS_IMAGE_KEYS = ['vod', 'mobileTop', 'mainTop', 'programBanner', 'radioProfil']
 
 
-def get_json(url, referer):
-    req = urllib.request.Request(url, headers={
-        'User-Agent': UA, 'Referer': referer, 'X-Requested-With': 'XMLHttpRequest',
-        'Accept-Language': 'ko-KR,ko;q=0.9'})
+def today_kst():
+    return datetime.datetime.now(KST).date()
+
+
+def fetch(url, referer, ajax=False):
+    h = {'User-Agent': UA, 'Referer': referer, 'Accept-Language': 'ko-KR,ko;q=0.9'}
+    if ajax:
+        h['X-Requested-With'] = 'XMLHttpRequest'
+    req = urllib.request.Request(url, headers=h)
     with urllib.request.urlopen(req, timeout=30) as r:
-        return json.loads(r.read().decode('utf-8'))
+        return r.read().decode('utf-8', errors='replace')
+
+
+def get_json(url, referer):
+    return json.loads(fetch(url, referer, ajax=True))
 
 
 def day_key(d):
@@ -27,11 +37,30 @@ def day_key(d):
     return {4: 'friday', 5: 'saturday', 6: 'sunday'}.get(d.weekday(), 'weekday')
 
 
+def text_of(s):
+    return re.sub(r'\s+', ' ', htmllib.unescape(re.sub(r'<[^>]+>', ' ', s))).strip()
+
+
 def base_title(t):
     # "최강희의 영화음악 (재)" → "최강희의 영화음악" (재방송도 같은 사진 쓰기)
     return re.sub(r'\s*\((재|재방송)\)\s*$', '', t).strip()
 
 
+def clean_day(progs):
+    """시간 순서로 · 같은 시작 시간은 하나만 · 끝 시간 없으면 다음 프로그램 시작으로"""
+    progs = sorted(progs, key=lambda p: p['start'])
+    seen, out = set(), []
+    for p in progs:
+        if p['start'] not in seen:
+            seen.add(p['start'])
+            out.append(p)
+    for i, p in enumerate(out):
+        if not p.get('end'):
+            p['end'] = out[i + 1]['start'] if i + 1 < len(out) else '00:00'
+    return out
+
+
+# ───────── CBS ─────────
 def cbs_image(it):
     img = ((it.get('program') or {}).get('image')) or {}
     for k in CBS_IMAGE_KEYS:
@@ -42,7 +71,6 @@ def cbs_image(it):
 
 
 def cbs():
-    """{방송국: {요일칸: [프로그램...]}} — 데이터에 있는 날짜(보통 오늘)만"""
     data = get_json('https://www.cbs.co.kr/schedule/radio/ajax', 'https://www.cbs.co.kr/schedule')
     by = {}
     for key, items in (data.items() if isinstance(data, dict) else []):
@@ -64,15 +92,73 @@ def cbs():
     out = {}
     for station, days in by.items():
         for date, progs in days.items():
-            progs.sort(key=lambda p: p['start'])
-            seen, clean = set(), []
-            for p in progs:  # 같은 시작 시간이 두 번 있으면 하나만
-                if p['start'] not in seen:
-                    seen.add(p['start'])
-                    clean.append(p)
+            clean = clean_day(progs)
             if len(clean) >= 5:
                 out.setdefault(station, {})[day_key(datetime.date.fromisoformat(date))] = clean
     return out
+
+
+# ───────── YTN 라디오 ─────────
+def ytn():
+    page = fetch('https://radio.ytn.co.kr/schedule/daily.php', 'https://radio.ytn.co.kr/')
+    m = re.search(r'(\d{4})년\s*(\d{1,2})월\s*(\d{1,2})일', page)
+    date = datetime.date(int(m.group(1)), int(m.group(2)), int(m.group(3))) if m else today_kst()
+    progs = []
+    for block in re.findall(r'<div class="time_content">(.*?)<div class="hr">', page, re.S):
+        t = re.search(r'<div class="time">\s*(\d{1,2}:\d{2})', block)
+        n = re.search(r'<div class="name">(.*?)</div>', block, re.S)
+        if not (t and n):
+            continue
+        title = text_of(n.group(1))
+        if not title:
+            continue
+        p = {'title': title, 'start': t.group(1).zfill(5), 'end': ''}
+        code = re.search(r's_mcd=(\d+)', n.group(1))
+        if code:  # 프로그램 사진 (프로그램 목록 화면에서 쓰는 주소 모양)
+            p['image'] = f'https://imgradio.ytn.co.kr/program_info/pro_img2_{code.group(1)}.jpg'
+        progs.append(p)
+    clean = clean_day(progs)
+    return {'YTN 라디오': {day_key(date): clean}} if len(clean) >= 5 else {}
+
+
+# ───────── 경인방송 ─────────
+def ifm_day(date):
+    page = fetch(f'https://www.ifm.kr/schedule?date={date:%Y-%m-%d}', 'https://www.ifm.kr/schedule')
+    i = page.find('tbl_radio_schedule')
+    table = page[i:] if i >= 0 else page
+    progs = []
+    for row in re.findall(r'<tr[^>]*>(.*?)</tr>', table, re.S):
+        t = re.search(r'class="first time"[^>]*>\s*(\d{1,2}:\d{2})', row)
+        n = re.search(r'class="position-relative"[^>]*>(.*?)</div>', row, re.S)
+        if not (t and n):
+            continue
+        title = text_of(n.group(1))
+        if not title:
+            continue
+        p = {'title': title, 'start': t.group(1).zfill(5), 'end': ''}
+        img = re.search(r'<img[^>]+src="(https?://[^"]+)"', row)
+        if img:
+            p['image'] = img.group(1)
+        progs.append(p)
+    return clean_day(progs)
+
+
+def ifm():
+    week = {}
+    start = today_kst()
+    for k in range(7):  # 일주일치 한 번에: 요일 칸마다 가까운 날
+        d = start + datetime.timedelta(days=k)
+        key = day_key(d)
+        if key in week:
+            continue
+        try:
+            progs = ifm_day(d)
+        except Exception as e:
+            print(f'  (경인방송 {d} 못 가져옴: {e})')
+            continue
+        if len(progs) >= 5:
+            week[key] = progs
+    return {'경인방송': week} if week else {}
 
 
 def fill_images(week):
@@ -88,6 +174,9 @@ def fill_images(week):
                 p['image'] = pics[base_title(p['title'])]
 
 
+SOURCES = [('CBS', cbs), ('YTN', ytn), ('경인방송', ifm)]
+
+
 def main():
     try:
         with open(OUT, encoding='utf-8') as f:
@@ -96,7 +185,7 @@ def main():
         old = {}
     new = json.loads(json.dumps(old))  # 깊은 복사
     ok = 0
-    for name, fn in [('CBS', cbs)]:
+    for name, fn in SOURCES:
         try:
             got = fn()
         except Exception as e:
@@ -107,9 +196,11 @@ def main():
             continue
         for station, days in got.items():
             week = new.get(station) or {}
-            week.update(days)  # 오늘 요일 칸만 새로 (나머지 요일은 예전 것 그대로)
+            week.update(days)  # 가져온 요일 칸만 새로 (나머지 요일은 예전 것 그대로)
             for k in ('weekday', 'friday', 'saturday', 'sunday'):
                 week.setdefault(k, [])
+            if not week['weekday']:  # 평일 칸이 아직 없으면 앱이 쓸 수 있게 가져온 날 것으로 임시로 채움
+                week['weekday'] = next((v for v in days.values() if v), [])
             fill_images(week)
             new[station] = week
             for k, v in days.items():

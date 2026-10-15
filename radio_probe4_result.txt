@@ -1,0 +1,335 @@
+============================================================
+[YTN 지금 방송 파일] https://radio.ytn.co.kr/incfile/nowSchedule.xml
+  상태 200 · text/xml · 글자 수 431
+<?xml version="1.0" encoding="UTF-8"?>
+<ytnradio>
+<schedule>
+<time>04:00</time>
+<title>뉴스퀘어 4AM </title>
+</schedule>
+<schedule>
+<time>04:20</time>
+<title>한밤의 BGM 여행 5부</title>
+</schedule>
+<schedule>
+<time>05:00</time>
+<title>뉴스START </title>
+</schedule>
+<schedule>
+<time>05:25</time>
+<title>듀에토의 더 클래식 </title>
+</schedule>
+<schedule>
+<time>05:45</time>
+<title>이원화 변호사의 사건...</title>
+</schedule>
+<now_pro>0468</now_pro>
+
+</ytnradio>
+============================================================
+[YTN 편성표] https://radio.ytn.co.kr/schedule/daily.php
+  상태 200 · text/html; charset=UTF-8 · 글자 수 37362
+  --- 첫 시간 근처 HTML (그대로) ---
+class="today_n" style="float:left;padding-top:5px"><span class="today">2026년 10월 16일 금요일 편성표입니다.</span></div>
+		<div style="float:leftwidth:350px;text-align:right"><a href="javascript:_print('2026-10-16', 0, 1)">
+        <img src="/img/schedule/btn_daily_down.gif" width="110" height="22" style="vertical-align:middle" alt="일간편성표 다운로드" /></a>&nbsp;<a href="javascript:_print('2026-10-16', 0, 2)"><img src="/img/schedule/btn_print.gif" width="65" height="22"  style="vertical-align:middle"  alt="인쇄하기" /></a></div>
+		</div>
+
+
+        		<div id="schedule2">
+
+		<div class="daytime_left">
+			<div class="time_title"><img src="/img/schedule/th_day_n.gif" width="330" height="26" alt="" /></div>
+			<!-- 시간 / 방송타이틀 -->
+
+                        <div class="time_content">
+                <div class="time">00:00 -</div>
+                <div class="name">YTN24 </div>
+				            </div>
+            <div class="hr"></div>
+                        <div class="time_content">
+                <div class="time">00:20 -</div>
+                <div class="name"><a href='/program/program_main.php?s_mcd=0240'>한밤의 BGM 여행 1부</a></div>
+				            </div>
+            <div class="hr"></div>
+                        <div class="time_content">
+                <div class="time">01:00 -</div>
+                <div class="name">YTN24 </div>
+				            </div>
+            <div class="hr"></div>
+                        <div class="time_content">
+                <div class="time">01:20 -</div>
+                <div class="name"><a href='/program/program_main.php?s_mcd=0240'>한밤의 BGM 여행 2부</a></div>
+				            </div>
+            <div class="hr"></div>
+                        <div class="time_content">
+                <div class="time">02:00 -</div>
+                <div class="name">YTN24 </div>
+				            </div>
+            <div class="hr"></div>
+                        <div class="time_content">
+                <div class="time">02:20 -</div>
+                <div class="name"><a href='/program/program_main.php?s_mcd=0240'>한밤의 BGM 여행 3부</a></div>
+				            </div>
+            <div class="hr"></div>
+                        <div class="time_content">
+                <div class="time">03:00 -</div>
+                <div class="name">YTN24 </div>
+				            </div>
+            <div class="hr"></div>
+                        <div class="time_content">
+                <div class="time">03:20 -</div>
+                <div class="name"><a href='/program/program_main.php?s_mcd=0240'>한밤의 BGM 여행 4부</a></div>
+				            </div>
+            <div class="hr"></div>
+                        <div class="time_content">
+                <div class="time">04:00 -</div>
+                <div class="name">뉴스퀘어 4AM </div>
+				            </div>
+            <div class="hr"></div>
+                        <div class="time_content">
+                <div class="time">04:20 -</div>
+                <div class="name"><a href='/program/program_main.php?s_mcd=0240'>한밤의 BGM 여행 5부</a></div>
+				            </div>
+            <div class="hr"></div>
+                        <div class="time_content">
+                <div class="time">05:00 -</div>
+                <div class="name">뉴스START </div>
+				            </div>
+            <div class="hr"></div>
+                        <div class="time_content">
+                <div class="time">05:25 -</div>
+                <div class="name"><a href='/program/program_main.php?s_mcd=0446'>듀에토의 더 클래식 </a></div>
+				            </div>
+            <div class="hr"></div>
+                        <div class="time_content">
+                <div class="time">05:45 -</div>
+                <div class="name"><a href='/program/program_main.php?s_mcd=0459'>이원화 변호사의 사건X파일 </a></div>
+				            </div>
+            <div class="hr"></div>
+                      
+  --- 사진 후보 (처음 15개) ---
+  /img/_top/login_button.gif
+  /img/_top/login_bar.gif
+  /img/_top/join_btn.gif
+  /img/_top/new_logo_v2.jpg
+  /img/_top/btn_onair.gif
+  /img/_top/menu01_off.gif
+  /img/_top/menu02_off.gif
+  /img/_top/menu03_off.gif
+  /img/_top/menu04_off.gif
+  /img/_top/menu05_off.gif
+  /img/_top/search_tit.gif
+  /img/_top/bg_top_pro_bottom.gif
+  ../img/etc/bnr_201028.jpg?v1
+  ../img/title/title_daily_sch.gif
+  /img/schedule/btn_schedule_week_back_n.gif
+============================================================
+[YTN 프로그램 목록] https://radio.ytn.co.kr/program/daily.php
+  상태 200 · text/html; charset=UTF-8 · 글자 수 28611
+  --- 첫 시간 근처 HTML (그대로) ---
+e="position:absolute;top:260px;right:-154px;g">
+	<!---->
+</div>
+<!-- //우측 윙배너 영역 -->
+
+
+
+<!-- content -->
+<div id="middleZone">
+	<div id="contentZone">
+		<!-- 프로그램 컨텐츠 -->
+		<ul id="titleZone">
+			<li class="left">
+				<img src="../img/title/title_daily.gif" width="196" height="33" alt="프로그램별 다시 듣기"/>
+			</li>
+			<li class="right"></li>
+		</ul>
+
+		<!-- 프로그램 리스트 -->
+		<div class="pro_list">
+						<dl>
+				<dt class="img"><a href="/program/program_main.php?s_mcd=0489"><img src="https://imgradio.ytn.co.kr/program_info/pro_img2_0489.jpg" width="109" height="109" alt="" /></a></dt>
+				<dd class="title"><a href="/program/program_main.php?s_mcd=0489" class="title">[굿모닝 경제 매거진 해 봅시다]</a></dd>
+				<dd class="time"><img src="/img/program/ico_time_n.gif" width="28" height="14" alt="방송" />&nbsp;[월~금]^06:20-07:00</dd>
+				<dd class="text">Early Birds Only!
+일찍 일어나는 새가 정보를 얻는다
+ 
+간밤 외신과 따끈따끈한 해외 증시 소식까지 한 큐에!
+얼리버드를 위한 매거진 <해, 봅시다>와 함께
+빠르게 하루를 앞서 가세요.  
+</dd>
+			</dl>
+			<div class="dotLIne"></div>
+						<dl>
+				<dt class="img"><a href="/program/program_main.php?s_mcd=0214"><img src="https://imgradio.ytn.co.kr/program_info/pro_img2_0214.jpg" width="109" height="109" alt="" /></a></dt>
+				<dd class="title"><a href="/program/program_main.php?s_mcd=0214" class="title">[장성철의 뉴스명당]</a></dd>
+				<dd class="time"><img src="/img/program/ico_time_n.gif" width="28" height="14" alt="방송" />&nbsp;[월~금] 07:10~09:00</dd>
+				<dd class="text">뉴스가 팡팡 터지는 노다지 땅!
+귀동냥하러 왔다 '입덕'하고 나가는 이곳? 
+장성철의 뉴스명당!
+
+당대표 장성철, 정식 인사 올립니다! 
+저랑 같이 아침 시사 판 한번 제대로 흔들
+당원 여러분 누굽니까~~
+
+...</dd>
+			</dl>
+			<div class="dotLIne"></div>
+						<dl>
+				<dt class="img"><a href="/program/program_main.php?s_mcd=0206"><img src="https://imgradio.ytn.co.kr/program_info/pro_img2_0206.jpg" width="109" height="109" alt="" /></a></dt>
+				<dd class="title"><a href="/program/program_main.php?s_mcd=0206" class="title">[조태현의 생생경제]</a></dd>
+				<dd class="time"><img src="/img/program/ico_time_n.gif" width="28" height="14" alt="방송" />&nbsp;[월~금] 09:10~10:00</dd>
+				<dd class="text">오직 ‘경제’의 눈으로 바라본 세상은 어떤 모습일까? 삶에서 절대 빼놓을 수 없지만, 놓치기 쉬운 경제! 매일 아침 9시, 경제가 어려운 분들을 위한 단 하나의 경제 전문 프로그램, 당신의 경제적 시야를 한층 넓혀 ...</dd>
+			</dl>
+			<div class="dotLIne"></div>
+						<dl>
+				<dt class="img"><a href="/program/program_main.php?s_mcd=0433"><img src="https://imgradio.ytn.co.kr/program_info/pro_img2_0433.jpg" width="109" height="109" alt="" /></a></dt>
+				<dd class="title"><a href="/program/program_main.php?s_mcd=0433" class="title">[슬기로운 라디오생활]</a></dd>
+				<dd class="time"><img src="/img/program/ico_time_n.gif" width="28" height="14" alt="방송" />&nbsp;[월~금] 10:30~12:00</dd>
+				<dd class="text">정보의 품격을 높여라! 당신의 오늘은 어제보다 똑똑하다</dd>
+			</dl>
+			<div class="dotLIne"></div>
+						<dl>
+				<dt class="img"><a href="/program/program_main.php?s_mcd=0342"><img src="https://imgradio.ytn.co.kr/program_info/pro_img2_0342.jpg" width="109" height="109" alt="" /></a></dt>
+				<dd class="title"><a href="/program/program_main.php?s_mcd=0342" class="title">[굿머니 굿라이프]</a></dd>
+				<dd class="time"><img src="/img/program/ico_time_n.gif" width="28" height="14" alt="방송" />&nbsp;[매일] 16:20~17:00 [평일] 21:20~22:00(재방)</dd>
+				<dd class="text">든든한 내일이 보이는 재무설계 전문 프로그램! 언제든 "굿머니 굿라이프(Good Money Good Life!)"는 청취자 여러분에게 밝고 희망찬 미래를 설계해드립니다. </dd>
+			</dl>
+			<div class="dotLIne"></div>
+						<dl>
+				<dt class="img"><a href="/program/program_main.php?s_mcd=0263"><img src="https://imgradio.ytn.co.kr/program_info/pro_img2_0263.jpg" width="109" height="109" alt="" /></a></dt>
+				<dd class="title"><a href="/program/program_main.php?s_mcd=0263" class="title">[(돌아온) 이동형의 뉴스 정면승부]</a></dd>
+				<dd class="time"><img src="/img/program/ico_time_n.gif" width="28" height="14" alt="방송" />&nbsp;[월~금] 17:00~18:30</dd>
+				<dd class="text">긴 휴가를 마치고 돌아온 
+  --- 사진 후보 (처음 15개) ---
+  /img/_top/login_button.gif
+  /img/_top/login_bar.gif
+  /img/_top/join_btn.gif
+  /img/_top/new_logo_v2.jpg
+  /img/_top/btn_onair.gif
+  /img/_top/menu01_off.gif
+  /img/_top/menu02_off.gif
+  /img/_top/menu03_off.gif
+  /img/_top/menu04_off.gif
+  /img/_top/menu05_off.gif
+  /img/_top/search_tit.gif
+  /img/_top/bg_top_pro_bottom.gif
+  ../img/etc/bnr_201028.jpg?v1
+  ../img/title/title_daily.gif
+  https://imgradio.ytn.co.kr/program_info/pro_img2_0489.jpg
+============================================================
+[경인방송 오늘] https://www.ifm.kr/schedule?date=2026-10-16
+  상태 200 · text/html; charset=UTF-8 · 글자 수 47815
+  --- 첫 시간 근처 HTML (그대로) ---
+2026-10-17'" style="cursor:pointer">
+					10.17<br/>
+					<span style="font-size:20px;">토</span>
+				</li>
+								<li  onclick="document.location='/schedule?date=2026-10-18'" style="cursor:pointer">
+					10.18<br/>
+					<span style="font-size:20px;">일</span>
+				</li>
+						</ul>
+
+		<div class="btn_next">
+			<a href="/schedule?date=2026-10-23">
+				<img src="/assets/_renewal/imgs/btn_next_white.png" alt="" style="">
+			</a>
+		</div>
+	</div>
+
+	<div class="schedule">
+		<div class="print_current_date">2026-10-16 금요일 편성표</div>
+		<table id="tbl_radio_schedule" border="0">
+			<colgroup>
+									<col style="width:150px">
+					<col style="width:100px">
+					<col width="*">
+					<col style="width:100px">
+							</colgroup>
+
+			<tbody>
+				
+									<tr class="onair">
+						<td class="first time">00:00</td>
+						<td>
+															<a href="/program/yourbgm" target="_self">
+									<img src="https://www.ifm.kr/uploads/files/202507/02/be0cbf510c304095be069a8a09205dec.jpg"
+									     onerror="this.src='/assets/_renewal/imgs/default_program_main_m.jpg';"
+									     style="width: 100px; height: 100px; border-radius: 50%; display: block; margin: 0 auto;"/>
+								</a>
+													</td>
+
+						<td class="first ft_01" style="position: relative; font-size: 15px;">
+							<div class="position-relative" style="font-size: 22px; font-weight: bold; margin-bottom: 5px;">
+																	<a href="/program/yourbgm" target="_self" style="font-size: 22px; font-weight: bold">
+										당신의 BGM									</a>
+															</div>
+							<div style="font-size: 17px;"></div>
+							<div class="mobileShow"></div>
+						</td>
+						<td></td>
+					</tr>
+									<tr class="">
+						<td class="first time">06:00</td>
+						<td>
+															<a href="/program/kpopai" target="_self">
+									<img src="https://www.ifm.kr/uploads/files/202601/04/ee3fed1e70bbb8506b2f6d13fe62ec59.png"
+									     onerror="this.src='/assets/_renewal/imgs/default_program_main_m.jpg';"
+									     style="width: 100px; height: 100px; border-radius: 50%; display: block; margin: 0 auto;"/>
+								</a>
+													</td>
+
+						<td class="first ft_01" style="position: relative; font-size: 15px;">
+							<div class="position-relative" style="font-size: 22px; font-weight: bold; margin-bottom: 5px;">
+																	<a href="/program/kpopai" target="_self" style="font-size: 22px; font-weight: bold">
+										K-POP AI MUSIC GUIDE									</a>
+															</div>
+							<div style="font-size: 17px;"></div>
+							<div class="mobileShow"></div>
+						</td>
+						<td></td>
+					</tr>
+									<tr class="">
+						<td class="first time">07:00</td>
+						<td>
+															<a href="/program/good_morning" target="_self">
+									<img src="https://www.ifm.kr/uploads/files/202604/03/a54409a07999277a651fa8230a91ad96.png"
+									     onerror="this.src='/assets/_renewal/imgs/default_program_main_m.jpg';"
+									     style="width: 100px; height: 100px; border-radius: 50%; display: block; margin: 0 auto;"/>
+								</a>
+													</td>
+
+						<td class="first ft_01" style="position: relative; font-size: 15px;">
+							<div class="position-relative" style="font-size: 22px; font-weight: bold; margin-bottom: 5px;">
+																	<a href="/program/good_morning" target="_self" style="font-size: 22px; font-weight: bold">
+										굿모닝 인천 박주언입니다									</a>
+															</div>
+							<div style="font-size: 17px;">1부, 2부</div>
+							<div class="mobileShow"></div>
+						</td>
+						<td></td>
+					</tr>
+									<tr class="">
+						<td class="first time">07:55</td>
+						<td>
+															<a href="/program/ifm_engnews" target="_self">
+									<img src="https://www.ifm.kr/uploads/files/202601/05/8bf0d888ac5d14b26c4331b2197cb5a1.png"
+									     onerror="this.src='/assets/_renewal/
+  --- 사진 후보 (처음 15개) ---
+  /assets/_renewal/imgs/new_logo_white.png
+  /assets/_renewal/imgs/btn_prev_white.png
+  /assets/_renewal/imgs/btn_next_white.png
+  /assets/_renewal/imgs/default_program_main_m.jpg
+  /assets/_renewal/imgs/default_program_main_m.jpg
+  /assets/_renewal/imgs/default_program_main_m.jpg
+  /assets/_renewal/imgs/default_program_main_m.jpg
+  /assets/_renewal/imgs/default_program_main_m.jpg
+  /assets/_renewal/imgs/default_program_main_m.jpg
+  /assets/_renewal/imgs/default_program_main_m.jpg
+  /assets/_renewal/imgs/default_program_main_m.jpg
+  /assets/_renewal/imgs/default_program_main_m.jpg
+  /assets/_renewal/imgs/default_program_main_m.jpg
+  /assets/_renewal/imgs/default_program_main_m.jpg
+  /assets/_renewal/imgs/default_program_main_m.jpg

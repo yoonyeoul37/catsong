@@ -187,7 +187,7 @@ def febc():
             if not ti:
                 continue
             p = {'title': ti, 'start': tm.zfill(5), 'end': ''}
-            if img and ti == title:
+            if img:  # 프로그램 안 짧은 코너도 그 프로그램 사진
                 p['image'] = img
             progs.append(p)
     clean = clean_day(progs)

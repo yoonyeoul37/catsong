@@ -8,6 +8,7 @@ import '../providers/music_provider.dart';
 import '../widgets/station_tile.dart';
 import 'favorites_screen.dart';
 import 'nature_sound_detail_screen.dart';
+import '../utils/nature_sound_catalog.dart';
 
 class AllFavoritesScreen extends StatefulWidget {
   const AllFavoritesScreen({super.key});
@@ -21,42 +22,25 @@ class _AllFavoritesScreenState extends State<AllFavoritesScreen>
   late TabController _tabController;
   Set<String> _natureFavorites = {};
 
-  static const _natureSoundData = <Map<String, dynamic>>[
-    {
-      'name': '파도소리',
-      'icon': Icons.waves,
-      'color': Color(0xFF4A7BA6),
-      'description': '규칙적인 파도 소리는 마음을 차분히 가라앉혀 깊은 휴식과 수면에 도움을 줘요',
-      'assetPath': 'assets/wave_sound.mp3',
-    },
-    {
-      'name': '빗소리',
-      'icon': Icons.water_drop_outlined,
-      'color': Color(0xFF3E5A78),
-      'description': '일정한 빗소리는 집중력을 높이고 불안한 마음을 편안하게 다독여줘요',
-      'assetPath': 'assets/rain_sound.mp3',
-    },
-    {
-      'name': '새소리',
-      'icon': Icons.forest_outlined,
-      'color': Color(0xFF5C7A5E),
-      'description': '청아한 새소리는 스트레스를 줄이고 상쾌한 기분을 만들어줘요',
-      'assetPath': 'assets/bird_sound.mp3',
-    },
-    {
-      'name': '모닥불',
-      'icon': Icons.local_fire_department_outlined,
-      'color': Color(0xFFC97B4A),
-      'description': '타닥타닥 장작 타는 소리는 아늑하고 포근한 분위기를 만들어줘요',
-      'assetPath': 'assets/campfire_sound.mp3',
-    },
-    {
-      'name': '시냇물',
-      'icon': Icons.water_outlined,
-      'color': Color(0xFF2C6BB3),
-      'description': '졸졸 흐르는 시냇물 소리는 마음을 편안하게 이완시켜줘요',
-      'assetPath': 'assets/stream_sound.mp3',
-    },
+  // 자연소리 화면과 같은 목록(nature_sound_catalog)에서 가져오기
+  // → 클라우드 주소·새로 생긴 소리(잔잔한 파도 등)가 자동으로 같이 따라와요
+  static const _categoryColors = <String, Color>{
+    '파도소리': Color(0xFF4A7BA6),
+    '빗소리': Color(0xFF3E5A78),
+    '새소리': Color(0xFF5C7A5E),
+    '모닥불': Color(0xFFC97B4A),
+    '시냇물': Color(0xFF2C6BB3),
+  };
+  static final _natureSoundData = <Map<String, dynamic>>[
+    for (final s in natureSoundCatalog)
+      if (s.isReady)
+        {
+          'name': s.name,
+          'icon': s.icon,
+          'color': _categoryColors[s.category] ?? const Color(0xFF3E9C7E),
+          'description': s.description,
+          'assetPath': s.assetPath,
+        },
   ];
 
   @override

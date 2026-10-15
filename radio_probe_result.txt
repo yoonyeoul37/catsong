@@ -1,0 +1,270 @@
+============================================================
+[CBS] https://www.cbs.co.kr/radio
+  상태 200 · 실제 주소 https://www.cbs.co.kr/radio · 글자 수 106653
+  편성 링크 후보: 편성표 → https://www.cbs.co.kr/schedule
+  편성 링크 후보: 표준FM → https://www.cbs.co.kr/schedule?type=fm
+  편성 링크 후보: 음악FM → https://www.cbs.co.kr/schedule?type=musicFm
+  편성 링크 후보: JOY4U → https://www.cbs.co.kr/schedule?type=joy4u
+  편성 링크 후보: 표준FM 98.1 → https://www.cbs.co.kr/radio/programList?media=radio002
+  편성 링크 후보: 음악FM 93.9 → https://www.cbs.co.kr/radio/programList?media=radio001
+  데이터 주소 후보: /ajax
+  데이터 주소 후보: /data/cbs/nocutBout.json
+  데이터 주소 후보: /data/cbs/nocutNewsShow.json
+  데이터 주소 후보: /mission/sermonList/ajax
+  데이터 주소 후보: /music/chartBox/ajax
+  데이터 주소 후보: /music/trackBox2/ajax
+  데이터 주소 후보: /onair/fm
+  데이터 주소 후보: /onair/joy4u
+  데이터 주소 후보: /onair/musicfm
+  데이터 주소 후보: /onair/tv
+  데이터 주소 후보: /schedule
+  데이터 주소 후보: /schedule/
+  데이터 주소 후보: /schedule/radio/ajax
+  데이터 주소 후보: /schedule?type=fm
+  데이터 주소 후보: /schedule?type=joy4u
+  ▶ 열어 봄: https://www.cbs.co.kr/schedule → 상태 200 · 글자 수 222468
+     시간표처럼 보이는 글: 04:00 새아침입니다 김주영 목사 다시듣기
+     시간표처럼 보이는 글: 05:00 날마다 주님과 함께 루터란아워 다시듣기
+     시간표처럼 보이는 글: 05:30 아침강단 정영호 목사 다시듣기
+     시간표처럼 보이는 글: 06:00 복음의 메아리 이영훈 목사 다시듣기
+     시간표처럼 보이는 글: 06:30 믿음 위에 서서 손세용 목사 다시듣기
+     시간표처럼 보이는 글: 07:00 영락의 강단 김운성 목사 다시듣기
+     데이터 주소 후보: /data/cbs/upload/save/board/scheduleFm/cbs17852182899887.pdf
+     데이터 주소 후보: /onair/fm
+     데이터 주소 후보: /onair/tv
+     데이터 주소 후보: /schedule
+     데이터 주소 후보: /schedule/preview?file=
+     데이터 주소 후보: /schedule?type=fm
+     데이터 주소 후보: /schedule?type=fm&date=
+     데이터 주소 후보: /schedule?type=fm&date=20261004
+     데이터 주소 후보: /schedule?type=fm&date=20261018
+     데이터 주소 후보: /schedule?type=joy4u
+     데이터 주소 후보: /schedule?type=musicFm
+     데이터 주소 후보: /schedule?type=tv
+     데이터 주소 후보: https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css
+     데이터 주소 후보: https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js
+     데이터 주소 후보: https://www.cbs.co.kr/schedule
+  ▶ 열어 봄: https://www.cbs.co.kr/schedule?type=fm → 상태 200 · 글자 수 222484
+     시간표처럼 보이는 글: 04:00 새아침입니다 김주영 목사 다시듣기
+     시간표처럼 보이는 글: 05:00 날마다 주님과 함께 루터란아워 다시듣기
+     시간표처럼 보이는 글: 05:30 아침강단 정영호 목사 다시듣기
+     시간표처럼 보이는 글: 06:00 복음의 메아리 이영훈 목사 다시듣기
+     시간표처럼 보이는 글: 06:30 믿음 위에 서서 손세용 목사 다시듣기
+     시간표처럼 보이는 글: 07:00 영락의 강단 김운성 목사 다시듣기
+     데이터 주소 후보: /data/cbs/upload/save/board/scheduleFm/cbs17852182899887.pdf
+     데이터 주소 후보: /onair/fm
+     데이터 주소 후보: /onair/tv
+     데이터 주소 후보: /schedule
+     데이터 주소 후보: /schedule/preview?file=
+     데이터 주소 후보: /schedule?type=fm
+     데이터 주소 후보: /schedule?type=fm&date=
+     데이터 주소 후보: /schedule?type=fm&date=20261004
+     데이터 주소 후보: /schedule?type=fm&date=20261018
+     데이터 주소 후보: /schedule?type=joy4u
+     데이터 주소 후보: /schedule?type=musicFm
+     데이터 주소 후보: /schedule?type=tv
+     데이터 주소 후보: https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css
+     데이터 주소 후보: https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js
+     데이터 주소 후보: https://www.cbs.co.kr/schedule?type=fm
+============================================================
+[CBS(모바일)] https://m.cbs.co.kr/radio
+  상태 200 · 실제 주소 https://www.cbs.co.kr/ · 글자 수 125703
+  편성 링크 후보: 편성표 → https://www.cbs.co.kr/schedule
+  편성 링크 후보:  → https://www.cbs.co.kr/program/home/cbs_P000246
+  편성 링크 후보:  → https://www.cbs.co.kr/program/home/cbs_P000223
+  편성 링크 후보:  → https://www.cbs.co.kr/program/home/cbs_P000276
+  편성 링크 후보:  → https://www.cbs.co.kr/program/home/cbs_P000010
+  편성 링크 후보: 편성표 → https://www.cbs.co.kr/schedule?type=tv
+  데이터 주소 후보: /mission/sermonList/ajax
+  데이터 주소 후보: /onair/fm
+  데이터 주소 후보: /onair/joy4u
+  데이터 주소 후보: /onair/musicFm
+  데이터 주소 후보: /onair/tv
+  데이터 주소 후보: /schedule
+  데이터 주소 후보: /schedule/all/ajax
+  데이터 주소 후보: /schedule?type=fm
+  데이터 주소 후보: /schedule?type=tv
+  데이터 주소 후보: https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css
+  데이터 주소 후보: https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js
+  ▶ 열어 봄: https://www.cbs.co.kr/schedule → 상태 200 · 글자 수 222468
+     시간표처럼 보이는 글: 04:00 새아침입니다 김주영 목사 다시듣기
+     시간표처럼 보이는 글: 05:00 날마다 주님과 함께 루터란아워 다시듣기
+     시간표처럼 보이는 글: 05:30 아침강단 정영호 목사 다시듣기
+     시간표처럼 보이는 글: 06:00 복음의 메아리 이영훈 목사 다시듣기
+     시간표처럼 보이는 글: 06:30 믿음 위에 서서 손세용 목사 다시듣기
+     시간표처럼 보이는 글: 07:00 영락의 강단 김운성 목사 다시듣기
+     데이터 주소 후보: /data/cbs/upload/save/board/scheduleFm/cbs17852182899887.pdf
+     데이터 주소 후보: /onair/fm
+     데이터 주소 후보: /onair/tv
+     데이터 주소 후보: /schedule
+     데이터 주소 후보: /schedule/preview?file=
+     데이터 주소 후보: /schedule?type=fm
+     데이터 주소 후보: /schedule?type=fm&date=
+     데이터 주소 후보: /schedule?type=fm&date=20261004
+     데이터 주소 후보: /schedule?type=fm&date=20261018
+     데이터 주소 후보: /schedule?type=joy4u
+     데이터 주소 후보: /schedule?type=musicFm
+     데이터 주소 후보: /schedule?type=tv
+     데이터 주소 후보: https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css
+     데이터 주소 후보: https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js
+     데이터 주소 후보: https://www.cbs.co.kr/schedule
+  ▶ 열어 봄: https://www.cbs.co.kr/program/home/cbs_P000246 → 상태 200 · 글자 수 26690
+     시간표처럼 보이는 글: 09:00 홈 공지사항 다시듣기 오늘의 방송 인터뷰 전문
+     시간표처럼 보이는 글: 07:06 박성태의 뉴스쇼 월-금
+     데이터 주소 후보: /onair/fm
+     데이터 주소 후보: /onair/tv
+     데이터 주소 후보: /schedule
+     데이터 주소 후보: /schedule?type=fm
+     데이터 주소 후보: /schedule?type=tv
+     데이터 주소 후보: https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css
+     데이터 주소 후보: https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js
+============================================================
+[YTN 라디오] https://radio.ytn.co.kr/
+  상태 200 · 실제 주소 https://radio.ytn.co.kr/ · 글자 수 37798
+  편성 링크 후보:  → https://radio.ytn.co.kr/program/daily_interview.php
+  편성 링크 후보:  → https://radio.ytn.co.kr/program/daily.php
+  편성 링크 후보:  → https://radio.ytn.co.kr/schedule/daily.php
+  편성 링크 후보: 깁스한 다리로 꼼짝 못 하는데..."식었냐"... → https://radio.ytn.co.kr/program/?f=2&id=111319&s_mcd=0463&s_hcd=01
+  편성 링크 후보: 전자발찌 무용론? 인천 흉기난동범, '... → https://radio.ytn.co.kr/program/?f=2&id=111318&s_mcd=0459&s_hcd=01
+  편성 링크 후보: 김종대 "트럼프, 중간선거 지... → https://radio.ytn.co.kr/program/?f=2&id=111314&s_mcd=0263&s_hcd=01
+  데이터 주소 후보: /_js/ajax.js
+  데이터 주소 후보: /img/_top/btn_onair.gif
+  데이터 주소 후보: /img/comm/schedule_go.gif
+  데이터 주소 후보: /img/main/bul_onair.gif
+  데이터 주소 후보: /incfile/nowSchedule.xml
+  데이터 주소 후보: /schedule/daily.php
+  ▶ 열어 봄: https://radio.ytn.co.kr/program/daily_interview.php → 상태 200 · 글자 수 28942
+     데이터 주소 후보: /_js/ajax.js
+     데이터 주소 후보: /img/_top/btn_onair.gif
+     데이터 주소 후보: /img/comm/schedule_go.gif
+     데이터 주소 후보: /img/comm/schedule_title.gif
+     데이터 주소 후보: /incfile/nowSchedule.xml
+     데이터 주소 후보: /schedule/daily.php
+  ▶ 열어 봄: https://radio.ytn.co.kr/program/daily.php → 상태 200 · 글자 수 28611
+     시간표처럼 보이는 글: 07:00 Early Birds Only! 일찍 일어나는
+     시간표처럼 보이는 글: 07:10 뉴스가 팡팡 터지는 노다지 땅! 귀동냥하러 왔다
+     시간표처럼 보이는 글: 09:10 오직 ‘경제’의 눈으로 바라본 세상은 어떤 모습
+     시간표처럼 보이는 글: 10:30 정보의 품격을 높여라! 당신의 오늘은 어제보다
+     시간표처럼 보이는 글: 17:00 긴 휴가를 마치고 돌아온 이동형의 뉴스 정면승부
+     시간표처럼 보이는 글: 18:40 영화보다 더 리얼하고 드라마보다 반전 있는 '실
+     데이터 주소 후보: /_js/ajax.js
+     데이터 주소 후보: /img/_top/btn_onair.gif
+     데이터 주소 후보: /img/comm/schedule_go.gif
+     데이터 주소 후보: /img/comm/schedule_title.gif
+     데이터 주소 후보: /incfile/nowSchedule.xml
+     데이터 주소 후보: /schedule/daily.php
+============================================================
+[국악방송] https://www.gugakfm.co.kr/
+  접속 실패: <urlopen error timed out>
+============================================================
+[TBS] https://tbs.seoul.kr/
+  상태 200 · 실제 주소 https://tbs.seoul.kr/tv/index.do · 글자 수 72017
+  편성 링크 후보: 프로그램소개 → https://tbs.seoul.kr/tv/programsCity.do
+  편성 링크 후보: 편성표 → https://tbs.seoul.kr/tv/schedule.do
+  편성 링크 후보: 프로그램소개 → https://tbs.seoul.kr/fm/programsDay.do
+  편성 링크 후보: 편성표 → https://tbs.seoul.kr/fm/schedule.do
+  편성 링크 후보: About the program → https://tbs.seoul.kr/eFm/programsDaily.do
+  편성 링크 후보: Schedule → https://tbs.seoul.kr/eFm/schedule.do
+  데이터 주소 후보: /eFm/schedule.do
+  데이터 주소 후보: /fm/schedule.do
+  데이터 주소 후보: /tv/schedule.do
+  ▶ 열어 봄: https://tbs.seoul.kr/tv/programsCity.do → 상태 200 · 글자 수 29776
+     시간표처럼 보이는 글: 10:00 진행 김태진, 조현아 우리 함께 수시 우리동네
+     시간표처럼 보이는 글: 10:00 진행 양아람 교양 --> 교양 신박한 벙커 금
+     시간표처럼 보이는 글: 20:00 진행 이시원, 타일러 라쉬 시민영상 특이점 수
+     시간표처럼 보이는 글: 09:00 진행 나선홍, 김보빈 에코가 석자 월요일 오전
+     시간표처럼 보이는 글: 09:00 진행 김혜지, 이강훈, 정유림 문화 &middo
+     시간표처럼 보이는 글: 22:00 진행 정인, 창민, 수란, 지소울, 아일, 재주
+     데이터 주소 후보: /eFm/schedule.do
+     데이터 주소 후보: /fm/schedule.do
+     데이터 주소 후보: /tv/schedule.do
+  ▶ 열어 봄: https://tbs.seoul.kr/tv/schedule.do → 상태 200 · 글자 수 32601
+     시간표처럼 보이는 글: 00:20 도시의 품격 스페셜
+     시간표처럼 보이는 글: 00:30 서울마블 스페셜
+     시간표처럼 보이는 글: 01:10 시민영상 특이점 나선홍, 김보빈
+     시간표처럼 보이는 글: 01:50 시민영상 특이점 나선홍, 김보빈
+     시간표처럼 보이는 글: 02:30 공간사람
+     시간표처럼 보이는 글: 02:40 카약 피싱 쇼
+     데이터 주소 후보: /eFm/schedule.do
+     데이터 주소 후보: /fm/schedule.do
+     데이터 주소 후보: /tv/schedule.do
+============================================================
+[CPBC 가톨릭] https://www.cpbc.co.kr/
+  상태 200 · 실제 주소 https://www.cpbc.co.kr/ · 글자 수 932
+============================================================
+[FEBC 극동방송] https://www.febc.net/
+  상태 200 · 실제 주소 https://seoul.febc.net/ · 글자 수 153829
+  편성 링크 후보: 라디오 프로그램 → https://seoul.febc.net/radio/program
+  편성 링크 후보: 보이는 라디오 → https://seoul.febc.net/radio/program/bora
+  편성 링크 후보: 편성표 → https://seoul.febc.net/radio/schedule
+  편성 링크 후보: 오늘의 설교 → https://seoul.febc.net/sermon/schedule
+  편성 링크 후보: 홈커밍데이 라디오쇼
+                   → https://seoul.febc.net/program/2439406/general
+  편성 링크 후보: 만나고 싶은 사람 듣고 싶은 이야기
+          → https://seoul.febc.net/program/3240/general
+  데이터 주소 후보: /radio/schedule
+  데이터 주소 후보: /radio/schedule/live/
+  데이터 주소 후보: /sermon/schedule
+  ▶ 열어 봄: https://seoul.febc.net/radio/program → 상태 200 · 글자 수 52989
+     시간표처럼 보이는 글: 19:00 오늘의 선한 사마리아인 토
+     시간표처럼 보이는 글: 12:45 오후의 열린 광장 월~금
+     시간표처럼 보이는 글: 16:00 소망의 찬양 월~금
+     시간표처럼 보이는 글: 12:10 본향을 향하여 주일
+     시간표처럼 보이는 글: 13:20 산위의 말씀 주일
+     시간표처럼 보이는 글: 14:50 말씀과 함께 주
+     데이터 주소 후보: /radio/schedule
+     데이터 주소 후보: /radio/schedule/live/
+     데이터 주소 후보: /sermon/schedule
+  ▶ 열어 봄: https://seoul.febc.net/radio/program/bora → 상태 200 · 글자 수 66170
+     데이터 주소 후보: /radio/schedule
+     데이터 주소 후보: /radio/schedule/live/
+     데이터 주소 후보: /sermon/schedule
+============================================================
+[OBS] https://www.obs.co.kr/
+  접속 실패: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1081)>
+============================================================
+[경인방송] https://www.ifm.kr/
+  상태 200 · 실제 주소 https://www.ifm.kr/ · 글자 수 154045
+  편성 링크 후보: 편성표 → https://www.ifm.kr/schedule
+  편성 링크 후보: 청취자 참여 → https://www.ifm.kr/program/board/corp_listener/128
+  편성 링크 후보: 청취자게시판 → https://www.ifm.kr/program/board/corp_listener/129
+  편성 링크 후보: 이벤트 → https://www.ifm.kr/program/board/corp_listener/500
+  편성 링크 후보:  → https://www.ifm.kr/program/yourbgm
+  편성 링크 후보:  → https://www.ifm.kr/program/kpopai
+  데이터 주소 후보: /onair/bora
+  데이터 주소 후보: /onair/radio
+  데이터 주소 후보: /schedule
+  데이터 주소 후보: https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.min.js
+  ▶ 열어 봄: https://www.ifm.kr/schedule → 상태 200 · 글자 수 47799
+     시간표처럼 보이는 글: 00:00 당신의 BGM
+     시간표처럼 보이는 글: 06:00 K-POP AI MUSIC GUIDE
+     시간표처럼 보이는 글: 07:00 굿모닝 인천 박주언입니다
+     시간표처럼 보이는 글: 07:55 ifm 영어뉴스
+     시간표처럼 보이는 글: 08:05 굿모닝 인천 박주언입니다
+     시간표처럼 보이는 글: 09:00 모닝테라스
+     데이터 주소 후보: /assets/_renewal/css/schedule.css?1758716056
+     데이터 주소 후보: /onair/bora
+     데이터 주소 후보: /onair/radio
+     데이터 주소 후보: /schedule
+     데이터 주소 후보: /schedule?date=2026-10-09
+     데이터 주소 후보: /schedule?date=2026-10-12
+     데이터 주소 후보: /schedule?date=2026-10-13
+     데이터 주소 후보: /schedule?date=2026-10-14
+     데이터 주소 후보: /schedule?date=2026-10-15
+     데이터 주소 후보: /schedule?date=2026-10-16
+     데이터 주소 후보: /schedule?date=2026-10-17
+     데이터 주소 후보: /schedule?date=2026-10-18
+     데이터 주소 후보: /schedule?date=2026-10-23
+     데이터 주소 후보: https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.min.js
+     데이터 주소 후보: https://www.ifm.kr/schedule
+  ▶ 열어 봄: https://www.ifm.kr/program/board/corp_listener/128 → 상태 200 · 글자 수 46270
+     데이터 주소 후보: /onair/bora
+     데이터 주소 후보: /onair/radio
+     데이터 주소 후보: /schedule
+     데이터 주소 후보: https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.min.js
+============================================================
+[TBN] https://www.tbn.or.kr/
+  상태 200 · 실제 주소 https://www.tbn.or.kr/ · 글자 수 2198
+============================================================
+[부산MBC] https://www.busanmbc.co.kr/
+  접속 실패: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>

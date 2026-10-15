@@ -1197,7 +1197,7 @@ class _RadioCountryStationsScreenState
             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const RadioHomeScreen()),
+              MaterialPageRoute(builder: (ctx) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: const TextScaler.linear(1.25)), child: const RadioHomeScreen())), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
             );
           },
           child: Row(

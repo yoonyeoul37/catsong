@@ -750,7 +750,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                               : RadioCountryStationsScreen(country: country);
                                   Navigator.of(context).pushReplacement(
                                     PageRouteBuilder(
-                                      pageBuilder: (context, animation, secondaryAnimation) => listScreen,
+                                      pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.25)), child: listScreen), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
                                       transitionsBuilder: (context, animation, secondaryAnimation, child) =>
                                           FadeTransition(opacity: animation, child: child),
                                       transitionDuration: const Duration(milliseconds: 250),
@@ -1037,7 +1037,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                             ? _ProgramCard.getTimeStr(radioProvider.currentProgram!, radioProvider)
                             : '';
                         return ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(10), // 홈 메뉴 그림과 같게
                           child: Stack(
                             children: [
                               scheduleLoading
@@ -1205,11 +1205,14 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                       if (radioProvider.currentProgram != null &&
                           radioProvider.scheduleList.isNotEmpty) ...[
                         SizedBox(height: (h * 0.005).clamp(2.0, 4.0)),
-                        _NextProgramLine(
-                          compact: compact, // 짧은 폰은 작은 카드로
-                          scheduleList: radioProvider.scheduleList,
-                          currentProgram: radioProvider.currentProgram!,
-                          radioProvider: radioProvider,
+                        Transform.translate(
+                          offset: const Offset(0, -9), // 다음 방송 칸만 살짝 위로 (아래는 그대로)
+                          child: _NextProgramLine(
+                            compact: compact, // 짧은 폰은 작은 카드로
+                            scheduleList: radioProvider.scheduleList,
+                            currentProgram: radioProvider.currentProgram!,
+                            radioProvider: radioProvider,
+                          ),
                         ),
                       ] else if (radioProvider.descriptionFor(current.name) != null) ...[
                         SizedBox(height: (h * 0.005).clamp(2.0, 4.0)),
@@ -1936,12 +1939,12 @@ class _NextProgramLineState extends State<_NextProgramLine> {
       padding: EdgeInsets.all(widget.compact ? 10 : 14),
       decoration: BoxDecoration(
         color: baseColor.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(10), // 홈 메뉴 그림과 같게
       ),
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(widget.compact ? 10 : 14),
+            borderRadius: BorderRadius.circular(6), // 바깥(10)보다 작게
             child: (nextImage != null && nextImage.isNotEmpty)
                 ? Image.network(
               nextImage,

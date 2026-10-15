@@ -44,7 +44,7 @@ class OverseasRadioView extends StatelessWidget {
         : RadioCountryStationsScreen(country: country);
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        pageBuilder: (_, __, ___) => listScreen,
+        pageBuilder: (ctx, __, ___) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: const TextScaler.linear(1.25)), child: listScreen), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
         transitionsBuilder: (_, animation, __, child) =>
             FadeTransition(opacity: animation, child: child),
         transitionDuration: const Duration(milliseconds: 250),

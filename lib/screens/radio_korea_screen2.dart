@@ -453,7 +453,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
             targetContext,
             duration: const Duration(milliseconds: 400),
             curve: Curves.easeOutCubic,
-            alignment: 0.15,
+            alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd, // 이미 보이면 안 움직임 → 맨 위 카드 그대로
           );
         }
       }
@@ -742,7 +742,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const RadioHomeScreen()),
+                      MaterialPageRoute(builder: (ctx) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: const TextScaler.linear(1.25)), child: const RadioHomeScreen())), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
                     );
                   },
                   child: Container(

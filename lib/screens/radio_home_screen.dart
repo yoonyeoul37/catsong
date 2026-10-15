@@ -373,7 +373,7 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
     Navigator.push(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => screen,
+        pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.25)), child: screen), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },

@@ -1,0 +1,166 @@
+map 안의 이름들: search, timeTableExt, line, fmNowHomeList
+============================================================
+[지금 방송 timeTableExt] 제목: 처음듣는 라디오 이다경입니다
+============================================================
+[편성 목록 fmNowHomeList] 15개
+- 임형주의 오늘도 수고한 당신에게 | (월~일) 20시
+    movie_icon = /data/fm_thumb/2026/282/282_1.jpg
+    movie_icon2 = /data/fm_thumb/2026/282/282_2.jpg
+    movie_icon3 = /data/fm_thumb/2026/282/282_3.jpg
+    movie_icon4 = /data/fm_thumb/2026/282/282_4.jpg
+    movie_icon6 = /data/fm_thumb/2026/282/282_6.jpg
+    movie_icon7 = /data/fm_thumb/2026/282/282_7.jpg
+    movie_icon8 = /data/fm_thumb/2026/282/282_8.jpg
+    movie_icon9 = /data/fm_thumb/2026/282/282_9.jpg
+    movie_icon10 = /data/fm_thumb/2026/282/282_10.jpg
+- NEWSROOM | (월~일) 18시~20시
+    movie_icon = /data/fm_thumb/2026/281/281_1.jpg
+    movie_icon2 = /data/fm_thumb/2026/281/281_2.jpg
+    movie_icon3 = /data/fm_thumb/2026/281/281_3.jpg
+    movie_icon4 = /data/fm_thumb/2026/281/281_4.jpg
+    movie_icon6 = /data/fm_thumb/2026/281/281_6.jpg
+    movie_icon7 = /data/fm_thumb/2026/281/281_7.jpg
+    movie_icon8 = /data/fm_thumb/2026/281/281_8.jpg
+    movie_icon9 = /data/fm_thumb/2026/281/281_9.jpg
+    movie_icon10 = /data/fm_thumb/2026/281/281_10.jpg
+- KFN 디펜스11 PLUS | (토~일) 11:00-12:00
+    movie_icon = /data/fm_thumb/2026/280/280_1.jpg
+    movie_icon2 = /data/fm_thumb/2026/280/280_2.jpg
+    movie_icon3 = /data/fm_thumb/2026/280/280_3.jpg
+    movie_icon4 = /data/fm_thumb/2026/280/280_4.jpg
+    movie_icon6 = /data/fm_thumb/2026/280/280_6.jpg
+    movie_icon7 = /data/fm_thumb/2026/280/280_7.jpg
+    movie_icon8 = /data/fm_thumb/2026/280/280_8.jpg
+    movie_icon9 = /data/fm_thumb/2026/280/280_9.jpg
+    movie_icon10 = /data/fm_thumb/2026/280/280_10.jpg
+- 밤을 비추는 라디오 | (월~일) 22:05
+    movie_icon = /data/fm_thumb/2026/279/279_1.jpg
+    movie_icon2 = /data/fm_thumb/2026/279/279_2.jpg
+    movie_icon3 = /data/fm_thumb/2026/279/279_3.jpg
+    movie_icon4 = /data/fm_thumb/2026/279/279_4.jpg
+    movie_icon5 = /data/fm_thumb/2026/279/279_5.jpg
+    movie_icon6 = /data/fm_thumb/2026/279/279_6.jpg
+    movie_icon7 = /data/fm_thumb/2026/279/279_7.jpg
+    movie_icon8 = /data/fm_thumb/2026/279/279_8.jpg
+    movie_icon9 = /data/fm_thumb/2026/279/279_9.jpg
+    movie_icon10 = /data/fm_thumb/2026/279/279_10.jpg
+- KFN 디펜스11 | (월~금) 11:00
+    movie_icon = /data/fm_thumb/2026/278/278_1.jpg
+    movie_icon2 = /data/fm_thumb/2026/278/278_2.jpg
+    movie_icon3 = /data/fm_thumb/2026/278/278_3.jpg
+    movie_icon4 = /data/fm_thumb/2026/278/278_4.jpg
+    movie_icon6 = /data/fm_thumb/2026/278/278_6.jpg
+    movie_icon7 = /data/fm_thumb/2026/278/278_7.jpg
+    movie_icon8 = /data/fm_thumb/2026/278/278_8.jpg
+    movie_icon9 = /data/fm_thumb/2026/278/278_9.jpg
+    movie_icon10 = /data/fm_thumb/2026/278/278_10.jpg
+- KFN 캠페인 | 매주 월요일~금요일
+    movie_icon = /data/fm_thumb/2024/270/270_1.jpg
+    movie_icon2 = /data/fm_thumb/2024/270/270_2.jpg
+    movie_icon3 = /data/fm_thumb/2024/270/270_3.jpg
+    movie_icon4 = /data/fm_thumb/2024/270/270_4.jpg
+    movie_icon5 = /data/fm_thumb/2024/270/270_5.jpg
+    movie_icon6 = /data/fm_thumb/2024/270/270_6.jpg
+    movie_icon7 = /data/fm_thumb/2024/270/270_7.jpg
+    movie_icon8 = /data/fm_thumb/2024/270/270_8.jpg
+    movie_icon9 = /data/fm_thumb/2024/270/270_9.jpg
+    movie_icon10 = /data/fm_thumb/2024/270/270_10.jpg
+- 처음듣는 라디오 이다경입니다 | (월~일) 06:00~07:00
+    movie_icon = /data/fm_thumb/2025/276/276_1.jpg
+    movie_icon2 = /data/fm_thumb/2025/276/276_2.jpg
+    movie_icon3 = /data/fm_thumb/2025/276/276_3.jpg
+    movie_icon4 = /data/fm_thumb/2025/276/276_4.jpg
+    movie_icon5 = /data/fm_thumb/2025/276/276_5.jpg
+    movie_icon6 = /data/fm_thumb/2025/276/276_6.jpg
+    movie_icon7 = /data/fm_thumb/2025/276/276_7.jpg
+    movie_icon8 = /data/fm_thumb/2025/276/276_8.jpg
+    movie_icon9 = /data/fm_thumb/2025/276/276_9.jpg
+    movie_icon10 = /data/fm_thumb/2025/276/276_10.jpg
+- 오유경의 뮤직갤러리 | (월~일) 09:00~11:00
+    movie_icon = /data/fm_thumb/2024/273/273_1.jpg
+    movie_icon2 = /data/fm_thumb/2024/273/273_2.jpg
+    movie_icon3 = /data/fm_thumb/2024/273/273_3.jpg
+    movie_icon4 = /data/fm_thumb/2024/273/273_4.jpg
+    movie_icon5 = /data/fm_thumb/2024/273/273_5.jpg
+    movie_icon6 = /data/fm_thumb/2024/273/273_6.jpg
+    movie_icon7 = /data/fm_thumb/2024/273/273_7.jpg
+    movie_icon8 = /data/fm_thumb/2024/273/273_8.jpg
+    movie_icon9 = /data/fm_thumb/2024/273/273_9.jpg
+    movie_icon10 = /data/fm_thumb/2024/273/273_10.jpg
+- 미료의 프리스타일 | (월~일) 16:05~18:00
+    movie_icon = /data/fm_thumb/2024/269/269_1.jpg
+    movie_icon2 = /data/fm_thumb/2024/269/269_2.jpg
+    movie_icon3 = /data/fm_thumb/2024/269/269_3.jpg
+    movie_icon4 = /data/fm_thumb/2024/269/269_4.jpg
+    movie_icon5 = /data/fm_thumb/2024/269/269_5.jpg
+    movie_icon6 = /data/fm_thumb/2024/269/269_6.jpg
+    movie_icon7 = /data/fm_thumb/2024/269/269_7.jpg
+    movie_icon8 = /data/fm_thumb/2024/269/269_8.jpg
+    movie_icon9 = /data/fm_thumb/2024/269/269_9.jpg
+    movie_icon10 = /data/fm_thumb/2024/269/269_10.jpg
+- 김종서의 러빙유 | (월~일) 14:00~16:00
+    movie_icon = /data/fm_thumb/2023/266/266_1.jpg
+    movie_icon2 = /data/fm_thumb/2023/266/266_2.jpg
+    movie_icon3 = /data/fm_thumb/2023/266/266_3.jpg
+    movie_icon4 = /data/fm_thumb/2023/266/266_4.jpg
+    movie_icon5 = /data/fm_thumb/2023/266/266_5.jpg
+    movie_icon6 = /data/fm_thumb/2023/266/266_6.jpg
+    movie_icon7 = /data/fm_thumb/2023/266/266_7.jpg
+    movie_icon8 = /data/fm_thumb/2023/266/266_8.jpg
+    movie_icon9 = /data/fm_thumb/2023/266/266_9.jpg
+    movie_icon10 = /data/fm_thumb/2023/266/266_10.jpg
+- 신나는라디오 | (월~일) 12:05~14:00
+    movie_icon = /data/fm_thumb/2023/262/262_1.jpg
+    movie_icon2 = /data/fm_thumb/2023/262/262_2.jpg
+    movie_icon3 = /data/fm_thumb/2023/262/262_3.jpg
+    movie_icon4 = /data/fm_thumb/2023/262/262_4.jpg
+    movie_icon5 = /data/fm_thumb/2023/262/262_5.jpg
+    movie_icon6 = /data/fm_thumb/2023/262/262_6.jpg
+    movie_icon7 = /data/fm_thumb/2023/262/262_7.jpg
+    movie_icon8 = /data/fm_thumb/2023/262/262_8.jpg
+    movie_icon9 = /data/fm_thumb/2023/262/262_9.jpg
+    movie_icon10 = /data/fm_thumb/2023/262/262_10.jpg
+- KFN Radio 특집 다큐멘터리 |   
+    movie_icon = /data/fm_thumb/2022/255/255_1.jpg
+    movie_icon2 = /data/fm_thumb/2022/255/255_2.jpg
+    movie_icon3 = /data/fm_thumb/2022/255/255_3.jpg
+    movie_icon4 = /data/fm_thumb/2022/255/255_4.jpg
+    movie_icon5 = /data/fm_thumb/2022/255/255_5.jpg
+    movie_icon6 = /data/fm_thumb/2022/255/255_6.jpg
+    movie_icon7 = /data/fm_thumb/2022/255/255_7.jpg
+    movie_icon8 = /data/fm_thumb/2022/255/255_8.jpg
+    movie_icon9 = /data/fm_thumb/2022/255/255_9.jpg
+    movie_icon10 = /data/fm_thumb/2022/255/255_10.jpg
+- 명상의 시간 | (월~일) 22:00~22:05
+    movie_icon = /data/fm_thumb/2017/228/228_1.jpg
+    movie_icon2 = /data/fm_thumb/2017/228/228_2.jpg
+    movie_icon3 = /data/fm_thumb/2017/228/228_3.jpg
+    movie_icon4 = /data/fm_thumb/2017/228/228_4.jpg
+    movie_icon5 = /data/fm_thumb/2017/228/228_5.jpg
+    movie_icon6 = /data/fm_thumb/2017/228/228_6.jpg
+    movie_icon7 = /data/fm_thumb/2017/228/228_7.jpg
+    movie_icon8 = /data/fm_thumb/2017/228/228_8.jpg
+    movie_icon9 = /data/fm_thumb/2017/228/228_9.jpg
+    movie_icon10 = /data/fm_thumb/2017/228/228_10.jpg
+- 주말엔 클팝 | (토~일) 07:00~09:00
+    movie_icon = /data/fm_thumb/2017/225/225_1.jpg
+    movie_icon2 = /data/fm_thumb/2017/225/225_2.jpg
+    movie_icon3 = /data/fm_thumb/2017/225/225_3.jpg
+    movie_icon4 = /data/fm_thumb/2017/225/225_4.jpg
+    movie_icon5 = /data/fm_thumb/2017/225/225_5.jpg
+    movie_icon6 = /data/fm_thumb/2017/225/225_6.jpg
+    movie_icon7 = /data/fm_thumb/2017/225/225_7.jpg
+    movie_icon8 = /data/fm_thumb/2017/225/225_8.jpg
+    movie_icon9 = /data/fm_thumb/2017/225/225_9.jpg
+    movie_icon10 = /data/fm_thumb/2017/225/225_10.jpg
+- 국방광장 | (월~금) 07:00~09:00
+    movie_icon = /data/fm_thumb/2007/17/17_1.jpg
+    movie_icon2 = /data/fm_thumb/2007/17/17_2.jpg
+    movie_icon3 = /data/fm_thumb/2007/17/17_3.jpg
+    movie_icon4 = /data/fm_thumb/2007/17/17_4.jpg
+    movie_icon5 = /data/fm_thumb/2007/17/17_5.jpg
+    movie_icon6 = /data/fm_thumb/2007/17/17_6.jpg
+    movie_icon7 = /data/fm_thumb/2007/17/17_7.jpg
+    movie_icon8 = /data/fm_thumb/2007/17/17_8.jpg
+    movie_icon9 = /data/fm_thumb/2007/17/17_9.jpg
+    movie_icon10 = /data/fm_thumb/2007/17/17_10.jpg

@@ -1765,10 +1765,13 @@ class RadioProvider extends ChangeNotifier {
           // "(월~일) 16:05~18:00" 파싱
           final match = RegExp(r'(\d{2}:\d{2})~(\d{2}:\d{2})').firstMatch(time);
           if (match != null) {
+            final icon = item['movie_icon'] as String? ?? '';
             schedules.add({
               'program_title': name,
               'start_time': match.group(1)!,
               'end_time': match.group(2)!,
+              // 프로그램 사진 (예: /data/fm_thumb/2025/276/276_1.jpg)
+              if (icon.isNotEmpty) 'image': icon.startsWith('http') ? icon : 'https://radio.dema.mil.kr$icon',
             });
           }
         }
@@ -1779,6 +1782,17 @@ class RadioProvider extends ChangeNotifier {
           return sa.compareTo(sb);
         });
         _scheduleListMap[stationName] = schedules;
+        // 지금 방송에도 같은 프로그램 사진
+        final curMap = _currentProgramMap[stationName];
+        if (curMap != null) {
+          for (final item in list) {
+            final icon = item['movie_icon'] as String? ?? '';
+            if (item['homepage_nm'] == curMap['program_title'] && icon.isNotEmpty) {
+              curMap['image'] = icon.startsWith('http') ? icon : 'https://radio.dema.mil.kr$icon';
+              break;
+            }
+          }
+        }
         notifyListeners();
         if (_currentStation?.name == stationName) {
           _updateWidget(stationName, _currentStation == null ? '' : _mediaSubtitle(_currentStation!), true);

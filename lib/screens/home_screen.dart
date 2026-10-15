@@ -3082,7 +3082,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             _buildTopCard(musicProvider, isDarkMode), // 정리할 곡 있으면 정리 카드, 없으면 오늘의 카드
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 12, 8),
+              padding: const EdgeInsets.fromLTRB(16, 3, 12, 3),
               child: Row(
                 children: [
                   Text('${musicProvider.songCount} ${AppLocalizations.of(context)!.songCount}',
@@ -3120,8 +3120,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         context.read<PlayerProvider>().playFromList(musicProvider.songs, 0);
                       }
                     },
-                    icon: Icon(Icons.play_arrow,
-                        color: baseColor.withOpacity(0.6), size: 26),
+                    icon: Icon(CupertinoIcons.play_fill,
+                        color: baseColor.withOpacity(0.5), size: 20),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
@@ -3133,7 +3133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         context.read<PlayerProvider>().playFromList(songs, 0);
                       }
                     },
-                    icon: Icon(Icons.shuffle_rounded, color: baseColor.withOpacity(0.6), size: 21),
+                    icon: Icon(CupertinoIcons.shuffle, color: baseColor.withOpacity(0.5), size: 17),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   ),
@@ -3523,7 +3523,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: SafeArea(
         top: false,
         child: SizedBox(
-          height: 62,
+          height: 54,
           child: Row(
             children: List.generate(items.length, (index) {
               final isSelected = _currentTabIndex == index;

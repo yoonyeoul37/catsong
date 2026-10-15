@@ -1798,7 +1798,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
       }),
-      _DashboardCategory('수면 · 명상', '백색소음 · 명상음 (준비중)', 'assets/sleep_bg.jpg', StartScreenType.sleep, () {
+      _DashboardCategory('휴식 · 집중', '백색소음 · 집중 소리 (준비중)', 'assets/sleep_bg.jpg', StartScreenType.sleep, () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
         Navigator.push(
           context,

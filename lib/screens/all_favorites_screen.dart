@@ -127,7 +127,7 @@ class _AllFavoritesScreenState extends State<AllFavoritesScreen>
             Tab(text: '음악($musicFavCount)'),
             Tab(text: '라디오($radioFavCount)'),
             Tab(text: '자연소리(${natureFavList.length})'),
-            const Tab(text: '수면 · 집중(0)'),
+            const Tab(text: '휴식 · 집중(0)'),
           ],
         ),
       ),
@@ -216,7 +216,7 @@ class _AllFavoritesScreenState extends State<AllFavoritesScreen>
               );
             },
           ),
-          _emptyState(baseColor, '수면 · 집중 기능은 준비중이에요'),
+          _emptyState(baseColor, '휴식 · 집중 기능은 준비중이에요'),
         ],
       ),
     );

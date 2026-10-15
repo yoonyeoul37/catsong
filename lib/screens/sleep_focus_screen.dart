@@ -21,7 +21,7 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
     final baseColor = isDarkMode ? Colors.white : Colors.black;
     final bgColor = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA);
 
-    final categories = ['전체', '수면', '명상', '백색소음', '기타'];
+    final categories = ['전체', '휴식', '집중', '백색소음', '기타'];
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -49,13 +49,13 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: '수면',
+                        text: '휴식',
                         style: GoogleFonts.doHyeon(
                             // 기본 포인트 색이면 파랑, 다른 색이면 먹색 (홈 로고와 같은 규칙)
                             color: context.watch<ThemeProvider>().primaryColor.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : baseColor, fontSize: 19),
                       ),
                       TextSpan(
-                        text: ' · 명상',
+                        text: ' · 집중',
                         style: GoogleFonts.doHyeon(
                             color: baseColor, fontSize: 19),
                       ),
@@ -71,7 +71,7 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
             ),
             const SizedBox(height: 0),
             Text(
-              '편안한 소리로 잠들고, 마음을 가다듬어보세요',
+              '편안한 소리로 쉬고, 마음을 모아 집중해 보세요',
               style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 11.5),
             ),
           ],

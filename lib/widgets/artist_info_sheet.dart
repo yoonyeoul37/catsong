@@ -186,7 +186,7 @@ class _ArtistApi {
     Map? hit;
     for (final t in list) {
       final an = '${(t['artist'] as Map?)?['name'] ?? ''}';
-      if (_sameArtist(an, artist)) {
+      if (_sameArtist(an, artist) && _sameTitle('${t['title'] ?? ''}', title)) {
         hit = t;
         break;
       }
@@ -211,14 +211,24 @@ class _ArtistApi {
         }
       }
     } else {
-      // 곡은 못 찾아도 가수는 찾아보기
+      // 곡은 못 찾아도 가수는 찾아보기 — 이름이 같은 가수가 여럿일 수 있어서 대표곡에 지금 노래가 있는 가수만
       final a = await _get('https://api.deezer.com/search/artist?limit=5&q=${Uri.encodeQueryComponent(artist)}');
+      final same = <int>[];
       for (final x in (a?['data'] as List?)?.whereType<Map>() ?? const <Map>[]) {
-        if (_sameArtist('${x['name'] ?? ''}', artist)) {
-          artistId = (x['id'] as num?)?.toInt();
+        final id = (x['id'] as num?)?.toInt();
+        if (id != null && _sameArtist('${x['name'] ?? ''}', artist)) same.add(id);
+      }
+      for (final id in same) {
+        final top = await _get('https://api.deezer.com/artist/$id/top?limit=100');
+        final has = ((top?['data'] as List?)?.whereType<Map>() ?? const <Map>[])
+            .any((t) => _sameTitle('${t['title'] ?? ''}', title));
+        if (has) {
+          artistId = id;
           break;
         }
       }
+      // 대표곡에 없어도 그 이름 가수가 딱 한 명이면 (헷갈릴 사람이 없으니) 그 가수로
+      if (artistId == null && same.length == 1) artistId = same.first;
     }
     if (artistId == null) return;
     final ar = await _get('https://api.deezer.com/artist/$artistId');
@@ -266,16 +276,37 @@ class _ArtistApi {
   static String _year(String date) => date.length >= 4 ? date.substring(0, 4) : '';
 
   /// 애플(한국 스토어) 앨범 — 카드 뜰 때 디저와 동시에
-  static Future<List<_Album>> appleAlbums(String artist) async {
+  /// (이름이 같은 다른 가수가 섞이지 않게 '지금 듣는 노래'를 부른 가수로 찾기)
+  static Future<List<_Album>> appleAlbums(String title, String artist) async {
     final out = <_Album>[];
-    final s = await _get('https://itunes.apple.com/search?entity=musicArtist&country=KR&limit=5'
-        '&term=${Uri.encodeQueryComponent(artist)}');
+    final s = await _get('https://itunes.apple.com/search?entity=song&country=KR&limit=25'
+        '&term=${Uri.encodeQueryComponent('$artist $title')}');
     int? appleId;
     for (final a in (s?['results'] as List?)?.whereType<Map>() ?? const <Map>[]) {
-      if (_sameArtist('${a['artistName'] ?? ''}', artist)) {
+      if (_sameArtist('${a['artistName'] ?? ''}', artist) && _sameTitle('${a['trackName'] ?? ''}', title)) {
         appleId = (a['artistId'] as num?)?.toInt();
         break;
       }
+    }
+    if (appleId == null) {
+      final s2 = await _get('https://itunes.apple.com/search?entity=musicArtist&country=KR&limit=5'
+          '&term=${Uri.encodeQueryComponent(artist)}');
+      final same = <int>[];
+      for (final a in (s2?['results'] as List?)?.whereType<Map>() ?? const <Map>[]) {
+        final id = (a['artistId'] as num?)?.toInt();
+        if (id != null && _sameArtist('${a['artistName'] ?? ''}', artist)) same.add(id);
+      }
+      for (final id in same) {
+        final sl = await _get('https://itunes.apple.com/lookup?id=$id&entity=song&country=KR&limit=200');
+        final has = ((sl?['results'] as List?)?.whereType<Map>() ?? const <Map>[])
+            .any((c) => c['wrapperType'] == 'track' && _sameTitle('${c['trackName'] ?? ''}', title));
+        if (has) {
+          appleId = id;
+          break;
+        }
+      }
+      // 곡 목록에 없어도 그 이름 가수가 딱 한 명이면 그 가수로
+      if (appleId == null && same.length == 1) appleId = same.first;
     }
     if (appleId == null) return out;
     final l = await _get('https://itunes.apple.com/lookup?id=$appleId&entity=album&country=KR&limit=200');
@@ -295,10 +326,37 @@ class _ArtistApi {
   }
 
   /// 뮤직브레인즈 앨범 — 조금 늦게 (1초에 한 번만 물어봐야 해서)
-  static Future<List<_Album>> mbAlbums(String artist) async {
+  /// (이름이 같은 다른 가수가 섞이지 않게 '지금 듣는 노래'를 부른 가수의 고유번호로 찾기)
+  static Future<List<_Album>> mbAlbums(String title, String artist) async {
     final out = <_Album>[];
     await Future.delayed(const Duration(milliseconds: 1100));
-    final q = Uri.encodeQueryComponent('artist:"$artist"');
+    final rq = Uri.encodeQueryComponent('recording:"$title" AND artist:"$artist"');
+    final rs = await _get('https://musicbrainz.org/ws/2/recording/?query=$rq&fmt=json&limit=5');
+    String? arid;
+    for (final r in (rs?['recordings'] as List?)?.whereType<Map>() ?? const <Map>[]) {
+      if (((r['score'] as num?) ?? 0) < 90 || !_sameTitle('${r['title'] ?? ''}', title)) continue;
+      for (final c in (r['artist-credit'] as List?)?.whereType<Map>() ?? const <Map>[]) {
+        final ar = c['artist'] as Map?;
+        if (ar?['id'] != null && _sameArtist('${c['name'] ?? ar?['name'] ?? ''}', artist)) {
+          arid = '${ar!['id']}';
+          break;
+        }
+      }
+      if (arid != null) break;
+    }
+    if (arid == null) {
+      await Future.delayed(const Duration(milliseconds: 1100));
+      final aq = Uri.encodeQueryComponent('artist:"$artist"');
+      final al = await _get('https://musicbrainz.org/ws/2/artist/?query=$aq&fmt=json&limit=5');
+      final same = [
+        for (final a in (al?['artists'] as List?)?.whereType<Map>() ?? const <Map>[])
+          if (((a['score'] as num?) ?? 0) >= 90 && a['id'] != null && _sameArtist('${a['name'] ?? ''}', artist)) '${a['id']}'
+      ];
+      if (same.length == 1) arid = same.first; // 헷갈릴 사람이 없을 때만
+    }
+    if (arid == null) return out;
+    await Future.delayed(const Duration(milliseconds: 1100)); // 뮤직브레인즈: 1초에 한 번만
+    final q = Uri.encodeQueryComponent('arid:$arid');
     final m = await _get('https://musicbrainz.org/ws/2/release-group?query=$q&fmt=json&limit=60');
     for (final g in (m?['release-groups'] as List?)?.whereType<Map>() ?? const <Map>[]) {
       if (((g['score'] as num?) ?? 0) < 80) continue;
@@ -616,7 +674,7 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
   String get _artist => widget.song.artistDisplay.trim();
   bool get _unknownArtist =>
       _artist.isEmpty || _artist.contains('알 수 없') || _artist.toLowerCase().contains('unknown');
-  String get _key => 'artistInfo5:${_artist.toLowerCase()}|${_title.toLowerCase()}';
+  String get _key => 'artistInfo8:${_artist.toLowerCase()}|${_title.toLowerCase()}';
 
   @override
   void initState() {
@@ -674,7 +732,7 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
     final info = _Info()..artist = _artist;
     var apple = <_Album>[];
     await Future.wait([
-      _ArtistApi.appleAlbums(_artist).then((l) => apple = l),
+      _ArtistApi.appleAlbums(_title, _artist).then((l) => apple = l),
       _ArtistApi.deezer(info, _title, _artist),
       _ArtistApi.wiki(info, _artist, lang),
       _ArtistApi.mbArtist(info, _artist),
@@ -691,7 +749,7 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
   /// 작사·작곡은 조금 늦게 (뮤직브레인즈가 천천히 받아야 해서)
   Future<void> _loadCredits(_Info info, SharedPreferences p) async {
     // 뮤직브레인즈에만 있는 앨범 더하기 → 화면에 바로 반영
-    _ArtistApi.mergeAlbums(info, await _ArtistApi.mbAlbums(_artist));
+    _ArtistApi.mergeAlbums(info, await _ArtistApi.mbAlbums(_title, _artist));
     if (mounted) setState(() {});
     await Future.delayed(const Duration(milliseconds: 1100));
     await _ArtistApi.credits(info, _title, _artist);
@@ -1074,12 +1132,15 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
                       child: SizedBox(
                         width: 92,
                         height: 92,
+                        // 표지가 오는 동안 · 표지가 없을 때는 빈 칸 대신 음반 그림
                         child: a.cover.isEmpty
-                            ? Container(color: line)
+                            ? _noCover(line, hint)
                             : CachedNetworkImage(
                                 imageUrl: a.cover,
                                 fit: BoxFit.cover,
-                                errorWidget: (_, __, ___) => Container(color: line),
+                                fadeInDuration: const Duration(milliseconds: 200),
+                                placeholder: (_, __) => _noCover(line, hint),
+                                errorWidget: (_, __, ___) => _noCover(line, hint),
                               ),
                       ),
                     ),
@@ -1142,6 +1203,13 @@ class _ArtistInfoBodyState extends State<_ArtistInfoBody> {
       ),
     );
   }
+
+  /// 앨범 표지 없을 때 (회색 칸 + 음반 그림)
+  Widget _noCover(Color line, Color hint) => Container(
+        color: line,
+        alignment: Alignment.center,
+        child: Icon(Icons.album_rounded, color: hint.withOpacity(0.55), size: 30),
+      );
 
   /// 사진 없으면 이름 첫 글자
   Widget _initial(String name, Color card, Color hint) {

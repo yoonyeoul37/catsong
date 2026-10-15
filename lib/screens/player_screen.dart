@@ -1025,7 +1025,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                               Text((_photoMode == 1) ? '랜덤' : '고정',
                                   style: TextStyle(color: ink, fontSize: 14, fontWeight: FontWeight.w600)),
                               const SizedBox(height: 2),
-                              Text((_photoMode == 1) ? '노래가 바뀔 때마다 사진이 바뀌어요' : '고른 사진 한 장만 계속 보여요',
+                              Text((_photoMode == 1) ? '곡이 바뀌면 배경도 바뀝니다.' : '배경 사진이 고정됩니다.',
                                   style: TextStyle(color: sub, fontSize: 11.5)),
                             ],
                           ),

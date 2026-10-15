@@ -1143,6 +1143,10 @@ const niceDefaults = [
 
 /// 메인 홈 카드용: 안 들어 본 국내 방송 하나 (지금 시간대 추천 → 다른 시간대 추천 → 전체 목록 순서)
 /// skip: 최근에 들은 방송·지금 듣는 방송 / 모두 들어 봤으면 null
+/// 국내 라디오 전체 목록 (목록 화면 순서 그대로) — 홈 '최근에 들었어요'에서 이전·다음 쓰려고
+List<RadioStation> koreanRadioStations() =>
+    koreanStations.map(_RadioKoreaScreenState._toRadioStation).toList();
+
 RadioStation? niceKoreanStationNow({Set<String> skip = const {}, int day = 0}) {
   final h = DateTime.now().hour;
   final s = (h >= 5 && h < 11) ? 0 : (h >= 11 && h < 17) ? 1 : (h >= 17 && h < 22) ? 2 : 3;

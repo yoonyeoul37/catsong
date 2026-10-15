@@ -434,7 +434,7 @@ class PlayerProvider extends ChangeNotifier {
         'title': song.titleDisplay,
         'artist': song.artistDisplay,
         'isPlaying': true,
-      });
+      }).catchError((Object _) => null); // 위젯 없거나 준비 전이면 조용히 넘어가기
     } catch (e) {}
   }
 
@@ -445,7 +445,7 @@ class PlayerProvider extends ChangeNotifier {
         'title': song?.titleDisplay ?? tr.appName,
         'artist': song?.artistDisplay ?? tr.widgetIdle,
         'isPlaying': isPlaying,
-      });
+      }).catchError((Object _) => null); // 위젯 없거나 준비 전이면 조용히 넘어가기
     } catch (e) {}
   }
 

@@ -56,7 +56,7 @@ import '../providers/theme_provider.dart';
 import 'nature_sounds_screen.dart';
 import 'nature_sound_detail_screen.dart';
 import 'radio_player_screen.dart';
-import 'radio_korea_screen2.dart' show niceKoreanStationNow;
+import 'radio_korea_screen2.dart' show niceKoreanStationNow, koreanRadioStations;
 import '../utils/nature_sound_catalog.dart';
 import '../utils/paran_photo.dart';
 import '../utils/no_album_helper.dart';
@@ -2559,7 +2559,25 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTapAction = () {
                           if (item.stationData != null) {
                             final station = RadioStation.fromJson(item.stationData!);
-                            context.read<RadioProvider>().playStation(station);
+                            final radio = context.read<RadioProvider>();
+                            // 다음·이전용: 국내 방송이면 라디오 목록 전체 순서 그대로 (주사위와 같게)
+                            final all = koreanRadioStations();
+                            final i = all.indexWhere((s) => s.name == station.name);
+                            if (i >= 0) {
+                              radio.setQueue(all, i);
+                              radio.playStation(all[i]);
+                            } else {
+                              // 해외 방송 등: 최근에 들은 라디오끼리
+                              final queue = <RadioStation>[];
+                              for (final e in recentContent) {
+                                if (e.type != RecentContentType.radio || e.stationData == null) continue;
+                                final st = RadioStation.fromJson(e.stationData!);
+                                if (!queue.any((q) => q.name == st.name)) queue.add(st);
+                              }
+                              final idx = queue.indexWhere((q) => q.name == station.name);
+                              if (idx >= 0) radio.setQueue(queue, idx);
+                              radio.playStation(station);
+                            }
                           }
                         };
                         break;

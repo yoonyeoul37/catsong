@@ -5,7 +5,7 @@
 # CBS · YTN · FEBC · TBS는 '오늘' 편성만 줘서 매일 돌리면 그날 요일 칸이 새로 바뀌고,
 # 경인방송 · JTV · 국악FM은 일주일치를 한 번에 가져와요
 # 실행: python tools/make_schedule.py   (GitHub에서는 매일 새벽 자동으로)
-import json, sys, datetime, urllib.request, os, re, html as htmllib
+import json, sys, datetime, urllib.request, urllib.parse, os, re, html as htmllib
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'schedule.json')
 UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36'
@@ -308,7 +308,8 @@ def gugak_images():
         img = re.search(r'<img src="(/DataFiles/Radio/PROG/[^"]+)"[^>]*class="bg"', prog) \
             or re.search(r'<img src="(/DataFiles/Radio/PROG/[^"]+)"', prog)
         if img:
-            pics[name] = 'https://www.igbf.kr' + img.group(1)
+            # 한글 · [ ] 가 든 사진 주소는 앱에서 못 열 수 있어서 주소용 글자로 바꿈
+            pics[name] = 'https://www.igbf.kr' + urllib.parse.quote(htmllib.unescape(img.group(1)), safe='/%')
     return pics
 
 

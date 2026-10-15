@@ -1281,7 +1281,7 @@ class _RadioCountryStationsScreenState
             Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back_ios,
-              color: baseColor, size: 20),
+              color: baseColor, size: 18),
         ),
         // 나라 이름 (누르면 나라 고르기) — 긴 이름은 … 로 줄임
         title: GestureDetector(
@@ -1331,14 +1331,14 @@ class _RadioCountryStationsScreenState
               });
             },
             icon: Icon(_showSearch ? Icons.close : Icons.search,
-                color: baseColor, size: 22),
+                color: baseColor, size: 20),
           ),
           IconButton(
             onPressed: () {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
               Navigator.of(context).popUntil((route) => route.isFirst);
             },
-            icon: Icon(Icons.home_rounded, color: baseColor, size: 22),
+            icon: Icon(Icons.home_rounded, color: baseColor, size: 20),
           ),
         ],
       ),

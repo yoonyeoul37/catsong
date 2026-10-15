@@ -137,7 +137,7 @@ class OverseasRadioView extends StatelessWidget {
                         IconButton(
                           onPressed: () => _close(context),
                           icon: const Icon(Icons.keyboard_arrow_down_rounded,
-                              color: Colors.white, size: 32),
+                              color: Colors.white, size: 28),
                         ),
                         const Spacer(),
                         // 전원: 종료 확인창
@@ -145,7 +145,7 @@ class OverseasRadioView extends StatelessWidget {
                           IconButton(
                             onPressed: onExit,
                             icon: const Icon(Icons.power_settings_new_rounded,
-                                color: Color(0xFFE8877E), size: 24),
+                                color: Color(0xFFE8877E), size: 20),
                           ),
                         // 홈: 처음 화면까지 한 번에
                         IconButton(
@@ -154,7 +154,7 @@ class OverseasRadioView extends StatelessWidget {
                             Navigator.of(context).popUntil((route) => route.isFirst);
                           },
                           icon: const Icon(Icons.home_rounded,
-                              color: Colors.white, size: 24),
+                              color: Colors.white, size: 20),
                         ),
                         // TV로 듣기 (연결되면 하늘색)
                         if (onCast != null)
@@ -165,7 +165,7 @@ class OverseasRadioView extends StatelessWidget {
                               icon: Icon(
                                 CastService.instance.isConnected ? Icons.cast_connected : Icons.cast,
                                 color: CastService.instance.isConnected ? const Color(0xFF7FB8F0) : Colors.white,
-                                size: 23,
+                                size: 19,
                               ),
                             ),
                           ),

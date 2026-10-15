@@ -464,13 +464,14 @@ def bbs_images(codes):
     pics = {}
     for code in codes:
         try:
-            page = fetch(f'https://www.bbsi.co.kr/?ACT=RADIO&MODE=HOME&ProgramCode={code}', 'https://www.bbsi.co.kr/',
+            page = fetch(f'https://www.bbsi.co.kr/HOME2/?ACT=RADIO&MODE=HOME&ProgramCode={code}', 'https://www.bbsi.co.kr/',
                          insecure=True)
         except Exception:
             continue
-        m = re.search(r'(https?:)?//m\.bbsi\.co\.kr/M/UploadProgramImg/[\w.\-]+', page)
+        # 프로그램 홈 맨 위 큰 사진
+        m = re.search(r'class="top-banner"[^>]*>\s*<img src="((?:https?:)?//m\.bbsi\.co\.kr/M/UploadProgramImg/[\w.\-]+)"', page)
         if m:
-            u = m.group(0)
+            u = m.group(1)
             pics[code] = u if u.startswith('http') else 'https:' + u
     return pics
 

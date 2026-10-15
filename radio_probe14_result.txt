@@ -1,0 +1,42 @@
+############################################################
+■ 프로그램 번호 1207
+  [PC 프로그램 홈] https://www.bbsi.co.kr/?ACT=RADIO&MODE=HOME&ProgramCode=1207 → 상태 200 · 글자 수 67176 · 진짜 사진 있음: 예 · 사진 115개
+    … " onclick="goBannerLink('https://www.bbs.or.kr/HOME2/?ACT=TV&MODE=HOME&ProgramCode=2525','N')"><div id="player" style="position:absolute;z-index:1;right:200px;"></div><img src="https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg" alt=" 송봉주의 음악 두시" style="width:2000px !important;height:55
+    … " onclick="goBannerLink('https://www.bbs.or.kr/HOME2/?ACT=TV&MODE=HOME&ProgramCode=2474','N')"><div id="player" style="position:absolute;z-index:1;right:200px;"></div><img src="https://m.bbsi.co.kr/M/UploadProgramImg/4f7c8ff443e108e68009.jpg" alt=" 별빛 아름다운 저녁, 주석입니다" style="width:2000px !important;he
+    … ACT=TV_LIST">전체보기</a></p></div><div class="swiper tvSwiper"><div class="swiper-wrapper tv-grid"><div class="swiper-slide"><a href="?ACT=TV&MODE=HOME&ProgramCode=2481"><img src="https://m.bbsi.co.kr/M/UploadProgramImg/8942e4d820040c4af512.jpg" class="mvImg" style="width:280px;height:380px" /><p>청운스님의 
+    … p>청운스님의 삶의 향기</p><span>(월) 19:30 / (목) 16:00 / (금) 13:00</span></a></div><div class="swiper-slide"><a href="?ACT=TV&MODE=HOME&ProgramCode=2492"><div class="image-box"><img src="https://m.bbsi.co.kr/M/UploadProgramImg/ce24a9e586cf7a1232de.jpg" class="auto-cropped" /></div><p>통(通)하는 불교 시즌 3 : 나를 깨우는 50
+    … 32de.jpg" class="auto-cropped" /></div><p>통(通)하는 불교 시즌 3 : 나를 깨우는 50분</p><span></span></a></div><div class="swiper-slide"><a href="?ACT=TV&MODE=HOME&ProgramCode=2187"><img src="https://m.bbsi.co.kr/M/UploadProgramImg/47c66ff44e4b6cd4c119.png" class="mvImg" style="width:280px;height:380px" /><p>구선스님의 
+    … 0px;height:380px" /><p>구선스님의 정토 16관법</p><span>(화) 19:30 / (토) 15:00 / (일) 13:00</span></a></div><div class="swiper-slide"><a href="?ACT=TV&MODE=HOME&ProgramCode=2377"><img src="https://m.bbsi.co.kr/M/UploadProgramImg/73c3f72aa85a29d07863.jpg" class="mvImg" style="width:280px;height:380px" /><p>BBS 선지
+    og:image https://www.bbs.or.kr/HOME/img/common/logo_sns.jpg
+  [PC HOME2 프로그램 홈] https://www.bbsi.co.kr/HOME2/?ACT=RADIO&MODE=HOME&ProgramCode=1207 → 상태 200 · 글자 수 22822 · 진짜 사진 있음: 아니오 · 사진 1개
+    … .com/response/4EHG4svS7cl','Y')"><div style="margin:0 auto;width:56px"><img id="btnTop" src="./assets/images/btnTop.png"></div></div></section><div class="top-banner"><img src="https://m.bbsi.co.kr/M/UploadProgramImg/cb261a6862e2dd9c3258.jpg" style="width:2000px;height:550px;"></div><section class="t
+    og:image https://www.bbs.or.kr/HOME/img/common/logo_sns.jpg
+  [모바일 다시듣기] https://m.bbsi.co.kr/M/?ACT=RADIO_REPLAY_VIEW_BOARD&APP_END&ProgramCode=1207 → 상태 200 · 글자 수 69800 · 진짜 사진 있음: 아니오 · 사진 0개
+    og:image https://www.bbsi.co.kr/HOME/img/common/logo_sns.jpg
+  [모바일 프로그램] https://m.bbsi.co.kr/M/?ACT=RADIO_PROGRAM&ProgramCode=1207 → 상태 200 · 글자 수 69749 · 진짜 사진 있음: 아니오 · 사진 0개
+    og:image https://www.bbsi.co.kr/HOME/img/common/logo_sns.jpg
+  [모바일 프로그램 목록] https://m.bbsi.co.kr/M/?ACT=RADIO_PROGRAM_LIST → 상태 200 · 글자 수 69893 · 진짜 사진 있음: 아니오 · 사진 0개
+    og:image https://www.bbsi.co.kr/HOME/img/common/logo_sns.jpg
+  [모바일 라디오 첫 화면] https://m.bbsi.co.kr/M/?ACT=RADIO_FM → 상태 200 · 글자 수 72148 · 진짜 사진 있음: 아니오 · 사진 0개
+    og:image https://www.bbsi.co.kr/HOME/img/common/logo_sns.jpg
+############################################################
+■ 프로그램 번호 2349
+  [PC 프로그램 홈] https://www.bbsi.co.kr/?ACT=RADIO&MODE=HOME&ProgramCode=2349 → 상태 200 · 글자 수 67245 · 진짜 사진 있음: 예 · 사진 115개
+    … " onclick="goBannerLink('https://www.bbs.or.kr/HOME2/?ACT=TV&MODE=HOME&ProgramCode=2525','N')"><div id="player" style="position:absolute;z-index:1;right:200px;"></div><img src="https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg" alt=" 송봉주의 음악 두시" style="width:2000px !important;height:55
+    … " onclick="goBannerLink('https://www.bbs.or.kr/HOME2/?ACT=TV&MODE=HOME&ProgramCode=2474','N')"><div id="player" style="position:absolute;z-index:1;right:200px;"></div><img src="https://m.bbsi.co.kr/M/UploadProgramImg/4f7c8ff443e108e68009.jpg" alt=" 별빛 아름다운 저녁, 주석입니다" style="width:2000px !important;he
+    … ACT=TV_LIST">전체보기</a></p></div><div class="swiper tvSwiper"><div class="swiper-wrapper tv-grid"><div class="swiper-slide"><a href="?ACT=TV&MODE=HOME&ProgramCode=2187"><img src="https://m.bbsi.co.kr/M/UploadProgramImg/47c66ff44e4b6cd4c119.png" class="mvImg" style="width:280px;height:380px" /><p>구선스님의 
+    … 0px;height:380px" /><p>구선스님의 정토 16관법</p><span>(화) 19:30 / (토) 15:00 / (일) 13:00</span></a></div><div class="swiper-slide"><a href="?ACT=TV&MODE=HOME&ProgramCode=2377"><img src="https://m.bbsi.co.kr/M/UploadProgramImg/73c3f72aa85a29d07863.jpg" class="mvImg" style="width:280px;height:380px" /><p>BBS 선지
+    … :280px;height:380px" /><p>BBS 선지식 명법문</p><span>매주 (화) 07:50 (목) 11:30 (일) 09:00</span></a></div><div class="swiper-slide"><a href="?ACT=TV&MODE=HOME&ProgramCode=2451"><img src="https://m.bbsi.co.kr/M/UploadProgramImg/abbd07c727a984e2110e.jpg" class="mvImg" style="width:280px;height:380px" /><p>도일스님의 
+    … eight:380px" /><p>도일스님의 붓다스토리 아함경2</p><span>(월)22:30 (화)11:30 (목)13:00 (금)07:50</span></a></div><div class="swiper-slide"><a href="?ACT=TV&MODE=HOME&ProgramCode=2478"><img src="https://m.bbsi.co.kr/M/UploadProgramImg/2fdf87d230b937e24cf1.jpg" class="mvImg" style="width:280px;height:380px" /><p>고우스님의 
+    og:image https://www.bbs.or.kr/HOME/img/common/logo_sns.jpg
+  [PC HOME2 프로그램 홈] https://www.bbsi.co.kr/HOME2/?ACT=RADIO&MODE=HOME&ProgramCode=2349 → 상태 200 · 글자 수 19120 · 진짜 사진 있음: 아니오 · 사진 1개
+    … .com/response/4EHG4svS7cl','Y')"><div style="margin:0 auto;width:56px"><img id="btnTop" src="./assets/images/btnTop.png"></div></div></section><div class="top-banner"><img src="https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg" style="width:2000px;height:550px;"></div><section class="t
+    og:image https://www.bbs.or.kr/HOME/img/common/logo_sns.jpg
+  [모바일 다시듣기] https://m.bbsi.co.kr/M/?ACT=RADIO_REPLAY_VIEW_BOARD&APP_END&ProgramCode=2349 → 상태 200 · 글자 수 69800 · 진짜 사진 있음: 아니오 · 사진 0개
+    og:image https://www.bbsi.co.kr/HOME/img/common/logo_sns.jpg
+  [모바일 프로그램] https://m.bbsi.co.kr/M/?ACT=RADIO_PROGRAM&ProgramCode=2349 → 상태 200 · 글자 수 69749 · 진짜 사진 있음: 아니오 · 사진 0개
+    og:image https://www.bbsi.co.kr/HOME/img/common/logo_sns.jpg
+  [모바일 프로그램 목록] https://m.bbsi.co.kr/M/?ACT=RADIO_PROGRAM_LIST → 상태 200 · 글자 수 69893 · 진짜 사진 있음: 아니오 · 사진 0개
+    og:image https://www.bbsi.co.kr/HOME/img/common/logo_sns.jpg
+  [모바일 라디오 첫 화면] https://m.bbsi.co.kr/M/?ACT=RADIO_FM → 상태 200 · 글자 수 72148 · 진짜 사진 있음: 아니오 · 사진 0개
+    og:image https://www.bbsi.co.kr/HOME/img/common/logo_sns.jpg

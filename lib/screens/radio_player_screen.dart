@@ -531,7 +531,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
               child: SafeArea(
                 top: false,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 2, 0, 4),
+                  padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                   // 지금 프로그램 한 줄 (한국 방송일 때)
                   if (_isKoreanBroadcast(current.name)) const _NowProgramStrip(),
@@ -690,7 +690,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                           _showFarewellAndExit(context);
                         },
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          padding: const EdgeInsets.fromLTRB(12, 4, 12, 0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -716,7 +716,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
       body: Stack(
         children: [
           LayoutBuilder(builder: (context, constraints) {
-            final h = constraints.maxHeight;
+            final h = constraints.maxHeight - 14; // 하단바 줄인 만큼 빼서 가운데 배치는 그대로
             final compact = h < 600; // 세로가 짧은 폰(엑스커버 등): 눈금자 숨기고 사진 자리 더 주기
             // 스크롤 없이 한 화면에: 위 버튼은 상태바 아래 고정, 재생 버튼은 항상 화면 안
             // (작은 폰에서는 사진만 남는 공간만큼 줄어듦 · 큰 폰은 그대로)
@@ -1249,7 +1249,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                       SizedBox(height: (h * 0.008).clamp(3.0, 8.0)),
 
                       // 해외·음악 화면과 같은 산 모양 (정지 중엔 낮게 멈춤)
-                      SizedBox(height: (h * 0.008).clamp(3.0, 8.0)),
+                      SizedBox(height: (h * 0.008).clamp(3.0, 8.0) + 8), // 이퀄라이저·재생 버튼 살짝 아래로
                       MountainEqBars(isPlaying: isPlaying, color: primaryColor),
                       const SizedBox(height: 6),
 
@@ -2220,7 +2220,7 @@ class _BottomBarItem extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.fromLTRB(12, 4, 12, 0),
         child: Stack(
           clipBehavior: Clip.none,
           children: [

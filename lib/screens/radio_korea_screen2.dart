@@ -168,21 +168,37 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
     );
   }
 
-  // 주사위는 수도권 방송만 (지역 방송은 빼기) · 아래 방송은 덜 나오게
-  static const _diceLow = ['국악FM', 'CPBC 가톨릭'];
+  // 주사위: 수도권만 · 외국어·지방은 빼기 · 종교와 아래 방송은 가끔(0.3) · 지금 사진 있는 방송은 조금 더(×1.5)
+  static const _diceOut = {'FEBC 극동방송 AM', '수원 SoneFM'}; // AM은 FM과 같은 방송 · SoneFM은 편성표 없음
+  static const _diceLow = {'국악FM', '국방FM', 'EBS FM', 'CBS JOY4U', 'MBC 올댓뮤직', 'TBN 경인교통', '마포FM'};
 
-  // 주사위 판: 지금 방송 쉬는 채널은 빼기 (다 쉬는 시간이면 그냥 전부)
-  List<DiceStation> _dicePool() {
-    final radio = context.read<RadioProvider>();
-    final pool = _dicePoolAll().where((d) => !radio.isOffAirNow(d.station.name)).toList();
-    return pool.isEmpty ? _dicePoolAll() : pool;
+  double? _diceWeight(_KStation ks, RadioProvider r) {
+    if (ks.region != '수도권' || _diceOut.contains(ks.name)) return null;
+    final c = stationCategory(ks);
+    if (c == 2) return null; // 외국어
+    var w = (c == 3 || _diceLow.contains(ks.name)) ? 0.3 : 1.0;
+    final img = (r.currentProgramFor(ks.name)?['image'] ?? '').toString();
+    if (img.isNotEmpty) w *= 1.5;
+    return w;
   }
 
-  List<DiceStation> _dicePoolAll() => [
+  // 주사위 판: 지금 방송 쉬는 채널 · 방금 주사위로 나온 방송은 빼기 (그러면 너무 적으면 그냥 전부)
+  List<DiceStation> _dicePool() {
+    final radio = context.read<RadioProvider>();
+    final all = _dicePoolAll();
+    final pool = all
+        .where((d) => !radio.isOffAirNow(d.station.name) && d.station.name != _diceChoice)
+        .toList();
+    return pool.length >= 3 ? pool : all;
+  }
+
+  List<DiceStation> _dicePoolAll() {
+    final r = context.read<RadioProvider>();
+    return [
         for (final ks in koreanStations)
-          if (ks.region == '수도권')
+          if (_diceWeight(ks, r) != null)
             DiceStation(
-              weight: _diceLow.contains(ks.name) ? 0.3 : 1.0,
+              weight: _diceWeight(ks, r)!,
               station: _toRadioStation(ks),
               badge: ks.broadcaster,
               image: (r) => (r.currentProgramFor(ks.name)?['image'] ?? '').toString(),
@@ -194,6 +210,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
               },
             ),
       ];
+  }
 
   Future<void> _openDice() async {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -211,7 +228,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
     if (!mounted) return;
     await showRadioDice(context, _dicePool(), onOpen: (st) {
       // 전체 목록 순서 그대로 넘겨서 상세 화면에서 이전/다음도 되게
-      final list = koreanStations.map(_toRadioStation).toList();
+      final list = koreanStationsSorted.map(_toRadioStation).toList();
       final i = list.indexWhere((s) => s.name == st.name);
       Navigator.push(
         context,
@@ -451,7 +468,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
 
   Widget _buildAllList(BuildContext context, RadioProvider radioProvider) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
-    final radioStations = koreanStations.map((ks) => _toRadioStation(ks)).toList();
+    final radioStations = koreanStationsSorted.map((ks) => _toRadioStation(ks)).toList(); // 화면 순서(카테고리별) 그대로
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final currentName = radioProvider.currentStation?.name;
@@ -470,19 +487,65 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
       }
     });
 
+    // 카테고리별로 나눈 목록: 제목 줄(-1 - 카테고리) + 방송 줄(정렬된 목록 번호)
+    final items = <int>[];
+    var lastCat = -99;
+    for (var j = 0; j < koreanStationsSorted.length; j++) {
+      final c = stationCategory(koreanStationsSorted[j]);
+      if (c != lastCat) {
+        items.add(-1 - c);
+        lastCat = c;
+      }
+      items.add(j);
+    }
+    final catCounts = <int, int>{};
+    for (final s in koreanStationsSorted) {
+      final c = stationCategory(s);
+      catCounts[c] = (catCounts[c] ?? 0) + 1;
+    }
+    final baseC = isDarkMode ? Colors.white : Colors.black;
+
     return _DialHost(
       tickColor: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.35),
       child: ListView.separated(
       padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
-      itemCount: koreanStations.length + 1,
+      itemCount: items.length + 1,
       separatorBuilder: (_, i) => i == 0
           ? const SizedBox(height: 6)
-          : _DialEffect(
-              child: Divider(height: 1, color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.1))),
+          : (items[i - 1] < 0 || (i < items.length && items[i] < 0)) // 카테고리 제목 앞뒤는 선 없이
+              ? const SizedBox.shrink()
+              : _DialEffect(
+                  child: Divider(height: 1, color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.1))),
       itemBuilder: (context, n) {
+        if (n > 0 && items[n - 1] < 0) {
+          // 카테고리 제목: 이름 · 개수 뒤로 가는 선
+          final c = -1 - items[n - 1];
+          return _DialEffect(
+            child: Padding(
+              padding: EdgeInsets.only(top: n == 1 ? 6 : 22, bottom: 6),
+              child: Row(
+                children: [
+                  Flexible(
+                    child: Text(
+                      stationCategoryLabel(context, c),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: baseC.withOpacity(0.72), fontSize: 12.5, fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Text('${catCounts[c] ?? 0}',
+                      style: GoogleFonts.quicksand(color: baseC.withOpacity(0.5), fontSize: 12, fontWeight: FontWeight.w700)),
+                  const SizedBox(width: 10),
+                  Expanded(child: Container(height: 1, color: baseC.withOpacity(0.18))),
+                ],
+              ),
+            ),
+          );
+        }
         if (n == 0) return _nowNiceCard(context, radioProvider, radioStations); // 맨 위 사진 카드
-        final i = n - 1;
-        final ks = koreanStations[i];
+        final i = items[n - 1];
+        final ks = koreanStationsSorted[i];
         final current = radioProvider.currentStation;
         final isPlaying = current?.name == ks.name && radioProvider.isPlaying;
         _stationItemKeys.putIfAbsent(ks.name, () => GlobalKey());
@@ -1192,7 +1255,7 @@ const niceDefaults = [
 /// skip: 최근에 들은 방송·지금 듣는 방송 / 모두 들어 봤으면 null
 /// 국내 라디오 전체 목록 (목록 화면 순서 그대로) — 홈 '최근에 들었어요'에서 이전·다음 쓰려고
 List<RadioStation> koreanRadioStations() =>
-    koreanStations.map(_RadioKoreaScreenState._toRadioStation).toList();
+    koreanStationsSorted.map(_RadioKoreaScreenState._toRadioStation).toList();
 
 RadioStation? niceKoreanStationNow({Set<String> skip = const {}, int day = 0}) {
   final h = DateTime.now().hour;
@@ -1210,6 +1273,74 @@ RadioStation? niceKoreanStationNow({Set<String> skip = const {}, int day = 0}) {
   if (rest.isEmpty) return null;
   return _RadioKoreaScreenState._toRadioStation(rest[day % rest.length]);
 }
+
+// ── 전체 목록 카테고리 · 정렬 ──
+// 0 주요 방송 · 1 음악·시사 · 2 외국어 · 3 종교 방송 · 4 교통 방송 · 5 지역 방송 · 6 공동체 라디오
+const _foreignNames = {'아리랑 라디오', 'TBS eFM', 'BeFM', 'EBS 반디'};
+
+int stationCategory(_KStation s) {
+  if (s.broadcaster == '공동체') return 6;
+  if (s.broadcaster == 'TBN') return 4;
+  if (_foreignNames.contains(s.name)) return 2;
+  if (const {'CPBC', 'FEBC', 'BBS'}.contains(s.broadcaster)) return 3;
+  if (s.region == '수도권') return const {'KBS', 'MBC', 'SBS'}.contains(s.broadcaster) ? 0 : 1;
+  return 5;
+}
+
+String stationCategoryLabel(BuildContext context, int c) {
+  final l = Localizations.localeOf(context);
+  final k = l.languageCode == 'zh'
+      ? ((l.scriptCode == 'Hant' || l.countryCode == 'TW' || l.countryCode == 'HK') ? 'tw' : 'cn')
+      : l.languageCode;
+  const labels = {
+    'ko': ['주요 방송', '음악·시사', '외국어', '종교 방송', '교통 방송', '지역 방송', '공동체 라디오'],
+    'en': ['Major stations', 'Music & news', 'Foreign language', 'Religious', 'Traffic', 'Regional', 'Community radio'],
+    'ja': ['主要局', '音楽・時事', '外国語', '宗教放送', '交通放送', '地方局', 'コミュニティFM'],
+    'tw': ['主要電台', '音樂・時事', '外語', '宗教電台', '交通電台', '地方電台', '社區電台'],
+    'cn': ['主要电台', '音乐・时事', '外语', '宗教电台', '交通电台', '地方电台', '社区电台'],
+  };
+  return (labels[k] ?? labels['ko']!)[c];
+}
+
+const _regionOrder = ['수도권', '부산/경남', '대구/경북', '광주/전남', '전북', '대전/충남', '충북', '강원', '제주'];
+const _brandOrder = ['KBS', 'MBC', 'SBS', 'TBC', 'JTV', 'EBS', 'CBS', 'YTN', 'TBS', 'OBS', 'CPBC', 'FEBC', 'BBS',
+    '국악방송', '국방FM', 'Arirang', 'BeFM', 'TBN', '공동체'];
+// 같은 방송사·도시 안 채널 순서 (1라디오 → 해피FM → 1FM …)
+const _channelOrder = [('1라디오', 1), ('표준FM', 1), ('러브FM', 1), ('해피FM', 2), ('음악FM', 2), ('파워FM', 2),
+    (' AM', 2), ('1FM', 3), ('Classic', 3), ('JOY4U', 3), ('Cool', 4), ('FM4U', 4), ('3라디오', 5), ('올댓뮤직', 6)];
+
+int _channelRank(String name) {
+  for (final (k, r) in _channelOrder) {
+    if (name.contains(k)) return r;
+  }
+  return 0;
+}
+
+/// 전체 목록 화면 순서: 카테고리 → 지역 → 방송사 → 도시 → 채널
+final List<_KStation> koreanStationsSorted = () {
+  int idx(List<String> l, String v) {
+    final i = l.indexOf(v);
+    return i < 0 ? 99 : i;
+  }
+
+  int city(_KStation s) => koreanStations.indexWhere((k) => k.region == s.region && k.subLabel == s.subLabel);
+  final l = [...koreanStations];
+  final orig = {for (var i = 0; i < koreanStations.length; i++) koreanStations[i].name: i};
+  l.sort((a, b) {
+    for (final d in [
+      stationCategory(a) - stationCategory(b),
+      idx(_regionOrder, a.region) - idx(_regionOrder, b.region),
+      idx(_brandOrder, a.broadcaster) - idx(_brandOrder, b.broadcaster),
+      city(a) - city(b),
+      _channelRank(a.name) - _channelRank(b.name),
+      orig[a.name]! - orig[b.name]!,
+    ]) {
+      if (d != 0) return d;
+    }
+    return 0;
+  });
+  return l;
+}();
 
 class _KStation {
   final String name;

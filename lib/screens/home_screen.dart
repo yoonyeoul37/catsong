@@ -378,6 +378,79 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  // ───── 메인 라디오 카드 왼쪽 위 채널 수 (한국어: 국내 방송 개수 · 다른 언어: 그 나라 채널 수) ─────
+  int? _radioCount; // 다른 나라 채널 수 (저장해 둔 값 → 새로 받은 값)
+  String? _radioCountFor; // 위 숫자가 어느 나라 것인지
+
+  static String _radioCountry(Locale l) => switch (l.languageCode) {
+        'ko' => 'KR',
+        'ja' => 'JP',
+        'zh' => (l.scriptCode == 'Hant' || l.countryCode == 'TW' || l.countryCode == 'HK') ? 'TW' : 'CN',
+        _ => (l.countryCode ?? '').length == 2 ? l.countryCode!.toUpperCase() : 'US',
+      };
+
+  Future<void> _loadRadioCount(String code) async {
+    final radio = context.read<RadioProvider>();
+    final p = await SharedPreferences.getInstance();
+    final saved = p.getInt('radio_count_$code');
+    if (saved != null && mounted && _radioCountFor == code) setState(() => _radioCount = saved);
+    await radio.fetchAllCountryCounts(); // 이미 받아 뒀으면 바로 끝남
+    final n = radio.getCountryStationCount(code);
+    if (n != null && n > 0) {
+      await p.setInt('radio_count_$code', n);
+      if (mounted && _radioCountFor == code) setState(() => _radioCount = n);
+    }
+  }
+
+  Widget _radioCountChip(BuildContext context) {
+    final l = Localizations.localeOf(context);
+    final code = _radioCountry(l);
+    int? n;
+    if (code == 'KR') {
+      n = koreanRadioStations().length;
+    } else {
+      if (_radioCountFor != code) {
+        _radioCountFor = code;
+        _radioCount = null;
+        WidgetsBinding.instance.addPostFrameCallback((_) => _loadRadioCount(code));
+      }
+      n = _radioCount;
+    }
+    if (n == null || n <= 0) return const SizedBox.shrink();
+    final countText = n.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (_) => ',');
+    final unit = switch (l.languageCode) {
+      'ko' => '채널',
+      'ja' => '局',
+      'zh' => code == 'TW' ? '個電台' : '个电台',
+      _ => 'stations',
+    };
+    const ink = Color(0xFF17140F);
+    const red = Color(0xFFE5484D);
+    return Container(
+      height: 23,
+      padding: const EdgeInsets.symmetric(horizontal: 9),
+      decoration: BoxDecoration(color: Colors.white.withOpacity(0.62), borderRadius: BorderRadius.circular(999)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              color: red,
+              shape: BoxShape.circle,
+              boxShadow: [BoxShadow(color: red.withOpacity(0.25), spreadRadius: 2.5)],
+            ),
+          ),
+          const SizedBox(width: 6),
+          Text(countText, style: GoogleFonts.quicksand(color: ink.withOpacity(0.8), fontSize: 12, fontWeight: FontWeight.w700)),
+          const SizedBox(width: 3),
+          Text(unit, style: TextStyle(color: ink.withOpacity(0.78), fontSize: 10.5, fontWeight: FontWeight.w700)),
+        ],
+      ),
+    );
+  }
+
   // ───── 메인 홈 카드: 나만의 색 → 지금 방송 → 오늘의 팁 (✕ 누르면 다음 카드, 내일 다시 처음부터) ─────
   Set<String> _homeClosed = {}; // 오늘 ✕로 닫은 카드 ('radio', 'tip')
   final Set<String> _programAsked = {}; // 방송마다 편성표는 한 번만 받기
@@ -2279,6 +2352,24 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
+                        // 라디오 카드: 하트와 마주 보는 왼쪽 위에 채널 수 알약
+                        if (c.type == StartScreenType.radio)
+                          Positioned(
+                            top: 8,
+                            left: 8,
+                            right: 39, // 하트 칸(23) + 사이 8 비우기
+                            height: 23,
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: MediaQuery.withClampedTextScaling(
+                                  maxScaleFactor: 1.15,
+                                  child: _radioCountChip(context),
+                                ),
+                              ),
+                            ),
+                          ),
                         Positioned(
                           top: 8,
                           right: 8,

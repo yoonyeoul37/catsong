@@ -20606,5 +20606,559 @@
         "end": "23:00"
       }
     ]
+  },
+  "FEBC 극동방송 AM": {
+    "friday": [
+      {
+        "title": "별처럼 빛나는 그대에게",
+        "start": "00:00",
+        "end": "01:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/479414af-a918-4fbc-b86e-1eed8979b66b.png"
+      },
+      {
+        "title": "나영환의 달빛가스펠",
+        "start": "01:00",
+        "end": "02:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202411/22cfb63e-c695-4423-9759-50a419351461.png"
+      },
+      {
+        "title": "샬롬, 대한민국입니다",
+        "start": "02:00",
+        "end": "03:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202506/e8839f70-c9ae-40e0-bca1-435f69b5f5ae.jpg"
+      },
+      {
+        "title": "복음의 메아리",
+        "start": "03:00",
+        "end": "03:20",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/6e7fc3e7-7e1d-4053-b7be-2b47f3f5e81f.png"
+      },
+      {
+        "title": "복음의 메아리(3분 메시지)",
+        "start": "03:20",
+        "end": "03:25",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/6e7fc3e7-7e1d-4053-b7be-2b47f3f5e81f.png"
+      },
+      {
+        "title": "복음의 메아리",
+        "start": "03:25",
+        "end": "04:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/6e7fc3e7-7e1d-4053-b7be-2b47f3f5e81f.png"
+      },
+      {
+        "title": "복음의 메아리",
+        "start": "04:00",
+        "end": "04:20",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/6e7fc3e7-7e1d-4053-b7be-2b47f3f5e81f.png"
+      },
+      {
+        "title": "복음의 메아리(설교)",
+        "start": "04:20",
+        "end": "04:50",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/6e7fc3e7-7e1d-4053-b7be-2b47f3f5e81f.png"
+      },
+      {
+        "title": "복음의 메아리",
+        "start": "04:50",
+        "end": "05:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/6e7fc3e7-7e1d-4053-b7be-2b47f3f5e81f.png"
+      },
+      {
+        "title": "내 영혼에 햇빛 비치니",
+        "start": "05:00",
+        "end": "05:05",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/a8a5e1ef-f8e5-42b3-906e-5fc4c6705180.png"
+      },
+      {
+        "title": "FEBC 새벽예배",
+        "start": "05:05",
+        "end": "05:35",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/a8a5e1ef-f8e5-42b3-906e-5fc4c6705180.png"
+      },
+      {
+        "title": "내 영혼에 햇빛 비치니",
+        "start": "05:35",
+        "end": "06:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/a8a5e1ef-f8e5-42b3-906e-5fc4c6705180.png"
+      },
+      {
+        "title": "주님과 이 아침을",
+        "start": "06:00",
+        "end": "06:25",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/6503ce2f-0846-49bb-afc0-0d9785a832d4.png"
+      },
+      {
+        "title": "오늘의 양식",
+        "start": "06:25",
+        "end": "07:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/6503ce2f-0846-49bb-afc0-0d9785a832d4.png"
+      },
+      {
+        "title": "좋은 아침입니다",
+        "start": "07:00",
+        "end": "08:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/657cfb7e-da62-4085-9d54-2799b54049c2.png"
+      },
+      {
+        "title": "힘찬 라디오",
+        "start": "08:00",
+        "end": "08:45",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202608/4b196afa-dbbe-4a64-b17a-9d392b4d4560.jpg"
+      },
+      {
+        "title": "날마다 살아나는 큐티",
+        "start": "08:45",
+        "end": "09:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202608/4b196afa-dbbe-4a64-b17a-9d392b4d4560.jpg"
+      },
+      {
+        "title": "사랑의 뜰안",
+        "start": "09:00",
+        "end": "09:10",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202604/b8aa6346-fb69-4aca-8157-3094f98de443.jpg"
+      },
+      {
+        "title": "내가 매일 기쁘게",
+        "start": "09:10",
+        "end": "09:20",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202604/b8aa6346-fb69-4aca-8157-3094f98de443.jpg"
+      },
+      {
+        "title": "FEBC 게시판",
+        "start": "09:20",
+        "end": "09:30",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202604/b8aa6346-fb69-4aca-8157-3094f98de443.jpg"
+      },
+      {
+        "title": "생명은 빛으로",
+        "start": "09:30",
+        "end": "10:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202604/b8aa6346-fb69-4aca-8157-3094f98de443.jpg"
+      },
+      {
+        "title": "사랑의 뜰안",
+        "start": "10:00",
+        "end": "11:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202604/b8aa6346-fb69-4aca-8157-3094f98de443.jpg"
+      },
+      {
+        "title": "소망의 기도",
+        "start": "11:00",
+        "end": "11:45",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202504/8c7e37fe-2d7f-429f-add9-33c58a910e75.png"
+      },
+      {
+        "title": "빛을 따라서",
+        "start": "11:45",
+        "end": "12:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202504/8c7e37fe-2d7f-429f-add9-33c58a910e75.png"
+      },
+      {
+        "title": "소망의 찬양",
+        "start": "12:00",
+        "end": "12:10",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202609/abcbc0c9-1476-47cf-adf3-53d33af74a29.jpg"
+      },
+      {
+        "title": "소망의 찬양",
+        "start": "12:10",
+        "end": "13:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202609/abcbc0c9-1476-47cf-adf3-53d33af74a29.jpg"
+      },
+      {
+        "title": "만나고 싶은 사람 듣고 싶은 이야기",
+        "start": "13:00",
+        "end": "13:45",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202606/c86fe1fb-e361-4e87-82ba-59006892a7df.jpg"
+      },
+      {
+        "title": "FEBC 게시판",
+        "start": "13:45",
+        "end": "14:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202606/c86fe1fb-e361-4e87-82ba-59006892a7df.jpg"
+      },
+      {
+        "title": "오후의 열린 광장",
+        "start": "14:00",
+        "end": "14:10"
+      },
+      {
+        "title": "복소리",
+        "start": "14:10",
+        "end": "14:30",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202505/f250dfa9-4d25-4b39-95a2-cbe56ee3e459.jpg"
+      },
+      {
+        "title": "말씀의 오후",
+        "start": "14:30",
+        "end": "15:00"
+      },
+      {
+        "title": "오후의 열린 광장",
+        "start": "15:00",
+        "end": "16:00"
+      },
+      {
+        "title": "같이 걸어가기",
+        "start": "16:00",
+        "end": "16:30",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202511/4ed0bb6e-6207-457a-8b92-fb88d2efb9be.jpg"
+      },
+      {
+        "title": "세상을 깨우는 말씀",
+        "start": "16:30",
+        "end": "17:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202511/4ed0bb6e-6207-457a-8b92-fb88d2efb9be.jpg"
+      },
+      {
+        "title": "같이 걸어가기",
+        "start": "17:00",
+        "end": "17:45",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202511/4ed0bb6e-6207-457a-8b92-fb88d2efb9be.jpg"
+      },
+      {
+        "title": "은혜의 단비",
+        "start": "17:45",
+        "end": "18:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202511/4ed0bb6e-6207-457a-8b92-fb88d2efb9be.jpg"
+      },
+      {
+        "title": "성경의 무림고수를 찾아서",
+        "start": "18:00",
+        "end": "19:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/dbe3dc55-cf32-4285-8cc9-5e9369dc90f6.png"
+      },
+      {
+        "title": "찬양의 동산",
+        "start": "19:00",
+        "end": "19:30",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202408/55faae1c-383d-4e8f-950e-e09f8f2154d1.png"
+      },
+      {
+        "title": "매기성경강해",
+        "start": "19:30",
+        "end": "20:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202408/55faae1c-383d-4e8f-950e-e09f8f2154d1.png"
+      },
+      {
+        "title": "찬양이 가득한 세상",
+        "start": "20:00",
+        "end": "20:50",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202505/f250dfa9-4d25-4b39-95a2-cbe56ee3e459.jpg"
+      },
+      {
+        "title": "복소리",
+        "start": "20:50",
+        "end": "21:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202505/f250dfa9-4d25-4b39-95a2-cbe56ee3e459.jpg"
+      },
+      {
+        "title": "은혜의 찬송",
+        "start": "21:00",
+        "end": "21:50",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202412/2753be72-40cb-4231-9505-366e75fcf25c.png"
+      },
+      {
+        "title": "지혜의 시간",
+        "start": "21:50",
+        "end": "22:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202412/2753be72-40cb-4231-9505-366e75fcf25c.png"
+      },
+      {
+        "title": "찬양BGM",
+        "start": "22:00",
+        "end": "22:30",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/66694d02-242d-461d-a123-b2e7e6cc5e4c.png"
+      },
+      {
+        "title": "이브닝 프레이즈",
+        "start": "22:30",
+        "end": "23:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202503/b8e3aec0-e4f5-46fe-9b7f-8f586fc5a0b5.jpg"
+      },
+      {
+        "title": "김도현의 샬롬나잇",
+        "start": "23:00",
+        "end": "00:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/45856677-7281-4526-bff1-f020fda7236f.png"
+      }
+    ],
+    "weekday": [
+      {
+        "title": "별처럼 빛나는 그대에게",
+        "start": "00:00",
+        "end": "01:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/479414af-a918-4fbc-b86e-1eed8979b66b.png"
+      },
+      {
+        "title": "나영환의 달빛가스펠",
+        "start": "01:00",
+        "end": "02:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202411/22cfb63e-c695-4423-9759-50a419351461.png"
+      },
+      {
+        "title": "샬롬, 대한민국입니다",
+        "start": "02:00",
+        "end": "03:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202506/e8839f70-c9ae-40e0-bca1-435f69b5f5ae.jpg"
+      },
+      {
+        "title": "복음의 메아리",
+        "start": "03:00",
+        "end": "03:20",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/6e7fc3e7-7e1d-4053-b7be-2b47f3f5e81f.png"
+      },
+      {
+        "title": "복음의 메아리(3분 메시지)",
+        "start": "03:20",
+        "end": "03:25",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/6e7fc3e7-7e1d-4053-b7be-2b47f3f5e81f.png"
+      },
+      {
+        "title": "복음의 메아리",
+        "start": "03:25",
+        "end": "04:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/6e7fc3e7-7e1d-4053-b7be-2b47f3f5e81f.png"
+      },
+      {
+        "title": "복음의 메아리",
+        "start": "04:00",
+        "end": "04:20",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/6e7fc3e7-7e1d-4053-b7be-2b47f3f5e81f.png"
+      },
+      {
+        "title": "복음의 메아리(설교)",
+        "start": "04:20",
+        "end": "04:50",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/6e7fc3e7-7e1d-4053-b7be-2b47f3f5e81f.png"
+      },
+      {
+        "title": "복음의 메아리",
+        "start": "04:50",
+        "end": "05:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/6e7fc3e7-7e1d-4053-b7be-2b47f3f5e81f.png"
+      },
+      {
+        "title": "내 영혼에 햇빛 비치니",
+        "start": "05:00",
+        "end": "05:05",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/a8a5e1ef-f8e5-42b3-906e-5fc4c6705180.png"
+      },
+      {
+        "title": "FEBC 새벽예배",
+        "start": "05:05",
+        "end": "05:35",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/a8a5e1ef-f8e5-42b3-906e-5fc4c6705180.png"
+      },
+      {
+        "title": "내 영혼에 햇빛 비치니",
+        "start": "05:35",
+        "end": "06:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/a8a5e1ef-f8e5-42b3-906e-5fc4c6705180.png"
+      },
+      {
+        "title": "주님과 이 아침을",
+        "start": "06:00",
+        "end": "06:25",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/6503ce2f-0846-49bb-afc0-0d9785a832d4.png"
+      },
+      {
+        "title": "오늘의 양식",
+        "start": "06:25",
+        "end": "07:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/6503ce2f-0846-49bb-afc0-0d9785a832d4.png"
+      },
+      {
+        "title": "좋은 아침입니다",
+        "start": "07:00",
+        "end": "08:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/657cfb7e-da62-4085-9d54-2799b54049c2.png"
+      },
+      {
+        "title": "힘찬 라디오",
+        "start": "08:00",
+        "end": "08:45",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202608/4b196afa-dbbe-4a64-b17a-9d392b4d4560.jpg"
+      },
+      {
+        "title": "날마다 살아나는 큐티",
+        "start": "08:45",
+        "end": "09:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202608/4b196afa-dbbe-4a64-b17a-9d392b4d4560.jpg"
+      },
+      {
+        "title": "사랑의 뜰안",
+        "start": "09:00",
+        "end": "09:10",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202604/b8aa6346-fb69-4aca-8157-3094f98de443.jpg"
+      },
+      {
+        "title": "내가 매일 기쁘게",
+        "start": "09:10",
+        "end": "09:20",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202604/b8aa6346-fb69-4aca-8157-3094f98de443.jpg"
+      },
+      {
+        "title": "FEBC 게시판",
+        "start": "09:20",
+        "end": "09:30",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202604/b8aa6346-fb69-4aca-8157-3094f98de443.jpg"
+      },
+      {
+        "title": "생명은 빛으로",
+        "start": "09:30",
+        "end": "10:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202604/b8aa6346-fb69-4aca-8157-3094f98de443.jpg"
+      },
+      {
+        "title": "사랑의 뜰안",
+        "start": "10:00",
+        "end": "11:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202604/b8aa6346-fb69-4aca-8157-3094f98de443.jpg"
+      },
+      {
+        "title": "소망의 기도",
+        "start": "11:00",
+        "end": "11:45",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202504/8c7e37fe-2d7f-429f-add9-33c58a910e75.png"
+      },
+      {
+        "title": "빛을 따라서",
+        "start": "11:45",
+        "end": "12:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202504/8c7e37fe-2d7f-429f-add9-33c58a910e75.png"
+      },
+      {
+        "title": "소망의 찬양",
+        "start": "12:00",
+        "end": "12:10",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202609/abcbc0c9-1476-47cf-adf3-53d33af74a29.jpg"
+      },
+      {
+        "title": "소망의 찬양",
+        "start": "12:10",
+        "end": "13:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202609/abcbc0c9-1476-47cf-adf3-53d33af74a29.jpg"
+      },
+      {
+        "title": "만나고 싶은 사람 듣고 싶은 이야기",
+        "start": "13:00",
+        "end": "13:45",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202606/c86fe1fb-e361-4e87-82ba-59006892a7df.jpg"
+      },
+      {
+        "title": "FEBC 게시판",
+        "start": "13:45",
+        "end": "14:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202606/c86fe1fb-e361-4e87-82ba-59006892a7df.jpg"
+      },
+      {
+        "title": "오후의 열린 광장",
+        "start": "14:00",
+        "end": "14:10"
+      },
+      {
+        "title": "복소리",
+        "start": "14:10",
+        "end": "14:30",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202505/f250dfa9-4d25-4b39-95a2-cbe56ee3e459.jpg"
+      },
+      {
+        "title": "말씀의 오후",
+        "start": "14:30",
+        "end": "15:00"
+      },
+      {
+        "title": "오후의 열린 광장",
+        "start": "15:00",
+        "end": "16:00"
+      },
+      {
+        "title": "같이 걸어가기",
+        "start": "16:00",
+        "end": "16:30",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202511/4ed0bb6e-6207-457a-8b92-fb88d2efb9be.jpg"
+      },
+      {
+        "title": "세상을 깨우는 말씀",
+        "start": "16:30",
+        "end": "17:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202511/4ed0bb6e-6207-457a-8b92-fb88d2efb9be.jpg"
+      },
+      {
+        "title": "같이 걸어가기",
+        "start": "17:00",
+        "end": "17:45",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202511/4ed0bb6e-6207-457a-8b92-fb88d2efb9be.jpg"
+      },
+      {
+        "title": "은혜의 단비",
+        "start": "17:45",
+        "end": "18:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202511/4ed0bb6e-6207-457a-8b92-fb88d2efb9be.jpg"
+      },
+      {
+        "title": "성경의 무림고수를 찾아서",
+        "start": "18:00",
+        "end": "19:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/dbe3dc55-cf32-4285-8cc9-5e9369dc90f6.png"
+      },
+      {
+        "title": "찬양의 동산",
+        "start": "19:00",
+        "end": "19:30",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202408/55faae1c-383d-4e8f-950e-e09f8f2154d1.png"
+      },
+      {
+        "title": "매기성경강해",
+        "start": "19:30",
+        "end": "20:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202408/55faae1c-383d-4e8f-950e-e09f8f2154d1.png"
+      },
+      {
+        "title": "찬양이 가득한 세상",
+        "start": "20:00",
+        "end": "20:50",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202505/f250dfa9-4d25-4b39-95a2-cbe56ee3e459.jpg"
+      },
+      {
+        "title": "복소리",
+        "start": "20:50",
+        "end": "21:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202505/f250dfa9-4d25-4b39-95a2-cbe56ee3e459.jpg"
+      },
+      {
+        "title": "은혜의 찬송",
+        "start": "21:00",
+        "end": "21:50",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202412/2753be72-40cb-4231-9505-366e75fcf25c.png"
+      },
+      {
+        "title": "지혜의 시간",
+        "start": "21:50",
+        "end": "22:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202412/2753be72-40cb-4231-9505-366e75fcf25c.png"
+      },
+      {
+        "title": "찬양BGM",
+        "start": "22:00",
+        "end": "22:30",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/66694d02-242d-461d-a123-b2e7e6cc5e4c.png"
+      },
+      {
+        "title": "이브닝 프레이즈",
+        "start": "22:30",
+        "end": "23:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202503/b8e3aec0-e4f5-46fe-9b7f-8f586fc5a0b5.jpg"
+      },
+      {
+        "title": "김도현의 샬롬나잇",
+        "start": "23:00",
+        "end": "00:00",
+        "image": "https://seoul.febc.net/fileupload/ogImage/202410/45856677-7281-4526-bff1-f020fda7236f.png"
+      }
+    ],
+    "saturday": [],
+    "sunday": []
   }
 }

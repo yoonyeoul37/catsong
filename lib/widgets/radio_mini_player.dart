@@ -225,14 +225,13 @@ class RadioMiniPlayer extends StatelessWidget {
                                         if (nowPlaying == null || nowPlaying.isEmpty) {
                                           return const SizedBox.shrink();
                                         }
-                                        return Text(
+                                        // 프로그램 이름이 길면 방송 이름처럼 좌우로 흐르게
+                                        return _MiniTitle(
                                           timeStr.isNotEmpty ? '$nowPlaying  $timeStr' : nowPlaying,
-                                          style: TextStyle(
+                                          TextStyle(
                                             color: baseColor.withOpacity(0.6),
                                             fontSize: 10,
                                           ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
                                         );
                                       }),
                                     ),

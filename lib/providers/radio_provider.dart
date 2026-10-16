@@ -1096,6 +1096,33 @@ class RadioProvider extends ChangeNotifier {
   }
   Map<String, dynamic>? currentProgramFor(String stationName) =>
       _currentProgramMap[stationName];
+
+  /// 지금 방송을 쉬는 시간인지 (주사위에서 빼려고)
+  bool isOffAirNow(String name) {
+    // 1) 지금 프로그램 이름이 '방송 안 함'
+    final title = (_nowPlayingMap[name] ?? '').replaceAll(' ', '');
+    if (title.contains('방송시간이아닙니다') || title.contains('정파') || title.contains('휴지')) return true;
+    // 2) 편성표 파일 방송: 편성은 있는데 지금 시간에 맞는 프로그램이 없음 (예: CPBC 새벽 2~5시)
+    if (_scheduleService.hasSchedule(name) && _scheduleService.getCurrentProgram(name) == null) return true;
+    // 3) EBS: 받아 둔 하루 편성표에 지금 시간이 비어 있음
+    if (name == 'EBS 반디' || name == 'EBS FM') {
+      final list = _scheduleListMap[name];
+      if (list != null && list.isNotEmpty) {
+        final n = DateTime.now();
+        final hm = '${n.hour.toString().padLeft(2, '0')}:${n.minute.toString().padLeft(2, '0')}';
+        final on = list.any((s) {
+          final st = s['start_time'] as String? ?? '';
+          final en = s['end_time'] as String? ?? '';
+          if (st.length < 5 || en.length < 5) return false;
+          return en.compareTo(st) > 0
+              ? st.compareTo(hm) <= 0 && hm.compareTo(en) < 0
+              : st.compareTo(hm) <= 0 || hm.compareTo(en) < 0; // 자정 넘는 프로그램
+        });
+        if (!on) return true;
+      }
+    }
+    return false;
+  }
   final Map<String, String> _nowPlayingMap = {};
   String? nowPlayingFor(String stationName) => _nowPlayingMap[stationName];
 

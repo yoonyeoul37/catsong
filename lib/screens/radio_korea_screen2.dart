@@ -171,7 +171,14 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
   // 주사위는 수도권 방송만 (지역 방송은 빼기) · 아래 방송은 덜 나오게
   static const _diceLow = ['국악FM', 'CPBC 가톨릭'];
 
-  List<DiceStation> _dicePool() => [
+  // 주사위 판: 지금 방송 쉬는 채널은 빼기 (다 쉬는 시간이면 그냥 전부)
+  List<DiceStation> _dicePool() {
+    final radio = context.read<RadioProvider>();
+    final pool = _dicePoolAll().where((d) => !radio.isOffAirNow(d.station.name)).toList();
+    return pool.isEmpty ? _dicePoolAll() : pool;
+  }
+
+  List<DiceStation> _dicePoolAll() => [
         for (final ks in koreanStations)
           if (ks.region == '수도권')
             DiceStation(

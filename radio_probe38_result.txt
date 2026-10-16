@@ -1,0 +1,24 @@
+■ 1) 앱에 있는 지금 주소
+  https://624a79c87201d.streamlock.net/MBCFM/TV2.stream/playlist.m3u8 → X <urlopen error timed out>
+  https://624a79c87201d.streamlock.net/MBCFM/FM.stream/playlist.m3u8 → X <urlopen error timed out>
+  https://624a79c87201d.streamlock.net/MBCFM/AM.stream/playlist.m3u8 → X <urlopen error timed out>
+  https://624a79c87201d.streamlock.net/MBCFM/radio.stream/playlist.m3u8 → X <urlopen error timed out>
+  https://624a79c87201d.streamlock.net/MBCFM/RADIO.stream/playlist.m3u8 → X <urlopen error timed out>
+  https://624a79c87201d.streamlock.net/MBCFM/SFM.stream/playlist.m3u8 → X <urlopen error timed out>
+  https://624a79c87201d.streamlock.net/MBCFM/fm1.stream/playlist.m3u8 → X <urlopen error timed out>
+  https://624a79c87201d.streamlock.net/MBCFM/TV1.stream/playlist.m3u8 → X <urlopen error timed out>
+  https://624a79c87201d.streamlock.net/MBCFM/TV3.stream/playlist.m3u8 → X <urlopen error timed out>
+■ 2) 홈페이지에서 생방송 페이지 · 방송 주소 찾기
+  https://mbcgn.kr/index.asp → 200 https://mbcgn.kr/index.asp · 글자 수 115079 · 주소 0개
+  https://mbcgn.kr/06_oar/oar01.asp → 200 https://mbcgn.kr/06_oar/oar01.asp · 글자 수 436 · 주소 0개
+    (전체) <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Frameset//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd'> <html xmlns='http://www.w3.org/1999/xhtml'> <head> <meta http-equiv='Content-Type' content='text/html; charset=utf-8' /> <title>MBC경남</title> <script type='text/javascript'> alert("로그인 후 사용하실 수 있습니다."); document.location = "/login.asp?rurl=%2F06%5Foar%2Foar01%2Easp"; </script> </head> <body> </body> </html> 
+  https://mbcgn.kr/06_oar/oar02.asp → 200 https://mbcgn.kr/06_oar/oar02.asp · 글자 수 436 · 주소 0개
+    (전체) <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Frameset//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd'> <html xmlns='http://www.w3.org/1999/xhtml'> <head> <meta http-equiv='Content-Type' content='text/html; charset=utf-8' /> <title>MBC경남</title> <script type='text/javascript'> alert("로그인 후 사용하실 수 있습니다."); document.location = "/login.asp?rurl=%2F06%5Foar%2Foar02%2Easp"; </script> </head> <body> </body> </html> 
+  https://mbcgn.kr/06_oar/oar03.asp → 200 https://mbcgn.kr/06_oar/oar03.asp · 글자 수 436 · 주소 0개
+    (전체) <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Frameset//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd'> <html xmlns='http://www.w3.org/1999/xhtml'> <head> <meta http-equiv='Content-Type' content='text/html; charset=utf-8' /> <title>MBC경남</title> <script type='text/javascript'> alert("로그인 후 사용하실 수 있습니다."); document.location = "/login.asp?rurl=%2F06%5Foar%2Foar03%2Easp"; </script> </head> <body> </body> </html> 
+  https://mbcgn.kr/01_oar/oar01.asp → X HTTP Error 404: Not Found
+  https://mbcgn.kr/01_oar/oar02.asp → X HTTP Error 404: Not Found
+  https://mbcgn.kr/06_oar/oar02.asp?mn_lnk=A → 200 https://mbcgn.kr/06_oar/oar02.asp?mn_lnk=A · 글자 수 451 · 주소 0개
+    (전체) <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Frameset//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd'> <html xmlns='http://www.w3.org/1999/xhtml'> <head> <meta http-equiv='Content-Type' content='text/html; charset=utf-8' /> <title>MBC경남</title> <script type='text/javascript'> alert("로그인 후 사용하실 수 있습니다."); document.location = "/login.asp?rurl=%2F06%5Foar%2Foar02%2Easp%3Fmn%5Flnk%3DA"; </script> </head> <body> </body> </html> 
+  https://mbcgn.kr/06_oar/oar03.asp?mn_lnk=A → 200 https://mbcgn.kr/06_oar/oar03.asp?mn_lnk=A · 글자 수 451 · 주소 0개
+    (전체) <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Frameset//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd'> <html xmlns='http://www.w3.org/1999/xhtml'> <head> <meta http-equiv='Content-Type' content='text/html; charset=utf-8' /> <title>MBC경남</title> <script type='text/javascript'> alert("로그인 후 사용하실 수 있습니다."); document.location = "/login.asp?rurl=%2F06%5Foar%2Foar03%2Easp%3Fmn%5Flnk%3DA"; </script> </head> <body> </body> </html> 

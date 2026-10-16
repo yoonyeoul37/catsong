@@ -1097,6 +1097,9 @@ class RadioProvider extends ChangeNotifier {
   Map<String, dynamic>? currentProgramFor(String stationName) =>
       _currentProgramMap[stationName];
 
+  /// 편성표 파일(schedule.json)에 이 방송이 있는지 (지역 MBC 등)
+  bool hasFileSchedule(String name) => _scheduleService.hasSchedule(name);
+
   /// 지금 방송을 쉬는 시간인지 (주사위에서 빼려고)
   bool isOffAirNow(String name) {
     // 1) 지금 프로그램 이름이 '방송 안 함'

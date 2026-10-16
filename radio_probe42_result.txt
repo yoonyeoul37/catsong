@@ -1,0 +1,58 @@
+■ 1) 지금 주소 (소리 조각 안 형식)
+  https://wowza.jejumbc.com/live/_definst_/mp3:radio1/playlist.m3u8
+     → OK 조각 30000바이트 · 서버가 말한 형식 audio/x-aac · 실제 형식 ID3 꼬리표 + AAC(ADTS)
+       목록: #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-STREAM-INF:BANDWIDTH=167951,CODECS="mp4a.40.2" / chunklist_w332253535.m3u8 ‖ #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-TARGETDURATION:11 / #EXT-X-MEDIA-SEQUENCE:2718 / #EXTINF:9.961, / media_w332253535_2718.aac / #EXTINF:10.031, / media_w332253535_2719.aac
+  https://wowza.jejumbc.com/live/_definst_/mp3:radio2/playlist.m3u8
+     → OK 조각 30000바이트 · 서버가 말한 형식 audio/x-aac · 실제 형식 ID3 꼬리표 + AAC(ADTS)
+       목록: #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-STREAM-INF:BANDWIDTH=69174,CODECS="mp4a.40.2" / chunklist_w2050963893.m3u8 ‖ #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-TARGETDURATION:11 / #EXT-X-MEDIA-SEQUENCE:2718 / #EXTINF:10.031, / media_w2050963893_2718.aac / #EXTINF:9.961, / media_w2050963893_2719.aac
+■ 2) 비슷한 다른 주소
+  https://wowza.jejumbc.com/live/_definst_/radio1/playlist.m3u8
+     → OK 조각 30000바이트 · 서버가 말한 형식 audio/x-aac · 실제 형식 ID3 꼬리표 + AAC(ADTS)
+       목록: #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-STREAM-INF:BANDWIDTH=167951,CODECS="mp4a.40.2" / chunklist_w2099406436.m3u8 ‖ #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-TARGETDURATION:11 / #EXT-X-MEDIA-SEQUENCE:2718 / #EXTINF:9.961, / media_w2099406436_2718.aac / #EXTINF:10.031, / media_w2099406436_2719.aac
+  https://wowza.jejumbc.com/live/radio1/playlist.m3u8
+     → OK 조각 30000바이트 · 서버가 말한 형식 audio/x-aac · 실제 형식 ID3 꼬리표 + AAC(ADTS)
+       목록: #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-STREAM-INF:BANDWIDTH=167951,CODECS="mp4a.40.2" / chunklist_w1237874447.m3u8 ‖ #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-TARGETDURATION:11 / #EXT-X-MEDIA-SEQUENCE:2718 / #EXTINF:9.961, / media_w1237874447_2718.aac / #EXTINF:10.031, / media_w1237874447_2719.aac
+  https://wowza.jejumbc.com/live/_definst_/radio2/playlist.m3u8
+     → OK 조각 30000바이트 · 서버가 말한 형식 audio/x-aac · 실제 형식 ID3 꼬리표 + AAC(ADTS)
+       목록: #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-STREAM-INF:BANDWIDTH=69174,CODECS="mp4a.40.2" / chunklist_w23651738.m3u8 ‖ #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-TARGETDURATION:11 / #EXT-X-MEDIA-SEQUENCE:2718 / #EXTINF:10.031, / media_w23651738_2718.aac / #EXTINF:9.961, / media_w23651738_2719.aac
+  https://wowza.jejumbc.com/live/radio2/playlist.m3u8
+     → OK 조각 30000바이트 · 서버가 말한 형식 audio/x-aac · 실제 형식 ID3 꼬리표 + AAC(ADTS)
+       목록: #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-STREAM-INF:BANDWIDTH=69174,CODECS="mp4a.40.2" / chunklist_w345755426.m3u8 ‖ #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-TARGETDURATION:11 / #EXT-X-MEDIA-SEQUENCE:2718 / #EXTINF:10.031, / media_w345755426_2718.aac / #EXTINF:9.961, / media_w345755426_2719.aac
+  https://wowza.jejumbc.com/live/_definst_/aac:radio1/playlist.m3u8
+     → OK 조각 30000바이트 · 서버가 말한 형식 audio/x-aac · 실제 형식 ID3 꼬리표 + AAC(ADTS)
+       목록: #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-STREAM-INF:BANDWIDTH=167951,CODECS="mp4a.40.2" / chunklist_w2079036299.m3u8 ‖ #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-TARGETDURATION:11 / #EXT-X-MEDIA-SEQUENCE:2718 / #EXTINF:9.961, / media_w2079036299_2718.aac / #EXTINF:10.031, / media_w2079036299_2719.aac
+  https://wowza.jejumbc.com/live/aac:radio1/playlist.m3u8
+     → OK 조각 30000바이트 · 서버가 말한 형식 audio/x-aac · 실제 형식 ID3 꼬리표 + AAC(ADTS)
+       목록: #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-STREAM-INF:BANDWIDTH=167951,CODECS="mp4a.40.2" / chunklist_w1830302648.m3u8 ‖ #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-TARGETDURATION:11 / #EXT-X-MEDIA-SEQUENCE:2718 / #EXTINF:9.961, / media_w1830302648_2718.aac / #EXTINF:10.031, / media_w1830302648_2719.aac
+  https://wowza.jejumbc.com/live/_definst_/aac:radio2/playlist.m3u8
+     → OK 조각 30000바이트 · 서버가 말한 형식 audio/x-aac · 실제 형식 ID3 꼬리표 + AAC(ADTS)
+       목록: #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-STREAM-INF:BANDWIDTH=69174,CODECS="mp4a.40.2" / chunklist_w818516814.m3u8 ‖ #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-TARGETDURATION:11 / #EXT-X-MEDIA-SEQUENCE:2719 / #EXTINF:9.961, / media_w818516814_2719.aac / #EXTINF:10.031, / media_w818516814_2720.aac
+  https://wowza.jejumbc.com/live/aac:radio2/playlist.m3u8
+     → OK 조각 30000바이트 · 서버가 말한 형식 audio/x-aac · 실제 형식 ID3 꼬리표 + AAC(ADTS)
+       목록: #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-STREAM-INF:BANDWIDTH=69174,CODECS="mp4a.40.2" / chunklist_w25286699.m3u8 ‖ #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-TARGETDURATION:11 / #EXT-X-MEDIA-SEQUENCE:2719 / #EXTINF:9.961, / media_w25286699_2719.aac / #EXTINF:10.031, / media_w25286699_2720.aac
+  https://wowza.jejumbc.com/live/_definst_/mp4:radio1/playlist.m3u8
+     → OK 조각 30000바이트 · 서버가 말한 형식 audio/x-aac · 실제 형식 ID3 꼬리표 + AAC(ADTS)
+       목록: #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-STREAM-INF:BANDWIDTH=167951,CODECS="mp4a.40.2" / chunklist_w669003656.m3u8 ‖ #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-TARGETDURATION:11 / #EXT-X-MEDIA-SEQUENCE:2719 / #EXTINF:10.031, / media_w669003656_2719.aac / #EXTINF:9.961, / media_w669003656_2720.aac
+  https://wowza.jejumbc.com/live/mp4:radio1/playlist.m3u8
+     → OK 조각 30000바이트 · 서버가 말한 형식 audio/x-aac · 실제 형식 ID3 꼬리표 + AAC(ADTS)
+       목록: #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-STREAM-INF:BANDWIDTH=167951,CODECS="mp4a.40.2" / chunklist_w2083473815.m3u8 ‖ #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-TARGETDURATION:11 / #EXT-X-MEDIA-SEQUENCE:2719 / #EXTINF:10.031, / media_w2083473815_2719.aac / #EXTINF:9.961, / media_w2083473815_2720.aac
+  https://wowza.jejumbc.com/live/_definst_/mp4:radio2/playlist.m3u8
+     → OK 조각 30000바이트 · 서버가 말한 형식 audio/x-aac · 실제 형식 ID3 꼬리표 + AAC(ADTS)
+       목록: #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-STREAM-INF:BANDWIDTH=69174,CODECS="mp4a.40.2" / chunklist_w903223765.m3u8 ‖ #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-TARGETDURATION:11 / #EXT-X-MEDIA-SEQUENCE:2719 / #EXTINF:9.961, / media_w903223765_2719.aac / #EXTINF:10.031, / media_w903223765_2720.aac
+  https://wowza.jejumbc.com/live/mp4:radio2/playlist.m3u8
+     → OK 조각 30000바이트 · 서버가 말한 형식 audio/x-aac · 실제 형식 ID3 꼬리표 + AAC(ADTS)
+       목록: #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-STREAM-INF:BANDWIDTH=69174,CODECS="mp4a.40.2" / chunklist_w1334585553.m3u8 ‖ #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-TARGETDURATION:11 / #EXT-X-MEDIA-SEQUENCE:2719 / #EXTINF:9.961, / media_w1334585553_2719.aac / #EXTINF:10.031, / media_w1334585553_2720.aac
+■ 3) 제주MBC 생방송 페이지의 공식 주소
+  https://jejumbc.com/OnAir → 주소 1개
+     https://wowza.jejumbc.com/live/tv_jejumbc/playlist.m3u8
+       → OK 조각 30000바이트 · 서버가 말한 형식 video/MP2T · 실제 형식 MPEG-TS (ts 묶음)
+       목록: #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-STREAM-INF:BANDWIDTH=1830390,CODECS="avc1.77.32,mp4a.40.34",RESOLUTION=640x352 / chunklist_w786470878.m3u8 ‖ #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-TARGETDURATION:19 / #EXT-X-MEDIA-SEQUENCE:2718 / #EXTINF:9.443, / media_w786470878_2718.ts / #EXTINF:10.744, / media_w786470878_2719.ts
+  https://jejumbc.com/OnAir/FM → 주소 1개
+     https://onairfm.jejumbc.com/hls/onairfmjejumbc/index.m3u8
+       → OK 조각 30000바이트 · 서버가 말한 형식 video/mp2t · 실제 형식 MPEG-TS (ts 묶음)
+       목록: #EXTM3U / #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=627896,RESOLUTION=640x360,FRAME-RATE=10,CODECS="avc1.640016,mp4a.40.2" / 1_2/index.m3u8?sessId=6420 ‖ #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-TARGETDURATION:26 / #EXT-X-MEDIA-SEQUENCE:473 / #EXTINF:25.000000, / 11825000_11850000.ts?sessId=6420 / #EXTINF:25.000000, / 11850000_11875000.ts?sessId=6420
+  https://jejumbc.com/OnAir/FM4U → 주소 1개
+     https://onairsfm.jejumbc.com/hls/onairsfmjejumbc/index.m3u8
+       → OK 조각 30000바이트 · 서버가 말한 형식 video/mp2t · 실제 형식 MPEG-TS (ts 묶음)
+       목록: #EXTM3U / #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=627784,RESOLUTION=640x360,FRAME-RATE=10,CODECS="avc1.640016,mp4a.40.2" / 1_2/index.m3u8?sessId=16476 ‖ #EXTM3U / #EXT-X-VERSION:3 / #EXT-X-TARGETDURATION:26 / #EXT-X-MEDIA-SEQUENCE:496 / #EXTINF:25.000000, / 12400000_12425000.ts?sessId=16476 / #EXTINF:25.000000, / 12425000_12450000.ts?sessId=16476
+  https://jejumbc.com/ → 주소 0개

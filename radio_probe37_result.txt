@@ -1,0 +1,17 @@
+■ https://busanmbc.co.kr/06_oar/oar02.asp → 200 https://busanmbc.co.kr/06_oar/oar02.asp · 글자 수 563
+  (전체) <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Frameset//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd'> <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='ko' lang='ko'> <head> <meta http-equiv='Content-Type' content='text/html; charset=utf-8' /> <meta http-equiv='X-UA-Compatible' content='IE=11,chrome=1' /> <meta name='viewport' content='width=device-width, initial-scale=1' /> <title>부산MBC</title> <script type='text/javascript'> alert("로그인 후 확인하실 수 있습니다."); location.href = "/login.asp"; </script> </head> <body> </body> </html> 
+  → 따라감 https://busanmbc.co.kr/login.asp
+■ https://busanmbc.co.kr/06_oar/oar03.asp → 200 https://busanmbc.co.kr/06_oar/oar03.asp · 글자 수 563
+  (전체) <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Frameset//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd'> <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='ko' lang='ko'> <head> <meta http-equiv='Content-Type' content='text/html; charset=utf-8' /> <meta http-equiv='X-UA-Compatible' content='IE=11,chrome=1' /> <meta name='viewport' content='width=device-width, initial-scale=1' /> <title>부산MBC</title> <script type='text/javascript'> alert("로그인 후 확인하실 수 있습니다."); location.href = "/login.asp"; </script> </head> <body> </body> </html> 
+  → 따라감 https://busanmbc.co.kr/login.asp
+■ https://m.busanmbc.co.kr/ → 200 https://www.usmbc.co.kr/ · 글자 수 37721
+■ https://busanmbc.co.kr/m/index.asp → X HTTP Error 404: Not Found
+■ https://busanmbc.co.kr/login.asp → 200 https://busanmbc.co.kr/login.asp · 글자 수 61466
+  → 따라감 https://busanmbc.co.kr/search_result.asp?tsearch_yn=Y&topsearch_keyword=
+■ https://busanmbc.co.kr/search_result.asp?tsearch_yn=Y&topsearch_keyword= → 200 https://busanmbc.co.kr/search_result.asp?tsearch_yn=Y&topsearch_keyword= · 글자 수 79229
+  → 따라감 https://busanmbc.co.kr/search_result.asp?tsearch_yn=Y&topsearch_keyword=
+■ 지금 주소 한 번 더 (기다리는 시간 늘려서) · http 로도
+  https://stream.bsmbc.com/live/BusanMBC_AM_onairstream.sbhhqc/playlist.m3u8 → X <urlopen error [WinError 10060] 연결된 구성원으로부터 응답이 없어 연결하지 못했거나, 호스트로부터 응답이 없어 연결이 
+  http://stream.bsmbc.com/live/BusanMBC_AM_onairstream.sbhhqc/playlist.m3u8 → X <urlopen error [WinError 10060] 연결된 구성원으로부터 응답이 없어 연결하지 못했거나, 호스트로부터 응답이 없어 연결이 
+  https://stream.bsmbc.com/live/mp4:BusanMBC.Live-FM-0415/playlist.m3u8 → X <urlopen error [WinError 10060] 연결된 구성원으로부터 응답이 없어 연결하지 못했거나, 호스트로부터 응답이 없어 연결이 
+  http://stream.bsmbc.com:1935/live/mp4:BusanMBC.Live-FM-0415/playlist.m3u8 → X <urlopen error [WinError 10060] 연결된 구성원으로부터 응답이 없어 연결하지 못했거나, 호스트로부터 응답이 없어 연결이 

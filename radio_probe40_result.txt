@@ -1,0 +1,43 @@
+■ 1) 앱처럼 imbc.com 표시를 붙였을 때 vs 안 붙였을 때 (지역 MBC 전부)
+  제주MBC 표준FM: 표시 없음 → OK 소리 조각 20000바이트  |  imbc 표시 → OK 소리 조각 20000바이트
+  제주MBC FM4U: 표시 없음 → OK 소리 조각 20000바이트  |  imbc 표시 → OK 소리 조각 20000바이트
+  춘천MBC FM4U: 표시 없음 → OK 소리 조각 20000바이트  |  imbc 표시 → OK 소리 조각 20000바이트
+  안동MBC 표준FM: 표시 없음 → X The read operation timed out  |  imbc 표시 → X The read operation timed out
+  광주MBC 표준FM: 표시 없음 → OK 소리 조각 20000바이트  |  imbc 표시 → OK 소리 조각 20000바이트
+  목포MBC 표준FM: 표시 없음 → OK 소리 조각 20000바이트  |  imbc 표시 → OK 소리 조각 20000바이트
+  대전MBC 표준FM: 표시 없음 → OK 소리 조각 20000바이트  |  imbc 표시 → OK 소리 조각 20000바이트
+  대구MBC 표준FM: 표시 없음 → OK 소리 조각 16365바이트  |  imbc 표시 → OK 소리 조각 17663바이트
+  전주MBC 표준FM: 표시 없음 → OK 소리 조각 20000바이트  |  imbc 표시 → OK 소리 조각 20000바이트
+■ 춘천MBC 표준FM: 새 주소 찾기
+  https://chmbc.co.kr/ → 글자 수 281954 · 주소 3개
+     https://stream.chmbc.co.kr/TV/myStream/playlist → X m3u8 아님 (200 text/html)
+     https://stream.chmbc.co.kr/live_radio2/fm1_aac/playlist → X m3u8 아님 (200 text/html)
+     https://stream.chmbc.co.kr/radio1/fm1_aac/playlist → X m3u8 아님 (200 text/html)
+     링크 https://chmbc.co.kr/guide2/channel/radio2
+     링크 https://chmbc.co.kr/guide2/channel/radio2
+     링크 https://chmbc.co.kr/guide2/channel/radio2
+     링크 https://cdn.jsdelivr.net/gh/puzzlecompany/chmbc-assets@97938f1/js/player.js
+  https://chmbc.co.kr/onair/radio2 → X HTTP Error 404: Not Found
+  https://chmbc.co.kr/onair/radio → X HTTP Error 404: Not Found
+  https://chmbc.co.kr/onair → X HTTP Error 404: Not Found
+  [추측] https://stream.chmbc.co.kr/live_radio2/fm2/playlist.m3u8 → X HTTP Error 404: Not Found
+  [추측] https://stream.chmbc.co.kr/live_radio/fm1/playlist.m3u8 → X HTTP Error 404: Not Found
+  [추측] https://stream.chmbc.co.kr/live_radio1/fm2/playlist.m3u8 → X HTTP Error 404: Not Found
+  [추측] https://stream.chmbc.co.kr/live_radio3/fm2/playlist.m3u8 → X HTTP Error 404: Not Found
+  [추측] https://stream.chmbc.co.kr/live_radio/am/playlist.m3u8 → X HTTP Error 404: Not Found
+  [추측] https://stream.chmbc.co.kr/live_radio2/fm/playlist.m3u8 → X HTTP Error 404: Not Found
+■ 울산MBC 표준FM: 새 주소 찾기
+  https://www.usmbc.co.kr/OnAir → 글자 수 18501 · 주소 1개
+     https://5ddfd163bd00d.streamlock.net/nHDTV/nHDTV/playlist → X HTTP Error 404: Not Found
+     링크 https://www.usmbc.co.kr/OnAir
+     링크 https://www.usmbc.co.kr/OnAir
+     링크 https://www.usmbc.co.kr/OnAir/TV
+     링크 https://www.usmbc.co.kr/OnAir/FM
+     링크 https://www.usmbc.co.kr/OnAir/FM4U
+  https://www.usmbc.co.kr/ → 글자 수 37720 · 주소 0개
+     링크 https://www.usmbc.co.kr/OnAir
+     링크 https://www.usmbc.co.kr/OnAir
+  [추측] https://5ddfd163bd00d.streamlock.net/STDFM/STDFM.stream/playlist.m3u8 → X HTTP Error 404: Not Found
+  [추측] https://5ddfd163bd00d.streamlock.net/STDFM/_definst_/STDFM/playlist.m3u8 → OK 소리 조각 20000바이트
+  [추측] https://5ddfd163bd00d.streamlock.net/FM4U/FM4U/playlist.m3u8 → OK 소리 조각 20000바이트
+  [추측] https://5ddfd163bd00d.streamlock.net/STFM/STFM/playlist.m3u8 → X HTTP Error 404: Not Found

@@ -371,7 +371,9 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
   bool _isKoreanBroadcast(String name) {
     final lower = name.toLowerCase();
     return lower.contains('kbs') ||
-        name.contains('MBC') ||
+        // MBC: 서울 2개는 따로 가져오고, 지역 MBC는 편성표 파일에 있을 때만
+        (name.contains('MBC') &&
+            (name == 'MBC 표준FM' || name == 'MBC FM4U' || context.read<RadioProvider>().hasFileSchedule(name))) ||
         name.contains('SBS') ||
         name.contains('CBS') ||
         name == '국방FM' ||

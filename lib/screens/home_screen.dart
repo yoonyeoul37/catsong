@@ -426,10 +426,10 @@ class _HomeScreenState extends State<HomeScreen> {
     };
     const ink = Color(0xFF17140F);
     const red = Color(0xFFE5484D);
-    return Container(
-      height: 23,
-      padding: const EdgeInsets.symmetric(horizontal: 9),
-      decoration: BoxDecoration(color: Colors.white.withOpacity(0.62), borderRadius: BorderRadius.circular(999)),
+    // 띠 안 제목 오른쪽: 배경 없이 ● 102 채널 (좁은 자리라 영어·중국어는 숫자만)
+    final showUnit = l.languageCode == 'ko' || l.languageCode == 'ja';
+    return Padding(
+      padding: const EdgeInsets.only(left: 6),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -439,13 +439,15 @@ class _HomeScreenState extends State<HomeScreen> {
             decoration: BoxDecoration(
               color: red,
               shape: BoxShape.circle,
-              boxShadow: [BoxShadow(color: red.withOpacity(0.25), spreadRadius: 2.5)],
+              boxShadow: [BoxShadow(color: red.withOpacity(0.22), spreadRadius: 2.5)],
             ),
           ),
           const SizedBox(width: 6),
-          Text(countText, style: GoogleFonts.quicksand(color: ink.withOpacity(0.8), fontSize: 12, fontWeight: FontWeight.w700)),
-          const SizedBox(width: 3),
-          Text(unit, style: TextStyle(color: ink.withOpacity(0.78), fontSize: 10.5, fontWeight: FontWeight.w700)),
+          Text(countText, style: GoogleFonts.quicksand(color: ink.withOpacity(0.78), fontSize: 12, fontWeight: FontWeight.w700)),
+          if (showUnit) ...[
+            const SizedBox(width: 2),
+            Text(unit, style: TextStyle(color: ink.withOpacity(0.6), fontSize: 10.5, fontWeight: FontWeight.w700)),
+          ],
         ],
       ),
     );
@@ -2298,7 +2300,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text.rich(
+                                    // 제목 줄: 라디오 카드는 오른쪽 끝에 채널 수 (● 102 채널)
+                                    Row(children: [
+                                    Expanded(child: Text.rich(
                                         TextSpan(children: [
                                           // 제목 앞 작은 아이콘 (둥근 모양)
                                           WidgetSpan(
@@ -2337,7 +2341,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 offset: const Offset(0, -0.5),
                                                 blurRadius: 1,
                                               ),
-                                            ])),
+                                            ]))),
+                                    if (c.type == StartScreenType.radio) _radioCountChip(context),
+                                    ]),
                                     const SizedBox(height: 2),
                                     Text(c.subtitle,
                                         maxLines: 1,
@@ -2352,24 +2358,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        // 라디오 카드: 하트와 마주 보는 왼쪽 위에 채널 수 알약
-                        if (c.type == StartScreenType.radio)
-                          Positioned(
-                            top: 8,
-                            left: 8,
-                            right: 39, // 하트 칸(23) + 사이 8 비우기
-                            height: 23,
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: MediaQuery.withClampedTextScaling(
-                                  maxScaleFactor: 1.15,
-                                  child: _radioCountChip(context),
-                                ),
-                              ),
-                            ),
-                          ),
+                        // (라디오 채널 수는 아래 흰 띠 안 제목 오른쪽으로 옮김)
                         Positioned(
                           top: 8,
                           right: 8,

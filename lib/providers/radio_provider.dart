@@ -227,7 +227,7 @@ class RadioProvider extends ChangeNotifier {
       await nativePlayer.setProperty('user-agent', 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36');
       await nativePlayer.setProperty('demuxer-lavf-probesize', '4096');
       await nativePlayer.setProperty('stream-lavf-o', 'reconnect=1');
-      await nativePlayer.setProperty('network-timeout', '30');
+      await nativePlayer.setProperty('network-timeout', '15'); // 끊긴 연결을 30초씩 기다리지 않게
       await nativePlayer.setProperty('demuxer-max-bytes', '5242880');
       await nativePlayer.setProperty('cache', 'yes');
       await nativePlayer.setProperty('cache-secs', '10');
@@ -303,6 +303,8 @@ class RadioProvider extends ChangeNotifier {
       debugPrint('stream.playing: $playing');
       _isActuallyPlaying = playing;
       if (playing) {
+        _stallTimer?.cancel(); // 소리 나옴 → 다시 연결 그만
+        _stallRetries = 0;
         _setPlayerState(RadioPlayerState.playing);
         _updateForeground(true);
       } else {
@@ -318,6 +320,8 @@ class RadioProvider extends ChangeNotifier {
       if (buffering && !_isActuallyPlaying) {
         _setPlayerState(RadioPlayerState.loading);
       }
+      // 10초 넘게 계속 불러오는 중이면 새로 연결
+      if (buffering) _armStall(10);
     });
 
     _player.stream.completed.listen((completed) async {
@@ -441,13 +445,33 @@ class RadioProvider extends ChangeNotifier {
 
   void Function(RadioStation station, String? image)? onStationPlayed; // image: 그때 프로그램 사진 (없으면 null)
   Timer? _playedTimer; // 30초 이상 들었을 때만 최근에 넣기
+  bool _userPaused = false; // 사용자가 직접 멈춤 → 자동 다시 연결 안 함
+  Timer? _stallTimer; // 너무 오래 '불러오는 중'이면 다시 연결
+  int _stallRetries = 0; // 연달아 다시 연결한 횟수 (3번까지)
+
+  /// [secs]초 뒤에도 소리가 안 나오면 새로 연결 (와이파이↔LTE 바뀔 때 뱅뱅 도는 것 막기)
+  void _armStall([int secs = 10]) {
+    _stallTimer?.cancel();
+    _stallTimer = Timer(Duration(seconds: secs), () {
+      final st = _currentStation;
+      if (st == null || _userPaused || _isActuallyPlaying) return;
+      if (_playerState == RadioPlayerState.idle) return;
+      if (_stallRetries >= 3) return; // 계속 안 되면 그만 (방송 자체 문제일 수 있음)
+      _stallRetries++;
+      debugPrint('$secs초 넘게 소리 없음 → 다시 연결 ($_stallRetries번째)');
+      playStation(st, force: true);
+    });
+  }
   Timer? _playedTick; // 듣는 동안 5분마다: 프로그램 사진이 바뀌면 '최근에 들었어요' 사진도 새로
 
-  Future<void> playStation(RadioStation station) async {
-    if (_playerState == RadioPlayerState.loading) {
+  Future<void> playStation(RadioStation station, {bool force = false}) async {
+    // force: 네트워크가 바뀌어서 다시 연결할 때는 '불러오는 중'이어도 새로 시작
+    if (_playerState == RadioPlayerState.loading && !force) {
       debugPrint('이미 로딩 중 - 중복 호출 무시');
       return;
     }
+    _userPaused = false;
+    _armStall(15); // 연결하는 데 15초 넘게 걸리면 한 번 더
     // 30초 이상 들었을 때만 "최근에 들었어요"에 넣기
     _playedTimer?.cancel();
     _playedTick?.cancel();
@@ -652,6 +676,8 @@ class RadioProvider extends ChangeNotifier {
 
   Future<void> togglePlayPause() async {
     if (_playerState == RadioPlayerState.playing) {
+      _userPaused = true; // 직접 멈춤 → 네트워크 바뀌어도 다시 켜지 않음
+      _stallTimer?.cancel();
       await _player.pause();
       await WakelockPlus.disable().catchError((Object _) {});
     } else if (_playerState == RadioPlayerState.paused) {
@@ -662,6 +688,7 @@ class RadioProvider extends ChangeNotifier {
   }
 
   Future<void> stopRadio() async {
+    _stallTimer?.cancel();
     _setPlayerState(RadioPlayerState.idle);
     await _player.stop();
     _isActuallyPlaying = false;
@@ -1636,34 +1663,26 @@ class RadioProvider extends ChangeNotifier {
   }
 
   void _listenConnectivity() {
-    List<ConnectivityResult> _lastResults = [];
+    List<ConnectivityResult> lastResults = [];
     _connectivitySubscription = Connectivity().onConnectivityChanged.listen((results) async {
       final isNone = results.isEmpty || (results.contains(ConnectivityResult.none) && results.length == 1);
-      final wasNone = _lastResults.isEmpty || (_lastResults.contains(ConnectivityResult.none) && _lastResults.length == 1);
-      final networkChanged = !isNone && _lastResults.isNotEmpty && !wasNone && results.toString() != _lastResults.toString();
-      _lastResults = List.from(results);
+      final wasNone = lastResults.isEmpty || (lastResults.contains(ConnectivityResult.none) && lastResults.length == 1);
+      final hadWifi = lastResults.contains(ConnectivityResult.wifi);
+      final hasWifi = results.contains(ConnectivityResult.wifi);
+      lastResults = List.from(results);
 
-      if (_currentStation == null) return;
+      if (_currentStation == null || isNone || _userPaused) return;
+      if (_playerState == RadioPlayerState.idle) return;
 
-      // 네트워크 없음→있음 복구 시
-      if (!isNone && wasNone && !_isActuallyPlaying &&
-          _playerState != RadioPlayerState.idle &&
-          _playerState != RadioPlayerState.error) {
-        debugPrint('네트워크 복구 감지 - 라디오 재연결 시도');
-        await Future.delayed(const Duration(seconds: 2));
-        if (_currentStation != null && !_isActuallyPlaying) {
-          await playStation(_currentStation!);
-        }
-      }
-      // WiFi↔LTE 전환 시 (스트림 끊김 대비)
-      else if (networkChanged &&
-          _playerState != RadioPlayerState.idle &&
-          _playerState != RadioPlayerState.error) {
-        debugPrint('네트워크 전환 감지 - 라디오 재연결 시도');
-        await Future.delayed(const Duration(milliseconds: 800));
-        if (_currentStation != null && !_isActuallyPlaying) {
-          await playStation(_currentStation!);
-        }
+      // 끊겼다 다시 연결됨 · 또는 와이파이↔LTE가 바뀜 → 소리가 나오는 중이어도 새 네트워크로 다시 연결
+      // (예전엔 '소리 안 날 때만' · '불러오는 중이면 무시'라서, 옛 네트워크에 매달려 30초 넘게 뱅뱅 돌았음)
+      if (wasNone || hadWifi != hasWifi) {
+        debugPrint('네트워크 바뀜 감지 (와이파이 $hadWifi → $hasWifi) - 라디오 다시 연결');
+        await Future.delayed(const Duration(milliseconds: 1500)); // 새 네트워크를 실제로 쓸 수 있을 때까지 잠깐
+        final cur = _currentStation;
+        if (cur == null || _userPaused || _playerState == RadioPlayerState.idle) return;
+        _stallRetries = 0;
+        await playStation(cur, force: true);
       }
     });
   }

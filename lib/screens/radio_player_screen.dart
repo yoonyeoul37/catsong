@@ -2304,6 +2304,113 @@ class _BottomBarItem extends StatelessWidget {
 }
 
 /// 하단바 위: 지금 프로그램 한 줄 (● 이름 · N분 남음 + 얇은 진행 막대)
+// ── 라디오 문자 참여 번호 (방송국 공식 페이지·여러 자료에서 같은 번호 확인한 곳만, 2026-10) ──
+// 확실하지 않은 곳(경인방송·국악FM·TBN·KBS 3라디오·국방FM)은 일부러 비워 둠 → 칩 안 보임
+const _smsNumbers = {
+  'KBS 제1라디오': '#9730',
+  'KBS 해피FM': '#1061',
+  'KBS Classic FM': '#9310',
+  'KBS Cool FM': '#8910',
+  'MBC 표준FM': '#8001',
+  'MBC FM4U': '#8000',
+  'SBS 러브FM': '#1035',
+  'SBS 파워FM': '#1077',
+  'EBS FM': '#1045',
+  'CBS 표준FM': '#1212',
+  'CBS 음악FM': '#9390',
+  'YTN 라디오': '#0945',
+  'TBS FM': '#0951',
+  'TBS eFM': '#1013',
+  'OBS 라디오': '#0999',
+  'CPBC 가톨릭': '#1053',
+  'FEBC 극동방송': '#1069',
+  'FEBC 극동방송 AM': '#1069',
+  'BBS 불교방송': '#2842',
+};
+
+/// 문자 참여 안내 (아래에서 올라오는 베이지 카드 + ✕) → [문자 보내기] 누르면 문자 앱이 번호 채워진 채로 열림
+void _showSmsSheet(BuildContext context, String number) {
+  final l = Localizations.localeOf(context);
+  final k = l.languageCode == 'zh'
+      ? ((l.scriptCode == 'Hant' || l.countryCode == 'TW' || l.countryCode == 'HK') ? 'tw' : 'cn')
+      : l.languageCode;
+  const texts = {
+    'ko': ['문자로 사연 보내기', '이 번호로 문자를 보내면 방송에 사연이나 신청곡을 보낼 수 있어요.', '짧은 문자 50원 · 긴 문자·사진 100원의 정보이용료가 붙어요.', '문자 보내기'],
+    'en': ['Text the show', 'Send a text to this number to share a story or request a song.', 'An information fee applies: 50 KRW for short texts, 100 KRW for long texts or photos.', 'Send text'],
+    'ja': ['メッセージで参加', 'この番号にメッセージを送ると、番組にお便りやリクエストを送れます。', '情報利用料がかかります（短文50ウォン・長文/写真100ウォン）。', 'メッセージを送る'],
+    'tw': ['傳簡訊參與', '傳簡訊到這個號碼，就能向節目分享故事或點歌。', '需支付資訊使用費（短訊50韓元・長訊/照片100韓元）。', '傳送簡訊'],
+    'cn': ['发短信参与', '发短信到这个号码，就能向节目分享故事或点歌。', '需支付信息使用费（短信50韩元・长信/图片100韩元）。', '发送短信'],
+  };
+  final t = texts[k] ?? texts['ko']!;
+  final isDark = context.read<ThemeProvider>().isDarkMode;
+  final bg = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
+  final strong = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+  final muted = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF5A5348);
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: Colors.transparent,
+    builder: (sheetCtx) => Container(
+      decoration: BoxDecoration(color: bg, borderRadius: const BorderRadius.vertical(top: Radius.circular(20))),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(22, 10, 22, 18),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => Navigator.pop(sheetCtx),
+                  child: SizedBox(width: 36, height: 36, child: Icon(Icons.close_rounded, size: 20, color: muted)),
+                ),
+              ),
+              Row(
+                children: [
+                  Icon(Icons.sms_outlined, size: 18, color: strong),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(t[0], style: TextStyle(color: strong, fontSize: 16, fontWeight: FontWeight.w800)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              Text(number,
+                  style: TextStyle(color: strong, fontSize: 28, fontWeight: FontWeight.w800, letterSpacing: 0.5)),
+              const SizedBox(height: 8),
+              Text(t[1], style: TextStyle(color: muted, fontSize: 13, height: 1.5)),
+              const SizedBox(height: 4),
+              Text(t[2], style: TextStyle(color: muted.withOpacity(0.8), fontSize: 12, height: 1.5)),
+              const SizedBox(height: 18),
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: Material(
+                  color: strong, // 큰 버튼은 먹색 (다크는 크림색)
+                  borderRadius: BorderRadius.circular(14),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(14),
+                    onTap: () async {
+                      Navigator.pop(sheetCtx);
+                      await launchUrl(Uri(scheme: 'sms', path: number));
+                    },
+                    child: Center(
+                      child: Text(t[3],
+                          style: TextStyle(color: bg, fontSize: 14.5, fontWeight: FontWeight.w800)),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
 class _NowProgramStrip extends StatefulWidget {
   const _NowProgramStrip();
 
@@ -2336,6 +2443,7 @@ class _NowProgramStripState extends State<_NowProgramStrip> {
     final strong = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final muted = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF5A5348);
     final line = isDark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
+    final sms = _smsNumbers[radioProvider.currentStation?.name]; // 문자 참여 번호 (없으면 칩 안 보임)
 
     final now = DateTime.now();
     final nowM = _ScheduleListSheet._wrap(now.hour * 60 + now.minute);
@@ -2379,6 +2487,33 @@ class _NowProgramStripState extends State<_NowProgramStrip> {
               ),
               const SizedBox(width: 8),
               Text(tr.minutesLeft(end - nowM), style: TextStyle(color: muted, fontSize: 11.5)),
+              if (sms != null) ...[
+                const SizedBox(width: 10),
+                // 문자 참여: 작은 테두리 칩 → 누르면 요금 안내 + 문자 보내기
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    _showSmsSheet(context, sms);
+                  },
+                  child: Container(
+                    height: 22,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: line),
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.sms_outlined, size: 12, color: muted),
+                        const SizedBox(width: 4),
+                        Text(sms, style: TextStyle(color: strong, fontSize: 11, fontWeight: FontWeight.w700)),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
           const SizedBox(height: 7),

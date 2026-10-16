@@ -856,6 +856,36 @@ def mbcnet_cards(base):
     return cards
 
 
+def chmbc_cards():
+    """춘천MBC 라디오 프로그램 페이지들 (이름 · 요일 · 시간 · 사진) — 지역 프로그램 사진용"""
+    base = 'https://chmbc.co.kr'
+    if base in LOCAL_CARDS:
+        return LOCAL_CARDS[base]
+    cards = []
+    try:
+        page = fetch(base + '/programme_list/Radio', base + '/')
+        links = list(dict.fromkeys(re.findall(r'href=["\'](?:https://chmbc\.co\.kr)?(/programme/[^"\'#?]+)["\']', page)))
+        for path in links[:20]:
+            try:
+                t = fetch(base + path, base + '/programme_list/Radio')
+            except Exception:
+                continue
+            title = re.search(r'property=["\']og:title["\']\s+content=["\']([^"\']*)', t)
+            img = re.search(r'property=["\']og:image["\']\s+content=["\']([^"\']*)', t)
+            if not (title and img and 'Radio' in title.group(1)):  # TV 프로그램은 빼기
+                continue
+            name = re.sub(r'\s*:+\s*Radio.*$', '', htmllib.unescape(title.group(1))).strip()
+            m = re.search(r'([월화수목금토일])\s*-\s*([월화수목금토일])\s*(\d{1,2})시\s*(\d{1,2})분', text_of(t))
+            if not m:
+                continue
+            a, b = WEEKDAY_IDX[m.group(1)], WEEKDAY_IDX[m.group(2)]
+            cards.append((mbc_key(name), set(range(a, b + 1)), int(m.group(3)) * 60 + int(m.group(4)), img.group(1)))
+    except Exception as e:
+        print(f'  (춘천MBC 프로그램 사진 못 가져옴: {e})')
+    LOCAL_CARDS[base] = cards
+    return cards
+
+
 def same_name(a, b):
     """비교용 이름 둘이 같은 프로그램인지: 4글자 넘게 겹치면 (예: 임서영과김준규의… ↔ 임서영김준규의…)"""
     if len(a) < 4 or len(b) < 4:
@@ -899,7 +929,8 @@ def mbc_regional():
     for station, fn, ch in MBC_REGIONAL:
         by_date = {}
         # 지역 프로그램 사진 (제주·대전·광주·목포: 홈페이지 프로그램 목록)
-        cards = mbcnet_cards('{0.scheme}://{0.netloc}'.format(urllib.parse.urlsplit(ch))) if fn is mbcnet_day else []
+        cards = (mbcnet_cards('{0.scheme}://{0.netloc}'.format(urllib.parse.urlsplit(ch))) if fn is mbcnet_day
+                 else chmbc_cards() if fn is chmbc_day else [])
         for d in fetch_days:
             try:
                 rows = fn(ch, d)

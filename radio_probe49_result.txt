@@ -1,0 +1,66 @@
+■ 춘천MBC 라디오 프로그램 페이지 13개
+  [목록 카드 글자] enu-item-object-custom"> 제보하기 여기 이슈 강원 보도제작국 보도특집 전국뉴스 DMZ 다큐멘터리 뉴스에 바란다! <a href="http
+  [목록 카드 글자] enu-item-type-custom menu-item-object-custom"> 편성표 인생굿샷 가고잡소 강원365 레트로365 테마기행 길 전국시대 제작특집 <li id="jKA
+  [목록 카드 글자] item-object-custom"> 인생굿샷 가고잡소 강원365 레트로365 테마기행 길 전국시대 제작특집 나이야가라 <li id="iJO3Q3ifTbSen
+  [목록 카드 글자] ustom menu-item-object-custom"> 가고잡소 강원365 레트로365 테마기행 길 전국시대 제작특집 나이야가라 TV특강 <li id="DDOFI" c
+  [목록 카드 글자] enu-item-type-custom menu-item-object-custom"> 강원365 레트로365 테마기행 길 전국시대 제작특집 나이야가라 TV특강 Radio <ul class="sub-men
+  [목록 카드 글자] ustom menu-item-object-custom"> 레트로365 테마기행 길 전국시대 제작특집 나이야가라 TV특강 Radio 표준FM 편성표(92.3MHz
+  [목록 카드 글자] s="menu-item menu-item-type-custom menu-item-object-custom"> 테마기행 길 전국시대 제작특집 나이야가라 TV특강 Radio 표준FM 편성표(92.3MHz)
+  [목록 카드 글자] ass="menu-item menu-item-type-custom menu-item-object-custom"> 제작특집 나이야가라 TV특강 Radio 표준FM 편성표(92.3MHz) 음악FM 편성표(94.5MHz) 김지후의 정오의 희망곡 <a href="https://chm
+  [목록 카드 글자] enu-item-type-custom menu-item-object-custom"> 나이야가라 TV특강 Radio 표준FM 편성표(92.3MHz) 음악FM 편성표(94.5MHz) 김지후의 정오의 희망곡 이브닝 강원 <li id="8y0tc58u" class="menu-item menu-item-type-custom menu-item-object-custom me
+  [목록 카드 글자] m menu-item-type-custom menu-item-object-custom"> 음악FM 편성표(94.5MHz) 김지후의 정오의 희망곡 이브닝 강원 문화행사/광고안내 광고안내 행사 게시판 한국현대조각초대전 <li id="gfysaKRozegDh" class="menu-item menu-item-type-custom menu-item-object-custom menu
+  [목록 카드 글자] tom menu-item-object-custom"> 김지후의 정오의 희망곡 이브닝 강원 문화행사/광고안내 광고안내 행사 게시판 한국현대조각초대전 시청자마당 <a
+  [목록 카드 글자] _info">18시 05분 방송 종영 생방송 강원시대 월-금 06시 05분 방송 <img width="400" height=
+  [목록 카드 글자] _info">06시 05분 방송 종영 행복! 싱싱 노래교실 <img width="400" height="225" src="https://puzz
+  ── https://chmbc.co.kr/programme/KQyw7Mu9yAwHy93drpO5
+     제목 여기 이슈 강원 ::::: TV 프로그램 · og:title '여기 이슈 강원 ::::: TV 프로그램'
+     시간 ['목 21시 00분'] · 채널 ['표준FM', '음악FM', '92.3MHz', '94.5MHz']
+     og:image https://puzzle-alpha.sgp1.cdn.digitaloceanspaces.com/controller/chmbc/2024/07/19102716-50BC-AA14-18BA-RWKKBX070UT2LJ7138UZ.png
+  ── https://chmbc.co.kr/programme/A5qlrRsHBIjJ_m
+     제목 인생굿샷 ::::: TV 프로그램 · og:title '인생굿샷 ::::: TV 프로그램'
+     시간 ['토 10시 30분'] · 채널 ['표준FM', '음악FM', '92.3MHz', '94.5MHz']
+     og:image https://puzzle-alpha.sgp1.cdn.digitaloceanspaces.com/controller/chmbc/2025/04/23092835-65A4-D183-3093-ZNRG3SWA7X5VLYAMDW0I.png
+  ── https://chmbc.co.kr/programme/Q-0rEiPsGBO2RBhxKY
+     제목 가고잡소 ::::: TV 프로그램 · og:title '가고잡소 ::::: TV 프로그램'
+     시간 ['토 10시 20분'] · 채널 ['표준FM', '음악FM', '92.3MHz', '94.5MHz']
+     og:image https://puzzle-alpha.sgp1.cdn.digitaloceanspaces.com/controller/chmbc/2023/03/28085933-F9AA-7191-67F4-WI97Z5D6QRYAX9H8HSQC.png
+  ── https://chmbc.co.kr/programme/LgllqYiKXd
+     제목 강원365 ::::: TV 프로그램 · og:title '강원365 ::::: TV 프로그램'
+     시간 ['수 18시 05분'] · 채널 ['표준FM', '음악FM', '92.3MHz', '94.5MHz']
+     og:image https://puzzle-alpha.sgp1.cdn.digitaloceanspaces.com/controller/chmbc/2022/12/07094254-8CFE-D29F-E064-P33OP2D6HUCYTI1VKQD4.jpg
+  ── https://chmbc.co.kr/programme/h0Qu4Ce2tDDuiZq
+     제목 레트로365 ::::: TV 프로그램 · og:title '레트로365 ::::: TV 프로그램'
+     시간 ['월 18시 05분'] · 채널 ['표준FM', '음악FM', '92.3MHz', '94.5MHz']
+     og:image https://puzzle-alpha.sgp1.cdn.digitaloceanspaces.com/controller/chmbc/2023/07/03135238-7138-16C0-134E-A4NOBTGS8H3WV3ZR8SI8.png
+  ── https://chmbc.co.kr/programme/1AItZ6JnqvOjX
+     제목 테마기행 길 ::::: TV 프로그램 · og:title '테마기행 길 ::::: TV 프로그램'
+     시간 ['금 18시 05분'] · 채널 ['표준FM', '음악FM', '92.3MHz', '94.5MHz']
+     og:image https://puzzle-alpha.sgp1.cdn.digitaloceanspaces.com/former_MBC_ALPHA/ch_2/2019/02/8ebf5e22242740f776ff9d12560557a9f870c785ac09e31d7b767ca6c09e62e58dc5d65285e636917084802108843ccb3595c4c7cc4751292e5bb2a10bf238fd.png
+  ── https://chmbc.co.kr/programme/Sd0Opd1u5OqsVR0mCrs
+     제목 전국시대 ::::: TV 프로그램 · og:title '전국시대 ::::: TV 프로그램'
+     시간 ['월-목 07시 50분'] · 채널 ['표준FM', '음악FM', '92.3MHz', '94.5MHz']
+     og:image https://puzzle-alpha.sgp1.cdn.digitaloceanspaces.com/former_MBC_ALPHA/ch_2/2020/01/405e3a228e65f9e2d5b10c8267580d04f3891fd45b511efa56267f7f129ce217e1b85f4891d7b8d368833d562a3e3f1bc4c50c8de0641cc849302d3e23f5217d.jpg
+  ── https://chmbc.co.kr/programme/Y1IU9jH7v7HN6e0oI4lbd
+     제목 나이야가라 ::::: TV 프로그램 · og:title '나이야가라 ::::: TV 프로그램'
+     시간 ['토 09시 15분'] · 채널 ['표준FM', '음악FM', '92.3MHz', '94.5MHz']
+     og:image https://puzzle-alpha.sgp1.cdn.digitaloceanspaces.com/controller/chmbc/2021/04/27090926-FB0F-F59B-3030-7VKFXHIGAWWCPCPLJGN4.jpg
+  ── https://chmbc.co.kr/programme/HOLgZrH93BQb2
+     제목 Error :::: 비공개 프로그램 페이지 입니다. · og:title None
+     시간 [] · 채널 []
+     og:image None
+  ── https://chmbc.co.kr/programme/A5V919bMKJYp7Cw
+     제목 김지후의 정오의 희망곡 ::::: Radio 프로그램 · og:title '김지후의 정오의 희망곡 ::::: Radio 프로그램'
+     시간 ['월-일 12시 00분'] · 채널 ['표준FM', '음악FM', '92.3MHz', '94.5MHz']
+     og:image https://puzzle-alpha.sgp1.cdn.digitaloceanspaces.com/controller/chmbc/2025/10/29174824-1FC0-1106-67E4-2S3JJMEW45G44FNEIS5Z.png
+  ── https://chmbc.co.kr/programme/b493s6WD0Xm-E_5
+     제목 이브닝 강원 ::::: Radio 프로그램 · og:title '이브닝 강원 ::::: Radio 프로그램'
+     시간 ['월-금 18시 05분'] · 채널 ['표준FM', '음악FM', '92.3MHz', '94.5MHz']
+     og:image https://puzzle-alpha.sgp1.cdn.digitaloceanspaces.com/controller/chmbc/2026/09/09150937-81A4-22E7-3A00-BC92XG4QMTX56MA3D30I.jpg
+  ── https://chmbc.co.kr/programme/90b1JwbDtW3CpkAMc
+     제목 생방송 강원시대 ::::: Radio 프로그램 · og:title '생방송 강원시대 ::::: Radio 프로그램'
+     시간 ['월-금 06시 05분'] · 채널 ['표준FM', '음악FM', '92.3MHz', '94.5MHz']
+     og:image https://puzzle-alpha.sgp1.cdn.digitaloceanspaces.com/controller/chmbc/2024/07/22140806-10F9-848C-E24C-2PH0IQQOWS4TJORLSOMV.png
+  ── https://chmbc.co.kr/programme/ErcYQxmWS3IgN
+     제목 행복! 싱싱 노래교실 ::::: Radio 프로그램 · og:title '행복! 싱싱 노래교실 ::::: Radio 프로그램'
+     시간 [] · 채널 ['표준FM', '음악FM', '92.3MHz', '94.5MHz']
+     og:image https://puzzle-alpha.sgp1.cdn.digitaloceanspaces.com/former_MBC_ALPHA/ch_2/2019/03/4bef48f32d2ab773bd35d21b4235166c996be99ca78578bc19b201f6e0d21700fd187bada8555c24e254b598786a4defb5a4eca447cd1b669dbc75f2db5ec4fd.jpg

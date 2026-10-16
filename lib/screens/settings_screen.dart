@@ -6,7 +6,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:torch_light/torch_light.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../providers/theme_provider.dart';

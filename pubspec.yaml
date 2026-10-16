@@ -24,7 +24,6 @@ dependencies:
   video_player: ^2.9.2
   chewie: ^1.8.5
   share_plus: ^10.0.0
-  flutter_colorpicker: ^1.1.0
   google_fonts: ^8.1.0
   media_kit: ^1.1.11
   media_kit_libs_android_video: ^1.0.5

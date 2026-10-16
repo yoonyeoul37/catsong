@@ -745,6 +745,103 @@ def tbn():
     return out
 
 
+# ───────── 지역 MBC (서울 MBC와 같은 프로그램은 서울 사진 빌려 쓰기) ─────────
+MBC_PICS = {}
+
+
+def mbc_key(t):
+    # "김종배의 시선집중 1,2 부" · "정오의 희망곡 김지후입니다 (춘천MBC)" → 비교용 글자
+    t = htmllib.unescape(t)
+    t = re.sub(r'\((?:[^)]*MBC[^)]*|재|재방송)\)', '', t)
+    t = re.sub(r'\d+(?:\s*,\s*\d+)*\s*부', '', t)
+    return re.sub(r'[\s,.·!?~\-&;:()\[\]]', '', t).lower()
+
+
+def mbc_seoul_pics():
+    """서울 MBC 표준FM · FM4U 일주일치 프로그램 사진 (제목 → 사진)"""
+    if MBC_PICS:
+        return MBC_PICS
+    d = today_kst()
+    for k in range(-1, 7):
+        day = d + datetime.timedelta(days=k)
+        for s in ('FM', 'FM4U'):
+            try:
+                data = get_json(f'https://control.imbc.com/Schedule/Radio/Time?sType={s}&broadDate={day:%Y%m%d}',
+                                'https://www.imbc.com/')
+            except Exception:
+                continue
+            for it in data if isinstance(data, list) else []:
+                t, img = (it.get('Title') or '').strip(), (it.get('Photo') or '').strip()
+                if t and img:
+                    MBC_PICS.setdefault(mbc_key(t), 'https:' + img if img.startswith('//') else img)
+    MBC_PICS.setdefault('', '')
+    return MBC_PICS
+
+
+def mbc_image(title):
+    k = mbc_key(title)
+    pics = mbc_seoul_pics()
+    if len(k) < 4:  # "뉴스"처럼 짧은 이름은 헷갈려서 안 씀
+        return ''
+    if pics.get(k):
+        return pics[k]
+    # 이름 앞뒤가 조금 다른 경우 ("시선집중" ↔ "김종배의 시선집중"): 긴 쪽이 짧은 쪽을 품으면 같은 프로그램
+    best = max((sk for sk in pics if len(sk) >= 4 and (sk in k or k in sk)), key=len, default='')
+    return pics.get(best, '')
+
+
+def chmbc_day(channel, d):
+    """춘천MBC 그날 편성 (radio2=표준FM, radio=음악FM): (날짜, 'HH:MM', 제목) — 24시 넘으면 다음 날"""
+    page = fetch(f'https://chmbc.co.kr/guide2/channel/{channel}/date/{d:%Y-%m-%d}', 'https://chmbc.co.kr/')
+    rows = []
+    for hh, mm, title in re.findall(r'left_section[^"]*">.*?<i>(\d{1,2})시\s*(\d{1,2})분</i>.*?'
+                                    r'class="title-wrap">(.*?)<div id="guidetype"', page, re.S):
+        h = int(hh)
+        title = text_of(title)
+        if title:
+            rows.append((d + datetime.timedelta(days=h // 24), f'{h % 24:02d}:{int(mm):02d}', title))
+    return rows
+
+
+MBC_REGIONAL = [  # 앱의 방송 이름, 그날 편성 가져오는 함수, 채널
+    ('춘천MBC 표준FM', chmbc_day, 'radio2'),
+    ('춘천MBC FM4U', chmbc_day, 'radio'),
+]
+
+
+def mbc_regional():
+    start = today_kst()
+    days = []  # 요일 칸마다 가까운 날
+    for k in range(7):
+        d = start + datetime.timedelta(days=k)
+        if day_key(d) not in [day_key(x) for x in days]:
+            days.append(d)
+    fetch_days = sorted(set(days) | {x - datetime.timedelta(days=1) for x in days})  # 전날 '24시~'가 그날 새벽
+    out = {}
+    for station, fn, ch in MBC_REGIONAL:
+        by_date = {}
+        for d in fetch_days:
+            try:
+                rows = fn(ch, d)
+            except Exception as e:
+                print(f'  ({station} {d} 못 가져옴: {e})')
+                continue
+            for day, hm, title in rows:
+                p = {'title': title, 'start': hm, 'end': ''}
+                img = mbc_image(title)
+                if img:
+                    p['image'] = img
+                by_date.setdefault(day, {})[hm] = p
+        week = {}
+        for d in days:
+            progs = clean_day(list(by_date.get(d, {}).values()))
+            if len(progs) >= 5:
+                week[day_key(d)] = progs
+        if week:
+            out[station] = week
+    return out
+
+
 
 def fill_images(week):
     # 재방송처럼 사진이 없는 칸: 같은 프로그램 이름의 사진을 빌려 쓰기 (다른 요일 것도)
@@ -759,7 +856,7 @@ def fill_images(week):
                 p['image'] = pics[base_title(p['title'])]
 
 
-SOURCES = [('CBS', cbs), ('YTN', ytn), ('경인방송', ifm), ('FEBC', febc), ('TBS', tbs), ('JTV', jtv), ('국악FM', gugak), ('OBS', obs), ('BBS', bbs), ('CPBC', cpbc), ('TBN', tbn)]
+SOURCES = [('CBS', cbs), ('YTN', ytn), ('경인방송', ifm), ('FEBC', febc), ('TBS', tbs), ('JTV', jtv), ('국악FM', gugak), ('OBS', obs), ('BBS', bbs), ('CPBC', cpbc), ('TBN', tbn), ('지역 MBC', mbc_regional)]
 
 
 def main():

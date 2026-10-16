@@ -567,7 +567,7 @@ class RadioProvider extends ChangeNotifier {
         fetchEbsFmSchedule();
       }
       final isKbsMbcSbs = station.name.contains('KBS') ||
-          station.name.contains('MBC') ||
+          _mbcChannelTypes.containsKey(station.name) || // 서울 MBC만 (지역 MBC는 편성표 파일 사용)
           station.name.contains('SBS');
       if (!isKbsMbcSbs && _scheduleService.hasSchedule(station.name)) {
         final program = _scheduleService.getCurrentProgram(station.name);

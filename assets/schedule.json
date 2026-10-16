@@ -9570,5 +9570,1230 @@
     ],
     "saturday": [],
     "sunday": []
+  },
+  "춘천MBC 표준FM": {
+    "friday": [
+      {
+        "title": "낭만가요 1,2부",
+        "start": "00:00",
+        "end": "02:00"
+      },
+      {
+        "title": "꿈의 팝송 1부",
+        "start": "02:00",
+        "end": "03:00"
+      },
+      {
+        "title": "가요 1999",
+        "start": "03:00",
+        "end": "05:00"
+      },
+      {
+        "title": "오늘의 문화방송",
+        "start": "05:00",
+        "end": "05:05"
+      },
+      {
+        "title": "가요 1999",
+        "start": "05:05",
+        "end": "06:00"
+      },
+      {
+        "title": "뉴스투데이",
+        "start": "06:00",
+        "end": "06:15"
+      },
+      {
+        "title": "아침 & 뉴스 , 류수민입니다 1,2 부",
+        "start": "06:15",
+        "end": "07:00"
+      },
+      {
+        "title": "뉴스",
+        "start": "07:00",
+        "end": "07:05"
+      },
+      {
+        "title": "김종배의 시선집중 1,2 부",
+        "start": "07:05",
+        "end": "08:00",
+        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+      },
+      {
+        "title": "김종배의 시선집중 3 부",
+        "start": "08:00",
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+      },
+      {
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
+        "end": "09:00"
+      },
+      {
+        "title": "뉴스",
+        "start": "09:00",
+        "end": "09:05"
+      },
+      {
+        "title": "여성시대 양희은 · 김일중입니다 1,2부",
+        "start": "09:05",
+        "end": "10:00",
+        "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "10:00",
+        "end": "10:05"
+      },
+      {
+        "title": "여성시대 양희은 · 김일중입니다 3,4부",
+        "start": "10:05",
+        "end": "11:00",
+        "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "11:00",
+        "end": "11:05"
+      },
+      {
+        "title": "오승훈의 이과학 저과학 1,2부",
+        "start": "11:05",
+        "end": "12:00"
+      },
+      {
+        "title": "뉴스",
+        "start": "12:00",
+        "end": "12:05"
+      },
+      {
+        "title": "손석희의 12시 1,2부",
+        "start": "12:05",
+        "end": "13:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134266534050317340_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "13:00",
+        "end": "13:05"
+      },
+      {
+        "title": "손석희의 12시 3,4부",
+        "start": "13:05",
+        "end": "14:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134266534050317340_Big_C.png"
+      },
+      {
+        "title": "2시 종합 뉴스",
+        "start": "14:00",
+        "end": "14:20"
+      },
+      {
+        "title": "트로트 라디오 1,2부",
+        "start": "14:20",
+        "end": "15:00",
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "15:00",
+        "end": "15:05"
+      },
+      {
+        "title": "트로트 라디오 3,4부",
+        "start": "15:05",
+        "end": "16:00",
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "16:00",
+        "end": "16:05"
+      },
+      {
+        "title": "정선희 · 문천식의 지금은 라디오시대 1,2 부",
+        "start": "16:05",
+        "end": "17:00",
+        "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "17:00",
+        "end": "17:05"
+      },
+      {
+        "title": "정선희 · 문천식의 지금은 라디오시대 3,4 부",
+        "start": "17:05",
+        "end": "18:00",
+        "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "18:00",
+        "end": "18:05"
+      },
+      {
+        "title": "이브닝 강원",
+        "start": "18:05",
+        "end": "19:00"
+      },
+      {
+        "title": "저녁앤뉴스",
+        "start": "19:00",
+        "end": "19:10"
+      },
+      {
+        "title": "조승원의 뉴스하이킥 3,4부",
+        "start": "19:10",
+        "end": "20:00",
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "20:00",
+        "end": "20:05"
+      },
+      {
+        "title": "오늘도 당신편 이재은 입니다 1,2부",
+        "start": "20:05",
+        "end": "21:00",
+        "image": "https://img.imbc.com/adams/Program/202511/134081653651271991_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "21:00",
+        "end": "21:05"
+      },
+      {
+        "title": "오늘도 당신편 이재은 입니다 3,4부",
+        "start": "21:05",
+        "end": "22:00",
+        "image": "https://img.imbc.com/adams/Program/202511/134081653651271991_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "22:00",
+        "end": "22:05"
+      },
+      {
+        "title": "박정호의 손에잡히는경제 플러스 1,2부",
+        "start": "22:05",
+        "end": "23:00",
+        "image": "https://img.imbc.com/adams/Program/20268/134308187599646511.jpg"
+      },
+      {
+        "title": "뉴스",
+        "start": "23:00",
+        "end": "23:05"
+      },
+      {
+        "title": "신혜림의 골든디스크 1,2부",
+        "start": "23:05",
+        "end": "00:00",
+        "image": "https://img.imbc.com/adams/Program/202311/133448560915178965_Big_C.png"
+      }
+    ],
+    "saturday": [
+      {
+        "title": "낭만가요 1,2부",
+        "start": "00:00",
+        "end": "02:00"
+      },
+      {
+        "title": "꿈의 팝송 1부",
+        "start": "02:00",
+        "end": "03:00"
+      },
+      {
+        "title": "가요 1999",
+        "start": "03:00",
+        "end": "05:00"
+      },
+      {
+        "title": "오늘의 문화방송",
+        "start": "05:00",
+        "end": "05:05"
+      },
+      {
+        "title": "가요 1999",
+        "start": "05:05",
+        "end": "06:00"
+      },
+      {
+        "title": "뉴스",
+        "start": "06:00",
+        "end": "06:05"
+      },
+      {
+        "title": "김경일의 물음표",
+        "start": "06:05",
+        "end": "07:00",
+        "image": "https://img.imbc.com/adams/Program/20267/134273364422602814_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "07:00",
+        "end": "07:05"
+      },
+      {
+        "title": "김종배의 시선집중 1,2 부",
+        "start": "07:05",
+        "end": "08:00",
+        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "08:00",
+        "end": "08:05"
+      },
+      {
+        "title": "권용주, 강다솜의 차카차카 1,2부",
+        "start": "08:05",
+        "end": "09:00",
+        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "09:00",
+        "end": "09:05"
+      },
+      {
+        "title": "여성시대 양희은 · 김일중입니다 1,2부",
+        "start": "09:05",
+        "end": "10:00",
+        "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "10:00",
+        "end": "10:05"
+      },
+      {
+        "title": "여성시대 양희은 · 김일중입니다 3,4부",
+        "start": "10:05",
+        "end": "11:00",
+        "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "11:00",
+        "end": "11:05"
+      },
+      {
+        "title": "정치인싸 1,2부",
+        "start": "11:05",
+        "end": "12:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "12:00",
+        "end": "12:05"
+      },
+      {
+        "title": "손석희의 12시 1,2부",
+        "start": "12:05",
+        "end": "13:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134266534050317340_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "13:00",
+        "end": "13:05"
+      },
+      {
+        "title": "손석희의 12시 3,4부",
+        "start": "13:05",
+        "end": "14:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134266534050317340_Big_C.png"
+      },
+      {
+        "title": "2시 종합 뉴스",
+        "start": "14:00",
+        "end": "14:10"
+      },
+      {
+        "title": "트로트 라디오 1,2부",
+        "start": "14:10",
+        "end": "15:00",
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "15:00",
+        "end": "15:05"
+      },
+      {
+        "title": "트로트 라디오 3,4부",
+        "start": "15:05",
+        "end": "16:00",
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "16:00",
+        "end": "16:05"
+      },
+      {
+        "title": "정선희 · 문천식의 지금은 라디오시대 1,2 부",
+        "start": "16:05",
+        "end": "17:00",
+        "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "17:00",
+        "end": "17:05"
+      },
+      {
+        "title": "정선희 · 문천식의 지금은 라디오시대 3,4 부",
+        "start": "17:05",
+        "end": "18:00",
+        "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "18:00",
+        "end": "18:05"
+      },
+      {
+        "title": "이브닝 강원",
+        "start": "18:05",
+        "end": "19:00"
+      },
+      {
+        "title": "저녁앤뉴스",
+        "start": "19:00",
+        "end": "19:10"
+      },
+      {
+        "title": "김치형의 뉴스하이킥 3,4부",
+        "start": "19:10",
+        "end": "20:00"
+      },
+      {
+        "title": "뉴스",
+        "start": "20:00",
+        "end": "20:05"
+      },
+      {
+        "title": "오늘도 당신편 이재은 입니다 1,2부",
+        "start": "20:05",
+        "end": "21:00",
+        "image": "https://img.imbc.com/adams/Program/202511/134081653651271991_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "21:00",
+        "end": "21:05"
+      },
+      {
+        "title": "오늘도 당신편 이재은 입니다 3,4부",
+        "start": "21:05",
+        "end": "22:00",
+        "image": "https://img.imbc.com/adams/Program/202511/134081653651271991_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "22:00",
+        "end": "22:05"
+      },
+      {
+        "title": "박정호의 손에잡히는경제 플러스 1,2부",
+        "start": "22:05",
+        "end": "23:00",
+        "image": "https://img.imbc.com/adams/Program/20268/134308187599646511.jpg"
+      },
+      {
+        "title": "뉴스",
+        "start": "23:00",
+        "end": "23:05"
+      },
+      {
+        "title": "신혜림의 골든디스크 1,2부",
+        "start": "23:05",
+        "end": "00:00",
+        "image": "https://img.imbc.com/adams/Program/202311/133448560915178965_Big_C.png"
+      }
+    ],
+    "sunday": [
+      {
+        "title": "낭만가요 1,2부",
+        "start": "00:00",
+        "end": "02:00"
+      },
+      {
+        "title": "꿈의 팝송 1부",
+        "start": "02:00",
+        "end": "03:00"
+      },
+      {
+        "title": "가요 1999",
+        "start": "03:00",
+        "end": "05:00"
+      },
+      {
+        "title": "오늘의 문화방송",
+        "start": "05:00",
+        "end": "05:05"
+      },
+      {
+        "title": "가요 1999",
+        "start": "05:05",
+        "end": "06:00"
+      },
+      {
+        "title": "뉴스",
+        "start": "06:00",
+        "end": "06:05"
+      },
+      {
+        "title": "라디오북클럽 1,2부",
+        "start": "06:05",
+        "end": "07:00"
+      },
+      {
+        "title": "뉴스",
+        "start": "07:00",
+        "end": "07:05"
+      },
+      {
+        "title": "김종배의 시선집중 1,2 부",
+        "start": "07:05",
+        "end": "08:00",
+        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "08:00",
+        "end": "08:05"
+      },
+      {
+        "title": "권용주, 강다솜의 차카차카 1,2부",
+        "start": "08:05",
+        "end": "09:00",
+        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "09:00",
+        "end": "09:05"
+      },
+      {
+        "title": "여성시대 양희은 · 김일중입니다 1,2부",
+        "start": "09:05",
+        "end": "10:00",
+        "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "10:00",
+        "end": "10:05"
+      },
+      {
+        "title": "여성시대 양희은 · 김일중입니다 3,4부",
+        "start": "10:05",
+        "end": "11:00",
+        "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "11:00",
+        "end": "11:05"
+      },
+      {
+        "title": "정치인싸 1,2부",
+        "start": "11:05",
+        "end": "12:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "12:00",
+        "end": "12:05"
+      },
+      {
+        "title": "손석희의 12시 1,2부",
+        "start": "12:05",
+        "end": "13:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134266534050317340_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "13:00",
+        "end": "13:05"
+      },
+      {
+        "title": "손석희의 12시 3,4부",
+        "start": "13:05",
+        "end": "14:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134266534050317340_Big_C.png"
+      },
+      {
+        "title": "2시 종합 뉴스",
+        "start": "14:00",
+        "end": "14:10"
+      },
+      {
+        "title": "트로트 라디오 1,2부",
+        "start": "14:10",
+        "end": "15:00",
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "15:00",
+        "end": "15:05"
+      },
+      {
+        "title": "트로트 라디오 3,4부",
+        "start": "15:05",
+        "end": "16:00",
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "16:00",
+        "end": "16:05"
+      },
+      {
+        "title": "정선희 · 문천식의 지금은 라디오시대 1,2 부",
+        "start": "16:05",
+        "end": "17:00",
+        "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "17:00",
+        "end": "17:05"
+      },
+      {
+        "title": "정선희 · 문천식의 지금은 라디오시대 3,4 부",
+        "start": "17:05",
+        "end": "18:00",
+        "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "18:00",
+        "end": "18:05"
+      },
+      {
+        "title": "이브닝 강원",
+        "start": "18:05",
+        "end": "19:00"
+      },
+      {
+        "title": "저녁앤뉴스",
+        "start": "19:00",
+        "end": "19:10"
+      },
+      {
+        "title": "김치형의 뉴스하이킥 3,4부",
+        "start": "19:10",
+        "end": "20:00"
+      },
+      {
+        "title": "뉴스",
+        "start": "20:00",
+        "end": "20:05"
+      },
+      {
+        "title": "오늘도 당신편 이재은 입니다 1,2부",
+        "start": "20:05",
+        "end": "21:00",
+        "image": "https://img.imbc.com/adams/Program/202511/134081653651271991_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "21:00",
+        "end": "21:05"
+      },
+      {
+        "title": "오늘도 당신편 이재은 입니다 3,4부",
+        "start": "21:05",
+        "end": "22:00",
+        "image": "https://img.imbc.com/adams/Program/202511/134081653651271991_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "22:00",
+        "end": "22:05"
+      },
+      {
+        "title": "박정호의 손에잡히는경제 플러스 1,2부",
+        "start": "22:05",
+        "end": "23:00",
+        "image": "https://img.imbc.com/adams/Program/20268/134308187599646511.jpg"
+      },
+      {
+        "title": "뉴스",
+        "start": "23:00",
+        "end": "23:05"
+      },
+      {
+        "title": "신혜림의 골든디스크 1,2부",
+        "start": "23:05",
+        "end": "00:00",
+        "image": "https://img.imbc.com/adams/Program/202311/133448560915178965_Big_C.png"
+      }
+    ],
+    "weekday": [
+      {
+        "title": "낭만가요 1,2부",
+        "start": "00:00",
+        "end": "02:00"
+      },
+      {
+        "title": "꿈의 팝송 1부",
+        "start": "02:00",
+        "end": "03:00"
+      },
+      {
+        "title": "가요 1999",
+        "start": "03:00",
+        "end": "05:00"
+      },
+      {
+        "title": "오늘의 문화방송",
+        "start": "05:00",
+        "end": "05:05"
+      },
+      {
+        "title": "가요 1999",
+        "start": "05:05",
+        "end": "06:00"
+      },
+      {
+        "title": "뉴스투데이",
+        "start": "06:00",
+        "end": "06:15"
+      },
+      {
+        "title": "아침 & 뉴스 , 류수민입니다 1,2 부",
+        "start": "06:15",
+        "end": "07:00"
+      },
+      {
+        "title": "뉴스",
+        "start": "07:00",
+        "end": "07:05"
+      },
+      {
+        "title": "김종배의 시선집중 1,2 부",
+        "start": "07:05",
+        "end": "08:00",
+        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+      },
+      {
+        "title": "김종배의 시선집중 3 부",
+        "start": "08:00",
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+      },
+      {
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
+        "end": "09:00"
+      },
+      {
+        "title": "뉴스",
+        "start": "09:00",
+        "end": "09:05"
+      },
+      {
+        "title": "여성시대 양희은 · 김일중입니다 1,2부",
+        "start": "09:05",
+        "end": "10:00",
+        "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "10:00",
+        "end": "10:05"
+      },
+      {
+        "title": "여성시대 양희은 · 김일중입니다 3,4부",
+        "start": "10:05",
+        "end": "11:00",
+        "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "11:00",
+        "end": "11:05"
+      },
+      {
+        "title": "오승훈의 이과학 저과학 1,2부",
+        "start": "11:05",
+        "end": "12:00"
+      },
+      {
+        "title": "뉴스",
+        "start": "12:00",
+        "end": "12:05"
+      },
+      {
+        "title": "손석희의 12시 1,2부",
+        "start": "12:05",
+        "end": "13:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134266534050317340_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "13:00",
+        "end": "13:05"
+      },
+      {
+        "title": "손석희의 12시 3,4부",
+        "start": "13:05",
+        "end": "14:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134266534050317340_Big_C.png"
+      },
+      {
+        "title": "2시 종합 뉴스",
+        "start": "14:00",
+        "end": "14:20"
+      },
+      {
+        "title": "트로트 라디오 1,2부",
+        "start": "14:20",
+        "end": "15:00",
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "15:00",
+        "end": "15:05"
+      },
+      {
+        "title": "트로트 라디오 3,4부",
+        "start": "15:05",
+        "end": "16:00",
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "16:00",
+        "end": "16:05"
+      },
+      {
+        "title": "정선희 · 문천식의 지금은 라디오시대 1,2 부",
+        "start": "16:05",
+        "end": "17:00",
+        "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "17:00",
+        "end": "17:05"
+      },
+      {
+        "title": "정선희 · 문천식의 지금은 라디오시대 3,4 부",
+        "start": "17:05",
+        "end": "18:00",
+        "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "18:00",
+        "end": "18:05"
+      },
+      {
+        "title": "이브닝 강원",
+        "start": "18:05",
+        "end": "19:00"
+      },
+      {
+        "title": "저녁앤뉴스",
+        "start": "19:00",
+        "end": "19:10"
+      },
+      {
+        "title": "조승원의 뉴스하이킥 3,4부",
+        "start": "19:10",
+        "end": "20:00",
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "20:00",
+        "end": "20:05"
+      },
+      {
+        "title": "오늘도 당신편 이재은 입니다 1,2부",
+        "start": "20:05",
+        "end": "21:00",
+        "image": "https://img.imbc.com/adams/Program/202511/134081653651271991_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "21:00",
+        "end": "21:05"
+      },
+      {
+        "title": "오늘도 당신편 이재은 입니다 3,4부",
+        "start": "21:05",
+        "end": "22:00",
+        "image": "https://img.imbc.com/adams/Program/202511/134081653651271991_Big_C.png"
+      },
+      {
+        "title": "뉴스",
+        "start": "22:00",
+        "end": "22:05"
+      },
+      {
+        "title": "박정호의 손에잡히는경제 플러스 1,2부",
+        "start": "22:05",
+        "end": "23:00",
+        "image": "https://img.imbc.com/adams/Program/20268/134308187599646511.jpg"
+      },
+      {
+        "title": "뉴스",
+        "start": "23:00",
+        "end": "23:05"
+      },
+      {
+        "title": "신혜림의 골든디스크 1,2부",
+        "start": "23:05",
+        "end": "00:00",
+        "image": "https://img.imbc.com/adams/Program/202311/133448560915178965_Big_C.png"
+      }
+    ]
+  },
+  "춘천MBC FM4U": {
+    "friday": [
+      {
+        "title": "FM영화음악 김세윤입니다",
+        "start": "00:00",
+        "end": "01:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134265618972832547_Big_C.png"
+      },
+      {
+        "title": "아이돌 라디오 핫트랙",
+        "start": "01:00",
+        "end": "03:00"
+      },
+      {
+        "title": "음악의발견",
+        "start": "03:00",
+        "end": "05:00"
+      },
+      {
+        "title": "여기는 MBC FM4U",
+        "start": "05:00",
+        "end": "05:05"
+      },
+      {
+        "title": "응답하라 20세기 (1부)",
+        "start": "05:05",
+        "end": "06:00"
+      },
+      {
+        "title": "세상을 여는 아침 이영은입니다",
+        "start": "06:00",
+        "end": "07:00",
+        "image": "https://img.imbc.com/adams/Program/20255/133913949266251509_Big_C.png"
+      },
+      {
+        "title": "굿모닝 FM 테이입니다",
+        "start": "07:00",
+        "end": "09:00",
+        "image": "https://img.imbc.com/adams/Program/20235/133285275377467612_Big_C.png"
+      },
+      {
+        "title": "오늘 아침 윤상입니다",
+        "start": "09:00",
+        "end": "11:00",
+        "image": "https://img.imbc.com/adams/Program/20251/133806259815766920_Big_C.png"
+      },
+      {
+        "title": "김나연의 브런치카페 (원주MBC)",
+        "start": "11:00",
+        "end": "12:00"
+      },
+      {
+        "title": "정오의 희망곡 김지후입니다 (춘천MBC)",
+        "start": "12:00",
+        "end": "14:00"
+      },
+      {
+        "title": "2시의 데이트 안영미입니다",
+        "start": "14:00",
+        "end": "16:00"
+      },
+      {
+        "title": "21오후의 발견 (MBC강원영동)",
+        "start": "16:00",
+        "end": "18:00"
+      },
+      {
+        "title": "배철수의 음악캠프",
+        "start": "18:00",
+        "end": "20:00",
+        "image": "https://img.imbc.com/adams/Program/20206/132369283803903446_Big_C.png"
+      },
+      {
+        "title": "김이나의 별이빛나는밤에",
+        "start": "20:00",
+        "end": "22:00",
+        "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
+      },
+      {
+        "title": "아이돌 라디오",
+        "start": "22:00",
+        "end": "00:00"
+      }
+    ],
+    "saturday": [
+      {
+        "title": "FM영화음악 김세윤입니다",
+        "start": "00:00",
+        "end": "01:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134265618972832547_Big_C.png"
+      },
+      {
+        "title": "아이돌 라디오 핫트랙",
+        "start": "01:00",
+        "end": "03:00"
+      },
+      {
+        "title": "음악의발견",
+        "start": "03:00",
+        "end": "05:00"
+      },
+      {
+        "title": "여기는 MBC FM4U",
+        "start": "05:00",
+        "end": "05:05"
+      },
+      {
+        "title": "응답하라 20세기 (1부)",
+        "start": "05:05",
+        "end": "06:00"
+      },
+      {
+        "title": "세상을 여는 아침 이영은입니다",
+        "start": "06:00",
+        "end": "07:00",
+        "image": "https://img.imbc.com/adams/Program/20255/133913949266251509_Big_C.png"
+      },
+      {
+        "title": "굿모닝 FM 테이입니다",
+        "start": "07:00",
+        "end": "09:00",
+        "image": "https://img.imbc.com/adams/Program/20235/133285275377467612_Big_C.png"
+      },
+      {
+        "title": "오늘 아침 윤상입니다",
+        "start": "09:00",
+        "end": "11:00",
+        "image": "https://img.imbc.com/adams/Program/20251/133806259815766920_Big_C.png"
+      },
+      {
+        "title": "김나연의 브런치카페 (원주MBC)",
+        "start": "11:00",
+        "end": "12:00"
+      },
+      {
+        "title": "정오의 희망곡 김지후입니다 (춘천MBC)",
+        "start": "12:00",
+        "end": "14:00"
+      },
+      {
+        "title": "2시의 데이트 안영미입니다",
+        "start": "14:00",
+        "end": "16:00"
+      },
+      {
+        "title": "21오후의 발견 (MBC강원영동)",
+        "start": "16:00",
+        "end": "18:00"
+      },
+      {
+        "title": "배철수의 음악캠프",
+        "start": "18:00",
+        "end": "20:00",
+        "image": "https://img.imbc.com/adams/Program/20206/132369283803903446_Big_C.png"
+      },
+      {
+        "title": "김이나의 별이빛나는밤에",
+        "start": "20:00",
+        "end": "22:00",
+        "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
+      },
+      {
+        "title": "스포왕 고영배",
+        "start": "22:00",
+        "end": "00:00"
+      }
+    ],
+    "sunday": [
+      {
+        "title": "FM영화음악 김세윤입니다",
+        "start": "00:00",
+        "end": "01:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134265618972832547_Big_C.png"
+      },
+      {
+        "title": "아이돌 라디오 핫트랙",
+        "start": "01:00",
+        "end": "03:00"
+      },
+      {
+        "title": "음악의발견",
+        "start": "03:00",
+        "end": "05:00"
+      },
+      {
+        "title": "여기는 MBC FM4U",
+        "start": "05:00",
+        "end": "05:05"
+      },
+      {
+        "title": "응답하라 20세기 (1부)",
+        "start": "05:05",
+        "end": "06:00"
+      },
+      {
+        "title": "세상을 여는 아침 이영은입니다",
+        "start": "06:00",
+        "end": "07:00",
+        "image": "https://img.imbc.com/adams/Program/20255/133913949266251509_Big_C.png"
+      },
+      {
+        "title": "굿모닝 FM 테이입니다",
+        "start": "07:00",
+        "end": "09:00",
+        "image": "https://img.imbc.com/adams/Program/20235/133285275377467612_Big_C.png"
+      },
+      {
+        "title": "오늘 아침 윤상입니다",
+        "start": "09:00",
+        "end": "11:00",
+        "image": "https://img.imbc.com/adams/Program/20251/133806259815766920_Big_C.png"
+      },
+      {
+        "title": "김나연의 브런치카페 (원주MBC)",
+        "start": "11:00",
+        "end": "12:00"
+      },
+      {
+        "title": "정오의 희망곡 김지후입니다 (춘천MBC)",
+        "start": "12:00",
+        "end": "14:00"
+      },
+      {
+        "title": "2시의 데이트 안영미입니다",
+        "start": "14:00",
+        "end": "16:00"
+      },
+      {
+        "title": "21오후의 발견 (MBC강원영동)",
+        "start": "16:00",
+        "end": "18:00"
+      },
+      {
+        "title": "배철수의 음악캠프",
+        "start": "18:00",
+        "end": "20:00",
+        "image": "https://img.imbc.com/adams/Program/20206/132369283803903446_Big_C.png"
+      },
+      {
+        "title": "김이나의 별이빛나는밤에",
+        "start": "20:00",
+        "end": "22:00",
+        "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
+      },
+      {
+        "title": "스포왕 고영배",
+        "start": "22:00",
+        "end": "00:00"
+      }
+    ],
+    "weekday": [
+      {
+        "title": "FM영화음악 김세윤입니다",
+        "start": "00:00",
+        "end": "01:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134265618972832547_Big_C.png"
+      },
+      {
+        "title": "아이돌 라디오 핫트랙",
+        "start": "01:00",
+        "end": "03:00"
+      },
+      {
+        "title": "음악의발견",
+        "start": "03:00",
+        "end": "05:00"
+      },
+      {
+        "title": "여기는 MBC FM4U",
+        "start": "05:00",
+        "end": "05:05"
+      },
+      {
+        "title": "응답하라 20세기 (1부)",
+        "start": "05:05",
+        "end": "06:00"
+      },
+      {
+        "title": "세상을 여는 아침 이영은입니다",
+        "start": "06:00",
+        "end": "07:00",
+        "image": "https://img.imbc.com/adams/Program/20255/133913949266251509_Big_C.png"
+      },
+      {
+        "title": "굿모닝 FM 테이입니다",
+        "start": "07:00",
+        "end": "09:00",
+        "image": "https://img.imbc.com/adams/Program/20235/133285275377467612_Big_C.png"
+      },
+      {
+        "title": "오늘 아침 윤상입니다",
+        "start": "09:00",
+        "end": "11:00",
+        "image": "https://img.imbc.com/adams/Program/20251/133806259815766920_Big_C.png"
+      },
+      {
+        "title": "김나연의 브런치카페 (원주MBC)",
+        "start": "11:00",
+        "end": "12:00"
+      },
+      {
+        "title": "정오의 희망곡 김지후입니다 (춘천MBC)",
+        "start": "12:00",
+        "end": "14:00"
+      },
+      {
+        "title": "2시의 데이트 안영미입니다",
+        "start": "14:00",
+        "end": "16:00"
+      },
+      {
+        "title": "21오후의 발견 (MBC강원영동)",
+        "start": "16:00",
+        "end": "18:00"
+      },
+      {
+        "title": "배철수의 음악캠프",
+        "start": "18:00",
+        "end": "20:00",
+        "image": "https://img.imbc.com/adams/Program/20206/132369283803903446_Big_C.png"
+      },
+      {
+        "title": "김이나의 별이빛나는밤에",
+        "start": "20:00",
+        "end": "22:00",
+        "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
+      },
+      {
+        "title": "친한친구 이현입니다",
+        "start": "22:00",
+        "end": "00:00"
+      }
+    ]
   }
 }

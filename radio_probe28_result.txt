@@ -1,0 +1,75 @@
+■ 1) 극동방송 서울 편성표 페이지
+  첫 편성 칸 위치 16263
+  --- 첫 칸 앞부분 (탭·채널 이름이 여기 있을 가능성) ---
+tton" data-value="https://seoul.febc.net/member/login" onclick="goHomepage(this)" class="btn-login"> <span class="txt">로그인</span> </button> <button type="button" data-value="https://seoul.febc.net/member/join" onclick="goHomepage(this)" class="btn-join"> <span class="txt">회원가입</span> </button> </div> <!-- mo 편성표 --> <button type="button" class="btn-calendar mo-show" onclick="javascript:location.href='/radio/schedule'"> <span class="hide-txt">편성표</span> <i class="ico-header-calendar" aria-hidden="true"></i> </button> <!-- //mo 편성표 --> <!-- //pc 검색 --> <button type="button" class="btn-search"> <span class="hide-txt">키워드 검색</span> <i class="ico-header-search" aria-hidden="true"></i> </button> <!-- //pc 검색 --> <button type="button" class="btn-allmenu"> <span class="hide-txt">전체메뉴 열기</span> <i class="ico-header-allmenu" aria-hidden="true"></i> </button> </div> </div> </div> </div> <script> let goCommonOnAir = function(obj){ openWindowPop("/radio/schedule/live/"+$(obj).data("value").branchId,"live","top=10, left=10, width=510, height=934"); } let cookieDomain = "febc.net"; let goBranchHomepage = function(obj){ deleteCookie("LOCATION_COOKIE",cookieDomain,"/") let hompageUrl = $(obj).data("value"); $.get("/branch/cookie?hompageUrl="+hompageUrl,function(){ location.href = hompageUrl; }) } let goHomepage = function(obj){ deleteCookie("LOCATION_COOKIE",cookieDomain,"/") location.href = $(obj).data("value") + '?referrerUrl=' + location.href; } </script> </header> <!-- 검색 활성화 : .on --> <form method="get" name="commonParamForm" action="/search"> <div class="header-search-wrap"> <div class="search-dimm"></div> <div class="search-inner" data-class="commonSearch"> <div class="component-input" data-clear="true"> <div class="input-field"> <input type="text" id="temp_input_btn_0001" name="searchValue" placeholder="검색어를 입력해 주세요" data-class="searchValue" autocomplete="off"/> <button type="button" class="input-field-btn search" onclick="goCommonSearch(this)"> <span class="hide-txt">키워드 검색</span> <i class="ico-search-header" aria-hidden="true"></i> </button> </div> <div class="input-info">에러 메시지??</div> </div> <button type="button" class="btn-search-close"> <span class="hide-txt">검색창 닫기</span> </button> </div> </div> </form> <script> let goCommonSearch = function(obj){ let searchObj = $(obj).closest("[data-class=commonSearch]").find("[data-class=searchValue]"); if(searchObj.val().trim() == ""){ alertHtml("검색어를 입력해 주세요."); searchObj.focus(); return; } location.href = "/search?searchValue="+searchObj.val(); } </script> <!-- //검색 --> <nav class="allmenu"> <button type="button" class="btn-allmenu-login" data-value="https://seoul.febc.net/member/login" onclick="goHomepage(this)"> <span class="btn-txt">로그인/회원가입</span> <i class="ico-allmenu-login" aria-hidden="true"></i> </button> <div class="allmenu-area"> <ul class="allmenu-list component-accordion" data-props-type="separate"> <li class="one-depth 
+  --- 칸마다 시간 · 제목 · 앞쪽 묶음 표시 ---
+  ? · ? · 앞 표시: -
+  ? · ? · 앞 표시: -
+  ? · ? · 앞 표시: -
+  ? · ? · 앞 표시: -
+  ? · ? · 앞 표시: -
+  00:00 · 별처럼 빛나는 그대에게 · 앞 표시: class="select-tab-bx"
+  01:00 · 나영환의 달빛가스펠 · 앞 표시: class="select-tab-bx"
+  02:00 · 샬롬, 대한민국입니다 · 앞 표시: class="select-tab-bx"
+  03:00 · 복음의 메아리 · 앞 표시: class="select-tab-bx"
+  04:00 · 복음의 메아리 · 앞 표시: class="select-tab-bx"
+  05:00 · 내 영혼에 햇빛 비치니 · 앞 표시: class="select-tab-bx"
+  06:00 · 주님과 이 아침을 · 앞 표시: class="select-tab-bx"
+  07:00 · 좋은 아침입니다 · 앞 표시: class="select-tab-bx"
+  08:00 · 힘찬 라디오 · 앞 표시: class="select-tab-bx"
+  09:00 · 사랑의 뜰안 · 앞 표시: class="select-tab-bx"
+  10:00 · 사랑의 뜰안 · 앞 표시: class="select-tab-bx"
+  11:00 · 소망의 기도 · 앞 표시: class="select-tab-bx"
+  12:00 · 소망의 찬양 · 앞 표시: class="select-tab-bx"
+  13:00 · 만나고 싶은 사람 듣고 싶은 이야기 · 앞 표시: class="select-tab-bx"
+  14:00 · 오후의 열린 광장 · 앞 표시: class="select-tab-bx"
+  15:00 · 오후의 열린 광장 · 앞 표시: class="select-tab-bx"
+  16:00 · 같이 걸어가기 · 앞 표시: class="select-tab-bx"
+  17:00 · 같이 걸어가기 · 앞 표시: class="select-tab-bx"
+  18:00 · 성경의 무림고수를 찾아서 · 앞 표시: class="select-tab-bx"
+  19:00 · 찬양의 동산 · 앞 표시: class="select-tab-bx"
+  20:00 · 찬양이 가득한 세상 · 앞 표시: class="select-tab-bx"
+  21:00 · 은혜의 찬송 · 앞 표시: class="select-tab-bx"
+  22:00 · 찬양BGM · 앞 표시: class="select-tab-bx"
+  22:30 · 이브닝 프레이즈 · 앞 표시: class="select-tab-bx"
+  23:00 · 김도현의 샬롬나잇 · 앞 표시: class="select-tab-bx"
+  주소 단서 /radio/schedule
+  주소 단서 /radio/schedule/live/
+  주소 단서 /sermon/schedule
+  AM 단서 /program/1449/general
+  AM 단서 /program/1570693/sermon
+  AM 단서 /program/1570715/sermon
+  AM 단서 /program/1644614/general
+  AM 단서 /program/2351875/general
+  AM 단서 /program/2381613/general
+  AM 단서 /program/3240/general
+  AM 단서 /program/3252/general
+  AM 단서 /program/426659/general
+  AM 단서 /program/575944/general
+  AM 단서 /program/9591/general
+  AM 단서 /program/9601/general
+  AM 단서 /program/9630/general
+  AM 단서 /program/9640/general
+  AM 단서 /program/9643/sermon
+  AM 단서 /program/9646/general
+  AM 단서 /program/9649/general
+  AM 단서 /program/9652/sermon
+  AM 단서 /program/9657/general
+  AM 단서 /program/9661/general
+  AM 단서 /program/9664/general
+  AM 단서 /program/9670/sermon
+  AM 단서 /program/9672/general
+  AM 단서 /program/9676/sermon
+  AM 단서 /program/9679/general
+  AM 단서 /program/9688/general
+  AM 단서 /program/9691/sermon
+  AM 단서 /program/9695/general
+  AM 단서 /program/9736/general
+  AM 단서 /program/9739/general
+■ 2) MBC 올댓뮤직
+  https://www.imbc.com/broad/radio/ → 글자 수 12434
+    …  <div class="fm4u-all"> <strong>FM4U 91.9</strong> <ul></ul> </div> <div class="idol-all"> <strong>���̵� ���� ���Ϲ���</strong> <ul></ul> </div> </div> <div class="allthat-youtube"> <div class="allthat-all"> <strong>�ô����</strong> <ul></ul> </div> <div class="youtube-all"> <strong>��Ʃ�� ��������</strong> <ul></ul> </div> <div cl
+    … ong>FM4U 91.9</strong> <ul></ul> </div> <div class="idol-all"> <strong>���̵� ���� ���Ϲ���</strong> <ul></ul> </div> </div> <div class="allthat-youtube"> <div class="allthat-all"> <strong>�ô����</strong> <ul></ul> </div> <div class="youtube-all"> <strong>��Ʃ�� ��������</strong> <ul></ul> </div> <div class="podcast-all"> <strong>��
+  https://mini.imbc.com/ → 글자 수 2486
+    … "og:url" content="https://mini.imbc.com/"/><meta property="og:description" content="언제 어디서나 MBC 스마트라디오 mini를 즐기세요."/><meta name="keywords" content="MBC, 미니, 라디오, MBC mni, MBCmini, mini 웹앱, 미니웹앱, mini웹앱, 엠비씨라디오, mini, 실시간, FM4U, 91.9, FM, 95.9, 표준FM, 올댓뮤직, 엠비씨에프엠, MBC라디오mini"/><meta name="description" lang="ko" content="언제 어디서나 MBC 스마트라디오 mini를 즐기세요."/><title>MBC 스마트라디오 mini</title><script type="text/javascript">const agent=window.navigator.userAgent.toLowerCase();(agent.indexOf("msie")>-1||agent.i
+  https://www.imbc.com/broad/radio/allthatmusic/ → 글자 수 1515

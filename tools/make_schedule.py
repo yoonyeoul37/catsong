@@ -803,9 +803,32 @@ def chmbc_day(channel, d):
     return rows
 
 
+def mbcnet_day(base, d):
+    """제주·대전·광주·목포MBC (같은 모양 홈페이지) 그날 편성: base = '.../FM' 또는 '.../FM4U'
+    한 페이지가 새벽 5시~다음 날 새벽이라, 시간이 거꾸로 가면(23:05 → 00:00) 다음 날로 넘김"""
+    page = fetch(f'{base}/{d:%Y-%m-%d}', base)
+    rows, day, last = [], d, -1
+    for hh, mm, title in re.findall(r'<li class="order\d*">\s*<(?:a|div)\b[^>]*>\s*<strong>\s*(\d{1,2}):(\d{2})\s*</strong>'
+                                    r'\s*<p>(.*?)</p>', page, re.S):
+        m = int(hh) * 60 + int(mm)
+        if m < last and day == d:
+            day = d + datetime.timedelta(days=1)
+        last = m
+        title = text_of(title)
+        if title:
+            rows.append((day, f'{int(hh) % 24:02d}:{mm}', title))
+    return rows
+
+
 MBC_REGIONAL = [  # 앱의 방송 이름, 그날 편성 가져오는 함수, 채널
     ('춘천MBC 표준FM', chmbc_day, 'radio2'),
     ('춘천MBC FM4U', chmbc_day, 'radio'),
+    ('제주MBC 표준FM', mbcnet_day, 'https://jejumbc.com/FMTimetable/FM'),
+    ('제주MBC FM4U', mbcnet_day, 'https://jejumbc.com/FMTimetable/FM4U'),
+    ('대전MBC 표준FM', mbcnet_day, 'https://tjmbc.co.kr/ProgramScheduleTV/FM'),
+    ('광주MBC 표준FM', mbcnet_day, 'https://kjmbc.co.kr/Timetable/FM'),
+    ('광주MBC FM4U', mbcnet_day, 'https://kjmbc.co.kr/Timetable/FM4U'),
+    ('목포MBC 표준FM', mbcnet_day, 'https://www.mpmbc.co.kr/TVTimetable/FM'),
 ]
 
 

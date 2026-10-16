@@ -12,7 +12,7 @@ UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like 
 KST = datetime.timezone(datetime.timedelta(hours=9))  # GitHub 서버는 해외 시간이라 한국 날짜로 맞추기
 
 # CBS 데이터의 방송 번호 → 앱의 방송국 이름
-CBS_MEDIA = {'radio001': 'CBS 음악FM', 'radio002': 'CBS 표준FM'}
+CBS_MEDIA = {'radio001': 'CBS 음악FM', 'radio002': 'CBS 표준FM', 'radio003': 'CBS JOY4U'}
 # CBS 프로그램 사진: 앞에 있는 것부터 씀
 CBS_IMAGE_KEYS = ['vod', 'mobileTop', 'mainTop', 'programBanner', 'radioProfil']
 
@@ -192,7 +192,21 @@ def ifm():
 
 # ───────── FEBC 극동방송 (서울) ─────────
 def febc():
-    page = fetch('https://seoul.febc.net/radio/schedule', 'https://seoul.febc.net/')
+    out = {}
+    for station, base in [('FEBC 극동방송', 'https://seoul.febc.net'), ('FEBC 제주극동방송', 'https://jeju.febc.net')]:
+        try:
+            clean = febc_day(base)
+        except Exception as e:
+            print(f'  ({station} 못 가져옴: {e})')
+            continue
+        if len(clean) >= 5:
+            out[station] = {day_key(today_kst()): clean}
+    return out
+
+
+def febc_day(base):
+    """극동방송 지역 홈페이지의 오늘 편성표 (서울 · 제주 모양이 같음)"""
+    page = fetch(base + '/radio/schedule', base + '/')
     page = re.sub(r'<script.*?</script>', '', page, flags=re.S | re.I)
     progs = []
     for block in page.split('accordion-item component-collapse')[1:]:
@@ -205,7 +219,7 @@ def febc():
         img = re.search(r'<img src="([^"]+)"', head)
         img = img.group(1) if img and '/assets/dev/' not in img.group(1) else None  # 빈 틀 사진은 빼기
         if img and not img.startswith('http'):
-            img = 'https://seoul.febc.net' + img
+            img = base + img
         items = [(t.group(1), title)]
         items += [(tm, text_of(ti)) for tm, ti in
                   re.findall(r'<span class="time">(\d{1,2}:\d{2})</span>.*?<p class="tit">(.*?)</p>', inner, re.S)]
@@ -216,8 +230,7 @@ def febc():
             if img:  # 프로그램 안 짧은 코너도 그 프로그램 사진
                 p['image'] = img
             progs.append(p)
-    clean = clean_day(progs)
-    return {'FEBC 극동방송': {day_key(today_kst()): clean}} if len(clean) >= 5 else {}
+    return clean_day(progs)  # 오늘 편성 (방송 이름은 febc()에서 붙임)
 
 
 # ───────── TBS FM · TBS eFM ─────────

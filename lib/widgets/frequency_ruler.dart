@@ -103,7 +103,7 @@ class _FrequencyRulerState extends State<FrequencyRuler>
           children: [
             Text(widget.minFreq.toStringAsFixed(0),
                 style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 11)),
-            Text('${freq.toStringAsFixed(1)} MHz',
+            Text(widget.maxFreq > 200 ? '${freq.toStringAsFixed(0)} kHz' : '${freq.toStringAsFixed(1)} MHz', // AM이면 kHz
                 style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 11, fontWeight: FontWeight.w600)),
             Text(widget.maxFreq.toStringAsFixed(0),
                 style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 11)),

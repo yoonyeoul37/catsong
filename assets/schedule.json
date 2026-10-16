@@ -4096,8 +4096,7 @@
       {
         "title": "이효주의 싱싱라디오",
         "start": "12:10",
-        "end": "14:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/cb261a6862e2dd9c3258.jpg"
+        "end": "14:00"
       },
       {
         "title": "송봉주의 음악 두시",
@@ -4285,8 +4284,7 @@
       {
         "title": "이효주의 싱싱라디오",
         "start": "12:00",
-        "end": "14:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/cb261a6862e2dd9c3258.jpg"
+        "end": "14:00"
       },
       {
         "title": "김중연의 트로트 연구소",
@@ -4464,8 +4462,7 @@
       {
         "title": "이효주의 싱싱라디오",
         "start": "12:00",
-        "end": "14:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/cb261a6862e2dd9c3258.jpg"
+        "end": "14:00"
       },
       {
         "title": "김중연의 트로트 연구소",
@@ -4652,8 +4649,7 @@
       {
         "title": "이효주의 싱싱라디오",
         "start": "12:10",
-        "end": "14:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/cb261a6862e2dd9c3258.jpg"
+        "end": "14:00"
       },
       {
         "title": "송봉주의 음악 두시",
@@ -8796,5 +8792,783 @@
         "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ]
+  },
+  "CBS JOY4U": {
+    "friday": [
+      {
+        "title": "최정원의 당신을 향한 노래 (재)",
+        "start": "00:00",
+        "end": "01:55",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000281/cbs17814505624441.png"
+      },
+      {
+        "title": "찬송의 향기 (재)",
+        "start": "01:55",
+        "end": "02:00"
+      },
+      {
+        "title": "찬양하라 내 영혼아 (재)",
+        "start": "02:00",
+        "end": "04:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16866427741409.png"
+      },
+      {
+        "title": "이명희의 내가 매일 기쁘게",
+        "start": "04:00",
+        "end": "06:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000222/cbs17122939613369.png"
+      },
+      {
+        "title": "정민아의 Amazing Grace",
+        "start": "06:00",
+        "end": "07:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16843139081839.png"
+      },
+      {
+        "title": "정민아의 Amazing Grace",
+        "start": "07:00",
+        "end": "08:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16843139081839.png"
+      },
+      {
+        "title": "송정훈의 샬롬 CCM",
+        "start": "08:00",
+        "end": "10:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000280/cbs17096235034589.png"
+      },
+      {
+        "title": "최정원의 당신을 향한 노래",
+        "start": "10:00",
+        "end": "11:55",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000281/cbs17814505624441.png"
+      },
+      {
+        "title": "찬송의 향기",
+        "start": "11:55",
+        "end": "12:00"
+      },
+      {
+        "title": "최인혁의 사랑의 노래 평화의 노래",
+        "start": "12:00",
+        "end": "14:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs1685612493602.png"
+      },
+      {
+        "title": "오늘의 찬양",
+        "start": "14:00",
+        "end": "14:05"
+      },
+      {
+        "title": "박요한의 가스펠아워",
+        "start": "14:05",
+        "end": "15:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000658/cbs17914434063696.png"
+      },
+      {
+        "title": "찬송의 향기 (재)",
+        "start": "15:00",
+        "end": "15:05"
+      },
+      {
+        "title": "박요한의 가스펠아워",
+        "start": "15:05",
+        "end": "16:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000658/cbs17914434063696.png"
+      },
+      {
+        "title": "전진의 주님을 찬송하면서",
+        "start": "16:00",
+        "end": "18:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000576/cbs17563681088982.png"
+      },
+      {
+        "title": "찬양하라 내 영혼아",
+        "start": "18:00",
+        "end": "20:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16866427741409.png"
+      },
+      {
+        "title": "이명희의 내가 매일 기쁘게 (재)",
+        "start": "20:00",
+        "end": "22:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000222/cbs17122939613369.png"
+      },
+      {
+        "title": "김은영의 CCM CAMP",
+        "start": "22:00",
+        "end": "23:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000243/cbs17814904853817.png"
+      },
+      {
+        "title": "5분 메시지",
+        "start": "23:00",
+        "end": "23:05",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16907956068987.jpg"
+      },
+      {
+        "title": "김은영의 CCM CAMP",
+        "start": "23:05",
+        "end": "23:59",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000243/cbs17814904853817.png"
+      }
+    ],
+    "weekday": [
+      {
+        "title": "최정원의 당신을 향한 노래 (재)",
+        "start": "00:00",
+        "end": "01:55",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000281/cbs17814505624441.png"
+      },
+      {
+        "title": "찬송의 향기 (재)",
+        "start": "01:55",
+        "end": "02:00"
+      },
+      {
+        "title": "찬양하라 내 영혼아 (재)",
+        "start": "02:00",
+        "end": "04:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16866427741409.png"
+      },
+      {
+        "title": "이명희의 내가 매일 기쁘게",
+        "start": "04:00",
+        "end": "06:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000222/cbs17122939613369.png"
+      },
+      {
+        "title": "정민아의 Amazing Grace",
+        "start": "06:00",
+        "end": "07:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16843139081839.png"
+      },
+      {
+        "title": "정민아의 Amazing Grace",
+        "start": "07:00",
+        "end": "08:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16843139081839.png"
+      },
+      {
+        "title": "송정훈의 샬롬 CCM",
+        "start": "08:00",
+        "end": "10:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000280/cbs17096235034589.png"
+      },
+      {
+        "title": "최정원의 당신을 향한 노래",
+        "start": "10:00",
+        "end": "11:55",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000281/cbs17814505624441.png"
+      },
+      {
+        "title": "찬송의 향기",
+        "start": "11:55",
+        "end": "12:00"
+      },
+      {
+        "title": "최인혁의 사랑의 노래 평화의 노래",
+        "start": "12:00",
+        "end": "14:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs1685612493602.png"
+      },
+      {
+        "title": "오늘의 찬양",
+        "start": "14:00",
+        "end": "14:05"
+      },
+      {
+        "title": "박요한의 가스펠아워",
+        "start": "14:05",
+        "end": "15:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000658/cbs17914434063696.png"
+      },
+      {
+        "title": "찬송의 향기 (재)",
+        "start": "15:00",
+        "end": "15:05"
+      },
+      {
+        "title": "박요한의 가스펠아워",
+        "start": "15:05",
+        "end": "16:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000658/cbs17914434063696.png"
+      },
+      {
+        "title": "전진의 주님을 찬송하면서",
+        "start": "16:00",
+        "end": "18:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000576/cbs17563681088982.png"
+      },
+      {
+        "title": "찬양하라 내 영혼아",
+        "start": "18:00",
+        "end": "20:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16866427741409.png"
+      },
+      {
+        "title": "이명희의 내가 매일 기쁘게 (재)",
+        "start": "20:00",
+        "end": "22:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000222/cbs17122939613369.png"
+      },
+      {
+        "title": "김은영의 CCM CAMP",
+        "start": "22:00",
+        "end": "23:00",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000243/cbs17814904853817.png"
+      },
+      {
+        "title": "5분 메시지",
+        "start": "23:00",
+        "end": "23:05",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16907956068987.jpg"
+      },
+      {
+        "title": "김은영의 CCM CAMP",
+        "start": "23:05",
+        "end": "23:59",
+        "image": "https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000243/cbs17814904853817.png"
+      }
+    ],
+    "saturday": [],
+    "sunday": []
+  },
+  "FEBC 제주극동방송": {
+    "friday": [
+      {
+        "title": "별처럼 빛나는 그대에게",
+        "start": "00:00",
+        "end": "01:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202410/479414af-a918-4fbc-b86e-1eed8979b66b.png"
+      },
+      {
+        "title": "나영환의 달빛가스펠",
+        "start": "01:00",
+        "end": "02:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202411/22cfb63e-c695-4423-9759-50a419351461.png"
+      },
+      {
+        "title": "샬롬, 대한민국입니다",
+        "start": "02:00",
+        "end": "03:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202506/e8839f70-c9ae-40e0-bca1-435f69b5f5ae.jpg"
+      },
+      {
+        "title": "복음의 메아리",
+        "start": "03:00",
+        "end": "04:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202410/6e7fc3e7-7e1d-4053-b7be-2b47f3f5e81f.png"
+      },
+      {
+        "title": "북한 구원과 복음통일을 위한 기도",
+        "start": "04:00",
+        "end": "04:02"
+      },
+      {
+        "title": "새벽을 깨우며",
+        "start": "04:02",
+        "end": "04:30",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/2695b363-2a81-4024-8f7a-43fff925a4e0.png"
+      },
+      {
+        "title": "새벽의 강단",
+        "start": "04:30",
+        "end": "05:00"
+      },
+      {
+        "title": "여기는 대한민국 제주도입니다",
+        "start": "05:00",
+        "end": "06:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/107f33ea-d9de-4d90-9110-c071b054cae6.png"
+      },
+      {
+        "title": "땅끝까지 복음을",
+        "start": "06:00",
+        "end": "06:30",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/d97cc803-fd14-4649-9b2f-39dbadc6c440.png"
+      },
+      {
+        "title": "오늘의 양식",
+        "start": "06:30",
+        "end": "07:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/346da898-19f8-4ae6-84df-3baa8510fc65.png"
+      },
+      {
+        "title": "좋은 아침입니다",
+        "start": "07:00",
+        "end": "07:02",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202410/657cfb7e-da62-4085-9d54-2799b54049c2.png"
+      },
+      {
+        "title": "좋은 아침입니다",
+        "start": "07:02",
+        "end": "07:50",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202410/657cfb7e-da62-4085-9d54-2799b54049c2.png"
+      },
+      {
+        "title": "찬양",
+        "start": "07:50",
+        "end": "08:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202410/657cfb7e-da62-4085-9d54-2799b54049c2.png"
+      },
+      {
+        "title": "빛을 따라서",
+        "start": "08:00",
+        "end": "08:25",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/7be9a16e-b6f9-43ff-b467-e03fa410d4aa.png"
+      },
+      {
+        "title": "FEBC 게시판",
+        "start": "08:25",
+        "end": "08:30",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/1387c5a5-1fae-43c6-a98f-5c3e0c71335d.png"
+      },
+      {
+        "title": "라디오 강단",
+        "start": "08:30",
+        "end": "09:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/0820098b-08a7-43db-abbc-77f175a02ff0.png"
+      },
+      {
+        "title": "힘찬 라디오",
+        "start": "09:00",
+        "end": "09:30",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202608/4b196afa-dbbe-4a64-b17a-9d392b4d4560.jpg"
+      },
+      {
+        "title": "힘내세요! 제주극동방송이 기도합니다",
+        "start": "09:30",
+        "end": "09:50"
+      },
+      {
+        "title": "은혜의 강단",
+        "start": "09:50",
+        "end": "10:00"
+      },
+      {
+        "title": "멋지게 삽시다",
+        "start": "10:00",
+        "end": "11:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202604/dba9216d-ac54-48e8-b577-65045db59218.jpg"
+      },
+      {
+        "title": "소망의 기도",
+        "start": "11:00",
+        "end": "12:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202410/e58ae207-3900-4b87-8169-ef6841186f05.png"
+      },
+      {
+        "title": "나의 기쁨 나의 소망",
+        "start": "12:00",
+        "end": "12:10",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202511/7666f660-019b-441c-8ca9-1041ed9b7ef4.jpg"
+      },
+      {
+        "title": "나의 기쁨 나의 소망",
+        "start": "12:10",
+        "end": "12:55",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202511/7666f660-019b-441c-8ca9-1041ed9b7ef4.jpg"
+      },
+      {
+        "title": "FEBC 게시판",
+        "start": "12:55",
+        "end": "13:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202511/7666f660-019b-441c-8ca9-1041ed9b7ef4.jpg"
+      },
+      {
+        "title": "만나고 싶은 사람 듣고 싶은 이야기",
+        "start": "13:00",
+        "end": "14:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202606/c86fe1fb-e361-4e87-82ba-59006892a7df.jpg"
+      },
+      {
+        "title": "말씀의 오후",
+        "start": "14:00",
+        "end": "14:30"
+      },
+      {
+        "title": "퀴즈온에어",
+        "start": "14:30",
+        "end": "15:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202604/88deb638-9b74-43a5-9edc-9820a1f458a9.jpg"
+      },
+      {
+        "title": "세상을 깨우는 라디오",
+        "start": "15:00",
+        "end": "15:50",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202411/8e4d5d7e-ea98-4c2a-bea9-2ee309c17037.png"
+      },
+      {
+        "title": "찬양",
+        "start": "15:50",
+        "end": "16:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202411/8e4d5d7e-ea98-4c2a-bea9-2ee309c17037.png"
+      },
+      {
+        "title": "생명은 빛으로",
+        "start": "16:00",
+        "end": "16:30"
+      },
+      {
+        "title": "복소리",
+        "start": "16:30",
+        "end": "16:40",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202408/c39ad61d-20d3-453c-a856-7f01559a2d62.png"
+      },
+      {
+        "title": "FEBC 게시판",
+        "start": "16:40",
+        "end": "16:45",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/1387c5a5-1fae-43c6-a98f-5c3e0c71335d.png"
+      },
+      {
+        "title": "힘내세요! 제주극동방송이 기도합니다",
+        "start": "16:45",
+        "end": "17:00"
+      },
+      {
+        "title": "다섯시, 마음 퇴근합니다",
+        "start": "17:00",
+        "end": "17:45",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202604/0e4672a2-098a-4b05-ac55-d308a2da1323.jpg"
+      },
+      {
+        "title": "날마다 살아나는 큐티",
+        "start": "17:45",
+        "end": "18:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202408/26c2b5db-1291-4996-922e-a142e4543193.png"
+      },
+      {
+        "title": "행복한 저녁 즐거운 라디오",
+        "start": "18:00",
+        "end": "18:51",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202511/37a9e841-4085-44d6-a6dc-1ee1ef201be2.jpg"
+      },
+      {
+        "title": "쉴만한 물가로",
+        "start": "18:51",
+        "end": "19:00"
+      },
+      {
+        "title": "참된 삶을 향하여",
+        "start": "19:00",
+        "end": "19:30"
+      },
+      {
+        "title": "찬송 다이어리",
+        "start": "19:30",
+        "end": "20:00"
+      },
+      {
+        "title": "내 삶의 노래로",
+        "start": "20:00",
+        "end": "20:55",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/441c71cd-a51d-4c46-a2f5-3ea9e9365525.png"
+      },
+      {
+        "title": "FEBC 게시판",
+        "start": "20:55",
+        "end": "21:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/1387c5a5-1fae-43c6-a98f-5c3e0c71335d.png"
+      },
+      {
+        "title": "더프레이어노트",
+        "start": "21:00",
+        "end": "21:30"
+      },
+      {
+        "title": "현석주의 작은 음악실",
+        "start": "21:30",
+        "end": "22:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202411/b40151e4-8de7-42a0-a263-ca1e109de0ad.png"
+      },
+      {
+        "title": "은혜의 찬송",
+        "start": "22:00",
+        "end": "22:40",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202412/2753be72-40cb-4231-9505-366e75fcf25c.png"
+      },
+      {
+        "title": "매기성경강해",
+        "start": "22:40",
+        "end": "23:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202410/0079111b-b515-4f63-b9d6-e62fbac10235.png"
+      },
+      {
+        "title": "김도현의 샬롬나잇",
+        "start": "23:00",
+        "end": "00:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202410/45856677-7281-4526-bff1-f020fda7236f.png"
+      }
+    ],
+    "weekday": [
+      {
+        "title": "별처럼 빛나는 그대에게",
+        "start": "00:00",
+        "end": "01:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202410/479414af-a918-4fbc-b86e-1eed8979b66b.png"
+      },
+      {
+        "title": "나영환의 달빛가스펠",
+        "start": "01:00",
+        "end": "02:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202411/22cfb63e-c695-4423-9759-50a419351461.png"
+      },
+      {
+        "title": "샬롬, 대한민국입니다",
+        "start": "02:00",
+        "end": "03:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202506/e8839f70-c9ae-40e0-bca1-435f69b5f5ae.jpg"
+      },
+      {
+        "title": "복음의 메아리",
+        "start": "03:00",
+        "end": "04:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202410/6e7fc3e7-7e1d-4053-b7be-2b47f3f5e81f.png"
+      },
+      {
+        "title": "북한 구원과 복음통일을 위한 기도",
+        "start": "04:00",
+        "end": "04:02"
+      },
+      {
+        "title": "새벽을 깨우며",
+        "start": "04:02",
+        "end": "04:30",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/2695b363-2a81-4024-8f7a-43fff925a4e0.png"
+      },
+      {
+        "title": "새벽의 강단",
+        "start": "04:30",
+        "end": "05:00"
+      },
+      {
+        "title": "여기는 대한민국 제주도입니다",
+        "start": "05:00",
+        "end": "06:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/107f33ea-d9de-4d90-9110-c071b054cae6.png"
+      },
+      {
+        "title": "땅끝까지 복음을",
+        "start": "06:00",
+        "end": "06:30",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/d97cc803-fd14-4649-9b2f-39dbadc6c440.png"
+      },
+      {
+        "title": "오늘의 양식",
+        "start": "06:30",
+        "end": "07:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/346da898-19f8-4ae6-84df-3baa8510fc65.png"
+      },
+      {
+        "title": "좋은 아침입니다",
+        "start": "07:00",
+        "end": "07:02",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202410/657cfb7e-da62-4085-9d54-2799b54049c2.png"
+      },
+      {
+        "title": "좋은 아침입니다",
+        "start": "07:02",
+        "end": "07:50",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202410/657cfb7e-da62-4085-9d54-2799b54049c2.png"
+      },
+      {
+        "title": "찬양",
+        "start": "07:50",
+        "end": "08:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202410/657cfb7e-da62-4085-9d54-2799b54049c2.png"
+      },
+      {
+        "title": "빛을 따라서",
+        "start": "08:00",
+        "end": "08:25",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/7be9a16e-b6f9-43ff-b467-e03fa410d4aa.png"
+      },
+      {
+        "title": "FEBC 게시판",
+        "start": "08:25",
+        "end": "08:30",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/1387c5a5-1fae-43c6-a98f-5c3e0c71335d.png"
+      },
+      {
+        "title": "라디오 강단",
+        "start": "08:30",
+        "end": "09:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/0820098b-08a7-43db-abbc-77f175a02ff0.png"
+      },
+      {
+        "title": "힘찬 라디오",
+        "start": "09:00",
+        "end": "09:30",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202608/4b196afa-dbbe-4a64-b17a-9d392b4d4560.jpg"
+      },
+      {
+        "title": "힘내세요! 제주극동방송이 기도합니다",
+        "start": "09:30",
+        "end": "09:50"
+      },
+      {
+        "title": "은혜의 강단",
+        "start": "09:50",
+        "end": "10:00"
+      },
+      {
+        "title": "멋지게 삽시다",
+        "start": "10:00",
+        "end": "11:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202604/dba9216d-ac54-48e8-b577-65045db59218.jpg"
+      },
+      {
+        "title": "소망의 기도",
+        "start": "11:00",
+        "end": "12:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202410/e58ae207-3900-4b87-8169-ef6841186f05.png"
+      },
+      {
+        "title": "나의 기쁨 나의 소망",
+        "start": "12:00",
+        "end": "12:10",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202511/7666f660-019b-441c-8ca9-1041ed9b7ef4.jpg"
+      },
+      {
+        "title": "나의 기쁨 나의 소망",
+        "start": "12:10",
+        "end": "12:55",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202511/7666f660-019b-441c-8ca9-1041ed9b7ef4.jpg"
+      },
+      {
+        "title": "FEBC 게시판",
+        "start": "12:55",
+        "end": "13:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202511/7666f660-019b-441c-8ca9-1041ed9b7ef4.jpg"
+      },
+      {
+        "title": "만나고 싶은 사람 듣고 싶은 이야기",
+        "start": "13:00",
+        "end": "14:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202606/c86fe1fb-e361-4e87-82ba-59006892a7df.jpg"
+      },
+      {
+        "title": "말씀의 오후",
+        "start": "14:00",
+        "end": "14:30"
+      },
+      {
+        "title": "퀴즈온에어",
+        "start": "14:30",
+        "end": "15:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202604/88deb638-9b74-43a5-9edc-9820a1f458a9.jpg"
+      },
+      {
+        "title": "세상을 깨우는 라디오",
+        "start": "15:00",
+        "end": "15:50",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202411/8e4d5d7e-ea98-4c2a-bea9-2ee309c17037.png"
+      },
+      {
+        "title": "찬양",
+        "start": "15:50",
+        "end": "16:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202411/8e4d5d7e-ea98-4c2a-bea9-2ee309c17037.png"
+      },
+      {
+        "title": "생명은 빛으로",
+        "start": "16:00",
+        "end": "16:30"
+      },
+      {
+        "title": "복소리",
+        "start": "16:30",
+        "end": "16:40",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202408/c39ad61d-20d3-453c-a856-7f01559a2d62.png"
+      },
+      {
+        "title": "FEBC 게시판",
+        "start": "16:40",
+        "end": "16:45",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/1387c5a5-1fae-43c6-a98f-5c3e0c71335d.png"
+      },
+      {
+        "title": "힘내세요! 제주극동방송이 기도합니다",
+        "start": "16:45",
+        "end": "17:00"
+      },
+      {
+        "title": "다섯시, 마음 퇴근합니다",
+        "start": "17:00",
+        "end": "17:45",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202604/0e4672a2-098a-4b05-ac55-d308a2da1323.jpg"
+      },
+      {
+        "title": "날마다 살아나는 큐티",
+        "start": "17:45",
+        "end": "18:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202408/26c2b5db-1291-4996-922e-a142e4543193.png"
+      },
+      {
+        "title": "행복한 저녁 즐거운 라디오",
+        "start": "18:00",
+        "end": "18:51",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202511/37a9e841-4085-44d6-a6dc-1ee1ef201be2.jpg"
+      },
+      {
+        "title": "쉴만한 물가로",
+        "start": "18:51",
+        "end": "19:00"
+      },
+      {
+        "title": "참된 삶을 향하여",
+        "start": "19:00",
+        "end": "19:30"
+      },
+      {
+        "title": "찬송 다이어리",
+        "start": "19:30",
+        "end": "20:00"
+      },
+      {
+        "title": "내 삶의 노래로",
+        "start": "20:00",
+        "end": "20:55",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/441c71cd-a51d-4c46-a2f5-3ea9e9365525.png"
+      },
+      {
+        "title": "FEBC 게시판",
+        "start": "20:55",
+        "end": "21:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202409/1387c5a5-1fae-43c6-a98f-5c3e0c71335d.png"
+      },
+      {
+        "title": "더프레이어노트",
+        "start": "21:00",
+        "end": "21:30"
+      },
+      {
+        "title": "현석주의 작은 음악실",
+        "start": "21:30",
+        "end": "22:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202411/b40151e4-8de7-42a0-a263-ca1e109de0ad.png"
+      },
+      {
+        "title": "은혜의 찬송",
+        "start": "22:00",
+        "end": "22:40",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202412/2753be72-40cb-4231-9505-366e75fcf25c.png"
+      },
+      {
+        "title": "매기성경강해",
+        "start": "22:40",
+        "end": "23:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202410/0079111b-b515-4f63-b9d6-e62fbac10235.png"
+      },
+      {
+        "title": "김도현의 샬롬나잇",
+        "start": "23:00",
+        "end": "00:00",
+        "image": "https://jeju.febc.net/fileupload/ogImage/202410/45856677-7281-4526-bff1-f020fda7236f.png"
+      }
+    ],
+    "saturday": [],
+    "sunday": []
   }
 }

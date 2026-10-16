@@ -381,6 +381,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         name == 'YTN 라디오' ||
         name == '경인방송' ||
         name == 'FEBC 극동방송' ||
+        name == 'FEBC 제주극동방송' ||
         name == 'TBS FM' ||
         name == 'TBS eFM' ||
         name == 'JTV 매직FM' ||
@@ -1070,6 +1071,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                 width: double.infinity,
                                 height: imgH,
                                 fit: BoxFit.cover,
+                                // TBN 사진은 중요한 부분이 위쪽이라 위쪽 기준으로 자르기
+                                alignment: current.name.startsWith('TBN ') ? Alignment.topCenter : Alignment.center,
                                 headers: const {'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Mobile Safari/537.36'}, // 일부 방송국은 브라우저처럼 물어봐야 사진을 줌
                                 // 사진 받는 동안: 빈칸 대신 로딩 칸과 같은 색
                                 frameBuilder: (fCtx, child, frame, sync) => frame == null && !sync
@@ -1209,6 +1212,9 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                           child: FrequencyRuler(
                             frequency: _parseFrequency(freq),
                             primaryColor: primaryColor,
+                            // AM 방송(kHz)이면 AM 눈금으로
+                            minFreq: freq.contains('kHz') ? 531 : 88.0,
+                            maxFreq: freq.contains('kHz') ? 1602 : 108.0,
                           ),
                         ),
 

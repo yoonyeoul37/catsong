@@ -526,10 +526,24 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
       itemBuilder: (context, i) {
         final station = recent[i];
         final lastListened = station.lastListened;
-        final weekdays = tr.weekdaysShort.split(',');
-        final timeStr = lastListened != null
-            ? '${lastListened.year}.${lastListened.month.toString().padLeft(2, '0')}.${lastListened.day.toString().padLeft(2, '0')}(${weekdays[lastListened.weekday - 1]}) ${lastListened.hour.toString().padLeft(2, '0')}:${lastListened.minute.toString().padLeft(2, '0')}'
+        // 왼쪽 시간 배지: 위 '14:05' · 아래 '오늘/어제/10.14'
+        final hmStr = lastListened != null
+            ? '${lastListened.hour.toString().padLeft(2, '0')}:${lastListened.minute.toString().padLeft(2, '0')}'
             : '';
+        String dayStr = '';
+        if (lastListened != null) {
+          final now = DateTime.now();
+          final diff = DateTime(now.year, now.month, now.day)
+              .difference(DateTime(lastListened.year, lastListened.month, lastListened.day))
+              .inDays;
+          dayStr = diff == 0
+              ? '오늘'
+              : diff == 1
+                  ? '어제'
+                  : '${lastListened.month.toString().padLeft(2, '0')}.${lastListened.day.toString().padLeft(2, '0')}';
+        }
+        // 아래 줄: 국내는 '지역 · 방송 성격', 해외는 나라 이름
+        final descStr = koreanStationDesc(station.name) ?? (station.country ?? '');
         final isPlaying = radioProvider.currentStation?.stationUuid == station.stationUuid && radioProvider.isPlaying;
         return InkWell(
           onTap: () {
@@ -548,12 +562,30 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
             padding: const EdgeInsets.symmetric(vertical: 14),
             child: Row(
               children: [
-                Container(
-                  width: 6,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: isPlaying ? primaryColorOf(context) : baseColor.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(3),
+                // 시간 배지 (듣는 중이면 강조 색)
+                SizedBox(
+                  width: 44,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        hmStr,
+                        textScaler: TextScaler.noScaling,
+                        maxLines: 1,
+                        style: GoogleFonts.quicksand(
+                          color: isPlaying ? primaryColorOf(context) : baseColor,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 1),
+                      Text(
+                        dayStr,
+                        textScaler: TextScaler.noScaling,
+                        maxLines: 1,
+                        style: TextStyle(color: baseColor.withOpacity(0.45), fontSize: 10.5),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -563,15 +595,23 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                     children: [
                       Text(
                         station.name,
-                        style: TextStyle(color: baseColor, fontSize: 15.5, fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                          color: isPlaying ? primaryColorOf(context) : baseColor,
+                          fontSize: 15.5,
+                          fontWeight: FontWeight.w500,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        timeStr,
-                        style: TextStyle(color: baseColor.withOpacity(0.45), fontSize: 12),
-                      ),
+                      if (descStr.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          descStr,
+                          style: TextStyle(color: baseColor.withOpacity(0.45), fontSize: 12),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -625,7 +665,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => _BroadcasterStationList(broadcaster: region, stations: stations),
+                builder: (ctx) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: radioTextScaler(ctx)), child: _BroadcasterStationList(broadcaster: region, stations: stations)), // 라디오 목록 글자 크기 맞추기 (전체 목록과 같게)
               ),
             );
           },
@@ -1409,7 +1449,7 @@ class _BroadcasterGridScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => _BroadcasterStationList(broadcaster: key, stations: stations),
+                builder: (ctx) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: radioTextScaler(ctx)), child: _BroadcasterStationList(broadcaster: key, stations: stations)), // 라디오 목록 글자 크기 맞추기 (전체 목록과 같게)
               ),
             );
           },

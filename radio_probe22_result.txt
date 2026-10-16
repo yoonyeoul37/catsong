@@ -1,0 +1,144 @@
+■ 1) 주소 모양 맞춰 보기
+  OK | TBN busan | http://radio2.tbn.or.kr:1935/busan/myStream/playlist.m3u8
+  OK | TBN daegu | http://radio2.tbn.or.kr:1935/daegu/myStream/playlist.m3u8
+  OK | TBN gwangju | http://radio2.tbn.or.kr:1935/gwangju/myStream/playlist.m3u8
+  OK | TBN daejeon | http://radio2.tbn.or.kr:1935/daejeon/myStream/playlist.m3u8
+  OK | TBN gangwon | http://radio2.tbn.or.kr:1935/gangwon/myStream/playlist.m3u8
+  OK | TBN jeonbuk | http://radio2.tbn.or.kr:1935/jeonbuk/myStream/playlist.m3u8
+  OK | TBN gyeongnam | http://radio2.tbn.or.kr:1935/gyeongnam/myStream/playlist.m3u8
+  OK | TBN chungbuk | http://radio2.tbn.or.kr:1935/chungbuk/myStream/playlist.m3u8
+  OK | TBN chungnam | http://radio2.tbn.or.kr:1935/chungnam/myStream/playlist.m3u8
+  OK | TBN jeju | http://radio2.tbn.or.kr:1935/jeju/myStream/playlist.m3u8
+  X(HTTP Error 404: Not Found) | TBN gyeongbuk | http://radio2.tbn.or.kr:1935/gyeongbuk/myStream/playlist.m3u8
+  X(HTTP Error 404: Not Found) | TBN jeonnam | http://radio2.tbn.or.kr:1935/jeonnam/myStream/playlist.m3u8
+  X(HTTP Error 404: Not Found) | TBN seoul | http://radio2.tbn.or.kr:1935/seoul/myStream/playlist.m3u8
+  OK | TBN gyeongin | http://radio2.tbn.or.kr:1935/gyeongin/myStream/playlist.m3u8
+  OK | TBN ulsan | http://radio2.tbn.or.kr:1935/ulsan/myStream/playlist.m3u8
+  OK | 극동방송 seoul | http://mlive2.febc.net:1935/live/seoulfm/playlist.m3u8
+  OK | 극동방송 jeju | http://mlive2.febc.net:1935/live/jejufm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 busan | http://mlive2.febc.net:1935/live/busanfm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 daegu | http://mlive2.febc.net:1935/live/daegufm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 gwangju | http://mlive2.febc.net:1935/live/gwangjufm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 daejeon | http://mlive2.febc.net:1935/live/daejeonfm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 changwon | http://mlive2.febc.net:1935/live/changwonfm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 ulsan | http://mlive2.febc.net:1935/live/ulsanfm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 pohang | http://mlive2.febc.net:1935/live/pohangfm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 mokpo | http://mlive2.febc.net:1935/live/mokpofm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 yeongdong | http://mlive2.febc.net:1935/live/yeongdongfm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 gangwon | http://mlive2.febc.net:1935/live/gangwonfm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 jeonbuk | http://mlive2.febc.net:1935/live/jeonbukfm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 jeonju | http://mlive2.febc.net:1935/live/jeonjufm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 suncheon | http://mlive2.febc.net:1935/live/suncheonfm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 yeosu | http://mlive2.febc.net:1935/live/yeosufm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 chuncheon | http://mlive2.febc.net:1935/live/chuncheonfm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 cheongju | http://mlive2.febc.net:1935/live/cheongjufm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 gyeongin | http://mlive2.febc.net:1935/live/gyeonginfm/playlist.m3u8
+  X(HTTP Error 404: Not Found) | 극동방송 incheon | http://mlive2.febc.net:1935/live/incheonfm/playlist.m3u8
+  OK | 극동방송 seoul (am) | http://mlive2.febc.net:1935/live/seoulam/playlist.m3u8
+■ 2) 홈페이지 안의 방송 주소
+  ── KNN 부산
+    https://www.knn.co.kr/ → 200 · 글자 수 122327
+    온에어·라디오 링크 https://www.knn.co.kr/onair
+    온에어·라디오 링크 https://www.knn.co.kr/radio
+  ── TBC 대구
+    https://www.tbc.co.kr/ → 200 · 글자 수 81373
+    온에어·라디오 링크 https://www.tbc.co.kr/fm
+    온에어·라디오 링크 https://www.tbc.co.kr/fm/?mid=3_102_103
+    온에어·라디오 링크 https://www.tbc.co.kr/fm/?mid=3_104_107
+    온에어·라디오 링크 https://www.tbc.co.kr/fm/?mid=3_108_109
+    온에어·라디오 링크 https://www.tbc.co.kr/fm/?mid=3_112_113
+    온에어·라디오 링크 https://www.tbc.co.kr/fm/?mid=3_116_117
+    온에어·라디오 링크 https://www.tbc.co.kr/fm/?mid=3_71_72
+    온에어·라디오 링크 https://www.tbc.co.kr/fm/?mid=3_77_78
+    온에어·라디오 링크 https://www.tbc.co.kr/fm/?mid=3_86_87
+    온에어·라디오 링크 https://www.tbc.co.kr/fm/?mid=3_92_93
+    온에어·라디오 링크 https://www.tbc.co.kr/fm/?mid=3_98_99
+    온에어·라디오 링크 https://www.tbc.co.kr/onair/?mid=6_190
+  ── KBC 광주
+    https://www.ikbc.co.kr/ → 200 · 글자 수 70778
+    온에어·라디오 링크 https://www.ikbc.co.kr/onair
+    온에어·라디오 링크 https://www.ikbc.co.kr/radio/main
+  ── TJB 대전
+    https://www.tjb.co.kr/ → 200 · 글자 수 26895
+    온에어·라디오 링크 https://m.tjb.co.kr/onair-main.php
+  ── UBC 울산
+    https://www.ubc.co.kr/ → 200 · 글자 수 94798
+    온에어·라디오 링크 https://www.ubc.co.kr/onair
+    온에어·라디오 링크 https://www.ubc.co.kr/onair/
+    온에어·라디오 링크 https://www.ubc.co.kr/radio/
+    온에어·라디오 링크 https://www.ubc.co.kr/radio/date/
+    온에어·라디오 링크 https://www.ubc.co.kr/radio/happy-4/
+    온에어·라디오 링크 https://www.ubc.co.kr/radio/money/
+    온에어·라디오 링크 https://www.ubc.co.kr/radio/movie/
+    온에어·라디오 링크 https://www.ubc.co.kr/radio/radio/
+    온에어·라디오 링크 https://www.ubc.co.kr/radio/sleepless/
+    온에어·라디오 링크 https://www.ubc.co.kr/radio/sunday-special/
+    온에어·라디오 링크 https://www.ubc.co.kr/schedule/radio/
+    온에어·라디오 링크 https://www.ubc.co.kr/tv/live052/
+  ── CJB 청주
+    https://www.cjb.co.kr/ → 200 · 글자 수 261
+  ── G1 강원
+    https://www.g1tv.co.kr/ → 200 · 글자 수 28618
+    온에어·라디오 링크 https://www.g1tv.co.kr/radio
+    온에어·라디오 링크 https://www.g1tv.co.kr/radio/?mid=16_17_54
+    온에어·라디오 링크 https://www.g1tv.co.kr/radio/?mid=16_18_55
+    온에어·라디오 링크 https://www.g1tv.co.kr/radio/?mid=16_19_56
+    온에어·라디오 링크 https://www.g1tv.co.kr/radio/?mid=16_20_57
+    온에어·라디오 링크 https://www.g1tv.co.kr/radio/?mid=16_242_243
+    온에어·라디오 링크 https://www.g1tv.co.kr/radio/?mid=16_302_304
+  ── JIBS 제주
+    https://www.jibs.co.kr/ → 200 · 글자 수 56354
+    온에어·라디오 링크 https://www.jibs.co.kr/radio/viewRadioMain?channelId=0
+    온에어·라디오 링크 https://www.jibs.co.kr/radio/viewRadioProgramInfo?channelId=445
+    온에어·라디오 링크 https://www.jibs.co.kr/radio/viewRadioProgramInfo?channelId=473
+    온에어·라디오 링크 https://www.jibs.co.kr/radio/viewRadioProgramInfo?channelId=474
+  ── 전주MBC
+    https://www.jmbc.co.kr/ → 200 · 글자 수 92953
+    온에어·라디오 링크 https://www.jmbc.co.kr/onair/fm4u
+    온에어·라디오 링크 https://www.jmbc.co.kr/onair/sfm
+    온에어·라디오 링크 https://www.jmbc.co.kr/onair/tv
+    온에어·라디오 링크 https://www.jmbc.co.kr/program/fm_000001
+    온에어·라디오 링크 https://www.jmbc.co.kr/program/fm_000002
+    온에어·라디오 링크 https://www.jmbc.co.kr/program/fm_000003
+    온에어·라디오 링크 https://www.jmbc.co.kr/program/fm_000004
+    온에어·라디오 링크 https://www.jmbc.co.kr/program/fm_210215
+    온에어·라디오 링크 https://www.jmbc.co.kr/program/fm_22112501
+    온에어·라디오 링크 https://www.jmbc.co.kr/program/fm_22112502
+    온에어·라디오 링크 https://www.jmbc.co.kr/program/fm_22112503
+    온에어·라디오 링크 https://www.jmbc.co.kr/program/fm_24110101
+      └ https://www.jmbc.co.kr/onair/fm4u 안 주소 OK | https://live.jmbc.co.kr/live/fm_live.m3u8
+      └ https://www.jmbc.co.kr/onair/sfm 안 주소 OK | https://live.jmbc.co.kr/live/am_live.m3u8
+      └ https://www.jmbc.co.kr/onair/tv 안 주소 OK | https://live.jmbc.co.kr/live/tv_live.m3u8
+      └ https://www.jmbc.co.kr/program/fm_000001 안 주소 X(<urlopen error timed out>) | https://smart.igtb.co.kr:1935/live/stream.sdp
+      └ https://www.jmbc.co.kr/program/fm_000001 안 주소 X(<urlopen error timed out>) | http://smart.igtb.co.kr:1935/live/stream.sdp/playlist.sdp
+  ── 여수MBC
+    https://www.ysmbc.co.kr/ → 200 · 글자 수 51613
+    온에어·라디오 링크 https://ysmbc.co.kr/FM4UTimetable
+    온에어·라디오 링크 https://ysmbc.co.kr/FMTimetable
+    온에어·라디오 링크 https://ysmbc.co.kr/ListOfMembers
+    온에어·라디오 링크 https://ysmbc.co.kr/OnAir
+    온에어·라디오 링크 https://ysmbc.co.kr/RadioMenu
+    온에어·라디오 링크 https://ysmbc.co.kr/RadioObservatory
+    온에어·라디오 링크 https://ysmbc.co.kr/RadioProgram
+  ── 원주MBC
+    https://www.wjmbc.co.kr/ → 200 · 글자 수 65403
+    온에어·라디오 링크 http://vod.wjmbc.co.kr/vod_hd/tv/livejg/2024/20240618.mp4
+    온에어·라디오 링크 http://www.mbceg.co.kr/program/radio_06
+    온에어·라디오 링크 https://www.wjmbc.co.kr/radio/am.html
+    온에어·라디오 링크 https://www.wjmbc.co.kr/radio/fm.html
+    온에어·라디오 링크 https://www.wjmbc.co.kr/radio/prog.html
+    온에어·라디오 링크 https://www.wjmbc.co.kr/radio/prog_intro.html?pgcode=goldendisc&gnb=3&snb=1&tnb=8
+    온에어·라디오 링크 https://www.wjmbc.co.kr/radio/prog_intro.html?pgcode=sisamate&gnb=3&snb=1&tnb=4
+  ── MBC강원영동
+    https://www.mbceg.co.kr/ → 200 · 글자 수 56803
+    온에어·라디오 링크 https://www.mbceg.co.kr/board/radio_07
+    온에어·라디오 링크 https://www.mbceg.co.kr/program/radio_03
+    온에어·라디오 링크 https://www.mbceg.co.kr/program/radio_06
+    온에어·라디오 링크 https://www.mbceg.co.kr/program/radio_09
+  ── 부산CBS
+    https://busan.cbs.co.kr/ → X(<urlopen error [Errno 11001] getaddrinfo failed>)
+  ── 원음방송
+    https://www.wbsi.kr/ → 200 · 글자 수 60
+    http://www.wbsi.kr/ → 200 · 글자 수 60
+  ── GFN 광주영어방송
+    https://www.gfn.or.kr/ → X(<urlopen error [Errno 11001] getaddrinfo failed>)

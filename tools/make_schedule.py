@@ -5,7 +5,7 @@
 # CBS · YTN · FEBC · TBS는 '오늘' 편성만 줘서 매일 돌리면 그날 요일 칸이 새로 바뀌고,
 # 경인방송 · JTV · 국악FM은 일주일치를 한 번에 가져와요
 # 실행: python tools/make_schedule.py   (GitHub에서는 매일 새벽 자동으로)
-import json, sys, ssl, time, datetime, urllib.request, urllib.parse, os, re, html as htmllib
+import json, sys, ssl, time, datetime, difflib, urllib.request, urllib.parse, os, re, html as htmllib
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'schedule.json')
 UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36'
@@ -820,6 +820,49 @@ def mbcnet_day(base, d):
     return rows
 
 
+# 지역 홈페이지 '라디오 프로그램' 목록 카드: (비교용 이름, 요일들, 시작 분, 사진) — 지역 프로그램 사진용
+LOCAL_CARDS = {}
+WEEKDAY_IDX = {'월': 0, '화': 1, '수': 2, '목': 3, '금': 4, '토': 5, '일': 6}
+
+
+def mbcnet_cards(base):
+    """제주·대전·광주·목포MBC (같은 모양 홈페이지)의 라디오 프로그램 목록"""
+    if base in LOCAL_CARDS:
+        return LOCAL_CARDS[base]
+    cards = []
+    try:
+        page = fetch(base + '/RadioProgram', base + '/')
+        for inner in re.findall(r'<a[^>]+href=["\'][^"\']*/RadioProgram/\d+/home["\'][^>]*>(.*?)</a>', page, re.S):
+            img = re.search(r'<img[^>]+src=["\']([^"\']+)', inner)
+            m = re.match(r'(.*?)\s+((?:[월화수목금토일]\s*)+)\s*(\d{1,2})시\s*(\d{1,2})분', text_of(inner))
+            if img and m:
+                cards.append((mbc_key(m.group(1)), {WEEKDAY_IDX[x] for x in re.findall('[월화수목금토일]', m.group(2))},
+                              int(m.group(3)) * 60 + int(m.group(4)), urllib.parse.urljoin(base + '/', img.group(1))))
+    except Exception as e:
+        print(f'  ({base} 프로그램 사진 못 가져옴: {e})')
+    LOCAL_CARDS[base] = cards
+    return cards
+
+
+def same_name(a, b):
+    """비교용 이름 둘이 같은 프로그램인지: 4글자 넘게 겹치면 (예: 임서영과김준규의… ↔ 임서영김준규의…)"""
+    if len(a) < 4 or len(b) < 4:
+        return False
+    m = difflib.SequenceMatcher(None, a, b).find_longest_match(0, len(a), 0, len(b))
+    return m.size >= min(6, len(a), len(b))
+
+
+def local_pics(progs, d, cards):
+    """지역 프로그램이면 지역 사진으로 (서울 사진보다 먼저) — 요일 맞고, 이름 겹치고, 시작 시간이 90분 안"""
+    for p in progs:
+        k = mbc_key(p['title'])
+        s = int(p['start'][:2]) * 60 + int(p['start'][3:5])
+        for ck, wds, cm, img in cards:
+            if d.weekday() in wds and abs(s - cm) <= 90 and same_name(k, ck):
+                p['image'] = img
+                break
+
+
 MBC_REGIONAL = [  # 앱의 방송 이름, 그날 편성 가져오는 함수, 채널
     ('춘천MBC 표준FM', chmbc_day, 'radio2'),
     ('춘천MBC FM4U', chmbc_day, 'radio'),
@@ -843,6 +886,8 @@ def mbc_regional():
     out = {}
     for station, fn, ch in MBC_REGIONAL:
         by_date = {}
+        # 지역 프로그램 사진 (제주·대전·광주·목포: 홈페이지 프로그램 목록)
+        cards = mbcnet_cards('{0.scheme}://{0.netloc}'.format(urllib.parse.urlsplit(ch))) if fn is mbcnet_day else []
         for d in fetch_days:
             try:
                 rows = fn(ch, d)
@@ -858,6 +903,8 @@ def mbc_regional():
         week = {}
         for d in days:
             progs = clean_day(list(by_date.get(d, {}).values()))
+            if cards:
+                local_pics(progs, d, cards)
             if len(progs) >= 5:
                 week[day_key(d)] = progs
         if week:

@@ -634,8 +634,9 @@ TBN_AREAS = {  # 앱의 방송 이름 → TBN 편성표 지역 번호(page_code)
 
 def tbn_table(page_code, d):
     """그날 그 지역 편성표 칸들: (날짜, 'HH:MM', 제목, 프로그램 번호) — 24시 넘으면 다음 날"""
+    time.sleep(0.3)  # TBN 사이트가 막지 않게 조금씩 쉬면서
     page = fetch(f'https://www.tbn.or.kr/broadcast/program.tbn?area_code=6&page_code={page_code}&today={d:%Y%m%d}',
-                 'https://www.tbn.or.kr/main.tbn', insecure=True)
+                 'https://www.tbn.or.kr/main.tbn', insecure=True, timeout=15)
     i = page.find('프로그램소개 - 시, 분, 프로그램명')
     table = page[i:page.find('</table>', i)] if i >= 0 else ''
     rows = []
@@ -718,20 +719,31 @@ def tbn():
             national[d] = tbn_table(1, d)  # 본부(전국) 편성
         except Exception as e:
             print(f'  (TBN 본부 {d} 못 가져옴: {e})')
+            print('  (TBN 사이트가 응답이 없어요 — TBN은 예전 편성표 그대로 둬요)')
+            return {}  # 본부 편성이 하루라도 빠지면 틀린 편성이 되니까 이번엔 TBN 전체를 건너뜀
     out = {}
     for station, code in TBN_AREAS.items():
-        by_date = {}
+        if TBN_FAILS[0] >= 6:  # TBN 사이트가 계속 응답이 없으면 남은 곳은 기다리지 않기
+            print(f'  ({station} 못 가져와서 예전 편성표 그대로 둬요)')
+            continue
+        by_date, failed = {}, False
         for d in fetch_days:
             try:
                 local = tbn_table(code, d)
+                TBN_FAILS[0] = 0
             except Exception as e:
+                TBN_FAILS[0] += 1
                 print(f'  ({station} {d} 못 가져옴: {e})')
-                local = []
+                failed = True  # 지역 편성이 빠지면 틀린 편성이 되니까 이 방송은 예전 것 그대로
+                break
             for day, hm, title, seq in national.get(d, []):
                 if hm not in by_date.get(day, {}):
                     by_date.setdefault(day, {})[hm] = tbn_item(title, hm, seq)
             for day, hm, title, seq in local:  # 같은 시간이면 지역 방송이 우선
                 by_date.setdefault(day, {})[hm] = tbn_item(title, hm, seq)
+        if failed:
+            print(f'  ({station} 예전 편성표 그대로 둬요)')
+            continue
         week = {}
         for d in days:
             progs = clean_day(list(by_date.get(d, {}).values()))
@@ -1097,7 +1109,11 @@ def main():
         old = {}
     new = json.loads(json.dumps(old))  # 깊은 복사
     ok = 0
+    # 일부만 돌리기: python tools/make_schedule.py 지역MBC TBN  (아무것도 안 쓰면 전부)
+    only = [a.replace(' ', '') for a in sys.argv[1:]]
     for name, fn in SOURCES:
+        if only and name.replace(' ', '') not in only:
+            continue
         try:
             got = fn()
         except Exception as e:

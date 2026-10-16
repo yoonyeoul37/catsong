@@ -18834,5 +18834,912 @@
         "image": "https://img.imbc.com/adams/Program/20252/133837138148346004_Big_C.png"
       }
     ]
+  },
+  "TBC 드림FM": {
+    "friday": [
+      {
+        "title": "한밤의 플레이리스트",
+        "start": "00:00",
+        "end": "01:00",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_playlist.jpg"
+      },
+      {
+        "title": "애프터 클럽",
+        "start": "01:00",
+        "end": "03:00",
+        "image": "http://img2.sbs.co.kr/img/sbs_cms/PG/2018/09/07/PG37851258_w640_h360.jpg"
+      },
+      {
+        "title": "드림FM 뮤직스테이션",
+        "start": "03:00",
+        "end": "05:00",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_dream_fm.jpg"
+      },
+      {
+        "title": "이인권의 펀펀투데이",
+        "start": "05:00",
+        "end": "07:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2023/08/17/Tok1692236374685-640-360.jpg"
+      },
+      {
+        "title": "김영철의 파워FM",
+        "start": "07:00",
+        "end": "09:00",
+        "image": "http://img2.sbs.co.kr/img/sbs_cms/PG/2020/07/06/PG72653161_w640_h360.jpg"
+      },
+      {
+        "title": "아름다운 이 아침, 봉태규입니다",
+        "start": "09:00",
+        "end": "11:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2024/03/13/X1S1710304371178-640-360.jpg"
+      },
+      {
+        "title": "돈워리, 비해피",
+        "start": "11:00",
+        "end": "11:50",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_don.jpg"
+      },
+      {
+        "title": "TBC 낮종합뉴스",
+        "start": "11:50",
+        "end": "12:00"
+      },
+      {
+        "title": "12시엔 주현영",
+        "start": "12:00",
+        "end": "14:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2024/08/02/Pc31722560981948-640-360.jpg"
+      },
+      {
+        "title": "두시탈출 컬투쇼",
+        "start": "14:00",
+        "end": "16:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2026/05/12/Z5h1778559530785-640-360.jpg"
+      },
+      {
+        "title": "황제성의 황제파워",
+        "start": "16:00",
+        "end": "18:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2026/09/01/j9a1788220734412-640-360.jpg"
+      },
+      {
+        "title": "박소현의 러브게임",
+        "start": "18:00",
+        "end": "20:00",
+        "image": "http://img2.sbs.co.kr/img/sbs_cms/PG/2019/12/16/PG92096997_w640_h360.jpg"
+      },
+      {
+        "title": "매직 뮤직",
+        "start": "20:00",
+        "end": "22:00",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_magicm.jpg"
+      },
+      {
+        "title": "배성재의 텐",
+        "start": "22:00",
+        "end": "23:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2026/04/02/xYf1775088215944-640-360.jpg"
+      },
+      {
+        "title": "청춘찬가 100인의기록",
+        "start": "23:00",
+        "end": "23:10"
+      },
+      {
+        "title": "장진영의 해피드림",
+        "start": "23:10",
+        "end": "00:00",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_happy.jpg"
+      }
+    ],
+    "saturday": [
+      {
+        "title": "한밤의 플레이리스트",
+        "start": "00:00",
+        "end": "01:00",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_playlist.jpg"
+      },
+      {
+        "title": "애프터 클럽",
+        "start": "01:00",
+        "end": "03:00",
+        "image": "http://img2.sbs.co.kr/img/sbs_cms/PG/2018/09/07/PG37851258_w640_h360.jpg"
+      },
+      {
+        "title": "드림FM 뮤직스테이션",
+        "start": "03:00",
+        "end": "05:00",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_dream_fm.jpg"
+      },
+      {
+        "title": "이인권의 펀펀투데이",
+        "start": "05:00",
+        "end": "07:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2023/08/17/Tok1692236374685-640-360.jpg"
+      },
+      {
+        "title": "김영철의 파워FM",
+        "start": "07:00",
+        "end": "09:00",
+        "image": "http://img2.sbs.co.kr/img/sbs_cms/PG/2020/07/06/PG72653161_w640_h360.jpg"
+      },
+      {
+        "title": "아름다운 이 아침, 봉태규입니다",
+        "start": "09:00",
+        "end": "11:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2024/03/13/X1S1710304371178-640-360.jpg"
+      },
+      {
+        "title": "돈워리, 비해피",
+        "start": "11:00",
+        "end": "11:50",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_don.jpg"
+      },
+      {
+        "title": "TBC 낮종합뉴스",
+        "start": "11:50",
+        "end": "12:00"
+      },
+      {
+        "title": "12시엔 주현영",
+        "start": "12:00",
+        "end": "14:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2024/08/02/Pc31722560981948-640-360.jpg"
+      },
+      {
+        "title": "두시탈출 컬투쇼",
+        "start": "14:00",
+        "end": "16:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2026/05/12/Z5h1778559530785-640-360.jpg"
+      },
+      {
+        "title": "황제성의 황제파워",
+        "start": "16:00",
+        "end": "18:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2026/09/01/j9a1788220734412-640-360.jpg"
+      },
+      {
+        "title": "박소현의 러브게임",
+        "start": "18:00",
+        "end": "20:00",
+        "image": "http://img2.sbs.co.kr/img/sbs_cms/PG/2019/12/16/PG92096997_w640_h360.jpg"
+      },
+      {
+        "title": "매직 뮤직",
+        "start": "20:00",
+        "end": "22:00",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_magicm.jpg"
+      },
+      {
+        "title": "배성재의 텐",
+        "start": "22:00",
+        "end": "23:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2026/04/02/xYf1775088215944-640-360.jpg"
+      },
+      {
+        "title": "조현진의 더 클래식",
+        "start": "23:00",
+        "end": "00:00",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_classic.jpg"
+      }
+    ],
+    "sunday": [
+      {
+        "title": "한밤의 플레이리스트",
+        "start": "00:00",
+        "end": "01:00",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_playlist.jpg"
+      },
+      {
+        "title": "애프터 클럽",
+        "start": "01:00",
+        "end": "03:00",
+        "image": "http://img2.sbs.co.kr/img/sbs_cms/PG/2018/09/07/PG37851258_w640_h360.jpg"
+      },
+      {
+        "title": "드림FM 뮤직스테이션",
+        "start": "03:00",
+        "end": "05:00",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_dream_fm.jpg"
+      },
+      {
+        "title": "이인권의 펀펀투데이",
+        "start": "05:00",
+        "end": "07:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2023/08/17/Tok1692236374685-640-360.jpg"
+      },
+      {
+        "title": "김영철의 파워FM",
+        "start": "07:00",
+        "end": "09:00",
+        "image": "http://img2.sbs.co.kr/img/sbs_cms/PG/2020/07/06/PG72653161_w640_h360.jpg"
+      },
+      {
+        "title": "아름다운 이 아침, 봉태규입니다",
+        "start": "09:00",
+        "end": "11:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2024/03/13/X1S1710304371178-640-360.jpg"
+      },
+      {
+        "title": "돈워리, 비해피",
+        "start": "11:00",
+        "end": "11:50",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_don.jpg"
+      },
+      {
+        "title": "TBC 낮종합뉴스",
+        "start": "11:50",
+        "end": "12:00"
+      },
+      {
+        "title": "12시엔 주현영",
+        "start": "12:00",
+        "end": "14:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2024/08/02/Pc31722560981948-640-360.jpg"
+      },
+      {
+        "title": "두시탈출 컬투쇼",
+        "start": "14:00",
+        "end": "16:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2026/05/12/Z5h1778559530785-640-360.jpg"
+      },
+      {
+        "title": "황제성의 황제파워",
+        "start": "16:00",
+        "end": "18:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2026/09/01/j9a1788220734412-640-360.jpg"
+      },
+      {
+        "title": "박소현의 러브게임",
+        "start": "18:00",
+        "end": "20:00",
+        "image": "http://img2.sbs.co.kr/img/sbs_cms/PG/2019/12/16/PG92096997_w640_h360.jpg"
+      },
+      {
+        "title": "매직 뮤직",
+        "start": "20:00",
+        "end": "22:00",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_magicm.jpg"
+      },
+      {
+        "title": "배성재의 텐",
+        "start": "22:00",
+        "end": "23:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2026/04/02/xYf1775088215944-640-360.jpg"
+      },
+      {
+        "title": "조현진의 더 클래식",
+        "start": "23:00",
+        "end": "00:00",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_classic.jpg"
+      }
+    ],
+    "weekday": [
+      {
+        "title": "TBC 가요아카데미",
+        "start": "00:00",
+        "end": "01:00",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_sing.jpg"
+      },
+      {
+        "title": "애프터 클럽",
+        "start": "01:00",
+        "end": "03:00",
+        "image": "http://img2.sbs.co.kr/img/sbs_cms/PG/2018/09/07/PG37851258_w640_h360.jpg"
+      },
+      {
+        "title": "드림FM 뮤직스테이션",
+        "start": "03:00",
+        "end": "05:00",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_dream_fm.jpg"
+      },
+      {
+        "title": "이인권의 펀펀투데이",
+        "start": "05:00",
+        "end": "07:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2023/08/17/Tok1692236374685-640-360.jpg"
+      },
+      {
+        "title": "김영철의 파워FM",
+        "start": "07:00",
+        "end": "09:00",
+        "image": "http://img2.sbs.co.kr/img/sbs_cms/PG/2020/07/06/PG72653161_w640_h360.jpg"
+      },
+      {
+        "title": "아름다운 이 아침, 봉태규입니다",
+        "start": "09:00",
+        "end": "11:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2024/03/13/X1S1710304371178-640-360.jpg"
+      },
+      {
+        "title": "돈워리, 비해피",
+        "start": "11:00",
+        "end": "11:50",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_don.jpg"
+      },
+      {
+        "title": "TBC 낮종합뉴스",
+        "start": "11:50",
+        "end": "12:00"
+      },
+      {
+        "title": "12시엔 주현영",
+        "start": "12:00",
+        "end": "14:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2024/08/02/Pc31722560981948-640-360.jpg"
+      },
+      {
+        "title": "두시탈출 컬투쇼",
+        "start": "14:00",
+        "end": "16:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2026/05/12/Z5h1778559530785-640-360.jpg"
+      },
+      {
+        "title": "황제성의 황제파워",
+        "start": "16:00",
+        "end": "18:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2026/09/01/j9a1788220734412-640-360.jpg"
+      },
+      {
+        "title": "박소현의 러브게임",
+        "start": "18:00",
+        "end": "20:00",
+        "image": "http://img2.sbs.co.kr/img/sbs_cms/PG/2019/12/16/PG92096997_w640_h360.jpg"
+      },
+      {
+        "title": "매직 뮤직",
+        "start": "20:00",
+        "end": "22:00",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_magicm.jpg"
+      },
+      {
+        "title": "배성재의 텐",
+        "start": "22:00",
+        "end": "23:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2026/04/02/xYf1775088215944-640-360.jpg"
+      },
+      {
+        "title": "청춘찬가 100인의기록",
+        "start": "23:00",
+        "end": "23:10"
+      },
+      {
+        "title": "장진영의 해피드림",
+        "start": "23:10",
+        "end": "00:00",
+        "image": "https://www.tbc.co.kr/uploads/program/top_fm_happy.jpg"
+      }
+    ]
+  },
+  "BeFM": {
+    "saturday": [
+      {
+        "title": "4 My Busan (재)",
+        "start": "00:00",
+        "end": "00:55",
+        "image": "https://www.befm.or.kr/fileupload/program/RAl5KVs7LO9SAHE8.jpg"
+      },
+      {
+        "title": "재난사전예방프로그램",
+        "start": "00:55",
+        "end": "01:00",
+        "image": "https://www.befm.or.kr/fileupload/program/mlA6S8yLQbKDeaIDbT.jpg"
+      },
+      {
+        "title": "4 My Busan (재)",
+        "start": "01:00",
+        "end": "02:00",
+        "image": "https://www.befm.or.kr/fileupload/program/RAl5KVs7LO9SAHE8.jpg"
+      },
+      {
+        "title": "Culture Crunch (재)",
+        "start": "02:00",
+        "end": "02:55"
+      },
+      {
+        "title": "오늘의 회화",
+        "start": "02:55",
+        "end": "03:00"
+      },
+      {
+        "title": "K-POPPIN' (재)",
+        "start": "03:00",
+        "end": "04:00"
+      },
+      {
+        "title": "釜山华语知音 (재)",
+        "start": "04:00",
+        "end": "05:00",
+        "image": "https://www.befm.or.kr/fileupload/program/VnkEZkh82Jd13Fifa.jpg"
+      },
+      {
+        "title": "All-Star English (재)",
+        "start": "05:00",
+        "end": "05:55",
+        "image": "https://www.befm.or.kr/fileupload/program/kPIixuruXRGwiXdH7.jpg"
+      },
+      {
+        "title": "재난사전예방프로그램",
+        "start": "05:55",
+        "end": "06:00",
+        "image": "https://www.befm.or.kr/fileupload/program/mlA6S8yLQbKDeaIDbT.jpg"
+      },
+      {
+        "title": "All-Star English (재)",
+        "start": "06:00",
+        "end": "07:00",
+        "image": "https://www.befm.or.kr/fileupload/program/kPIixuruXRGwiXdH7.jpg"
+      },
+      {
+        "title": "World Classics",
+        "start": "07:00",
+        "end": "09:00",
+        "image": "https://www.befm.or.kr/fileupload/program/egekhWvHXwMnamAL.jpg"
+      },
+      {
+        "title": "Weekly Review",
+        "start": "09:00",
+        "end": "10:00",
+        "image": "https://www.befm.or.kr/fileupload/program/NyF9T9VlD8lG3N5Ijmx.jpg"
+      },
+      {
+        "title": "News Rewind",
+        "start": "10:00",
+        "end": "11:00",
+        "image": "https://www.befm.or.kr/fileupload/program/7LACkPxcwOQlbflbTF9.jpg"
+      },
+      {
+        "title": "BeFM Kids Club",
+        "start": "11:00",
+        "end": "12:00",
+        "image": "https://www.befm.or.kr/fileupload/program/GuaKx85K4MueVICwf.jpg"
+      },
+      {
+        "title": "Sweet Date",
+        "start": "12:00",
+        "end": "14:00",
+        "image": "https://www.befm.or.kr/fileupload/program/9hVQVRyxjOcJ8Ew2Bex.jpg"
+      },
+      {
+        "title": "H[A:RT] ATTACK",
+        "start": "14:00",
+        "end": "16:00"
+      },
+      {
+        "title": "4 My Busan",
+        "start": "16:00",
+        "end": "18:00",
+        "image": "https://www.befm.or.kr/fileupload/program/RAl5KVs7LO9SAHE8.jpg"
+      },
+      {
+        "title": "Cine Concerto",
+        "start": "18:00",
+        "end": "20:00",
+        "image": "https://www.befm.or.kr/fileupload/program/332TvBELLixXeMGn.jpg"
+      },
+      {
+        "title": "BeFM Kids Club (재)",
+        "start": "20:00",
+        "end": "21:00",
+        "image": "https://www.befm.or.kr/fileupload/program/GuaKx85K4MueVICwf.jpg"
+      },
+      {
+        "title": "Sweet Date (재)",
+        "start": "21:00",
+        "end": "23:00",
+        "image": "https://www.befm.or.kr/fileupload/program/9hVQVRyxjOcJ8Ew2Bex.jpg"
+      },
+      {
+        "title": "Hello, Vietnam",
+        "start": "23:00",
+        "end": "00:00",
+        "image": "https://www.befm.or.kr/fileupload/program/ubvAKOfrutePXVAiA.jpg"
+      }
+    ],
+    "sunday": [
+      {
+        "title": "World Classics (재)",
+        "start": "00:00",
+        "end": "02:00",
+        "image": "https://www.befm.or.kr/fileupload/program/egekhWvHXwMnamAL.jpg"
+      },
+      {
+        "title": "Culture Crunch (재)",
+        "start": "02:00",
+        "end": "03:00"
+      },
+      {
+        "title": "K-POPPIN' (재)",
+        "start": "03:00",
+        "end": "04:00"
+      },
+      {
+        "title": "Hello, Vietnam (재)",
+        "start": "04:00",
+        "end": "05:00",
+        "image": "https://www.befm.or.kr/fileupload/program/ubvAKOfrutePXVAiA.jpg"
+      },
+      {
+        "title": "4 My Busan (재)",
+        "start": "05:00",
+        "end": "07:00",
+        "image": "https://www.befm.or.kr/fileupload/program/RAl5KVs7LO9SAHE8.jpg"
+      },
+      {
+        "title": "World Classics",
+        "start": "07:00",
+        "end": "09:00",
+        "image": "https://www.befm.or.kr/fileupload/program/egekhWvHXwMnamAL.jpg"
+      },
+      {
+        "title": "Sunday Jukebox",
+        "start": "09:00",
+        "end": "11:00",
+        "image": "https://www.befm.or.kr/fileupload/program/cRIBGlN3gYqG5BRt.jpg"
+      },
+      {
+        "title": "BeFM School Reporters",
+        "start": "11:00",
+        "end": "12:00",
+        "image": "https://www.befm.or.kr/fileupload/program/AIKdP9bURfLp8xx.jpg"
+      },
+      {
+        "title": "Sweet Date",
+        "start": "12:00",
+        "end": "14:00",
+        "image": "https://www.befm.or.kr/fileupload/program/9hVQVRyxjOcJ8Ew2Bex.jpg"
+      },
+      {
+        "title": "H[A:RT] ATTACK",
+        "start": "14:00",
+        "end": "16:00"
+      },
+      {
+        "title": "4 My Busan",
+        "start": "16:00",
+        "end": "18:00",
+        "image": "https://www.befm.or.kr/fileupload/program/RAl5KVs7LO9SAHE8.jpg"
+      },
+      {
+        "title": "Cine Concerto",
+        "start": "18:00",
+        "end": "20:00",
+        "image": "https://www.befm.or.kr/fileupload/program/332TvBELLixXeMGn.jpg"
+      },
+      {
+        "title": "News Rewind (재)",
+        "start": "20:00",
+        "end": "21:00",
+        "image": "https://www.befm.or.kr/fileupload/program/7LACkPxcwOQlbflbTF9.jpg"
+      },
+      {
+        "title": "Sweet Date (재)",
+        "start": "21:00",
+        "end": "23:00",
+        "image": "https://www.befm.or.kr/fileupload/program/9hVQVRyxjOcJ8Ew2Bex.jpg"
+      },
+      {
+        "title": "Hello, Vietnam",
+        "start": "23:00",
+        "end": "00:00",
+        "image": "https://www.befm.or.kr/fileupload/program/ubvAKOfrutePXVAiA.jpg"
+      }
+    ],
+    "weekday": [
+      {
+        "title": "World Classics (재)",
+        "start": "00:00",
+        "end": "02:00",
+        "image": "https://www.befm.or.kr/fileupload/program/egekhWvHXwMnamAL.jpg"
+      },
+      {
+        "title": "Culture Crunch (재)",
+        "start": "02:00",
+        "end": "02:55"
+      },
+      {
+        "title": "오늘의 회화",
+        "start": "02:55",
+        "end": "03:00"
+      },
+      {
+        "title": "K-POPPIN' (재)",
+        "start": "03:00",
+        "end": "04:00"
+      },
+      {
+        "title": "Hello, Vietnam (재)",
+        "start": "04:00",
+        "end": "05:00",
+        "image": "https://www.befm.or.kr/fileupload/program/ubvAKOfrutePXVAiA.jpg"
+      },
+      {
+        "title": "4 My Busan (재)",
+        "start": "05:00",
+        "end": "07:00",
+        "image": "https://www.befm.or.kr/fileupload/program/RAl5KVs7LO9SAHE8.jpg"
+      },
+      {
+        "title": "Morning Wave In Busan",
+        "start": "07:00",
+        "end": "08:54",
+        "image": "https://www.befm.or.kr/fileupload/program/bswsKXCIwoW1cW3Dprw.jpg"
+      },
+      {
+        "title": "오늘의 회화",
+        "start": "08:54",
+        "end": "09:00"
+      },
+      {
+        "title": "#daily K",
+        "start": "09:00",
+        "end": "10:55"
+      },
+      {
+        "title": "오늘의 회화",
+        "start": "10:55",
+        "end": "11:00"
+      },
+      {
+        "title": "BeFM News(11)",
+        "start": "11:00",
+        "end": "11:06"
+      },
+      {
+        "title": "Busan Worldwide",
+        "start": "11:06",
+        "end": "12:00",
+        "image": "https://www.befm.or.kr/fileupload/program/3Su6i8B62vQIj9PzUSA.jpg"
+      },
+      {
+        "title": "BeFM News(12)",
+        "start": "12:00",
+        "end": "12:06"
+      },
+      {
+        "title": "Sweet Date",
+        "start": "12:06",
+        "end": "14:00",
+        "image": "https://www.befm.or.kr/fileupload/program/9hVQVRyxjOcJ8Ew2Bex.jpg"
+      },
+      {
+        "title": "H[A:RT] ATTACK",
+        "start": "14:00",
+        "end": "15:55"
+      },
+      {
+        "title": "오늘의 회화",
+        "start": "15:55",
+        "end": "16:00"
+      },
+      {
+        "title": "BeFM News(16)",
+        "start": "16:00",
+        "end": "16:06"
+      },
+      {
+        "title": "4 My Busan",
+        "start": "16:06",
+        "end": "18:00",
+        "image": "https://www.befm.or.kr/fileupload/program/RAl5KVs7LO9SAHE8.jpg"
+      },
+      {
+        "title": "BeFM News(18)",
+        "start": "18:00",
+        "end": "18:08"
+      },
+      {
+        "title": "All-Star English",
+        "start": "18:08",
+        "end": "20:00",
+        "image": "https://www.befm.or.kr/fileupload/program/kPIixuruXRGwiXdH7.jpg"
+      },
+      {
+        "title": "Busan Worldwide (재)",
+        "start": "20:00",
+        "end": "20:54",
+        "image": "https://www.befm.or.kr/fileupload/program/3Su6i8B62vQIj9PzUSA.jpg"
+      },
+      {
+        "title": "재난사전예방프로그램",
+        "start": "20:54",
+        "end": "21:00",
+        "image": "https://www.befm.or.kr/fileupload/program/mlA6S8yLQbKDeaIDbT.jpg"
+      },
+      {
+        "title": "Sweet Date (재)",
+        "start": "21:00",
+        "end": "21:54",
+        "image": "https://www.befm.or.kr/fileupload/program/9hVQVRyxjOcJ8Ew2Bex.jpg"
+      },
+      {
+        "title": "재난사전예방프로그램",
+        "start": "21:54",
+        "end": "22:00",
+        "image": "https://www.befm.or.kr/fileupload/program/mlA6S8yLQbKDeaIDbT.jpg"
+      },
+      {
+        "title": "Sweet Date (재)",
+        "start": "22:00",
+        "end": "23:00",
+        "image": "https://www.befm.or.kr/fileupload/program/9hVQVRyxjOcJ8Ew2Bex.jpg"
+      },
+      {
+        "title": "釜山华语知音",
+        "start": "23:00",
+        "end": "00:00",
+        "image": "https://www.befm.or.kr/fileupload/program/VnkEZkh82Jd13Fifa.jpg"
+      }
+    ],
+    "friday": [
+      {
+        "title": "4 My Busan (재)",
+        "start": "00:00",
+        "end": "00:55",
+        "image": "https://www.befm.or.kr/fileupload/program/RAl5KVs7LO9SAHE8.jpg"
+      },
+      {
+        "title": "재난사전예방프로그램",
+        "start": "00:55",
+        "end": "01:00",
+        "image": "https://www.befm.or.kr/fileupload/program/mlA6S8yLQbKDeaIDbT.jpg"
+      },
+      {
+        "title": "4 My Busan (재)",
+        "start": "01:00",
+        "end": "02:00",
+        "image": "https://www.befm.or.kr/fileupload/program/RAl5KVs7LO9SAHE8.jpg"
+      },
+      {
+        "title": "Culture Crunch (재)",
+        "start": "02:00",
+        "end": "02:55"
+      },
+      {
+        "title": "오늘의 회화",
+        "start": "02:55",
+        "end": "03:00"
+      },
+      {
+        "title": "K-POPPIN' (재)",
+        "start": "03:00",
+        "end": "04:00"
+      },
+      {
+        "title": "釜山华语知音 (재)",
+        "start": "04:00",
+        "end": "05:00",
+        "image": "https://www.befm.or.kr/fileupload/program/VnkEZkh82Jd13Fifa.jpg"
+      },
+      {
+        "title": "All-Star English (재)",
+        "start": "05:00",
+        "end": "05:55",
+        "image": "https://www.befm.or.kr/fileupload/program/kPIixuruXRGwiXdH7.jpg"
+      },
+      {
+        "title": "재난사전예방프로그램",
+        "start": "05:55",
+        "end": "06:00",
+        "image": "https://www.befm.or.kr/fileupload/program/mlA6S8yLQbKDeaIDbT.jpg"
+      },
+      {
+        "title": "All-Star English (재)",
+        "start": "06:00",
+        "end": "07:00",
+        "image": "https://www.befm.or.kr/fileupload/program/kPIixuruXRGwiXdH7.jpg"
+      },
+      {
+        "title": "Morning Wave In Busan",
+        "start": "07:00",
+        "end": "08:54",
+        "image": "https://www.befm.or.kr/fileupload/program/bswsKXCIwoW1cW3Dprw.jpg"
+      },
+      {
+        "title": "오늘의 회화",
+        "start": "08:54",
+        "end": "09:00"
+      },
+      {
+        "title": "#daily K",
+        "start": "09:00",
+        "end": "10:55"
+      },
+      {
+        "title": "오늘의 회화",
+        "start": "10:55",
+        "end": "11:00"
+      },
+      {
+        "title": "BeFM News(11)",
+        "start": "11:00",
+        "end": "11:06"
+      },
+      {
+        "title": "Busan Worldwide",
+        "start": "11:06",
+        "end": "12:00",
+        "image": "https://www.befm.or.kr/fileupload/program/3Su6i8B62vQIj9PzUSA.jpg"
+      },
+      {
+        "title": "BeFM News(12)",
+        "start": "12:00",
+        "end": "12:06"
+      },
+      {
+        "title": "Sweet Date",
+        "start": "12:06",
+        "end": "14:00",
+        "image": "https://www.befm.or.kr/fileupload/program/9hVQVRyxjOcJ8Ew2Bex.jpg"
+      },
+      {
+        "title": "H[A:RT] ATTACK",
+        "start": "14:00",
+        "end": "15:55"
+      },
+      {
+        "title": "오늘의 회화",
+        "start": "15:55",
+        "end": "16:00"
+      },
+      {
+        "title": "BeFM News(16)",
+        "start": "16:00",
+        "end": "16:06"
+      },
+      {
+        "title": "4 My Busan",
+        "start": "16:06",
+        "end": "18:00",
+        "image": "https://www.befm.or.kr/fileupload/program/RAl5KVs7LO9SAHE8.jpg"
+      },
+      {
+        "title": "BeFM News(18)",
+        "start": "18:00",
+        "end": "18:08"
+      },
+      {
+        "title": "All-Star English",
+        "start": "18:08",
+        "end": "20:00",
+        "image": "https://www.befm.or.kr/fileupload/program/kPIixuruXRGwiXdH7.jpg"
+      },
+      {
+        "title": "Busan Worldwide (재)",
+        "start": "20:00",
+        "end": "20:54",
+        "image": "https://www.befm.or.kr/fileupload/program/3Su6i8B62vQIj9PzUSA.jpg"
+      },
+      {
+        "title": "재난사전예방프로그램",
+        "start": "20:54",
+        "end": "21:00",
+        "image": "https://www.befm.or.kr/fileupload/program/mlA6S8yLQbKDeaIDbT.jpg"
+      },
+      {
+        "title": "Sweet Date (재)",
+        "start": "21:00",
+        "end": "21:54",
+        "image": "https://www.befm.or.kr/fileupload/program/9hVQVRyxjOcJ8Ew2Bex.jpg"
+      },
+      {
+        "title": "재난사전예방프로그램",
+        "start": "21:54",
+        "end": "22:00",
+        "image": "https://www.befm.or.kr/fileupload/program/mlA6S8yLQbKDeaIDbT.jpg"
+      },
+      {
+        "title": "Sweet Date (재)",
+        "start": "22:00",
+        "end": "23:00",
+        "image": "https://www.befm.or.kr/fileupload/program/9hVQVRyxjOcJ8Ew2Bex.jpg"
+      },
+      {
+        "title": "釜山华语知音",
+        "start": "23:00",
+        "end": "00:00",
+        "image": "https://www.befm.or.kr/fileupload/program/VnkEZkh82Jd13Fifa.jpg"
+      }
+    ]
   }
 }

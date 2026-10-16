@@ -390,6 +390,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         name == '국악FM' ||
         name == 'OBS 라디오' ||
         name == 'CPBC 가톨릭' ||
+        name == 'TBC 드림FM' ||
+        name == 'BeFM' ||
         name.startsWith('TBN '); // TBN 교통방송 12곳
   }
 

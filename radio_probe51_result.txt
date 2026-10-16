@@ -1,0 +1,104 @@
+■ 1) 원주MBC
+  프로그램 2개: ['goldendisc', 'sisamate']
+  ── goldendisc · 제목 원주문화방송(주) > 라디오 프로그램 · og {'title': '원주문화방송(주)', 'image': 'sns_img.png'}
+     시간 ['매일 오전 11:00 ~ 12:00'] · 채널 ['표준FM', '음악FM']
+     사진 https://www.wjmbc.co.kr/radio/images/goldendisc_schedule.jpg?v=20260330.2
+     사진 https://www.wjmbc.co.kr/images/insta_official.jpg
+     사진 https://www.wjmbc.co.kr/images/insta_news.jpg
+  ── sisamate · 제목 원주문화방송(주) > 라디오 프로그램 · og {'title': '원주문화방송(주)', 'image': 'sns_img.png'}
+     시간 ['월~금 오후 6:05~7:00'] · 채널 ['표준FM', '음악FM']
+     사진 https://www.wjmbc.co.kr/radio/images/sisamate_schedule.jpg?v=20260727.1
+     사진 https://www.wjmbc.co.kr/images/insta_official.jpg
+     사진 https://www.wjmbc.co.kr/images/insta_news.jpg
+■ 2) MBC강원영동
+  ── https://www.mbceg.co.kr/program/radio_06
+     제목 MBC 강원영동 · 시간 ['월~일 16:00 ~ 18:00']
+     사진 https://www.mbceg.co.kr/uploads/program/2025/12/7d329c2d7e8c4d4d68f08d41e9d94c41.jpg
+  ── https://www.mbceg.co.kr/program/radio_03
+     제목 MBC 강원영동 · 시간 ['월~금, 18:05 ~18:57']
+     사진 https://www.mbceg.co.kr/uploads/program/2026/09/bc55c3891fc512151ae59732a3ef0cb2.png
+  ── https://www.mbceg.co.kr/schedule/cp_depart
+     링크 [로그인] https://www.mbceg.co.kr/login?url=https%3A%2F%2Fwww.mbceg.co.kr%2Fschedule%2Fcp_depart
+     링크 [편성표] https://www.mbceg.co.kr/schedule/cp_depart
+     링크 [로그인하세요.] https://www.mbceg.co.kr/login?url=https%3A%2F%2Fwww.mbceg.co.kr%2Fschedule%2Fcp_depart
+     링크 [편성표] https://www.mbceg.co.kr/schedule/cp_depart
+     링크 [TV] https://www.mbceg.co.kr/schedule/cp_depart?g=tv&d=2026-10-16&a=g
+     링크 [표준FM] https://www.mbceg.co.kr/schedule/cp_depart?g=am&d=5&a=g
+     링크 [FM] https://www.mbceg.co.kr/schedule/cp_depart?g=fm&d=5&a=g
+■ 3) TBC 드림FM
+  ── https://www.tbc.co.kr/schedule · 글자 수 48014
+     링크 [라디오] https://www.tbc.co.kr/fm/?mid=3
+     링크 [FM 편성표] https://www.tbc.co.kr/schedule/?mid=7_181&end=
+     링크 [돈 워리 비 해피] https://www.tbc.co.kr/fm/?mid=3_71_72
+     링크 [배영서의 유쾌한 12시!] https://www.tbc.co.kr/fm/?mid=3_257_258
+     링크 [장예은의 매직? 뮤직!] https://www.tbc.co.kr/fm/?mid=3_86_87
+     링크 [장진영의 해피드림] https://www.tbc.co.kr/fm/?mid=3_92_93
+     링크 [라디오 세상] https://www.tbc.co.kr/fm/?mid=3_230_231
+     링크 [더 클래식] https://www.tbc.co.kr/fm/?mid=3_98_99
+     링크 [2023 KBO 프로야구] https://www.tbc.co.kr/fm/?mid=3_102_103
+     링크 [가요아카데미] https://www.tbc.co.kr/fm/?mid=3_104_107
+     링크 [오늘은 즐거운 가요!] https://www.tbc.co.kr/fm/?mid=3_108_109
+     링크 [특집프로그램 FM] https://www.tbc.co.kr/fm/?mid=3_116_117
+     링크 [라디오] https://www.tbc.co.kr/schedule/?mid=7_181&end=
+  ── https://www.tbc.co.kr/fm/?mid=3 · 글자 수 40933
+     링크 [라디오] https://www.tbc.co.kr/fm/?mid=3
+     링크 [로그인] https://www.tbc.co.kr/member/?mid=8_194&returl=https%3A%2F%2Fwww.tbc.co.kr%2Ffm%3Fmid%3D3
+     링크 [] https://www.tbc.co.kr/fm/?mid=3_71_72
+     링크 [돈 워리 비 해피] https://www.tbc.co.kr/fm/?mid=3_71_72
+     링크 [] https://www.tbc.co.kr/fm/?mid=3_86_87
+     링크 [매직뮤직] https://www.tbc.co.kr/fm/?mid=3_86_87
+     링크 [] https://www.tbc.co.kr/fm/?mid=3_92_93
+     링크 [장진영의 해피드림] https://www.tbc.co.kr/fm/?mid=3_92_93
+     링크 [] https://www.tbc.co.kr/fm/?mid=3_230_231
+     링크 [라디오 세상] https://www.tbc.co.kr/fm/?mid=3_230_231
+     링크 [] https://www.tbc.co.kr/fm/?mid=3_98_99
+     링크 [더 클래식] https://www.tbc.co.kr/fm/?mid=3_98_99
+     링크 [] https://www.tbc.co.kr/fm/?mid=3_102_103
+     링크 [KBO 프로야구] https://www.tbc.co.kr/fm/?mid=3_102_103
+     링크 [] https://www.tbc.co.kr/fm/?mid=3_104_107
+     링크 [가요아카데미] https://www.tbc.co.kr/fm/?mid=3_104_107
+     링크 [] https://www.tbc.co.kr/fm/?mid=3_108_109
+     링크 [오늘은 즐거운 가요!] https://www.tbc.co.kr/fm/?mid=3_108_109
+     링크 [] https://www.tbc.co.kr/fm/?mid=3_116_117
+     링크 [특집프로그램 FM] https://www.tbc.co.kr/fm/?mid=3_116_117
+     링크 [] https://www.tbc.co.kr/fm/?mid=3_300_301
+     링크 [한밤의 플레이리스트] https://www.tbc.co.kr/fm/?mid=3_300_301
+     링크 [] https://www.tbc.co.kr/fm/?mid=3_316_317
+     링크 [Dream FM 뮤직스테이션] https://www.tbc.co.kr/fm/?mid=3_316_317
+     링크 [돈 워리 비 해피] https://www.tbc.co.kr/fm/?mid=3_71_72
+     링크 [배영서의 유쾌한 12시!] https://www.tbc.co.kr/fm/?mid=3_257_258
+     링크 [장예은의 매직? 뮤직!] https://www.tbc.co.kr/fm/?mid=3_86_87
+     링크 [장진영의 해피드림] https://www.tbc.co.kr/fm/?mid=3_92_93
+     링크 [라디오 세상] https://www.tbc.co.kr/fm/?mid=3_230_231
+     링크 [더 클래식] https://www.tbc.co.kr/fm/?mid=3_98_99
+     링크 [2023 KBO 프로야구] https://www.tbc.co.kr/fm/?mid=3_102_103
+     링크 [가요아카데미] https://www.tbc.co.kr/fm/?mid=3_104_107
+     링크 [오늘은 즐거운 가요!] https://www.tbc.co.kr/fm/?mid=3_108_109
+     링크 [특집프로그램 FM] https://www.tbc.co.kr/fm/?mid=3_116_117
+     링크 [라디오] https://www.tbc.co.kr/schedule/?mid=7_181&end=
+■ 4) BeFM
+  ── https://www.befm.or.kr/sub/template.php?midx=37&lang=ko · 시간 122개
+      프로그램 시간표 인쇄 프로그램 시간표 BeFM [ L ] Local News [ A ] arirang Radio [ T ] tbs eFM --> [ G ] GFN --> 주간편성표 주간편성 MON TUE WED THU FRI SAT SUN MON MON 요일/시간별 Time, Program, 진행자를 나타낸 표입니다. Time Program 진행자 AM 00:00 [ L ] World Classics (RE) Christopher Temporelli 02:00 [ A ] Culture Crunch (RE) 02:55 [ L ] 오늘의 회화 03:00 [ A ] K-POPPIN&#39; (RE) Isak 04:00 [ L ] Hello, Vietnam (RE) TrầnThủy Trúc 05:00 [ L ] 4 My Busan (RE) Laura Mcluckie Jeon 07:00 [ L ] Morning Wave In Busan Katherine Bang 08:54 [ L ] 오늘의 회화 09:00 [ A ] #daily K Peter Bint 10:55 [ L ] 오늘의 회화 11:00 [ L ] BeFM News(11) Seojin Yoon 11:06 [ L ] Busan Worldwide Stephanie Yoon PM 12:00 [ L ] BeFM News(12) Seojin Yoon 12:06 [ L ] Sweet Date 14:00 [ A ] H[A:RT] ATTACK 15:55 [ L ] 오늘의 회화 16:00 [ L ] BeFM News(16) Claire Kim 16:06 [ L ] 4 My Busan Laura Mcluckie Jeon 18:00 [ L ] BeFM News(18) Claire Kim, Hong Jeong Hwa 18:08 [ L ] All-Star English Johan Kim ,Park Seong-eon , Boogi , Minsoo Shin 20:00 [ L ] Busan Worldwide (RE) Stephanie Yoon 20:54 [ L ] 재난사전예방프로그램 21:00 [ L ] Sweet Date (RE) 21:54 [ L ] 재난사전예방프로그램 22:00 [ L ] Sweet Date (RE) 23:00 [ L ] 釜山华语知音 李龙洋 TUE ~ THU TUE ~ THU 요일/시간별 Time, Program, 진행자를 나타낸 표입니다. Time Program 진행자 AM 00:00 [ L ] 4 My Busan (RE) Laura Mcluckie Jeon 00:55 [ L ] 재난사전예방프로그램 01:00 [ L ] 4 My Busan (RE) Laura Mcluckie Jeon 02:00 [ A ] Culture Crunch (RE) 02:55 [ L ] 오늘의 회화 03:00 [ A ] K-POPPIN&#39
+  ── https://www.befm.or.kr/sub/template.php?midx=35&lang=ko · 시간 52개
+     BeFM 프로그램 | 영어방송 본문 바로가기 메인메뉴 바로가기 프로그램 프로그램 홈 프로그램 BeFM 프로그램 인쇄 BeFM 프로그램 All-Star English MON-FRI 18:08~20:00 TUE-SAT 05:00~07:00 (RE) 4 My Busan MON-FRI 16:05~18:00 SAT-SUN 16:00~18:00 TUE-SAT 00:00~02:00 (RE) BeFM Kids Club SAT 11:00~12:00 SAT 20:00~21:00 (RE) BeFM School Reporters SUN 11:00~12:00 Busan Worldwide MON-FRI 11:05~12:00 MON-FRI 20:00~21:00 (RE) Cine Concerto SAT-SUN 18:00~20:00 Hello, Vietnam SAT-SUN 23:00~24:00 SUN-MON 04:00~05:00 (RE) Morning Wave In Busan MON-FRI 07:00~09:00 News Rewind SAT 10:00~11:00 SUN 20:00~21:00 (RE) Special Programs Sunday Jukebox SUN 09:00~11:00 Sweet Date MON-FRI 12:05~14:00 SAT-SUN 12:00~14:00 MON-SUN 21:00~23:00 (RE) Weekly Review SAT 09:00~10:00 World Classics SAT-SUN 07:00~09:00 SUN-MON 00:00~02:00 (RE) 釜山华语知音 MON-FRI 23:00~24:00 TUE-SAT 04:00~05:00 (RE) 재난사전예방프로그램 MON-FRI 20:54~21:00 MON-FRI 21:54~22:00
+     사진 https://www.befm.or.kr/fileupload/program/kPIixuruXRGwiXdH7.jpg
+     사진 https://www.befm.or.kr/fileupload/program/RAl5KVs7LO9SAHE8.jpg
+     사진 https://www.befm.or.kr/fileupload/program/GuaKx85K4MueVICwf.jpg
+     사진 https://www.befm.or.kr/fileupload/program/AIKdP9bURfLp8xx.jpg
+     사진 https://www.befm.or.kr/fileupload/program/3Su6i8B62vQIj9PzUSA.jpg
+     사진 https://www.befm.or.kr/fileupload/program/332TvBELLixXeMGn.jpg
+■ 5) 아리랑 라디오
+  주소 단서 /manifest.json
+  스크립트 https://file.kollus.com/vgcontroller/vg-controller-client.latest.min.js
+  스크립트 https://accounts.google.com/gsi/client
+  스크립트 https://www.arirang.com/static/js/12.a4e9c97e.chunk.js
+  스크립트 https://www.arirang.com/static/js/main.9ff58b66.chunk.js
+■ 6) 공동체 라디오 프로그램 소개
+  ── https://www.mapofm.net/program · 요일+시간 0개 [] · 시간 0개
+     올린 그림 108개 ['//contents.sixshop.com/uploadedFiles/53441/default/image_1668746131376.png', '//contents.sixshop.com/uploadedFiles/53441/default/image_1668746131376.png', '//contents.sixshop.com/uploadedFiles/53441/default/image_1668746131376.png']
+  ── https://www.jcfm.kr/untitled-8 · 요일+시간 0개 [] · 시간 0개
+     올린 그림 5개 ['//contents.sixshop.com/uploadedFiles/207956/default/image_1669301519484.png', '//contents.sixshop.com/uploadedFiles/207956/default/image_1669301519484.png', '//contents.sixshop.com/uploadedFiles/207956/default/image_1669301519484.png']
+  ── https://www.mapofm.net/timetable · 요일+시간 0개 [] · 시간 0개
+     올린 그림 6개 ['//contents.sixshop.com/uploadedFiles/53441/default/image_1668746131376.png', '//contents.sixshop.com/uploadedFiles/53441/default/image_1668746131376.png', '//contents.sixshop.com/uploadedFiles/53441/default/image_1668746131376.png']
+  ── https://www.jcfm.kr/untitled-7 · 요일+시간 0개 [] · 시간 0개
+     올린 그림 6개 ['//contents.sixshop.com/uploadedFiles/207956/default/image_1669301519484.png', '//contents.sixshop.com/uploadedFiles/207956/default/image_1669301519484.png', '//contents.sixshop.com/uploadedFiles/207956/default/image_1669301519484.png']

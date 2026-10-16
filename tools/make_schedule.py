@@ -882,6 +882,9 @@ def chmbc_cards():
             cards.append((mbc_key(name), set(range(a, b + 1)), int(m.group(3)) * 60 + int(m.group(4)), img.group(1)))
     except Exception as e:
         print(f'  (춘천MBC 프로그램 사진 못 가져옴: {e})')
+    # 춘천 FM4U가 받아 내보내는 MBC강원영동 프로그램 (매일 16:00 오후의 발견)
+    cards.append((mbc_key('오후의 발견'), set(range(7)), 16 * 60,
+                  'https://www.mbceg.co.kr/uploads/program/2025/12/7d329c2d7e8c4d4d68f08d41e9d94c41.jpg'))
     LOCAL_CARDS[base] = cards
     return cards
 
@@ -1116,6 +1119,130 @@ def mbc_overlay():
 
 
 
+# ───────── TBC 드림FM (대구, 날짜별 FM 편성표 · SBS 파워FM 프로그램은 SBS 사진 빌려 쓰기) ─────────
+def tbc_day(d):
+    page = fetch(f'https://www.tbc.co.kr/schedule/?mid=7_181&sYear={d.year}&sMonth={d.month}&sDate={d.day}',
+                 'https://www.tbc.co.kr/schedule')
+    rows = []
+    for hh, mm, cell in re.findall(r'<tr>\s*<td[^>]*>\s*(\d{1,2}):(\d{2})\s*</td>\s*<td[^>]*>(.*?)</td>\s*</tr>', page, re.S):
+        title = re.sub(r'\s*\d+부$', '', text_of(cell)).strip()
+        if title:
+            h = int(hh)
+            rows.append((d + datetime.timedelta(days=h // 24), f'{h % 24:02d}:{mm}', title))
+    return rows
+
+
+def tbc_pics():
+    """TBC 라디오 프로그램 페이지 맨 위 사진 (비교용 이름 → 사진)"""
+    pics = []
+    try:
+        page = fetch('https://www.tbc.co.kr/fm/?mid=3', 'https://www.tbc.co.kr/')
+        names = {}
+        for mid, a in re.findall(r'href=["\'][^"\']*fm/\?mid=(3_\d+_\d+)["\'][^>]*>(.*?)</a>', page, re.S):
+            a = text_of(a)
+            if a and mid not in names:
+                names[mid] = a
+        for mid, name in names.items():
+            try:
+                t = fetch(f'https://www.tbc.co.kr/fm/?mid={mid}', 'https://www.tbc.co.kr/fm/?mid=3')
+            except Exception:
+                continue
+            m = re.search(r'<img[^>]+src=["\']([^"\']*/uploads/program/top_fm_[^"\'?]+)', t)
+            if m:
+                pics.append((mbc_key(name), urllib.parse.urljoin('https://www.tbc.co.kr/', m.group(1))))
+    except Exception as e:
+        print(f'  (TBC 프로그램 사진 못 가져옴: {e})')
+    return pics
+
+
+def tbc():
+    start = today_kst()
+    days = []
+    for k in range(7):
+        d = start + datetime.timedelta(days=k)
+        if day_key(d) not in [day_key(x) for x in days]:
+            days.append(d)
+    by_date = {}
+    for d in sorted(set(days) | {x - datetime.timedelta(days=1) for x in days}):
+        try:
+            for day, hm, title in tbc_day(d):
+                by_date.setdefault(day, {})[hm] = {'title': title, 'start': hm, 'end': ''}
+        except Exception as e:
+            print(f'  (TBC {d} 못 가져옴: {e})')
+    pics = tbc_pics()
+    week = {}
+    for d in days:
+        progs = clean_day(list(by_date.get(d, {}).values()))
+        merged = []
+        for p in progs:  # 1부·2부가 이어지면 한 칸으로
+            if merged and merged[-1]['title'] == p['title'] and merged[-1]['end'] == p['start']:
+                merged[-1]['end'] = p['end']
+            else:
+                merged.append(p)
+        for p in merged:  # TBC 자체 프로그램 사진
+            k = mbc_key(p['title'])
+            for pk, img in pics:
+                if same_name(k, pk):
+                    p['image'] = img
+                    break
+        if len(merged) >= 5:
+            week[day_key(d)] = merged
+    sbs_images(week)  # 김영철의 파워FM 등 SBS 프로그램은 SBS 사진
+    return {'TBC 드림FM': week} if week else {}
+
+
+# ───────── BeFM 부산영어방송 (요일별 시간표 · 프로그램 사진) ─────────
+def befm_get(url):
+    # 옛날 보안 방식 + 인증서 확인 안 함 (편성표 읽기만 함)
+    try:
+        return fetch(url, 'https://www.befm.or.kr/', old=True)
+    except Exception:
+        c = old_ssl()
+        c.check_hostname = False
+        c.verify_mode = ssl.CERT_NONE
+        req = urllib.request.Request(url, headers={'User-Agent': UA, 'Referer': 'https://www.befm.or.kr/'})
+        with urllib.request.urlopen(req, timeout=30, context=c) as r:
+            return r.read().decode('utf-8', errors='replace')
+
+
+BEFM_TAB = {0: 'mon', 1: 'tue-thu', 2: 'tue-thu', 3: 'tue-thu', 4: 'fri', 5: 'sat', 6: 'sun'}
+
+
+def befm():
+    page = befm_get('https://www.befm.or.kr/sub/template.php?midx=37&lang=ko')
+    pics = {}
+    try:
+        cards = befm_get('https://www.befm.or.kr/sub/template.php?midx=35&lang=ko')
+        for pg, img in re.findall(r'href=["\']/program/main\.php\?pg=(\w+)["\'][^>]*>\s*<div class="img_box">\s*<img src=["\']([^"\']+)', cards):
+            pics[pg] = urllib.parse.urljoin('https://www.befm.or.kr/', img)
+    except Exception as e:
+        print(f'  (BeFM 프로그램 사진 못 가져옴: {e})')
+    tabs = {}
+    parts = re.split(r'<div class="schedule_con_box[^"]*" id="([\w-]+)"', page)
+    for i in range(1, len(parts) - 1, 2):
+        progs = []
+        for hm, link, title in re.findall(r'<th scope="row">.*?(\d{2}:\d{2})\s*</th>\s*<td>\s*<a href=["\']([^"\']*)["\'][^>]*>(.*?)</a>', parts[i + 1], re.S):
+            title = re.sub(r'^\[\s*\w\s*\]\s*', '', text_of(title))
+            title = re.sub(r'\s*\(RE\)$', ' (재)', title).strip()
+            if not title:
+                continue
+            p = {'title': title, 'start': hm, 'end': ''}
+            m = re.search(r'pg=(\w+)', link)
+            if m and m.group(1) in pics:
+                p['image'] = pics[m.group(1)]
+            progs.append(p)
+        if len(progs) >= 5:
+            tabs[parts[i]] = clean_day(progs)
+    week = {}
+    start = today_kst()
+    for k in range(7):
+        d = start + datetime.timedelta(days=k)
+        key = day_key(d)
+        if key not in week and BEFM_TAB[d.weekday()] in tabs:
+            week[key] = tabs[BEFM_TAB[d.weekday()]]
+    return {'BeFM': week} if week else {}
+
+
 def fill_images(week):
     # 재방송처럼 사진이 없는 칸: 같은 프로그램 이름의 사진을 빌려 쓰기 (다른 요일 것도)
     pics = {}
@@ -1129,7 +1256,7 @@ def fill_images(week):
                 p['image'] = pics[base_title(p['title'])]
 
 
-SOURCES = [('CBS', cbs), ('YTN', ytn), ('경인방송', ifm), ('FEBC', febc), ('TBS', tbs), ('JTV', jtv), ('국악FM', gugak), ('OBS', obs), ('BBS', bbs), ('CPBC', cpbc), ('TBN', tbn), ('지역 MBC', mbc_regional), ('지역 MBC 덮어쓰기', mbc_overlay)]
+SOURCES = [('CBS', cbs), ('YTN', ytn), ('경인방송', ifm), ('FEBC', febc), ('TBS', tbs), ('JTV', jtv), ('국악FM', gugak), ('OBS', obs), ('BBS', bbs), ('CPBC', cpbc), ('TBN', tbn), ('지역 MBC', mbc_regional), ('지역 MBC 덮어쓰기', mbc_overlay), ('TBC', tbc), ('BeFM', befm)]
 
 
 def main():

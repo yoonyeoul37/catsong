@@ -1,0 +1,58 @@
+■ 1) TBC 드림FM 편성표 (/schedule/?mid=7_181)
+  글자 수 49732 · 첫 시간 위치 8629
+  --- HTML 모양 ---
+   20px; margin-bottom:10px; border:1px solid #d8d8d8; background-color:#e8e8e8;"> <span style="margin-right:10px; font-size:15px; font-weight:bold;">2026년 10월 16일</span> <input type="text" id="sch_datepicker" style="display:none; cursor:pointer"> <span style="float:right;"> </span> <a href="http://203.251.91.5:8080/out/BpSchDayPrint.do?searchConChId=00002&searchConFromDate=20261016" target="_blank" style="float: right;"><img src="/assets/images/btn_week_off.gif"/></a> </div> <div id="sch_wrap"> <ul id="tab_menu_ul"><li class=""><a href="/schedule/?mid=7_181&sYear=2026&sMonth=10&sDate=12" target="">월요일 [10-12]</a></li><li class=""><a href="/schedule/?mid=7_181&sYear=2026&sMonth=10&sDate=13" target="">화요일 [10-13]</a></li><li class=""><a href="/schedule/?mid=7_181&sYear=2026&sMonth=10&sDate=14" target="">수요일 [10-14]</a></li><li class=""><a href="/schedule/?mid=7_181&sYear=2026&sMonth=10&sDate=15" target="">목요일 [10-15]</a></li><li class="current"><a href="/schedule/?mid=7_181&sYear=2026&sMonth=10&sDate=16" target="">금요일 [10-16]</a></li><li class=""><a href="/schedule/?mid=7_181&sYear=2026&sMonth=10&sDate=17" target="">토요일 [10-17]</a></li><li class=""><a href="/schedule/?mid=7_181&sYear=2026&sMonth=10&sDate=18" target="">일요일 [10-18]</a></li></ul> <table cellspacing="0" cellpadding="0" summary="스케줄" class="sch"> <caption class="selector">테이블</caption> <colgroup> <col width="100px"> <col width="80%"> </colgroup> <tbody> <tr><td scope="col" class="">05:00</td><td scope="col" style="white-space:nowrap" class="">이인권의 펀펀투데이 1부<span style='margin-left:10px;'></span><img title='Live' src='/assets/images/schedule/icon_pyun_live.gif'>&nbsp;&nbsp;<img title='스테레오' src='/assets/images/schedule/icon_pyun_stereo.gif'>&nbsp;&nbsp;</td></tr><tr><td scope="col" class="">06:00</td><td scope="col" style="white-space:nowrap" class="">이인권의 펀펀투데이 2부<span style='margin-left:10px;'></span><img title='Live' src='/assets/images/schedule/icon_pyun_live.gif'>&nbsp;&nbsp;<img title='스테레오' src='/assets/images/schedule/icon_pyun_stereo.gif'>&nbsp;&nbsp;</td></tr><tr><td scope="col" class="">06:30</td><td scope="col" style="white-space:nowrap" class="">이인권의 펀펀투데이 3부<span style='margin-left:10px;'></span><img title='Live' src='/assets/images/schedule/icon_pyun_live.gif'>&nbsp;&nbsp;<img title='스테레오' src='/assets/images/schedule/icon_pyun_stereo.gif'>&nbsp;&nbsp;</td></tr><tr><td scope="col" class="">07:00</td><td scope="col" style="white-space:nowrap" class="">김영철의 파워FM 1부<span style='margin-left:10px;'></span><img title='Live' src='/assets/images/schedule/icon_pyun_live.gif'>&nbsp;&nbsp;<img title='스테레오' src='/assets/images/schedule/icon_pyun_stereo.gif'>&nbsp;&nbsp;</td></tr><tr><td scope="col" class="">07:30</td><td scope="col" style="white-space:nowrap" class="">김영철의 파워FM 2부<span style='margin-left:10px;'></span><img title='Live' src='/assets/images/schedule/icon_pyun_live.gif'>&nbsp;&nbsp;<img title='스테레오' src='/assets/images/schedule/icon_pyun_stereo.gif'>&nbsp;&nbsp;</td></tr><tr><td scope="col" class="">08:00</td><td scope="col" style="white-space:nowrap" class="">김영철의 파워FM 3부<span style='margin-left:10px;'></span><img title='Live' src='/assets/images/schedule/icon_pyun_live.gif'>&nbsp;&nbsp;<img title='스테레오' src='/assets/images/schedule/icon_pyun_stereo.gif'>&nbsp;&nbsp;</td></tr><tr><td scope="col" class="">08:30</td><td scope="col" style="white-space:nowrap" class="">김영철의 파워FM 4부<span style='margin-left:10px;'></span><img title='Live' src='/assets/images/schedule/icon_pyun_live.gif'>&nbsp;&nbsp;<img title='스테레오' src='/assets/images/schedule/icon_pyun_stereo.gif'>&nbsp;&nbsp;</td></tr><tr><td scope="col" class="">09:00</td><td scope="col" style="white-space:nowrap" class="">아름다운 이 아침, 봉태규입니다 1부<span style='margin-left:10px;'></span><img title='Live' src='/assets/images/schedule/icon_pyun_live.gif'>&nbsp;&nbsp;<img title='스테레오' src='/assets/images/schedule/icon_pyun_stereo.gif'>&nbsp;&nbsp;</td></tr><tr><td scope="col" cl
+  날짜 링크 /schedule/?mid=7_181
+  날짜 링크 /schedule/?mid=7_181&end=
+  날짜 링크 /schedule/?mid=7_181&sYear=2026&sMonth=10&sDate=12
+  날짜 링크 /schedule/?mid=7_181&sYear=2026&sMonth=10&sDate=13
+  날짜 링크 /schedule/?mid=7_181&sYear=2026&sMonth=10&sDate=14
+  날짜 링크 /schedule/?mid=7_181&sYear=2026&sMonth=10&sDate=15
+  날짜 링크 /schedule/?mid=7_181&sYear=2026&sMonth=10&sDate=16
+  날짜 링크 /schedule/?mid=7_181&sYear=2026&sMonth=10&sDate=17
+  날짜 링크 /schedule/?mid=7_181&sYear=2026&sMonth=10&sDate=18
+■ TBC 드림FM 프로그램 페이지 사진
+  3_71_72 · og {'title': 'TBC 티비씨', 'image': ''} · 시간 ['매일 오전 11시']
+     사진 https://www.tbc.co.kr/uploads/program/top_fm_don.jpg?1638730475?250108_3
+     사진 https://tbc.co.kr/uploads/cache/banner/2026/09/thumb-5e11df7c1b4123ec0da3278d2e91a6d1_x150.png
+  3_257_258 · og {'title': 'TBC 티비씨', 'image': ''} · 시간 ['월~토: 낮 12시', '일: 낮 12시']
+     사진 https://www.tbc.co.kr/uploads/program/top_fm_pleasant12.jpg?1718769185?250108_3
+  3_86_87 · og {'title': 'TBC 티비씨', 'image': ''} · 시간 ['월, 토, 일 PM 8~10시']
+     사진 https://www.tbc.co.kr/uploads/program/top_fm_magicm.jpg?1773301354?250108_3
+  3_92_93 · og {'title': 'TBC 티비씨', 'image': ''} · 시간 ['월~금 밤 11시']
+     사진 https://www.tbc.co.kr/uploads/program/top_fm_happy.jpg?1639122966?250108_3
+     사진 https://www.tbc.co.kr/uploads/editor/2021/12/1d6e573b826ccda5750d28c5e9bf7fca.jpg
+     사진 https://www.tbc.co.kr/uploads/editor/2023/12/3a3b01074154bcb72a11df552c41b30d.png
+  3_230_231 · og {'title': 'TBC 티비씨', 'image': ''} · 시간 ['월요일 저녁 6시', '일시 🗓️ 매주 월요일 PM 6:00', '토, 일요일 PM 6:00']
+     사진 https://www.tbc.co.kr/uploads/program/top_fm_radio.jpg?1774944362?250108_3
+  3_98_99 · og {'title': 'TBC 티비씨', 'image': ''} · 시간 ['토,일 밤 11시', '토ㆍ일요일 밤 11시']
+     사진 https://www.tbc.co.kr/uploads/program/top_fm_classic.jpg?1638730475?250108_3
+     사진 https://tbc.co.kr/uploads/banner/2026/09/d51d7acdde871366c59e219fa74a6aba.png
+     사진 https://tbc.co.kr/uploads/banner/2026/09/9c444a8e98442e0e98c199ae2993ce81.png
+  3_104_107 · og {'title': 'TBC 티비씨', 'image': ''} · 시간 ['일요일 24:00']
+     사진 https://www.tbc.co.kr/uploads/program/top_fm_sing.jpg?1680094978?250108_3
+  3_108_109 · og {'title': 'TBC 티비씨', 'image': ''} · 시간 ['매일 오전 6시']
+     사진 https://www.tbc.co.kr/uploads/program/top_fm_today.jpg?1642486184?250108_3
+  3_300_301 · og {'title': 'TBC 티비씨', 'image': ''} · 시간 ['월~토 밤 12시', '일시 매일 밤 12:00']
+     사진 https://www.tbc.co.kr/uploads/program/top_fm_playlist.jpg?1789536400?250108_3
+  3_316_317 · og {'title': 'TBC 티비씨', 'image': ''} · 시간 ['일 오전 3시', '일시 매일 03:00']
+     사진 https://www.tbc.co.kr/uploads/program/top_fm_dream_fm.jpg?1791965487?250108_3
+■ 2) BeFM 시간표 HTML 모양 (midx=37)
+  못 가져옴 <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failure (_ssl.c:1081)>
+■ BeFM 프로그램 카드 HTML 모양 (midx=35)
+  못 가져옴 <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failure (_ssl.c:1081)>
+■ 3) 아리랑 스크립트 안 주소
+  https://www.arirang.com/static/js/main.9ff58b66.chunk.js · 글자 수 48476 · 주소 0개
+    … :"VOD \uc11c\ube44\uc2a4","menu_radio":"\ub77c\ub514\uc624","menu_vod":"VOD","header_kibf":"\uad6d\uc81c\ubc29\uc1a1\uad50\ub958\uc81c\ub2e8","header_schedule":"\ud3b8\uc131\ud45c","header_language":"\uc5b8\uc5b4\uc120\ud0dd","header_kor":"\ud55c\uad6d\uc5b4","header_eng":"\uc601\uc5b4(English)","header_radio_program":"\ud504\ub85c\uadf8\ub7a8","header_rad
+    … a1}})","menu_tv_host":"Host Introduction","menu_tv_vod":"Video on Demand","menu_radio":"RADIO","menu_vod":"VOD","header_kibf":"About Arirang","header_schedule":"SCHEDULE","header_language":"LANGUAGE","header_kor":"Korean(\ud55c\uad6d\uc5b4)","header_eng":"English","header_radio_program":"PROGRAM","header_radio_programs":"PROGRAMS","header_radio_podcast":"P
+    … true,"navbar":true,"title":true},"CALAMITY":{"text":"calamity","path":"/calamity","sitemap":true,"navbar":true,"title":true},"SCHEDULE":{"text":"menu_schedule","path":"/schedule","sitemap":true,"navbar":true,"title":true},"SEARCH_MAIN":{"text":"menu_search","path":"/search","sitemap":true,"navbar":true,"title":true}}')},75:function(e,t,a){"use strict";a.d(
+    … "title":true},"CALAMITY":{"text":"calamity","path":"/calamity","sitemap":true,"navbar":true,"title":true},"SCHEDULE":{"text":"menu_schedule","path":"/schedule","sitemap":true,"navbar":true,"title":true},"SEARCH_MAIN":{"text":"menu_search","path":"/search","sitemap":true,"navbar":true,"title":true}}')},75:function(e,t,a){"use strict";a.d(t,"a",(function(){r
+    … ),i=a.n(o),l=a(91),s=a.n(l);const c=window.location.search,d="NEWS/CATEGORY",_="NEWS/SCHEDULE",u="LIVE/SORT";const m=s.a.parse(c).lang,p={category:"",schedule:""};var h=m||"en";const b={key:"root",storage:i.a},v=Object(n.a)({news:function(e=p,t){switch(t.type){case d:return{...e,category:t.category};case _:return{...e,schedule:t.schedule};default:return e}
+    … ||"en";const b={key:"root",storage:i.a},v=Object(n.a)({news:function(e=p,t){switch(t.type){case d:return{...e,category:t.category};case _:return{...e,schedule:t.schedule};default:return e}},mode:function(e=h,t){if("CHANGE_MODE"===t.type)return t.mode;return e},liveSort:function(e="",t){if(t.type===u)return t.liveSort;return e}});t.d=Object(r.a)(b,v)}},[[28
+  https://www.arirang.com/static/js/12.a4e9c97e.chunk.js · 글자 수 525362 · 주소 0개
+    … on(e){e()}}var t=e.prototype;return t.batch=function(e){this.transactions++;var t=e();return this.transactions--,this.transactions||this.flush(),t},t.schedule=function(e){var t=this;this.transactions?this.queue.push(e):Object(r.r)((function(){t.notifyFn(e)}))},t.batchCalls=function(e){var t=this;return function(){for(var n=arguments.length,r=new Array(n),i
+    … n(){t.notifyFn(e)}))},t.batchCalls=function(e){var t=this;return function(){for(var n=arguments.length,r=new Array(n),i=0;i<n;i++)r[i]=arguments[i];t.schedule((function(){e.apply(void 0,r)}))}},t.flush=function(){var e=this,t=this.queue;this.queue=[],t.length&&Object(r.r)((function(){e.batchNotifyFn((function(){t.forEach((function(t){e.notifyFn(t)}))}))}))
+    … .queryKey,this.queryHash=e.queryHash,this.initialState=e.state||this.getDefaultState(this.options),this.state=this.initialState,this.meta=e.meta,this.scheduleGc()}var t=e.prototype;return t.setOptions=function(e){var t;this.options=Object(o.a)({},this.defaultOptions,e),this.meta=null==e?void 0:e.meta,this.cacheTime=Math.max(this.cacheTime||0,null!=(t=this.
+    …  0:e.meta,this.cacheTime=Math.max(this.cacheTime||0,null!=(t=this.options.cacheTime)?t:3e5)},t.setDefaultOptions=function(e){this.defaultOptions=e},t.scheduleGc=function(){var e=this;this.clearGcTimeout(),Object(i.h)(this.cacheTime)&&(this.gcTimeout=setTimeout((function(){e.optionalRemove()}),this.cacheTime))},t.clearGcTimeout=function(){clearTimeout(this.
+    … clearTimeout(this.gcTimeout),this.gcTimeout=void 0},t.optionalRemove=function(){this.observers.length||(this.state.isFetching?this.hadObservers&&this.scheduleGc():this.cache.remove(this))},t.setData=function(e,t){var n,r,o=this.state.data,a=Object(i.c)(e,o);return(null==(n=(r=this.options).isDataEqual)?void 0:n.call(r,o,a))?a=o:!1!==this.options.structural
+    … tryer&&(this.retryer.isTransportCancelable||this.abortSignalConsumed?this.retryer.cancel({revert:!0}):this.retryer.cancelRetry()),this.cacheTime?this.scheduleGc():this.cache.remove(this)),this.cache.notify({type:"observerRemoved",query:this,observer:e}))},t.getObserversCount=function(){return this.observers.length},t.invalidate=function(){this.state.isInva

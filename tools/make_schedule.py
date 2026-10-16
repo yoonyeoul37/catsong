@@ -868,7 +868,7 @@ def mbc_regional():
 # ───────── 지역 MBC 덮어쓰기: 서울 MBC 편성 + 지역 프로그램 시간만 바꿔 넣기 ─────────
 # (지역 편성표를 바로 읽을 수 없는 곳. 지역 홈페이지 프로그램 소개에 적힌 시간으로 직접 정리 — 개편 때 고쳐야 함)
 # (요일, 시작, 끝, 제목, 사진)  끝이 None이면 25분 넘게 지난 뒤 처음 오는 서울 프로그램 시작까지
-WEEK = {'매일': range(7), '월-금': range(5), '토': [5], '일': [6], '토일': [5, 6]}
+WEEK = {'매일': range(7), '월-금': range(5), '월-토': range(6), '토': [5], '일': [6], '토일': [5, 6]}
 MBC_OVERLAY = {
     '부산MBC 표준FM': ('FM', [
         ('월-금', '08:00', '09:00', '생방송 자갈치 아지매', None),
@@ -920,6 +920,24 @@ MBC_OVERLAY = {
     ]),
     '안동MBC 표준FM': ('FM', [
         ('월-금', '18:05', '19:00', '라디오 오늘', None),
+        ('토일', '14:05', '16:00', '즐거운 트로트세상', None),
+    ]),
+    '안동MBC FM4U': ('FM4U', [
+        ('매일', '12:00', '14:00', '정오의 희망곡 (안동MBC)', None),
+    ]),
+    '전주MBC 표준FM': ('FM', [
+        ('매일', '10:05', '11:00', '여성시대 (전주MBC)', 'https://www.jmbc.co.kr/uploads/pgm/sfm_000002_top_m.jpg'),
+        ('월-금', '11:05', None, '오늘의 발견', 'https://www.jmbc.co.kr/uploads/pgm/sfm_260330_top_m.jpg'),
+        ('월-금', '18:05', '19:00', '귀가번쩍 여섯시', 'https://www.jmbc.co.kr/uploads/pgm/sfm_000007_top_m.jpg'),
+        ('월-금', '19:20', '19:50', '뉴스 & 이슈', 'https://www.jmbc.co.kr/uploads/pgm/sfm_000006_top_m.jpg'),
+    ]),
+    '전주MBC FM4U': ('FM4U', [
+        ('매일', '07:00', '09:00', 'FM모닝쇼 김차동입니다', 'https://www.jmbc.co.kr/uploads/pgm/fm_000001_top_m_200914.png'),
+        ('일', '11:00', '12:00', '국악이 좋다', 'https://www.jmbc.co.kr/uploads/pgm/fm_000004_top_m.jpg'),
+        ('월-금', '12:00', None, '다윤이의 정오의 희망곡', 'https://www.jmbc.co.kr/uploads/pgm/fm_000002_top_m.jpg'),
+        ('토', '12:00', '14:00', '오프로드 이영래입니다', 'https://www.jmbc.co.kr/uploads/pgm/fm_22112503_top_m.jpg'),
+        ('월-토', '18:00', '20:00', '식스센스', 'https://www.jmbc.co.kr/uploads/pgm/fm_24110101_top_m.jpg'),
+        ('일', '19:00', '20:00', '이유있는 클래식', 'https://www.jmbc.co.kr/uploads/pgm/fm_000003_top_m.jpg'),
     ]),
 }
 

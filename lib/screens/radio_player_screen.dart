@@ -1949,6 +1949,28 @@ class _NextProgramLineState extends State<_NextProgramLine> {
     return '$hh:$mm:$ss';
   }
 
+  // 다음 방송 사진이 없을 때: 시작 시간대 그림 (홈 '최근에 들었어요'와 같은 4장)
+  String _slotImage(String startHHmm) {
+    var h = DateTime.now().hour;
+    if (startHHmm.contains(':')) {
+      final isPM = startHHmm.contains('오후');
+      final isAM = startHHmm.contains('오전');
+      final cleaned = startHHmm.replaceAll('오전', '').replaceAll('오후', '').trim();
+      h = int.tryParse(cleaned.split(':')[0].trim()) ?? h;
+      if (isPM && h != 12) h += 12;
+      if (isAM && h == 12) h = 0;
+      h %= 24;
+    }
+    final slot = h >= 5 && h < 11
+        ? 'morning'
+        : h >= 11 && h < 17
+            ? 'day'
+            : h >= 17 && h < 22
+                ? 'evening'
+                : 'night';
+    return 'assets/radio_media_$slot.jpg';
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentTitle = _titleOf(widget.currentProgram);
@@ -1990,19 +2012,11 @@ class _NextProgramLineState extends State<_NextProgramLine> {
               height: s,
               fit: BoxFit.cover,
               headers: const {'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Mobile Safari/537.36'}, // 일부 방송국은 브라우저처럼 물어봐야 사진을 줌
-              errorBuilder: (errCtx, err, stack) => Container(
-                width: s,
-                height: s,
-                color: baseColor.withOpacity(0.08),
-                child: Icon(Icons.radio, color: baseColor.withOpacity(0.38), size: iconS),
-              ),
+              errorBuilder: (errCtx, err, stack) =>
+                  Image.asset(_slotImage(nextStart), width: s, height: s, fit: BoxFit.cover),
             )
-                : Container(
-              width: s,
-              height: s,
-              color: baseColor.withOpacity(0.08),
-              child: Icon(Icons.radio, color: baseColor.withOpacity(0.38), size: iconS),
-            ),
+                // 다음 방송 사진이 없으면: 시작 시간대 그림
+                : Image.asset(_slotImage(nextStart), width: s, height: s, fit: BoxFit.cover),
           ),
           const SizedBox(width: 12),
           Expanded(

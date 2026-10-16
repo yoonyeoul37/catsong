@@ -394,6 +394,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         name == 'BeFM' ||
         name == '마포FM' ||
         name == '전주FM' ||
+        name == '성서공동체FM' ||
         name.startsWith('TBN '); // TBN 교통방송 12곳
   }
 

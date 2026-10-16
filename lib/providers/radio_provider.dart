@@ -439,8 +439,9 @@ class RadioProvider extends ChangeNotifier {
     }
   }
 
-  void Function(RadioStation station)? onStationPlayed;
+  void Function(RadioStation station, String? image)? onStationPlayed; // image: 그때 프로그램 사진 (없으면 null)
   Timer? _playedTimer; // 30초 이상 들었을 때만 최근에 넣기
+  Timer? _playedTick; // 듣는 동안 5분마다: 프로그램 사진이 바뀌면 '최근에 들었어요' 사진도 새로
 
   Future<void> playStation(RadioStation station) async {
     if (_playerState == RadioPlayerState.loading) {
@@ -449,10 +450,29 @@ class RadioProvider extends ChangeNotifier {
     }
     // 30초 이상 들었을 때만 "최근에 들었어요"에 넣기
     _playedTimer?.cancel();
+    _playedTick?.cancel();
+    String? programImg() {
+      final img = (currentProgramFor(station.name)?['image'] ?? '').toString().trim();
+      return img.isEmpty ? null : img;
+    }
+
     _playedTimer = Timer(const Duration(seconds: 30), () {
-      if (_currentStation?.stationUuid == station.stationUuid && isPlaying) {
-        onStationPlayed?.call(station);
-      }
+      if (_currentStation?.stationUuid != station.stationUuid || !isPlaying) return;
+      // 들었을 때 나오던 프로그램 사진도 같이 (홈 '최근에 들었어요' 카드 사진)
+      var sent = programImg();
+      onStationPlayed?.call(station, sent);
+      // 계속 듣는 동안 프로그램이 바뀌면 → 마지막으로 듣던 프로그램 사진으로 바꾸기
+      _playedTick = Timer.periodic(const Duration(minutes: 5), (t) {
+        if (_currentStation?.stationUuid != station.stationUuid || !isPlaying) {
+          t.cancel(); // 다른 방송으로 바꿨거나 멈추면 그만
+          return;
+        }
+        final img = programImg();
+        if (img != sent) {
+          sent = img;
+          onStationPlayed?.call(station, img);
+        }
+      });
     });
 
     try {

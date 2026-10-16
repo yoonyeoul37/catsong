@@ -1059,7 +1059,7 @@ class _StationTile extends StatelessWidget {
                       style: TextStyle(
                         color: isPlaying ? primaryColor : baseColor,
                         fontSize: 15,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w500,
                         letterSpacing: -0.2,
                       ),
                       maxLines: 1,

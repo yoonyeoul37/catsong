@@ -56,7 +56,7 @@ import '../providers/theme_provider.dart';
 import 'nature_sounds_screen.dart';
 import 'nature_sound_detail_screen.dart';
 import 'radio_player_screen.dart';
-import 'radio_korea_screen2.dart' show niceKoreanStationNow, koreanRadioStations;
+import 'radio_korea_screen2.dart' show niceKoreanStationNow, koreanRadioStations, koreanStationDesc;
 import '../utils/nature_sound_catalog.dart';
 import '../utils/paran_photo.dart';
 import '../utils/no_album_helper.dart';
@@ -2646,7 +2646,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       case RecentContentType.radio:
                         typeIcon = Icons.radio_rounded;
                         typeColor = const Color(0xFF8B5CF6);
-                        thumbnail = _recentAsset(_radioSlotImage(item.playedAt));
+                        // 들었을 때 프로그램 사진 → 없거나 못 불러오면 시간대 라디오 그림
+                        final recentImg = (item.stationData?['recentImage'] ?? '').toString();
+                        final slotImg = _radioSlotImage(item.playedAt);
+                        thumbnail = recentImg.isEmpty
+                            ? _recentAsset(slotImg)
+                            : CachedNetworkImage(
+                                imageUrl: recentImg,
+                                width: 72,
+                                height: 72,
+                                fit: BoxFit.cover,
+                                memCacheWidth: 216,
+                                placeholder: (_, __) => _recentAsset(slotImg),
+                                errorWidget: (_, __, ___) => _recentAsset(slotImg),
+                              );
                         onTapAction = () {
                           if (item.stationData != null) {
                             final station = RadioStation.fromJson(item.stationData!);
@@ -2757,7 +2770,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     color: baseColor, fontSize: 11, fontWeight: FontWeight.w600)),
-                            Text(item.subtitle == '자연소리' ? tr.natureSounds : item.subtitle == '라디오' ? tr.catRadio : item.subtitle,
+                            Text(
+                                item.subtitle == '자연소리'
+                                    ? tr.natureSounds
+                                    : item.subtitle == '라디오'
+                                        ? tr.catRadio
+                                        // 국내 라디오는 'South Korea' 대신 '서울 · 가요·팝'처럼 (해외는 나라 이름 그대로)
+                                        : (item.type == RecentContentType.radio ? koreanStationDesc(item.title) : null) ??
+                                            item.subtitle,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(

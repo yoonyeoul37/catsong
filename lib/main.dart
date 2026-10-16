@@ -100,7 +100,7 @@ void main() async {
 
   // RadioProvider 생성 + 음악/라디오 상호 정지 연결
   final radioProvider = RadioProvider()
-    ..onStationPlayed = ((station) => recentContentProvider.addRadio(station))
+    ..onStationPlayed = ((station, image) => recentContentProvider.addRadio(station, image: image))
     ..setAudioHandler(radioAudioHandler);
 
   radioProvider.setOnStopMusic(() async {

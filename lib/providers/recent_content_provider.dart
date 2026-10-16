@@ -65,14 +65,15 @@ class RecentContentProvider extends ChangeNotifier {
     ));
   }
 
-  Future<void> addRadio(RadioStation station) async {
+  Future<void> addRadio(RadioStation station, {String? image}) async {
     await _addEntry(RecentContentEntry(
       type: RecentContentType.radio,
       key: station.stationUuid,
       title: station.name,
       subtitle: (station.country?.isNotEmpty ?? false) ? station.country! : '라디오',
       playedAt: DateTime.now(),
-      stationData: station.toJson(),
+      // recentImage: 들었을 때 프로그램 사진 (홈 카드에 보여 줌)
+      stationData: {...station.toJson(), if (image != null) 'recentImage': image},
     ));
   }
 

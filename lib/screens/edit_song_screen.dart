@@ -26,6 +26,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
   late TextEditingController _titleController;
   late TextEditingController _artistController;
   late TextEditingController _albumController;
+  late String _genre = widget.song.genre; // 장르 (파일에 적힌 것 또는 고른 것)
 
   // 자동 정리: 열자마자 제목·가수를 깨끗하게 채워두고, "원래대로"로 되돌릴 수 있게
   late final String _origTitle = widget.song.titleDisplay;
@@ -37,8 +38,8 @@ class _EditSongScreenState extends State<EditSongScreen> {
   // 인터넷에서 찾기
   bool _searching = false;
   String? _pickedArt; // 고른 앨범 사진 주소 (저장할 때 받아서 넣음)
-  // 검색 결과 넣기 전 값 (되돌리기용: 제목·가수·앨범·사진)
-  (String, String, String, String?)? _beforePick;
+  // 검색 결과 넣기 전 값 (되돌리기용: 제목·가수·앨범·사진·장르)
+  (String, String, String, String?, String)? _beforePick;
 
   /// 검색 결과 넣기 전으로 되돌리기
   void _undoPick() {
@@ -50,6 +51,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
       _artistController.text = b.$2;
       _albumController.text = b.$3;
       _pickedArt = b.$4;
+      _genre = b.$5;
       _beforePick = null;
     });
   }
@@ -209,7 +211,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
     if (picked == null || !mounted) return;
     setState(() {
       // 되돌리기용: 넣기 전 값 (여러 번 골라도 맨 처음 값으로)
-      _beforePick ??= (_titleController.text, _artistController.text, _albumController.text, _pickedArt);
+      _beforePick ??= (_titleController.text, _artistController.text, _albumController.text, _pickedArt, _genre);
       // 제목: 지금 한글인데 고른 게 영어면 한글 그대로
       final curTitle = _titleController.text.trim();
       _titleController.text =
@@ -221,6 +223,11 @@ class _EditSongScreenState extends State<EditSongScreen> {
       _artistController.text = keepKorean ? curArtist : picked.artist;
       _albumController.text = picked.album;
       _pickedArt = picked.artUrl;
+    });
+    // 장르도 같이 채우기 (뒤에서 찾아서, 찾으면 쓱 들어감)
+    lookupGenre(picked).then((g) {
+      if (!mounted || _beforePick == null || Song.genreNameOf(g).isEmpty) return;
+      setState(() => _genre = g);
     });
     // 아래쪽 후보라 목록에서 못 바꿨으면 → 고른 다음 한글로 한 번 더 (Kim Hyun Sik → 김현식)
     if (!picked.koreanized &&
@@ -407,6 +414,8 @@ class _EditSongScreenState extends State<EditSongScreen> {
                   _field(tr.fieldArtist, _artistController, ink, sub),
                   Divider(height: 1, thickness: 0.5, indent: 16, color: line),
                   _field(tr.fieldAlbum, _albumController, ink, sub),
+                  Divider(height: 1, thickness: 0.5, indent: 16, color: line),
+                  _genreField(ink, sub),
                 ],
               ),
             ),
@@ -414,6 +423,157 @@ class _EditSongScreenState extends State<EditSongScreen> {
         ),
       ),
     );
+  }
+
+  /// 장르 칸 글자 (5개 언어: 한국어·영어·일본어·번체·간체)
+  static const _gtText = {
+    'label': ['장르', 'Genre', 'ジャンル', '類型', '类型'],
+    'pick': ['장르 고르기', 'Choose a genre', 'ジャンルを選ぶ', '選擇類型', '选择类型'],
+    'none': ['장르 없음', 'No genre', 'ジャンルなし', '無類型', '无类型'],
+    'type': ['직접 쓰기', 'Type your own', '自分で入力', '自行輸入', '自行输入'],
+  };
+  String _gt(String k) => _gtText[k]![Song.langIndex()];
+
+  /// 장르 줄: 누르면 고르는 창 (제목·가수·앨범 줄과 같은 모양)
+  Widget _genreField(Color ink, Color sub) {
+    final name = Song.genreNameOf(_genre);
+    return InkWell(
+      onTap: () => _pickGenre(ink, sub),
+      borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 10, 12, 4),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(_gt('label'), style: TextStyle(color: sub, fontSize: 12)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Text(name.isEmpty ? _gt('none') : name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            color: name.isEmpty ? sub : ink,
+                            fontSize: 15.5,
+                            fontWeight: name.isEmpty ? FontWeight.w500 : FontWeight.w600)),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right_rounded, color: sub, size: 22),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 장르 고르는 창: 직접 쓰기 + 많이 쓰는 장르 + 장르 없음
+  Future<void> _pickGenre(Color ink, Color sub) async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    final isDark = context.read<ThemeProvider>().isDarkMode;
+    final card = isDark ? const Color(0xFF24221F) : Colors.white;
+    final onInk = isDark ? const Color(0xFF24221F) : Colors.white;
+    final curName = Song.genreNameOf(_genre); // 지금 장르 (같은 이름 칸을 진하게)
+    final typed = TextEditingController();
+    final picked = await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (ctx) {
+        Widget chip(String text, String value, bool on) => GestureDetector(
+              onTap: () => Navigator.pop(ctx, value),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                decoration: BoxDecoration(
+                  color: on ? ink : card,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(text,
+                    style: TextStyle(
+                        color: on ? onInk : ink,
+                        fontSize: 13.5,
+                        fontWeight: on ? FontWeight.w700 : FontWeight.w500)),
+              ),
+            );
+        void submit() {
+          final t = typed.text.trim();
+          if (t.isNotEmpty) Navigator.pop(ctx, t);
+        }
+
+        return Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom), // 자판이 올라오면 같이 위로
+          child: SafeArea(
+            top: false,
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+              constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.75),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF32302C) : const Color(0xFFF4EFE5), // 다른 고르는 창과 같은 베이지
+                borderRadius: BorderRadius.circular(22),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(_gt('pick'), style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w800)),
+                  const SizedBox(height: 12),
+                  // 직접 쓰기
+                  Container(
+                    padding: const EdgeInsets.only(left: 14),
+                    decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(12)),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: typed,
+                            style: TextStyle(color: ink, fontSize: 14.5, fontWeight: FontWeight.w600),
+                            cursorColor: ink,
+                            textInputAction: TextInputAction.done,
+                            onSubmitted: (_) => submit(),
+                            decoration: InputDecoration(
+                              isDense: true,
+                              border: InputBorder.none,
+                              hintText: _gt('type'),
+                              hintStyle: TextStyle(color: sub, fontSize: 14, fontWeight: FontWeight.w500),
+                              contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: submit,
+                          icon: Icon(Icons.check_rounded, color: ink, size: 20),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  // 많이 쓰는 장르 (폰 언어로) + 맨 끝에 장르 없음
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          for (final g in Song.commonGenres)
+                            chip(Song.genreNameOf(g), g, Song.genreNameOf(g) == curName),
+                          chip(_gt('none'), '', curName.isEmpty),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+    if (picked == null || !mounted) return;
+    setState(() => _genre = picked);
   }
 
   /// 흰 카드 안 한 줄: 위에 작은 이름, 아래에 고칠 글자
@@ -449,6 +609,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
       title: _titleController.text,
       artist: _artistController.text,
       album: _albumController.text,
+      genre: _genre != widget.song.genre ? _genre : null, // 장르는 바꿨을 때만
     );
     // 인터넷에서 고른 앨범 사진이 있으면 받아서 넣기
     if (_pickedArt != null) {

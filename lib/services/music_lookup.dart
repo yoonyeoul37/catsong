@@ -12,8 +12,10 @@ class LookupResult {
   final int durationSec; // 노래 길이 (한글 제목 찾을 때 씀)
   final String? origTitle; // 한글로 바꿨으면 원래 영어 제목
   final String? origArtist; // 한글로 바꿨으면 원래 영어 가수 이름
+  final String genre; // 장르 (애플은 바로 옴, 디저는 앨범에서 따로 찾음)
+  final int albumId; // 디저 앨범 번호 (장르 찾을 때 씀)
   const LookupResult(this.title, this.artist, this.album, this.artUrl, this.thumbUrl,
-      {this.durationSec = 0, this.origTitle, this.origArtist});
+      {this.durationSec = 0, this.origTitle, this.origArtist, this.genre = '', this.albumId = 0});
 
   bool get koreanized => origTitle != null || origArtist != null;
 }
@@ -56,9 +58,10 @@ Future<List<LookupResult>> _deezer(String term) async {
       final art = (albumMap['cover_xl'] ?? albumMap['cover_big'] ?? '').toString();
       final thumb = (albumMap['cover_medium'] ?? art).toString();
       final dur = (r['duration'] is num) ? (r['duration'] as num).toInt() : 0;
+      final albumId = (albumMap['id'] is num) ? (albumMap['id'] as num).toInt() : 0;
       if (title.isEmpty || art.isEmpty) continue;
       if (!seen.add('$title|$artist|$album')) continue; // 같은 것 빼기
-      out.add(LookupResult(title, artist, album, art, thumb, durationSec: dur));
+      out.add(LookupResult(title, artist, album, art, thumb, durationSec: dur, albumId: albumId));
     }
     debugPrint('곡 찾기 결과(디저): ${out.length}개');
     return out;
@@ -89,7 +92,7 @@ Future<List<LookupResult>> _itunes(String term) async {
       if (title.isEmpty || small.isEmpty) continue;
       if (!seen.add('$title|$artist|$album')) continue;
       out.add(LookupResult(title, artist, album, small.replaceAll('100x100bb', '600x600bb'), small,
-          durationSec: dur));
+          durationSec: dur, genre: (r['primaryGenreName'] ?? '').toString()));
     }
     debugPrint('곡 찾기 결과(애플): ${out.length}개');
     return out;
@@ -181,7 +184,38 @@ Future<LookupResult> koreanize(LookupResult r) async {
   return LookupResult(t, a, r.album, r.artUrl, r.thumbUrl,
       durationSec: r.durationSec,
       origTitle: t != r.title ? r.title : null,
-      origArtist: a != r.artist ? r.artist : null);
+      origArtist: a != r.artist ? r.artist : null,
+      genre: r.genre,
+      albumId: r.albumId);
+}
+
+/// 고른 곡의 장르 찾기 (못 찾으면 '')
+/// 애플 결과는 이미 장르가 있고, 디저는 앨범 정보에서 → 그래도 없으면 애플에서 한 번 더
+Future<String> lookupGenre(LookupResult r) async {
+  const skip = {'', 'all', 'music', 'asian music', 'other', 'others'};
+  bool ok(String g) => !skip.contains(g.trim().toLowerCase());
+  if (ok(r.genre)) return r.genre.trim();
+  if (r.albumId > 0) {
+    try {
+      final res = await http
+          .get(Uri.parse('https://api.deezer.com/album/${r.albumId}'))
+          .timeout(const Duration(seconds: 8));
+      if (res.statusCode == 200) {
+        final data = jsonDecode(utf8.decode(res.bodyBytes)) as Map;
+        final list = ((data['genres'] as Map?)?['data'] as List?) ?? [];
+        for (final g in list.cast<Map>()) {
+          final name = (g['name'] ?? '').toString();
+          if (ok(name)) return name.trim();
+        }
+      }
+    } catch (e) {
+      debugPrint('장르 찾기 오류(디저): $e');
+    }
+  }
+  // 애플에서 같은 곡을 찾아서 장르만 가져오기
+  final list = await _itunes('${r.origArtist ?? r.artist} ${r.origTitle ?? r.title}');
+  if (list.isNotEmpty && ok(list.first.genre)) return list.first.genre.trim();
+  return '';
 }
 
 /// 앨범 사진 받아오기

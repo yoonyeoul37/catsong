@@ -18,6 +18,7 @@ import '../l10n/app_localizations.dart';
 import '../providers/theme_provider.dart';
 import 'radio_home_screen.dart';
 import '../widgets/radio_dice.dart';
+import '../widgets/more_menu_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../l10n/locale_holder.dart';
 enum _ViewMode { all, broadcaster, region, recent }
@@ -341,13 +342,24 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                 right: 0,
                 top: 0,
                 bottom: 68, // 사진은 글자 띠 위에만 (라디오가 안 가려지게)
-                child: Image.asset(
-                _heroImageNow(), // 아침·낮·저녁·밤 사진
-                fit: BoxFit.cover,
-                alignment: const Alignment(0, -0.2),
-                cacheWidth: 800,
-                errorBuilder: (_, __, ___) => Container(color: const Color(0xFFD5E1EC)),
-              ),
+                // 다크 모드: 홈 사진과 같게 색 반쯤 빼고 살짝 어둡게
+                child: ColorFiltered(
+                  colorFilter: isDark
+                      ? const ColorFilter.matrix(<double>[
+                          0.4082, 0.2832, 0.0286, 0, 0,
+                          0.0842, 0.6072, 0.0286, 0, 0,
+                          0.0842, 0.2832, 0.3526, 0, 0,
+                          0, 0, 0, 1, 0,
+                        ])
+                      : const ColorFilter.mode(Colors.transparent, BlendMode.dst),
+                  child: Image.asset(
+                    _heroImageNow(), // 아침·낮·저녁·밤 사진
+                    fit: BoxFit.cover,
+                    alignment: const Alignment(0, -0.2),
+                    cacheWidth: 800,
+                    errorBuilder: (_, __, ___) => Container(color: const Color(0xFFD5E1EC)),
+                  ),
+                ),
               ),
               // 사진 아래 크림 띠 (잠시 쉬어가요 카드와 같은 색)
               Positioned(
@@ -823,6 +835,14 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
 
         actions: [
           // 주사위는 맨 위 사진 카드 안으로 옮김
+          // ⋮ 메뉴 — 홈·라디오 재생 화면과 같은 메뉴
+          IconButton(
+            onPressed: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              showMoreMenuSheet(context);
+            },
+            icon: Icon(Icons.more_vert, color: baseColor, size: 22),
+          ),
           const SizedBox(width: 6),
         ],
         title: Row(

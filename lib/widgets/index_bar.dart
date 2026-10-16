@@ -19,6 +19,7 @@ class IndexBar extends StatefulWidget {
   final ValueChanged<String> onLetter; // 묶음 바뀔 때마다 (점프)
   final String? current; // 지금 보고 있는 구간 (파란 글자로 표시)
   final ValueChanged<String?> onActiveChanged; // 가운데 큰 글자 표시용
+  final List<String> groups; // 막대 칸 (폰 언어별)
 
   const IndexBar({
     super.key,
@@ -27,6 +28,7 @@ class IndexBar extends StatefulWidget {
     required this.onLetter,
     required this.onActiveChanged,
     this.current,
+    this.groups = kIndexGroups,
   });
 
   @override
@@ -39,7 +41,7 @@ class _IndexBarState extends State<IndexBar> {
 
   /// 누른 칸에 곡이 없으면 아래쪽 → 위쪽으로 가장 가까운 글자
   String? _resolve(int i) {
-    const g = kIndexGroups;
+    final g = widget.groups;
     for (var k = i; k < g.length; k++) {
       if (widget.available.contains(g[k])) return g[k];
     }
@@ -51,9 +53,8 @@ class _IndexBarState extends State<IndexBar> {
 
   void _handle(double dy, double height) {
     if (height <= 0) return;
-    final i = (dy / height * kIndexGroups.length)
-        .floor()
-        .clamp(0, kIndexGroups.length - 1);
+    final n = widget.groups.length;
+    final i = (dy / height * n).floor().clamp(0, n - 1);
     final g = _resolve(i);
     if (g == null || g == _active) return;
     _releaseToken++; // 사라지기 예약 취소
@@ -86,7 +87,7 @@ class _IndexBarState extends State<IndexBar> {
                 ? kIndexBlue // 지금 보고 있는 구간
                 : (widget.isDark ? kIndexMutedDark : kIndexMuted)
                     .withOpacity(has ? 1.0 : 0.35),
-        fontSize: isAZ ? 11.5 : 14.5,
+        fontSize: isAZ ? 11.5 : (widget.groups.length > 20 ? 12.5 : 14.5),
         fontWeight: (isActive || g == widget.current) ? FontWeight.w900 : FontWeight.w800,
         height: 1.0,
       ),
@@ -131,7 +132,7 @@ class _IndexBarState extends State<IndexBar> {
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Column(
-                children: kIndexGroups
+                children: widget.groups
                     .map((g) => Expanded(child: Center(child: _item(g))))
                     .toList(),
               ),

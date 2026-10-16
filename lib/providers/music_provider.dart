@@ -130,11 +130,13 @@ class MusicProvider extends ChangeNotifier {
     for (final key in keys) {
       final uri = key.replaceFirst('edited_song_', '');
       final data = prefs.getStringList(key);
-      if (data != null && data.length == 3) {
+      // 예전: [제목, 가수, 앨범] / 장르까지 고친 곡: [제목, 가수, 앨범, 장르]
+      if (data != null && data.length >= 3) {
         _editedSongs[uri] = {
           'title': data[0],
           'artist': data[1],
           'album': data[2],
+          if (data.length >= 4) 'genre': data[3],
         };
       }
     }
@@ -143,10 +145,12 @@ class MusicProvider extends ChangeNotifier {
   Future<void> _saveEditedSong(Song song) async {
     final prefs = await SharedPreferences.getInstance();
     if (song.uri != null) {
+      final keepGenre = _editedSongs[song.uri]?['genre'] != null; // 장르를 고친 적 있는 곡만
       await prefs.setStringList('edited_song_${song.uri}', [
         song.title,
         song.artist,
         song.album,
+        if (keepGenre) song.genre,
       ]);
     }
   }
@@ -414,20 +418,23 @@ class MusicProvider extends ChangeNotifier {
     await _saveRecentSongs();
     notifyListeners();
   }
-  Future<void> updateSongInfo(Song song, {String? title, String? artist, String? album}) async {
+  Future<void> updateSongInfo(Song song, {String? title, String? artist, String? album, String? genre}) async {
     if (title != null) song.title = title;
     if (artist != null) song.artist = artist;
     if (album != null) song.album = album;
+    if (genre != null) song.genre = genre; // 장르 (앱 안에만 저장)
     song.isEdited = true;
-    await _saveEditedSong(song);
-    // 새로고침해도 방금 고친 내용이 유지되도록 바로 기억해둠
+    // 새로고침해도 방금 고친 내용이 유지되도록 바로 기억해둠 (장르는 고친 적 있을 때만)
     if (song.uri != null) {
+      final keepGenre = genre != null || _editedSongs[song.uri!]?['genre'] != null;
       _editedSongs[song.uri!] = {
         'title': song.title,
         'artist': song.artist,
         'album': song.album,
+        if (keepGenre) 'genre': song.genre,
       };
     }
+    await _saveEditedSong(song);
 
     // 실제 파일 메타데이터 업데이트
     if (song.uri != null) {
@@ -745,6 +752,7 @@ class MusicProvider extends ChangeNotifier {
               song.album = metadata['album'] ?? song.album;
             }
             song.duration = (metadata['duration'] as int?) ?? song.duration;
+            song.genre = (metadata['genre'] as String?) ?? song.genre; // 장르
             song.albumArt = metadata['albumArt'] != null
                 ? List<int>.from(metadata['albumArt'])
                 : null;
@@ -759,6 +767,8 @@ class MusicProvider extends ChangeNotifier {
           song.artist = edited['artist'] ?? song.artist;
           song.album = edited['album'] ?? song.album;
           song.isEdited = true;
+          final eg = edited['genre'];
+          if (eg != null) song.genre = eg; // 고친 장르
         }
         // 인터넷에서 찾아 넣은 앨범 사진이 있으면 그걸로
         if (song.uri != null && _customArt.containsKey(song.uri)) {

@@ -1243,11 +1243,12 @@ class MainActivity : AudioServiceActivity() {
             val artist = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
             val album = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
             val duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+            val genre = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE) // 장르 (없으면 null)
             val rawArt = retriever.embeddedPicture
             val albumArt = rawArt?.let { resizeAlbumArt(it) }
             retriever.release()
             mapOf("title" to title, "artist" to artist, "album" to album,
-                "duration" to duration?.toLongOrNull(), "albumArt" to albumArt)
+                "duration" to duration?.toLongOrNull(), "albumArt" to albumArt, "genre" to genre)
         } catch (e: Exception) {
             retriever.release()
             mapOf("title" to null, "artist" to null, "album" to null,

@@ -123,25 +123,71 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _byArtist = false;
   Map<String, int> _artistCounts = const {}; // 가수별 곡 수
   static const double _artistHeaderH = 30; // 가수 이름 줄 높이
+  // 장르 정렬 (제목 → 가수 → 장르 → 제목): 장르일 땐 초성 막대 없이 장르 줄로 묶음
+  bool _byGenre = false;
+  Map<String, int> _genreCounts = const {}; // 장르별 곡 수
+  String? _genreFilter; // 장르 칸에서 고른 장르 (null = 전체)
+  Map<String, List<Song>> _genreSongs = const {}; // 장르 줄 이름 → 곡 (▶ 섞어 듣기용)
+  static const double _genreHeaderH = 30; // 장르 줄 높이 (가수 줄과 같게)
 
   // 목록 줄 종류: (머리글, -1) = 초성 머리글 / (가수, -2) = 가수 줄 / (null, 번호) = 곡
   void _buildIndexEntries(List<Song> songs) {
-    var fp = songs.length * 2 + (_byArtist ? 1 : 0);
+    final lang = Localizations.localeOf(context).languageCode; // 초성 바는 폰 언어별
+    var fp = songs.length * 2 + (_byArtist ? 1 : 0) + (_byGenre ? 7 : 0) + (_genreFilter?.hashCode ?? 0) + lang.hashCode;
     for (final s in songs) {
-      fp = (fp * 31 + s.titleDisplay.hashCode + (_byArtist ? s.artistDisplay.hashCode : 0)) & 0x3fffffff;
+      fp = (fp * 31 + s.titleDisplay.hashCode + (_byArtist ? s.artistDisplay.hashCode : 0) +
+              (_byGenre ? s.genreKey.hashCode : 0)) & 0x3fffffff;
     }
     if (fp == _indexFingerprint) return;
     _indexFingerprint = fp;
+    if (_byGenre) {
+      // 장르 정렬: 곡 많은 장르부터, 장르 없는 곡(기타)은 맨 아래, 장르 안에서는 제목순
+      final byG = <String, List<Song>>{};
+      for (final s in songs) {
+        byG.putIfAbsent(s.genreKey, () => []).add(s);
+      }
+      final keys = byG.keys.where((k) => k.isNotEmpty).toList()
+        ..sort((a, b) {
+          final c = byG[b]!.length.compareTo(byG[a]!.length);
+          return c != 0 ? c : a.toLowerCase().compareTo(b.toLowerCase());
+        });
+      if (byG.containsKey('')) keys.add('');
+      final ordered = <Song>[];
+      final entries = <(String?, int)>[];
+      final counts = <String, int>{};
+      final songsByLabel = <String, List<Song>>{};
+      // 장르 칸에서 하나 고르면 그 장르만 (전체 보기에서만)
+      final f = (_showFavorites || _showRecent) ? null : _genreFilter;
+      final shown = (f != null && byG.containsKey(f)) ? [f] : keys;
+      for (final k in shown) {
+        final list = byG[k]!
+          ..sort((a, b) => a.titleDisplay.toLowerCase().compareTo(b.titleDisplay.toLowerCase()));
+        final label = list.first.genreDisplay;
+        counts[label] = list.length;
+        songsByLabel[label] = list;
+        if (shown.length > 1) entries.add((label, -4)); // 장르 줄 (하나만 골랐으면 위 칸에 보이니 생략)
+        for (final s in list) {
+          entries.add((null, ordered.length));
+          ordered.add(s);
+        }
+      }
+      _indexSongs = ordered;
+      _indexCounts = const {};
+      _genreCounts = counts;
+      _genreSongs = songsByLabel;
+      _indexEntries = entries;
+      return;
+    }
     String keyOf(Song s) => _byArtist ? s.artistDisplay : s.titleDisplay;
     final byGroup = <String, List<Song>>{};
     final artistCounts = <String, int>{};
     for (final s in songs) {
-      byGroup.putIfAbsent(indexGroupOf(keyOf(s)), () => []).add(s);
+      byGroup.putIfAbsent(indexGroupFor(keyOf(s), lang), () => []).add(s);
       artistCounts[s.artistDisplay] = (artistCounts[s.artistDisplay] ?? 0) + 1;
     }
     final ordered = <Song>[];
     final entries = <(String?, int)>[];
-    for (final g in kIndexGroups) {
+    for (final g in indexGroupsFor(lang)) {
       final list = byGroup[g];
       if (list == null || list.isEmpty) continue;
       list.sort((a, b) {
@@ -178,6 +224,170 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_songListController.hasClients) _songListController.jumpTo(0);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('song_sort_by_artist', v);
+  }
+
+  /// 정렬 바꾸기 (제목 / 가수 / 장르) — 기억해 둠
+  Future<void> _setSortMode({required bool artist, required bool genre}) async {
+    if (artist == _byArtist && genre == _byGenre) return;
+    setState(() {
+      _byArtist = artist;
+      _byGenre = genre;
+      _genreFilter = null;
+      _indexFingerprint = -1;
+    });
+    if (_songListController.hasClients) _songListController.jumpTo(0);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('song_sort_by_artist', artist);
+    await prefs.setBool('song_sort_by_genre', genre);
+  }
+
+  /// '장르' / '장르별로 정렬했어요' (5개 언어)
+  String _genreText(BuildContext c, bool toast) {
+    final l = Localizations.localeOf(c);
+    final k = l.languageCode == 'zh'
+        ? ((l.scriptCode == 'Hant' || l.countryCode == 'TW' || l.countryCode == 'HK') ? 'tw' : 'cn')
+        : l.languageCode;
+    const label = {'ko': '장르', 'ja': 'ジャンル', 'tw': '類型', 'cn': '类型'};
+    const done = {'ko': '장르별로 정렬했어요', 'ja': 'ジャンル別に並べ替えました', 'tw': '已依類型排序', 'cn': '已按类型排序'};
+    return toast ? (done[k] ?? 'Sorted by genre') : (label[k] ?? 'Genre');
+  }
+
+  /// 장르 정렬일 때 장르 이름 줄: 장르 + 곡 수 (가수 줄과 같은 모양, 재생은 위 ▶·⤨로)
+  Widget _buildGenreHeader(String genre, bool isDark) {
+    final count = _genreCounts[genre] ?? 0;
+    return SizedBox(
+      height: _genreHeaderH,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(22, 8, 12, 0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Flexible(
+              child: Text(genre,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: isDark ? Colors.white.withOpacity(0.8) : const Color(0xFF17140F),
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w700,
+                  )),
+            ),
+            const SizedBox(width: 6),
+            Text('$count ${AppLocalizations.of(context)!.songCount}',
+                style: TextStyle(
+                  color: (isDark ? kIndexMutedDark : kIndexMuted).withOpacity(0.7),
+                  fontSize: 11,
+                )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 위 ▶·⤨가 틀 곡: 장르 하나 골랐으면 그 장르 곡만, 아니면 전체
+  List<Song> _playListNow(List<Song> all) {
+    if (_byGenre && _genreFilter != null && _genreSongs.length == 1) {
+      return _genreSongs.values.first;
+    }
+    return all;
+  }
+
+  /// '발라드 4곡 섞어서 재생' (5개 언어)
+  String _genreShuffleText(String label, int n) {
+    final l = Localizations.localeOf(context);
+    final k = l.languageCode == 'zh'
+        ? ((l.scriptCode == 'Hant' || l.countryCode == 'TW' || l.countryCode == 'HK') ? 'tw' : 'cn')
+        : l.languageCode;
+    return switch (k) {
+      'ko' => '$label $n곡 섞어서 재생',
+      'ja' => '$label $n曲をシャッフル再生',
+      'tw' => '隨機播放 $label・$n 首',
+      'cn' => '随机播放 $label・$n 首',
+      _ => 'Shuffling $label · $n songs',
+    };
+  }
+
+  /// 장르 칸 맨 앞 '모든 장르' (위 탭 '전체'와 헷갈리지 않게, 5개 언어)
+  String _genreAllText() {
+    final l = Localizations.localeOf(context);
+    final k = l.languageCode == 'zh'
+        ? ((l.scriptCode == 'Hant' || l.countryCode == 'TW' || l.countryCode == 'HK') ? 'tw' : 'cn')
+        : l.languageCode;
+    return switch (k) {
+      'ko' => '모든 장르',
+      'ja' => 'すべてのジャンル',
+      'tw' => '全部類型',
+      'cn' => '全部类型',
+      _ => 'All genres',
+    };
+  }
+
+  /// 장르 고르기 (null = 전체)
+  void _setGenreFilter(String? key) {
+    if (key == _genreFilter) return;
+    setState(() {
+      _genreFilter = key;
+      _indexFingerprint = -1;
+    });
+    if (_songListController.hasClients) _songListController.jumpTo(0);
+  }
+
+  /// 장르 정렬일 때 목록 위 장르 칸: 글자 + 가는 밑줄 (옆으로 밀기)
+  Widget _buildGenreBar(Color baseColor, List<Song> songs) {
+    final counts = <String, int>{};
+    final labels = <String, String>{};
+    for (final s in songs) {
+      final k = s.genreKey;
+      counts[k] = (counts[k] ?? 0) + 1;
+      labels[k] ??= s.genreDisplay;
+    }
+    final keys = counts.keys.where((k) => k.isNotEmpty).toList()
+      ..sort((a, b) {
+        final c = counts[b]!.compareTo(counts[a]!);
+        return c != 0 ? c : a.toLowerCase().compareTo(b.toLowerCase());
+      });
+    if (counts.containsKey('')) keys.add(''); // 기타는 맨 끝
+    final cur = (_genreFilter != null && counts.containsKey(_genreFilter)) ? _genreFilter : null;
+    final point = Theme.of(context).colorScheme.primary;
+
+    Widget item(String text, int? n, bool on, VoidCallback onTap) {
+      return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+          onTap();
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(right: 18, top: 6, bottom: 10),
+          child: Text.rich(TextSpan(children: [
+            TextSpan(
+                text: text,
+                style: TextStyle(
+                  color: on ? point : baseColor.withOpacity(0.5),
+                  fontSize: 13.5,
+                  fontWeight: on ? FontWeight.w700 : FontWeight.w500,
+                )),
+            if (n != null)
+              TextSpan(
+                  text: ' $n',
+                  style: TextStyle(
+                      color: on ? point.withOpacity(0.6) : baseColor.withOpacity(0.32),
+                      fontSize: 11)),
+          ])),
+        ),
+      );
+    }
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(children: [
+        item(AppLocalizations.of(context)!.all, null, cur == null, () => _setGenreFilter(null)),
+        for (final k in keys)
+          item(labels[k]!, counts[k], cur == k, () => _setGenreFilter(cur == k ? null : k)),
+      ]),
+    );
   }
 
   /// 가수 정렬일 때 가수 이름 줄: 가수 + 곡 수
@@ -230,7 +440,7 @@ class _HomeScreenState extends State<HomeScreen> {
     for (final e in _indexEntries) {
       if (y > top) break;
       if (e.$2 == -1) cur = e.$1;
-      y += e.$2 == -1 ? _indexHeaderH : (e.$2 == -2 ? _artistHeaderH : rowH);
+      y += e.$2 == -1 ? _indexHeaderH : (e.$2 == -2 ? _artistHeaderH : (e.$2 == -4 ? _genreHeaderH : rowH));
     }
     if (_currentGroup.value != cur) _currentGroup.value = cur;
   }
@@ -251,7 +461,7 @@ class _HomeScreenState extends State<HomeScreen> {
     double offset = _newTopRows > 0 ? _indexHeaderH + _newTopRows * rowH : 0; // 맨 위 새 곡 칸
     for (var j = 0; j < hi; j++) {
       final t = _indexEntries[j].$2;
-      offset += t == -1 ? _indexHeaderH : (t == -2 ? _artistHeaderH : rowH);
+      offset += t == -1 ? _indexHeaderH : (t == -2 ? _artistHeaderH : (t == -4 ? _genreHeaderH : rowH));
     }
     final max = _songListController.position.maxScrollExtent;
     _songListController.jumpTo(offset.clamp(0.0, max));
@@ -906,9 +1116,11 @@ class _HomeScreenState extends State<HomeScreen> {
     // 지난번 정렬(제목/가수) 불러오기
     SharedPreferences.getInstance().then((p) {
       final v = p.getBool('song_sort_by_artist') ?? false;
-      if (mounted && v != _byArtist) {
+      final g = (p.getBool('song_sort_by_genre') ?? false) && !v;
+      if (mounted && (v != _byArtist || g != _byGenre)) {
         setState(() {
           _byArtist = v;
+          _byGenre = g;
           _indexFingerprint = -1;
         });
       }
@@ -2270,7 +2482,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        Image.asset(
+                        darkPhoto(isDarkMode, Image.asset(
                           c.imageAsset,
                           fit: BoxFit.cover,
                           alignment: const Alignment(0, -0.4), // 물건·사람이 위쪽에 있어서
@@ -2278,7 +2490,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           errorBuilder: (context, error, stackTrace) => Container(
                             color: baseColor.withOpacity(0.08),
                           ),
-                        ),
+                        )),
                         // 밝은 사진: 먹색 글자 (어두운 칸 없음)
                         Positioned(
                           left: 0,
@@ -2439,12 +2651,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
-                            paranPhoto(
+                            darkPhoto(isDarkMode, paranPhoto(
                               item.$2,
                               thumb: true,
                               fit: BoxFit.cover,
                               fallback: Container(color: baseColor.withOpacity(0.08)),
-                            ),
+                            )),
                             Positioned(
                               left: 0,
                               right: 0,
@@ -2736,7 +2948,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                    child: thumbnail,
+                                    child: darkPhoto(isDarkMode, thumbnail),
                                   ),
                                   Positioned(
                                     left: 4,
@@ -3118,14 +3330,14 @@ class _HomeScreenState extends State<HomeScreen> {
           boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 6, offset: const Offset(0, 2))],
         ),
         child: ClipOval(
-          child: paranPhoto(
+          child: darkPhoto(isDark, paranPhoto(
             natureImg[sound] ?? 'assets/nature_wave_bg.png',
             thumb: true,
             width: 40,
             height: 40,
             fit: BoxFit.cover,
             fallback: Container(color: softBox, child: Icon(ic, size: 18, color: ink)),
-          ),
+          )),
         ),
       );
       title = t;
@@ -3280,8 +3492,8 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(size * 0.18),
           child: s.albumArt != null
-              ? Image.memory(Uint8List.fromList(s.albumArt!),
-                  width: size, height: size, fit: BoxFit.cover, gaplessPlayback: true, cacheWidth: (size * 3).round())
+              ? darkPhoto(isDark, Image.memory(Uint8List.fromList(s.albumArt!),
+                  width: size, height: size, fit: BoxFit.cover, gaplessPlayback: true, cacheWidth: (size * 3).round()))
               : NoArtTile(title: s.titleDisplay, colorKey: s.uri ?? s.titleDisplay, size: size, isDark: isDark),
         ),
       );
@@ -3378,6 +3590,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         () => setState(() {
                       _showFavorites = false;
                       _showRecent = false;
+                      _genreFilter = null;
+                      _indexFingerprint = -1;
                     }),
                     Theme.of(context).colorScheme.primary,
                   ),
@@ -3447,9 +3661,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     behavior: HitTestBehavior.opaque,
                     onTap: () {
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      final next = !_byArtist;
-                      _setSortByArtist(next);
-                      showParanToast(context, next ? tr.sortedByArtist : tr.sortedByTitle,
+                      // 제목 → 가수 → 장르 → 제목 (장르가 적힌 곡이 하나도 없으면 장르는 건너뜀)
+                      final hasGenre = musicProvider.allSongs.any((s) => s.genreKey.isNotEmpty);
+                      final toArtist = !_byArtist && !_byGenre;
+                      final toGenre = _byArtist && hasGenre;
+                      _setSortMode(artist: toArtist, genre: toGenre);
+                      showParanToast(
+                          context,
+                          toArtist
+                              ? tr.sortedByArtist
+                              : (toGenre ? _genreText(context, true) : tr.sortedByTitle),
                           duration: const Duration(milliseconds: 1500));
                     },
                     child: Padding(
@@ -3459,7 +3680,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Icon(Icons.swap_vert, size: 17, color: baseColor.withOpacity(0.55)),
                           const SizedBox(width: 2),
-                          Text(_byArtist ? tr.sortArtist : tr.sortTitle,
+                          Text(_byArtist ? tr.sortArtist : (_byGenre ? _genreText(context, false) : tr.sortTitle),
                               style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 12.5)),
                         ],
                       ),
@@ -3469,8 +3690,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   IconButton(
                     onPressed: () {
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      if (musicProvider.songs.isNotEmpty) {
-                        context.read<PlayerProvider>().playFromList(musicProvider.songs, 0);
+                      final list = _playListNow(musicProvider.songs); // 장르 골랐으면 그 장르만
+                      if (list.isNotEmpty) {
+                        context.read<PlayerProvider>().playFromList(list, 0);
                       }
                     },
                     icon: Icon(CupertinoIcons.play_fill,
@@ -3481,9 +3703,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   IconButton(
                     onPressed: () {
                       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                      if (musicProvider.songs.isNotEmpty) {
-                        final songs = List<Song>.from(musicProvider.songs)..shuffle();
+                      final list = _playListNow(musicProvider.songs); // 장르 골랐으면 그 장르만
+                      if (list.isNotEmpty) {
+                        final songs = List<Song>.from(list)..shuffle();
                         context.read<PlayerProvider>().playFromList(songs, 0);
+                        // 장르 골랐으면 '힙합 8곡 섞어서 재생' 안내
+                        if (!identical(list, musicProvider.songs) && _genreSongs.isNotEmpty) {
+                          showParanToast(context, _genreShuffleText(_genreSongs.keys.first, songs.length),
+                              duration: const Duration(milliseconds: 1500));
+                        }
                       }
                     },
                     icon: Icon(CupertinoIcons.shuffle, color: baseColor.withOpacity(0.5), size: 17),
@@ -3493,11 +3721,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+            // 장르 정렬일 때만: 장르 칸 (전체 보기에서)
+            if (_byGenre && !_isSearching && !_showFavorites && !_showRecent)
+              _buildGenreBar(baseColor, musicProvider.songs),
             Expanded(
               child: Builder(builder: (context) {
               // 빠른 이동 막대: 30곡 이상이고 검색 중이 아닐 때만
               // 새로 들어온 곡은 목록 맨 위로 (원래 자리에서는 빼기) — 전체 보기에서만, 검색 중엔 원래대로
-              final newOnes = (!_isSearching && !_showFavorites && !_showRecent)
+              final newOnes = (!_isSearching && !_showFavorites && !_showRecent && !_byGenre)
                   ? musicProvider.newSongs
                   : const <Song>[];
               final newIds = {for (final s in newOnes) s.id};
@@ -3506,9 +3737,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? allListSongs
                   : allListSongs.where((s) => !newIds.contains(s.id)).toList();
               _newTopRows = newOnes.length; // 빠른 이동 위치 계산용
-              final showIndexBar = listSongs.length >= 30 && !_isSearching;
-              // 가수 정렬이면 곡이 적어도 가수별로 묶어서 보여줌
-              final grouped = showIndexBar || (_byArtist && !_isSearching);
+              // 장르 정렬은 장르 줄로 묶어서 초성 막대 없음
+              final showIndexBar = listSongs.length >= 30 && !_isSearching && !_byGenre;
+              // 가수·장르 정렬이면 곡이 적어도 묶어서 보여줌
+              final grouped = showIndexBar || ((_byArtist || _byGenre) && !_isSearching);
               if (grouped) _buildIndexEntries(listSongs);
               final available = showIndexBar
                   ? _indexEntries.where((e) => e.$2 == -1).map((e) => e.$1!).toSet()
@@ -3545,6 +3777,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     }
                     if (entry.$2 == -2) {
                       return _buildArtistHeader(entry.$1!, isDarkList); // 가수 이름 줄
+                    }
+                    if (entry.$2 == -4) {
+                      return _buildGenreHeader(entry.$1!, isDarkList); // 장르 줄
                     }
                     if (entry.$1 != null) {
                       return _buildIndexHeader(entry.$1!, isDarkList);
@@ -3650,14 +3885,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: ValueListenableBuilder<String?>(
                       valueListenable: _currentGroup,
                       builder: (context, cur, _) => IndexBar(
+                        groups: indexGroupsFor(Localizations.localeOf(context).languageCode),
                         available: available,
                         isDark: isDarkList,
                         onLetter: _jumpToGroup,
                         onActiveChanged: (l) {
                           _indexBubble.value = l;
-                          _pokeIndexBar(); // 누르고 있는 동안은 안 사라지게
+                          // 누르고 있는 동안은 안 사라지게, 손 떼면 3초 뒤에 닫기
+                          _pokeIndexBar(hideMs: l == null ? 3000 : 1500);
                         },
-                        current: cur ?? (available.isNotEmpty ? kIndexGroups.firstWhere(available.contains) : null),
+                        current: cur ?? (available.isNotEmpty
+                            ? indexGroupsFor(Localizations.localeOf(context).languageCode).firstWhere(available.contains)
+                            : null),
                       ),
                     ),
                   ),
@@ -3717,10 +3956,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// 초성 막대: 스크롤하는 동안 보이고, 멈추면 1.5초 뒤 사라짐 (막대를 누르고 있는 동안은 그대로)
-  void _pokeIndexBar() {
+  void _pokeIndexBar({int hideMs = 1500}) {
     if (!_indexShow.value) _indexShow.value = true;
     final t = ++_indexHideToken;
-    Future.delayed(const Duration(milliseconds: 1500), () {
+    Future.delayed(Duration(milliseconds: hideMs), () {
       if (mounted && t == _indexHideToken && _indexBubble.value == null) _indexShow.value = false;
     });
   }
@@ -4214,6 +4453,16 @@ String _radioSlotImage(DateTime t) {
               : 'night';
   return 'assets/radio_media_$slot.jpg';
 }
+
+/// 다크 모드: 홈 사진 색을 반쯤 빼고 살짝 어둡게 (밝기 72% · 색 45%) — 메인 홈 사진 모두 같게
+const ColorFilter _kDarkPhotoFilter = ColorFilter.matrix(<double>[
+  0.4082, 0.2832, 0.0286, 0, 0,
+  0.0842, 0.6072, 0.0286, 0, 0,
+  0.0842, 0.2832, 0.3526, 0, 0,
+  0, 0, 0, 1, 0,
+]);
+Widget darkPhoto(bool dark, Widget child) =>
+    dark ? ColorFiltered(colorFilter: _kDarkPhotoFilter, child: child) : child;
 
 /// 최근 카드 사진 (앱 안 사진)
 Widget _recentAsset(String asset) {

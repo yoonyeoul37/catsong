@@ -428,7 +428,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
   /// 장르 칸 글자 (5개 언어: 한국어·영어·일본어·번체·간체)
   static const _gtText = {
     'label': ['장르', 'Genre', 'ジャンル', '類型', '类型'],
-    'pick': ['장르 고르기', 'Choose a genre', 'ジャンルを選ぶ', '選擇類型', '选择类型'],
+    'pick': ['장르별 선택', 'Select genre', 'ジャンル選択', '選擇類型', '选择类型'],
     'none': ['장르 없음', 'No genre', 'ジャンルなし', '無類型', '无类型'],
     'type': ['직접 쓰기', 'Type your own', '自分で入力', '自行輸入', '自行输入'],
   };
@@ -519,8 +519,23 @@ class _EditSongScreenState extends State<EditSongScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(_gt('pick'), style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w800)),
-                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(_gt('pick'),
+                            style: TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w800)),
+                      ),
+                      // 닫기 (아무것도 안 바꾸고 닫힘)
+                      IconButton(
+                        onPressed: () => Navigator.pop(ctx),
+                        icon: Icon(Icons.close_rounded, color: sub, size: 22),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
                   // 직접 쓰기
                   Container(
                     padding: const EdgeInsets.only(left: 14),

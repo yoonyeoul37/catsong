@@ -611,6 +611,70 @@ def cpbc():
     return {'CPBC 가톨릭': week} if week else {}
 
 
+# ───────── TBN 교통방송 (본부 편성 + 지역 편성 합치기) ─────────
+TBN_AREAS = {  # 앱의 방송 이름 → TBN 편성표 지역 번호(page_code)
+    'TBN 경인교통': 6, 'TBN 부산교통': 2, 'TBN 광주교통': 3, 'TBN 대구교통': 4, 'TBN 대전교통': 5,
+    'TBN 울산교통': 9, 'TBN 강원교통': 7, 'TBN 충북교통': 13, 'TBN 충남교통': 14, 'TBN 전북교통': 8,
+    'TBN 경남교통': 10, 'TBN 제주교통': 12,
+}
+
+
+def tbn_table(page_code, d):
+    """그날 그 지역 편성표 칸들: (날짜, 'HH:MM', 제목) — 24시 넘으면 다음 날"""
+    page = fetch(f'https://www.tbn.or.kr/broadcast/program.tbn?area_code=6&page_code={page_code}&today={d:%Y%m%d}',
+                 'https://www.tbn.or.kr/main.tbn', insecure=True)
+    i = page.find('프로그램소개 - 시, 분, 프로그램명')
+    table = page[i:page.find('</table>', i)] if i >= 0 else ''
+    rows = []
+    for hh, mm, title in re.findall(r'<tr>\s*<td>\s*(\d{1,2})\s*</td>\s*<td>\s*(\d{1,2})\s*</td>\s*'
+                                    r'<td[^>]*>.*?<strong>(.*?)</strong>', table, re.S):
+        h = int(hh)
+        title = text_of(title)
+        if title:
+            rows.append((d + datetime.timedelta(days=h // 24), f'{h % 24:02d}:{int(mm):02d}', title))
+    return rows
+
+
+def tbn():
+    start = today_kst()
+    days = []  # 요일 칸마다 가까운 날 (월~목 · 금 · 토 · 일)
+    for k in range(7):
+        d = start + datetime.timedelta(days=k)
+        if day_key(d) not in [day_key(x) for x in days]:
+            days.append(d)
+    fetch_days = sorted(set(days) | {x - datetime.timedelta(days=1) for x in days})  # 전날 '24시~'가 그날 새벽
+    national = {}
+    for d in fetch_days:
+        try:
+            national[d] = tbn_table(1, d)  # 본부(전국) 편성
+        except Exception as e:
+            print(f'  (TBN 본부 {d} 못 가져옴: {e})')
+    out = {}
+    for station, code in TBN_AREAS.items():
+        by_date = {}
+        for d in fetch_days:
+            try:
+                local = tbn_table(code, d)
+            except Exception as e:
+                print(f'  ({station} {d} 못 가져옴: {e})')
+                local = []
+            for day, hm, title in national.get(d, []):
+                by_date.setdefault(day, {}).setdefault(hm, {'title': title, 'start': hm, 'end': ''})
+            for day, hm, title in local:  # 같은 시간이면 지역 방송이 우선
+                by_date.setdefault(day, {})[hm] = {'title': title, 'start': hm, 'end': ''}
+        week = {}
+        for d in days:
+            progs = clean_day(list(by_date.get(d, {}).values()))
+            if len(progs) >= 5:
+                week[day_key(d)] = progs
+        if week:
+            out[station] = week
+    first = out.get('TBN 경인교통', {}).get(day_key(start), [])
+    if first:  # 확인용: 경인 오늘 편성 한눈에
+        print('  (TBN 경인 오늘) ' + ' / '.join(f"{p['start']} {p['title']}" for p in first))
+    return out
+
+
 
 def fill_images(week):
     # 재방송처럼 사진이 없는 칸: 같은 프로그램 이름의 사진을 빌려 쓰기 (다른 요일 것도)
@@ -625,7 +689,7 @@ def fill_images(week):
                 p['image'] = pics[base_title(p['title'])]
 
 
-SOURCES = [('CBS', cbs), ('YTN', ytn), ('경인방송', ifm), ('FEBC', febc), ('TBS', tbs), ('JTV', jtv), ('국악FM', gugak), ('OBS', obs), ('BBS', bbs), ('CPBC', cpbc)]
+SOURCES = [('CBS', cbs), ('YTN', ytn), ('경인방송', ifm), ('FEBC', febc), ('TBS', tbs), ('JTV', jtv), ('국악FM', gugak), ('OBS', obs), ('BBS', bbs), ('CPBC', cpbc), ('TBN', tbn)]
 
 
 def main():

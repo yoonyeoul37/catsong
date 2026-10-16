@@ -1,0 +1,47 @@
+■ KNN 부산
+  https://www.knn.co.kr/onair → 200 (https://www.knn.co.kr/onair) · 글자 수 119532
+    [video.8.min.js] 단서 … a",m4a:"audio/mp4",mp3:"audio/mpeg",aac:"audio/aac",caf:"audio/x-caf",flac:"audio/flac",oga:"audio/ogg",wav:"audio/wav",m3u8:"application/x-mpegURL",mpd:"application/dash+xml",jpg:"image/jpeg",jpeg:"image/jpeg",gif:"image/gif",png:"image/png",svg:"image/svg+xml",webp:"image/webp"},Ls
+    [video.8.min.js] 단서 … equestaborted",NetworkRequestTimeout:"networkrequesttimeout",NetworkBodyParserFailed:"networkbodyparserfailed",StreamingHlsPlaylistParserError:"streaminghlsplaylistparsererror",StreamingDashManifestParserError:"streamingdashmanifestparsererror",StreamingContentSteeringParserError:"s
+    [video.8.min.js] 단서 … out:"networkrequesttimeout",NetworkBodyParserFailed:"networkbodyparserfailed",StreamingHlsPlaylistParserError:"streaminghlsplaylistparsererror",StreamingDashManifestParserError:"streamingdashmanifestparsererror",StreamingContentSteeringParserError:"streamingcontentsteeringparsererro
+    [video.8.min.js] 단서 … );function qn(e){for(var t=Un(e),i=new Uint8Array(t.length),s=0;s<t.length;s++)i[s]=t.charCodeAt(s);return i} /*! @name m3u8-parser @version 7.2.0 @license Apache-2.0 */class jn extends Qr{constructor(){super(),this.buffer=""}push(e){let t;for(this.buffer+=e,t=this.buffer.indexOf("\n
+    [video.8.min.js] 단서 … for(var t=0;t<ra.length;t++){var i=ra[t];if(ia["muxer"+i].test(e))return!0}return!1})}function ea(e){return da.test(e)?"hls":ha.test(e)?"dash":"application/vnd.videojs.vhs+json"===e?"vhs-json":null}function ta(e){return pa(e)}var ia={mp4:/^(av0?1|avc0?[1234]|vp0?9|flac|opus|mp3|mp4a
+    [video.8.min.js] 단서 … rack,t.options_);this.customTagParsers=e&&e.customTagParsers||[],this.customTagMappers=e&&e.customTagMappers||[],this.llhls=e&&e.llhls,this.dateRangesStorage_=new bh,this.state="HAVE_NOTHING",this.handleMediaupdatetimeout_=this.handleMediaupdatetimeout_.bind(this),this.on("mediaupda
+  https://www.knn.co.kr/radio → 200 (https://www.knn.co.kr/radio) · 글자 수 53510
+■ TBC 대구
+  https://www.tbc.co.kr/onair/?mid=6_190 → 200 (http://www.tbc.co.kr/onair/?mid=6_190) · 글자 수 37844
+    iframe https://www.googletagmanager.com/ns.html?id=GTM-KKQXCK9X
+    [페이지] 주소 ?(200 text/html) | http://203.251.91.122:1935/on-air-Backup/fm/playlist
+    [페이지] 단서 … s/tbc_player/videojs-contrib-media-sources.min.js"></script> <script src="/assets_renewal/js/tbc_player/videojs-contrib-hlsjs.min.js"></script> <div class="browser"> <video id="player" style="width:100%;height:100%" class="video-js vjs-default-skin" autoplay="autoplay" muted="mute
+    [페이지] 단서 … LAY</p> </div>--> </div> <script> var player = videojs('#player', { autoplay: true, html5: { hlsjsConfig: { debug: false } } }); player.src({ src: 'http://203.251.91.122:1935/on-air-Backup/fm/playlist.m3u8', type: 'appli
+    [페이지] 단서 …  hlsjsConfig: { debug: false } } }); player.src({ src: 'http://203.251.91.122:1935/on-air-Backup/fm/playlist.m3u8', type: 'application/x-mpegURL', withCredentials: true }); player.poster = "/assets/images/player_fm_img.gif"; play
+    [페이지] 단서 …  debug: false } } }); player.src({ src: 'http://203.251.91.122:1935/on-air-Backup/fm/playlist.m3u8', type: 'application/x-mpegURL', withCredentials: true }); player.poster = "/assets/images/player_fm_img.gif"; player.play(); </script> <style> .v
+  https://www.tbc.co.kr/fm → 200 (https://www.tbc.co.kr/fm/?mid=3) · 글자 수 46309
+    iframe https://www.googletagmanager.com/ns.html?id=GTM-KKQXCK9X
+■ KBC 광주
+  https://www.ikbc.co.kr/onair → X(HTTP Error 400: Bad Request)
+  https://www.ikbc.co.kr/radio/main → 200 (https://www.ikbc.co.kr/radio/main) · 글자 수 38053
+■ TJB 대전
+  https://m.tjb.co.kr/onair-main.php → 200 (https://m.tjb.co.kr/onair-main.php) · 글자 수 6199
+    [페이지] 단서 … 5 - .wt_box 에 .box_tv 클래스 추가--> <a class="wt_box box_tv" href='javascript:loginCheck("http://m.tjb.co.kr/onair-tv-hls.php?ch=1");'> <div class="inner"> <div class="ico_sec ico_2"> <!-- <img src="assets/icon/icon-onair-2.png" alt=""> --> 
+■ UBC 울산
+  https://www.ubc.co.kr/onair/ → 200 (https://www.ubc.co.kr/onair/tv/) · 글자 수 39187
+  https://www.ubc.co.kr/radio/ → 200 (https://www.ubc.co.kr/radio/) · 글자 수 31236
+■ G1 강원
+  https://www.g1tv.co.kr/radio → 200 (https://www.g1tv.co.kr/radio/?mid=16) · 글자 수 13269
+■ JIBS 제주
+  https://www.jibs.co.kr/radio/viewRadioMain?channelId=0 → 200 (https://www.jibs.co.kr/radio/viewRadioMain?channelId=0) · 글자 수 46040
+■ CJB 청주
+  https://www.cjb.co.kr/ → 200 (https://www.cjb.co.kr/) · 글자 수 261
+    (페이지 전체) <script type="text/javascript"> //<![CDATA[ window.location.href = "https://www.cjb.co.kr/home"; //]]> </script> <noscript>&bull;&nbsp;3초뒤에 이동<meta http-equiv='refresh' content='3; url=https://www.cjb.co.kr/home'></noscript> 
+  https://m.cjb.co.kr/ → 200 (https://www.cjb.co.kr/) · 글자 수 261
+    (페이지 전체) <script type="text/javascript"> //<![CDATA[ window.location.href = "https://www.cjb.co.kr/home"; //]]> </script> <noscript>&bull;&nbsp;3초뒤에 이동<meta http-equiv='refresh' content='3; url=https://www.cjb.co.kr/home'></noscript> 
+■ 여수MBC
+  https://ysmbc.co.kr/OnAir → 200 (https://ysmbc.co.kr/) · 글자 수 51613
+■ 원주MBC
+  https://www.wjmbc.co.kr/radio/fm.html → 200 (https://www.wjmbc.co.kr/radio/fm.html) · 글자 수 51187
+  https://www.wjmbc.co.kr/radio/am.html → 200 (https://www.wjmbc.co.kr/radio/am.html) · 글자 수 57702
+■ MBC강원영동
+  https://www.mbceg.co.kr/ → 200 (https://www.mbceg.co.kr/) · 글자 수 56803
+    [페이지] 주소 ?(200 text/html; charset=utf-8) | https://youtube.com/playlist?list=PLA0GRXPjAFdLjRTeSBUsGaUX0y8bzjtHs
+    [페이지] 주소 ?(200 text/html; charset=utf-8) | https://youtube.com/playlist?list=PLA0GRXPjAFdLtxMsvLBI05BAAEJ1Uyf9i
+  https://www.mbceg.co.kr/onair → X(HTTP Error 404: Not Found)

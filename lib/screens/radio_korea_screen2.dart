@@ -1246,6 +1246,7 @@ const koreanStations = <_KStation>[
   _KStation(name: '포항MBC 표준FM', region: '대구/경북', broadcaster: 'MBC', subLabel: '포항', frequency: '104.3 MHz', streamUrl: 'http://stream.yubinet.com:1935/live/_definst_/Radio_Am/playlist.m3u8'),
   _KStation(name: 'TBN 대구교통', region: '대구/경북', broadcaster: 'TBN', subLabel: '대구', frequency: '', streamUrl: 'http://radio2.tbn.or.kr:1935/daegu/myStream/playlist.m3u8'),
   _KStation(name: '성서공동체FM', region: '대구/경북', broadcaster: '공동체', subLabel: '대구', frequency: '', streamUrl: 'http://115.85.182.39/scnfm'),
+  _KStation(name: 'TBC 드림FM', region: '대구/경북', broadcaster: 'TBC', subLabel: '대구', frequency: '', streamUrl: 'http://203.251.91.122:1935/on-air-Backup/fm/playlist.m3u8'),
   _KStation(name: '광주MBC 표준FM', region: '광주/전남', broadcaster: 'MBC', subLabel: '광주', frequency: '97.9 MHz', streamUrl: 'https://media.kjmbc.co.kr/hls/amlive/GWANGJU-MBC-AM/playlist.m3u8'),
   _KStation(name: '광주MBC FM4U', region: '광주/전남', broadcaster: 'MBC', subLabel: '광주', frequency: '89.5 MHz', streamUrl: 'https://media.kjmbc.co.kr/hls/fmlive/GWANGJU-MBC-FM/playlist.m3u8'),
   _KStation(name: '목포MBC 표준FM', region: '광주/전남', broadcaster: 'MBC', subLabel: '목포', frequency: '97.9 MHz', streamUrl: 'https://vod.mpmbc.co.kr/live/encoder-am/playlist.m3u8'),
@@ -1944,6 +1945,7 @@ String _stationDesc(_KStation s) {
     '수원 SoneFM': '공동체 라디오',
     '성서공동체FM': '공동체 라디오',
     '전주FM': '공동체 라디오',
+    'TBC 드림FM': '음악·생활',
   };
   final n = s.name;
   String? g = exact[n];

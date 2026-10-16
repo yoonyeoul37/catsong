@@ -386,7 +386,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         name == 'JTV 매직FM' ||
         name == '국악FM' ||
         name == 'OBS 라디오' ||
-        name == 'CPBC 가톨릭';
+        name == 'CPBC 가톨릭' ||
+        name.startsWith('TBN '); // TBN 교통방송 12곳
   }
 
   String _getBroadcaster(String name) {

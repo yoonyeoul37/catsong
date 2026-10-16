@@ -1,0 +1,599 @@
+############################################################
+■ 경인 오늘 · 글자 수 213554
+  본문 시작 위치 194266
+id="contents">
+			<div class="aside-wrap">
+	             <div class="title-area">
+	                 <h3>편성표</h3>
+	             </div>
+	             <div class="aside-menu">
+	                 <ul>
+	                     <li class="active"><a href="/broadcast/program.tbn?BOARD_ID=P001&amp;area_code=6">프로그램 소개</a></li>
+	                 </ul>
+	             </div>
+	         </div>
+		<div class="contents">
+			<div class="page-title">
+                <h4>프로그램 소개</h4>
+                <div class="breadcrumb">
+                    <span><img src="/images/common/icon-home02.png" alt="홈" /></span><span>편성표</span><span>프로그램 소개</span>
+                </div>
+            </div>
+             <ul class="tab-list square local-select">
+                <li class="on" ><a href="?page_code=1&amp;area_code=6&amp;today=20261016" ><span>본부</span></a></li>
+                <li ><a href="?page_code=3&amp;area_code=6&amp;today=20261016" ><span>전남광주</span></a></li>
+                <li ><a href="?page_code=2&amp;area_code=6&amp;today=20261016" ><span>부산</span></a></li>
+                <li ><a href="?page_code=4&amp;area_code=6&amp;today=20261016" ><span>대구</span></a></li>
+                <li ><a href="?page_code=6&amp;area_code=6&amp;today=20261016" ><span>경인</span></a></li>
+                <li ><a href="?page_code=5&amp;area_code=6&amp;today=20261016" ><span>대전</span></a></li>
+                <li ><a href="?page_code=9&amp;area_code=6&amp;today=20261016" ><span>울산</span></a></li>
+                <li ><a href="?page_code=7&amp;area_code=6&amp;today=20261016" ><span>강원</span></a></li>
+                <li ><a href="?page_code=13&amp;area_code=6&amp;today=20261016" ><span>충북</span></a></li>
+                <li ><a href="?page_code=14&amp;area_code=6&amp;today=20261016" ><span>충남</span></a></li>
+                <li ><a href="?page_code=8&amp;area_code=6&amp;today=20261016" ><span>전북</span></a></li>
+                <li ><a href="?page_code=11&amp;area_code=6&amp;today=20261016" ><span>경북</span></a></li>
+                <li ><a href="?page_code=10&amp;area_code=6&amp;today=20261016" ><span>경남</span></a></li>
+                <li ><a href="?page_code=12&amp;area_code=6&amp;today=20261016" ><span>제주</span></a></li>
+            </ul>      
+            <div class="broadcast-intro-wrap">
+            	<div class="broadcast-navi-wrap">
+		            <div class="broadcast-navi">
+		               <a class="prev" href="./program.tbn?area_code=6&page_code=1&today=20261015"><img src="/images/common/icon-prev02.png" alt="이전프로그램"/></a>
+		                <span>2026년 10월 16일 <strong>금요일</strong></span>
+		                <a class="next" href="./program.tbn?area_code=6&page_code=1&today=20261017"><img src="/images/common/icon-next02.png" alt="다음프로그램"/></a>
+		           		<p class="text">달력의 해당 날짜를 클릭하시면 아래의 표에서<br />프로그램 정보를 확인하실 수 있습니다.</p>
+		            </div>
+	            </div>
+	            <div id="calStr" class="calendar_box">
+					<!-- 
+	            	<span>
+	                <a href='#none'>
+	                <img src="../images/broadcast/btn_prev1.gif" alt="이전년" /></a>
+	                2010.12
+	                <a href='#none'>
+	                <img src="../images/broadcast/btn_next1.gif" alt="다음년" /></a>
+	                </span>
+	            	<table summary="요일별 날짜를 보실 수 있습니다.">
+	                	<caption>달력</caption>
+	                    <colgroup>
+	                    	<col width="10%" />
+	                        <col width="10%" />
+	                        <col width="10%" />
+	                        <col width="10%" />
+	                        <col width="10%" />
+	                        <col width="10%" />
+	                        <col width="10%" />
+	                    </colgroup>
+	                	<thead>
+	                        <tr>
+	                            <th scope="col"><img src="/images/broadcast/cal01.gif" alt="일" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal02.gif" alt="월" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal03.gif" alt="화" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal04.gif" alt="수" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal05.gif" alt="목" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal06.gif" alt="금" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal07.gif" alt="토" /></th>
+	                        </tr>
+	                    </thead>
+	                    <tbody>
+	                		<tr>
+	                        	<td class="r">1</td>
+	                            <td>2</td>
+	                            <td>3</td>
+	                            <td>4</td>
+	                            <td>5</td>
+	                            <td>6</td>
+	                            <td class="b">7</td>
+	                        </tr>
+	                        <tr>
+	                        	<td class="r">1</td>
+	                            <td>2</td>
+	                            <td>3</td>
+	                            <td>4</td>
+	                            <td>5</td>
+	                            <td>6</td>
+	                            <td class="b">7</td>
+	                        </tr>
+	                        <tr>
+	                        	<td class="r">1</td>
+	                            <td>2</td>
+	                            <td>3</td>
+	                            <td><strong>4</strong></td>
+	                            <td>5</td>
+	                            <td>6</td>
+	                            <td class="b">7</td>
+	                        </tr>
+	                        <tr>
+	                        	<td class="r">1</td>
+	                            <td>2</td>
+	                            <td>3</td>
+	                            <td>4</td>
+	                            <td>5</td>
+	                            <td>6</td>
+	                            <td class="b">7</td>
+	                        </tr>
+	                    </tbody>
+	                </table>
+	                -->
+            </div><!--//calendar_box-->
+            </div>
+	<div class="table-list basic mb50">
+	<table>
+    <caption>프로그램소개 - 시, 분, 프로그램명 정보제공</caption>
+    <thead>
+        <tr>
+            <th scope="col" class="wid10">시</th>                            
+            <th scope="col" class="wid10">분</th>                            
+            <th scope="col" class="wid30">프로그램명</th>
+            <th scope="col">&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+				        <tr>
+				            <td>06</td>
+				            <td>00</td>
+				            <td class="align-left">
+								<a href="/program/main.tbn?forum_seq=411
+									&amp;area_code=6"><strong>굿모닝 코리아</strong>
+								</a>
+							</td>
+				            <td class="align-left">
+				                <p class="step-array">
+					            	<!-- PD : 강지선 | 
+					            	MC :   | 
+					            	작가 : -->            	
+					            	PD : 강지선
+					            	 ｜ MC : 서현진
+					            	 ｜ 작가 : 강인숙   
+				            	</p>
+				            </td>
+				        </tr>
+				        <tr>
+				            <td>08</td>
+				            <td>52</td>
+				            <td class="align-left">
+								<a href="/program/main.tbn?forum_seq=420
+									&amp;area_code=6"><strong>tbn 특별기획 우리의 생명이 가장 중요합니다.</strong>
+								</a>
+							</td>
+				            <td class="align-left">
+				                <p class="step-array">
+					            	<!-- PD : 김영주 | 
+					            	MC :   | 
+					            	작가 : -->            	
+					            	PD : 김영주
+					            	 ｜ MC : 윤유선
+					            	 ｜ 작가 : 강인숙   
+				            	</p>
+				            </td>
+				        </tr>
+				        <tr>
+				            <td>11</td>
+				            <td>00</td>
+				            <td class="align-left">
+								<a href="/program/main.tbn?forum_seq=474
+									&amp;area_code=6"><strong>김경식의 오토쇼 으라차차</strong>
+								</a>
+							</td>
+				            <td class="align-left">
+				                <p class="step-array">
+					            	<!-- PD : 김영주 | 
+					            	MC :   | 
+					            	작가 : -->            	
+					            	PD : 김영주
+					            	 ｜ MC : 김경식
+					            	 ｜ 작가 : 김태형ㆍ김은경   
+				            	</p>
+				            </td>
+				        </tr>
+				        <tr>
+				            <td>12</td>
+				            <td>05</td>
+				            <td class="align-left">
+								<
+  --- 본문 사진 후보 ---
+  /images/broadcast/cal01.gif
+  /images/broadcast/cal02.gif
+  /images/broadcast/cal03.gif
+  /images/broadcast/cal04.gif
+  /images/broadcast/cal05.gif
+  /images/broadcast/cal06.gif
+  /images/broadcast/cal07.gif
+############################################################
+■ 경인 내일(today=YYYYMMDD) · 글자 수 214133
+  본문 시작 위치 194258
+id="contents">
+			<div class="aside-wrap">
+	             <div class="title-area">
+	                 <h3>편성표</h3>
+	             </div>
+	             <div class="aside-menu">
+	                 <ul>
+	                     <li class="active"><a href="/broadcast/program.tbn?BOARD_ID=P001&amp;area_code=6">프로그램 소개</a></li>
+	                 </ul>
+	             </div>
+	         </div>
+		<div class="contents">
+			<div class="page-title">
+                <h4>프로그램 소개</h4>
+                <div class="breadcrumb">
+                    <span><img src="/images/common/icon-home02.png" alt="홈" /></span><span>편성표</span><span>프로그램 소개</span>
+                </div>
+            </div>
+             <ul class="tab-list square local-select">
+                <li class="on" ><a href="?page_code=1&amp;area_code=6&amp;today=20261017" ><span>본부</span></a></li>
+                <li ><a href="?page_code=3&amp;area_code=6&amp;today=20261017" ><span>전남광주</span></a></li>
+                <li ><a href="?page_code=2&amp;area_code=6&amp;today=20261017" ><span>부산</span></a></li>
+                <li ><a href="?page_code=4&amp;area_code=6&amp;today=20261017" ><span>대구</span></a></li>
+                <li ><a href="?page_code=6&amp;area_code=6&amp;today=20261017" ><span>경인</span></a></li>
+                <li ><a href="?page_code=5&amp;area_code=6&amp;today=20261017" ><span>대전</span></a></li>
+                <li ><a href="?page_code=9&amp;area_code=6&amp;today=20261017" ><span>울산</span></a></li>
+                <li ><a href="?page_code=7&amp;area_code=6&amp;today=20261017" ><span>강원</span></a></li>
+                <li ><a href="?page_code=13&amp;area_code=6&amp;today=20261017" ><span>충북</span></a></li>
+                <li ><a href="?page_code=14&amp;area_code=6&amp;today=20261017" ><span>충남</span></a></li>
+                <li ><a href="?page_code=8&amp;area_code=6&amp;today=20261017" ><span>전북</span></a></li>
+                <li ><a href="?page_code=11&amp;area_code=6&amp;today=20261017" ><span>경북</span></a></li>
+                <li ><a href="?page_code=10&amp;area_code=6&amp;today=20261017" ><span>경남</span></a></li>
+                <li ><a href="?page_code=12&amp;area_code=6&amp;today=20261017" ><span>제주</span></a></li>
+            </ul>      
+            <div class="broadcast-intro-wrap">
+            	<div class="broadcast-navi-wrap">
+		            <div class="broadcast-navi">
+		               <a class="prev" href="./program.tbn?area_code=6&page_code=1&today=20261016"><img src="/images/common/icon-prev02.png" alt="이전프로그램"/></a>
+		                <span>2026년 10월 17일 <strong>토요일</strong></span>
+		                <a class="next" href="./program.tbn?area_code=6&page_code=1&today=20261018"><img src="/images/common/icon-next02.png" alt="다음프로그램"/></a>
+		           		<p class="text">달력의 해당 날짜를 클릭하시면 아래의 표에서<br />프로그램 정보를 확인하실 수 있습니다.</p>
+		            </div>
+	            </div>
+	            <div id="calStr" class="calendar_box">
+					<!-- 
+	            	<span>
+	                <a href='#none'>
+	                <img src="../images/broadcast/btn_prev1.gif" alt="이전년" /></a>
+	                2010.12
+	                <a href='#none'>
+	                <img src="../images/broadcast/btn_next1.gif" alt="다음년" /></a>
+	                </span>
+	            	<table summary="요일별 날짜를 보실 수 있습니다.">
+	                	<caption>달력</caption>
+	                    <colgroup>
+	                    	<col width="10%" />
+	                        <col width="10%" />
+	                        <col width="10%" />
+	                        <col width="10%" />
+	                        <col width="10%" />
+	                        <col width="10%" />
+	                        <col width="10%" />
+	                    </colgroup>
+	                	<thead>
+	                        <tr>
+	                            <th scope="col"><img src="/images/broadcast/cal01.gif" alt="일" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal02.gif" alt="월" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal03.gif" alt="화" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal04.gif" alt="수" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal05.gif" alt="목" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal06.gif" alt="금" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal07.gif" alt="토" /></th>
+	                        </tr>
+	                    </thead>
+	                    <tbody>
+	                		<tr>
+	                        	<td class="r">1</td>
+	                            <td>2</td>
+	                            <td>3</td>
+	                            <td>4</td>
+	                            <td>5</td>
+	                            <td>6</td>
+	                            <td class="b">7</td>
+	                        </tr>
+	                        <tr>
+	                        	<td class="r">1</td>
+	                            <td>2</td>
+	                            <td>3</td>
+	                            <td>4</td>
+	                            <td>5</td>
+	                            <td>6</td>
+	                            <td class="b">7</td>
+	                        </tr>
+	                        <tr>
+	                        	<td class="r">1</td>
+	                            <td>2</td>
+	                            <td>3</td>
+	                            <td><strong>4</strong></td>
+	                            <td>5</td>
+	                            <td>6</td>
+	                            <td class="b">7</td>
+	                        </tr>
+	                        <tr>
+	                        	<td class="r">1</td>
+	                            <td>2</td>
+	                            <td>3</td>
+	                            <td>4</td>
+	                            <td>5</td>
+	                            <td>6</td>
+	                            <td class="b">7</td>
+	                        </tr>
+	                    </tbody>
+	                </table>
+	                -->
+            </div><!--//calendar_box-->
+            </div>
+	<div class="table-list basic mb50">
+	<table>
+    <caption>프로그램소개 - 시, 분, 프로그램명 정보제공</caption>
+    <thead>
+        <tr>
+            <th scope="col" class="wid10">시</th>                            
+            <th scope="col" class="wid10">분</th>                            
+            <th scope="col" class="wid30">프로그램명</th>
+            <th scope="col">&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+				        <tr>
+				            <td>05</td>
+				            <td>00</td>
+				            <td class="align-left">
+								<a href="/program/main.tbn?forum_seq=528
+									&amp;area_code=6"><strong>tbn명예의전당</strong>
+								</a>
+							</td>
+				            <td class="align-left">
+				                <p class="step-array">
+					            	<!-- PD : 강지선 | 
+					            	MC :   | 
+					            	작가 : -->            	
+					            	PD : 강지선
+				            	</p>
+				            </td>
+				        </tr>
+				        <tr>
+				            <td>06</td>
+				            <td>00</td>
+				            <td class="align-left">
+								<a href="/program/main.tbn?forum_seq=478
+									&amp;area_code=6"><strong>즐거운 주말 아침</strong>
+								</a>
+							</td>
+				            <td class="align-left">
+				                <p class="step-array">
+					            	<!-- PD : 강지선 | 
+					            	MC :   | 
+					            	작가 : -->            	
+					            	PD : 강지선
+					            	 ｜ MC : 박진희
+					            	 ｜ 작가 : 강인숙   
+				            	</p>
+				            </td>
+				        </tr>
+				        <tr>
+				            <td>08</td>
+				            <td>00</td>
+				            <td class="align-left">
+								<a href="/program/main.tbn?forum_seq=508
+									&amp;area_code=6"><strong>신나는 라디오, 박수림입니다.</strong>
+								</a>
+							</td>
+				            <td class="align-left">
+				                <p class="step-array">
+					            	<!-- PD : 이선영 | 
+					            	MC :   | 
+					            	작가 : -->            	
+					            	PD : 이선영
+					            	 ｜ MC : 박수림
+					            	 ｜ 작가 : 남효민   
+				            	</p>
+				            </td>
+				        </tr>
+				        <tr>
+				            <td>10</td>
+				            <td>00</td>
+				            <td class="align-left">
+								<a href="/program/main.tbn?forum_seq=509
+  --- 본문 사진 후보 ---
+  /images/broadcast/cal01.gif
+  /images/broadcast/cal02.gif
+  /images/broadcast/cal03.gif
+  /images/broadcast/cal04.gif
+  /images/broadcast/cal05.gif
+  /images/broadcast/cal06.gif
+  /images/broadcast/cal07.gif
+############################################################
+■ 경인 내일(today=YYYY-MM-DD) · 글자 수 214165
+  본문 시작 위치 194260
+id="contents">
+			<div class="aside-wrap">
+	             <div class="title-area">
+	                 <h3>편성표</h3>
+	             </div>
+	             <div class="aside-menu">
+	                 <ul>
+	                     <li class="active"><a href="/broadcast/program.tbn?BOARD_ID=P001&amp;area_code=6">프로그램 소개</a></li>
+	                 </ul>
+	             </div>
+	         </div>
+		<div class="contents">
+			<div class="page-title">
+                <h4>프로그램 소개</h4>
+                <div class="breadcrumb">
+                    <span><img src="/images/common/icon-home02.png" alt="홈" /></span><span>편성표</span><span>프로그램 소개</span>
+                </div>
+            </div>
+             <ul class="tab-list square local-select">
+                <li class="on" ><a href="?page_code=1&amp;area_code=6&amp;today=2026-10-17" ><span>본부</span></a></li>
+                <li ><a href="?page_code=3&amp;area_code=6&amp;today=2026-10-17" ><span>전남광주</span></a></li>
+                <li ><a href="?page_code=2&amp;area_code=6&amp;today=2026-10-17" ><span>부산</span></a></li>
+                <li ><a href="?page_code=4&amp;area_code=6&amp;today=2026-10-17" ><span>대구</span></a></li>
+                <li ><a href="?page_code=6&amp;area_code=6&amp;today=2026-10-17" ><span>경인</span></a></li>
+                <li ><a href="?page_code=5&amp;area_code=6&amp;today=2026-10-17" ><span>대전</span></a></li>
+                <li ><a href="?page_code=9&amp;area_code=6&amp;today=2026-10-17" ><span>울산</span></a></li>
+                <li ><a href="?page_code=7&amp;area_code=6&amp;today=2026-10-17" ><span>강원</span></a></li>
+                <li ><a href="?page_code=13&amp;area_code=6&amp;today=2026-10-17" ><span>충북</span></a></li>
+                <li ><a href="?page_code=14&amp;area_code=6&amp;today=2026-10-17" ><span>충남</span></a></li>
+                <li ><a href="?page_code=8&amp;area_code=6&amp;today=2026-10-17" ><span>전북</span></a></li>
+                <li ><a href="?page_code=11&amp;area_code=6&amp;today=2026-10-17" ><span>경북</span></a></li>
+                <li ><a href="?page_code=10&amp;area_code=6&amp;today=2026-10-17" ><span>경남</span></a></li>
+                <li ><a href="?page_code=12&amp;area_code=6&amp;today=2026-10-17" ><span>제주</span></a></li>
+            </ul>      
+            <div class="broadcast-intro-wrap">
+            	<div class="broadcast-navi-wrap">
+		            <div class="broadcast-navi">
+		               <a class="prev" href="./program.tbn?area_code=6&page_code=1&today=20261016"><img src="/images/common/icon-prev02.png" alt="이전프로그램"/></a>
+		                <span>2026년 -1월 0-일 <strong>수요일</strong></span>
+		                <a class="next" href="./program.tbn?area_code=6&page_code=1&today=20261018"><img src="/images/common/icon-next02.png" alt="다음프로그램"/></a>
+		           		<p class="text">달력의 해당 날짜를 클릭하시면 아래의 표에서<br />프로그램 정보를 확인하실 수 있습니다.</p>
+		            </div>
+	            </div>
+	            <div id="calStr" class="calendar_box">
+					<!-- 
+	            	<span>
+	                <a href='#none'>
+	                <img src="../images/broadcast/btn_prev1.gif" alt="이전년" /></a>
+	                2010.12
+	                <a href='#none'>
+	                <img src="../images/broadcast/btn_next1.gif" alt="다음년" /></a>
+	                </span>
+	            	<table summary="요일별 날짜를 보실 수 있습니다.">
+	                	<caption>달력</caption>
+	                    <colgroup>
+	                    	<col width="10%" />
+	                        <col width="10%" />
+	                        <col width="10%" />
+	                        <col width="10%" />
+	                        <col width="10%" />
+	                        <col width="10%" />
+	                        <col width="10%" />
+	                    </colgroup>
+	                	<thead>
+	                        <tr>
+	                            <th scope="col"><img src="/images/broadcast/cal01.gif" alt="일" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal02.gif" alt="월" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal03.gif" alt="화" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal04.gif" alt="수" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal05.gif" alt="목" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal06.gif" alt="금" /></th>
+	                            <th scope="col"><img src="/images/broadcast/cal07.gif" alt="토" /></th>
+	                        </tr>
+	                    </thead>
+	                    <tbody>
+	                		<tr>
+	                        	<td class="r">1</td>
+	                            <td>2</td>
+	                            <td>3</td>
+	                            <td>4</td>
+	                            <td>5</td>
+	                            <td>6</td>
+	                            <td class="b">7</td>
+	                        </tr>
+	                        <tr>
+	                        	<td class="r">1</td>
+	                            <td>2</td>
+	                            <td>3</td>
+	                            <td>4</td>
+	                            <td>5</td>
+	                            <td>6</td>
+	                            <td class="b">7</td>
+	                        </tr>
+	                        <tr>
+	                        	<td class="r">1</td>
+	                            <td>2</td>
+	                            <td>3</td>
+	                            <td><strong>4</strong></td>
+	                            <td>5</td>
+	                            <td>6</td>
+	                            <td class="b">7</td>
+	                        </tr>
+	                        <tr>
+	                        	<td class="r">1</td>
+	                            <td>2</td>
+	                            <td>3</td>
+	                            <td>4</td>
+	                            <td>5</td>
+	                            <td>6</td>
+	                            <td class="b">7</td>
+	                        </tr>
+	                    </tbody>
+	                </table>
+	                -->
+            </div><!--//calendar_box-->
+            </div>
+	<div class="table-list basic mb50">
+	<table>
+    <caption>프로그램소개 - 시, 분, 프로그램명 정보제공</caption>
+    <thead>
+        <tr>
+            <th scope="col" class="wid10">시</th>                            
+            <th scope="col" class="wid10">분</th>                            
+            <th scope="col" class="wid30">프로그램명</th>
+            <th scope="col">&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+				        <tr>
+				            <td>05</td>
+				            <td>00</td>
+				            <td class="align-left">
+								<a href="/program/main.tbn?forum_seq=528
+									&amp;area_code=6"><strong>tbn명예의전당</strong>
+								</a>
+							</td>
+				            <td class="align-left">
+				                <p class="step-array">
+					            	<!-- PD : 강지선 | 
+					            	MC :   | 
+					            	작가 : -->            	
+					            	PD : 강지선
+				            	</p>
+				            </td>
+				        </tr>
+				        <tr>
+				            <td>06</td>
+				            <td>00</td>
+				            <td class="align-left">
+								<a href="/program/main.tbn?forum_seq=478
+									&amp;area_code=6"><strong>즐거운 주말 아침</strong>
+								</a>
+							</td>
+				            <td class="align-left">
+				                <p class="step-array">
+					            	<!-- PD : 강지선 | 
+					            	MC :   | 
+					            	작가 : -->            	
+					            	PD : 강지선
+					            	 ｜ MC : 박진희
+					            	 ｜ 작가 : 강인숙   
+				            	</p>
+				            </td>
+				        </tr>
+				        <tr>
+				            <td>08</td>
+				            <td>00</td>
+				            <td class="align-left">
+								<a href="/program/main.tbn?forum_seq=508
+									&amp;area_code=6"><strong>신나는 라디오, 박수림입니다.</strong>
+								</a>
+							</td>
+				            <td class="align-left">
+				                <p class="step-array">
+					            	<!-- PD : 이선영 | 
+					            	MC :   | 
+					            	작가 : -->            	
+					            	PD : 이선영
+					            	 ｜ MC : 박수림
+					            	 ｜ 작가 : 남효민   
+				            	</p>
+				            </td>
+				        </tr>
+				        <tr>
+				            <td>10</td>
+				            <td>00</td>
+				            <td class="align-left">
+								<a href="/pr
+  --- 본문 사진 후보 ---
+  /images/broadcast/cal01.gif
+  /images/broadcast/cal02.gif
+  /images/broadcast/cal03.gif
+  /images/broadcast/cal04.gif
+  /images/broadcast/cal05.gif
+  /images/broadcast/cal06.gif
+  /images/broadcast/cal07.gif

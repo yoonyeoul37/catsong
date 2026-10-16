@@ -1,0 +1,552 @@
+############################################################
+■ 편성표 페이지 area_code=6 → 200 · 글자 수 213554
+--- 페이지 전체 (스타일 빼고) ---
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>	
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi">
+	<meta name ="description" content="TBN">
+	<meta name ="keyword" content="TBN">
+	<meta name="Robots" content="ALL">
+ 
+<title>방송프로그램 | 편성표 | 한국도로교통공단 tbn 교통방송</title>
+
+
+
+
+<link rel="shortcut icon" type="image/x-icon" href="/images/common/favicon.ico" />
+<link rel="stylesheet" href="/css/common.css" type="text/css" />
+<link rel="stylesheet" href="/css/style.css" type="text/css" />
+<script type="text/javascript" src="/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script type="text/javascript" src="/js/slick.min.js"></script>
+<script type="text/javascript" src="/js/html5shiv.js"></script>
+<script type="text/javascript" src="/js/respond.min.js"></script>
+<script type="text/javascript" src="/js/default.js"></script>
+<script type="text/javascript" src="/js/board.js"></script>
+
+<script type="text/javascript">
+$(function(){
+	$(window).load(function(){
+		if (window.location.href.indexOf("madang") > -1) {
+			$('link[rel=stylesheet][href="/css/common.css"]').remove();
+			$('link[rel=stylesheet][href="/css/style.css"]').remove();
+			$('script').each(function(){
+				if(this.src === '/js/jquery-1.7.1.min.js'){
+					this.parentNode.removeChild(this);
+				}
+				if(this.src === '/js/main.js'){
+					this.parentNode.removeChild(this);
+				}
+				if(this.src === '/js/common.js'){
+					this.parentNode.removeChild(this);
+				}
+			});
+		}
+		if (window.location.href.indexOf("razyad") > -1) {
+			$('link[rel=stylesheet][href="/css/common.css"]').remove();
+			$('link[rel=stylesheet][href="/css/style.css"]').remove();
+			$('script').each(function(){
+				if(this.src === '/js/jquery-1.7.1.min.js'){
+					this.parentNode.removeChild(this);
+				}
+				if(this.src === '/js/main.js'){
+					this.parentNode.removeChild(this);
+				}
+				if(this.src === '/js/common.js'){
+					this.parentNode.removeChild(this);
+				}
+			});
+		}
+	});
+});
+
+</script>
+<script type="text/javascript" src="/js/default.js"></script>
+<script type="text/javascript" src="/program/js/calendar.js"></script>
+<script type="text/javascript">
+<!--
+function everyDay( day ){
+	document.location.href = "./program.tbn?today=" + day+"&area_code="+document.getElementById("area_code").value+"&page_code="+document.getElementById("page_code").value;
+	//< %=StringUtil.nvl(request.getParameter("location"))%>;
+}
+//-->
+</script>
+</head>
+<body>
+	
+
+
+<script type="text/javascript">
+
+
+$(document).ready(function(){
+    var boardId="P001"
+    console.log(boardId)
+    if(boardId!=null){
+        $.ajax({
+            url:'/pageview/setPageviewCount.tbn?pageviewBoardId='+boardId+"&pageviewUrl="+$(location).attr('href'), 
+
+            dataType: 'html',
+            success : function (data) {
+//             console.log(data)
+            },
+            error:function(request,status,error){
+                //alert("code:"+request.status);
+               }
+        });
+    }
+    if(location.protocol == 'http:'  ) {
+    	//로컬에서만 주석처리해야됨.
+ 	 	//document.location.href = document.location.href.replace('http:', 'https:');	
+ 	 	}
+    
+});
+
+// 프로그램 검색시 이미
+function searchValue()
+{
+	//alert('검색시도');
+	var f = document.searchHeadForm;
+
+	//alert(f.search_txt.value );
+	f.keyword.value = "";
+		
+	return false;
+}
+
+// 검색어 체크
+function searchValueCheck()
+{
+	var f = document.searchHeadForm;
+
+	if('' == f.keyword.value)	// 검색어에 값이 없을 경우
+	{
+		alert('검색어를 입력 하세요.');
+		f.keyword.focus();
+		return false;
+	}
+	return true;
+}
+</script>
+<div class="overlay"></div>
+	<!-- skip navigation -->
+	<div id="skipNavigation">
+		<a href="#contents">본문 바로가기</a>
+		<a href="#gnb">메뉴 바로가기</a>
+		<a href="#footer">하단 바로가기</a>
+	</div>
+	<!--// skip to content -->
+	<div class="wrap">
+		<div class="header-wrap">
+			<header id="header">
+				<h1 class="logo"><a href="/main.tbn?area_code=6" style="padding-right: 15px; display: inline-block; max-width:100%; height:auto;"><img src="/images/common/logo_6.png" alt="한국도로교통공단 tbn 교통방송"/></a></h1>
+				<div class="util">
+					<ul>
+						<li><a href="/main.tbn?area_code=1">HOME</a></li>
+					    
+						
+                        
+						
+						
+						    <li><a href="/member/login.tbn?BOARD_ID=P001&amp;area_code=6&amp;page_code=1&amp;try_code=">로그인</a></li>
+						
+						
+						    <li><a href="/member/member_stipulation.tbn?area_code=6&amp;page_code=2">회원가입</a></li>
+						
+						
+					</ul>
+				</div>
+				<p class="mobile-search-btn"><a href="javascript:;"><img src="../images/common/icon-search.png" alt="검색열기" /></a></p>
+				<p class="mobile-menu-btn"><a href="#top"><img src="/images/common/icon-menu.png" alt="메뉴열기"></a></p>
+				<h2 class="tts">주메뉴</h2>
+				<div class="gnb-wrap">
+					<div class="local-quick-link">
+						<p class="home-link"><a href="/main.tbn?area_code=1"><img src="../images/common/icon-home.png" alt="홈으로이동" /></a></p>
+						<p class="tit"><a href="javascript:;">지역방송</a></p>
+						<ul>
+							<li><a href="/main.tbn?area_code=1"><p><span><img src="../images/common/quick-img01.png" alt="tbn" /> 전국</span></p></a></li>
+							<li><a href="/main.tbn?area_code=3"><p><span><img src="../images/common/quick-img02.png" alt="tbn" /> 전남광주</span> <span>FM97.3<em>MHz</em></span></p></a></li>
+							<li><a href="/main.tbn?area_code=2"><p><span><img src="../images/common/quick-img02.png" alt="tbn" /> 부산</span> <span>FM94.9<em>MHz</em></span></p></a></li>
+							<li><a href="/main.tbn?area_code=4"><p><span><img src="../images/common/quick-img02.png" alt="tbn" /> 대구</span> <span>FM103.9<em>MHz</em></span></p></a></li>
+							<li><a href="/main.tbn
+  스크립트 /js/board.js
+  스크립트 /js/common.js
+  스크립트 /js/default.js
+  스크립트 /js/html5shiv.js
+  스크립트 /js/jquery-1.7.1.min.js
+  스크립트 /js/jquery-ui.min.js
+  스크립트 /js/respond.min.js
+  스크립트 /js/slick.min.js
+  스크립트 /program/js/calendar.js
+############################################################
+■ 편성표 페이지 area_code=1 → 200 · 글자 수 213357
+--- 페이지 전체 (스타일 빼고) ---
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>	
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi">
+	<meta name ="description" content="TBN">
+	<meta name ="keyword" content="TBN">
+	<meta name="Robots" content="ALL">
+ 
+<title>방송프로그램 | 편성표 | 한국도로교통공단 tbn 교통방송</title>
+
+
+
+
+<link rel="shortcut icon" type="image/x-icon" href="/images/common/favicon.ico" />
+<link rel="stylesheet" href="/css/common.css" type="text/css" />
+<link rel="stylesheet" href="/css/style.css" type="text/css" />
+<script type="text/javascript" src="/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script type="text/javascript" src="/js/slick.min.js"></script>
+<script type="text/javascript" src="/js/html5shiv.js"></script>
+<script type="text/javascript" src="/js/respond.min.js"></script>
+<script type="text/javascript" src="/js/default.js"></script>
+<script type="text/javascript" src="/js/board.js"></script>
+
+<script type="text/javascript">
+$(function(){
+	$(window).load(function(){
+		if (window.location.href.indexOf("madang") > -1) {
+			$('link[rel=stylesheet][href="/css/common.css"]').remove();
+			$('link[rel=stylesheet][href="/css/style.css"]').remove();
+			$('script').each(function(){
+				if(this.src === '/js/jquery-1.7.1.min.js'){
+					this.parentNode.removeChild(this);
+				}
+				if(this.src === '/js/main.js'){
+					this.parentNode.removeChild(this);
+				}
+				if(this.src === '/js/common.js'){
+					this.parentNode.removeChild(this);
+				}
+			});
+		}
+		if (window.location.href.indexOf("razyad") > -1) {
+			$('link[rel=stylesheet][href="/css/common.css"]').remove();
+			$('link[rel=stylesheet][href="/css/style.css"]').remove();
+			$('script').each(function(){
+				if(this.src === '/js/jquery-1.7.1.min.js'){
+					this.parentNode.removeChild(this);
+				}
+				if(this.src === '/js/main.js'){
+					this.parentNode.removeChild(this);
+				}
+				if(this.src === '/js/common.js'){
+					this.parentNode.removeChild(this);
+				}
+			});
+		}
+	});
+});
+
+</script>
+<script type="text/javascript" src="/js/default.js"></script>
+<script type="text/javascript" src="/program/js/calendar.js"></script>
+<script type="text/javascript">
+<!--
+function everyDay( day ){
+	document.location.href = "./program.tbn?today=" + day+"&area_code="+document.getElementById("area_code").value+"&page_code="+document.getElementById("page_code").value;
+	//< %=StringUtil.nvl(request.getParameter("location"))%>;
+}
+//-->
+</script>
+</head>
+<body>
+	
+
+
+<script type="text/javascript">
+
+
+$(document).ready(function(){
+    var boardId="P001"
+    console.log(boardId)
+    if(boardId!=null){
+        $.ajax({
+            url:'/pageview/setPageviewCount.tbn?pageviewBoardId='+boardId+"&pageviewUrl="+$(location).attr('href'), 
+
+            dataType: 'html',
+            success : function (data) {
+//             console.log(data)
+            },
+            error:function(request,status,error){
+                //alert("code:"+request.status);
+               }
+        });
+    }
+    if(location.protocol == 'http:'  ) {
+    	//로컬에서만 주석처리해야됨.
+ 	 	//document.location.href = document.location.href.replace('http:', 'https:');	
+ 	 	}
+    
+});
+
+// 프로그램 검색시 이미
+function searchValue()
+{
+	//alert('검색시도');
+	var f = document.searchHeadForm;
+
+	//alert(f.search_txt.value );
+	f.keyword.value = "";
+		
+	return false;
+}
+
+// 검색어 체크
+function searchValueCheck()
+{
+	var f = document.searchHeadForm;
+
+	if('' == f.keyword.value)	// 검색어에 값이 없을 경우
+	{
+		alert('검색어를 입력 하세요.');
+		f.keyword.focus();
+		return false;
+	}
+	return true;
+}
+</script>
+<div class="overlay"></div>
+	<!-- skip navigation -->
+	<div id="skipNavigation">
+		<a href="#contents">본문 바로가기</a>
+		<a href="#gnb">메뉴 바로가기</a>
+		<a href="#footer">하단 바로가기</a>
+	</div>
+	<!--// skip to content -->
+	<div class="wrap">
+		<div class="header-wrap">
+			<header id="header">
+				<h1 class="logo"><a href="/main.tbn?area_code=1" style="padding-right: 15px; display: inline-block; max-width:100%; height:auto;"><img src="/images/common/logo_1.png" alt="한국도로교통공단 tbn 교통방송"/></a></h1>
+				<div class="util">
+					<ul>
+						<li><a href="/main.tbn?area_code=1">HOME</a></li>
+					    
+						
+                        
+						
+						
+						    <li><a href="/member/login.tbn?BOARD_ID=P001&amp;area_code=1&amp;page_code=1&amp;try_code=">로그인</a></li>
+						
+						
+						    <li><a href="/member/member_stipulation.tbn?area_code=1&amp;page_code=2">회원가입</a></li>
+						
+						
+					</ul>
+				</div>
+				<p class="mobile-search-btn"><a href="javascript:;"><img src="../images/common/icon-search.png" alt="검색열기" /></a></p>
+				<p class="mobile-menu-btn"><a href="#top"><img src="/images/common/icon-menu.png" alt="메뉴열기"></a></p>
+				<h2 class="tts">주메뉴</h2>
+				<div class="gnb-wrap">
+					<div class="local-quick-link">
+						<p class="home-link"><a href="/main.tbn?area_code=1"><img src="../images/common/icon-home.png" alt="홈으로이동" /></a></p>
+						<p class="tit"><a href="javascript:;">지역방송</a></p>
+						<ul>
+							<li><a href="/main.tbn?area_code=1"><p><span><img src="../images/common/quick-img01.png" alt="tbn" /> 전국</span></p></a></li>
+							<li><a href="/main.tbn?area_code=3"><p><span><img src="../images/common/quick-img02.png" alt="tbn" /> 전남광주</span> <span>FM97.3<em>MHz</em></span></p></a></li>
+							<li><a href="/main.tbn?area_code=2"><p><span><img src="../images/common/quick-img02.png" alt="tbn" /> 부산</span> <span>FM94.9<em>MHz</em></span></p></a></li>
+							<li><a href="/main.tbn?area_code=4"><p><span><img src="../images/common/quick-img02.png" alt="tbn" /> 대구</span> <span>FM103.9<em>MHz</em></span></p></a></li>
+							<li><a href="/main.tbn
+  스크립트 /js/board.js
+  스크립트 /js/common.js
+  스크립트 /js/default.js
+  스크립트 /js/html5shiv.js
+  스크립트 /js/jquery-1.7.1.min.js
+  스크립트 /js/jquery-ui.min.js
+  스크립트 /js/respond.min.js
+  스크립트 /js/slick.min.js
+  스크립트 /program/js/calendar.js
+============================================================
+https://www.tbn.or.kr/js/common.js → 200 · 글자 수 20031
+  …  if(aTag.length > 0){ $(aTag).each(function(){ if($(this).attr('href').indexOf('downloadfile/filedown.tbn') != -1 || $(this).attr('href').indexOf('keyword=') != -1 ){ console.log($(this).attr('href')); $(this).attr('href',encodeURI($(this
+============================================================
+https://www.tbn.or.kr/js/default.js → 200 · 글자 수 14198
+  …  var obj = document.getElementById("subnav_list"+id); obj.style.visibility = "visible"; if('1' == id){ viewprogram(viewProgramNum); imgOverprogram(viewProgramNum); } else { viewprogram(0); } } function CloseSub(id) { var obj = document.getElementById("subna
+  … Id("subnav_list"+id); obj.style.visibility = "visible"; if('1' == id){ viewprogram(viewProgramNum); imgOverprogram(viewProgramNum); } else { viewprogram(0); } } function CloseSub(id) { var obj = document.getElementById("subnav_list"+id); obj.style.visibility
+  … y = "visible"; if('1' == id){ viewprogram(viewProgramNum); imgOverprogram(viewProgramNum); } else { viewprogram(0); } } function CloseSub(id) { var obj = document.getElementById("subnav_list"+id); obj.style.visibility = "hidden"; //for(var i=1; i<9; i++){ 
+  … ById("subnav_list"+id); obj.style.visibility = "hidden"; //for(var i=1; i<9; i++){ //if(document.getElementById("program"+i).style.visibility == "visible"){ //document.getElementById("program"+i).style.visibility = "hidden"; //document.getElementById("program"+i).style.di
+  …  i<9; i++){ //if(document.getElementById("program"+i).style.visibility == "visible"){ //document.getElementById("program"+i).style.visibility = "hidden"; //document.getElementById("program"+i).style.display = "none"; //} //} viewprogram(0); } // imgOverContent g
+  … y == "visible"){ //document.getElementById("program"+i).style.visibility = "hidden"; //document.getElementById("program"+i).style.display = "none"; //} //} viewprogram(0); } // imgOverContent gnb function imgOvergnb(num) { for (var i = 1; i <= 4; i++ ) { var 
+  … ).style.visibility = "hidden"; //document.getElementById("program"+i).style.display = "none"; //} //} viewprogram(0); } // imgOverContent gnb function imgOvergnb(num) { for (var i = 1; i <= 4; i++ ) { var content_tab = document.getElementById("gnb"+i+"_tab"); 
+  …  }else{ frm.style.display = "none"; } }else{ frm.style.display = "none"; } } } } //program //imgOverContent program function imgOverprogram(num) { for (var i = 1; i <= 13; i++ ) { var content_tab = document.getElementById("program"+i+"_tab"); 
+  … display = "none"; } }else{ frm.style.display = "none"; } } } } //program //imgOverContent program function imgOverprogram(num) { for (var i = 1; i <= 13; i++ ) { var content_tab = document.getElementById("program"+i+"_tab"); var img_src = content_
+  …  }else{ frm.style.display = "none"; } } } } //program //imgOverContent program function imgOverprogram(num) { for (var i = 1; i <= 13; i++ ) { var content_tab = document.getElementById("program"+i+"_tab"); var img_src = content_tab.getAttribute('src'); 
+  … rogram function imgOverprogram(num) { for (var i = 1; i <= 13; i++ ) { var content_tab = document.getElementById("program"+i+"_tab"); var img_src = content_tab.getAttribute('src'); img_src = img_src.replace("_on", "_off"); content_tab.setAttribute('src', img_src); } 
+  … replace("_on", "_off"); content_tab.setAttribute('src', img_src); } var content_tab = document.getElementById("program"+num+"_tab"); var img_src = content_tab.getAttribute('src'); img_src = img_src.replace("_off", "_on"); content_tab.setAttribute('src', img_src); } /
+  … lace("_off", "_on"); content_tab.setAttribute('src', img_src); } //topday var viewProgramNum = 1; function viewprogram(x) { /* document.getElementById("program1").style.visibility = "hidden"; document.getElementById("program2").style.visibility = "hidden"; document.get
+  … e('src', img_src); } //topday var viewProgramNum = 1; function viewprogram(x) { /* document.getElementById("program1").style.visibility = "hidden"; document.getElementById("program2").style.visibility = "hidden"; document.getElementById("program3").style.visibility = "hi
+  … on viewprogram(x) { /* document.getElementById("program1").style.visibility = "hidden"; document.getElementById("program2").style.visibility = "hidden"; document.getElementById("program3").style.visibility = "hidden"; document.getElementById("program4").style.visibility = "hi
+  … le.visibility = "hidden"; document.getElementById("program2").style.visibility = "hidden"; document.getElementById("program3").style.visibility = "hidden"; document.getElementById("program4").style.visibility = "hidden"; document.getElementById("program5").style.visibility = "hi
+  … le.visibility = "hidden"; document.getElementById("program3").style.visibility = "hidden"; document.getElementById("program4").style.visibility = "hidden"; document.getElementById("program5").style.visibility = "hidden"; document.getElementById("program6").style.visibility = "hi
+  … le.visibility = "hidden"; document.getElementById("program4").style.visibility = "hidden"; document.getElementById("program5").style.visibility = "hidden"; document.getElementById("program6").style.visibility = "hidden"; document.getElementById("program7").style.visibility = "hi
+  … le.visibility = "hidden"; document.getElementById("program5").style.visibility = "hidden"; document.getElementById("program6").style.visibility = "hidden"; document.getElementById("program7").style.visibility = "hidden"; document.getElementById("program8").style.visibility = "hi
+  … le.visibility = "hidden"; document.getElementById("program6").style.visibility = "hidden"; document.getElementById("program7").style.visibility = "hidden"; document.getElementById("program8").style.visibility = "hidden"; document.getElementById("program"+x).style.visibility = "v
+  … le.visibility = "hidden"; document.getElementById("program7").style.visibility = "hidden"; document.getElementById("program8").style.visibility = "hidden"; document.getElementById("program"+x).style.visibility = "visible"; */ for(var i=1; i<=12; i++) { if(i == x){ 
+  … le.visibility = "hidden"; document.getElementById("program8").style.visibility = "hidden"; document.getElementById("program"+x).style.visibility = "visible"; */ for(var i=1; i<=12; i++) { if(i == x){ document.getElementById("program"+i).style.visibility = "visible"; 
+  … am"+x).style.visibility = "visible"; */ for(var i=1; i<=12; i++) { if(i == x){ document.getElementById("program"+i).style.visibility = "visible"; viewProgramNum = i; } else { document.getElementById("program"+i).style.visibility = "hidden"; } } } //on
+  … ElementById("program"+i).style.visibility = "visible"; viewProgramNum = i; } else { document.getElementById("program"+i).style.visibility = "hidden"; } } } //onair //imgOverContent onair function imgOveronair(num) { for (var i = 1; i <= 13; i++ ) { var content
+  … NAL_SEQ) { if(confirm("정말 삭제 하시겠습니까?")){ if(gubun == 'corredboard') { location.href="/listen/corresboard_delete.tbn?BOARD_ID="+BOARD_ID+"&area_code="+area_code+"&BOARD_SEQ="+BOARD_SEQ+"&ORIGINAL_SEQ="+ORIGINAL_SEQ; } else if(gubun == 'lostboard') { location.href="/lis
+  … OARD_SEQ+"&ORIGINAL_SEQ="+ORIGINAL_SEQ; } else if(gubun == 'lostboard') { location.href="/listen/lostboard_delete.tbn?BOARD_ID="+BOARD_ID+"&area_code="+area_code+"&BOARD_SEQ="+BOARD_SEQ+"&ORIGINAL_SEQ="+ORIGINAL_SEQ; } else if(gubun == 'faqboard') { location.href="/lis
+  … BOARD_SEQ+"&ORIGINAL_SEQ="+ORIGINAL_SEQ; } else if(gubun == 'faqboard') { location.href="/listen/faqboard_delete.tbn?BOARD_ID="+BOARD_ID+"&area_code="+area_code+"&BOARD_SEQ="+BOARD_SEQ; } else if( gubun == 'unsatifyboard') { location.href="/listen/unsatifyboard_delete_
+  … de+"&BOARD_SEQ="+BOARD_SEQ; } else if( gubun == 'unsatifyboard') { location.href="/listen/unsatifyboard_delete_ok.tbn?BOARD_ID="+BOARD_ID+"&area_code="+area_code+"&BOARD_SEQ="+BOARD_SEQ; } else if( gubun == 'product_board') { location.href="/listen/product_board_delete_
+  … de+"&BOARD_SEQ="+BOARD_SEQ; } else if( gubun == 'product_board') { location.href="/listen/product_board_delete_ok.tbn?BOARD_ID="+BOARD_ID+"&area_code="+area_code+"&BOARD_SEQ="+BOARD_SEQ; } else if ( gubun == 'tbnnews' ) { location.href="/notice/tbnnews_delete.tbn?
+  … area_code+"&BOARD_SEQ="+BOARD_SEQ; } else if ( gubun == 'tbnnews' ) { location.href="/notice/tbnnews_delete.tbn?BOARD_ID="+BOARD_ID+"&area_code="+area_code+"&BOARD_SEQ="+BOARD_SEQ; } else if ( gubun == 'report' ) { location.href="/notice/report_delete.tbn?BO
+  … "+area_code+"&BOARD_SEQ="+BOARD_SEQ; } else if ( gubun == 'report' ) { location.href="/notice/report_delete.tbn?BOARD_ID="+BOARD_ID+"&area_code="+area_code+"&BOARD_SEQ="+BOARD_SEQ; } else if ( gubun == 'viewers' ) { location.href="/notice/viewers_delete.tbn?
+  … area_code+"&BOARD_SEQ="+BOARD_SEQ; } else if ( gubun == 'viewers' ) { location.href="/notice/viewers_delete.tbn?BOARD_ID="+BOARD_ID+"&area_code="+area_code+"&BOARD_SEQ="+BOARD_SEQ; } else if ( gubun == 'eventview' ) { location.href="/notice/event_delete.tbn?
+  … area_code+"&BOARD_SEQ="+BOARD_SEQ; } else if ( gubun == 'eventview' ) { location.href="/notice/event_delete.tbn?BOARD_ID="+BOARD_ID+"&area_code="+area_code+"&BOARD_SEQ="+BOARD_SEQ; } else if ( gubun == 'recruitinfo' ) { location.href="/notice/recruitinfo_del
+  … e+"&BOARD_SEQ="+BOARD_SEQ; } else if ( gubun == 'recruitinfo' ) { location.href="/notice/recruitinfo_delete.tbn?BOARD_ID="+BOARD_ID+"&area_code="+area_code+"&BOARD_SEQ="+BOARD_SEQ; } else if ( gubun == 'recruitfaq' ) { location.href="/notice/recruitfaq_delet
+  … ode+"&BOARD_SEQ="+BOARD_SEQ; } else if ( gubun == 'recruitfaq' ) { location.href="/notice/recruitfaq_delete.tbn?BOARD_ID="+BOARD_ID+"&area_code="+area_code+"&BOARD_SEQ="+BOARD_SEQ; } } } function confirmDelete(delUrl) { if(confirm ('정말 삭제하시겠습니까?')){ 
+============================================================
+https://www.tbn.or.kr/js/board.js → 200 · 글자 수 8790
+  … e; } return true; } //좌측메뉴 버튼 클릭시 페이지 이동 function goListenerBody(board_id){ location.href="/listener/board.tbn?board_id="+boardid; } //게시판 이메일 직접 입력 관련 사항 function goEmailSelect(x){ if(x.value == '1'){ document.getElementById("selfEmail").style.visibility = ""
+  … ); alert("BOARD_ID="+BOARD_ID.value); alert("curPage="+curPage.value); location.href="/notice/rotanews_view_before.tbn?BOARD_SEQ="+x+"&BOARD_ID="+BOARD_ID.value+"&curPage="+curPage.value; } function hiddenGloop(num) { for(var i=1; i < num; i++) { document.getElement
+============================================================
+[후보] https://www.tbn.or.kr/broadcast/schedule.tbn?area_code=6 → None (https://www.tbn.or.kr/broadcast/schedule.tbn?area_code=6) · 글자 수 16 · 시간 글자 0개
+============================================================
+[후보] https://www.tbn.or.kr/broadcast/program_list.tbn?area_code=6 → None (https://www.tbn.or.kr/broadcast/program_list.tbn?area_code=6) · 글자 수 16 · 시간 글자 0개
+============================================================
+[후보] https://www.tbn.or.kr/broadcast/timetable.tbn?area_code=6 → None (https://www.tbn.or.kr/broadcast/timetable.tbn?area_code=6) · 글자 수 16 · 시간 글자 0개
+============================================================
+[후보] https://www.tbn.or.kr/broadcast/program.tbn?BOARD_ID=P001&page_code=2&area_code=6 → 200 (https://www.tbn.or.kr/broadcast/program.tbn?BOARD_ID=P001&page_code=2&area_code=6) · 글자 수 216741 · 시간 글자 332개
+<a href="javascript:;">충북</a></li>
+												<li><a href="javascript:;">충남</a></li>
+												<li><a href="javascript:;">전북</a></li>
+												<li><a href="javascript:;">경북</a></li>
+												<li><a href="javascript:;">경남</a></li>
+												<li><a href="javascript:;">제주</a></li>
+											</ul>
+											
+											
+
+										</div>
+									</div>
+									<div class="gnb-sch-wrap">
+										<ul>
+											<li>
+												<p class="tts">서울</p>
+												<div class="program_list">
+													<div class="weekday">
+														<p>평일프로그램</p>
+														<ul>
+														    
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=411">
+																	    <strong>06:00</strong><span>굿모닝 코리아</span>
+																	    <span>MC : 서현진
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=420">
+																	    <strong>08:52</strong><span>tbn 특별기획 우리의 생명이 가장 중요합니다.</span>
+																	    <span>MC : 윤유선
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=474">
+																	    <strong>11:00</strong><span>김경식의 오토쇼 으라차차</span>
+																	    <span>MC : 김경식
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=515">
+																	    <strong>12:05</strong><span>김효진, 양상국의 12시에 만나요</span>
+																	    <span>MC : 김효진,양상국
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=503">
+																	    <strong>20:00</strong><span>김승현의 가요본색</span>
+																	    <span>MC : 김승현
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=521">
+																	    <strong>22:00</strong><span>행복한 밤, tbn과 함께</span>
+																	    <span>MC : 최지은
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=504">
+																	    <strong>24:00</strong><span>tbn플레이리스트 </span>
+																	    <span>
+		                                                                </span></a></li> 
+	                                                            
+                                                            
+														</ul>
+													</div><!--//weekday-->
+													<div class="weekend">
+														<p>주말프로
+============================================================
+[후보] https://www.tbn.or.kr/broadcast/program.tbn?BOARD_ID=P002&page_code=1&area_code=6 → 200 (https://www.tbn.or.kr/broadcast/program.tbn?BOARD_ID=P002&page_code=1&area_code=6) · 글자 수 213554 · 시간 글자 332개
+<a href="javascript:;">충북</a></li>
+												<li><a href="javascript:;">충남</a></li>
+												<li><a href="javascript:;">전북</a></li>
+												<li><a href="javascript:;">경북</a></li>
+												<li><a href="javascript:;">경남</a></li>
+												<li><a href="javascript:;">제주</a></li>
+											</ul>
+											
+											
+
+										</div>
+									</div>
+									<div class="gnb-sch-wrap">
+										<ul>
+											<li>
+												<p class="tts">서울</p>
+												<div class="program_list">
+													<div class="weekday">
+														<p>평일프로그램</p>
+														<ul>
+														    
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=411">
+																	    <strong>06:00</strong><span>굿모닝 코리아</span>
+																	    <span>MC : 서현진
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=420">
+																	    <strong>08:52</strong><span>tbn 특별기획 우리의 생명이 가장 중요합니다.</span>
+																	    <span>MC : 윤유선
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=474">
+																	    <strong>11:00</strong><span>김경식의 오토쇼 으라차차</span>
+																	    <span>MC : 김경식
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=515">
+																	    <strong>12:05</strong><span>김효진, 양상국의 12시에 만나요</span>
+																	    <span>MC : 김효진,양상국
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=503">
+																	    <strong>20:00</strong><span>김승현의 가요본색</span>
+																	    <span>MC : 김승현
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=521">
+																	    <strong>22:00</strong><span>행복한 밤, tbn과 함께</span>
+																	    <span>MC : 최지은
+		                                                                &nbsp;&nbsp;</span></a></li> 
+	                                                            
+																	<li><a href="/program/main.tbn?area_code=1&amp;forum_seq=504">
+																	    <strong>24:00</strong><span>tbn플레이리스트 </span>
+																	    <span>
+		                                                                </span></a></li> 
+	                                                            
+                                                            
+														</ul>
+													</div><!--//weekday-->
+													<div class="weekend">
+														<p>주말프로
+============================================================
+[후보] https://m.tbn.or.kr/ → None (https://m.tbn.or.kr/) · 글자 수 48 · 시간 글자 0개

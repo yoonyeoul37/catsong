@@ -1,0 +1,19 @@
+■ 1) 화면 조각 파일들에서 부를 때 넣는 값 찾기
+  조각 파일 0개
+■ 2) 넣는 값 바꿔 보며 프로그램 목록 부르기 (에러 내용 포함)
+  program/list {} → X 400 {"resultCode":{"code":400002,"http_status":400,"timestamp":1792131007407,"message":"프로그램 타입은 필수입니다.","trace":"","access_token":null,"expire_time":0}}
+  program/list {"page": 1} → X 400 {"resultCode":{"code":400002,"http_status":400,"timestamp":1792131007518,"message":"프로그램 타입은 필수입니다.","trace":"","access_token":null,"expire_time":0}}
+  program/list {"channel": "radio"} → X 400 {"resultCode":{"code":400002,"http_status":400,"timestamp":1792131010639,"message":"프로그램 타입은 필수입니다.","trace":"","access_token":null,"expire_time":0}}
+  program/list {"channel_id": 3} → X 400 {"resultCode":{"code":400002,"http_status":400,"timestamp":1792131010734,"message":"프로그램 타입은 필수입니다.","trace":"","access_token":null,"expire_time":0}}
+  program/list {"menu_id": 3} → X 400 {"resultCode":{"code":400002,"http_status":400,"timestamp":1792131010848,"message":"프로그램 타입은 필수입니다.","trace":"","access_token":null,"expire_time":0}}
+  program/list {"type": "radio"} → X 400 {"resultCode":{"code":400002,"http_status":400,"timestamp":1792131010943,"message":"프로그램 타입은 필수입니다.","trace":"","access_token":null,"expire_time":0}}
+  program/list {"program_type": "RADIO"} → X 400 {"resultCode":{"code":400002,"http_status":400,"timestamp":1792131011061,"message":"언어선택은 필수입니다.","trace":"","access_token":null,"expire_time":0}}
+  program/list {"is_radio": true} → X 400 {"resultCode":{"code":400002,"http_status":400,"timestamp":1792131011170,"message":"프로그램 타입은 필수입니다.","trace":"","access_token":null,"expire_time":0}}
+  program/list {"lang": "en"} → X 400 {"resultCode":{"code":400002,"http_status":400,"timestamp":1792131011278,"message":"프로그램 타입은 필수입니다.","trace":"","access_token":null,"expire_time":0}}
+  program/list {"page": 1, "page_size": 50, "channel": "RADIO"} → X 400 {"resultCode":{"code":400002,"http_status":400,"timestamp":1792131011383,"message":"프로그램 타입은 필수입니다.","trace":"","access_token":null,"expire_time":0}}
+  menu/list {} → X 400 {"resultCode":{"code":400002,"http_status":400,"timestamp":1792131011502,"message":"프로그램이 선택되지 않았습니다.","trace":"","access_token":null,"expire_time":0}}
+  category/list {} → X 400 {"resultCode":{"code":400002,"http_status":400,"timestamp":1792131014620,"message":"언어선택은 필수입니다.","trace":"","access_token":null,"expire_time":0}}
+  menu/list {"lang": "en"} → X 400 {"resultCode":{"code":400002,"http_status":400,"timestamp":1792131017745,"message":"프로그램이 선택되지 않았습니다.","trace":"","access_token":null,"expire_time":0}}
+  category/list {"lang": "en"} → X 400 {"resultCode":{"code":400002,"http_status":400,"timestamp":1792131017860,"message":"언어선택은 필수입니다.","trace":"","access_token":null,"expire_time":0}}
+  menu/list {"menu_type": "radio"} → X 400 {"resultCode":{"code":400002,"http_status":400,"timestamp":1792131020980,"message":"프로그램이 선택되지 않았습니다.","trace":"","access_token":null,"expire_time":0}}
+  category/list {"menu_type": "radio"} → X 400 {"resultCode":{"code":400002,"http_status":400,"timestamp":1792131024099,"message":"언어선택은 필수입니다.","trace":"","access_token":null,"expire_time":0}}

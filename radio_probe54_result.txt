@@ -1,0 +1,519 @@
+■ 1) MBC 올댓뮤직 (iMBC 편성 주소)
+  sType=CHM → 프로그램 0개 · []
+  sType=chm → 프로그램 0개 · []
+  sType=ALLTHAT → 프로그램 0개 · []
+  sType=AllThatMusic → 프로그램 0개 · []
+  sType=ATM → 프로그램 0개 · []
+  sType=MUSIC → 프로그램 0개 · []
+  sType=CH3 → 프로그램 0개 · []
+  sType=FM3 → 프로그램 0개 · []
+  sType=DMB → 프로그램 0개 · []
+  https://www.imbc.com/broad/radio/fm/schedule/index.html → https://www.imbc.com/broad/radio/fm/schedule/index.html · 단서 []
+  https://radio.imbc.com/ → https://www.imbc.com/broad/radio/ · 단서 ['allthat']
+  https://mini.imbc.com/ → https://miniwebapp.imbc.com/index · 단서 []
+■ 2) 극동방송 AM
+  ── https://seoul.febc.net/radio/schedule → https://seoul.febc.net/radio/schedule · 글자 181887 · 시간 69개
+     링크 [라디오 프로그램] /radio/program
+     링크 [보이는 라디오] /radio/program/bora
+     링크 [편성표] /radio/schedule
+     링크 [오늘의 설교] /sermon/schedule
+     링크 [라디오 프로그램] /radio/program
+     링크 [보이는 라디오] /radio/program/bora
+     링크 [편성표] /radio/schedule
+     링크 [오늘의 설교] /sermon/schedule
+     링크 [편성표] javascript:;
+     링크 [] /program/9591/general
+     링크 [별처럼 빛나는 그대에게 홈으로 이동] /program/9591/general
+     링크 [별처럼 빛나는 그대에게 홈으로 이동] /program/9591/general
+     링크 [] /program/9601/general
+     링크 [나영환의 달빛가스펠 홈으로 이동] /program/9601/general
+     링크 [나영환의 달빛가스펠 홈으로 이동] /program/9601/general
+     링크 [] /program/979414/general
+     링크 [샬롬, 대한민국입니다 홈으로 이동] /program/979414/general
+     링크 [샬롬, 대한민국입니다 홈으로 이동] /program/979414/general
+     링크 [] /program/9630/general
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [복음의 메아리(3분 메시지) 홈으로 ] /program/1570693/sermon
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [] /program/9630/general
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [복음의 메아리(설교) 홈으로 이동] /program/1570715/sermon
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [] /program/9646/general
+     링크 [내 영혼에 햇빛 비치니 홈으로 이동] /program/9646/general
+     링크 [말씀365 홈으로 이동] /program/9640/general
+     링크 [FEBC 새벽예배 홈으로 이동] /program/9643/sermon
+     링크 [내 영혼에 햇빛 비치니 홈으로 이동] /program/9646/general
+     링크 [] /program/9649/general
+     링크 [주님과 이 아침을 홈으로 이동] /program/9649/general
+     링크 [주님과 이 아침을 홈으로 이동] /program/9649/general
+     링크 [오늘의 양식 홈으로 이동] /program/9652/sermon
+     링크 [] /program/9657/general
+     링크 [좋은 아침입니다 홈으로 이동] /program/9657/general
+     링크 [좋은 아침입니다 홈으로 이동] /program/9657/general
+     링크 [] /program/9661/general
+     링크 [힘찬 라디오 홈으로 이동] /program/9661/general
+     링크 [힘찬 라디오 홈으로 이동] /program/9661/general
+     링크 [날마다 살아나는 큐티 홈으로 이동] /program/9664/general
+     링크 [] /program/9679/general
+     링크 [사랑의 뜰안 홈으로 이동] /program/9679/general
+     링크 [좋은아침 칼럼 홈으로 이동] /program/1449/general
+     링크 [내가 매일 기쁘게 홈으로 이동] /program/9670/sermon
+     링크 [FEBC 게시판 홈으로 이동] /program/9672/general
+     링크 [생명은 빛으로 홈으로 이동] /program/9676/sermon
+     링크 [] /program/9679/general
+     링크 [사랑의 뜰안 홈으로 이동] /program/9679/general
+     링크 [사랑의 뜰안 홈으로 이동] /program/9679/general
+     링크 [] /program/9688/general
+     링크 [소망의 기도 홈으로 이동] /program/9688/general
+     링크 [소망의 기도 홈으로 이동] /program/9688/general
+     링크 [빛을 따라서 홈으로 이동] /program/9691/sermon
+     링크 [] /program/2351875/general
+     링크 [소망의 찬양 홈으로 이동] /program/2351875/general
+     링크 [정오의 기도 / 교계뉴스 홈으로 이동] /program/9695/general
+     링크 [소망의 찬양 홈으로 이동] /program/2351875/general
+     링크 [] /program/3240/general
+     링크 [만나고 싶은 사람 듣고 싶은 이야기 ] /program/3240/general
+     링크 [만나고 싶은 사람 듣고 싶은 이야기 ] /program/3240/general
+     링크 [FEBC 게시판 홈으로 이동] /program/9672/general
+     링크 [] /program/2381613/general
+     링크 [오후의 열린 광장 홈으로 이동] /program/2381613/general
+     링크 [FEBC 응접실 홈으로 이동] /program/9736/general
+     링크 [복소리 홈으로 이동] /program/9739/general
+     링크 [말씀의 오후 홈으로 이동] /program/9742/sermon
+     링크 [] /program/2381613/general
+     링크 [오후의 열린 광장 홈으로 이동] /program/2381613/general
+     링크 [오후의 열린 광장 홈으로 이동] /program/2381613/general
+     링크 [] /program/1644614/general
+     링크 [같이 걸어가기 홈으로 이동] /program/1644614/general
+     링크 [진리의 등대 홈으로 이동] /program/9748/sermon
+     링크 [세상을 깨우는 말씀 홈으로 이동] /program/9751/sermon
+     링크 [] /program/1644614/general
+     링크 [같이 걸어가기 홈으로 이동] /program/1644614/general
+     링크 [같이 걸어가기 홈으로 이동] /program/1644614/general
+     링크 [은혜의 단비 홈으로 이동] /program/9757/sermon
+     링크 [] /program/3252/general
+     링크 [성경의 무림고수를 찾아서 홈으로 이동] /program/3252/general
+     링크 [성경의 무림고수를 찾아서 홈으로 이동] /program/3252/general
+     링크 [] /program/9764/general
+     링크 [찬양의 동산 홈으로 이동] /program/9764/general
+     링크 [찬양의 동산 홈으로 이동] /program/9764/general
+     링크 [매기성경강해 홈으로 이동] /program/9767/general
+     링크 [] /program/9770/general
+     링크 [찬양이 가득한 세상 홈으로 이동] /program/9770/general
+     링크 [찬양이 가득한 세상 홈으로 이동] /program/9770/general
+     링크 [복소리 홈으로 이동] /program/9739/general
+     링크 [] /program/426659/general
+     링크 [은혜의 찬송 홈으로 이동] /program/426659/general
+     링크 [은혜의 찬송 홈으로 이동] /program/426659/general
+     링크 [지혜의 시간 홈으로 이동] /program/9775/sermon
+     링크 [] /program/9781/general
+     링크 [찬양BGM 홈으로 이동] /program/9781/general
+     링크 [] /program/575944/general
+     링크 [이브닝 프레이즈 홈으로 이동] /program/575944/general
+     링크 [] /program/9802/general
+     링크 [김도현의 샬롬나잇 홈으로 이동] /program/9802/general
+     링크 [김도현의 샬롬나잇 홈으로 이동] /program/9802/general
+     링크 [Family site] javascript:;
+  https://www.febc.net/radio/schedule → X HTTP Error 404: Not Found
+  ── https://seoul.febc.net/radio/schedule?channel=am → https://seoul.febc.net/radio/schedule?channel=am · 글자 181887 · 시간 69개
+     링크 [라디오 프로그램] /radio/program
+     링크 [보이는 라디오] /radio/program/bora
+     링크 [편성표] /radio/schedule
+     링크 [오늘의 설교] /sermon/schedule
+     링크 [라디오 프로그램] /radio/program
+     링크 [보이는 라디오] /radio/program/bora
+     링크 [편성표] /radio/schedule
+     링크 [오늘의 설교] /sermon/schedule
+     링크 [편성표] javascript:;
+     링크 [] /program/9591/general
+     링크 [별처럼 빛나는 그대에게 홈으로 이동] /program/9591/general
+     링크 [별처럼 빛나는 그대에게 홈으로 이동] /program/9591/general
+     링크 [] /program/9601/general
+     링크 [나영환의 달빛가스펠 홈으로 이동] /program/9601/general
+     링크 [나영환의 달빛가스펠 홈으로 이동] /program/9601/general
+     링크 [] /program/979414/general
+     링크 [샬롬, 대한민국입니다 홈으로 이동] /program/979414/general
+     링크 [샬롬, 대한민국입니다 홈으로 이동] /program/979414/general
+     링크 [] /program/9630/general
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [복음의 메아리(3분 메시지) 홈으로 ] /program/1570693/sermon
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [] /program/9630/general
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [복음의 메아리(설교) 홈으로 이동] /program/1570715/sermon
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [] /program/9646/general
+     링크 [내 영혼에 햇빛 비치니 홈으로 이동] /program/9646/general
+     링크 [말씀365 홈으로 이동] /program/9640/general
+     링크 [FEBC 새벽예배 홈으로 이동] /program/9643/sermon
+     링크 [내 영혼에 햇빛 비치니 홈으로 이동] /program/9646/general
+     링크 [] /program/9649/general
+     링크 [주님과 이 아침을 홈으로 이동] /program/9649/general
+     링크 [주님과 이 아침을 홈으로 이동] /program/9649/general
+     링크 [오늘의 양식 홈으로 이동] /program/9652/sermon
+     링크 [] /program/9657/general
+     링크 [좋은 아침입니다 홈으로 이동] /program/9657/general
+     링크 [좋은 아침입니다 홈으로 이동] /program/9657/general
+     링크 [] /program/9661/general
+     링크 [힘찬 라디오 홈으로 이동] /program/9661/general
+     링크 [힘찬 라디오 홈으로 이동] /program/9661/general
+     링크 [날마다 살아나는 큐티 홈으로 이동] /program/9664/general
+     링크 [] /program/9679/general
+     링크 [사랑의 뜰안 홈으로 이동] /program/9679/general
+     링크 [좋은아침 칼럼 홈으로 이동] /program/1449/general
+     링크 [내가 매일 기쁘게 홈으로 이동] /program/9670/sermon
+     링크 [FEBC 게시판 홈으로 이동] /program/9672/general
+     링크 [생명은 빛으로 홈으로 이동] /program/9676/sermon
+     링크 [] /program/9679/general
+     링크 [사랑의 뜰안 홈으로 이동] /program/9679/general
+     링크 [사랑의 뜰안 홈으로 이동] /program/9679/general
+     링크 [] /program/9688/general
+     링크 [소망의 기도 홈으로 이동] /program/9688/general
+     링크 [소망의 기도 홈으로 이동] /program/9688/general
+     링크 [빛을 따라서 홈으로 이동] /program/9691/sermon
+     링크 [] /program/2351875/general
+     링크 [소망의 찬양 홈으로 이동] /program/2351875/general
+     링크 [정오의 기도 / 교계뉴스 홈으로 이동] /program/9695/general
+     링크 [소망의 찬양 홈으로 이동] /program/2351875/general
+     링크 [] /program/3240/general
+     링크 [만나고 싶은 사람 듣고 싶은 이야기 ] /program/3240/general
+     링크 [만나고 싶은 사람 듣고 싶은 이야기 ] /program/3240/general
+     링크 [FEBC 게시판 홈으로 이동] /program/9672/general
+     링크 [] /program/2381613/general
+     링크 [오후의 열린 광장 홈으로 이동] /program/2381613/general
+     링크 [FEBC 응접실 홈으로 이동] /program/9736/general
+     링크 [복소리 홈으로 이동] /program/9739/general
+     링크 [말씀의 오후 홈으로 이동] /program/9742/sermon
+     링크 [] /program/2381613/general
+     링크 [오후의 열린 광장 홈으로 이동] /program/2381613/general
+     링크 [오후의 열린 광장 홈으로 이동] /program/2381613/general
+     링크 [] /program/1644614/general
+     링크 [같이 걸어가기 홈으로 이동] /program/1644614/general
+     링크 [진리의 등대 홈으로 이동] /program/9748/sermon
+     링크 [세상을 깨우는 말씀 홈으로 이동] /program/9751/sermon
+     링크 [] /program/1644614/general
+     링크 [같이 걸어가기 홈으로 이동] /program/1644614/general
+     링크 [같이 걸어가기 홈으로 이동] /program/1644614/general
+     링크 [은혜의 단비 홈으로 이동] /program/9757/sermon
+     링크 [] /program/3252/general
+     링크 [성경의 무림고수를 찾아서 홈으로 이동] /program/3252/general
+     링크 [성경의 무림고수를 찾아서 홈으로 이동] /program/3252/general
+     링크 [] /program/9764/general
+     링크 [찬양의 동산 홈으로 이동] /program/9764/general
+     링크 [찬양의 동산 홈으로 이동] /program/9764/general
+     링크 [매기성경강해 홈으로 이동] /program/9767/general
+     링크 [] /program/9770/general
+     링크 [찬양이 가득한 세상 홈으로 이동] /program/9770/general
+     링크 [찬양이 가득한 세상 홈으로 이동] /program/9770/general
+     링크 [복소리 홈으로 이동] /program/9739/general
+     링크 [] /program/426659/general
+     링크 [은혜의 찬송 홈으로 이동] /program/426659/general
+     링크 [은혜의 찬송 홈으로 이동] /program/426659/general
+     링크 [지혜의 시간 홈으로 이동] /program/9775/sermon
+     링크 [] /program/9781/general
+     링크 [찬양BGM 홈으로 이동] /program/9781/general
+     링크 [] /program/575944/general
+     링크 [이브닝 프레이즈 홈으로 이동] /program/575944/general
+     링크 [] /program/9802/general
+     링크 [김도현의 샬롬나잇 홈으로 이동] /program/9802/general
+     링크 [김도현의 샬롬나잇 홈으로 이동] /program/9802/general
+     링크 [Family site] javascript:;
+  ── https://seoul.febc.net/radio/schedule?type=AM → https://seoul.febc.net/radio/schedule?type=AM · 글자 181887 · 시간 69개
+     링크 [라디오 프로그램] /radio/program
+     링크 [보이는 라디오] /radio/program/bora
+     링크 [편성표] /radio/schedule
+     링크 [오늘의 설교] /sermon/schedule
+     링크 [라디오 프로그램] /radio/program
+     링크 [보이는 라디오] /radio/program/bora
+     링크 [편성표] /radio/schedule
+     링크 [오늘의 설교] /sermon/schedule
+     링크 [편성표] javascript:;
+     링크 [] /program/9591/general
+     링크 [별처럼 빛나는 그대에게 홈으로 이동] /program/9591/general
+     링크 [별처럼 빛나는 그대에게 홈으로 이동] /program/9591/general
+     링크 [] /program/9601/general
+     링크 [나영환의 달빛가스펠 홈으로 이동] /program/9601/general
+     링크 [나영환의 달빛가스펠 홈으로 이동] /program/9601/general
+     링크 [] /program/979414/general
+     링크 [샬롬, 대한민국입니다 홈으로 이동] /program/979414/general
+     링크 [샬롬, 대한민국입니다 홈으로 이동] /program/979414/general
+     링크 [] /program/9630/general
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [복음의 메아리(3분 메시지) 홈으로 ] /program/1570693/sermon
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [] /program/9630/general
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [복음의 메아리(설교) 홈으로 이동] /program/1570715/sermon
+     링크 [복음의 메아리 홈으로 이동] /program/9630/general
+     링크 [] /program/9646/general
+     링크 [내 영혼에 햇빛 비치니 홈으로 이동] /program/9646/general
+     링크 [말씀365 홈으로 이동] /program/9640/general
+     링크 [FEBC 새벽예배 홈으로 이동] /program/9643/sermon
+     링크 [내 영혼에 햇빛 비치니 홈으로 이동] /program/9646/general
+     링크 [] /program/9649/general
+     링크 [주님과 이 아침을 홈으로 이동] /program/9649/general
+     링크 [주님과 이 아침을 홈으로 이동] /program/9649/general
+     링크 [오늘의 양식 홈으로 이동] /program/9652/sermon
+     링크 [] /program/9657/general
+     링크 [좋은 아침입니다 홈으로 이동] /program/9657/general
+     링크 [좋은 아침입니다 홈으로 이동] /program/9657/general
+     링크 [] /program/9661/general
+     링크 [힘찬 라디오 홈으로 이동] /program/9661/general
+     링크 [힘찬 라디오 홈으로 이동] /program/9661/general
+     링크 [날마다 살아나는 큐티 홈으로 이동] /program/9664/general
+     링크 [] /program/9679/general
+     링크 [사랑의 뜰안 홈으로 이동] /program/9679/general
+     링크 [좋은아침 칼럼 홈으로 이동] /program/1449/general
+     링크 [내가 매일 기쁘게 홈으로 이동] /program/9670/sermon
+     링크 [FEBC 게시판 홈으로 이동] /program/9672/general
+     링크 [생명은 빛으로 홈으로 이동] /program/9676/sermon
+     링크 [] /program/9679/general
+     링크 [사랑의 뜰안 홈으로 이동] /program/9679/general
+     링크 [사랑의 뜰안 홈으로 이동] /program/9679/general
+     링크 [] /program/9688/general
+     링크 [소망의 기도 홈으로 이동] /program/9688/general
+     링크 [소망의 기도 홈으로 이동] /program/9688/general
+     링크 [빛을 따라서 홈으로 이동] /program/9691/sermon
+     링크 [] /program/2351875/general
+     링크 [소망의 찬양 홈으로 이동] /program/2351875/general
+     링크 [정오의 기도 / 교계뉴스 홈으로 이동] /program/9695/general
+     링크 [소망의 찬양 홈으로 이동] /program/2351875/general
+     링크 [] /program/3240/general
+     링크 [만나고 싶은 사람 듣고 싶은 이야기 ] /program/3240/general
+     링크 [만나고 싶은 사람 듣고 싶은 이야기 ] /program/3240/general
+     링크 [FEBC 게시판 홈으로 이동] /program/9672/general
+     링크 [] /program/2381613/general
+     링크 [오후의 열린 광장 홈으로 이동] /program/2381613/general
+     링크 [FEBC 응접실 홈으로 이동] /program/9736/general
+     링크 [복소리 홈으로 이동] /program/9739/general
+     링크 [말씀의 오후 홈으로 이동] /program/9742/sermon
+     링크 [] /program/2381613/general
+     링크 [오후의 열린 광장 홈으로 이동] /program/2381613/general
+     링크 [오후의 열린 광장 홈으로 이동] /program/2381613/general
+     링크 [] /program/1644614/general
+     링크 [같이 걸어가기 홈으로 이동] /program/1644614/general
+     링크 [진리의 등대 홈으로 이동] /program/9748/sermon
+     링크 [세상을 깨우는 말씀 홈으로 이동] /program/9751/sermon
+     링크 [] /program/1644614/general
+     링크 [같이 걸어가기 홈으로 이동] /program/1644614/general
+     링크 [같이 걸어가기 홈으로 이동] /program/1644614/general
+     링크 [은혜의 단비 홈으로 이동] /program/9757/sermon
+     링크 [] /program/3252/general
+     링크 [성경의 무림고수를 찾아서 홈으로 이동] /program/3252/general
+     링크 [성경의 무림고수를 찾아서 홈으로 이동] /program/3252/general
+     링크 [] /program/9764/general
+     링크 [찬양의 동산 홈으로 이동] /program/9764/general
+     링크 [찬양의 동산 홈으로 이동] /program/9764/general
+     링크 [매기성경강해 홈으로 이동] /program/9767/general
+     링크 [] /program/9770/general
+     링크 [찬양이 가득한 세상 홈으로 이동] /program/9770/general
+     링크 [찬양이 가득한 세상 홈으로 이동] /program/9770/general
+     링크 [복소리 홈으로 이동] /program/9739/general
+     링크 [] /program/426659/general
+     링크 [은혜의 찬송 홈으로 이동] /program/426659/general
+     링크 [은혜의 찬송 홈으로 이동] /program/426659/general
+     링크 [지혜의 시간 홈으로 이동] /program/9775/sermon
+     링크 [] /program/9781/general
+     링크 [찬양BGM 홈으로 이동] /program/9781/general
+     링크 [] /program/575944/general
+     링크 [이브닝 프레이즈 홈으로 이동] /program/575944/general
+     링크 [] /program/9802/general
+     링크 [김도현의 샬롬나잇 홈으로 이동] /program/9802/general
+     링크 [김도현의 샬롬나잇 홈으로 이동] /program/9802/general
+     링크 [Family site] javascript:;
+  ── https://www.febc.net/ → https://seoul.febc.net/ · 글자 153836 · 시간 25개
+     링크 [라디오 프로그램] /radio/program
+     링크 [보이는 라디오] /radio/program/bora
+     링크 [편성표] /radio/schedule
+     링크 [오늘의 설교] /sermon/schedule
+     링크 [라디오 프로그램] /radio/program
+     링크 [보이는 라디오] /radio/program/bora
+     링크 [편성표] /radio/schedule
+     링크 [오늘의 설교] /sermon/schedule
+     링크 [홈커밍데이 라디오쇼 토 09:00 -] https://seoul.febc.net/program/2439406/general
+     링크 [만나고 싶은 사람 듣고 싶은 이야기 ] /program/3240/general
+     링크 [좋은 아침입니다 월~금 07:00 -] /program/9657/general
+     링크 [힘찬 라디오 월~금 08:00 - 0] /program/9661/general
+     링크 [사랑의 뜰안 월~금 10:00 - 1] /program/9679/general
+     링크 [소망의 기도 월~금 11:00 - 1] https://seoul.febc.net/program/1644582/general
+     링크 [소망의 찬양 월~금 12:10 - 1] https://seoul.febc.net/program/2351875/general
+     링크 [오 해피데이 월~목 13:00 - 1] /program/9709/general
+     링크 [같이 걸어가기 월~금 17:00 - ] https://seoul.febc.net/program/1644614/general
+     링크 [행복한 저녁 즐거운 라디오 월~목 1] /program/9761/general
+     링크 [[ AM 1188kHz / FM 10] /intro/nationwide?branch=seoul
+     링크 [편성표 바로가기] /radio/schedule
+     링크 [] /program/9591/general
+     링크 [별처럼 빛나는 그대에게] /program/9591/general
+     링크 [] /program/9601/general
+     링크 [나영환의 달빛가스펠] /program/9601/general
+     링크 [] /program/979414/general
+     링크 [샬롬, 대한민국입니다] /program/979414/general
+     링크 [] /program/9630/general
+     링크 [복음의 메아리] /program/9630/general
+     링크 [] /program/9630/general
+     링크 [복음의 메아리] /program/9630/general
+     링크 [] /program/9646/general
+     링크 [내 영혼에 햇빛 비치니] /program/9646/general
+     링크 [] /program/9649/general
+     링크 [주님과 이 아침을] /program/9649/general
+     링크 [] /program/9657/general
+     링크 [좋은 아침입니다] /program/9657/general
+     링크 [] /program/9661/general
+     링크 [힘찬 라디오] /program/9661/general
+     링크 [] /program/9679/general
+     링크 [사랑의 뜰안] /program/9679/general
+     링크 [] /program/9679/general
+     링크 [사랑의 뜰안] /program/9679/general
+     링크 [] /program/9688/general
+     링크 [소망의 기도] /program/9688/general
+     링크 [] /program/2351875/general
+     링크 [소망의 찬양] /program/2351875/general
+     링크 [] /program/3240/general
+     링크 [만나고 싶은 사람 듣고 싶은 이야기] /program/3240/general
+     링크 [] /program/2381613/general
+     링크 [오후의 열린 광장] /program/2381613/general
+     링크 [] /program/2381613/general
+     링크 [오후의 열린 광장] /program/2381613/general
+     링크 [] /program/1644614/general
+     링크 [같이 걸어가기] /program/1644614/general
+     링크 [] /program/1644614/general
+     링크 [같이 걸어가기] /program/1644614/general
+     링크 [] /program/3252/general
+     링크 [성경의 무림고수를 찾아서] /program/3252/general
+     링크 [] /program/9764/general
+     링크 [찬양의 동산] /program/9764/general
+     링크 [] /program/9770/general
+     링크 [찬양이 가득한 세상] /program/9770/general
+     링크 [] /program/426659/general
+     링크 [은혜의 찬송] /program/426659/general
+     링크 [] /program/9781/general
+     링크 [찬양BGM] /program/9781/general
+     링크 [] /program/575944/general
+     링크 [이브닝 프레이즈] /program/575944/general
+     링크 [] /program/9802/general
+     링크 [김도현의 샬롬나잇] /program/9802/general
+     링크 [[경건생활 365] 9월 23일 - ] /program/47060/replay/view/80758
+     링크 [[경건생활 365] 9월 22일 - ] /program/47060/replay/view/80754
+     링크 [[경건생활 365] 9월 17일 - ] /program/47060/replay/view/80733
+     링크 [[경건생활 365] 9월 16일 - ] /program/47060/replay/view/80729
+     링크 [[경건생활 365] 9월 21일 - ] /program/47060/replay/view/80750
+     링크 [[경건생활 365] 9월 20일 - ] /program/47060/replay/view/80747
+     링크 [[경건생활 365] 9월 19일 - ] /program/47060/replay/view/80743
+     링크 [[경건생활 365] 9월 18일 - ] /program/47060/replay/view/80737
+     링크 [동영상 보러가기 좋은 시가 나오기까지] /program/2314722/replay/view/80756
+     링크 [동영상 보러가기 지옥에도 등급이 있을] /program/2314722/replay/view/80726
+     링크 [동영상 보러가기 &quot;지옥의 불] /program/2314722/replay/view/80694
+     링크 [동영상 보러가기 3.1운동의 판도를 ] /program/2314722/replay/view/80660
+     링크 [Family site] javascript:;
+     … "> FEBC 서울극동방송 주파수 안내 [ AM 1188kHz / FM 106.9MHz ] 에서 만나실 수 있습니다. <a href="/radio/sched
+■ 3) 아리랑
+  스크립트 ['https://file.kollus.com/vgcontroller/vg-controller-client.latest.min.js', 'https://accounts.google.com/gsi/client', 'https://www.arirang.com/static/js/12.a4e9c97e.chunk.js', 'https://www.arirang.com/static/js/main.9ff58b66.chunk.js']
+  https://file.kollus.com/vgcontroller/vg-controller-client.latest.min.js · 글자 151382 · 주소 6개
+    https://a
+    https://a/c%20d?a=1&c=3
+    https://github.com/zloirock/core-js
+    https://github.com/zloirock/core-js/blob/v3.42.0/LICENSE
+    https://x
+    https://тест
+  https://accounts.google.com/gsi/client · 글자 276726 · 주소 21개
+    http://www.w3.org/2000/svg
+    https://accounts.google.com
+    https://accounts.google.com/gsi/
+    https://accounts.google.com/gsi/button
+    https://accounts.google.com/gsi/fedcm.json
+    https://accounts.google.com/gsi/fedcm/config/active.json
+    https://accounts.google.com/gsi/fedcm/config/passive.json
+    https://accounts.google.com/gsi/iframe/select
+    https://accounts.google.com/gsi/log
+    https://accounts.google.com/gsi/revoke
+    https://accounts.google.com/gsi/select
+    https://accounts.google.com/gsi/status
+    https://accounts.google.com/gsi/style
+    https://accounts.google.com/o/oauth2/iframe
+    https://accounts.google.com/o/oauth2/v2/auth
+    https://accounts.sandbox.google.com
+    https://meet.google.com
+    https://news.google.com/swg/ui/v1/rrmgisinterop
+    https://oauth2.googleapis.com/revoke
+    https://schema.org
+    https://www.w3.org/2000/svg
+  https://www.arirang.com/static/js/12.a4e9c97e.chunk.js · 글자 525362 · 주소 6개
+    http://www.w3.org/1998/Math/MathML
+    http://www.w3.org/1999/xhtml
+    http://www.w3.org/1999/xlink
+    http://www.w3.org/2000/svg
+    http://www.w3.org/XML/1998/namespace
+    https://reactjs.org/docs/error-decoder.html?invariant=
+  https://www.arirang.com/static/js/main.9ff58b66.chunk.js · 글자 48476 · 주소 47개
+    /news/program
+    /radio
+    /radio/categories/list
+    /radio/podcast
+    /radio/podcast/list
+    /radio/podcast/main
+    /radio/vod/main
+    /radio/vod/view
+    /radio/watch
+    /schedule
+    /v1.0/open/board/category/list
+    /v1.0/open/board/detail
+    /v1.0/open/board/item/detail
+    /v1.0/open/board/item/insert
+    /v1.0/open/board/item/list
+    /v1.0/open/board/item/program/list
+    /v1.0/open/board/item/update
+    /v1.0/open/category/list
+    /v1.0/open/corner/detail
+    /v1.0/open/corner/list
+    /v1.0/open/external/proxy
+    /v1.0/open/media/episode/detail
+    /v1.0/open/media/episode/list
+    /v1.0/open/media/news/detail
+    /v1.0/open/media/news/list
+    /v1.0/open/media/vod/detail
+    /v1.0/open/media/vod/list
+    /v1.0/open/menu/list
+    /v1.0/open/online/auth
+    /v1.0/open/online/user/me/nickname/update
+    /v1.0/open/program/detail
+    /v1.0/open/program/list
+    /v1.0/open/program/sns/list
+    /v1.0/open/program/tracklist/detail
+    /v1.0/open/program/tracklist/list
+    /v1.0/open/reporter/detail
+    /v1.0/open/reporter/list
+    /v1.0/open/view/slide/hit
+    /v1.0/open/view/slide/list
+    https://geoip.arirang.com/v1.0/open/geoip
+    https://v.kr.kollus.com/s?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHB0IjoyNTU1OTcxMjAwLCJtYyI6eyIwIjp7Im1ja2V5IjoiQkxKb0hUT0IiLCJ0aXRsZSI6IkFyaXJhbmcgUmFkaW8iLCJsaXZlIjp7InVybCI6Imh0dHBzOlwvXC9hbWRsaXZlLWNoMDMtY3RuZC1jb20uYWthbWFpemVkLm5ldFwvYXJpcmFuZ18zY2hcL3NtaWw6YXJpcmFuZ18zY2guc21pbFwvcGxheWxpc3QubTN1OCIsInBvc3Rlcl91cmwiOiJodHRwczpcL1wvaW1nLmFyaXJhbmcuY29tXC92MVwvQVVUSF9kNTI0NDljMTZkM2I0YmJjYTE3ZDRmZmZkOWZjNDRhZlwvcHVibGljXC9vbGRcL0ltYWdlc1wvcmFkaW9cL1JhZGlvXzIwMjEwOS5wbmcifX19fQ.wRzl9TvQyCvwlJEOhHbPJxDP8Q1nPTO_p_OiSwUlj0A&custom_key=2488d22a619a018210ee7f7d65118ef38c6dad49b8fd0297b84118c26c7272cc
+    https://v.kr.kollus.com/s?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHB0IjoyNTU1OTcxMjAwLCJtYyI6eyIwIjp7Im1ja2V5IjoiUEhnVkhUTEciLCJ0aXRsZSI6IkFyaXJhbmcgVFYiLCJsaXZlIjp7InVybCI6Imh0dHBzOlwvXC9hbWRsaXZlLWNoMDEtY3RuZC1jb20uYWthbWFpemVkLm5ldFwvYXJpcmFuZ18xY2hcL3NtaWw6YXJpcmFuZ18xY2guc21pbFwvcGxheWxpc3QubTN1OCIsInBvc3Rlcl91cmwiOiJodHRwczpcL1wvaW1nLmFyaXJhbmcuY29tXC92MVwvQVVUSF9kNTI0NDljMTZkM2I0YmJjYTE3ZDRmZmZkOWZjNDRhZlwvYXJpcmFuZ1wvc3RhdGljXC9tZWRpYVwvc2NoZWR1bGVfbGl2ZTEuNDc5OTQ2OWEucG5nIn19fX0.patG5SP3itjZtmoN9LBNC0R_RUql41Ppwt-jGFHYgzY&custom_key=2488d22a619a018210ee7f7d65118ef38c6dad49b8fd0297b84118c26c7272cc&player_version
+    https://v.kr.kollus.com/s?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHB0IjoyNTU1OTcxMjAwLCJtYyI6eyIwIjp7Im1ja2V5IjoiaXNjOUhUT0wiLCJ0aXRsZSI6IkFyaXJhbmcgVFYiLCJsaXZlIjp7InVybCI6Imh0dHBzOlwvXC9hbWRsaXZlLWNoMDQtY3RuZC1jb20uYWthbWFpemVkLm5ldFwvYXJpcmFuZ180Y2hcL3NtaWw6YXJpcmFuZ180Y2guc21pbFwvcGxheWxpc3QubTN1OCIsInBvc3Rlcl91cmwiOiJodHRwczpcL1wvaW1nLmFyaXJhbmcuY29tXC92MVwvQVVUSF9kNTI0NDljMTZkM2I0YmJjYTE3ZDRmZmZkOWZjNDRhZlwvYXJpcmFuZ1wvc3RhdGljXC9tZWRpYVwvc2NoZWR1bGVfbGl2ZTMuN2JmMmMwOWIucG5nIn19fX0.NW-czq9Zn5wllqZv8Y3QCTRTpOMWpI-WD68i1WowAUQ&custom_key=2488d22a619a018210ee7f7d65118ef38c6dad49b8fd0297b84118c26c7272cc&player_version
+    https://v.kr.kollus.com/s?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHB0IjoyNTU1OTcxMjAwLCJtYyI6eyIwIjp7Im1ja2V5Ijoid2pxaUhUTjYiLCJ0aXRsZSI6IkFyaXJhbmcgVFYiLCJsaXZlIjp7InVybCI6Imh0dHBzOlwvXC9hbWRsaXZlLWNoMDItY3RuZC1jb20uYWthbWFpemVkLm5ldFwvYXJpcmFuZ18yY2hcL3NtaWw6YXJpcmFuZ18yY2guc21pbFwvcGxheWxpc3QubTN1OCIsInBvc3Rlcl91cmwiOiJodHRwczpcL1wvaW1nLmFyaXJhbmcuY29tXC92MVwvQVVUSF9kNTI0NDljMTZkM2I0YmJjYTE3ZDRmZmZkOWZjNDRhZlwvYXJpcmFuZ1wvc3RhdGljXC9tZWRpYVwvc2NoZWR1bGVfbGl2ZTIuMTdlYmM3MzMucG5nIn19fX0.MEAJ9z0b_I2RdsxiWo5Ux0VsTgldq-1clqqF8drDFJU&custom_key=2488d22a619a018210ee7f7d65118ef38c6dad49b8fd0297b84118c26c7272cc&player_version
+    https://v.kr.kollus.com/s?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHB0IjoyNTU1OTcxMjAwLCJtYyI6eyIwIjp7Im1ja2V5IjoieTU0ZEhUS1QiLCJ0aXRsZSI6IkFyaXJhbmcgVFYiLCJsaXZlIjp7InVybCI6Imh0dHBzOlwvXC9hbWRsaXZlLWNoMDEtZy1jdG5kLWNvbS5ha2FtYWl6ZWQubmV0XC9hcmlyYW5nXzFnY2hcL3NtaWw6YXJpcmFuZ18xZ2NoLnNtaWxcL3BsYXlsaXN0Lm0zdTgiLCJwb3N0ZXJfdXJsIjoiaHR0cHM6XC9cL2ltZy5hcmlyYW5nLmNvbVwvdjFcL0FVVEhfZDUyNDQ5YzE2ZDNiNGJiY2ExN2Q0ZmZmZDlmYzQ0YWZcL2FyaXJhbmdcL3N0YXRpY1wvbWVkaWFcL3NjaGVkdWxlX2xpdmUxLjQ3OTk0NjlhLnBuZyJ9fX19.tGyn5GxOKSK9xjEhzvhF97DvXGc2knkivfxHxYdKnjY&custom_key=2488d22a619a018210ee7f7d65118ef38c6dad49b8fd0297b84118c26c7272cc&player_version
+    https://webdev.arirang.com
+    https://www.arirang.com
+■ 4) 공동체 라디오 메뉴
+  ── https://www.mapofm.net/ → https://www.mapofm.net/
+     링크 [편성표] https://www.mapofm.net/timetable
+     링크 [프로그램 소개] https://www.mapofm.net/program
+     링크 [편성표] https://www.mapofm.net/timetable
+     링크 [프로그램 소개] https://www.mapofm.net/program
+     링크 [편성표] https://www.mapofm.net/timetable
+     링크 [프로그램 소개] https://www.mapofm.net/program
+     링크 [] https://www.mapofm.net/program
+  ── https://www.jcfm.kr/ → https://www.jcfm.kr/
+     링크 [편성표] https://www.jcfm.kr/untitled-7
+     링크 [프로그램 소개] https://www.jcfm.kr/untitled-8
+     링크 [편성표] https://www.jcfm.kr/untitled-7
+     링크 [프로그램 소개] https://www.jcfm.kr/untitled-8
+     링크 [편성표] https://www.jcfm.kr/untitled-7
+     링크 [프로그램 소개] https://www.jcfm.kr/untitled-8
+  ── http://www.ssfm.kr/ → https://www.ssfm.kr/
+  ── https://ssfm.kr/ → https://ssfm.kr/

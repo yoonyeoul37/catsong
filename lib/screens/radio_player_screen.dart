@@ -392,6 +392,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         name == 'CPBC 가톨릭' ||
         name == 'TBC 드림FM' ||
         name == 'BeFM' ||
+        name == '마포FM' ||
+        name == '전주FM' ||
         name.startsWith('TBN '); // TBN 교통방송 12곳
   }
 

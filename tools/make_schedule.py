@@ -900,6 +900,24 @@ MBC_OVERLAY = {
         ('매일', '12:00', '13:57', '완벽한 하루', None),
         ('토일', '16:00', '18:00', '주말의 발견', None),
     ]),
+    '울산MBC 표준FM': ('FM', [
+        ('월-금', '14:20', '16:00', '배윤호, 이남미의 확깨는 라디오',
+         'https://www.usmbc.co.kr/storage/program/controller/usmbc/2025/10/13/104752-3A81-8788-5C52-W9DDLTY3AXN605B2HR6B.jpg'),
+        ('월-금', '18:05', '19:00', '김연경의 퇴근길 톡톡',
+         'https://www.usmbc.co.kr/storage/program/controller/usmbc/2020/03/02/101655-6B56-E495-4006-9QAH2BZKSSRQU48YYSP5.jpg'),
+    ]),
+    '울산MBC FM4U': ('FM4U', [
+        ('월-금', '12:00', '14:00', '정오의 희망곡 박성은입니다',
+         'https://www.usmbc.co.kr/storage/program/controller/usmbc/2024/01/29/095810-0610-AF94-C547-R8BVA9CZXGGWV625S8JN.jpg'),
+    ]),
+    '대구MBC 표준FM': ('FM', [
+        ('월-금', '08:30', '08:35', '달구벌만평',
+         'https://dgmbc.com/storage/program/2021/07/27/174847-0335-49FF-9035-80RQHPQ67GXP4BUOXS6A.jpg'),
+        ('월-금', '08:35', None, '여론현장',
+         'https://dgmbc.com/storage/program/2022/09/05/091026-9C84-D424-BBF2-8TU3J9ORGJEM1ZL9QAYS.jpg'),
+        ('월-금', '14:20', '16:00', '즐거운 오후2시',
+         'https://dgmbc.com/storage/program/former_MBC_ALPHA/dg/2019/12/ddcde87fb6b3d81bc65b1d90e0850f8460e6862ee5de2eef9558cee514459ad4573006bd3778b6ec1bbddd4939bde845de7b006e3449878a356f0eed6ba7ff2b.jpg'),
+    ]),
     '안동MBC 표준FM': ('FM', [
         ('월-금', '18:05', '19:00', '라디오 오늘', None),
     ]),

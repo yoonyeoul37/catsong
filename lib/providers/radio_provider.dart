@@ -1203,6 +1203,13 @@ class RadioProvider extends ChangeNotifier {
     'KBS Cool FM': '25',
   };
 
+  /// KBS 편성 사진: 바깥에서 못 여는 주소(접근 거부)는 '사진 없음'으로 → 바로 기본 이미지
+  static String? _kbsImage(dynamic url) {
+    final u = url?.toString() ?? '';
+    if (u.isEmpty || u.contains('padmin.static.kbs.co.kr')) return null;
+    return u;
+  }
+
   static Map<String, String>? _parseKbsChannelFromUrl(String streamUrl) {
     final match = RegExp(r'channel_code/(\d+)(?:_(\d+))?$').firstMatch(streamUrl);
     if (match == null) return null;
@@ -1254,7 +1261,7 @@ class RadioProvider extends ChangeNotifier {
           // program_code 기준으로 연속된 항목 병합
           final merged = _mergeKbsSchedules(allSchedules.cast<Map<String, dynamic>>());
           for (final s in merged) {
-            s['image'] = s['image_w'];
+            s['image'] = _kbsImage(s['image_w']);
           }
           _scheduleListMap[stationName] = merged;
           final nowHour = now.hour;
@@ -1283,7 +1290,7 @@ class RadioProvider extends ChangeNotifier {
               }
               final merged = Map<String, dynamic>.from(s);
               merged['program_planned_end_time'] = finalEnd;
-              merged['image'] = s['image_w'];
+              merged['image'] = _kbsImage(s['image_w']);
               _currentProgramMap[stationName] = merged;
               _nowPlayingMap[stationName] = s['program_title'] as String? ?? '';
               break;
@@ -1334,7 +1341,7 @@ class RadioProvider extends ChangeNotifier {
           // program_code 기준으로 연속된 항목 병합
           final merged = _mergeKbsSchedules(allSchedules.cast<Map<String, dynamic>>());
           for (final s in merged) {
-            s['image'] = s['image_w'];
+            s['image'] = _kbsImage(s['image_w']);
           }
           _scheduleListMap[stationName] = merged;
           final nowHour = now.hour;

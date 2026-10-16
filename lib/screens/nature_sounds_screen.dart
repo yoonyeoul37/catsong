@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,8 +7,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../utils/paran_photo.dart';
 import '../utils/nature_sound_catalog.dart';
 import '../l10n/locale_holder.dart';
-import '../utils/greeting_images.dart';
-import '../widgets/farewell_title.dart';
 import '../providers/theme_provider.dart';
 import '../providers/player_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -22,9 +19,6 @@ import 'nature_sound_detail_screen.dart';
 import '../widgets/paran_dialog.dart';
 import '../widgets/paran_toast.dart';
 import '../widgets/heart_pop.dart';
-import 'package:audio_service/audio_service.dart';
-import 'package:just_audio/just_audio.dart';
-import '../main.dart' show globalAudioHandler;
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -79,137 +73,11 @@ String _natureThumbImage(String name, String category, String assetPath) {
 
 class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
   Timer? _sleepTimer;
-  int? _sleepMinutes;
   _NatureSound? _selectedSound;
   Set<String> _favoriteNames = {};
-  bool _showFavoritesOnly = false;
   String _selectedCategory = '전체';
 
   static const _sounds = natureSoundCatalog;
-
-  // 예전 목록 (안 씀) — 나중에 지워도 됨
-  static const _oldSounds = <_NatureSound>[
-    _NatureSound(
-      name: '파도소리',
-      category: '파도소리',
-      icon: Icons.waves,
-      emoji: '🌊',
-      description: '규칙적인 파도 소리는 마음을 차분히 가라앉혀 깊은 휴식과 수면에 도움을 줘요',
-      assetPath: 'https://files.ssing.kr/nature-sounds/wave_sound.mp3',
-    ),
-    _NatureSound(
-      name: '잔잔한 파도',
-      category: '파도소리',
-      icon: Icons.waves,
-      emoji: '🌊',
-      description: '한결 부드럽고 잔잔하게 밀려오는 파도 소리로 편안한 휴식을 도와줘요',
-      assetPath: 'https://files.ssing.kr/nature-sounds/wave_calm_sound.mp3',
-    ),
-    _NatureSound(
-      name: '갈매기와 파도',
-      category: '파도소리',
-      icon: Icons.waves,
-      emoji: '🌊',
-      description: '갈매기 울음소리가 어우러진 파도 소리로 생생한 해변 분위기를 느껴보세요',
-      assetPath: 'https://files.ssing.kr/nature-sounds/wave_seagull_sound.mp3',
-    ),
-    _NatureSound(
-      name: '바위에 부딪히는 파도',
-      category: '파도소리',
-      icon: Icons.waves,
-      emoji: '🌊',
-      description: '바위에 세게 부딪히며 부서지는 파도 소리로 역동적인 바다를 느껴보세요',
-      assetPath: 'https://files.ssing.kr/nature-sounds/wave_rocks_sound.mp3',
-    ),
-    _NatureSound(
-      name: '멀리서 들리는 갈매기',
-      category: '파도소리',
-      icon: Icons.waves,
-      emoji: '🌊',
-      description: '고요한 바닷가, 멀리서 은은하게 들려오는 갈매기 소리로 차분한 휴식을 느껴보세요',
-      assetPath: 'https://files.ssing.kr/nature-sounds/wave_distant_seagull_sound.mp3',
-    ),
-    _NatureSound(
-      name: '거친 파도',
-      category: '파도소리',
-      icon: Icons.waves,
-      emoji: '🌊',
-      description: '거칠게 밀려와 부서지는 파도 소리로 힘 있는 바다를 느껴보세요',
-      assetPath: 'https://files.ssing.kr/nature-sounds/wave_rough_sound.mp3',
-    ),
-    _NatureSound(
-      name: '빗소리',
-      category: '빗소리',
-      icon: Icons.water_drop_outlined,
-      emoji: '☔',
-      description: '일정한 빗소리는 집중력을 높이고 불안한 마음을 편안하게 다독여줘요',
-      assetPath: 'https://files.ssing.kr/nature-sounds/rain_sound.mp3',
-    ),
-    _NatureSound(
-      name: '창문에 떨어지는 비',
-      category: '빗소리',
-      icon: Icons.water_drop_outlined,
-      emoji: '🪟',
-      description: '창문을 두드리는 부드러운 빗소리로 편안하게 잠들어보세요',
-      assetPath: 'https://files.ssing.kr/nature-sounds/rain_window_sound.mp3',
-    ),
-    _NatureSound(
-      name: '숲속의 비와 새소리',
-      category: '빗소리',
-      icon: Icons.water_drop_outlined,
-      emoji: '🌲',
-      description: '숲속에 내리는 빗소리와 새소리가 어우러져 마음을 편안하게 해줘요',
-      assetPath: 'https://files.ssing.kr/nature-sounds/rain_forest_sound.mp3',
-    ),
-    _NatureSound(
-      name: '숲속의 거센 밤비',
-      category: '빗소리',
-      icon: Icons.water_drop_outlined,
-      emoji: '🌙',
-      description: '깊은 밤 숲속에 세차게 내리는 빗소리로 몰입감 있는 휴식을 느껴보세요',
-      assetPath: 'https://files.ssing.kr/nature-sounds/rain_night_forest_sound.mp3',
-    ),
-    _NatureSound(
-      name: '새소리',
-      category: '새소리',
-      icon: Icons.forest_outlined,
-      emoji: '🐦',
-      description: '청아한 새소리는 스트레스를 줄이고 상쾌한 기분을 만들어줘요',
-      assetPath: 'https://files.ssing.kr/nature-sounds/bird_sound.mp3',
-    ),
-    _NatureSound(
-      name: '뻐꾸기와 숲속 새소리',
-      category: '새소리',
-      icon: Icons.forest_outlined,
-      emoji: '🌳',
-      description: '뻐꾸기 소리가 어우러진 숲속의 새소리로 상쾌한 아침을 느껴보세요',
-      assetPath: 'https://files.ssing.kr/nature-sounds/bird_forest_cuckoo_sound.mp3',
-    ),
-    _NatureSound(
-      name: '모닥불',
-      category: '모닥불',
-      icon: Icons.local_fire_department_outlined,
-      emoji: '🔥',
-      description: '타닥타닥 장작 타는 소리는 아늑한 분위기로 깊은 이완을 도와줘요',
-      assetPath: 'https://files.ssing.kr/nature-sounds/campfire_sound.mp3',
-    ),
-    _NatureSound(
-      name: '시냇물',
-      category: '시냇물',
-      icon: Icons.water_outlined,
-      emoji: '💧',
-      description: '졸졸 흐르는 시냇물 소리는 마음을 편안하게 하고 잡생각을 줄여줘요',
-      assetPath: 'https://files.ssing.kr/nature-sounds/stream_sound.mp3',
-    ),
-    _NatureSound(
-      name: '잔잔한 강물',
-      category: '시냇물',
-      icon: Icons.water_outlined,
-      emoji: '🌊',
-      description: '넓은 강물이 잔잔하게 흐르는 소리로 편안한 휴식을 느껴보세요',
-      assetPath: 'https://files.ssing.kr/nature-sounds/stream_river_sound.mp3',
-    ),
-  ];
 
   @override
   void initState() {
@@ -244,50 +112,6 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
     // (하트가 바로 바뀌어서 따로 알림 없음)
   }
 
-  void _showCenterToast(String message) {
-    final overlay = Overlay.of(context);
-    late OverlayEntry entry;
-    entry = OverlayEntry(
-      builder: (_) => Positioned.fill(
-        child: Center(
-          child: TweenAnimationBuilder<double>(
-            tween: Tween(begin: 0.0, end: 1.0),
-            duration: const Duration(milliseconds: 300),
-            builder: (_, value, child) => Opacity(
-              opacity: value,
-              child: Transform.scale(scale: 0.85 + 0.15 * value, child: child),
-            ),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
-              ),
-              child: Text(
-                message,
-                style: const TextStyle(
-                  color: Colors.black87,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-    overlay.insert(entry);
-    Future.delayed(const Duration(seconds: 2), () => entry.remove());
-  }
-
   @override
   void dispose() {
     _sleepTimer?.cancel();
@@ -311,207 +135,6 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
         showParanToast(context, tr.soundPlayFailed, error: true);
       }
     }
-  }
-
-  void _showExitConfirmDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (ctx) => Dialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                '자연소리를 종료하시겠어요?',
-                style: TextStyle(color: Colors.black87, fontSize: 17, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                '다음에 또 좋은 소리로 만나요.',
-                style: TextStyle(color: Colors.black54, fontSize: 14),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                        Navigator.pop(ctx);
-                      },
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.black54,
-                        side: const BorderSide(color: Colors.black26),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: const Text('계속 듣기'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                        Navigator.pop(ctx);
-                        _showFarewellAndExit(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: const Text('종료', style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showFarewellAndExit(BuildContext context) {
-    final langCode = Localizations.localeOf(context).languageCode;
-    late final String smallText;
-    late final String farewellAsset;
-    switch (langCode) {
-      case 'ko':
-        smallText = '파란소리와 함께한 시간,\n즐거우셨나요?\n\n언제든 다시 찾아오시면,\n좋은 소리로 맞아드릴게요.\n안녕히 가세요!';
-        farewellAsset = 'assets/farewell_ko_v4.mp3';
-        break;
-      case 'ja':
-        smallText = 'Paransoriと過ごした時間、\n楽しんでいただけましたか?\n\nいつでもまた遊びに来てください、\n素敵な音でお迎えします。\nまた会いましょう!';
-        farewellAsset = 'assets/farewell_ja.mp3';
-        break;
-      case 'zh':
-        smallText = Localizations.localeOf(context).scriptCode == 'Hant'
-            ? '與Paransori相伴的時光，\n您開心嗎?\n\n歡迎隨時回來，\n我們會用美好的聲音迎接您。\n再見啦!'
-            : '与Paransori相伴的时光，\n您开心吗?\n\n欢迎随时回来，\n我们会用美好的声音迎接您。\n再见啦!';
-        farewellAsset = 'assets/farewell_zh.mp3';
-        break;
-      default:
-        smallText = 'Did you enjoy your time\nwith Paransori?\n\nCome back anytime — we\'ll\nwelcome you with great sounds again.\nGoodbye, and see you soon!';
-        farewellAsset = 'assets/farewell_en.mp3';
-    }
-    if (langCode == 'ko' && context.read<ThemeProvider>().voiceGreetingEnabled) { // 목소리는 한국어만
-      final farewellPlayer = AudioPlayer();
-      farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
-    }
-
-    context.read<PlayerProvider>().player.setVolume(0.12);
-    final overlay = Overlay.of(context);
-    late OverlayEntry entry;
-    entry = OverlayEntry(
-      builder: (_) => TweenAnimationBuilder<double>(
-        tween: Tween(begin: 0.0, end: 1.0),
-        duration: const Duration(milliseconds: 900),
-        curve: Curves.easeOut,
-        builder: (_, value, child) => Opacity(
-          opacity: value,
-          child: TweenAnimationBuilder<double>(
-            tween: Tween(begin: 0.05, end: 0.85),
-            duration: const Duration(milliseconds: 7000), // 끝인사: 서서히 어둡게
-            curve: Curves.easeIn,
-            builder: (_, darkValue, __) => Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: farewellImage(context),
-                  onError: (_, __) {},
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(darkValue),
-                    BlendMode.darken,
-                  ),
-                ),
-              ),
-              alignment: Alignment.center,
-              child: const FarewellTitle(), // Paransori + 소리 막대 + 한 줄 인사
-            ),
-          ),
-        ),
-      ),
-    );
-    overlay.insert(entry);
-
-    Future.delayed(const Duration(milliseconds: 6500), () async {
-      late OverlayEntry fadeOutEntry;
-      fadeOutEntry = OverlayEntry(
-        builder: (_) => TweenAnimationBuilder<double>(
-          tween: Tween(begin: 0.0, end: 1.0),
-          duration: const Duration(milliseconds: 900),
-          builder: (_, value, child) => Opacity(
-            opacity: value,
-            child: Container(
-              color: Colors.black,
-              width: double.infinity,
-              height: double.infinity,
-            ),
-          ),
-        ),
-      );
-      overlay.insert(fadeOutEntry);
-
-      await context.read<PlayerProvider>().stopNatureSound();
-      final handler = globalAudioHandler;
-      if (handler is SimpleAudioHandler) {
-        handler.playbackState.add(PlaybackState());
-        handler.mediaItem.add(null);
-        await handler.stop();
-      }
-
-      await Future.delayed(const Duration(milliseconds: 900));
-      entry.remove();
-      const MethodChannel('kr.ssing.catsong/media').invokeMethod('closeApp');
-    });
-  }
-
-  void _setSleepTimer(int? minutes) {
-    _sleepTimer?.cancel();
-    setState(() => _sleepMinutes = minutes);
-    if (minutes != null) {
-      _sleepTimer = Timer(Duration(minutes: minutes), () {
-        context.read<PlayerProvider>().stopNatureSound();
-        setState(() => _sleepMinutes = null);
-      });
-    }
-  }
-
-  void _showSleepTimerDialog(Color baseColor, bool isDarkMode) {
-    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F5F0),
-        title: Text('수면 타이머', style: TextStyle(color: baseColor)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [5, 15, 30, 60].map((m) {
-            return ListTile(
-              title: Text('$m분 후 정지', style: TextStyle(color: baseColor)),
-              onTap: () {
-                Navigator.pop(ctx);
-                _setSleepTimer(m);
-              },
-            );
-          }).toList()
-            ..add(ListTile(
-              title: Text('끄기', style: TextStyle(color: baseColor.withOpacity(0.5))),
-              onTap: () {
-                Navigator.pop(ctx);
-                _setSleepTimer(null);
-              },
-            )),
-        ),
-      ),
-    );
   }
 
   @override

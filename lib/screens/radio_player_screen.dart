@@ -54,15 +54,12 @@ double? _parseFrequency(String? freq) {
   return double.tryParse(match.group(1)!);
 }
 
-bool _isKoreanStation(String countryCode) => countryCode == 'KR';
-
 // ── 라디오 창 색 (라이트: 베이지 · 다크: 어두운 갈색) — 창을 그릴 때마다 다크 모드인지 맞춤 ──
 bool _rdDark = false;
 Color get _rBg => _rdDark ? const Color(0xFF32302C) : const Color(0xFFF4EFE5);
 Color get _rCard => _rdDark ? const Color(0xFF3E3B37) : Colors.white;
 Color get _rInk => _rdDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
 Color get _rSub => _rdDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
-Color get _rMuted => _rdDark ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
 Color get _rLine => _rdDark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
 
 class RadioPlayerScreen extends StatefulWidget {
@@ -126,76 +123,6 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
   Future<void> _confirmExit(BuildContext context) async {
     // 새 종료창 (사진 + 큰 질문) — 홈·음악·라디오·자연소리 공통
     if (await showExitConfirm(context) && context.mounted) _showFarewellAndExit(context);
-  }
-
-  // (예전 종료창 — 코드 정리할 때 지우기)
-  Future<void> _oldConfirmExit(BuildContext context) async {
-    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => Dialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                AppLocalizations.of(ctx)!.radioExitConfirmTitle,
-                style: const TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                AppLocalizations.of(ctx)!.radioExitConfirmMessage,
-                style: const TextStyle(color: Colors.black54, fontSize: 13),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                        Navigator.pop(ctx, false);
-                      },
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.black54,
-                        side: const BorderSide(color: Color(0xFFE5E5E5)),
-                        padding: const EdgeInsets.symmetric(vertical: 13),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: Text(AppLocalizations.of(ctx)!.radioExitKeepListening),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                        Navigator.pop(ctx, true);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 13),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: Text(AppLocalizations.of(ctx)!.radioExitConfirmButton),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-    if (confirmed != true) return;
-    if (!context.mounted) return;
-    _showFarewellAndExit(context);
   }
 
   void _showFarewellAndExit(BuildContext context) {

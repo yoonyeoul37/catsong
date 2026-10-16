@@ -71,7 +71,6 @@ enum _RecState { idle, recording, paused, saving }
 
 class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTickerProviderStateMixin {
   static const _channel = MethodChannel('kr.ssing.catsong/media');
-  static const _blue = Color(0xFF2589E8);
   static const _sky = Color(0xFF7FB8F0);
   static const _red = Color(0xFFFF4D57);
 

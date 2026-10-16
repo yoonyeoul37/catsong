@@ -107,50 +107,6 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
     // (하트가 바로 바뀌어서 따로 알림 없음)
   }
 
-  void _showCenterToast(String message) {
-    final overlay = Overlay.of(context);
-    late OverlayEntry entry;
-    entry = OverlayEntry(
-      builder: (_) => Positioned.fill(
-        child: Center(
-          child: TweenAnimationBuilder<double>(
-            tween: Tween(begin: 0.0, end: 1.0),
-            duration: const Duration(milliseconds: 300),
-            builder: (_, value, child) => Opacity(
-              opacity: value,
-              child: Transform.scale(scale: 0.85 + 0.15 * value, child: child),
-            ),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
-              ),
-              child: Text(
-                message,
-                style: const TextStyle(
-                  color: Colors.black87,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-    overlay.insert(entry);
-    Future.delayed(const Duration(seconds: 2), () => entry.remove());
-  }
-
   @override
   void dispose() {
     _sleepTicker?.cancel();
@@ -473,71 +429,6 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
   void _showExitConfirmDialog(BuildContext context) async {
     // 새 종료창 (사진 + 큰 질문) — 홈·음악·라디오·자연소리 공통
     if (await showExitConfirm(context) && context.mounted) _showFarewellAndExit(context);
-  }
-
-  // (예전 종료창 — 코드 정리할 때 지우기)
-  void _oldExitConfirmDialog(BuildContext context) {
-    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-    showDialog(
-      context: context,
-      builder: (ctx) => Dialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                '파란소리를 종료하시겠어요?',
-                style: TextStyle(color: Colors.black87, fontSize: 17, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                '다음에 또 좋은 소리로 만나요.',
-                style: TextStyle(color: Colors.black54, fontSize: 14),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                        Navigator.pop(ctx);
-                      },
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.black54,
-                        side: const BorderSide(color: Colors.black26),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: const Text('계속 듣기'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                        Navigator.pop(ctx);
-                        _showFarewellAndExit(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: const Text('종료', style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   void _showFarewellAndExit(BuildContext context) {

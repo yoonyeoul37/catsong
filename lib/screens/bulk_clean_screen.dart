@@ -47,7 +47,6 @@ class _CleanItem {
 }
 
 class _BulkCleanScreenState extends State<BulkCleanScreen> {
-  static const _blue = Color(0xFF2589E8);
   List<_CleanItem> _items = [];
   bool _ready = false; // 곡 정보를 다 읽은 뒤에 검사했는지
   bool _working = false;

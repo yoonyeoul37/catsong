@@ -18,7 +18,6 @@ class _FarewellTitleState extends State<FarewellTitle> with SingleTickerProvider
 
   // 첫인사와 같은 소리 막대
   static const _barH = <int>[4, 7, 11, 16, 10, 20, 14, 24, 18, 12, 22, 15, 9, 17, 11, 6, 13, 8, 5, 4];
-  static const _barColors = <Color>[Color(0xFFFF9A70), Color(0xFFEE978B), Color(0xFFDE94A6), Color(0xFFCD91C1), Color(0xFFBC8EDC), Color(0xFFB492F1), Color(0xFFC5AAF4), Color(0xFFD5C2F7), Color(0xFFE6DBFA), Color(0xFFF7F3FD), Color(0xFFF2FAF3), Color(0xFFD9F0DA), Color(0xFFBFE6C1), Color(0xFFA6DCA9), Color(0xFF8CD290), Color(0xFF99C786), Color(0xFFB3BC80), Color(0xFFCCB17B), Color(0xFFE6A575), Color(0xFFFF9A70)];
 
   @override
   void dispose() {

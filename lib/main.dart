@@ -333,7 +333,6 @@ class AppInitializer extends StatefulWidget {
 }
 
 class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObserver {
-  bool _showWelcome = false;
   // 알람이나 홈 위젯 바로가기로 켜졌으면 첫인사 없이 바로
   bool _showIntro = !AlarmService.launchedByAlarm && WidgetGo.target.value == null;
   bool _introCleared = false; // 첫인사 사진을 램에서 비웠는지
@@ -528,89 +527,6 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
     if (restart) InAppUpdate.completeFlexibleUpdate();
   }
 
-  // (예전 업데이트 창 — 코드 정리할 때 지우기)
-  void _oldUpdateReadySnackbar() {
-    if (!mounted) return;
-    const accent = AppTheme.fixedAccent;
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => Dialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(28, 32, 28, 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 64,
-                height: 64,
-                decoration: BoxDecoration(
-                  color: accent.withOpacity(0.12),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.system_update, color: accent, size: 34),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                AppLocalizations.of(ctx)!.updateReadyTitle,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                AppLocalizations.of(ctx)!.updateReadyMessage,
-                style: const TextStyle(
-                  color: Colors.black54,
-                  fontSize: 15,
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 28),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(ctx);
-                    InAppUpdate.completeFlexibleUpdate();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: accent,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                  ),
-                  child: Text(
-                    AppLocalizations.of(ctx)!.updateReadyButton,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 4),
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed: () => Navigator.pop(ctx),
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.black38,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                  child: Text(AppLocalizations.of(ctx)!.updateReadyLater, style: const TextStyle(fontSize: 14)),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Future<void> _checkAndRequestReview() async {
     final prefs = await SharedPreferences.getInstance();
     final launchCount = (prefs.getInt('launch_count') ?? 0) + 1;
@@ -650,120 +566,6 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
             mode: LaunchMode.externalApplication);
       } catch (_) {}
     }
-  }
-
-  // (예전 리뷰 창 — 코드 정리할 때 지우기)
-  Future<void> _oldReviewDialog() async {
-    final primaryColor = Theme.of(context).colorScheme.primary;
-    final prefs = await SharedPreferences.getInstance();
-    final l = AppLocalizations.of(context)!;
-
-    const accent = AppTheme.fixedAccent;
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => Dialog(
-        backgroundColor: Colors.white,
-        shape:
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 28, 24, 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF2F7DE8),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: const Icon(Icons.music_note_rounded,
-                    color: Colors.white, size: 32),
-              ),
-              const SizedBox(height: 18),
-              Text(
-                l.reviewTitle,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.visible,
-                softWrap: false,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                l.reviewMessage,
-                style: const TextStyle(
-                  color: Colors.black54,
-                  fontSize: 13,
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  5,
-                  (i) => const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 2),
-                    child: Icon(Icons.star_rounded,
-                        color: Color(0xFFF5B83D), size: 28),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed: () async {
-                    Navigator.pop(ctx);
-                    await prefs.setInt('last_review_request',
-                        DateTime.now().millisecondsSinceEpoch);
-                    final uri = Uri.parse(
-                        'https://play.google.com/store/apps/details?id=kr.ssing.catsong');
-                    try {
-                      await launchUrl(uri,
-                          mode: LaunchMode.externalApplication);
-                    } catch (e) {}
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: const Color(0xFF2F7DE8),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: const StadiumBorder(),
-                  ),
-                  child: Text(l.reviewButton,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w600, fontSize: 14)),
-                ),
-              ),
-              const SizedBox(height: 4),
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pop(ctx);
-                    prefs.setInt('last_review_request',
-                        DateTime.now().millisecondsSinceEpoch);
-                  },
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.black38,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                  child: Text(l.reviewLater,
-                      style: const TextStyle(fontSize: 13)),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   @override
@@ -829,7 +631,6 @@ class _IntroViewState extends State<_IntroView> with TickerProviderStateMixin {
 
   // 소리 파형: 막대 20개 높이 · 색 (홈 카드 색: 살구 → 보라 → 흰 → 연두 → 살구)
   static const _barH = <int>[4, 7, 11, 16, 10, 20, 14, 24, 18, 12, 22, 15, 9, 17, 11, 6, 13, 8, 5, 4];
-  static const _barColors = <Color>[Color(0xFFFF9A70), Color(0xFFEE978B), Color(0xFFDE94A6), Color(0xFFCD91C1), Color(0xFFBC8EDC), Color(0xFFB492F1), Color(0xFFC5AAF4), Color(0xFFD5C2F7), Color(0xFFE6DBFA), Color(0xFFF7F3FD), Color(0xFFF2FAF3), Color(0xFFD9F0DA), Color(0xFFBFE6C1), Color(0xFFA6DCA9), Color(0xFF8CD290), Color(0xFF99C786), Color(0xFFB3BC80), Color(0xFFCCB17B), Color(0xFFE6A575), Color(0xFFFF9A70)];
 
   @override
   void didChangeDependencies() {

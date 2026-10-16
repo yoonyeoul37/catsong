@@ -619,98 +619,6 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
     );
   }
 
-  // ───────── 지금 재생 중인 녹음: 10초 앞뒤 · 배속 ─────────
-  Widget _miniBar(CallRecording r, PlayerProvider player, MusicProvider music, Color baseColor) {
-    final pos = player.position;
-    final dur = player.duration;
-    final progress = dur.inMilliseconds > 0 ? (pos.inMilliseconds / dur.inMilliseconds).clamp(0.0, 1.0) : 0.0;
-    String t(Duration d) =>
-        '${d.inMinutes}:${(d.inSeconds % 60).toString().padLeft(2, '0')}';
-    void jump(int sec) {
-      const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-      var to = pos + Duration(seconds: sec);
-      if (to < Duration.zero) to = Duration.zero;
-      if (dur > Duration.zero && to > dur) to = dur;
-      player.seekTo(to);
-    }
-
-    const speeds = [1.0, 1.25, 1.5, 2.0];
-    final speed = player.playbackSpeed;
-    final isDark = baseColor == Colors.white;
-    final muted = isDark ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
-    return Container(
-      margin: const EdgeInsets.fromLTRB(16, 2, 16, 8),
-      padding: const EdgeInsets.fromLTRB(14, 10, 8, 8),
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF353330) : Colors.white, // 떠 있는 카드
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(isDark ? 0.4 : 0.12), blurRadius: 16, offset: const Offset(0, 4)),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(music.recordingTitle(r),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: baseColor, fontSize: 13.5, fontWeight: FontWeight.w600)),
-              ),
-              Text('${t(pos)} / ${t(dur)}', style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 11.5)),
-              const SizedBox(width: 6),
-            ],
-          ),
-          const SizedBox(height: 6),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(2),
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 3,
-              backgroundColor: baseColor.withOpacity(0.08),
-              valueColor: AlwaysStoppedAnimation(_blue),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(onPressed: () => jump(-10), icon: Icon(Icons.replay_10, color: muted, size: 26)),
-              IconButton(
-                onPressed: () => player.togglePlayPause(),
-                icon: Icon(player.isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled,
-                    color: _blue, size: 38),
-              ),
-              IconButton(onPressed: () => jump(10), icon: Icon(Icons.forward_10, color: muted, size: 26)),
-              const SizedBox(width: 8),
-              // 배속: 누를 때마다 1.0 → 1.25 → 1.5 → 2.0
-              GestureDetector(
-                onTap: () {
-                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                  final i = speeds.indexWhere((s) => (s - speed).abs() < 0.01);
-                  player.setPlaybackSpeed(speeds[(i + 1) % speeds.length]);
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: speed == 1.0 ? Colors.transparent : (isDark ? Colors.white.withOpacity(0.9) : _ink),
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: speed == 1.0 ? baseColor.withOpacity(0.2) : Colors.transparent),
-                  ),
-                  child: Text('${speed == speed.roundToDouble() ? speed.toStringAsFixed(1) : speed}×',
-                      style: TextStyle(
-                          color: speed == 1.0 ? muted : (isDark ? const Color(0xFF24221F) : Colors.white),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700)),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
   /// 공유 (카톡·문자·메일 등)
   Future<void> _share(List<CallRecording> list) async {
     if (list.isEmpty) return;
@@ -814,16 +722,6 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
           ]),
         ],
       ),
-    );
-  }
-
-  Widget _menuItem(IconData icon, String label, Color color, VoidCallback? onTap) {
-    return ListTile(
-      enabled: onTap != null,
-      leading: Icon(icon, color: onTap == null ? color.withOpacity(0.35) : (color == Colors.redAccent ? color : color.withOpacity(0.6))),
-      title: Text(label,
-          style: TextStyle(color: onTap == null ? color.withOpacity(0.35) : color, fontSize: 14.5)),
-      onTap: onTap,
     );
   }
 

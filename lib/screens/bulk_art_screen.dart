@@ -27,7 +27,6 @@ class _ArtItem {
 }
 
 class _BulkArtScreenState extends State<BulkArtScreen> {
-  static const _blue = Color(0xFF2589E8);
   List<_ArtItem> _items = [];
   bool _ready = false;
   bool _searchingAll = false;

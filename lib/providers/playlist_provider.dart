@@ -13,8 +13,6 @@ class PlaylistProvider extends ChangeNotifier {
     loadPlaylists();
   }
 
-  List<String> _pendingPlaylistUris = [];
-
   Future<void> loadPlaylists() async {
     try {
       final prefs = await SharedPreferences.getInstance();

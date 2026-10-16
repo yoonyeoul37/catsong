@@ -1164,58 +1164,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     try { await launchUrl(uri, mode: LaunchMode.externalApplication); } catch (e) { await launchUrl(uri, mode: LaunchMode.inAppWebView); }
   }
 
-  void _showColorPicker(BuildContext context) {
-    final themeProvider = context.read<ThemeProvider>();
-    final isDarkMode = themeProvider.isDarkMode;
-    showParanSheet(
-      context,
-      title: tr.accentColor,
-      builder: (ctx, setSheet) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(4, 0, 4, 10),
-            child: Text(tr.accentSheetHint,
-                style: TextStyle(color: _sTextHint(isDarkMode), fontSize: 12.5)),
-          ),
-          ParanCard(
-            children: [
-              for (final c in ThemeProvider.pointColors)
-                InkWell(
-                  onTap: () {
-                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                    themeProvider.setPrimaryColor(c.$2);
-                    Navigator.pop(ctx);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
-                    child: Row(
-                      children: [
-                        Container(width: 22, height: 22, decoration: BoxDecoration(color: c.$2, shape: BoxShape.circle)),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(pointColorName(c.$1),
-                              style: TextStyle(
-                                color: _sText(isDarkMode),
-                                fontSize: 14.5,
-                                fontWeight: themeProvider.primaryColor.value == c.$2.value
-                                    ? FontWeight.w700
-                                    : FontWeight.w500,
-                              )),
-                        ),
-                        if (themeProvider.primaryColor.value == c.$2.value)
-                          Icon(Icons.check_circle_rounded, color: c.$2, size: 20),
-                      ],
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
   /// 글자 크기: 작게 · 보통 · 크게 (누르면 앱 전체가 바로 바뀜)
   void _showTextSizeDialog(BuildContext context) {
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;

@@ -90,8 +90,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool _isScrollingUp = true;
-  double _lastScrollOffset = 0;
   int _currentTabIndex = 0;
   bool _showFavorites = false;
   bool _showRecent = false;
@@ -214,18 +212,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _indexEntries = entries;
   }
 
-  /// 정렬 바꾸기 (제목 / 가수) — 기억해 둠
-  Future<void> _setSortByArtist(bool v) async {
-    if (v == _byArtist) return;
-    setState(() {
-      _byArtist = v;
-      _indexFingerprint = -1;
-    });
-    if (_songListController.hasClients) _songListController.jumpTo(0);
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('song_sort_by_artist', v);
-  }
-
   /// 정렬 바꾸기 (제목 / 가수 / 장르) — 기억해 둠
   Future<void> _setSortMode({required bool artist, required bool genre}) async {
     if (artist == _byArtist && genre == _byGenre) return;
@@ -305,21 +291,6 @@ class _HomeScreenState extends State<HomeScreen> {
       'tw' => '隨機播放 $label・$n 首',
       'cn' => '随机播放 $label・$n 首',
       _ => 'Shuffling $label · $n songs',
-    };
-  }
-
-  /// 장르 칸 맨 앞 '모든 장르' (위 탭 '전체'와 헷갈리지 않게, 5개 언어)
-  String _genreAllText() {
-    final l = Localizations.localeOf(context);
-    final k = l.languageCode == 'zh'
-        ? ((l.scriptCode == 'Hant' || l.countryCode == 'TW' || l.countryCode == 'HK') ? 'tw' : 'cn')
-        : l.languageCode;
-    return switch (k) {
-      'ko' => '모든 장르',
-      'ja' => 'すべてのジャンル',
-      'tw' => '全部類型',
-      'cn' => '全部类型',
-      _ => 'All genres',
     };
   }
 
@@ -543,7 +514,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-  bool _showBanner = false;
   bool _isSelectionMode = false;
   final Map<int, GlobalKey> _songItemKeys = {};
   int? _lastScrolledSongId;
@@ -1345,75 +1315,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void _showExitConfirmDialog(BuildContext context) async {
     // 새 종료창 (사진 + 큰 질문) — 홈·음악·라디오·자연소리 공통
     if (await showExitConfirm(context) && context.mounted) _showFarewellAndExit(context);
-  }
-
-  // (예전 종료창 — 코드 정리할 때 지우기)
-  void _oldExitConfirmDialog(BuildContext context) {
-    final isDarkMode = context.read<ThemeProvider>().isDarkMode;
-    showDialog(
-      context: context,
-      builder: (ctx) => Dialog(
-        backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '파란소리를 종료하시겠어요?',
-                style: TextStyle(
-                    color: isDarkMode ? Colors.white : Colors.black87,
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                '다음에 또 좋은 소리로 만나요.',
-                style: TextStyle(
-                    color: isDarkMode ? Colors.white60 : Colors.black54, fontSize: 14),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                        Navigator.pop(ctx);
-                      },
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: isDarkMode ? Colors.white60 : Colors.black54,
-                        side: BorderSide(color: isDarkMode ? Colors.white24 : Colors.black26),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: const Text('계속 듣기'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                        Navigator.pop(ctx);
-                        _showFarewellAndExit(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: const Text('종료', style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   void _showFarewellAndExit(BuildContext context) {

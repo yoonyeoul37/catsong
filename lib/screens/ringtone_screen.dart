@@ -4,7 +4,6 @@ import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import '../providers/music_provider.dart';
 import '../models/song.dart';
-import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/action_feedback.dart';
 import '../widgets/paran_toast.dart';
@@ -25,7 +24,6 @@ class RingtoneScreen extends StatefulWidget {
 
 class _RingtoneScreenState extends State<RingtoneScreen> {
   static const _channel = MethodChannel('kr.ssing.catsong/media');
-  static const _accent = AppTheme.fixedAccent;
   Song? _selectedSong;
   double _startValue = 0.0;
   double _endValue = 30.0;

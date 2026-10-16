@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../models/song.dart';
 import '../providers/music_provider.dart';
-import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/theme_provider.dart';
 import '../utils/song_title_cleaner.dart';
@@ -22,7 +21,6 @@ class EditSongScreen extends StatefulWidget {
 }
 
 class _EditSongScreenState extends State<EditSongScreen> {
-  static const _accent = AppTheme.fixedAccent;
   late TextEditingController _titleController;
   late TextEditingController _artistController;
   late TextEditingController _albumController;

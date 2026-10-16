@@ -567,22 +567,6 @@ class SongListTile extends StatelessWidget {
     }
   }
 
-  Widget _infoRow(String label, String value, Color primaryColor) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: TextStyle(color: primaryColor, fontSize: 11)),
-          Text(value,
-              style: const TextStyle(
-                  color: Colors.black87, fontSize: 13),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis),
-        ],
-      ),
-    );
-  }
 }
 
 /// 곡 줄이 화면에 나타날 때 아래에서 살포시 떠오르게

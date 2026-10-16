@@ -865,6 +865,130 @@ def mbc_regional():
     return out
 
 
+# ───────── 지역 MBC 덮어쓰기: 서울 MBC 편성 + 지역 프로그램 시간만 바꿔 넣기 ─────────
+# (지역 편성표를 바로 읽을 수 없는 곳. 지역 홈페이지 프로그램 소개에 적힌 시간으로 직접 정리 — 개편 때 고쳐야 함)
+# (요일, 시작, 끝, 제목, 사진)  끝이 None이면 25분 넘게 지난 뒤 처음 오는 서울 프로그램 시작까지
+WEEK = {'매일': range(7), '월-금': range(5), '토': [5], '일': [6], '토일': [5, 6]}
+MBC_OVERLAY = {
+    '부산MBC 표준FM': ('FM', [
+        ('월-금', '08:00', '09:00', '생방송 자갈치 아지매', None),
+        ('토', '08:05', '08:35', '우리 영화볼래요?', None),
+        ('토', '08:35', '08:57', '라디오 시민세상', None),
+        ('매일', '15:05', '16:00', '오후만세', None),
+        ('월-금', '18:05', '19:00', '생방송 오늘 저녁, 부산입니다', None),
+    ]),
+    '부산MBC FM4U': ('FM4U', [
+        ('매일', '11:00', '12:00', '안희성의 가정 음악실', None),
+        ('매일', '12:00', None, '정오의 희망곡 (부산MBC)', 'https://busanmbc.co.kr/upload/editor/20260421165259.jpg'),
+    ]),
+    '포항MBC 표준FM': ('FM', [
+        ('월-금', '18:05', '19:00', '라디오열린세상',
+         'https://www.phmbc.co.kr/contents/program_info/open_world/1585542303.jpg'),
+    ]),
+    'MBC경남 표준FM': ('FM', [
+        ('월-금', '07:00', '09:00', 'FM 아침의 행진', None),
+        ('월-금', '08:30', None, '좋은 아침', None),
+        ('월-금', '12:00', None, '정오의 희망곡 김군입니다', None),
+        ('월-금', '15:05', None, 'The 즐거운 오후 3시', None),
+        ('월-금', '18:05', None, '생방송 라디오 광장', None),
+    ]),
+    'MBC충북 표준FM': ('FM', [
+        ('월-금', '11:05', '11:57', '시사ON', None),
+        ('월-금', '18:05', '20:00', "임규호의 '저녁N'", None),
+    ]),
+    'MBC충북 FM4U': ('FM4U', [
+        ('매일', '12:00', '13:57', '완벽한 하루', None),
+        ('토일', '16:00', '18:00', '주말의 발견', None),
+    ]),
+    '안동MBC 표준FM': ('FM', [
+        ('월-금', '18:05', '19:00', '라디오 오늘', None),
+    ]),
+}
+
+
+def hm2m(s):
+    return int(s[:2]) * 60 + int(s[3:5])
+
+
+def m2hm(m):
+    return f'{m // 60 % 24:02d}:{m % 60:02d}'
+
+
+def mbc_seoul_day(stype, fetch_days):
+    """서울 MBC 날짜별 편성: {날짜: [(시작분, 끝분, 제목, 사진)]} — 24시 넘으면 다음 날"""
+    by = {}
+    for d in fetch_days:
+        try:
+            data = get_json(f'https://control.imbc.com/Schedule/Radio/Time?sType={stype}&broadDate={d:%Y%m%d}',
+                            'https://www.imbc.com/')
+        except Exception as e:
+            print(f'  (서울 MBC {stype} {d} 못 가져옴: {e})')
+            continue
+        for it in data if isinstance(data, list) else []:
+            st, en = str(it.get('StartTime') or ''), str(it.get('EndTime') or '')
+            t = (it.get('Title') or '').strip()
+            if not (t and len(st) == 4 and len(en) == 4 and st.isdigit() and en.isdigit()):
+                continue
+            s = int(st[:2]) * 60 + int(st[2:])
+            e = int(en[:2]) * 60 + int(en[2:])
+            if e <= s:
+                e += 1440
+            day = d + datetime.timedelta(days=s // 1440)
+            img = (it.get('Photo') or '').strip()
+            img = 'https:' + img if img.startswith('//') else img
+            by.setdefault(day, {})[s % 1440] = (s % 1440, s % 1440 + (e - s), t, img)
+    return {k: sorted(v.values()) for k, v in by.items()}
+
+
+def mbc_overlay():
+    start = today_kst()
+    days = []
+    for k in range(7):
+        d = start + datetime.timedelta(days=k)
+        if day_key(d) not in [day_key(x) for x in days]:
+            days.append(d)
+    fetch_days = sorted(set(days) | {x - datetime.timedelta(days=1) for x in days})
+    seoul = {s: mbc_seoul_day(s, fetch_days) for s in ('FM', 'FM4U')}
+    out = {}
+    for station, (stype, locals_) in MBC_OVERLAY.items():
+        week = {}
+        for d in days:
+            progs = [list(p) for p in seoul[stype].get(d, [])]  # [시작, 끝, 제목, 사진] (분)
+            if len(progs) < 5:
+                continue
+            for wk, s_hm, e_hm, title, img in sorted(locals_, key=lambda x: x[1]):
+                if d.weekday() not in WEEK[wk]:
+                    continue
+                s = hm2m(s_hm)
+                if e_hm:
+                    e = hm2m(e_hm)
+                else:  # 끝 시간이 안 적힌 지역 프로그램: 25분 넘게 지난 뒤 처음 시작하는 서울 프로그램까지
+                    e = next((p[0] for p in progs if p[0] >= s + 25), s + 60)
+                new = []
+                for p in progs:
+                    if p[1] <= s or p[0] >= e:  # 안 겹침
+                        new.append(p)
+                        continue
+                    if p[0] < s:  # 앞부분만 남기기
+                        new.append([p[0], s, p[2], p[3]])
+                    if p[1] > e:  # 뒷부분 이어서
+                        new.append([e, p[1], p[2], p[3]])
+                new.append([s, e, title, img or ''])
+                progs = sorted(new)
+            items = []
+            for s, e, t, img in progs:
+                p = {'title': t, 'start': m2hm(s), 'end': m2hm(e)}
+                if img:
+                    p['image'] = img
+                items.append(p)
+            items = clean_day(items)
+            if len(items) >= 5:
+                week[day_key(d)] = items
+        if week:
+            out[station] = week
+    return out
+
+
 
 def fill_images(week):
     # 재방송처럼 사진이 없는 칸: 같은 프로그램 이름의 사진을 빌려 쓰기 (다른 요일 것도)
@@ -879,7 +1003,7 @@ def fill_images(week):
                 p['image'] = pics[base_title(p['title'])]
 
 
-SOURCES = [('CBS', cbs), ('YTN', ytn), ('경인방송', ifm), ('FEBC', febc), ('TBS', tbs), ('JTV', jtv), ('국악FM', gugak), ('OBS', obs), ('BBS', bbs), ('CPBC', cpbc), ('TBN', tbn), ('지역 MBC', mbc_regional)]
+SOURCES = [('CBS', cbs), ('YTN', ytn), ('경인방송', ifm), ('FEBC', febc), ('TBS', tbs), ('JTV', jtv), ('국악FM', gugak), ('OBS', obs), ('BBS', bbs), ('CPBC', cpbc), ('TBN', tbn), ('지역 MBC', mbc_regional), ('지역 MBC 덮어쓰기', mbc_overlay)]
 
 
 def main():

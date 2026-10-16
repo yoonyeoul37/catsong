@@ -276,7 +276,11 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
       final t = r.lastListened;
       if (t == null || slot(t) != s || r.name == cur) continue;
       final i = koreanStations.indexWhere((k) => k.name == r.name);
-      if (i >= 0) return i;
+      // 최근에 들었어도 지방·외국어·극동 AM·SoneFM은 건너뛰기 (주사위와 같은 규칙)
+      if (i >= 0 &&
+          koreanStations[i].region == '수도권' &&
+          stationCategory(koreanStations[i]) <= 1 &&
+          !_diceLow.contains(koreanStations[i].name)) return i;
     }
     const defaults = niceDefaults;
     for (final n in defaults[s]) {
@@ -1269,7 +1273,14 @@ RadioStation? niceKoreanStationNow({Set<String> skip = const {}, int day = 0}) {
     final i = koreanStations.indexWhere((k) => k.name == n);
     if (i >= 0) return _RadioKoreaScreenState._toRadioStation(koreanStations[i]);
   }
-  final rest = koreanStations.where((k) => !skip.contains(k.name)).toList();
+  // 다 들어 봤으면: 주사위와 같은 규칙 (수도권만 · 외국어·극동 AM·SoneFM 빼기)
+  final rest = koreanStations
+      .where((k) =>
+          !skip.contains(k.name) &&
+          k.region == '수도권' &&
+          stationCategory(k) != 2 &&
+          !_RadioKoreaScreenState._diceOut.contains(k.name))
+      .toList();
   if (rest.isEmpty) return null;
   return _RadioKoreaScreenState._toRadioStation(rest[day % rest.length]);
 }

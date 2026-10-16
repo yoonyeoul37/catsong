@@ -5,7 +5,7 @@
 # CBS · YTN · FEBC · TBS는 '오늘' 편성만 줘서 매일 돌리면 그날 요일 칸이 새로 바뀌고,
 # 경인방송 · JTV · 국악FM은 일주일치를 한 번에 가져와요
 # 실행: python tools/make_schedule.py   (GitHub에서는 매일 새벽 자동으로)
-import json, sys, ssl, datetime, urllib.request, urllib.parse, os, re, html as htmllib
+import json, sys, ssl, time, datetime, urllib.request, urllib.parse, os, re, html as htmllib
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'schedule.json')
 UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36'
@@ -37,7 +37,7 @@ def no_check_ssl():
     return c
 
 
-def fetch(url, referer, ajax=False, old=False, data=None, insecure=False):
+def fetch(url, referer, ajax=False, old=False, data=None, insecure=False, timeout=30):
     h = {'User-Agent': UA, 'Referer': referer, 'Accept-Language': 'ko-KR,ko;q=0.9'}
     if ajax:
         h['X-Requested-With'] = 'XMLHttpRequest'
@@ -46,7 +46,7 @@ def fetch(url, referer, ajax=False, old=False, data=None, insecure=False):
         h['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
     req = urllib.request.Request(url, headers=h, data=body)
     ctx = old_ssl() if old else no_check_ssl() if insecure else None
-    with urllib.request.urlopen(req, timeout=30, context=ctx) as r:
+    with urllib.request.urlopen(req, timeout=timeout, context=ctx) as r:
         raw = r.read()
         m = re.search(r'charset=([\w-]+)', r.headers.get('Content-Type', ''), re.I) \
             or re.search(r'charset=["\']?([\w-]+)', raw[:3000].decode('ascii', 'ignore'), re.I)
@@ -620,23 +620,79 @@ TBN_AREAS = {  # 앱의 방송 이름 → TBN 편성표 지역 번호(page_code)
 
 
 def tbn_table(page_code, d):
-    """그날 그 지역 편성표 칸들: (날짜, 'HH:MM', 제목) — 24시 넘으면 다음 날"""
+    """그날 그 지역 편성표 칸들: (날짜, 'HH:MM', 제목, 프로그램 번호) — 24시 넘으면 다음 날"""
     page = fetch(f'https://www.tbn.or.kr/broadcast/program.tbn?area_code=6&page_code={page_code}&today={d:%Y%m%d}',
                  'https://www.tbn.or.kr/main.tbn', insecure=True)
     i = page.find('프로그램소개 - 시, 분, 프로그램명')
     table = page[i:page.find('</table>', i)] if i >= 0 else ''
     rows = []
-    for hh, mm, title in re.findall(r'<tr>\s*<td>\s*(\d{1,2})\s*</td>\s*<td>\s*(\d{1,2})\s*</td>\s*'
-                                    r'<td[^>]*>.*?<strong>(.*?)</strong>', table, re.S):
+    for hh, mm, link, title in re.findall(r'<tr>\s*<td>\s*(\d{1,2})\s*</td>\s*<td>\s*(\d{1,2})\s*</td>\s*'
+                                          r'<td[^>]*>(.*?)<strong>(.*?)</strong>', table, re.S):
         h = int(hh)
         title = text_of(title)
+        seq = re.search(r'forum_seq=(\d+)', link)  # 프로그램 소개 페이지 번호 (사진 찾을 때 씀)
         if title:
-            rows.append((d + datetime.timedelta(days=h // 24), f'{h % 24:02d}:{int(mm):02d}', title))
+            rows.append((d + datetime.timedelta(days=h // 24), f'{h % 24:02d}:{int(mm):02d}', title,
+                         seq.group(1) if seq else ''))
     return rows
+
+
+TBN_PICS = {}  # 프로그램 번호 → 사진 (같은 프로그램은 한 번만 가져오기)
+
+
+TBN_OLD = {}  # 예전 schedule.json의 TBN 사진 (제목 → 사진): 이번에 못 가져오면 이걸로
+TBN_FAILS = [0]  # 연달아 못 가져온 횟수
+
+
+def tbn_image(seq, title=''):
+    """프로그램 소개 페이지 위쪽의 큰 배경 사진 (못 가져오면 예전 사진)"""
+    if seq and seq not in TBN_PICS:
+        TBN_PICS[seq] = ''
+        if TBN_FAILS[0] >= 6:  # 계속 응답이 없으면 TBN이 막은 것 — 더 기다리지 않기
+            pass
+        else:
+            err = None
+            for wait in (0.5, 5):  # 잠깐 쉬고 가져오기 · 안 되면 5초 쉬고 한 번 더
+                time.sleep(wait)
+                try:
+                    page = fetch(f'https://www.tbn.or.kr/program/main.tbn?forum_seq={seq}&area_code=6',
+                                 'https://www.tbn.or.kr/main.tbn', insecure=True, timeout=15)
+                    m = re.search(r'class="program-bg"[^>]*background-image\s*:\s*url\(([^)]+)\)', page)
+                    if m:
+                        TBN_PICS[seq] = urllib.parse.urljoin('https://www.tbn.or.kr/', m.group(1).strip('\'" '))
+                    TBN_FAILS[0] = 0
+                    err = None
+                    break
+                except Exception as e:
+                    TBN_FAILS[0] += 1
+                    err = e
+            if err:
+                print(f'  (TBN 사진 {seq} 못 가져옴: {err})')
+                if TBN_FAILS[0] >= 6:
+                    print('  (TBN 사진 페이지가 계속 응답이 없어요 — 나머지는 예전 사진으로 둬요)')
+    return TBN_PICS.get(seq) or TBN_OLD.get(title, '')
+
+
+def tbn_item(title, hm, seq):
+    p = {'title': title, 'start': hm, 'end': ''}
+    img = tbn_image(seq, title)
+    if img:
+        p['image'] = img
+    return p
 
 
 def tbn():
     start = today_kst()
+    try:  # 예전에 받아 둔 TBN 사진 (이번에 못 가져온 프로그램용)
+        with open(OUT, encoding='utf-8') as f:
+            for st, wk in json.load(f).items():
+                if st.startswith('TBN '):
+                    for progs in wk.values():
+                        for p in progs:
+                            if p.get('image'):
+                                TBN_OLD.setdefault(p['title'], p['image'])
+    except Exception:
+        pass
     days = []  # 요일 칸마다 가까운 날 (월~목 · 금 · 토 · 일)
     for k in range(7):
         d = start + datetime.timedelta(days=k)
@@ -658,10 +714,11 @@ def tbn():
             except Exception as e:
                 print(f'  ({station} {d} 못 가져옴: {e})')
                 local = []
-            for day, hm, title in national.get(d, []):
-                by_date.setdefault(day, {}).setdefault(hm, {'title': title, 'start': hm, 'end': ''})
-            for day, hm, title in local:  # 같은 시간이면 지역 방송이 우선
-                by_date.setdefault(day, {})[hm] = {'title': title, 'start': hm, 'end': ''}
+            for day, hm, title, seq in national.get(d, []):
+                if hm not in by_date.get(day, {}):
+                    by_date.setdefault(day, {})[hm] = tbn_item(title, hm, seq)
+            for day, hm, title, seq in local:  # 같은 시간이면 지역 방송이 우선
+                by_date.setdefault(day, {})[hm] = tbn_item(title, hm, seq)
         week = {}
         for d in days:
             progs = clean_day(list(by_date.get(d, {}).values()))

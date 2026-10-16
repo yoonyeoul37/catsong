@@ -4085,7 +4085,8 @@
       {
         "title": "무명을 밝히고",
         "start": "11:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/d8b61aa3ff9116c7c15c.jpg"
       },
       {
         "title": "정오종합뉴스",
@@ -4640,7 +4641,8 @@
       {
         "title": "무명을 밝히고",
         "start": "11:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/d8b61aa3ff9116c7c15c.jpg"
       },
       {
         "title": "정오종합뉴스",
@@ -5320,248 +5322,296 @@
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 경인대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230410/16810862275992.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 1005",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230410/16810861988412.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (경인)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250106/17361390503212.jpg"
       },
       {
         "title": "황순유의 4시의 라디오",
         "start": "16:05",
-        "end": "17:00"
+        "end": "17:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421721899842.jpg"
       },
       {
         "title": "달리는 라디오 (경인)",
         "start": "17:00",
-        "end": "19:00"
+        "end": "19:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241113/17314832939382.jpg"
       },
       {
         "title": "7시의 가요산책",
         "start": "19:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609169409032.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ],
     "saturday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "홍지영의 주말엔 12시",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421867099902.jpg"
       },
       {
         "title": "2시의 음악여행",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421871105002.jpg"
       },
       {
         "title": "4시엔 함께 가요",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736226618422.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "sunday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "홍지영의 주말엔 12시",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421867099902.jpg"
       },
       {
         "title": "2시의 음악여행",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421871105002.jpg"
       },
       {
         "title": "4시엔 함께 가요",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736226618422.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "weekday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 경인대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230410/16810862275992.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 1005",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230410/16810861988412.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (경인)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250106/17361390503212.jpg"
       },
       {
         "title": "황순유의 4시의 라디오",
         "start": "16:05",
-        "end": "17:00"
+        "end": "17:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421721899842.jpg"
       },
       {
         "title": "달리는 라디오 (경인)",
         "start": "17:00",
-        "end": "19:00"
+        "end": "19:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241113/17314832939382.jpg"
       },
       {
         "title": "7시의 가요산책",
         "start": "19:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609169409032.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ]
   },
@@ -5570,238 +5620,284 @@
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 부산대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241113/17314633856462.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 949",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241114/17315689415992.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "빵빵한 2시",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260713/17839022734112.jpg"
       },
       {
         "title": "tbn 부산매거진",
         "start": "16:05",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250320/17424562400862.jpg"
       },
       {
         "title": "달리는 라디오 (부산)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260128/17695874935242.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ],
     "saturday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "tbn 차차차 (부산주말)",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250115/17369259777202.jpg"
       },
       {
         "title": "굿뮤직",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260102/17673439775742.jpg"
       },
       {
         "title": "주말 N 어떤가요",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260102/17673440160592.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "sunday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "tbn 차차차 (부산주말)",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250115/17369259777202.jpg"
       },
       {
         "title": "굿뮤직",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260102/17673439775742.jpg"
       },
       {
         "title": "주말 N 어떤가요",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260102/17673440160592.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "weekday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 부산대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241113/17314633856462.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 949",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241114/17315689415992.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "빵빵한 2시",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260713/17839022734112.jpg"
       },
       {
         "title": "tbn 부산매거진",
         "start": "16:05",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250320/17424562400862.jpg"
       },
       {
         "title": "달리는 라디오 (부산)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260128/17695874935242.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ]
   },
@@ -5810,248 +5906,296 @@
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 전남광주대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260730/17853982235962.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 973 (전남광주)",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421704046582.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (전남광주)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260109/17679204466022.jpg"
       },
       {
         "title": "오혜빈의 청춘가요",
         "start": "16:05",
-        "end": "17:00"
+        "end": "17:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260323/17742409975432.jpg"
       },
       {
         "title": "tbn 남도매거진",
         "start": "17:00",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250701/17513511833592.jpg"
       },
       {
         "title": "달리는 라디오 (전남광주)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736190563402.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ],
     "saturday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "김정아의 에브리뮤직",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736192170642.jpg"
       },
       {
         "title": "tbn 차차차 (전남광주주말)",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736193480962.jpg"
       },
       {
         "title": "문애란의 뮤직라떼",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736197122512.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "sunday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "김정아의 에브리뮤직",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736192170642.jpg"
       },
       {
         "title": "tbn 차차차 (전남광주주말)",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736193480962.jpg"
       },
       {
         "title": "문애란의 뮤직라떼",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736197122512.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "weekday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 전남광주대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260730/17853982235962.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 973 (전남광주)",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421704046582.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (전남광주)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260109/17679204466022.jpg"
       },
       {
         "title": "오혜빈의 청춘가요",
         "start": "16:05",
-        "end": "17:00"
+        "end": "17:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260323/17742409975432.jpg"
       },
       {
         "title": "tbn 남도매거진",
         "start": "17:00",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250701/17513511833592.jpg"
       },
       {
         "title": "달리는 라디오 (전남광주)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736190563402.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ]
   },
@@ -6060,248 +6204,296 @@
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 대구대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20210304/16148418215482.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 1039",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20210222/16139775899392.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (대구)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250103/17358847907462.jpg"
       },
       {
         "title": "tbn 대구매거진",
         "start": "16:05",
-        "end": "17:00"
+        "end": "17:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250320/17424564056502.jpg"
       },
       {
         "title": "행복충전5시!",
         "start": "17:00",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241109/17311265632501.jpg"
       },
       {
         "title": "달리는 라디오 (대구)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20231127/17010493326212.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ],
     "saturday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "주말 N 나들이, 문가빈입니다",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230116/16738326537962.jpg"
       },
       {
         "title": "tbn 차차차 (대구주말)",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421896882172.jpg"
       },
       {
         "title": "문채희의 뮤직 큐",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20210412/16181878633611.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "sunday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "주말 N 나들이, 문가빈입니다",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230116/16738326537962.jpg"
       },
       {
         "title": "tbn 차차차 (대구주말)",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421896882172.jpg"
       },
       {
         "title": "문채희의 뮤직 큐",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20210412/16181878633611.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "weekday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 대구대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20210304/16148418215482.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 1039",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20210222/16139775899392.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (대구)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250103/17358847907462.jpg"
       },
       {
         "title": "tbn 대구매거진",
         "start": "16:05",
-        "end": "17:00"
+        "end": "17:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250320/17424564056502.jpg"
       },
       {
         "title": "행복충전5시!",
         "start": "17:00",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241109/17311265632501.jpg"
       },
       {
         "title": "달리는 라디오 (대구)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20231127/17010493326212.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ]
   },
@@ -6310,238 +6502,284 @@
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 대전대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20240422/17137461198202.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 1029",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241109/17311271692822.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (대전)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736185766212.jpg"
       },
       {
         "title": "tbn 충청매거진",
         "start": "16:05",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250320/17424565268692.jpg"
       },
       {
         "title": "달리는 라디오 (대전)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241109/17311272882732.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ],
     "saturday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "주말엔 놀자!",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312860739672.jpg"
       },
       {
         "title": "레트로 하이웨이",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260406/17754353966952.jpg"
       },
       {
         "title": "달리는 오락실",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260903/17884117499262.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "sunday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "주말엔 놀자!",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312860739672.jpg"
       },
       {
         "title": "레트로 하이웨이",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260406/17754353966952.jpg"
       },
       {
         "title": "달리는 오락실",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260903/17884117499262.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "weekday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 대전대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20240422/17137461198202.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 1029",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241109/17311271692822.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (대전)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736185766212.jpg"
       },
       {
         "title": "tbn 충청매거진",
         "start": "16:05",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250320/17424565268692.jpg"
       },
       {
         "title": "달리는 라디오 (대전)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241109/17311272882732.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ]
   },
@@ -6550,238 +6788,284 @@
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 울산대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421753188712.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 1041",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421755610322.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (울산)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250109/17363884937772.jpg"
       },
       {
         "title": "tbn 울산매거진",
         "start": "16:05",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250320/17424573340952.jpg"
       },
       {
         "title": "달리는 라디오 (울산)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609162213482.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ],
     "saturday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "주말을 부탁해",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421882096492.jpg"
       },
       {
         "title": "오후의 발견",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736217201922.jpg"
       },
       {
         "title": "4시엔 울랄라",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312872553152.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "sunday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "주말을 부탁해",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421882096492.jpg"
       },
       {
         "title": "오후의 발견",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736217201922.jpg"
       },
       {
         "title": "4시엔 울랄라",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312872553152.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "weekday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 울산대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421753188712.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 1041",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421755610322.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (울산)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250109/17363884937772.jpg"
       },
       {
         "title": "tbn 울산매거진",
         "start": "16:05",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250320/17424573340952.jpg"
       },
       {
         "title": "달리는 라디오 (울산)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609162213482.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ]
   },
@@ -6790,248 +7074,296 @@
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 강원대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20210222/16139788406262.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 1059 (강원)",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20240902/17252350570652.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (강원)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250106/17361379778902.jpg"
       },
       {
         "title": "tbn 강원매거진",
         "start": "16:05",
-        "end": "17:00"
+        "end": "17:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250320/17424554942282.jpg"
       },
       {
         "title": "달리는 라디오 (강원)",
         "start": "17:00",
-        "end": "19:00"
+        "end": "19:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736178576482.jpg"
       },
       {
         "title": "이수형의 럭키세븐",
         "start": "19:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736181277561.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ],
     "saturday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "이한의 친한친구",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736182865962.jpg"
       },
       {
         "title": "두시N휴게소",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421875067462.jpg"
       },
       {
         "title": "여휴만만",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230203/16753854066742.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "sunday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "이한의 친한친구",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736182865962.jpg"
       },
       {
         "title": "두시N휴게소",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421875067462.jpg"
       },
       {
         "title": "여휴만만",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230203/16753854066742.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "weekday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 강원대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20210222/16139788406262.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 1059 (강원)",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20240902/17252350570652.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (강원)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250106/17361379778902.jpg"
       },
       {
         "title": "tbn 강원매거진",
         "start": "16:05",
-        "end": "17:00"
+        "end": "17:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250320/17424554942282.jpg"
       },
       {
         "title": "달리는 라디오 (강원)",
         "start": "17:00",
-        "end": "19:00"
+        "end": "19:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736178576482.jpg"
       },
       {
         "title": "이수형의 럭키세븐",
         "start": "19:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736181277561.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ]
   },
@@ -7040,238 +7372,284 @@
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 충북대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609146551372.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오1033",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532697599452.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차(충북)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250108/17363157484302.jpg"
       },
       {
         "title": "tbn충북매거진",
         "start": "16:05",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260601/17802780158892.jpg"
       },
       {
         "title": "달리는 라디오 (충북)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20240130/17065745946142.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ],
     "saturday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "tbn 리듬하이",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421893917062.jpg"
       },
       {
         "title": "이효림의 음악정원",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260713/17839025370172.jpg"
       },
       {
         "title": "tbn 뮤직스테이션",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609189763322.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "sunday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "tbn 리듬하이",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421893917062.jpg"
       },
       {
         "title": "이효림의 음악정원",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260713/17839025370172.jpg"
       },
       {
         "title": "tbn 뮤직스테이션",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609189763322.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "weekday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 충북대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609146551372.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오1033",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532697599452.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차(충북)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250108/17363157484302.jpg"
       },
       {
         "title": "tbn충북매거진",
         "start": "16:05",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260601/17802780158892.jpg"
       },
       {
         "title": "달리는 라디오 (충북)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20240130/17065745946142.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ]
   },
@@ -7280,238 +7658,284 @@
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 충남대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250626/17509265445742.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 1029",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241109/17311271692822.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (대전)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736185766212.jpg"
       },
       {
         "title": "tbn 충남매거진",
         "start": "16:05",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250626/17509264947142.jpg"
       },
       {
         "title": "달리는 라디오 (충남)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736175754332.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ],
     "saturday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "주말엔 놀자!",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312860739672.jpg"
       },
       {
         "title": "레트로 하이웨이",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260406/17754353966952.jpg"
       },
       {
         "title": "달리는 오락실",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260903/17884117499262.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "sunday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "주말엔 놀자!",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312860739672.jpg"
       },
       {
         "title": "레트로 하이웨이",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260406/17754353966952.jpg"
       },
       {
         "title": "달리는 오락실",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260903/17884117499262.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "weekday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 충남대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250626/17509265445742.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 1029",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241109/17311271692822.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (대전)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736185766212.jpg"
       },
       {
         "title": "tbn 충남매거진",
         "start": "16:05",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250626/17509264947142.jpg"
       },
       {
         "title": "달리는 라디오 (충남)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736175754332.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ]
   },
@@ -7520,238 +7944,284 @@
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 전북대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20231113/16998317714062.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 1025",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736199240242.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (전북)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736203307472.jpg"
       },
       {
         "title": "tbn 전북 매거진",
         "start": "16:05",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250320/17424560227592.jpg"
       },
       {
         "title": "달리는 라디오 (전북)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260317/17737294079622.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ],
     "saturday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "tbn 차차차 (전북주말)",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736220774252.jpg"
       },
       {
         "title": "2시의 팝스테이션",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736211380592.jpg"
       },
       {
         "title": "주말엔 행복 주파수",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421880424562.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "sunday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "tbn 차차차 (전북주말)",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736220774252.jpg"
       },
       {
         "title": "2시의 팝스테이션",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736211380592.jpg"
       },
       {
         "title": "주말엔 행복 주파수",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421880424562.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "weekday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 전북대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20231113/16998317714062.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 1025",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736199240242.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (전북)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736203307472.jpg"
       },
       {
         "title": "tbn 전북 매거진",
         "start": "16:05",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250320/17424560227592.jpg"
       },
       {
         "title": "달리는 라디오 (전북)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260317/17737294079622.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ]
   },
@@ -7760,238 +8230,284 @@
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 경남대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20240422/17137453267502.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 955 (경남)",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421757874822.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (경남)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241211/17339039737082.jpg"
       },
       {
         "title": "tbn 경남매거진",
         "start": "16:05",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250320/17424573592772.jpg"
       },
       {
         "title": "달리는 라디오 (경남)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20240422/17137454547842.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ],
     "saturday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "tbn경남, 컬러풀 라디오",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421887418442.jpg"
       },
       {
         "title": "두시의 트롯팡팡",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736184202782.jpg"
       },
       {
         "title": "다정한 오후, 이설희입니다",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421890796362.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "sunday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "tbn경남, 컬러풀 라디오",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421887418442.jpg"
       },
       {
         "title": "두시의 트롯팡팡",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736184202782.jpg"
       },
       {
         "title": "다정한 오후, 이설희입니다",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421890796362.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "weekday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 경남대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20240422/17137453267502.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 955 (경남)",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250317/17421757874822.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차 (경남)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241211/17339039737082.jpg"
       },
       {
         "title": "tbn 경남매거진",
         "start": "16:05",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250320/17424573592772.jpg"
       },
       {
         "title": "달리는 라디오 (경남)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20240422/17137454547842.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ]
   },
@@ -8000,238 +8516,284 @@
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 제주 대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20210222/16139820132362.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 1055(제주)",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20210222/16139820396582.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차(제주)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250113/17367331052442.jpg"
       },
       {
         "title": "tbn 제주매거진",
         "start": "16:05",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609166642022.jpg"
       },
       {
         "title": "달리는 라디오 (제주)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20210224/16141488823372.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ],
     "saturday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236490282.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "tbn 차차차(제주주말)",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250113/17367330873102.jpg"
       },
       {
         "title": "2시의 뮤직테라피",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20231023/16980392274172.jpg"
       },
       {
         "title": "아무튼 오후 네시",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609191516512.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "sunday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "tbn명예의전당",
         "start": "05:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236039812.jpg"
       },
       {
         "title": "즐거운 주말 아침",
         "start": "06:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241111/17312837074562.jpg"
       },
       {
         "title": "신나는 라디오, 박수림입니다.",
         "start": "08:00",
-        "end": "10:00"
+        "end": "10:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20260316/17736465948072.jpg"
       },
       {
         "title": "tbn 뮤직쇼",
         "start": "10:00",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337235570552.jpg"
       },
       {
         "title": "tbn 차차차(제주주말)",
         "start": "12:00",
-        "end": "14:00"
+        "end": "14:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250113/17367330873102.jpg"
       },
       {
         "title": "2시의 뮤직테라피",
         "start": "14:00",
-        "end": "16:00"
+        "end": "16:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20231023/16980392274172.jpg"
       },
       {
         "title": "아무튼 오후 네시",
         "start": "16:00",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609191516512.jpg"
       },
       {
         "title": "선우경의 주말특급",
         "start": "18:00",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221020/16662614799171.jpg"
       },
       {
         "title": "원미연의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221028/16669331385582.jpg"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337249492552.png"
       }
     ],
     "weekday": [
       {
         "title": "tbn플레이리스트",
         "start": "00:00",
-        "end": "06:00"
+        "end": "06:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20241209/17337236322552.jpg"
       },
       {
         "title": "굿모닝 코리아",
         "start": "06:00",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671659917352.jpg"
       },
       {
         "title": "출발! 제주 대행진",
         "start": "07:00",
-        "end": "08:52"
+        "end": "08:52",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20210222/16139820132362.jpg"
       },
       {
         "title": "tbn 특별기획 우리의 생명이 가장 중요합니다.",
         "start": "08:52",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251231/17671660311062.jpg"
       },
       {
         "title": "스튜디오 1055(제주)",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20210222/16139820396582.jpg"
       },
       {
         "title": "김경식의 오토쇼 으라차차",
         "start": "11:00",
-        "end": "12:05"
+        "end": "12:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20220523/16532646226331.png"
       },
       {
         "title": "김효진, 양상국의 12시에 만나요",
         "start": "12:05",
-        "end": "14:05"
+        "end": "14:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20230102/16726466370832.jpg"
       },
       {
         "title": "tbn 차차차(제주)",
         "start": "14:05",
-        "end": "16:05"
+        "end": "16:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20250113/17367331052442.jpg"
       },
       {
         "title": "tbn 제주매거진",
         "start": "16:05",
-        "end": "18:05"
+        "end": "18:05",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609166642022.jpg"
       },
       {
         "title": "달리는 라디오 (제주)",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20210224/16141488823372.jpg"
       },
       {
         "title": "김승현의 가요본색",
         "start": "20:00",
-        "end": "22:00"
+        "end": "22:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20221027/16668662590042.png"
       },
       {
         "title": "행복한 밤, tbn과 함께",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://www.tbn.or.kr/file/broadcast/image/20251020/17609177606782.jpg"
       }
     ]
   }

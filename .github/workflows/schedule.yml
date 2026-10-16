@@ -28,3 +28,5 @@ jobs:
           git add assets/schedule.json
           git commit -m "라디오 편성표 자동 갱신"
           git push
+      - name: 손으로 적은 편성표 바뀌었는지 확인
+        run: python3 tools/check_timetable.py

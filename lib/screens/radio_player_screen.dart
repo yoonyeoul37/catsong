@@ -383,6 +383,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         name == 'YTN 라디오' ||
         name == '경인방송' ||
         name == 'FEBC 극동방송' ||
+        name == 'FEBC 극동방송 AM' ||
         name == 'FEBC 제주극동방송' ||
         name == 'TBS FM' ||
         name == 'TBS eFM' ||

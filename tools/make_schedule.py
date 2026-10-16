@@ -201,6 +201,8 @@ def febc():
             continue
         if len(clean) >= 5:
             out[station] = {day_key(today_kst()): clean}
+    if 'FEBC 극동방송' in out:  # 서울 AM 1188 은 FM 106.9 와 같은 방송
+        out['FEBC 극동방송 AM'] = json.loads(json.dumps(out['FEBC 극동방송']))
     return out
 
 

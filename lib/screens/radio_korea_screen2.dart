@@ -21,6 +21,8 @@ import '../widgets/radio_dice.dart';
 import '../widgets/more_menu_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../l10n/locale_holder.dart';
+import '../utils/point_color.dart';
+import 'paran_intro_screen.dart';
 enum _ViewMode { all, broadcaster, region, recent }
 
 class RadioKoreaScreen extends StatefulWidget {
@@ -767,6 +769,97 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         _ => r,
       };
 
+  /// 지역별 마지막 빈칸: Paransori 브랜드 카드 (⋮ 메뉴 아래 먹색 카드와 한 세트) → 누르면 파란소리 소개
+  Widget _regionBrandCard(BuildContext context, bool isDarkMode) {
+    // 라이트: 먹색 카드 · 크림 글자 / 다크: 크림 카드 · 먹색 글자 (바탕과 반대)
+    final bg = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final fg = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
+    final blue = pointColorOf(context, onDark: !isDarkMode);
+    final n = koreanStations.length;
+    final l = Localizations.localeOf(context);
+    final k = l.languageCode == 'zh'
+        ? ((l.scriptCode == 'Hant' || l.countryCode == 'TW' || l.countryCode == 'HK') ? 'tw' : 'cn')
+        : l.languageCode;
+    final line = switch (k) {
+      'ko' => '전국 $n개 채널을\n한곳에서',
+      'ja' => '全国$n局を\nひとつの場所で',
+      'tw' => '全國$n個電台\n盡在一處',
+      'cn' => '全国$n个电台\n尽在一处',
+      _ => '$n stations,\nall in one place',
+    };
+    return GestureDetector(
+      onTap: () {
+        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const ParanIntroScreen()));
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        alignment: Alignment.centerLeft,
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.25),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text.rich(
+                  TextSpan(children: [
+                    TextSpan(text: 'Paran', style: TextStyle(color: blue)),
+                    const TextSpan(text: 'sori'),
+                  ]),
+                  textScaler: TextScaler.noScaling,
+                  style: GoogleFonts.quicksand(
+                      color: fg, fontSize: 17, fontWeight: FontWeight.w700, letterSpacing: 0.4, height: 1.1),
+                ),
+                const SizedBox(width: 6),
+                // 작은 소리 막대 (로고 느낌)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 3),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      for (final (i, h) in const [5.0, 9.0, 12.0, 7.0].indexed) ...[
+                        if (i > 0) const SizedBox(width: 2),
+                        Container(
+                          width: 2.5,
+                          height: h,
+                          decoration: BoxDecoration(
+                              color: blue.withOpacity(0.85), borderRadius: BorderRadius.circular(2)),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 7),
+            Text(
+              line,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textScaler: TextScaler.noScaling,
+              style: TextStyle(
+                  color: fg.withOpacity(0.72), fontSize: 11.5, fontWeight: FontWeight.w600, height: 1.4),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildRegionGrid(BuildContext context) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
@@ -782,8 +875,9 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         mainAxisSpacing: 10,
         childAspectRatio: 1.5,
       ),
-      itemCount: regionList.length,
+      itemCount: regionList.length + 1, // 9개 지역 + 마지막 빈칸에 브랜드 카드
       itemBuilder: (context, index) {
+        if (index == regionList.length) return _regionBrandCard(context, isDarkMode);
         final region = regionList[index];
         final count = koreanStations.where((s) => s.region == region).length;
         return GestureDetector(

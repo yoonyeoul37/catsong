@@ -361,6 +361,55 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                   ),
                 ),
               ),
+              // 채널 수가 밝은 사진에서도 보이게: 오른쪽 위 모서리만 아주 살짝 어둡게 (칸처럼 안 보이게 번지듯)
+              Positioned(
+                top: 0,
+                right: 0,
+                width: 150,
+                height: 70,
+                child: IgnorePointer(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: RadialGradient(
+                        center: Alignment.topRight,
+                        radius: 1.0,
+                        colors: [Colors.black.withOpacity(0.38), Colors.black.withOpacity(0)],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // 사진 오른쪽 위: ● 102 채널 (홈 라디오 카드와 같은 모양, 사진 위라 흰 글자 + 옅은 그림자)
+              Positioned(
+                top: 10,
+                right: 12,
+                child: Builder(builder: (context) {
+                  final lang = Localizations.localeOf(context).languageCode;
+                  const shadow = [Shadow(color: Color(0x99000000), blurRadius: 6, offset: Offset(0, 1))];
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const _LiveDot(size: 7), // 빨간 점: 천천히 깜빡임
+                      const SizedBox(width: 6),
+                      Text('${koreanStations.length}',
+                          textScaler: TextScaler.noScaling,
+                          style: GoogleFonts.quicksand(
+                              color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700, shadows: shadow)),
+                      // 단위는 홈과 같게: 한국어 '채널' · 일본어 '局', 나머지는 숫자만
+                      if (lang == 'ko' || lang == 'ja') ...[
+                        const SizedBox(width: 2),
+                        Text(lang == 'ja' ? '局' : '채널',
+                            textScaler: TextScaler.noScaling,
+                            style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                shadows: shadow)),
+                      ],
+                    ],
+                  );
+                }),
+              ),
               // 사진 아래 크림 띠 (잠시 쉬어가요 카드와 같은 색)
               Positioned(
                 left: 0,
@@ -1562,11 +1611,59 @@ class _PlayingBarsState extends State<_PlayingBars>
 // ══════════════════════════════════════════
 // 방송사별 카드 격자 화면
 // ══════════════════════════════════════════
+/// 생방송 빨간 점 — 천천히 밝게·흐리게 (애니메이션 줄이기를 켜면 그대로)
+class _LiveDot extends StatefulWidget {
+  final double size;
+  const _LiveDot({this.size = 7});
+
+  @override
+  State<_LiveDot> createState() => _LiveDotState();
+}
+
+class _LiveDotState extends State<_LiveDot> with SingleTickerProviderStateMixin {
+  late final AnimationController _c =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 1200));
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _c.stop();
+      _c.value = 1;
+    } else if (!_c.isAnimating) {
+      _c.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    const red = Color(0xFFE5484D);
+    return FadeTransition(
+      opacity: Tween(begin: 0.35, end: 1.0).animate(CurvedAnimation(parent: _c, curve: Curves.easeInOut)),
+      child: Container(
+        width: widget.size,
+        height: widget.size,
+        decoration: BoxDecoration(
+          color: red,
+          shape: BoxShape.circle,
+          boxShadow: [BoxShadow(color: red.withOpacity(0.22), spreadRadius: 2.5)],
+        ),
+      ),
+    );
+  }
+}
+
 class _BroadcasterGridScreen extends StatelessWidget {
   final RadioProvider radioProvider;
   const _BroadcasterGridScreen({required this.radioProvider});
 
-  static const _order = ['KBS', 'MBC', 'SBS', 'EBS', 'CBS', '기타'];
+  static const _order = ['KBS', 'MBC', 'SBS', 'EBS', 'CBS', 'TBN', '종교', '지역민방', '공동체', '기타'];
 
   static const Map<String, Color> _cardColors = {
     'KBS': Color(0xFF14356B),
@@ -1574,14 +1671,49 @@ class _BroadcasterGridScreen extends StatelessWidget {
     'SBS': Color(0xFF7A1F1F),
     'EBS': Color(0xFF0D4C6E),
     'CBS': Color(0xFF1E4A2E),
+    'TBN': Color(0xFF6B4A12), // 황토
+    '종교': Color(0xFF33405A), // 회청
+    '지역민방': Color(0xFF6A3B22), // 적갈
+    '공동체': Color(0xFF4A5320), // 올리브
   };
+
+  /// 방송사 → 칸 (KBS·MBC·SBS·EBS·CBS는 그대로, 나머지는 묶음)
+  static String _keyOf(String broadcaster) => switch (broadcaster) {
+        'KBS' || 'MBC' || 'SBS' || 'EBS' || 'CBS' || 'TBN' => broadcaster,
+        'FEBC' || 'BBS' || 'CPBC' => '종교',
+        'TBC' || 'JTV' || 'OBS' => '지역민방', // OBS 칸에 경인방송도 같이 있음 (나중에 KNN·KBC·TJB 등도 여기로)
+        '공동체' => '공동체',
+        _ => '기타',
+      };
+
+  /// 칸 이름 (언어에 맞게) — 지역 칸에서 열 때는 지역 이름
+  static String gridLabel(BuildContext context, String key) => switch (key) {
+        '기타' => tr.categoryEtc,
+        '종교' => stationCategoryLabel(context, 3),
+        '공동체' => stationCategoryLabel(context, 6),
+        '지역민방' => _privateLabel(context),
+        _ => _RadioKoreaScreenState._regionLabel(key),
+      };
+
+  /// '지역 민방' (5개 언어)
+  static String _privateLabel(BuildContext context) {
+    final l = Localizations.localeOf(context);
+    final k = l.languageCode == 'zh'
+        ? ((l.scriptCode == 'Hant' || l.countryCode == 'TW' || l.countryCode == 'HK') ? 'tw' : 'cn')
+        : l.languageCode;
+    return switch (k) {
+      'ko' => '지역 민방',
+      'ja' => '地方民放',
+      'tw' => '地方民營電台',
+      'cn' => '地方民营电台',
+      _ => 'Regional private',
+    };
+  }
 
   Map<String, List<_KStation>> _grouped() {
     final Map<String, List<_KStation>> map = {};
     for (final s in koreanStations) {
-      final key = ['KBS', 'MBC', 'SBS', 'EBS', 'CBS'].contains(s.broadcaster)
-          ? s.broadcaster
-          : '기타';
+      final key = _keyOf(s.broadcaster);
       map.putIfAbsent(key, () => []).add(s);
     }
     return map;
@@ -1631,14 +1763,27 @@ class _BroadcasterGridScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  key == '기타' ? tr.categoryEtc : key,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown, // 'Community radio'처럼 길면 칸 안에 맞게 살짝 작게
+                    child: Text(
+                      gridLabel(context, key),
+                      maxLines: 1,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
                 ),
+                // TBN은 이름 밑에 작게 '(교통 방송)'
+                if (key == 'TBN')
+                  Text(
+                    '(${stationCategoryLabel(context, 4)})',
+                    style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 11.5),
+                  ),
                 const SizedBox(height: 4),
                 Text(
                   tr.channelsCount(stations.length),
@@ -1714,7 +1859,7 @@ class _BroadcasterStationList extends StatelessWidget {
           },
           icon: Icon(Icons.arrow_back_ios, color: baseColor, size: 20),
         ),
-        title: Text(broadcaster == '기타' ? tr.categoryEtc : _RadioKoreaScreenState._regionLabel(broadcaster),
+        title: Text(_BroadcasterGridScreen.gridLabel(context, broadcaster),
             style: TextStyle(color: baseColor, fontSize: 18, fontWeight: FontWeight.bold)),
       ),
       body: SafeArea(

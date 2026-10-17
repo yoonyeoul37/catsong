@@ -513,6 +513,7 @@ class RadioProvider extends ChangeNotifier {
       }
       final qIdx = _currentQueue.indexWhere((s) => s.name == station.name);
       if (qIdx >= 0) _currentQueueIndex = qIdx;
+      _startSchedule(station); // 편성표는 소리 연결을 기다리지 않고 바로 받기 시작
       notifyListeners();
 
       _onStopMusic?.call();
@@ -587,60 +588,75 @@ class RadioProvider extends ChangeNotifier {
       await recordListened(station);
       _updateWidget(station.name, _mediaSubtitle(station), true); // 알림창과 같은 한글 설명
 
-      // JSON 편성표 확인 (KBS/MBC/SBS 아닌 경우만)
-      if (station.name == '국방FM') {
-        fetchKfnSchedule();
-      }
-      // KBS 편성표
-      if (station.broadcaster == null && station.streamUrl.contains('cfpwwwapi.kbs.co.kr')) {
-        fetchScheduleByUrl(station.name, station.streamUrl);
-      } else if (station.name.contains('KBS')) {
-        fetchScheduleByUrl(station.name, station.streamUrl);
-      }
-      // MBC/SBS 편성표
-      if (station.name == 'MBC 표준FM' || station.name == 'MBC FM4U') {
-        fetchMbcSchedule(station.name);
-      }
-      if (station.name == 'SBS 파워FM' || station.name == 'SBS 러브FM') {
-        fetchSbsSchedule(station.name);
-      }
-      if (station.name == 'EBS 반디') {
-        fetchEbsBandiSchedule();
-      }
-      if (station.name == 'EBS FM') {
-        fetchEbsFmSchedule();
-      }
-      final isKbsMbcSbs = station.name.contains('KBS') ||
-          _mbcChannelTypes.containsKey(station.name) || // 서울 MBC만 (지역 MBC는 편성표 파일 사용)
-          station.name.contains('SBS');
-      if (!isKbsMbcSbs && _scheduleService.hasSchedule(station.name)) {
-        final program = _scheduleService.getCurrentProgram(station.name);
-        if (program != null) {
-          _currentProgramMap[station.name] = {
-            'program_title': program['title'],
-            'start_time': program['start'],
-            'end_time': program['end'],
-            'is_rerun': false,
-            'image': program['image'], // 편성표 파일에 사진이 있으면 (CBS)
-          };
-
-          _nowPlayingMap[station.name] = program['title'] as String? ?? '';
-          notifyListeners();
-        }
-        _scheduleListMap[station.name] =
-            _scheduleService.getScheduleList(station.name).map((p) => {
-              'program_title': p['title'],
-              'start_time': p['start'],
-              'end_time': p['end'],
-              'image': p['image'],
-            }).toList();
-        notifyListeners();
-      }
     } catch (e) {
       debugPrint('라디오 재생 실패: $e');
       _errorMessage = tr.stationLoadFailed;
       _setPlayerState(RadioPlayerState.error);
     }
+  }
+
+  /// 편성표 받기 시작 (방송을 틀 때마다) — 받는 동안은 '받는 중'이라 화면에 설명 카드를 안 보여 줌
+  /// (예전엔 소리가 연결된 뒤에 받아서 그동안 설명 카드가 번쩍 보였음 → 이제는 틀자마자 받기 시작)
+  void _startSchedule(RadioStation station) {
+    final name = station.name;
+    final jobs = <Future<void>>[];
+    // JSON 편성표 확인 (KBS/MBC/SBS 아닌 경우만)
+    if (name == '국방FM') {
+      jobs.add(fetchKfnSchedule());
+    }
+    // KBS 편성표
+    if (station.broadcaster == null && station.streamUrl.contains('cfpwwwapi.kbs.co.kr')) {
+      jobs.add(fetchScheduleByUrl(name, station.streamUrl));
+    } else if (name.contains('KBS')) {
+      jobs.add(fetchScheduleByUrl(name, station.streamUrl));
+    }
+    // MBC/SBS 편성표
+    if (name == 'MBC 표준FM' || name == 'MBC FM4U') {
+      jobs.add(fetchMbcSchedule(name));
+    }
+    if (name == 'SBS 파워FM' || name == 'SBS 러브FM') {
+      jobs.add(fetchSbsSchedule(name));
+    }
+    if (name == 'EBS 반디') {
+      jobs.add(fetchEbsBandiSchedule());
+    }
+    if (name == 'EBS FM') {
+      jobs.add(fetchEbsFmSchedule());
+    }
+    final isKbsMbcSbs = name.contains('KBS') ||
+        _mbcChannelTypes.containsKey(name) || // 서울 MBC만 (지역 MBC는 편성표 파일 사용)
+        name.contains('SBS');
+    // 편성표 파일(schedule.json)에 있는 방송은 바로 채움
+    if (!isKbsMbcSbs && _scheduleService.hasSchedule(name)) {
+      final program = _scheduleService.getCurrentProgram(name);
+      if (program != null) {
+        _currentProgramMap[name] = {
+          'program_title': program['title'],
+          'start_time': program['start'],
+          'end_time': program['end'],
+          'is_rerun': false,
+          'image': program['image'], // 편성표 파일에 사진이 있으면 (CBS)
+        };
+        _nowPlayingMap[name] = program['title'] as String? ?? '';
+      }
+      _scheduleListMap[name] =
+          _scheduleService.getScheduleList(name).map((p) => {
+            'program_title': p['title'],
+            'start_time': p['start'],
+            'end_time': p['end'],
+            'image': p['image'],
+          }).toList();
+    }
+    // 인터넷에서 받는 편성표: 다 받을 때까지 '받는 중' → 끝나면 풀고 화면 다시 그리기
+    if (jobs.isEmpty) return;
+    _scheduleLoading.add(name);
+    () async {
+      try {
+        await Future.wait(jobs);
+      } catch (_) {}
+      _scheduleLoading.remove(name);
+      notifyListeners();
+    }();
   }
 
   String _getReferer(RadioStation station) {
@@ -1133,6 +1149,9 @@ class RadioProvider extends ChangeNotifier {
 
   // ══════ 편성표 ══════
   final Map<String, List<Map<String, dynamic>>> _scheduleListMap = {};
+  final Set<String> _scheduleLoading = {}; // 지금 인터넷에서 편성표 받는 중인 방송
+  /// 편성표를 받는 중인지 (받는 동안은 설명 카드 안 보여 주기)
+  bool isScheduleLoading(String name) => _scheduleLoading.contains(name);
   List<Map<String, dynamic>> get scheduleList =>
       _scheduleListMap[_currentStation?.name ?? ''] ?? [];
   final Map<String, Map<String, dynamic>> _currentProgramMap = {};

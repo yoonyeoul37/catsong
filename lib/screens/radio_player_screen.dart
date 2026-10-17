@@ -1179,7 +1179,9 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                             radioProvider: radioProvider,
                           ),
                         ),
-                      ] else if (radioProvider.descriptionFor(current.name) != null) ...[
+                      ] else if (radioProvider.currentStation != null &&
+                          !radioProvider.isScheduleLoading(current.name) && // 편성표 받는 중엔 비워 두기 (깜빡임 방지)
+                          radioProvider.descriptionFor(current.name) != null) ...[
                         SizedBox(height: (h * 0.005).clamp(2.0, 4.0)),
                         Container(
                           width: double.infinity,

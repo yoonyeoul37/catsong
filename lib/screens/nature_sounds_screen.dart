@@ -574,44 +574,6 @@ class _VariantPickerSheet extends StatelessWidget {
   }
 }
 
-class _FarewellTextPainter extends CustomPainter {
-  final double opacity;
-  final String smallText;
-  _FarewellTextPainter({required this.opacity, required this.smallText});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final isMultiline = smallText.contains('\n');
-    final smallPainter = TextPainter(
-      text: TextSpan(
-        text: smallText,
-        style: TextStyle(
-          color: Colors.white.withOpacity(opacity * 0.85),
-          fontSize: isMultiline ? 17 : 14,
-          letterSpacing: isMultiline ? 0.2 : 5,
-          fontWeight: FontWeight.w500,
-          fontStyle: isMultiline ? FontStyle.normal : FontStyle.italic,
-          height: 1.6,
-        ),
-      ),
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    )..layout(maxWidth: size.width);
-    smallPainter.paint(canvas, Offset((size.width - smallPainter.width) / 2, 0));
-
-    final bigPainter = TextPainter(
-      text: TextSpan(
-        text: 'Paransori',
-        style: TextStyle(color: Colors.white.withOpacity(opacity), fontSize: 33, letterSpacing: 3, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    bigPainter.paint(canvas, Offset((size.width - bigPainter.width) / 2, smallPainter.height + 12));
-  }
-
-  @override
-  bool shouldRepaint(covariant _FarewellTextPainter oldDelegate) => oldDelegate.opacity != opacity;
-}
 
 class _CircleIconButton extends StatelessWidget {
   final VoidCallback onTap;

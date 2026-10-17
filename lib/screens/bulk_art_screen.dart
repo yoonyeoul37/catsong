@@ -44,7 +44,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
   String _norm(String s) => s
       .toLowerCase()
       .replaceAll(RegExp(r'[\(\[].*?[\)\]]'), '')
-      .replaceAll(RegExp(r'[^0-9a-z가-힣ぁ-んァ-ン一-龥]'), '');
+      .replaceAll(RegExp(r'[^0-9a-zÀ-ɏḀ-ỿ฀-๿가-힣ぁ-んァ-ン一-龥]'), '');
 
   /// 제목이 거의 같으면 "맞는 곡"으로 보고 미리 체크
   bool _looksSame(Song s, LookupResult r) {

@@ -271,7 +271,7 @@ class LyricsProvider extends ChangeNotifier {
   String _norm(String s) => s
       .toLowerCase()
       .replaceAll(RegExp(r'[\(\[].*?[\)\]]'), '')
-      .replaceAll(RegExp(r'[^0-9a-z가-힣ぁ-んァ-ン一-龥]'), '');
+      .replaceAll(RegExp(r'[^0-9a-zÀ-ɏḀ-ỿ฀-๿가-힣ぁ-んァ-ン一-龥]'), '');
 
   /// 인터넷에서 받아오기 — 실패하면 1초 쉬고 한 번 더. 못 받으면 null, 없으면 빈 목록
   Future<dynamic> _getJson(String url) async {

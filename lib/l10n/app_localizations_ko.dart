@@ -4105,4 +4105,343 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get byeLine4 => '푹 자고 내일 만나요';
+
+  @override
+  String get genreSortedToast => '장르별로 정렬했어요';
+
+  @override
+  String genreShuffle(String label, int n) {
+    return '$label $n곡 섞어서 재생';
+  }
+
+  @override
+  String get genrePickTitle => '장르별 선택';
+
+  @override
+  String get genreNone => '장르 없음';
+
+  @override
+  String get genreTypeOwn => '직접 쓰기';
+
+  @override
+  String get songGenreBallad => '발라드';
+
+  @override
+  String get songGenreDance => '댄스';
+
+  @override
+  String get songGenrePop => '팝';
+
+  @override
+  String get songGenreKpop => 'K-Pop';
+
+  @override
+  String get songGenreJpop => 'J-Pop';
+
+  @override
+  String get songGenreCpop => 'C-Pop';
+
+  @override
+  String get songGenreRock => '록';
+
+  @override
+  String get songGenreMetal => '메탈';
+
+  @override
+  String get songGenreHiphop => '힙합';
+
+  @override
+  String get songGenreRnb => 'R&B';
+
+  @override
+  String get songGenreJazz => '재즈';
+
+  @override
+  String get songGenreClassical => '클래식';
+
+  @override
+  String get songGenreOst => 'OST';
+
+  @override
+  String get songGenreTrot => '트로트';
+
+  @override
+  String get songGenreEnka => '엔카';
+
+  @override
+  String get songGenreIndie => '인디';
+
+  @override
+  String get songGenreElectronic => '일렉트로닉';
+
+  @override
+  String get songGenreFolk => '포크';
+
+  @override
+  String get songGenreBlues => '블루스';
+
+  @override
+  String get songGenreCountry => '컨트리';
+
+  @override
+  String get songGenreReggae => '레게';
+
+  @override
+  String get songGenreNewage => '뉴에이지';
+
+  @override
+  String get songGenreAnime => '애니메이션';
+
+  @override
+  String get songGenreKids => '동요';
+
+  @override
+  String regionBrandLine(int n) {
+    return '전국 $n개 채널을\n한곳에서';
+  }
+
+  @override
+  String get stationCatMajor => '주요 방송';
+
+  @override
+  String get stationCatMusicNews => '음악·시사';
+
+  @override
+  String get stationCatForeign => '외국어';
+
+  @override
+  String get stationCatReligion => '종교 방송';
+
+  @override
+  String get stationCatTraffic => '교통 방송';
+
+  @override
+  String get stationCatRegional => '지역 방송';
+
+  @override
+  String get stationCatCommunity => '공동체 라디오';
+
+  @override
+  String get stationCatPrivate => '지역 민방';
+
+  @override
+  String get smsSheetTitle => '문자로 사연 보내기';
+
+  @override
+  String get smsSheetDesc => '이 번호로 문자를 보내면 방송에 사연이나 신청곡을 보낼 수 있어요.';
+
+  @override
+  String get smsSheetFee => '짧은 문자 50원 · 긴 문자·사진 100원의 정보이용료가 붙어요.';
+
+  @override
+  String get smsSheetSend => '문자 보내기';
+
+  @override
+  String get languageMenuDesc => '앱 글자를 다른 언어로 볼 수 있어요.';
+
+  @override
+  String get languagePhone => '폰 언어';
+
+  @override
+  String get languageTagHant => '번체';
+
+  @override
+  String get languageTagHans => '간체';
+
+  @override
+  String get introTitle => '파란소리';
+
+  @override
+  String get introTagline => 'Paransori — 일상에 맑음을 더하다.';
+
+  @override
+  String get introQuestion => '소리에도 색이 있다면,\n어떤 색일까요?';
+
+  @override
+  String get introPoem => '파란 하늘처럼 맑고,\n시원한 바람처럼 상쾌하고,\n잔잔한 바다처럼 편안한 소리.';
+
+  @override
+  String get introStarted => '파란소리는 그런 소리를 담고 싶은\n마음에서 시작되었습니다.';
+
+  @override
+  String get introNameLabel => '이름 이야기';
+
+  @override
+  String get introNameStory =>
+      '\'파란소리\'라는 이름에는 맑은 하늘과 푸른 바다가 주는 청량함, 시원한 바람이 전하는 상쾌함, 그리고 자연 속에서 느끼는 편안함을 담았습니다.';
+
+  @override
+  String get introEverydayTitle => '소리와 함께하는 일상';
+
+  @override
+  String get introMoments =>
+      '바쁜 하루 중 잠시 쉬어가고 싶을 때,\n좋아하는 음악이 생각날 때,\n새로운 라디오 방송을 만나고 싶을 때,\n자연의 소리와 함께 조용한 시간을 보내고 싶을 때.';
+
+  @override
+  String get introEveryday1 => '파란소리는 일상의 다양한 순간에 가볍게 함께하고 싶습니다.';
+
+  @override
+  String get introEveryday2 =>
+      '음악 한 곡, 익숙한 라디오 방송, 잔잔한 빗소리 하나가 평범한 하루를 조금 더 기분 좋게 만들어 줄 수 있으니까요. 그래서 파란소리는 복잡하지 않고, 누구나 쉽고 즐겁게 사용할 수 있는 공간을 만들어가고 있습니다.';
+
+  @override
+  String get introSoundsTitle => '파란소리에서 만나는 소리';
+
+  @override
+  String get introWishTitle => '파란소리가 전하고 싶은 마음';
+
+  @override
+  String get introWish1 =>
+      '좋아하는 소리를 듣는 시간은 생각보다 우리 가까이에 있습니다. 아침을 시작할 때도, 일하는 중에도, 하루를 마무리하는 조용한 밤에도.';
+
+  @override
+  String get introWish2 =>
+      '한국에서 시작된 파란소리가 이제 세계 여러 곳의 사람들과 함께하며, 저마다의 일상에 작은 즐거움과 여유를 더할 수 있기를 바랍니다.';
+
+  @override
+  String get introClosing1 => '언제 어디서나 편안하게 찾을 수 있는 소리의 공간.';
+
+  @override
+  String get introClosing2 => '당신의 하루가 조금 더 맑아지도록.';
+
+  @override
+  String get introSign => '파란소리, Paransori.';
+
+  @override
+  String get introVersion => '버전';
+
+  @override
+  String get introFeature1Title => '나만의 음악';
+
+  @override
+  String get introFeature1Desc =>
+      '휴대폰에 저장된 음악을 느긋하게 감상하며, 좋아하는 노래로 나만의 시간을 채워보세요.';
+
+  @override
+  String get introFeature2Title => '세계의 라디오';
+
+  @override
+  String get introFeature2Desc =>
+      '다양한 나라의 라디오 방송을 들으며 새로운 음악과 이야기, 세상의 소리를 만나보세요.';
+
+  @override
+  String get introFeature3Title => '자연의 소리';
+
+  @override
+  String get introFeature3Desc => '빗소리, 바람 소리, 숲의 소리 등 자연이 들려주는 편안한 소리를 즐겨보세요.';
+
+  @override
+  String get introFeature4Title => '휴식과 집중';
+
+  @override
+  String get introFeature4Desc =>
+      '잠들기 전 조용한 시간부터 집중이 필요한 순간까지, 지금 나에게 어울리는 소리를 찾아보세요.';
+
+  @override
+  String get introFeature5Title => '나만의 소리 조합';
+
+  @override
+  String get introFeature5Desc => '좋아하는 소리들을 함께 재생하며 나만의 분위기를 만들어보세요.';
+
+  @override
+  String get introFeature6Title => '아침 알람';
+
+  @override
+  String get introFeature6Desc => '좋아하는 노래, 라디오, 자연의 소리로 기분 좋게 하루를 시작해 보세요.';
+
+  @override
+  String get introMenuTitle => '파란소리 소개';
+
+  @override
+  String get introMenuDesc => '어떤 앱인지 알려드려요.';
+
+  @override
+  String get nature01Name => '파도소리';
+
+  @override
+  String get nature01Desc => '규칙적인 파도 소리는 마음을 차분히 가라앉혀 깊은 휴식과 수면에 도움을 줘요';
+
+  @override
+  String get nature02Name => '잔잔한 파도';
+
+  @override
+  String get nature02Desc => '한결 부드럽고 잔잔하게 밀려오는 파도 소리로 편안한 휴식을 도와줘요';
+
+  @override
+  String get nature03Name => '갈매기와 파도';
+
+  @override
+  String get nature03Desc => '갈매기 울음소리가 어우러진 파도 소리로 생생한 해변 분위기를 느껴보세요';
+
+  @override
+  String get nature04Name => '바위에 부딪히는 파도';
+
+  @override
+  String get nature04Desc => '바위에 세게 부딪히며 부서지는 파도 소리로 역동적인 바다를 느껴보세요';
+
+  @override
+  String get nature05Name => '멀리서 들리는 갈매기';
+
+  @override
+  String get nature05Desc => '고요한 바닷가, 멀리서 은은하게 들려오는 갈매기 소리로 차분한 휴식을 느껴보세요';
+
+  @override
+  String get nature06Name => '거친 파도';
+
+  @override
+  String get nature06Desc => '거칠게 밀려와 부서지는 파도 소리로 힘 있는 바다를 느껴보세요';
+
+  @override
+  String get nature07Name => '빗소리';
+
+  @override
+  String get nature07Desc => '일정한 빗소리는 집중력을 높이고 불안한 마음을 편안하게 다독여줘요';
+
+  @override
+  String get nature08Name => '창문에 떨어지는 비';
+
+  @override
+  String get nature08Desc => '창문을 두드리는 부드러운 빗소리로 편안하게 잠들어보세요';
+
+  @override
+  String get nature09Name => '숲속의 비와 새소리';
+
+  @override
+  String get nature09Desc => '숲속에 내리는 빗소리와 새소리가 어우러져 마음을 편안하게 해줘요';
+
+  @override
+  String get nature10Name => '숲속의 거센 밤비';
+
+  @override
+  String get nature10Desc => '깊은 밤 숲속에 세차게 내리는 빗소리로 몰입감 있는 휴식을 느껴보세요';
+
+  @override
+  String get nature11Name => '새소리';
+
+  @override
+  String get nature11Desc => '청아한 새소리는 스트레스를 줄이고 상쾌한 기분을 만들어줘요';
+
+  @override
+  String get nature12Name => '뻐꾸기와 숲속 새소리';
+
+  @override
+  String get nature12Desc => '뻐꾸기 소리가 어우러진 숲속의 새소리로 상쾌한 아침을 느껴보세요';
+
+  @override
+  String get nature13Name => '모닥불';
+
+  @override
+  String get nature13Desc => '타닥타닥 장작 타는 소리는 아늑한 분위기로 깊은 이완을 도와줘요';
+
+  @override
+  String get nature14Name => '시냇물';
+
+  @override
+  String get nature14Desc => '졸졸 흐르는 시냇물 소리는 마음을 편안하게 하고 잡생각을 줄여줘요';
+
+  @override
+  String get nature15Name => '잔잔한 강물';
+
+  @override
+  String get nature15Desc => '넓은 강물이 잔잔하게 흐르는 소리로 편안한 휴식을 느껴보세요';
 }

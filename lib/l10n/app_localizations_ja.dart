@@ -4105,4 +4105,340 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get byeLine4 => 'ぐっすり眠って、また明日';
+
+  @override
+  String get genreSortedToast => 'ジャンル別に並べ替えました';
+
+  @override
+  String genreShuffle(String label, int n) {
+    return '$label $n曲をシャッフル再生';
+  }
+
+  @override
+  String get genrePickTitle => 'ジャンル選択';
+
+  @override
+  String get genreNone => 'ジャンルなし';
+
+  @override
+  String get genreTypeOwn => '自分で入力';
+
+  @override
+  String get songGenreBallad => 'バラード';
+
+  @override
+  String get songGenreDance => 'ダンス';
+
+  @override
+  String get songGenrePop => 'ポップス';
+
+  @override
+  String get songGenreKpop => 'K-POP';
+
+  @override
+  String get songGenreJpop => 'J-POP';
+
+  @override
+  String get songGenreCpop => 'C-POP';
+
+  @override
+  String get songGenreRock => 'ロック';
+
+  @override
+  String get songGenreMetal => 'メタル';
+
+  @override
+  String get songGenreHiphop => 'ヒップホップ';
+
+  @override
+  String get songGenreRnb => 'R&B';
+
+  @override
+  String get songGenreJazz => 'ジャズ';
+
+  @override
+  String get songGenreClassical => 'クラシック';
+
+  @override
+  String get songGenreOst => 'サウンドトラック';
+
+  @override
+  String get songGenreTrot => 'トロット';
+
+  @override
+  String get songGenreEnka => '演歌';
+
+  @override
+  String get songGenreIndie => 'インディーズ';
+
+  @override
+  String get songGenreElectronic => 'エレクトロニカ';
+
+  @override
+  String get songGenreFolk => 'フォーク';
+
+  @override
+  String get songGenreBlues => 'ブルース';
+
+  @override
+  String get songGenreCountry => 'カントリー';
+
+  @override
+  String get songGenreReggae => 'レゲエ';
+
+  @override
+  String get songGenreNewage => 'ニューエイジ';
+
+  @override
+  String get songGenreAnime => 'アニメ';
+
+  @override
+  String get songGenreKids => '童謡';
+
+  @override
+  String regionBrandLine(int n) {
+    return '全国$n局を\nひとつの場所で';
+  }
+
+  @override
+  String get stationCatMajor => '主要局';
+
+  @override
+  String get stationCatMusicNews => '音楽・時事';
+
+  @override
+  String get stationCatForeign => '外国語';
+
+  @override
+  String get stationCatReligion => '宗教放送';
+
+  @override
+  String get stationCatTraffic => '交通放送';
+
+  @override
+  String get stationCatRegional => '地方局';
+
+  @override
+  String get stationCatCommunity => 'コミュニティFM';
+
+  @override
+  String get stationCatPrivate => '地方民放';
+
+  @override
+  String get smsSheetTitle => 'メッセージで参加';
+
+  @override
+  String get smsSheetDesc => 'この番号にメッセージを送ると、番組にお便りやリクエストを送れます。';
+
+  @override
+  String get smsSheetFee => '情報利用料がかかります（短文50ウォン・長文/写真100ウォン）。';
+
+  @override
+  String get smsSheetSend => 'メッセージを送る';
+
+  @override
+  String get languageMenuDesc => 'アプリの表示言語を選べます。';
+
+  @override
+  String get languagePhone => '端末の言語';
+
+  @override
+  String get languageTagHant => '繁体字';
+
+  @override
+  String get languageTagHans => '簡体字';
+
+  @override
+  String get introTitle => 'Paransori';
+
+  @override
+  String get introTagline => '毎日に、澄んだひとときを。';
+
+  @override
+  String get introQuestion => '音にも色があるとしたら、\nどんな色でしょう？';
+
+  @override
+  String get introPoem => '青空のように澄んでいて、\n涼しい風のように爽やかで、\n穏やかな海のようにやすらぐ音。';
+
+  @override
+  String get introStarted => 'Paransoriは、そんな音を届けたいという想いから始まりました。';
+
+  @override
+  String get introNameLabel => '名前の由来';
+
+  @override
+  String get introNameStory =>
+      'Paransori（파란소리）は、韓国語の「パラン（파란）」と「ソリ（소리）」から生まれた名前です。「パラン」は青を意味し、澄んだ空と青い海を思わせます。「ソリ」は私たちが耳にする音のことです。この名前には、澄んだ空の清々しさ、涼しい風の爽やかさ、そして自然の中で感じるやすらぎを、音で届けたいという想いが込められています。';
+
+  @override
+  String get introEverydayTitle => '音とともにある毎日';
+
+  @override
+  String get introMoments =>
+      '忙しい一日の中で、少しひと息つきたいとき、\n好きな音楽を聴きたくなったとき、\n新しいラジオ番組に出会いたいとき、\n自然の音とともに静かな時間を過ごしたいとき。';
+
+  @override
+  String get introEveryday1 => 'Paransoriは、毎日のさまざまな瞬間に、気軽に寄り添いたいと思っています。';
+
+  @override
+  String get introEveryday2 =>
+      '一曲の音楽、聴き慣れたラジオ番組、静かな雨音ひとつが、いつもの一日を少しだけ心地よくしてくれるから。だからParansoriは、複雑ではなく、誰もが簡単に楽しく使える場所を目指しています。';
+
+  @override
+  String get introSoundsTitle => 'Paransoriで出会える音';
+
+  @override
+  String get introWishTitle => 'Paransoriが伝えたい想い';
+
+  @override
+  String get introWish1 =>
+      '好きな音を聴く時間は、思っているよりもずっと身近にあります。朝を迎えるときも、仕事の合間にも、一日を締めくくる静かな夜にも。';
+
+  @override
+  String get introWish2 =>
+      '韓国で生まれたParansoriが、いま世界のさまざまな場所の人々とともに、それぞれの毎日に小さな楽しさとゆとりを添えられたらうれしいです。';
+
+  @override
+  String get introClosing1 => 'いつでも、どこでも、気軽に立ち寄れる音の場所。';
+
+  @override
+  String get introClosing2 => 'あなたの一日が、もう少し澄みわたりますように。';
+
+  @override
+  String get introSign => 'Paransori.';
+
+  @override
+  String get introVersion => 'バージョン';
+
+  @override
+  String get introFeature1Title => '自分だけの音楽';
+
+  @override
+  String get introFeature1Desc => 'スマホに保存した音楽をゆったりと楽しみ、好きな曲で自分だけの時間を満たしましょう。';
+
+  @override
+  String get introFeature2Title => '世界のラジオ';
+
+  @override
+  String get introFeature2Desc => 'さまざまな国のラジオ番組を聴きながら、新しい音楽や物語、世界の音に出会いましょう。';
+
+  @override
+  String get introFeature3Title => '自然の音';
+
+  @override
+  String get introFeature3Desc => '雨音、風の音、森の音など、自然が聞かせてくれるやすらぎの音を楽しみましょう。';
+
+  @override
+  String get introFeature4Title => '休息と集中';
+
+  @override
+  String get introFeature4Desc => '眠る前の静かな時間から集中したいときまで、今の自分に合う音を見つけましょう。';
+
+  @override
+  String get introFeature5Title => '自分だけのサウンドミックス';
+
+  @override
+  String get introFeature5Desc => '好きな音を一緒に流して、自分だけの雰囲気をつくりましょう。';
+
+  @override
+  String get introFeature6Title => '朝のアラーム';
+
+  @override
+  String get introFeature6Desc => '好きな曲やラジオ、自然の音で、気持ちよく一日を始めましょう。';
+
+  @override
+  String get introMenuTitle => 'Paransoriについて';
+
+  @override
+  String get introMenuDesc => 'どんなアプリかご紹介します。';
+
+  @override
+  String get nature01Name => '波の音';
+
+  @override
+  String get nature01Desc => '規則的な波の音が心を落ち着かせ、深い休息と眠りを助けます';
+
+  @override
+  String get nature02Name => '穏やかな波';
+
+  @override
+  String get nature02Desc => 'やさしく穏やかに寄せる波の音で、ゆったり休めます';
+
+  @override
+  String get nature03Name => 'カモメと波';
+
+  @override
+  String get nature03Desc => 'カモメの鳴き声と波の音で、生き生きとした海辺の雰囲気を';
+
+  @override
+  String get nature04Name => '岩に砕ける波';
+
+  @override
+  String get nature04Desc => '岩に激しくぶつかって砕ける波の音で、力強い海を感じて';
+
+  @override
+  String get nature05Name => '遠くのカモメ';
+
+  @override
+  String get nature05Desc => '静かな海辺で遠くから聞こえるカモメの声で、穏やかな休息を';
+
+  @override
+  String get nature06Name => '荒波';
+
+  @override
+  String get nature06Desc => '荒々しく寄せては砕ける波の音で、力強い海を感じて';
+
+  @override
+  String get nature07Name => '雨の音';
+
+  @override
+  String get nature07Desc => '一定の雨音が集中力を高め、不安な心を落ち着かせます';
+
+  @override
+  String get nature08Name => '窓に落ちる雨';
+
+  @override
+  String get nature08Desc => '窓をたたくやさしい雨音で、心地よく眠りましょう';
+
+  @override
+  String get nature09Name => '森の雨と鳥の声';
+
+  @override
+  String get nature09Desc => '森に降る雨音と鳥のさえずりが心を和ませます';
+
+  @override
+  String get nature10Name => '森に降る夜の強い雨';
+
+  @override
+  String get nature10Desc => '夜の森に激しく降る雨音で、没入感のある休息を';
+
+  @override
+  String get nature11Name => '鳥のさえずり';
+
+  @override
+  String get nature11Desc => '澄んだ鳥の声がストレスを和らげ、爽やかな気分にします';
+
+  @override
+  String get nature12Name => 'カッコウと森の鳥';
+
+  @override
+  String get nature12Desc => 'カッコウの声が響く森の鳥のさえずりで、爽やかな朝を';
+
+  @override
+  String get nature13Name => '焚き火';
+
+  @override
+  String get nature13Desc => 'パチパチと薪が燃える音が、心地よい雰囲気で深いリラックスへ';
+
+  @override
+  String get nature14Name => '小川のせせらぎ';
+
+  @override
+  String get nature14Desc => 'さらさら流れる小川の音が心を落ち着かせ、雑念を減らします';
+
+  @override
+  String get nature15Name => '穏やかな川';
+
+  @override
+  String get nature15Desc => '広い川が静かに流れる音で、ゆったり休めます';
 }

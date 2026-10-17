@@ -4281,4 +4281,363 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get byeLine4 => 'Sleep well, see you tomorrow';
+
+  @override
+  String get genreSortedToast => 'Sorted by genre';
+
+  @override
+  String genreShuffle(String label, int n) {
+    return 'Shuffling $label · $n songs';
+  }
+
+  @override
+  String get genrePickTitle => 'Select genre';
+
+  @override
+  String get genreNone => 'No genre';
+
+  @override
+  String get genreTypeOwn => 'Type your own';
+
+  @override
+  String get songGenreBallad => 'Ballad';
+
+  @override
+  String get songGenreDance => 'Dance';
+
+  @override
+  String get songGenrePop => 'Pop';
+
+  @override
+  String get songGenreKpop => 'K-Pop';
+
+  @override
+  String get songGenreJpop => 'J-Pop';
+
+  @override
+  String get songGenreCpop => 'C-Pop';
+
+  @override
+  String get songGenreRock => 'Rock';
+
+  @override
+  String get songGenreMetal => 'Metal';
+
+  @override
+  String get songGenreHiphop => 'Hip-Hop';
+
+  @override
+  String get songGenreRnb => 'R&B';
+
+  @override
+  String get songGenreJazz => 'Jazz';
+
+  @override
+  String get songGenreClassical => 'Classical';
+
+  @override
+  String get songGenreOst => 'Soundtrack';
+
+  @override
+  String get songGenreTrot => 'Trot';
+
+  @override
+  String get songGenreEnka => 'Enka';
+
+  @override
+  String get songGenreIndie => 'Indie';
+
+  @override
+  String get songGenreElectronic => 'Electronic';
+
+  @override
+  String get songGenreFolk => 'Folk';
+
+  @override
+  String get songGenreBlues => 'Blues';
+
+  @override
+  String get songGenreCountry => 'Country';
+
+  @override
+  String get songGenreReggae => 'Reggae';
+
+  @override
+  String get songGenreNewage => 'New Age';
+
+  @override
+  String get songGenreAnime => 'Anime';
+
+  @override
+  String get songGenreKids => 'Kids';
+
+  @override
+  String regionBrandLine(int n) {
+    return '$n stations,\nall in one place';
+  }
+
+  @override
+  String get stationCatMajor => 'Major stations';
+
+  @override
+  String get stationCatMusicNews => 'Music & news';
+
+  @override
+  String get stationCatForeign => 'Foreign language';
+
+  @override
+  String get stationCatReligion => 'Religious';
+
+  @override
+  String get stationCatTraffic => 'Traffic';
+
+  @override
+  String get stationCatRegional => 'Regional';
+
+  @override
+  String get stationCatCommunity => 'Community radio';
+
+  @override
+  String get stationCatPrivate => 'Regional private';
+
+  @override
+  String get smsSheetTitle => 'Text the show';
+
+  @override
+  String get smsSheetDesc =>
+      'Send a text to this number to share a story or request a song.';
+
+  @override
+  String get smsSheetFee =>
+      'An information fee applies: 50 KRW for short texts, 100 KRW for long texts or photos.';
+
+  @override
+  String get smsSheetSend => 'Send text';
+
+  @override
+  String get languageMenuDesc => 'Show the app in another language.';
+
+  @override
+  String get languagePhone => 'Phone language';
+
+  @override
+  String get languageTagHant => 'Traditional';
+
+  @override
+  String get languageTagHans => 'Simplified';
+
+  @override
+  String get introTitle => 'Paransori';
+
+  @override
+  String get introTagline => 'Adding clarity to your everyday.';
+
+  @override
+  String get introQuestion => 'If sound had a color,\nwhat would it be?';
+
+  @override
+  String get introPoem =>
+      'Clear as a blue sky,\nfresh as a cool breeze,\ncalm as a gentle sea.';
+
+  @override
+  String get introStarted =>
+      'Paransori began with the wish to capture sounds like these.';
+
+  @override
+  String get introNameLabel => 'About the name';
+
+  @override
+  String get introNameStory =>
+      'Paransori comes from two Korean words, \'paran\' and \'sori\'. \'Paran\' means blue, bringing to mind clear skies and the deep blue sea. \'Sori\' means sound. The name carries our wish to share, through sound, the freshness of a clear sky, the coolness of a gentle breeze, and the comfort we feel in nature.';
+
+  @override
+  String get introEverydayTitle => 'Sound in your everyday';
+
+  @override
+  String get introMoments =>
+      'When you need a short break in a busy day,\nwhen a favorite song comes to mind,\nwhen you want to discover a new radio station,\nwhen you want a quiet moment with the sounds of nature.';
+
+  @override
+  String get introEveryday1 =>
+      'Paransori hopes to be there, lightly, in all the different moments of your day.';
+
+  @override
+  String get introEveryday2 =>
+      'A single song, a familiar radio show, the soft patter of rain — any of these can make an ordinary day a little brighter. That\'s why we\'re building a space that\'s simple, easy and enjoyable for everyone.';
+
+  @override
+  String get introSoundsTitle => 'Sounds you\'ll find in Paransori';
+
+  @override
+  String get introWishTitle => 'What Paransori hopes to share';
+
+  @override
+  String get introWish1 =>
+      'Time spent listening to the sounds you love is closer than you think — as your morning begins, while you work, and on quiet nights as the day winds down.';
+
+  @override
+  String get introWish2 =>
+      'Paransori began in Korea and now joins people all around the world. We hope it adds a little joy and ease to each of your days.';
+
+  @override
+  String get introClosing1 =>
+      'A space for sound you can turn to anytime, anywhere.';
+
+  @override
+  String get introClosing2 => 'So your day can be a little clearer.';
+
+  @override
+  String get introSign => 'Paransori.';
+
+  @override
+  String get introVersion => 'Version';
+
+  @override
+  String get introFeature1Title => 'Your music';
+
+  @override
+  String get introFeature1Desc =>
+      'Relax with the music saved on your phone and fill your time with the songs you love.';
+
+  @override
+  String get introFeature2Title => 'World radio';
+
+  @override
+  String get introFeature2Desc =>
+      'Tune in to stations from many countries and discover new music, stories and sounds from around the world.';
+
+  @override
+  String get introFeature3Title => 'Sounds of nature';
+
+  @override
+  String get introFeature3Desc =>
+      'Enjoy the soothing sounds of nature — rain, wind, the forest and more.';
+
+  @override
+  String get introFeature4Title => 'Rest & focus';
+
+  @override
+  String get introFeature4Desc =>
+      'From quiet moments before sleep to times when you need to focus, find the sound that suits you right now.';
+
+  @override
+  String get introFeature5Title => 'Your own sound mix';
+
+  @override
+  String get introFeature5Desc =>
+      'Play your favorite sounds together and create a mood that\'s all yours.';
+
+  @override
+  String get introFeature6Title => 'Morning alarm';
+
+  @override
+  String get introFeature6Desc =>
+      'Start your day on a good note with your favorite song, radio or the sounds of nature.';
+
+  @override
+  String get introMenuTitle => 'About Paransori';
+
+  @override
+  String get introMenuDesc => 'Get to know the app.';
+
+  @override
+  String get nature01Name => 'Ocean waves';
+
+  @override
+  String get nature01Desc =>
+      'Steady waves calm your mind and help you rest and sleep deeply';
+
+  @override
+  String get nature02Name => 'Gentle waves';
+
+  @override
+  String get nature02Desc =>
+      'Soft, gentle waves rolling in for a peaceful rest';
+
+  @override
+  String get nature03Name => 'Seagulls and waves';
+
+  @override
+  String get nature03Desc => 'Waves with seagull calls for a lively beach mood';
+
+  @override
+  String get nature04Name => 'Waves on rocks';
+
+  @override
+  String get nature04Desc =>
+      'Waves crashing hard against rocks for a dynamic sea';
+
+  @override
+  String get nature05Name => 'Distant seagulls';
+
+  @override
+  String get nature05Desc =>
+      'A quiet shore with seagulls softly calling far away';
+
+  @override
+  String get nature06Name => 'Rough waves';
+
+  @override
+  String get nature06Desc => 'Powerful waves rolling in and breaking';
+
+  @override
+  String get nature07Name => 'Rain';
+
+  @override
+  String get nature07Desc =>
+      'Steady rain helps you focus and soothes an anxious mind';
+
+  @override
+  String get nature08Name => 'Rain on the window';
+
+  @override
+  String get nature08Desc =>
+      'Soft rain tapping on the window to help you fall asleep';
+
+  @override
+  String get nature09Name => 'Forest rain and birds';
+
+  @override
+  String get nature09Desc =>
+      'Rain in the forest blended with birdsong to calm your mind';
+
+  @override
+  String get nature10Name => 'Heavy night rain';
+
+  @override
+  String get nature10Desc =>
+      'Heavy rain falling in a forest at night for deep relaxation';
+
+  @override
+  String get nature11Name => 'Birdsong';
+
+  @override
+  String get nature11Desc => 'Clear birdsong eases stress and lifts your mood';
+
+  @override
+  String get nature12Name => 'Cuckoo and forest birds';
+
+  @override
+  String get nature12Desc =>
+      'Forest birdsong with a cuckoo for a fresh morning';
+
+  @override
+  String get nature13Name => 'Campfire';
+
+  @override
+  String get nature13Desc =>
+      'Crackling firewood creates a cozy mood for deep relaxation';
+
+  @override
+  String get nature14Name => 'Stream';
+
+  @override
+  String get nature14Desc =>
+      'A babbling stream calms your mind and quiets busy thoughts';
+
+  @override
+  String get nature15Name => 'Calm river';
+
+  @override
+  String get nature15Desc => 'A wide river flowing calmly for a peaceful rest';
 }

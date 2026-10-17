@@ -127,25 +127,18 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
 
   void _showFarewellAndExit(BuildContext context) {
     final langCode = Localizations.localeOf(context).languageCode;
-    late final String smallText;
     late final String farewellAsset;
     switch (langCode) {
       case 'ko':
-        smallText = '파란소리와 함께한 시간,\n즐거우셨나요?\n\n언제든 다시 찾아오시면,\n좋은 소리로 맞아드릴게요.\n안녕히 가세요!';
         farewellAsset = 'assets/farewell_ko_v4.mp3';
         break;
       case 'ja':
-        smallText = 'Paransoriと過ごした時間、\n楽しんでいただけましたか?\n\nいつでもまた遊びに来てください、\n素敵な音でお迎えします。\nまた会いましょう!';
         farewellAsset = 'assets/farewell_ja.mp3';
         break;
       case 'zh':
-        smallText = Localizations.localeOf(context).scriptCode == 'Hant'
-            ? '與Paransori相伴的時光，\n您開心嗎?\n\n歡迎隨時回來，\n我們會用美好的聲音迎接您。\n再見啦!'
-            : '与Paransori相伴的时光，\n您开心吗?\n\n欢迎随时回来，\n我们会用美好的声音迎接您。\n再见啦!';
         farewellAsset = 'assets/farewell_zh.mp3';
         break;
       default:
-        smallText = 'Did you enjoy your time\nwith Paransori?\n\nCome back anytime — we\'ll\nwelcome you with great sounds again.\nGoodbye, and see you soon!';
         farewellAsset = 'assets/farewell_en.mp3';
     }
     if (langCode == 'ko' && context.read<ThemeProvider>().voiceGreetingEnabled) { // 목소리는 한국어만
@@ -2273,18 +2266,8 @@ const _smsNumbers = {
 
 /// 문자 참여 안내 (아래에서 올라오는 베이지 카드 + ✕) → [문자 보내기] 누르면 문자 앱이 번호 채워진 채로 열림
 void _showSmsSheet(BuildContext context, String number) {
-  final l = Localizations.localeOf(context);
-  final k = l.languageCode == 'zh'
-      ? ((l.scriptCode == 'Hant' || l.countryCode == 'TW' || l.countryCode == 'HK') ? 'tw' : 'cn')
-      : l.languageCode;
-  const texts = {
-    'ko': ['문자로 사연 보내기', '이 번호로 문자를 보내면 방송에 사연이나 신청곡을 보낼 수 있어요.', '짧은 문자 50원 · 긴 문자·사진 100원의 정보이용료가 붙어요.', '문자 보내기'],
-    'en': ['Text the show', 'Send a text to this number to share a story or request a song.', 'An information fee applies: 50 KRW for short texts, 100 KRW for long texts or photos.', 'Send text'],
-    'ja': ['メッセージで参加', 'この番号にメッセージを送ると、番組にお便りやリクエストを送れます。', '情報利用料がかかります（短文50ウォン・長文/写真100ウォン）。', 'メッセージを送る'],
-    'tw': ['傳簡訊參與', '傳簡訊到這個號碼，就能向節目分享故事或點歌。', '需支付資訊使用費（短訊50韓元・長訊/照片100韓元）。', '傳送簡訊'],
-    'cn': ['发短信参与', '发短信到这个号码，就能向节目分享故事或点歌。', '需支付信息使用费（短信50韩元・长信/图片100韩元）。', '发送短信'],
-  };
-  final t = texts[k] ?? texts['ko']!;
+  final a = AppLocalizations.of(context)!;
+  final t = [a.smsSheetTitle, a.smsSheetDesc, a.smsSheetFee, a.smsSheetSend];
   final isDark = context.read<ThemeProvider>().isDarkMode;
   final bg = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
   final strong = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
@@ -3084,42 +3067,4 @@ class _ScheduleListSheet extends StatelessWidget {
       ),
     );
   }
-}
-class _FarewellTextPainter extends CustomPainter {
-  final double opacity;
-  final String smallText;
-  _FarewellTextPainter({required this.opacity, required this.smallText});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final isMultiline = smallText.contains('\n');
-    final smallPainter = TextPainter(
-      text: TextSpan(
-        text: smallText,
-        style: TextStyle(
-          color: Colors.white.withOpacity(opacity * 0.85),
-          fontSize: isMultiline ? 17 : 14,
-          letterSpacing: isMultiline ? 0.2 : 5,
-          fontWeight: FontWeight.w500,
-          fontStyle: isMultiline ? FontStyle.normal : FontStyle.italic,
-          height: 1.6,
-        ),
-      ),
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    )..layout(maxWidth: size.width);
-    smallPainter.paint(canvas, Offset((size.width - smallPainter.width) / 2, 0));
-
-    final bigPainter = TextPainter(
-      text: TextSpan(
-        text: 'Paransori',
-        style: TextStyle(color: Colors.white.withOpacity(opacity), fontSize: 33, letterSpacing: 3, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    bigPainter.paint(canvas, Offset((size.width - bigPainter.width) / 2, smallPainter.height + 12));
-  }
-
-  @override
-  bool shouldRepaint(covariant _FarewellTextPainter oldDelegate) => oldDelegate.opacity != opacity;
 }

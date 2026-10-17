@@ -1157,29 +1157,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  /// 언어 줄 글자 (5개 언어) — 번역 작업 때 arb로 옮기기
+  /// 언어 줄 글자 (번역 파일)
   String _langText(String key) {
-    final loc = Localizations.localeOf(context);
-    final k = loc.languageCode == 'zh' ? (loc.scriptCode == 'Hant' ? 'tw' : 'cn') : loc.languageCode;
-    const t = {
-      'desc': {
-        'ko': '앱 글자를 다른 언어로 볼 수 있어요.',
-        'en': 'Show the app in another language.',
-        'ja': 'アプリの表示言語を選べます。',
-        'tw': '選擇應用程式的顯示語言。',
-        'cn': '选择应用的显示语言。',
-      },
-      'hant': {'ko': '번체', 'en': 'Traditional', 'ja': '繁体字', 'tw': '', 'cn': ''},
-      'hans': {'ko': '간체', 'en': 'Simplified', 'ja': '簡体字', 'tw': '', 'cn': ''},
-      'system': {
-        'ko': '폰 언어',
-        'en': 'Phone language',
-        'ja': '端末の言語',
-        'tw': '手機語言',
-        'cn': '手机语言',
-      },
+    final l = AppLocalizations.of(context)!;
+    return switch (key) {
+      'desc' => l.languageMenuDesc,
+      'hant' => l.languageTagHant,
+      'hans' => l.languageTagHans,
+      _ => l.languagePhone,
     };
-    return t[key]![k] ?? t[key]!['en']!;
   }
 
   /// 언어 이름: 폰 설정 따라가기는 지금 언어로, 나머지는 그 나라 말로 (모르는 언어로 바꿔도 다시 찾게)
@@ -1188,7 +1174,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     for (final l in ThemeProvider.appLanguages) {
       if (l.$1 == code) {
         // 중국어는 번체·간체를 지금 앱 언어로 괄호 안에 (중국어 화면에선 이름에 이미 있어서 안 붙임)
-        final tag = code == 'zh_Hant' ? _langText('hant') : code == 'zh_Hans' ? _langText('hans') : '';
+        final zh = Localizations.localeOf(context).languageCode == 'zh'; // 중국어 화면은 이름에 이미 있음
+        final tag = zh ? '' : code == 'zh_Hant' ? _langText('hant') : code == 'zh_Hans' ? _langText('hans') : '';
         return tag.isEmpty ? l.$2 : '${l.$2} ($tag)';
       }
     }

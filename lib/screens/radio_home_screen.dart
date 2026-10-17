@@ -108,7 +108,9 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
       'ko' => 'ko_KR',
       'ja' => 'ja_JP',
       'zh' => Localizations.localeOf(context).scriptCode == 'Hant' ? 'zh_TW' : 'zh_CN',
-      _ => 'en_US',
+      _ => (Localizations.localeOf(context).countryCode ?? '').isNotEmpty
+          ? '${lang}_${Localizations.localeOf(context).countryCode}'
+          : lang, // 독일어 de_DE 등 (나라 없으면 언어만)
     };
     setState(() => _isListening = true);
     _speech.listen(

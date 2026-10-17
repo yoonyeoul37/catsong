@@ -227,15 +227,10 @@ class _HomeScreenState extends State<HomeScreen> {
     await prefs.setBool('song_sort_by_genre', genre);
   }
 
-  /// '장르' / '장르별로 정렬했어요' (5개 언어)
+  /// '장르' / '장르별로 정렬했어요' (번역 파일)
   String _genreText(BuildContext c, bool toast) {
-    final l = Localizations.localeOf(c);
-    final k = l.languageCode == 'zh'
-        ? ((l.scriptCode == 'Hant' || l.countryCode == 'TW' || l.countryCode == 'HK') ? 'tw' : 'cn')
-        : l.languageCode;
-    const label = {'ko': '장르', 'ja': 'ジャンル', 'tw': '類型', 'cn': '类型'};
-    const done = {'ko': '장르별로 정렬했어요', 'ja': 'ジャンル別に並べ替えました', 'tw': '已依類型排序', 'cn': '已按类型排序'};
-    return toast ? (done[k] ?? 'Sorted by genre') : (label[k] ?? 'Genre');
+    final l = AppLocalizations.of(c)!;
+    return toast ? l.genreSortedToast : l.genreTab;
   }
 
   /// 장르 정렬일 때 장르 이름 줄: 장르 + 곡 수 (가수 줄과 같은 모양, 재생은 위 ▶·⤨로)
@@ -279,20 +274,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return all;
   }
 
-  /// '발라드 4곡 섞어서 재생' (5개 언어)
-  String _genreShuffleText(String label, int n) {
-    final l = Localizations.localeOf(context);
-    final k = l.languageCode == 'zh'
-        ? ((l.scriptCode == 'Hant' || l.countryCode == 'TW' || l.countryCode == 'HK') ? 'tw' : 'cn')
-        : l.languageCode;
-    return switch (k) {
-      'ko' => '$label $n곡 섞어서 재생',
-      'ja' => '$label $n曲をシャッフル再生',
-      'tw' => '隨機播放 $label・$n 首',
-      'cn' => '随机播放 $label・$n 首',
-      _ => 'Shuffling $label · $n songs',
-    };
-  }
+  /// '발라드 4곡 섞어서 재생' (번역 파일)
+  String _genreShuffleText(String label, int n) => AppLocalizations.of(context)!.genreShuffle(label, n);
 
   /// 장르 고르기 (null = 전체)
   void _setGenreFilter(String? key) {
@@ -1319,25 +1302,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _showFarewellAndExit(BuildContext context) {
     final langCode = Localizations.localeOf(context).languageCode;
-    late final String smallText;
     late final String farewellAsset;
     switch (langCode) {
       case 'ko':
-        smallText = '파란소리와 함께한 시간,\n즐거우셨나요?\n\n언제든 다시 찾아오시면,\n좋은 소리로 맞아드릴게요.\n안녕히 가세요!';
         farewellAsset = 'assets/farewell_ko_v4.mp3';
         break;
       case 'ja':
-        smallText = 'Paransoriと過ごした時間、\n楽しんでいただけましたか?\n\nいつでもまた遊びに来てください、\n素敵な音でお迎えします。\nまた会いましょう!';
         farewellAsset = 'assets/farewell_ja.mp3';
         break;
       case 'zh':
-        smallText = Localizations.localeOf(context).scriptCode == 'Hant'
-            ? '與Paransori相伴的時光，\n您開心嗎?\n\n歡迎隨時回來，\n我們會用美好的聲音迎接您。\n再見啦!'
-            : '与Paransori相伴的时光，\n您开心吗?\n\n欢迎随时回来，\n我们会用美好的声音迎接您。\n再见啦!';
         farewellAsset = 'assets/farewell_zh.mp3';
         break;
       default:
-        smallText = 'Did you enjoy your time\nwith Paransori?\n\nCome back anytime — we\'ll\nwelcome you with great sounds again.\nGoodbye, and see you soon!';
         farewellAsset = 'assets/farewell_en.mp3';
     }
     if (langCode == 'ko' && context.read<ThemeProvider>().voiceGreetingEnabled) {
@@ -3485,6 +3461,12 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
               child: Row(
                 children: [
+                  // 탭이 길면(긴 언어·큰 글자) 옆으로 밀어 보기 — 통화녹음 칩은 오른쪽 끝 그대로
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
                   _buildFilterTab(
                     AppLocalizations.of(context)!.all,
                     !_showFavorites && !_showRecent,
@@ -3514,8 +3496,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     }),
                     Theme.of(context).colorScheme.primary,
                   ),
+                        ],
+                      ),
+                    ),
+                  ),
                   // 녹음 (일반 음악과 따로) — 아이폰은 다른 앱 파일을 못 읽어서 안드로이드만
-                  if (Platform.isAndroid) const Spacer(), // 통화녹음은 오른쪽 끝으로
+                  if (Platform.isAndroid) const SizedBox(width: 10), // 통화녹음은 오른쪽 끝으로
                   // 통화녹음: 탭이 아니라 "다른 곳으로 가는" 작은 버튼 (안드로이드만)
                   if (Platform.isAndroid)
                     Padding(
@@ -4046,12 +4032,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: 24,
                       ),
                       const SizedBox(height: 3),
-                      Text(
-                        items[index]['label'] as String,
-                        style: TextStyle(
-                          color: isSelected ? baseColor : baseColor.withOpacity(0.6),
-                          fontSize: 10,
-                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                      // 한 줄로만 · 칸보다 길면 살짝 작게 · 글자 크기 설정은 1.2배까지만 (아래 칸 높이가 정해져 있어서)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            items[index]['label'] as String,
+                            maxLines: 1,
+                            textScaler: MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 1.2),
+                            style: TextStyle(
+                              color: isSelected ? baseColor : baseColor.withOpacity(0.6),
+                              fontSize: 10,
+                              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                            ),
+                          ),
                         ),
                       ),
                     ],

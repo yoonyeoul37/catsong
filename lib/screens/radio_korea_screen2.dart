@@ -776,17 +776,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
     final fg = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
     final blue = pointColorOf(context, onDark: !isDarkMode);
     final n = koreanStations.length;
-    final l = Localizations.localeOf(context);
-    final k = l.languageCode == 'zh'
-        ? ((l.scriptCode == 'Hant' || l.countryCode == 'TW' || l.countryCode == 'HK') ? 'tw' : 'cn')
-        : l.languageCode;
-    final line = switch (k) {
-      'ko' => '전국 $n개 채널을\n한곳에서',
-      'ja' => '全国$n局を\nひとつの場所で',
-      'tw' => '全國$n個電台\n盡在一處',
-      'cn' => '全国$n个电台\n尽在一处',
-      _ => '$n stations,\nall in one place',
-    };
+    final line = AppLocalizations.of(context)!.regionBrandLine(n);
     return GestureDetector(
       onTap: () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -1462,18 +1452,16 @@ int stationCategory(_KStation s) {
 }
 
 String stationCategoryLabel(BuildContext context, int c) {
-  final l = Localizations.localeOf(context);
-  final k = l.languageCode == 'zh'
-      ? ((l.scriptCode == 'Hant' || l.countryCode == 'TW' || l.countryCode == 'HK') ? 'tw' : 'cn')
-      : l.languageCode;
-  const labels = {
-    'ko': ['주요 방송', '음악·시사', '외국어', '종교 방송', '교통 방송', '지역 방송', '공동체 라디오'],
-    'en': ['Major stations', 'Music & news', 'Foreign language', 'Religious', 'Traffic', 'Regional', 'Community radio'],
-    'ja': ['主要局', '音楽・時事', '外国語', '宗教放送', '交通放送', '地方局', 'コミュニティFM'],
-    'tw': ['主要電台', '音樂・時事', '外語', '宗教電台', '交通電台', '地方電台', '社區電台'],
-    'cn': ['主要电台', '音乐・时事', '外语', '宗教电台', '交通电台', '地方电台', '社区电台'],
-  };
-  return (labels[k] ?? labels['ko']!)[c];
+  final l = AppLocalizations.of(context)!;
+  return [
+    l.stationCatMajor,
+    l.stationCatMusicNews,
+    l.stationCatForeign,
+    l.stationCatReligion,
+    l.stationCatTraffic,
+    l.stationCatRegional,
+    l.stationCatCommunity,
+  ][c];
 }
 
 const _regionOrder = ['수도권', '부산/경남', '대구/경북', '광주/전남', '전북', '대전/충남', '충북', '강원', '제주'];
@@ -1789,20 +1777,8 @@ class _BroadcasterGridScreen extends StatelessWidget {
         _ => _RadioKoreaScreenState._regionLabel(key),
       };
 
-  /// '지역 민방' (5개 언어)
-  static String _privateLabel(BuildContext context) {
-    final l = Localizations.localeOf(context);
-    final k = l.languageCode == 'zh'
-        ? ((l.scriptCode == 'Hant' || l.countryCode == 'TW' || l.countryCode == 'HK') ? 'tw' : 'cn')
-        : l.languageCode;
-    return switch (k) {
-      'ko' => '지역 민방',
-      'ja' => '地方民放',
-      'tw' => '地方民營電台',
-      'cn' => '地方民营电台',
-      _ => 'Regional private',
-    };
-  }
+  /// '지역 민방' (번역 파일)
+  static String _privateLabel(BuildContext context) => AppLocalizations.of(context)!.stationCatPrivate;
 
   Map<String, List<_KStation>> _grouped() {
     final Map<String, List<_KStation>> map = {};

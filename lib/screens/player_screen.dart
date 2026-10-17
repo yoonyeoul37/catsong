@@ -2195,12 +2195,20 @@ class _PlayerScreenState extends State<PlayerScreen>
               ],
             ),
             const SizedBox(height: 3),
-            Text(label,
-                style: TextStyle(
-                  color: sel ? _sheetBlue : _sheetSub,
-                  fontSize: 9.5,
-                  fontWeight: sel ? FontWeight.w700 : FontWeight.w500,
-                )),
+            // 이름은 사진 폭(48) 안에서 한 줄로 · 길면 살짝 작게 (긴 언어·큰 글자에서 왼쪽 메뉴 글자가 안 밀리게)
+            SizedBox(
+              width: 48,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(label,
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: sel ? _sheetBlue : _sheetSub,
+                      fontSize: 9.5,
+                      fontWeight: sel ? FontWeight.w700 : FontWeight.w500,
+                    )),
+              ),
+            ),
           ],
         ),
       );
@@ -2913,25 +2921,18 @@ class _PlayerScreenState extends State<PlayerScreen>
 
   void _showFarewellAndExit(BuildContext context) {
     final langCode = Localizations.localeOf(context).languageCode;
-    late final String smallText;
     late final String farewellAsset;
     switch (langCode) {
       case 'ko':
-        smallText = '파란소리와 함께한 시간,\n즐거우셨나요?\n\n언제든 다시 찾아오시면,\n좋은 소리로 맞아드릴게요.\n안녕히 가세요!';
         farewellAsset = 'assets/farewell_ko_v4.mp3';
         break;
       case 'ja':
-        smallText = 'Paransoriと過ごした時間、\n楽しんでいただけましたか?\n\nいつでもまた遊びに来てください、\n素敵な音でお迎えします。\nまた会いましょう!';
         farewellAsset = 'assets/farewell_ja.mp3';
         break;
       case 'zh':
-        smallText = Localizations.localeOf(context).scriptCode == 'Hant'
-            ? '與Paransori相伴的時光，\n您開心嗎?\n\n歡迎隨時回來，\n我們會用美好的聲音迎接您。\n再見啦!'
-            : '与Paransori相伴的时光，\n您开心吗?\n\n欢迎随时回来，\n我们会用美好的声音迎接您。\n再见啦!';
         farewellAsset = 'assets/farewell_zh.mp3';
         break;
       default:
-        smallText = 'Did you enjoy your time\nwith Paransori?\n\nCome back anytime — we\'ll\nwelcome you with great sounds again.\nGoodbye, and see you soon!';
         farewellAsset = 'assets/farewell_en.mp3';
     }
     context.read<PlayerProvider>().player.setVolume(0.12);
@@ -4166,42 +4167,4 @@ class _RadialVisualizerPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_RadialVisualizerPainter old) => true;
-}
-class _FarewellTextPainter extends CustomPainter {
-  final double opacity;
-  final String smallText;
-  _FarewellTextPainter({required this.opacity, required this.smallText});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final isMultiline = smallText.contains('\n');
-    final smallPainter = TextPainter(
-      text: TextSpan(
-        text: smallText,
-        style: TextStyle(
-          color: Colors.white.withOpacity(opacity * 0.85),
-          fontSize: isMultiline ? 17 : 14,
-          letterSpacing: isMultiline ? 0.2 : 5,
-          fontWeight: FontWeight.w500,
-          fontStyle: isMultiline ? FontStyle.normal : FontStyle.italic,
-          height: 1.6,
-        ),
-      ),
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    )..layout(maxWidth: size.width);
-    smallPainter.paint(canvas, Offset((size.width - smallPainter.width) / 2, 0));
-
-    final bigPainter = TextPainter(
-      text: TextSpan(
-        text: 'Paransori',
-        style: TextStyle(color: Colors.white.withOpacity(opacity), fontSize: 33, letterSpacing: 3, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    bigPainter.paint(canvas, Offset((size.width - bigPainter.width) / 2, smallPainter.height + 12));
-  }
-
-  @override
-  bool shouldRepaint(covariant _FarewellTextPainter oldDelegate) => oldDelegate.opacity != opacity;
 }

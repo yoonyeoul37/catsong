@@ -70,63 +70,75 @@ class Song {
     final k = genreKey;
     if (k.isEmpty) return AppLocale.current?.categoryEtc ?? '기타';
     if (!k.startsWith('@')) return k;
-    final names = _genreNames[k.substring(1)];
-    if (names == null) return k.substring(1);
-    return names[_genreLangIndex()];
+    return _genreName(k.substring(1)) ?? k.substring(1);
   }
 
   /// 장르 글자(파일에 적힌 것·고른 것) → 화면에 보일 이름 ('' = 장르 없음)
   static String genreNameOf(String raw) {
     final k = _cleanGenre(raw);
     if (k.isEmpty || !k.startsWith('@')) return k;
-    final names = _genreNames[k.substring(1)];
-    return names == null ? k.substring(1) : names[_genreLangIndex()];
+    return _genreName(k.substring(1)) ?? k.substring(1);
   }
 
   /// 고르는 창에 보여 줄 많이 쓰는 장르 ('@ballad' …)
-  static List<String> get commonGenres => [for (final k in _genreNames.keys) '@$k'];
+  static List<String> get commonGenres => [for (final k in _genreKeys) '@$k'];
 
-  /// 폰 언어 칸 번호 (다른 화면에서 5개 언어 글자 고를 때)
-  static int langIndex() => _genreLangIndex();
 
-  /// 폰 언어 → 이름 칸 번호 (0 한국어 · 1 영어 · 2 일본어 · 3 번체 · 4 간체)
-  static int _genreLangIndex() {
-    final n = AppLocale.current?.localeName ?? 'ko';
-    if (n.startsWith('ko')) return 0;
-    if (n.startsWith('ja')) return 2;
-    if (n.startsWith('zh')) {
-      return (n.contains('Hant') || n.contains('TW') || n.contains('HK')) ? 3 : 4;
-    }
-    return 1; // 영어 및 그 밖의 언어
-  }
+  // 많이 쓰는 장르: 공통 이름 → 화면 이름은 번역 파일 (songGenre…)
+  static const _genreKeys = [
+    'ballad',
+    'dance',
+    'pop',
+    'kpop',
+    'jpop',
+    'cpop',
+    'rock',
+    'metal',
+    'hiphop',
+    'rnb',
+    'jazz',
+    'classical',
+    'ost',
+    'trot',
+    'enka',
+    'indie',
+    'electronic',
+    'folk',
+    'blues',
+    'country',
+    'reggae',
+    'newage',
+    'anime',
+    'kids',
+  ];
 
-  // 많이 쓰는 장르: 이름 [한국어, 영어, 일본어, 번체, 간체]
-  static const _genreNames = <String, List<String>>{
-    'ballad': ['발라드', 'Ballad', 'バラード', '抒情', '抒情'],
-    'dance': ['댄스', 'Dance', 'ダンス', '舞曲', '舞曲'],
-    'pop': ['팝', 'Pop', 'ポップス', '流行', '流行'],
-    'kpop': ['K-Pop', 'K-Pop', 'K-POP', 'K-Pop', 'K-Pop'],
-    'jpop': ['J-Pop', 'J-Pop', 'J-POP', 'J-Pop', 'J-Pop'],
-    'cpop': ['C-Pop', 'C-Pop', 'C-POP', '華語流行', '华语流行'],
-    'rock': ['록', 'Rock', 'ロック', '搖滾', '摇滚'],
-    'metal': ['메탈', 'Metal', 'メタル', '金屬', '金属'],
-    'hiphop': ['힙합', 'Hip-Hop', 'ヒップホップ', '嘻哈', '嘻哈'],
-    'rnb': ['R&B', 'R&B', 'R&B', 'R&B', 'R&B'],
-    'jazz': ['재즈', 'Jazz', 'ジャズ', '爵士', '爵士'],
-    'classical': ['클래식', 'Classical', 'クラシック', '古典', '古典'],
-    'ost': ['OST', 'Soundtrack', 'サウンドトラック', '原聲帶', '原声带'],
-    'trot': ['트로트', 'Trot', 'トロット', 'Trot', 'Trot'],
-    'enka': ['엔카', 'Enka', '演歌', '演歌', '演歌'],
-    'indie': ['인디', 'Indie', 'インディーズ', '獨立', '独立'],
-    'electronic': ['일렉트로닉', 'Electronic', 'エレクトロニカ', '電子', '电子'],
-    'folk': ['포크', 'Folk', 'フォーク', '民謠', '民谣'],
-    'blues': ['블루스', 'Blues', 'ブルース', '藍調', '蓝调'],
-    'country': ['컨트리', 'Country', 'カントリー', '鄉村', '乡村'],
-    'reggae': ['레게', 'Reggae', 'レゲエ', '雷鬼', '雷鬼'],
-    'newage': ['뉴에이지', 'New Age', 'ニューエイジ', '新世紀', '新世纪'],
-    'anime': ['애니메이션', 'Anime', 'アニメ', '動漫', '动漫'],
-    'kids': ['동요', 'Kids', '童謡', '童謠', '童谣'],
-  };
+  static String? _genreName(String k) => switch (k) {
+        'ballad' => tr.songGenreBallad,
+        'dance' => tr.songGenreDance,
+        'pop' => tr.songGenrePop,
+        'kpop' => tr.songGenreKpop,
+        'jpop' => tr.songGenreJpop,
+        'cpop' => tr.songGenreCpop,
+        'rock' => tr.songGenreRock,
+        'metal' => tr.songGenreMetal,
+        'hiphop' => tr.songGenreHiphop,
+        'rnb' => tr.songGenreRnb,
+        'jazz' => tr.songGenreJazz,
+        'classical' => tr.songGenreClassical,
+        'ost' => tr.songGenreOst,
+        'trot' => tr.songGenreTrot,
+        'enka' => tr.songGenreEnka,
+        'indie' => tr.songGenreIndie,
+        'electronic' => tr.songGenreElectronic,
+        'folk' => tr.songGenreFolk,
+        'blues' => tr.songGenreBlues,
+        'country' => tr.songGenreCountry,
+        'reggae' => tr.songGenreReggae,
+        'newage' => tr.songGenreNewage,
+        'anime' => tr.songGenreAnime,
+        'kids' => tr.songGenreKids,
+        _ => null,
+      };
 
   // 파일에 적힌 말(공백·-·_·. 빼고 소문자) → 공통 장르
   static const _genreAlias = <String, String>{
@@ -203,7 +215,7 @@ class Song {
     var g = raw.trim();
     if (g.isEmpty) return '';
     // 고르는 창에서 고른 장르 ('@ballad')는 그대로
-    if (g.startsWith('@') && _genreNames.containsKey(g.substring(1))) return g;
+    if (g.startsWith('@') && _genreKeys.contains(g.substring(1))) return g;
     // 여러 장르가 같이 적혀 있으면 첫 번째만 (Pop; Dance)
     // ('/'로는 안 나눔: 랩/힙합 · 록/메탈 · R&B/Soul 같은 장르 이름이 많아서)
     g = g.split(RegExp(r'[;,|]')).first.trim();

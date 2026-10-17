@@ -39,7 +39,7 @@ int _stableHash(String s) {
 String noArtLetter(String title) {
   for (final r in title.trim().runes) {
     final ch = String.fromCharCode(r);
-    if (RegExp(r'[0-9A-Za-z가-힣぀-ヿ一-鿿]').hasMatch(ch)) {
+    if (RegExp(r'[0-9A-Za-zÀ-ɏḀ-ỿ฀-๿가-힣぀-ヿ一-鿿]').hasMatch(ch)) {
       return ch.toUpperCase();
     }
   }

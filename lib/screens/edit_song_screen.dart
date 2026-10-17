@@ -423,14 +423,16 @@ class _EditSongScreenState extends State<EditSongScreen> {
     );
   }
 
-  /// 장르 칸 글자 (5개 언어: 한국어·영어·일본어·번체·간체)
-  static const _gtText = {
-    'label': ['장르', 'Genre', 'ジャンル', '類型', '类型'],
-    'pick': ['장르별 선택', 'Select genre', 'ジャンル選択', '選擇類型', '选择类型'],
-    'none': ['장르 없음', 'No genre', 'ジャンルなし', '無類型', '无类型'],
-    'type': ['직접 쓰기', 'Type your own', '自分で入力', '自行輸入', '自行输入'],
-  };
-  String _gt(String k) => _gtText[k]![Song.langIndex()];
+  /// 장르 칸 글자 (번역 파일)
+  String _gt(String k) {
+    final l = AppLocalizations.of(context)!;
+    return switch (k) {
+      'label' => l.genreTab,
+      'pick' => l.genrePickTitle,
+      'none' => l.genreNone,
+      _ => l.genreTypeOwn,
+    };
+  }
 
   /// 장르 줄: 누르면 고르는 창 (제목·가수·앨범 줄과 같은 모양)
   Widget _genreField(Color ink, Color sub) {

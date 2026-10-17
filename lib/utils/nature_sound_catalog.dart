@@ -26,89 +26,27 @@ String natureName(String ko) => _natureText(ko, 0) ?? ko;
 String natureDesc(String koName, String koDesc) => _natureText(koName, 1) ?? koDesc;
 
 String? _natureText(String ko, int i) {
-  final loc = tr.localeName;
-  if (loc.startsWith('ko')) return null;
-  final m = loc.startsWith('ja')
-      ? _natureJa
-      : loc == 'zh_Hant'
-          ? _natureZhHant
-          : loc.startsWith('zh')
-              ? _natureZh
-              : _natureEn;
-  return m[ko]?[i];
+  final l = tr;
+  if (l.localeName.startsWith('ko')) return null;
+  return switch (ko) {
+    '파도소리' => i == 0 ? l.nature01Name : l.nature01Desc,
+    '잔잔한 파도' => i == 0 ? l.nature02Name : l.nature02Desc,
+    '갈매기와 파도' => i == 0 ? l.nature03Name : l.nature03Desc,
+    '바위에 부딪히는 파도' => i == 0 ? l.nature04Name : l.nature04Desc,
+    '멀리서 들리는 갈매기' => i == 0 ? l.nature05Name : l.nature05Desc,
+    '거친 파도' => i == 0 ? l.nature06Name : l.nature06Desc,
+    '빗소리' => i == 0 ? l.nature07Name : l.nature07Desc,
+    '창문에 떨어지는 비' => i == 0 ? l.nature08Name : l.nature08Desc,
+    '숲속의 비와 새소리' => i == 0 ? l.nature09Name : l.nature09Desc,
+    '숲속의 거센 밤비' => i == 0 ? l.nature10Name : l.nature10Desc,
+    '새소리' => i == 0 ? l.nature11Name : l.nature11Desc,
+    '뻐꾸기와 숲속 새소리' => i == 0 ? l.nature12Name : l.nature12Desc,
+    '모닥불' => i == 0 ? l.nature13Name : l.nature13Desc,
+    '시냇물' => i == 0 ? l.nature14Name : l.nature14Desc,
+    '잔잔한 강물' => i == 0 ? l.nature15Name : l.nature15Desc,
+    _ => null,
+  };
 }
-
-const _natureEn = <String, List<String>>{
-  '파도소리': ['Ocean waves', 'Steady waves calm your mind and help you rest and sleep deeply'],
-  '잔잔한 파도': ['Gentle waves', 'Soft, gentle waves rolling in for a peaceful rest'],
-  '갈매기와 파도': ['Seagulls and waves', 'Waves with seagull calls for a lively beach mood'],
-  '바위에 부딪히는 파도': ['Waves on rocks', 'Waves crashing hard against rocks for a dynamic sea'],
-  '멀리서 들리는 갈매기': ['Distant seagulls', 'A quiet shore with seagulls softly calling far away'],
-  '거친 파도': ['Rough waves', 'Powerful waves rolling in and breaking'],
-  '빗소리': ['Rain', 'Steady rain helps you focus and soothes an anxious mind'],
-  '창문에 떨어지는 비': ['Rain on the window', 'Soft rain tapping on the window to help you fall asleep'],
-  '숲속의 비와 새소리': ['Forest rain and birds', 'Rain in the forest blended with birdsong to calm your mind'],
-  '숲속의 거센 밤비': ['Heavy night rain', 'Heavy rain falling in a forest at night for deep relaxation'],
-  '새소리': ['Birdsong', 'Clear birdsong eases stress and lifts your mood'],
-  '뻐꾸기와 숲속 새소리': ['Cuckoo and forest birds', 'Forest birdsong with a cuckoo for a fresh morning'],
-  '모닥불': ['Campfire', 'Crackling firewood creates a cozy mood for deep relaxation'],
-  '시냇물': ['Stream', 'A babbling stream calms your mind and quiets busy thoughts'],
-  '잔잔한 강물': ['Calm river', 'A wide river flowing calmly for a peaceful rest'],
-};
-
-const _natureJa = <String, List<String>>{
-  '파도소리': ['波の音', '規則的な波の音が心を落ち着かせ、深い休息と眠りを助けます'],
-  '잔잔한 파도': ['穏やかな波', 'やさしく穏やかに寄せる波の音で、ゆったり休めます'],
-  '갈매기와 파도': ['カモメと波', 'カモメの鳴き声と波の音で、生き生きとした海辺の雰囲気を'],
-  '바위에 부딪히는 파도': ['岩に砕ける波', '岩に激しくぶつかって砕ける波の音で、力強い海を感じて'],
-  '멀리서 들리는 갈매기': ['遠くのカモメ', '静かな海辺で遠くから聞こえるカモメの声で、穏やかな休息を'],
-  '거친 파도': ['荒波', '荒々しく寄せては砕ける波の音で、力強い海を感じて'],
-  '빗소리': ['雨の音', '一定の雨音が集中力を高め、不安な心を落ち着かせます'],
-  '창문에 떨어지는 비': ['窓に落ちる雨', '窓をたたくやさしい雨音で、心地よく眠りましょう'],
-  '숲속의 비와 새소리': ['森の雨と鳥の声', '森に降る雨音と鳥のさえずりが心を和ませます'],
-  '숲속의 거센 밤비': ['森に降る夜の強い雨', '夜の森に激しく降る雨音で、没入感のある休息を'],
-  '새소리': ['鳥のさえずり', '澄んだ鳥の声がストレスを和らげ、爽やかな気分にします'],
-  '뻐꾸기와 숲속 새소리': ['カッコウと森の鳥', 'カッコウの声が響く森の鳥のさえずりで、爽やかな朝を'],
-  '모닥불': ['焚き火', 'パチパチと薪が燃える音が、心地よい雰囲気で深いリラックスへ'],
-  '시냇물': ['小川のせせらぎ', 'さらさら流れる小川の音が心を落ち着かせ、雑念を減らします'],
-  '잔잔한 강물': ['穏やかな川', '広い川が静かに流れる音で、ゆったり休めます'],
-};
-
-const _natureZh = <String, List<String>>{
-  '파도소리': ['海浪声', '有节奏的海浪声让心情平静，帮助深度休息和睡眠'],
-  '잔잔한 파도': ['平静的海浪', '轻柔平静的海浪声，助你安心休息'],
-  '갈매기와 파도': ['海鸥与海浪', '海鸥鸣叫与海浪声交织，感受生动的海滩氛围'],
-  '바위에 부딪히는 파도': ['拍打岩石的海浪', '猛烈拍打岩石的海浪声，感受大海的力量'],
-  '멀리서 들리는 갈매기': ['远处的海鸥', '宁静海边远处传来的海鸥声，带来平静的休息'],
-  '거친 파도': ['汹涌的海浪', '汹涌拍岸的海浪声，感受有力的大海'],
-  '빗소리': ['雨声', '稳定的雨声提升专注力，抚平不安的心情'],
-  '창문에 떨어지는 비': ['窗上的雨', '轻敲窗户的柔和雨声，助你安然入睡'],
-  '숲속의 비와 새소리': ['林中雨声与鸟鸣', '林中雨声与鸟鸣交织，让心情放松'],
-  '숲속의 거센 밤비': ['林中夜晚的大雨', '深夜林中倾盆而下的雨声，带来沉浸式休息'],
-  '새소리': ['鸟鸣', '清脆的鸟鸣减轻压力，带来清爽心情'],
-  '뻐꾸기와 숲속 새소리': ['布谷鸟与林中鸟鸣', '伴着布谷鸟声的林中鸟鸣，感受清爽的早晨'],
-  '모닥불': ['篝火', '噼啪作响的柴火声营造温馨氛围，帮助深度放松'],
-  '시냇물': ['溪流', '潺潺溪水声让心情平静，减少杂念'],
-  '잔잔한 강물': ['平静的河流', '宽阔河流平静流淌的声音，助你安心休息'],
-};
-
-const _natureZhHant = <String, List<String>>{
-  '파도소리': ['海浪聲', '有節奏的海浪聲讓心情平靜，幫助深度休息和睡眠'],
-  '잔잔한 파도': ['平靜的海浪', '輕柔平靜的海浪聲，助你安心休息'],
-  '갈매기와 파도': ['海鷗與海浪', '海鷗鳴叫與海浪聲交織，感受生動的海灘氛圍'],
-  '바위에 부딪히는 파도': ['拍打岩石的海浪', '猛烈拍打岩石的海浪聲，感受大海的力量'],
-  '멀리서 들리는 갈매기': ['遠處的海鷗', '寧靜海邊遠處傳來的海鷗聲，帶來平靜的休息'],
-  '거친 파도': ['洶湧的海浪', '洶湧拍岸的海浪聲，感受有力的大海'],
-  '빗소리': ['雨聲', '穩定的雨聲提升專注力，撫平不安的心情'],
-  '창문에 떨어지는 비': ['窗上的雨', '輕敲窗戶的柔和雨聲，助你安然入睡'],
-  '숲속의 비와 새소리': ['林中雨聲與鳥鳴', '林中雨聲與鳥鳴交織，讓心情放鬆'],
-  '숲속의 거센 밤비': ['林中夜晚的大雨', '深夜林中傾盆而下的雨聲，帶來沉浸式休息'],
-  '새소리': ['鳥鳴', '清脆的鳥鳴減輕壓力，帶來清爽心情'],
-  '뻐꾸기와 숲속 새소리': ['布穀鳥與林中鳥鳴', '伴著布穀鳥聲的林中鳥鳴，感受清爽的早晨'],
-  '모닥불': ['營火', '劈啪作響的柴火聲營造溫馨氛圍，幫助深度放鬆'],
-  '시냇물': ['溪流', '潺潺溪水聲讓心情平靜，減少雜念'],
-  '잔잔한 강물': ['平靜的河流', '寬闊河流平靜流淌的聲音，助你安心休息'],
-};
 
 const natureSoundCatalog = <NatureSound>[
   NatureSound(

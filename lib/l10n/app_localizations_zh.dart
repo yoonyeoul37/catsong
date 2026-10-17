@@ -4098,6 +4098,341 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get byeLine4 => '好好睡，明天见';
+
+  @override
+  String get genreSortedToast => '已按类型排序';
+
+  @override
+  String genreShuffle(String label, int n) {
+    return '随机播放 $label・$n 首';
+  }
+
+  @override
+  String get genrePickTitle => '选择类型';
+
+  @override
+  String get genreNone => '无类型';
+
+  @override
+  String get genreTypeOwn => '自行输入';
+
+  @override
+  String get songGenreBallad => '抒情';
+
+  @override
+  String get songGenreDance => '舞曲';
+
+  @override
+  String get songGenrePop => '流行';
+
+  @override
+  String get songGenreKpop => 'K-Pop';
+
+  @override
+  String get songGenreJpop => 'J-Pop';
+
+  @override
+  String get songGenreCpop => '华语流行';
+
+  @override
+  String get songGenreRock => '摇滚';
+
+  @override
+  String get songGenreMetal => '金属';
+
+  @override
+  String get songGenreHiphop => '嘻哈';
+
+  @override
+  String get songGenreRnb => 'R&B';
+
+  @override
+  String get songGenreJazz => '爵士';
+
+  @override
+  String get songGenreClassical => '古典';
+
+  @override
+  String get songGenreOst => '原声带';
+
+  @override
+  String get songGenreTrot => 'Trot';
+
+  @override
+  String get songGenreEnka => '演歌';
+
+  @override
+  String get songGenreIndie => '独立';
+
+  @override
+  String get songGenreElectronic => '电子';
+
+  @override
+  String get songGenreFolk => '民谣';
+
+  @override
+  String get songGenreBlues => '蓝调';
+
+  @override
+  String get songGenreCountry => '乡村';
+
+  @override
+  String get songGenreReggae => '雷鬼';
+
+  @override
+  String get songGenreNewage => '新世纪';
+
+  @override
+  String get songGenreAnime => '动漫';
+
+  @override
+  String get songGenreKids => '童谣';
+
+  @override
+  String regionBrandLine(int n) {
+    return '全国$n个电台\n尽在一处';
+  }
+
+  @override
+  String get stationCatMajor => '主要电台';
+
+  @override
+  String get stationCatMusicNews => '音乐・时事';
+
+  @override
+  String get stationCatForeign => '外语';
+
+  @override
+  String get stationCatReligion => '宗教电台';
+
+  @override
+  String get stationCatTraffic => '交通电台';
+
+  @override
+  String get stationCatRegional => '地方电台';
+
+  @override
+  String get stationCatCommunity => '社区电台';
+
+  @override
+  String get stationCatPrivate => '地方民营电台';
+
+  @override
+  String get smsSheetTitle => '发短信参与';
+
+  @override
+  String get smsSheetDesc => '发短信到这个号码，就能向节目分享故事或点歌。';
+
+  @override
+  String get smsSheetFee => '需支付信息使用费（短信50韩元・长信/图片100韩元）。';
+
+  @override
+  String get smsSheetSend => '发送短信';
+
+  @override
+  String get languageMenuDesc => '选择应用的显示语言。';
+
+  @override
+  String get languagePhone => '手机语言';
+
+  @override
+  String get languageTagHant => '繁体';
+
+  @override
+  String get languageTagHans => '简体';
+
+  @override
+  String get introTitle => 'Paransori';
+
+  @override
+  String get introTagline => '为日常增添一份清澈。';
+
+  @override
+  String get introQuestion => '如果声音也有颜色，\n会是什么颜色呢？';
+
+  @override
+  String get introPoem => '像蓝天一样清澈，\n像凉风一样清爽，\n像平静的大海一样安宁的声音。';
+
+  @override
+  String get introStarted => 'Paransori 源自想要传递这样声音的心意。';
+
+  @override
+  String get introNameLabel => '名字的由来';
+
+  @override
+  String get introNameStory =>
+      'Paransori（파란소리）这个名字来自韩语中的“파란（Paran）”和“소리（Sori）”。“Paran”意为蓝色，让人联想到晴朗的天空和蔚蓝的大海；“Sori”则是我们所听到的声音。这个名字承载着我们的心愿：用声音传递晴空的清爽、凉风的舒畅，以及置身大自然时的安宁。';
+
+  @override
+  String get introEverydayTitle => '与声音相伴的日常';
+
+  @override
+  String get introMoments =>
+      '在忙碌的一天中想稍作休息时，\n想起喜欢的音乐时，\n想遇见新的电台节目时，\n想与大自然的声音一起度过安静时光时。';
+
+  @override
+  String get introEveryday1 => 'Paransori 希望在日常的各种时刻，轻松地陪伴在你身边。';
+
+  @override
+  String get introEveryday2 =>
+      '因为一首歌、一档熟悉的电台节目、一阵轻柔的雨声，都能让平凡的一天变得更美好一些。所以 Paransori 一直努力打造一个简单、人人都能轻松愉快使用的空间。';
+
+  @override
+  String get introSoundsTitle => '在 Paransori 遇见的声音';
+
+  @override
+  String get introWishTitle => 'Paransori 想传达的心意';
+
+  @override
+  String get introWish1 => '聆听喜欢的声音的时光，其实比想象中更近。无论是开始早晨时、工作时，还是结束一天的安静夜晚。';
+
+  @override
+  String get introWish2 =>
+      '从韩国出发的 Paransori，如今与世界各地的人们相伴，希望能为每个人的日常增添一点小小的快乐与从容。';
+
+  @override
+  String get introClosing1 => '一个随时随地都能轻松找到的声音空间。';
+
+  @override
+  String get introClosing2 => '愿你的一天，更清澈一些。';
+
+  @override
+  String get introSign => 'Paransori.';
+
+  @override
+  String get introVersion => '版本';
+
+  @override
+  String get introFeature1Title => '我的音乐';
+
+  @override
+  String get introFeature1Desc => '悠闲地欣赏手机里保存的音乐，用喜欢的歌曲填满属于自己的时光。';
+
+  @override
+  String get introFeature2Title => '世界电台';
+
+  @override
+  String get introFeature2Desc => '收听来自各个国家的电台节目，遇见新的音乐、故事和世界的声音。';
+
+  @override
+  String get introFeature3Title => '大自然的声音';
+
+  @override
+  String get introFeature3Desc => '雨声、风声、森林的声音……尽情享受大自然带来的舒缓声音。';
+
+  @override
+  String get introFeature4Title => '休息与专注';
+
+  @override
+  String get introFeature4Desc => '从睡前的安静时光到需要专注的时刻，找到此刻最适合你的声音。';
+
+  @override
+  String get introFeature5Title => '我的声音组合';
+
+  @override
+  String get introFeature5Desc => '将喜欢的声音一起播放，营造属于自己的氛围。';
+
+  @override
+  String get introFeature6Title => '早晨闹钟';
+
+  @override
+  String get introFeature6Desc => '用喜欢的歌曲、电台或大自然的声音，愉快地开始新的一天。';
+
+  @override
+  String get introMenuTitle => '关于 Paransori';
+
+  @override
+  String get introMenuDesc => '了解这款应用。';
+
+  @override
+  String get nature01Name => '海浪声';
+
+  @override
+  String get nature01Desc => '有节奏的海浪声让心情平静，帮助深度休息和睡眠';
+
+  @override
+  String get nature02Name => '平静的海浪';
+
+  @override
+  String get nature02Desc => '轻柔平静的海浪声，助你安心休息';
+
+  @override
+  String get nature03Name => '海鸥与海浪';
+
+  @override
+  String get nature03Desc => '海鸥鸣叫与海浪声交织，感受生动的海滩氛围';
+
+  @override
+  String get nature04Name => '拍打岩石的海浪';
+
+  @override
+  String get nature04Desc => '猛烈拍打岩石的海浪声，感受大海的力量';
+
+  @override
+  String get nature05Name => '远处的海鸥';
+
+  @override
+  String get nature05Desc => '宁静海边远处传来的海鸥声，带来平静的休息';
+
+  @override
+  String get nature06Name => '汹涌的海浪';
+
+  @override
+  String get nature06Desc => '汹涌拍岸的海浪声，感受有力的大海';
+
+  @override
+  String get nature07Name => '雨声';
+
+  @override
+  String get nature07Desc => '稳定的雨声提升专注力，抚平不安的心情';
+
+  @override
+  String get nature08Name => '窗上的雨';
+
+  @override
+  String get nature08Desc => '轻敲窗户的柔和雨声，助你安然入睡';
+
+  @override
+  String get nature09Name => '林中雨声与鸟鸣';
+
+  @override
+  String get nature09Desc => '林中雨声与鸟鸣交织，让心情放松';
+
+  @override
+  String get nature10Name => '林中夜晚的大雨';
+
+  @override
+  String get nature10Desc => '深夜林中倾盆而下的雨声，带来沉浸式休息';
+
+  @override
+  String get nature11Name => '鸟鸣';
+
+  @override
+  String get nature11Desc => '清脆的鸟鸣减轻压力，带来清爽心情';
+
+  @override
+  String get nature12Name => '布谷鸟与林中鸟鸣';
+
+  @override
+  String get nature12Desc => '伴着布谷鸟声的林中鸟鸣，感受清爽的早晨';
+
+  @override
+  String get nature13Name => '篝火';
+
+  @override
+  String get nature13Desc => '噼啪作响的柴火声营造温馨氛围，帮助深度放松';
+
+  @override
+  String get nature14Name => '溪流';
+
+  @override
+  String get nature14Desc => '潺潺溪水声让心情平静，减少杂念';
+
+  @override
+  String get nature15Name => '平静的河流';
+
+  @override
+  String get nature15Desc => '宽阔河流平静流淌的声音，助你安心休息';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -8194,4 +8529,339 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get byeLine4 => '好好睡，明天見';
+
+  @override
+  String get genreSortedToast => '已依類型排序';
+
+  @override
+  String genreShuffle(String label, int n) {
+    return '隨機播放 $label・$n 首';
+  }
+
+  @override
+  String get genrePickTitle => '選擇類型';
+
+  @override
+  String get genreNone => '無類型';
+
+  @override
+  String get genreTypeOwn => '自行輸入';
+
+  @override
+  String get songGenreBallad => '抒情';
+
+  @override
+  String get songGenreDance => '舞曲';
+
+  @override
+  String get songGenrePop => '流行';
+
+  @override
+  String get songGenreKpop => 'K-Pop';
+
+  @override
+  String get songGenreJpop => 'J-Pop';
+
+  @override
+  String get songGenreCpop => '華語流行';
+
+  @override
+  String get songGenreRock => '搖滾';
+
+  @override
+  String get songGenreMetal => '金屬';
+
+  @override
+  String get songGenreHiphop => '嘻哈';
+
+  @override
+  String get songGenreRnb => 'R&B';
+
+  @override
+  String get songGenreJazz => '爵士';
+
+  @override
+  String get songGenreClassical => '古典';
+
+  @override
+  String get songGenreOst => '原聲帶';
+
+  @override
+  String get songGenreTrot => 'Trot';
+
+  @override
+  String get songGenreEnka => '演歌';
+
+  @override
+  String get songGenreIndie => '獨立';
+
+  @override
+  String get songGenreElectronic => '電子';
+
+  @override
+  String get songGenreFolk => '民謠';
+
+  @override
+  String get songGenreBlues => '藍調';
+
+  @override
+  String get songGenreCountry => '鄉村';
+
+  @override
+  String get songGenreReggae => '雷鬼';
+
+  @override
+  String get songGenreNewage => '新世紀';
+
+  @override
+  String get songGenreAnime => '動漫';
+
+  @override
+  String get songGenreKids => '童謠';
+
+  @override
+  String regionBrandLine(int n) {
+    return '全國$n個電台\n盡在一處';
+  }
+
+  @override
+  String get stationCatMajor => '主要電台';
+
+  @override
+  String get stationCatMusicNews => '音樂・時事';
+
+  @override
+  String get stationCatForeign => '外語';
+
+  @override
+  String get stationCatReligion => '宗教電台';
+
+  @override
+  String get stationCatTraffic => '交通電台';
+
+  @override
+  String get stationCatRegional => '地方電台';
+
+  @override
+  String get stationCatCommunity => '社區電台';
+
+  @override
+  String get stationCatPrivate => '地方民營電台';
+
+  @override
+  String get smsSheetTitle => '傳簡訊參與';
+
+  @override
+  String get smsSheetDesc => '傳簡訊到這個號碼，就能向節目分享故事或點歌。';
+
+  @override
+  String get smsSheetFee => '需支付資訊使用費（短訊50韓元・長訊/照片100韓元）。';
+
+  @override
+  String get smsSheetSend => '傳送簡訊';
+
+  @override
+  String get languageMenuDesc => '選擇應用程式的顯示語言。';
+
+  @override
+  String get languagePhone => '手機語言';
+
+  @override
+  String get languageTagHant => '繁體';
+
+  @override
+  String get languageTagHans => '簡體';
+
+  @override
+  String get introTitle => 'Paransori';
+
+  @override
+  String get introTagline => '為日常增添一份清澈。';
+
+  @override
+  String get introQuestion => '如果聲音也有顏色，\n會是什麼顏色呢？';
+
+  @override
+  String get introPoem => '像藍天一樣清澈，\n像涼風一樣清爽，\n像平靜的大海一樣安寧的聲音。';
+
+  @override
+  String get introStarted => 'Paransori 源自想要傳遞這樣聲音的心意。';
+
+  @override
+  String get introNameLabel => '名字的由來';
+
+  @override
+  String get introNameStory =>
+      'Paransori（파란소리）這個名字來自韓語中的「파란（Paran）」和「소리（Sori）」。「Paran」意為藍色，讓人聯想到晴朗的天空和蔚藍的大海；「Sori」則是我們所聽到的聲音。這個名字承載著我們的心願：用聲音傳遞晴空的清爽、涼風的舒暢，以及置身大自然時的安寧。';
+
+  @override
+  String get introEverydayTitle => '與聲音相伴的日常';
+
+  @override
+  String get introMoments =>
+      '在忙碌的一天中想稍作休息時，\n想起喜歡的音樂時，\n想遇見新的電台節目時，\n想與大自然的聲音一起度過安靜時光時。';
+
+  @override
+  String get introEveryday1 => 'Paransori 希望在日常的各種時刻，輕鬆地陪伴在你身邊。';
+
+  @override
+  String get introEveryday2 =>
+      '因為一首歌、一檔熟悉的電台節目、一陣輕柔的雨聲，都能讓平凡的一天變得更美好一些。所以 Paransori 一直努力打造一個簡單、人人都能輕鬆愉快使用的空間。';
+
+  @override
+  String get introSoundsTitle => '在 Paransori 遇見的聲音';
+
+  @override
+  String get introWishTitle => 'Paransori 想傳達的心意';
+
+  @override
+  String get introWish1 => '聆聽喜歡的聲音的時光，其實比想像中更近。無論是開始早晨時、工作時，還是結束一天的安靜夜晚。';
+
+  @override
+  String get introWish2 =>
+      '從韓國出發的 Paransori，如今與世界各地的人們相伴，希望能為每個人的日常增添一點小小的快樂與從容。';
+
+  @override
+  String get introClosing1 => '一個隨時隨地都能輕鬆找到的聲音空間。';
+
+  @override
+  String get introClosing2 => '願你的一天，更清澈一些。';
+
+  @override
+  String get introSign => 'Paransori.';
+
+  @override
+  String get introVersion => '版本';
+
+  @override
+  String get introFeature1Title => '我的音樂';
+
+  @override
+  String get introFeature1Desc => '悠閒地欣賞手機裡儲存的音樂，用喜歡的歌曲填滿屬於自己的時光。';
+
+  @override
+  String get introFeature2Title => '世界電台';
+
+  @override
+  String get introFeature2Desc => '收聽來自各個國家的電台節目，遇見新的音樂、故事和世界的聲音。';
+
+  @override
+  String get introFeature3Title => '大自然的聲音';
+
+  @override
+  String get introFeature3Desc => '雨聲、風聲、森林的聲音……盡情享受大自然帶來的舒緩聲音。';
+
+  @override
+  String get introFeature4Title => '休息與專注';
+
+  @override
+  String get introFeature4Desc => '從睡前的安靜時光到需要專注的時刻，找到此刻最適合你的聲音。';
+
+  @override
+  String get introFeature5Title => '我的聲音組合';
+
+  @override
+  String get introFeature5Desc => '將喜歡的聲音一起播放，營造屬於自己的氛圍。';
+
+  @override
+  String get introFeature6Title => '早晨鬧鐘';
+
+  @override
+  String get introFeature6Desc => '用喜歡的歌曲、電台或大自然的聲音，愉快地開始新的一天。';
+
+  @override
+  String get introMenuTitle => '關於 Paransori';
+
+  @override
+  String get introMenuDesc => '認識這款應用程式。';
+
+  @override
+  String get nature01Name => '海浪聲';
+
+  @override
+  String get nature01Desc => '有節奏的海浪聲讓心情平靜，幫助深度休息和睡眠';
+
+  @override
+  String get nature02Name => '平靜的海浪';
+
+  @override
+  String get nature02Desc => '輕柔平靜的海浪聲，助你安心休息';
+
+  @override
+  String get nature03Name => '海鷗與海浪';
+
+  @override
+  String get nature03Desc => '海鷗鳴叫與海浪聲交織，感受生動的海灘氛圍';
+
+  @override
+  String get nature04Name => '拍打岩石的海浪';
+
+  @override
+  String get nature04Desc => '猛烈拍打岩石的海浪聲，感受大海的力量';
+
+  @override
+  String get nature05Name => '遠處的海鷗';
+
+  @override
+  String get nature05Desc => '寧靜海邊遠處傳來的海鷗聲，帶來平靜的休息';
+
+  @override
+  String get nature06Name => '洶湧的海浪';
+
+  @override
+  String get nature06Desc => '洶湧拍岸的海浪聲，感受有力的大海';
+
+  @override
+  String get nature07Name => '雨聲';
+
+  @override
+  String get nature07Desc => '穩定的雨聲提升專注力，撫平不安的心情';
+
+  @override
+  String get nature08Name => '窗上的雨';
+
+  @override
+  String get nature08Desc => '輕敲窗戶的柔和雨聲，助你安然入睡';
+
+  @override
+  String get nature09Name => '林中雨聲與鳥鳴';
+
+  @override
+  String get nature09Desc => '林中雨聲與鳥鳴交織，讓心情放鬆';
+
+  @override
+  String get nature10Name => '林中夜晚的大雨';
+
+  @override
+  String get nature10Desc => '深夜林中傾盆而下的雨聲，帶來沉浸式休息';
+
+  @override
+  String get nature11Name => '鳥鳴';
+
+  @override
+  String get nature11Desc => '清脆的鳥鳴減輕壓力，帶來清爽心情';
+
+  @override
+  String get nature12Name => '布穀鳥與林中鳥鳴';
+
+  @override
+  String get nature12Desc => '伴著布穀鳥聲的林中鳥鳴，感受清爽的早晨';
+
+  @override
+  String get nature13Name => '營火';
+
+  @override
+  String get nature13Desc => '劈啪作響的柴火聲營造溫馨氛圍，幫助深度放鬆';
+
+  @override
+  String get nature14Name => '溪流';
+
+  @override
+  String get nature14Desc => '潺潺溪水聲讓心情平靜，減少雜念';
+
+  @override
+  String get nature15Name => '平靜的河流';
+
+  @override
+  String get nature15Desc => '寬闊河流平靜流淌的聲音，助你安心休息';
 }

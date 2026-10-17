@@ -3,7 +3,7 @@
 # 실행: python release_play.py   (mp3_player_new 폴더에서) — 아무것도 안 물어보고 끝까지
 #       python release_play.py "업데이트 내용"   ← 내용을 직접 넣고 싶을 때만
 #  1) build_release.py 로 버전 번호 +1 하고 .aab 만들기
-#  2) 업데이트 내용: 적은 게 없으면 "작은 개선과 오류 수정"
+#  2) 업데이트 내용: 적은 게 없으면 5개 언어 앱 소개 (아래 FULL_NOTES)
 #  3) 플레이 콘솔 프로덕션에 올리고 검토 보내기
 # 처음 한 번 준비: play-key.json (서비스 계정 키) 를 이 폴더에 두기
 import os, sys, subprocess, io
@@ -14,10 +14,11 @@ KEY_FILE = 'play-key.json'
 AAB = os.path.join('build', 'app', 'outputs', 'bundle', 'release', 'app-release.aab')
 TRACK = 'production'
 DEFAULT_NOTES = '작은 개선과 오류 수정'
-# 따로 적은 게 없으면 4개 언어 전체 소개를 출시 노트로
+# 따로 적은 게 없으면 5개 언어 전체 소개를 출시 노트로 (언어마다 500자까지)
 FULL_NOTES = {
     'ko-KR': """파란소리 – 음악, 라디오, 자연소리를 하나로
 - MP3·동영상 플레이어, 가사 보기와 가사 카드 공유
+- 장르별 정렬·장르 골라 듣기, 곡 정보에서 장르 수정
 - 한국과 100여 개 나라 라디오, 편성표까지
 - 휴식·집중·잠을 위한 자연소리와 소리 믹스
 - 파란포토 배경 (고정·랜덤, 컬러·흑백·세피아·필름)
@@ -26,14 +27,16 @@ FULL_NOTES = {
 - 다크 모드, 포인트 색, 글꼴로 나만의 앱 꾸미기""",
     'en-US': """Paransori – music, radio and nature sounds in one app
 - MP3 & video player with synced lyrics and lyric card sharing
-- Live radio from Korea and 100+ countries, with program schedules
+- Sort and play by genre, edit song genres
+- Live radio from Korea and 100+ countries, with schedules
 - Nature sounds & sound mix for rest, focus and sleep
-- Paran Photo backgrounds with Fixed / Random and Color, B&W, Sepia, Film tones
+- Paran Photo backgrounds: fixed or random, color, B&W, sepia, film
 - Sleep timer, morning alarm and home screen widgets
 - Cast to TV and speakers, equalizer, recordings
 - Dark mode, point colors and fonts to make it yours""",
     'ja-JP': """パランソリ – 音楽・ラジオ・自然音をひとつのアプリで
 - MP3・動画プレーヤー、歌詞表示と歌詞カードの共有
+- ジャンル別の並べ替え・再生、曲情報でジャンルを編集
 - 韓国と100か国以上のライブラジオ、番組表つき
 - 休息・集中・睡眠のための自然音とサウンドミックス
 - パランフォト背景(固定・ランダム、カラー・モノクロ・セピア・フィルム)
@@ -42,12 +45,22 @@ FULL_NOTES = {
 - ダークモード、ポイントカラー、フォントで自分好みに""",
     'zh-TW': """Paransori – 音樂、廣播、大自然聲音一次擁有
 - MP3・影片播放器，歌詞顯示與歌詞卡片分享
+- 依類型排序與播放，可在歌曲資訊中編輯類型
 - 韓國與 100 多個國家的線上廣播，附節目表
 - 放鬆、專注、助眠的大自然聲音與混音
 - Paran Photo 背景(固定・隨機，彩色・黑白・復古・底片)
 - 睡眠定時、晨間鬧鐘、桌面小工具
 - 投放至電視與喇叭、等化器、錄音
 - 深色模式、主題色與字型，打造專屬風格""",
+    'zh-CN': """Paransori – 音乐、电台、大自然声音一次拥有
+- MP3・视频播放器，歌词显示与歌词卡片分享
+- 按类型排序与播放，可在歌曲信息中编辑类型
+- 韩国与 100 多个国家的在线电台，附节目表
+- 放松、专注、助眠的大自然声音与混音
+- Paran Photo 背景(固定・随机，彩色・黑白・复古・胶片)
+- 睡眠定时、早晨闹钟、桌面小组件
+- 投放到电视与音箱、均衡器、录音
+- 深色模式、主题色与字体，打造专属风格""",
 }
 
 
@@ -103,7 +116,7 @@ def main():
             body={'track': TRACK, 'releases': [{
                 'versionCodes': [str(vc)],
                 'status': 'completed',
-                # 명령어 뒤에 적은 게 있으면 한국어로 그걸, 없으면 4개 언어 전체 소개
+                # 명령어 뒤에 적은 게 있으면 한국어로 그걸, 없으면 5개 언어 전체 소개
                 'releaseNotes': ([{'language': 'ko-KR', 'text': notes}] if sys.argv[1:]
                                  else [{'language': k, 'text': v} for k, v in FULL_NOTES.items()]),
             }]}).execute()

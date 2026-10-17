@@ -15,6 +15,7 @@ import '../screens/bulk_clean_screen.dart';
 import '../screens/bulk_art_screen.dart';
 import '../screens/settings_help_screen.dart';
 import '../screens/alarm_screen.dart';
+import '../screens/paran_intro_screen.dart';
 import '../services/alarm_service.dart';
 import '../l10n/locale_holder.dart';
 
@@ -153,6 +154,7 @@ void showMoreMenuSheet(
       ),
       onHelp: () => openPage(ctx, MaterialPageRoute(builder: (_) => const SettingsHelpScreen())),
       onAlarm: () => openPage(ctx, MaterialPageRoute(builder: (_) => const AlarmScreen())),
+      onIntro: () => openPage(ctx, MaterialPageRoute(builder: (_) => const ParanIntroScreen())),
       onHomepage: () async {
         Navigator.pop(ctx);
         final url = stationHomepage;
@@ -252,6 +254,7 @@ class _MoreMenuSheet extends StatelessWidget {
   final VoidCallback onHomepage;
   final VoidCallback onHelp;
   final VoidCallback onAlarm;
+  final VoidCallback onIntro;
   final bool showSongTools;
   final VoidCallback onCleanSongs;
   final VoidCallback onFindArt;
@@ -269,6 +272,7 @@ class _MoreMenuSheet extends StatelessWidget {
     required this.onHomepage,
     required this.onHelp,
     required this.onAlarm,
+    required this.onIntro,
   });
 
   @override
@@ -293,6 +297,8 @@ class _MoreMenuSheet extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 _TopBar(p: p),
+                _IntroCard(p: p, onTap: onIntro),
+                const SizedBox(height: 10),
                 _MenuGroup(p: p, children: [
                   if (showSongTools) ...[
                     _MenuCard(
@@ -506,6 +512,91 @@ class _MenuCard extends StatelessWidget {
                 const SizedBox(width: 6),
               ],
               _LineIcon(_kIconChevron, size: 18, color: p.chevron, stroke: 2.0),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// 파란소리 소개 — 다른 메뉴와 살짝 다르게: 연한 포인트 색 카드 + 작은 소리 막대
+class _IntroCard extends StatelessWidget {
+  final _Pal p;
+  final VoidCallback onTap;
+  const _IntroCard({required this.p, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final point = pointColorOf(context);
+    final dark = p.sheet.computeLuminance() < 0.5;
+    final bg = Color.alphaBlend(point.withOpacity(dark ? 0.16 : 0.10), p.card);
+    final (title, subtitle) = paranIntroMenuText();
+    return Material(
+      color: bg,
+      borderRadius: BorderRadius.circular(18),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () {
+          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+          onTap();
+        },
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 64),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+          alignment: Alignment.center,
+          child: Row(
+            children: [
+              // 아이콘 칸: 흰 바탕 + 소리 막대 (로고 느낌)
+              Container(
+                width: 34,
+                height: 34,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(color: p.card, borderRadius: BorderRadius.circular(10)),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    for (final (i, h) in const [7.0, 12.0, 15.0, 10.0].indexed) ...[
+                      if (i > 0) const SizedBox(width: 2.5),
+                      Container(
+                        width: 3,
+                        height: h,
+                        decoration: BoxDecoration(color: point, borderRadius: BorderRadius.circular(2)),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: p.title,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: -0.3,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: p.desc, fontSize: 11.5),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              _LineIcon(_kIconChevron, size: 18, color: point.withOpacity(0.85), stroke: 2.0),
             ],
           ),
         ),

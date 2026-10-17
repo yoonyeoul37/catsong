@@ -78,6 +78,19 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
     '제주': Color(0xFF1E5C4A),
   };
 
+  /// 지역마다 아이콘 (방송사별 칸과 같은 모양: 큰 아이콘을 은은하게)
+  static const Map<String, IconData> _regionIcons = {
+    '수도권': Icons.location_city_rounded,
+    '강원': Icons.terrain_rounded,
+    '대전/충남': Icons.science_rounded,
+    '충북': Icons.water_rounded,
+    '대구/경북': Icons.account_balance_rounded,
+    '전북': Icons.eco_rounded,
+    '광주/전남': Icons.local_florist_rounded,
+    '부산/경남': Icons.waves_rounded,
+    '제주': Icons.beach_access_rounded,
+  };
+
   @override
   void initState() {
     super.initState();
@@ -784,14 +797,14 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         Navigator.push(context, MaterialPageRoute(builder: (_) => const ParanIntroScreen()));
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 14),
         alignment: Alignment.centerLeft,
         decoration: BoxDecoration(
           color: bg,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(18), // 지역 칸과 같은 모서리·그림자
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.25),
+              color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.18),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),
@@ -882,30 +895,74 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
               ),
             );
           },
+          // B안 (방송사별과 같은 모양): 지역 색 바탕(살짝 그라데이션) + 오른쪽 위 큰 아이콘(은은하게) + 왼쪽 위 작은 아이콘 + 왼쪽 아래 이름·채널 수
           child: Container(
+            clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
-              color: _regionColors[region] ?? baseColor.withOpacity(0.06),
-              borderRadius: BorderRadius.circular(16),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  _regionColors[region] ?? const Color(0xFF3A342A),
+                  (_regionColors[region] ?? const Color(0xFF3A342A)).withOpacity(0.8),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.25),
+                  color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.18),
                   blurRadius: 12,
                   offset: const Offset(0, 6),
                 ),
               ],
             ),
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+            child: Stack(
               children: [
-                Text(
-                  _regionLabel(region),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700),
+                // 오른쪽 위 큰 아이콘 (배경 무늬처럼 은은하게, 칸 밖으로 살짝 잘리게)
+                Positioned(
+                  right: -6,
+                  top: -2,
+                  child: Icon(_regionIcons[region] ?? Icons.place_rounded,
+                      size: 60, color: Colors.white.withOpacity(0.10)),
                 ),
-                const SizedBox(height: 4),
-                Text(tr.channelsCount(count),
-                    style: const TextStyle(color: Colors.white70, fontSize: 11)),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 13, 12, 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+
+                      // 이름·채널 수: 남은 높이를 다 쓰고, 길거나 글자를 크게 해도 칸 안에 맞게 살짝 작게
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.bottomLeft,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _regionLabel(region),
+                                maxLines: 1,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: -0.3,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                tr.channelsCount(count),
+                                maxLines: 1,
+                                style: TextStyle(color: Colors.white.withOpacity(0.75), fontSize: 11.5),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -1760,6 +1817,20 @@ class _BroadcasterGridScreen extends StatelessWidget {
     '공동체': Color(0xFF4A5320), // 올리브
   };
 
+  /// 칸마다 아이콘 (A안: 사진 대신 큰 아이콘을 은은하게)
+  static const Map<String, IconData> _cardIcons = {
+    'KBS': Icons.mic_rounded,
+    'MBC': Icons.headphones_rounded,
+    'SBS': Icons.speaker_rounded,
+    'EBS': Icons.menu_book_rounded,
+    'CBS': Icons.church_rounded,
+    'TBN': Icons.directions_car_rounded,
+    '종교': Icons.spa_rounded,
+    '지역민방': Icons.location_city_rounded,
+    '공동체': Icons.park_rounded,
+    '기타': Icons.radio_rounded,
+  };
+
   /// 방송사 → 칸 (KBS·MBC·SBS·EBS·CBS는 그대로, 나머지는 묶음)
   static String _keyOf(String broadcaster) => switch (broadcaster) {
         'KBS' || 'MBC' || 'SBS' || 'EBS' || 'CBS' || 'TBN' => broadcaster,
@@ -1818,49 +1889,79 @@ class _BroadcasterGridScreen extends StatelessWidget {
               ),
             );
           },
+          // A안: 방송사 색 바탕(살짝 그라데이션) + 오른쪽 위 큰 아이콘(은은하게) + 왼쪽 위 작은 아이콘 + 왼쪽 아래 이름·채널 수
           child: Container(
+            clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
-              color: _cardColors[key] ?? const Color(0xFF3A342A),
-              borderRadius: BorderRadius.circular(16),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  _cardColors[key] ?? const Color(0xFF3A342A),
+                  (_cardColors[key] ?? const Color(0xFF3A342A)).withOpacity(0.8),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.25),
+                  color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.18),
                   blurRadius: 12,
                   offset: const Offset(0, 6),
                 ),
               ],
             ),
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+            child: Stack(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown, // 'Community radio'처럼 길면 칸 안에 맞게 살짝 작게
-                    child: Text(
-                      gridLabel(context, key),
-                      maxLines: 1,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
+                // 오른쪽 위 큰 아이콘 (배경 무늬처럼 은은하게, 칸 밖으로 살짝 잘리게)
+                Positioned(
+                  right: -6,
+                  top: -2,
+                  child: Icon(_cardIcons[key] ?? Icons.radio_rounded,
+                      size: 60, color: Colors.white.withOpacity(0.10)),
                 ),
-                // TBN은 이름 밑에 작게 '(교통 방송)'
-                if (key == 'TBN')
-                  Text(
-                    '(${stationCategoryLabel(context, 4)})',
-                    style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 11.5),
-                  ),
-                const SizedBox(height: 4),
-                Text(
-                  tr.channelsCount(stations.length),
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(_cardColors.containsKey(key) ? 0.7 : 0.6),
-                    fontSize: 11,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 13, 12, 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+
+                      // 이름·채널 수: 남은 높이를 다 쓰고, 길거나 글자를 크게 해도 칸 안에 맞게 살짝 작게
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.bottomLeft,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                gridLabel(context, key),
+                                maxLines: 1,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: -0.3,
+                                ),
+                              ),
+                              // TBN은 이름 밑에 작게 '(교통 방송)'
+                              if (key == 'TBN')
+                                Text(
+                                  '(${stationCategoryLabel(context, 4)})',
+                                  maxLines: 1,
+                                  style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 11),
+                                ),
+                              const SizedBox(height: 2),
+                              Text(
+                                tr.channelsCount(stations.length),
+                                maxLines: 1,
+                                style: TextStyle(color: Colors.white.withOpacity(0.75), fontSize: 11.5),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

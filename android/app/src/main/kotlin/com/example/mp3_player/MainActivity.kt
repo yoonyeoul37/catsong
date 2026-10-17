@@ -1034,6 +1034,18 @@ class MainActivity : AudioServiceActivity() {
                         }
                     } else result.success(false)
                 }
+                "setAppLocale" -> {
+                    // 설정 → 언어: 폰에도 알려서 위젯·알림 글자도 같은 언어로 (안드로이드 13 이상)
+                    val tag = call.argument<String>("tag") ?: "" // "" = 폰 설정 따라가기
+                    try {
+                        if (Build.VERSION.SDK_INT >= 33) {
+                            getSystemService(android.app.LocaleManager::class.java).applicationLocales =
+                                android.os.LocaleList.forLanguageTags(tag)
+                        }
+                    } catch (_: Exception) {}
+                    PlayerWidget.refreshAll(this)
+                    result.success(true)
+                }
                 "moveToBackground" -> {
                     moveTaskToBack(true)
                     result.success(true)

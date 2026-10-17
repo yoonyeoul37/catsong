@@ -20,6 +20,9 @@ class ThemeProvider extends ChangeNotifier {
   bool _seasonalEffectEnabled = true;
   bool _voiceGreetingEnabled = true;
   bool _feedbackSoundEnabled = true; // 완료 효과음 (물방울 소리·진동)
+  /// 앱 시작 전에 main.dart가 미리 읽어 둔 앱 언어 (첫 화면부터 그 언어로 → 깜빡임 없게)
+  static String preloadLanguage = 'system';
+  String _appLanguage = preloadLanguage; // 앱 언어 ('system' = 폰 설정 따라가기)
 
   Color get primaryColor => _primaryColor;
 
@@ -50,6 +53,39 @@ class ThemeProvider extends ChangeNotifier {
   bool get seasonalEffectEnabled => _seasonalEffectEnabled;
   bool get voiceGreetingEnabled => _voiceGreetingEnabled;
   bool get feedbackSoundEnabled => _feedbackSoundEnabled;
+  String get appLanguage => _appLanguage;
+
+  /// 설정 → 언어 (코드, 그 나라 말로 쓴 이름) — 새 언어를 넣으면 여기에 한 줄 추가
+  static const appLanguages = <(String, String)>[
+    ('ko', '한국어'),
+    ('en', 'English'),
+    ('ja', '日本語'),
+    ('zh_Hant', '繁體中文'),
+    ('zh_Hans', '简体中文'),
+  ];
+
+  /// MaterialApp에 넘길 언어 (null = 폰 설정 따라가기)
+  Locale? get appLocale => switch (_appLanguage) {
+        'ko' => const Locale('ko'),
+        'en' => const Locale('en'),
+        'ja' => const Locale('ja'),
+        'zh_Hant' => const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
+        'zh_Hans' => const Locale('zh'),
+        _ => null,
+      };
+
+  Future<void> setAppLanguage(String code) async {
+    _appLanguage = code;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('appLanguage', code);
+    notifyListeners();
+    // 폰에도 알려서 위젯·알림 글자도 같은 언어로 (안드로이드 13 이상)
+    const tags = {'ko': 'ko', 'en': 'en', 'ja': 'ja', 'zh_Hant': 'zh-TW', 'zh_Hans': 'zh-CN'};
+    try {
+      await const MethodChannel('kr.ssing.catsong/media')
+          .invokeMethod('setAppLocale', {'tag': tags[code] ?? ''});
+    } catch (_) {}
+  }
 
   Future<void> setFeedbackSoundEnabled(bool value) async {
     _feedbackSoundEnabled = value;
@@ -182,6 +218,10 @@ class ThemeProvider extends ChangeNotifier {
     }
     if (feedbackSoundEnabled != null) {
       _feedbackSoundEnabled = feedbackSoundEnabled;
+    }
+    final appLanguage = prefs.getString('appLanguage');
+    if (appLanguage != null && (appLanguage == 'system' || appLanguages.any((l) => l.$1 == appLanguage))) {
+      _appLanguage = appLanguage;
     }
     _applySystemBars();
     notifyListeners();

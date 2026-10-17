@@ -211,6 +211,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildTile(context, icon: Icons.style_outlined, title: l.playerStyle, desc: tr.descPlayerStyle, onTap: () => _showPlayerStyleDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.font_download_outlined, title: l.fontChange, desc: tr.descFont, onTap: () => _showFontDialog(context), primaryColor: primaryColor),
           _buildTile(context, icon: Icons.text_fields, title: l.textSize, desc: tr.descTextSize, onTap: () => _showTextSizeDialog(context), primaryColor: primaryColor),
+          // 언어: 폰 설정 따라가기 / 한국어 / English … (오른쪽에 지금 언어)
+          Consumer<ThemeProvider>(
+            builder: (context, t, _) => _buildTile(context,
+                icon: Icons.language_rounded,
+                title: l.languageTab,
+                desc: _langText('desc'),
+                subtitle: _langName(t.appLanguage),
+                onTap: () => _showLanguageSheet(context),
+                primaryColor: primaryColor),
+          ),
           // 메인 홈 맨 위 카드 (나만의 색·라디오·팁) — 오늘 다 닫았으면 설명 끝에 '다시 보기 ›'
           ValueListenableBuilder<bool>(
             valueListenable: MainCardPref.on,
@@ -1147,9 +1157,71 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  /// 언어 줄 글자 (5개 언어) — 번역 작업 때 arb로 옮기기
+  String _langText(String key) {
+    final loc = Localizations.localeOf(context);
+    final k = loc.languageCode == 'zh' ? (loc.scriptCode == 'Hant' ? 'tw' : 'cn') : loc.languageCode;
+    const t = {
+      'desc': {
+        'ko': '앱 글자를 다른 언어로 볼 수 있어요.',
+        'en': 'Show the app in another language.',
+        'ja': 'アプリの表示言語を選べます。',
+        'tw': '選擇應用程式的顯示語言。',
+        'cn': '选择应用的显示语言。',
+      },
+      'hant': {'ko': '번체', 'en': 'Traditional', 'ja': '繁体字', 'tw': '', 'cn': ''},
+      'hans': {'ko': '간체', 'en': 'Simplified', 'ja': '簡体字', 'tw': '', 'cn': ''},
+      'system': {
+        'ko': '폰 언어',
+        'en': 'Phone language',
+        'ja': '端末の言語',
+        'tw': '手機語言',
+        'cn': '手机语言',
+      },
+    };
+    return t[key]![k] ?? t[key]!['en']!;
+  }
+
+  /// 언어 이름: 폰 설정 따라가기는 지금 언어로, 나머지는 그 나라 말로 (모르는 언어로 바꿔도 다시 찾게)
+  String _langName(String code) {
+    if (code == 'system') return _langText('system');
+    for (final l in ThemeProvider.appLanguages) {
+      if (l.$1 == code) {
+        // 중국어는 번체·간체를 지금 앱 언어로 괄호 안에 (중국어 화면에선 이름에 이미 있어서 안 붙임)
+        final tag = code == 'zh_Hant' ? _langText('hant') : code == 'zh_Hans' ? _langText('hans') : '';
+        return tag.isEmpty ? l.$2 : '${l.$2} ($tag)';
+      }
+    }
+    return _langText('system');
+  }
+
+  /// 설정 → 언어: 폰 설정 따라가기 + 앱이 아는 언어들 (고르면 바로 바뀌고 기억)
+  void _showLanguageSheet(BuildContext context) {
+    final themeProvider = context.read<ThemeProvider>();
+    showParanSheet(
+      context,
+      title: AppLocalizations.of(context)!.languageTab,
+      builder: (ctx, setSheet) => ParanCard(
+        children: [
+          for (final code in ['system', for (final l in ThemeProvider.appLanguages) l.$1])
+            ParanRow(
+              icon: code == 'system' ? Icons.phone_android_rounded : Icons.language_rounded,
+              title: _langName(code),
+              selected: themeProvider.appLanguage == code,
+              onTap: () {
+                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                Navigator.pop(ctx);
+                themeProvider.setAppLanguage(code);
+              },
+            ),
+        ],
+      ),
+    );
+  }
+
   /// 약관 주소: 폰 언어 + 앱 다크/라이트를 붙여서 (페이지가 그대로 맞춰 열림)
   String _policyUrl(String page) {
-    final lang = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+    final lang = Localizations.localeOf(context).languageCode; // 설정 → 언어에서 고른 언어
     final theme = context.read<ThemeProvider>().isDarkMode ? 'dark' : 'light';
     return 'https://www.ssing.kr/$page.html?lang=$lang&theme=$theme';
   }

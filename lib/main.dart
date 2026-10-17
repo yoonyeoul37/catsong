@@ -193,6 +193,11 @@ void main() async {
   await AlarmService.init(); // 아침 알람 (알람 때문에 켜졌는지도 확인)
   await initGreetingScene(); // 첫인사·끝인사 오늘 장면 (지난번과 다르게)
   await WidgetGo.loadLaunch(); // 홈 위젯 바로가기로 켜졌는지
+  // 설정 → 언어에서 고른 언어 (첫 화면부터 그 언어로)
+  try {
+    ThemeProvider.preloadLanguage =
+        (await SharedPreferences.getInstance()).getString('appLanguage') ?? 'system';
+  } catch (_) {}
 
 
   runApp(MyApp(
@@ -249,6 +254,7 @@ class MyApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
+            locale: themeProvider.appLocale, // 설정 → 언어 (null이면 폰 설정 따라가기)
             supportedLocales: const [
               Locale('ko'),
               Locale('en'),

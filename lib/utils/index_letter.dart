@@ -24,11 +24,9 @@ String indexLetterOf(String text) {
     final cho = _chosung[(c - 0xAC00) ~/ 588];
     return _merge[cho] ?? cho;
   }
-  // 영어 → 대문자
-  final ch = String.fromCharCode(c).toUpperCase();
-  if (ch.length == 1 && ch.codeUnitAt(0) >= 65 && ch.codeUnitAt(0) <= 90) {
-    return ch;
-  }
+  // 영어 → 대문자 (악센트 글자는 기본 글자로: Ä→A, É→E, Ñ→N)
+  final latin = latinLetterOf(c);
+  if (latin != null) return latin;
   // 숫자, 기호, 그 밖의 글자
   return '#';
 }
@@ -87,12 +85,30 @@ String indexGroupFor(String text, String lang) {
   final t = text.trimLeft();
   if (t.isEmpty) return '#';
   final c = t.runes.first;
-  final ch = String.fromCharCode(c).toUpperCase();
-  final isLatin = ch.length == 1 && ch.codeUnitAt(0) >= 65 && ch.codeUnitAt(0) <= 90;
+  final ch = latinLetterOf(c) ?? ''; // 악센트 글자는 기본 글자로 (Ä→A, É→E, Ñ→N, Đ→D)
+  final isLatin = ch.isNotEmpty;
   if (lang == 'ja') {
     final row = _kanaRow(c);
     if (row != null) return row;
     return isLatin ? 'A-Z' : '#'; // 한자 제목은 읽는 법을 몰라서 #
   }
   return isLatin ? ch : '#';
+}
+
+// ───────── 악센트 글자 → 기본 글자 (Ä→A, É→E, Ñ→N, Đ→D, Ş→S, 베트남어 Ế→E …) ─────────
+// 스페인어·포르투갈어·독일어·프랑스어·베트남어 제목도 A~Z 칸으로 (예전엔 전부 # 으로 갔음)
+const _foldFrom =
+    'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝŸĀĂĄĆĈĊČĎĒĔĖĘĚĜĞĠĢĤĨĪĬĮİĴĶĹĻĽŃŅŇŌŎŐŔŖŘŚŜŞŠŢŤŨŪŬŮŰŲŴŶŹŻŽƠƯǍǏǑǓǕǗǙǛǞǠǦǨǪǬǴǸǺȀȂȄȆȈȊȌȎȐȒȔȖȘȚȞȦȨȪȬȮȰȲḀḂḄḆḈḊḌḎḐḒḔḖḘḚḜḞḠḢḤḦḨḪḬḮḰḲḴḶḸḺḼḾṀṂṄṆṈṊṌṎṐṒṔṖṘṚṜṞṠṢṤṦṨṪṬṮṰṲṴṶṸṺṼṾẀẂẄẆẈẊẌẎẐẒẔẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼẾỀỂỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỲỴỶỸĐŁØÆŒÞÐĦŦĿŊƗƵẞ';
+const _foldTo =
+    'AAAAAACEEEEIIIINOOOOOUUUUYYAAACCCCDEEEEEGGGGHIIIIIJKLLLNNNOOORRRSSSSTTUUUUUUWYZZZOUAIOUUUUUAAGKOOGNAAAEEIIOORRUUSTHAEOOOOYABBBCDDDDDEEEEEFGHHHHHIIKKKLLLLMMMNNNNOOOOPPRRRRSSSSSTTTTUUUUUVVWWWWWXXYZZZAAAAAAAAAAAAEEEEEEEEIIOOOOOOOOOOOOUUUUUUUYYYYDLOAOTDHTLNIZS';
+
+/// 첫 글자 → 영어 대문자 A~Z (악센트는 기본 글자로, ß→S), 영어 글자가 아니면 null
+String? latinLetterOf(int rune) {
+  var up = String.fromCharCode(rune).toUpperCase();
+  if (up.isEmpty) return null;
+  up = up.substring(0, 1); // ß → SS 처럼 두 글자가 되면 첫 글자만
+  final i = _foldFrom.indexOf(up);
+  if (i >= 0) up = _foldTo[i];
+  final u = up.codeUnitAt(0);
+  return (u >= 65 && u <= 90) ? up : null;
 }

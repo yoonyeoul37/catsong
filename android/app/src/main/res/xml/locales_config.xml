@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 폰 설정 → 앱 → 파란소리 → 언어 에 나오는 목록 (안드로이드 13 이상)
+     새 언어를 넣으면 여기에도 한 줄 추가 -->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="ko"/>
+    <locale android:name="en"/>
+    <locale android:name="ja"/>
+    <locale android:name="zh-CN"/>
+    <locale android:name="zh-TW"/>
+</locale-config>

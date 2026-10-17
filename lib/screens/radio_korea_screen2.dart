@@ -801,7 +801,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         alignment: Alignment.centerLeft,
         decoration: BoxDecoration(
           color: bg,
-          borderRadius: BorderRadius.circular(18), // 지역 칸과 같은 모서리·그림자
+          borderRadius: BorderRadius.circular(10), // 지역 칸과 같은 모서리·그림자
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.18),
@@ -907,7 +907,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                   (_regionColors[region] ?? const Color(0xFF3A342A)).withOpacity(0.8),
                 ],
               ),
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(10), // 홈 카드와 같은 둥글기
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.18),
@@ -1094,7 +1094,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                       color: baseColor.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(10), // 홈 카드·위 탭과 같은 둥글기
                     ),
                     child: Row(
                       children: [
@@ -1901,7 +1901,7 @@ class _BroadcasterGridScreen extends StatelessWidget {
                   (_cardColors[key] ?? const Color(0xFF3A342A)).withOpacity(0.8),
                 ],
               ),
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(10), // 홈 카드와 같은 둥글기
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.18),

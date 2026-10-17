@@ -4480,4 +4480,16 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get langNameTh => '태국어';
+
+  @override
+  String get langNameRu => '러시아어';
+
+  @override
+  String get langNameIt => '이탈리아어';
+
+  @override
+  String get langNameTr => '튀르키예어';
+
+  @override
+  String get langNamePl => '폴란드어';
 }

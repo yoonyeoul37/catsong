@@ -4690,4 +4690,16 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get langNameTh => 'Thai';
+
+  @override
+  String get langNameRu => 'Rusia';
+
+  @override
+  String get langNameIt => 'Italia';
+
+  @override
+  String get langNameTr => 'Turki';
+
+  @override
+  String get langNamePl => 'Polandia';
 }

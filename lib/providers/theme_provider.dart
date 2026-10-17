@@ -66,8 +66,12 @@ class ThemeProvider extends ChangeNotifier {
     ('de', 'Deutsch'),
     ('es', 'Español'),
     ('fr', 'Français'),
+    ('it', 'Italiano'),
+    ('pl', 'Polski'),
     ('pt', 'Português'),
     ('vi', 'Tiếng Việt'),
+    ('tr', 'Türkçe'),
+    ('ru', 'Русский'),
     ('th', 'ไทย'),
   ];
 

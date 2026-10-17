@@ -4682,4 +4682,16 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get langNameTh => 'Tiếng Thái';
+
+  @override
+  String get langNameRu => 'Tiếng Nga';
+
+  @override
+  String get langNameIt => 'Tiếng Ý';
+
+  @override
+  String get langNameTr => 'Tiếng Thổ Nhĩ Kỳ';
+
+  @override
+  String get langNamePl => 'Tiếng Ba Lan';
 }

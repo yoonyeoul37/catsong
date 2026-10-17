@@ -4676,4 +4676,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get langNameTh => 'Thai';
+
+  @override
+  String get langNameRu => 'Russian';
+
+  @override
+  String get langNameIt => 'Italian';
+
+  @override
+  String get langNameTr => 'Turkish';
+
+  @override
+  String get langNamePl => 'Polish';
 }

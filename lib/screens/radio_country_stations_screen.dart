@@ -308,7 +308,7 @@ class _RadioCountryStationsScreenState
     return map[k] ?? (k[0].toUpperCase() + k.substring(1));
   }
 
-  // 새 언어 7개: 방송 언어 이름
+  // 새 언어 11개: 방송 언어 이름
   static const Map<String, Map<String, String>> _langOther = {
     'de': {
       'english': 'Englisch', 'spanish': 'Spanisch', 'portuguese': 'Portugiesisch', 'french': 'Französisch',
@@ -407,6 +407,62 @@ class _RadioCountryStationsScreenState
       'polish': 'โปแลนด์', 'swedish': 'สวีเดน', 'welsh': 'เวลส์', 'irish': 'ไอริช',
       'filipino': 'ฟิลิปปินส์', 'tagalog': 'ตากาล็อก', 'persian': 'เปอร์เซีย', 'hebrew': 'ฮีบรู',
       'greek': 'กรีก',
+    },
+    'ru': {
+      'english': 'Английский', 'spanish': 'Испанский', 'portuguese': 'Португальский', 'french': 'Французский',
+      'german': 'Немецкий', 'italian': 'Итальянский', 'hindi': 'Хинди', 'tamil': 'Тамильский',
+      'telugu': 'Телугу', 'malayalam': 'Малаялам', 'bengali': 'Бенгальский', 'marathi': 'Маратхи',
+      'kannada': 'Каннада', 'punjabi': 'Панджаби', 'gujarati': 'Гуджарати', 'urdu': 'Урду',
+      'japanese': 'Японский', 'chinese': 'Китайский', 'mandarin': 'Путунхуа', 'cantonese': 'Кантонский',
+      'korean': 'Корейский', 'vietnamese': 'Вьетнамский', 'thai': 'Тайский', 'indonesian': 'Индонезийский',
+      'malay': 'Малайский', 'javanese': 'Яванский', 'arabic': 'Арабский', 'russian': 'Русский',
+      'ukrainian': 'Украинский', 'dutch': 'Нидерландский', 'catalan': 'Каталанский', 'basque': 'Баскский',
+      'galician': 'Галисийский', 'swiss german': 'Швейцарский немецкий', 'romansh': 'Ретороманский', 'turkish': 'Турецкий',
+      'polish': 'Польский', 'swedish': 'Шведский', 'welsh': 'Валлийский', 'irish': 'Ирландский',
+      'filipino': 'Филиппинский', 'tagalog': 'Тагальский', 'persian': 'Персидский', 'hebrew': 'Иврит',
+      'greek': 'Греческий',
+    },
+    'it': {
+      'english': 'Inglese', 'spanish': 'Spagnolo', 'portuguese': 'Portoghese', 'french': 'Francese',
+      'german': 'Tedesco', 'italian': 'Italiano', 'hindi': 'Hindi', 'tamil': 'Tamil',
+      'telugu': 'Telugu', 'malayalam': 'Malayalam', 'bengali': 'Bengalese', 'marathi': 'Marathi',
+      'kannada': 'Kannada', 'punjabi': 'Punjabi', 'gujarati': 'Gujarati', 'urdu': 'Urdu',
+      'japanese': 'Giapponese', 'chinese': 'Cinese', 'mandarin': 'Mandarino', 'cantonese': 'Cantonese',
+      'korean': 'Coreano', 'vietnamese': 'Vietnamita', 'thai': 'Thailandese', 'indonesian': 'Indonesiano',
+      'malay': 'Malese', 'javanese': 'Giavanese', 'arabic': 'Arabo', 'russian': 'Russo',
+      'ukrainian': 'Ucraino', 'dutch': 'Olandese', 'catalan': 'Catalano', 'basque': 'Basco',
+      'galician': 'Galiziano', 'swiss german': 'Tedesco svizzero', 'romansh': 'Romancio', 'turkish': 'Turco',
+      'polish': 'Polacco', 'swedish': 'Svedese', 'welsh': 'Gallese', 'irish': 'Irlandese',
+      'filipino': 'Filippino', 'tagalog': 'Tagalog', 'persian': 'Persiano', 'hebrew': 'Ebraico',
+      'greek': 'Greco',
+    },
+    'tr': {
+      'english': 'İngilizce', 'spanish': 'İspanyolca', 'portuguese': 'Portekizce', 'french': 'Fransızca',
+      'german': 'Almanca', 'italian': 'İtalyanca', 'hindi': 'Hintçe', 'tamil': 'Tamilce',
+      'telugu': 'Teluguca', 'malayalam': 'Malayalamca', 'bengali': 'Bengalce', 'marathi': 'Marathi',
+      'kannada': 'Kannada', 'punjabi': 'Pencapça', 'gujarati': 'Guceratça', 'urdu': 'Urduca',
+      'japanese': 'Japonca', 'chinese': 'Çince', 'mandarin': 'Mandarin', 'cantonese': 'Kantonca',
+      'korean': 'Korece', 'vietnamese': 'Vietnamca', 'thai': 'Tayca', 'indonesian': 'Endonezce',
+      'malay': 'Malayca', 'javanese': 'Cava dili', 'arabic': 'Arapça', 'russian': 'Rusça',
+      'ukrainian': 'Ukraynaca', 'dutch': 'Felemenkçe', 'catalan': 'Katalanca', 'basque': 'Baskça',
+      'galician': 'Galiçyaca', 'swiss german': 'İsviçre Almancası', 'romansh': 'Romanşça', 'turkish': 'Türkçe',
+      'polish': 'Lehçe', 'swedish': 'İsveççe', 'welsh': 'Galce', 'irish': 'İrlandaca',
+      'filipino': 'Filipince', 'tagalog': 'Tagalogca', 'persian': 'Farsça', 'hebrew': 'İbranice',
+      'greek': 'Yunanca',
+    },
+    'pl': {
+      'english': 'Angielski', 'spanish': 'Hiszpański', 'portuguese': 'Portugalski', 'french': 'Francuski',
+      'german': 'Niemiecki', 'italian': 'Włoski', 'hindi': 'Hindi', 'tamil': 'Tamilski',
+      'telugu': 'Telugu', 'malayalam': 'Malajalam', 'bengali': 'Bengalski', 'marathi': 'Marathi',
+      'kannada': 'Kannada', 'punjabi': 'Pendżabski', 'gujarati': 'Gudżarati', 'urdu': 'Urdu',
+      'japanese': 'Japoński', 'chinese': 'Chiński', 'mandarin': 'Mandaryński', 'cantonese': 'Kantoński',
+      'korean': 'Koreański', 'vietnamese': 'Wietnamski', 'thai': 'Tajski', 'indonesian': 'Indonezyjski',
+      'malay': 'Malajski', 'javanese': 'Jawajski', 'arabic': 'Arabski', 'russian': 'Rosyjski',
+      'ukrainian': 'Ukraiński', 'dutch': 'Niderlandzki', 'catalan': 'Kataloński', 'basque': 'Baskijski',
+      'galician': 'Galicyjski', 'swiss german': 'Szwajcarski niemiecki', 'romansh': 'Retoromański', 'turkish': 'Turecki',
+      'polish': 'Polski', 'swedish': 'Szwedzki', 'welsh': 'Walijski', 'irish': 'Irlandzki',
+      'filipino': 'Filipiński', 'tagalog': 'Tagalski', 'persian': 'Perski', 'hebrew': 'Hebrajski',
+      'greek': 'Grecki',
     },
   };
 

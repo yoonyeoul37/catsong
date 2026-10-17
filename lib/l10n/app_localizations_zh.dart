@@ -4469,6 +4469,18 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get langNameTh => '泰语';
+
+  @override
+  String get langNameRu => '俄语';
+
+  @override
+  String get langNameIt => '意大利语';
+
+  @override
+  String get langNameTr => '土耳其语';
+
+  @override
+  String get langNamePl => '波兰语';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -8936,4 +8948,16 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get langNameTh => '泰文';
+
+  @override
+  String get langNameRu => '俄文';
+
+  @override
+  String get langNameIt => '義大利文';
+
+  @override
+  String get langNameTr => '土耳其文';
+
+  @override
+  String get langNamePl => '波蘭文';
 }

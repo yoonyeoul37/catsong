@@ -57,6 +57,19 @@ const _kIndexGroupsLatin = [..._kAtoZ, '#'];
 // 태국어: 자음 44개를 11묶음으로 (ก ข ง จ ญ ด บ ม ย ส อ) + A-Z + #
 const _kThaiRows = ['ก', 'ข', 'ง', 'จ', 'ญ', 'ด', 'บ', 'ม', 'ย', 'ส', 'อ'];
 const _kIndexGroupsTh = [..._kThaiRows, 'A-Z', '#'];
+// 러시아어: А~Я (Ё→Е, Й→И, Ъ Ы Ь는 단어 첫 글자로 안 써서 뺌) + A-Z + #
+const _kCyrRows = [
+  'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К', 'Л', 'М', 'Н', 'О',
+  'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Э', 'Ю', 'Я',
+];
+const _kIndexGroupsRu = [..._kCyrRows, 'A-Z', '#'];
+
+/// 러시아어(키릴) 첫 글자 → 막대 칸, 아니면 null (우크라이나어 Є·І·Ї·Ґ도 비슷한 글자로)
+String? _cyrRow(int c) {
+  var up = String.fromCharCode(c).toUpperCase();
+  up = const {'Ё': 'Е', 'Й': 'И', 'Є': 'Е', 'І': 'И', 'Ї': 'И', 'Ґ': 'Г'}[up] ?? up;
+  return _kCyrRows.contains(up) ? up : null;
+}
 
 /// 태국어 제목 → 자음 묶음 (เ แ โ ใ ไ 처럼 자음 앞에 쓰는 모음은 건너뛰고 뒤 자음으로), 아니면 null
 String? _thaiRow(String t) {
@@ -83,6 +96,7 @@ List<String> indexGroupsFor(String lang) {
   if (lang == 'ko') return kIndexGroups;
   if (lang == 'ja') return _kIndexGroupsJa;
   if (lang == 'th') return _kIndexGroupsTh;
+  if (lang == 'ru') return _kIndexGroupsRu;
   return _kIndexGroupsLatin;
 }
 
@@ -111,6 +125,11 @@ String indexGroupFor(String text, String lang) {
   final c = t.runes.first;
   if (lang == 'th') {
     final row = _thaiRow(t);
+    if (row != null) return row;
+    return latinLetterOf(c) != null ? 'A-Z' : '#';
+  }
+  if (lang == 'ru') {
+    final row = _cyrRow(c);
     if (row != null) return row;
     return latinLetterOf(c) != null ? 'A-Z' : '#';
   }

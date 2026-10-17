@@ -1524,5 +1524,9 @@
   "langNameFr": "French",
   "langNamePt": "Portuguese",
   "langNameVi": "Vietnamese",
-  "langNameTh": "Thai"
+  "langNameTh": "Thai",
+  "langNameRu": "Russian",
+  "langNameIt": "Italian",
+  "langNameTr": "Turkish",
+  "langNamePl": "Polish"
 }

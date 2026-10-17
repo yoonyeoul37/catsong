@@ -10,10 +10,14 @@ import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
 import 'app_localizations_fr.dart';
 import 'app_localizations_id.dart';
+import 'app_localizations_it.dart';
 import 'app_localizations_ja.dart';
 import 'app_localizations_ko.dart';
+import 'app_localizations_pl.dart';
 import 'app_localizations_pt.dart';
+import 'app_localizations_ru.dart';
 import 'app_localizations_th.dart';
+import 'app_localizations_tr.dart';
 import 'app_localizations_vi.dart';
 import 'app_localizations_zh.dart';
 
@@ -108,10 +112,14 @@ abstract class AppLocalizations {
     Locale('es'),
     Locale('fr'),
     Locale('id'),
+    Locale('it'),
     Locale('ja'),
     Locale('ko'),
+    Locale('pl'),
     Locale('pt'),
+    Locale('ru'),
     Locale('th'),
+    Locale('tr'),
     Locale('vi'),
     Locale('zh'),
     Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
@@ -8583,6 +8591,30 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'태국어'**
   String get langNameTh;
+
+  /// No description provided for @langNameRu.
+  ///
+  /// In ko, this message translates to:
+  /// **'러시아어'**
+  String get langNameRu;
+
+  /// No description provided for @langNameIt.
+  ///
+  /// In ko, this message translates to:
+  /// **'이탈리아어'**
+  String get langNameIt;
+
+  /// No description provided for @langNameTr.
+  ///
+  /// In ko, this message translates to:
+  /// **'튀르키예어'**
+  String get langNameTr;
+
+  /// No description provided for @langNamePl.
+  ///
+  /// In ko, this message translates to:
+  /// **'폴란드어'**
+  String get langNamePl;
 }
 
 class _AppLocalizationsDelegate
@@ -8601,10 +8633,14 @@ class _AppLocalizationsDelegate
     'es',
     'fr',
     'id',
+    'it',
     'ja',
     'ko',
+    'pl',
     'pt',
+    'ru',
     'th',
+    'tr',
     'vi',
     'zh',
   ].contains(locale.languageCode);
@@ -8638,14 +8674,22 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsFr();
     case 'id':
       return AppLocalizationsId();
+    case 'it':
+      return AppLocalizationsIt();
     case 'ja':
       return AppLocalizationsJa();
     case 'ko':
       return AppLocalizationsKo();
+    case 'pl':
+      return AppLocalizationsPl();
     case 'pt':
       return AppLocalizationsPt();
+    case 'ru':
+      return AppLocalizationsRu();
     case 'th':
       return AppLocalizationsTh();
+    case 'tr':
+      return AppLocalizationsTr();
     case 'vi':
       return AppLocalizationsVi();
     case 'zh':

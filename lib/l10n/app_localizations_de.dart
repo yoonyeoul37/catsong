@@ -4715,4 +4715,16 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get langNameTh => 'Thailändisch';
+
+  @override
+  String get langNameRu => 'Russisch';
+
+  @override
+  String get langNameIt => 'Italienisch';
+
+  @override
+  String get langNameTr => 'Türkisch';
+
+  @override
+  String get langNamePl => 'Polnisch';
 }

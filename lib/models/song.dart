@@ -211,6 +211,19 @@ class Song {
     'เร็กเก้': 'reggae',
     'อินดี้': 'indie',
     'kinderlieder': 'kids', 'kindermusik': 'kids', 'kinder': 'kids', 'enfants': 'kids', 'musiquepourenfants': 'kids', 'infantil': 'kids', 'músicainfantil': 'kids', 'anak': 'kids', 'laguanak': 'kids', 'thiếunhi': 'kids', 'nhạcthiếunhi': 'kids', 'เพลงเด็ก': 'kids',
+    // 새 언어 4개 (러시아어·이탈리아어·튀르키예어·폴란드어)
+    'поп': 'pop', 'попмузыка': 'pop', 'эстрада': 'pop', 'рок': 'rock', 'хардрок': 'rock', 'метал': 'metal', 'хипхоп': 'hiphop', 'рэп': 'hiphop',
+    'джаз': 'jazz', 'блюз': 'blues', 'классика': 'classical', 'классическаямузыка': 'classical', 'саундтрек': 'ost', 'музыкакфильму': 'ost', 'электроника': 'electronic', 'электронная': 'electronic',
+    'электроннаямузыка': 'electronic', 'фолк': 'folk', 'народная': 'folk', 'народнаямузыка': 'folk', 'кантри': 'country', 'регги': 'reggae', 'инди': 'indie', 'ньюэйдж': 'newage',
+    'аниме': 'anime', 'детские': 'kids', 'детскиепесни': 'kids', 'детская': 'kids', 'баллада': 'ballad', 'танцевальная': 'dance', 'musicaclassica': 'classical', 'musicasinfonica': 'classical',
+    'lirica': 'classical', 'colonnasonora': 'ost', 'colonnesonore': 'ost', 'musicadafilm': 'ost', 'elettronica': 'electronic', 'musicaelettronica': 'electronic', 'cantautori': 'folk', 'cantautore': 'folk',
+    'musicapopolare': 'folk', 'musicatradizionale': 'folk', 'canzoniperbambini': 'kids', 'musicaperbambini': 'kids', 'bambini': 'kids', 'cartonianimati': 'anime', 'ballata': 'ballad', 'ballate': 'ballad',
+    'danza': 'dance', 'rockitaliano': 'rock', 'popitaliano': 'pop', 'musicaleggera': 'pop', 'rapitaliano': 'hiphop', 'musicaindipendente': 'indie', 'indipendente': 'indie', 'türkpop': 'pop',
+    'türkçepop': 'pop', 'türkçerock': 'rock', 'anadolurock': 'rock', 'türkçerap': 'hiphop', 'arabesk': 'folk', 'türkü': 'folk', 'türküler': 'folk', 'halkmüziği': 'folk',
+    'türkhalkmüziği': 'folk', 'klasikmüzik': 'classical', 'elektronikmüzik': 'electronic', 'filmmüziği': 'ost', 'dizimüziği': 'ost', 'çocuk': 'kids', 'çocukşarkıları': 'kids', 'çocukşarkilari': 'kids',
+    'caz': 'jazz', 'dans': 'dance', 'muzykaklasyczna': 'classical', 'klasyczna': 'classical', 'klasyka': 'classical', 'muzykapoważna': 'classical', 'muzykaelektroniczna': 'electronic', 'elektroniczna': 'electronic',
+    'elektronika': 'electronic', 'ścieżkadźwiękowa': 'ost', 'muzykafilmowa': 'ost', 'discopolo': 'dance', 'taneczna': 'dance', 'muzykataneczna': 'dance', 'piosenkidladzieci': 'kids', 'muzykadladzieci': 'kids',
+    'dladzieci': 'kids', 'ludowa': 'folk', 'muzykaludowa': 'folk', 'poezjaśpiewana': 'folk', 'szanty': 'folk', 'ballada': 'ballad', 'ballady': 'ballad',
     // 인터넷 검색(디저)에서 오는 이름
     'films/games': 'ost', 'filmscores': 'ost', 'electro': 'electronic',
   };
@@ -228,6 +241,7 @@ class Song {
     'music', 'musica', 'misc', 'miscellaneous', 'various', 'etc',
     '음악', '音楽', '音樂', '音乐', 'その他', '其他',
     'sonstige', 'sonstiges', 'andere', 'divers', 'autre', 'autres', 'otros', 'otro', 'outros', 'outro', 'lainnya', 'khác', 'อื่นๆ', 'musik', 'musique', 'música', 'nhạc', 'เพลง',
+    'другое', 'прочее', 'разное', 'музыка', 'неизвестно', 'неизвестный', 'безжанра', 'altro', 'altri', 'altre', 'sconosciuto', 'sconosciuta', 'generesconosciuto', 'varie', 'vari', 'nessuno', 'senzagenere', 'diğer', 'bilinmiyor', 'bilinmeyen', 'müzik', 'tanımsız', 'belirsiz', 'inne', 'inny', 'nieznany', 'nieznane', 'nieznana', 'muzyka', 'brak', 'różne',
   };
 
   static String _cleanGenre(String raw) {

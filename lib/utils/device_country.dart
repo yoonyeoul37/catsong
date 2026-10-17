@@ -45,6 +45,7 @@ class DeviceCountry {
     const home = {
       'ko': 'KR', 'en': 'US', 'ja': 'JP', 'zh': 'CN', 'zh_Hant': 'TW', 'de': 'DE', 'es': 'ES',
       'fr': 'FR', 'id': 'ID', 'pt': 'BR', 'vi': 'VN', 'th': 'TH',
+      'ru': 'RU', 'it': 'IT', 'tr': 'TR', 'pl': 'PL',
     };
     const alsoSpeak = {
       'en': ['US', 'GB', 'CA', 'AU', 'NZ', 'IE', 'IN', 'PH', 'SG', 'ZA'],
@@ -52,6 +53,8 @@ class DeviceCountry {
       'pt': ['BR', 'PT'],
       'fr': ['FR', 'BE', 'CH', 'CA', 'LU'],
       'de': ['DE', 'AT', 'CH', 'LU'],
+      'ru': ['RU', 'BY', 'KZ', 'KG'],
+      'it': ['IT', 'CH', 'SM'],
       'zh_Hant': ['TW', 'HK', 'MO'],
       'zh': ['CN', 'SG'],
     };

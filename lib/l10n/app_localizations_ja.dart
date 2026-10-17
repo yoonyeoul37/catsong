@@ -4477,4 +4477,16 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get langNameTh => 'タイ語';
+
+  @override
+  String get langNameRu => 'ロシア語';
+
+  @override
+  String get langNameIt => 'イタリア語';
+
+  @override
+  String get langNameTr => 'トルコ語';
+
+  @override
+  String get langNamePl => 'ポーランド語';
 }

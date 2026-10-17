@@ -595,7 +595,14 @@ class _BoardButton extends StatelessWidget {
             children: [
               icon == null ? RollDiceIcon(size: 18, color: fg) : Icon(icon, size: 17, color: fg),
               const SizedBox(width: 6),
-              Text(label, style: TextStyle(color: fg, fontSize: 13, fontWeight: FontWeight.w800)),
+              // 긴 언어(독일어 등)는 버튼 폭 안에서 살짝 작게
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(label,
+                      maxLines: 1, style: TextStyle(color: fg, fontSize: 13, fontWeight: FontWeight.w800)),
+                ),
+              ),
             ],
           ),
         ),

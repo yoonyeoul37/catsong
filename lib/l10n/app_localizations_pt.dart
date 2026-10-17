@@ -4705,4 +4705,16 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get langNameTh => 'Tailandês';
+
+  @override
+  String get langNameRu => 'Russo';
+
+  @override
+  String get langNameIt => 'Italiano';
+
+  @override
+  String get langNameTr => 'Turco';
+
+  @override
+  String get langNamePl => 'Polonês';
 }

@@ -45,3 +45,4 @@ app.*.map.json
 /android/app/release
 play-key.json
 supabase_download/
+upload-keystore.jks

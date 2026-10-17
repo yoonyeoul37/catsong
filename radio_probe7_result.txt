@@ -1,170 +1,0 @@
-######################################################################
-■ TBS 프로그램 사진
-  https://tbs.seoul.kr/fm/index.do → 상태 200 · 글자 수 26621
-    프로그램 링크 10개 (처음 25개)
-      /cont/FM/Hurricane/intro/intro.do?programId=PG2061460A
-      /cont/FM/folkSong/intro/intro.do?programId=PG2061987A
-      /cont/FM/moneycity/intro/intro.do?programId=PG2062460A
-      /cont/FM/seoul/intro/intro.do?programId=PG2062330A
-      /cont/FM/tbsMusicOnly/intro/intro.do?programId=PG2061842A
-      /eFm/programsDaily.do
-      /fm/programsDay.do
-      /homeBoard/efm/boardEFmFreeList.do?programId=BOARDE0001&boardCate=01
-      /homeBoard/efm/boardEFmNoticeList.do?programId=BOARDE0001&boardCate=02
-      /tv/programsCity.do
-    사진 후보 0개 (처음 15개)
-  https://tbs.seoul.kr/fm/schedule.do → 상태 200 · 글자 수 31695
-    프로그램 링크 7개 (처음 25개)
-      /cont/FM/Hurricane/intro/intro.do?programId=PG2061460A
-      /cont/FM/folkSong/intro/intro.do?programId=PG2061987A
-      /eFm/programsDaily.do
-      /fm/programsDay.do
-      /homeBoard/efm/boardEFmFreeList.do?programId=BOARDE0001&boardCate=01
-      /homeBoard/efm/boardEFmNoticeList.do?programId=BOARDE0001&boardCate=02
-      /tv/programsCity.do
-    사진 후보 0개 (처음 15개)
-  https://tbs.seoul.kr/eFm/index.do → 상태 200 · 글자 수 39525
-    프로그램 링크 25개 (처음 25개)
-      /cont/eFM/Akdongseoul/introduction/introduction.do?programId=PG2061113E
-      /cont/eFM/HatherlyShow/introduction/introduction.do?programId=PG2060175E
-      /cont/eFM/MenOnAir/Introduction/intro.do?programId=PG2061035E
-      /cont/eFM/ThisMorning/introduction/introduction.do?programId=PG2060171E
-      /cont/eFM/WeeklyReview/introduction/introduction.do?programId=PG2060181E
-      /cont/eFM/abroad/intro/introduction.do?programId=PG2061257E
-      /cont/eFM/comingtoseoul/notice/notice.do?programId=PG2061797E
-      /cont/eFM/diversevoices/intro/intro.do?programId=PG2061501E
-      /cont/eFM/e10121013/intro/intro.do?programId=PG2061734E
-      /cont/eFM/koreangenius/introduction/introduction.do?programId=PG2061407E
-      /cont/eFM/kride/introduction/introduction.do?programId=PG2061402E
-      /cont/eFM/livelyradio/intro/intro.do?programId=PG2061655E
-      /cont/eFM/manlijung/notice/notice.do?programId=PG2061396E
-      /cont/eFM/mixtape1013/playlist/playlist.do?programId=PG2061766E
-      /cont/eFM/morning_groove/intro/intro.do?programId=PG2061752E
-      /cont/eFM/thescoop/intro/introduction.do?programId=PG2061261E
-      /eFm/programsDaily.do
-      /fm/programsDay.do
-      /homeBoard/efm/boardEFmFreeList.do?programId=BOARDE0001&amp;boardCate=01
-      /homeBoard/efm/boardEFmFreeList.do?programId=BOARDE0001&boardCate=01
-      /homeBoard/efm/boardEFmNoticeList.do?programId=BOARDE0001&amp;boardCate=02
-      /homeBoard/efm/boardEFmNoticeList.do?programId=BOARDE0001&boardCate=02
-      /tv/programsCity.do
-      http://www.gfn.or.kr/program/view.do?pNo=59&amp;menuNo=650
-      https://www.gfn.or.kr/program/view.do?menuNo=317&amp;pNo=20
-    사진 후보 0개 (처음 15개)
-  https://tbs.seoul.kr/eFm/schedule.do → 상태 200 · 글자 수 33461
-    프로그램 링크 11개 (처음 25개)
-      /cont/eFM/comingtoseoul/notice/notice.do?programId=PG2061797E
-      /cont/eFM/e10121013/intro/intro.do?programId=PG2061734E
-      /cont/eFM/koreangenius/introduction/introduction.do?programId=PG2061407E
-      /cont/eFM/manlijung/notice/notice.do?programId=PG2061396E
-      /cont/eFM/mixtape1013/playlist/playlist.do?programId=PG2061766E
-      /cont/eFM/morning_groove/intro/intro.do?programId=PG2061752E
-      /eFm/programsDaily.do
-      /fm/programsDay.do
-      /homeBoard/efm/boardEFmFreeList.do?programId=BOARDE0001&boardCate=01
-      /homeBoard/efm/boardEFmNoticeList.do?programId=BOARDE0001&boardCate=02
-      /tv/programsCity.do
-    사진 후보 0개 (처음 15개)
-  ------------------------------------------------------------
-  [프로그램 페이지] https://tbs.seoul.kr/cont/FM/Hurricane/intro/intro.do?programId=PG2061460A → 상태 200
-    제목: 서울특별시 미디어재단 TBS
-    og:image: http://tbs.seoul.kr/common/images/index/tbsLogo.jpg
-      사진 /common/imagesFm/Hurricane/lnbPhoto.jpg
-      사진 /common/imagesFm/Hurricane/info.jpg
-      사진 http://tbs.seoul.kr/common/imagesFm/Hurricane/guest1.jpg
-      사진 http://tbs.seoul.kr/common/imagesFm/Hurricane/guest2.jpg
-      사진 http://tbs.seoul.kr/common/imagesFm/Hurricane/guest3.jpg
-      사진 http://tbs.seoul.kr/common/imagesFm/Hurricane/guest4.jpg
-      사진 http://tbs.seoul.kr/common/imagesFm/Hurricane/guest5.jpg
-      사진 http://tbs.seoul.kr/common/imagesFm/Hurricane/guest6.jpg
-  ------------------------------------------------------------
-  [프로그램 페이지] https://tbs.seoul.kr/cont/FM/folkSong/intro/intro.do?programId=PG2061987A → 상태 200
-    제목: 서울특별시 미디어재단 TBS
-    og:image: http://tbs.seoul.kr/common/images/index/tbsLogo.jpg
-      사진 /common/imagesFm/folkSong/info.jpg
-  ------------------------------------------------------------
-  [프로그램 페이지] https://tbs.seoul.kr/cont/FM/moneycity/intro/intro.do?programId=PG2062460A → 상태 200
-    제목: 서울특별시 미디어재단 TBS
-    og:image: http://tbs.seoul.kr/common/images/index/tbsLogo.jpg
-      사진 /common/imagesFm/moneycity/info.jpg
-######################################################################
-■ CPBC
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <title>cpbc플러스</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <script type="text/javascript" src="/javascript/cpbc-app.js"></script>
-</head>
-<body>
-<ul id="skip_nav" style="display: none;">
-    <li><a href="#header_w">글로벌 메뉴</a></li>
-    <li><a href="#container">본문컨텐츠</a></li>
-    <li><a href="#footer">풋터 메뉴</a></li>
-</ul>
-<div id="wrap">
-    <cpbc-gnb-header env="production" type="normal" color="black" effect="faded"></cpbc-gnb-header>
-    <cpbc-gnb-footer type="normal" color="black"></cpbc-gnb-footer>
-</div>
-<script>
-    document.querySelector('cpbc-gnb-header').insertAdjacentHTML('afterend', `<cpbc-app env="${location.host.includes('www-local') ? 'local' : 'production'}"></cpbc-app>`);
-</script>
-</body>
-</html>
-
-  cpbc-app.js → 상태 200 · 글자 수 5476
-  --- 스크립트 안 인터넷 주소 ---
-    https://m.cpbc.co.kr
-    https://www.npmjs.com/package/loadjs
-######################################################################
-■ 국악FM
-  [GET today=20261016] 상태 200 · 글자 수 4525
-  <?xml version="1.0" encoding="UTF-8" ?>        <RADIO_SCHEDULE_LIST>  	<SCH_INFO_LIST> 		<SCH_PROG_NAME>송지원의 국악산책(재)</SCH_PROG_NAME> 		<SCH_ST_DATE>20191111</SCH_ST_DATE> 		<SCH_ET_DATE>20290228</SCH_ET_DATE> 		<SCH_BROD_ST>0000</SCH_BROD_ST> 		<SCH_BROD_ET>0200</SCH_BROD_ET> 		<SCH_LOC>121</SCH_LOC>	 	</SCH_INFO_LIST>  	<SCH_INFO_LIST> 		<SCH_PROG_NAME>흐르는 음악처럼 [광주]</SCH_PROG_NAME> 		<SCH_ST_DATE>20131014</SCH_ST_DATE> 		<SCH_ET_DATE>20290228</SCH_ET_DATE> 		<SCH_BROD_ST>0200</SCH_BROD_ST> 		<SCH_BROD_ET>0500</SCH_BROD_ET> 		<SCH_LOC>121</SCH_LOC>	 	</SCH_INFO_LIST>  	<SCH_INFO_LIST> 		<SCH_PROG_NAME>솔바람 물소리 [대전]</SCH_PROG_NAME> 		<SCH_ST_DATE>20251015</SCH_ST_DATE> 		<SCH_ET_DATE>20290228</SCH_ET_DATE> 		<SCH_BROD_ST>0500</SCH_BROD_ST> 		<SCH_BROD_ET>0700</SCH_BROD_ET> 		<SCH_LOC>121</SCH_LOC>	 	</SCH_INFO_LIST>  	<SCH_INFO_LIST> 		<SCH_PROG_NAME>이한철의 창호에 드린 햇살</SCH_PROG_NAME> 		<SCH_ST_DATE>20151005</SCH_ST_DATE> 		<SCH_ET_DATE>20290228</SCH_ET_DATE> 		<SCH_BROD_ST>0700</SCH_BROD_ST> 		<SCH_BROD_ET>0900</SCH_BROD_ET> 		<SCH_LOC>121</SCH_LOC>	 	</SCH_INFO_LIST>  	<SCH_INFO_LIST> 		<SCH_PROG_NAME>송지원의 국악산책</SCH_PROG_NAME> 		<SCH_ST_DATE>20161010</SCH_ST_DATE> 		<SCH_ET_DATE>20290228</SCH_ET_DATE> 		<SCH_BROD_ST>0900</SCH_BROD_ST> 		<SCH_BROD_ET>1100</SCH_BROD_ET> 		<SCH_LOC>121</SCH_LOC>	 	</SCH_INFO_LIST>  	<SCH_INFO_LIST> 		<SCH_PROG_NAME>남도마실 [광주]</SCH_PROG_NAME> 		<SCH_ST_DATE>20170515</SCH_ST_DATE> 		<SCH_ET_DATE
-  [POST today=20261016] 상태 200 · 글자 수 4525
-  <?xml version="1.0" encoding="UTF-8" ?>        <RADIO_SCHEDULE_LIST>  	<SCH_INFO_LIST> 		<SCH_PROG_NAME>송지원의 국악산책(재)</SCH_PROG_NAME> 		<SCH_ST_DATE>20191111</SCH_ST_DATE> 		<SCH_ET_DATE>20290228</SCH_ET_DATE> 		<SCH_BROD_ST>0000</SCH_BROD_ST> 		<SCH_BROD_ET>0200</SCH_BROD_ET> 		<SCH_LOC>121</SCH_LOC>	 	</SCH_INFO_LIST>  	<SCH_INFO_LIST> 		<SCH_PROG_NAME>흐르는 음악처럼 [광주]</SCH_PROG_NAME> 		<SCH_ST_DATE>20131014</SCH_ST_DATE> 		<SCH_ET_DATE>20290228</SCH_ET_DATE> 		<SCH_BROD_ST>0200</SCH_BROD_ST> 		<SCH_BROD_ET>0500</SCH_BROD_ET> 		<SCH_LOC>121</SCH_LOC>	 	</SCH_INFO_LIST>  	<SCH_INFO_LIST> 		<SCH_PROG_NAME>솔바람 물소리 [대전]</SCH_PROG_NAME> 		<SCH_ST_DATE>20251015</SCH_ST_DATE> 		<SCH_ET_DATE>20290228</SCH_ET_DATE> 		<SCH_BROD_ST>0500</SCH_BROD_ST> 		<SCH_BROD_ET>0700</SCH_BROD_ET> 		<SCH_LOC>121</SCH_LOC>	 	</SCH_INFO_LIST>  	<SCH_INFO_LIST> 		<SCH_PROG_NAME>이한철의 창호에 드린 햇살</SCH_PROG_NAME> 		<SCH_ST_DATE>20151005</SCH_ST_DATE> 		<SCH_ET_DATE>20290228</SCH_ET_DATE> 		<SCH_BROD_ST>0700</SCH_BROD_ST> 		<SCH_BROD_ET>0900</SCH_BROD_ET> 		<SCH_LOC>121</SCH_LOC>	 	</SCH_INFO_LIST>  	<SCH_INFO_LIST> 		<SCH_PROG_NAME>송지원의 국악산책</SCH_PROG_NAME> 		<SCH_ST_DATE>20161010</SCH_ST_DATE> 		<SCH_ET_DATE>20290228</SCH_ET_DATE> 		<SCH_BROD_ST>0900</SCH_BROD_ST> 		<SCH_BROD_ET>1100</SCH_BROD_ET> 		<SCH_LOC>121</SCH_LOC>	 	</SCH_INFO_LIST>  	<SCH_INFO_LIST> 		<SCH_PROG_NAME>남도마실 [광주]</SCH_PROG_NAME> 		<SCH_ST_DATE>20170515</SCH_ST_DATE> 		<SCH_ET_DATE
-  [GET today=2026-10-16] 상태 None · 글자 수 19
-  HTTP Error 500: 500
-  [POST today=2026-10-16] 상태 None · 글자 수 19
-  HTTP Error 500: 500
-  [GET today=0] 상태 None · 글자 수 19
-  HTTP Error 500: 500
-  [POST today=0] 상태 None · 글자 수 19
-  HTTP Error 500: 500
-  --- showScheduleList 근처 ---
-  (없음)
-  --- 프로그램 사진 근처 ---
-              </ul>
-                            
-                        </li>
-                    
-				</ul>
-			</div>
-			<!-- //menu list-->
-		</article>
-	</div>
-	<!-- //layer menu-->
-
-
-
-
-
-
-			</div>
-		</div><!-- // header -->
-
-		<div id="content" class="sub radio program">
-        	<h2 class="blind">본문</h2>
-
-
-
-        	
-        	<div class="program_wrap">
-
-        		<div class="main_visual type2">
-        			
-        			<div class="bg_left" style="background:url('/DataFiles/Radio/PROG/sunshinel.jpg') right top"></div>
-                    <div class="bg_right" style="background:url('/DataFiles/Radio/PROG/sunshineR.jpg') left top"></div>
-                    <img src="/DataFiles/Radio/PROG/sunshine.jpg" alt="" class="bg">
-                    <div class="visu

@@ -1421,5 +1421,17 @@
   "nature14Name": "小川のせせらぎ",
   "nature14Desc": "さらさら流れる小川の音が心を落ち着かせ、雑念を減らします",
   "nature15Name": "穏やかな川",
-  "nature15Desc": "広い川が静かに流れる音で、ゆったり休めます"
+  "nature15Desc": "広い川が静かに流れる音で、ゆったり休めます",
+  "langNameKo": "韓国語",
+  "langNameEn": "英語",
+  "langNameJa": "日本語",
+  "langNameZhHant": "繁体字中国語",
+  "langNameZhHans": "簡体字中国語",
+  "langNameId": "インドネシア語",
+  "langNameDe": "ドイツ語",
+  "langNameEs": "スペイン語",
+  "langNameFr": "フランス語",
+  "langNamePt": "ポルトガル語",
+  "langNameVi": "ベトナム語",
+  "langNameTh": "タイ語"
 }

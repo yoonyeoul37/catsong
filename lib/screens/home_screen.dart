@@ -23,6 +23,8 @@ import '../providers/sound_mix_provider.dart';
 import '../widgets/sound_mix_mini_player.dart';
 import 'video_screen.dart';
 import 'package:flutter/material.dart';
+import '../utils/title_font.dart';
+import '../utils/device_country.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/music_provider.dart';
@@ -567,7 +569,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _radioCountChip(BuildContext context) {
     final l = Localizations.localeOf(context);
-    final code = _radioCountry(l);
+    final code = DeviceCountry.radioCountry() ?? _radioCountry(l); // 누르면 나오는 목록과 같은 나라
     int? n;
     if (code == 'KR') {
       n = koreanRadioStations().length;
@@ -944,7 +946,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 3),
               Text(tr.homeColorQuestion,
                   textScaler: TextScaler.noScaling,
-                  style: GoogleFonts.doHyeon(color: ink, fontSize: 21)),
+                  style: titleFont(color: ink, fontSize: 21)),
             ],
           ),
         );
@@ -2321,7 +2323,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Icon(Icons.tune_rounded, size: 18, color: baseColor.withOpacity(0.7)),
               const SizedBox(width: 6),
               Text(tr.homeSoundsHeader,
-                  style: GoogleFonts.doHyeon( // 로고와 같은 글꼴
+                  style: titleFont( // 로고와 같은 글꼴
                       color: baseColor, fontSize: 16.5, fontWeight: FontWeight.w400)),
             ],
           ),
@@ -2413,7 +2415,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                           TextSpan(text: c.title),
                                         ]),
-                                        style: GoogleFonts.doHyeon(
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: titleFont(
                                             color: const Color(0xFF17140F),
                                             fontSize: 14.5,
                                             fontWeight: FontWeight.w400,
@@ -2489,7 +2493,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Icon(Icons.volume_up_rounded, size: 18, color: baseColor.withOpacity(0.7)),
               const SizedBox(width: 6),
               Text(tr.homeRestHeader,
-                  style: GoogleFonts.doHyeon( // 로고와 같은 글꼴
+                  style: titleFont( // 로고와 같은 글꼴
                       color: baseColor, fontSize: 16.5, fontWeight: FontWeight.w400)),
             ],
           ),
@@ -2553,7 +2557,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Text(item.$1,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.doHyeon( // 로고와 같은 글꼴
+                                        style: titleFont( // 로고와 같은 글꼴
                                             color: const Color(0xFF17140F),
                                             fontSize: 12.5,
                                             fontWeight: FontWeight.w400)),
@@ -2577,7 +2581,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Icon(Icons.headphones_rounded, size: 18, color: baseColor.withOpacity(0.7)),
                 const SizedBox(width: 6),
                 Text(tr.homeRecentHeader,
-                    style: GoogleFonts.doHyeon( // 로고와 같은 글꼴
+                    style: titleFont( // 로고와 같은 글꼴
                         color: baseColor, fontSize: 16.5, fontWeight: FontWeight.w400)),
               ],
             ),

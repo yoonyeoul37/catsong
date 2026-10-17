@@ -1512,5 +1512,17 @@
   "nature14Name": "Stream",
   "nature14Desc": "A babbling stream calms your mind and quiets busy thoughts",
   "nature15Name": "Calm river",
-  "nature15Desc": "A wide river flowing calmly for a peaceful rest"
+  "nature15Desc": "A wide river flowing calmly for a peaceful rest",
+  "langNameKo": "Korean",
+  "langNameEn": "English",
+  "langNameJa": "Japanese",
+  "langNameZhHant": "Traditional Chinese",
+  "langNameZhHans": "Simplified Chinese",
+  "langNameId": "Indonesian",
+  "langNameDe": "German",
+  "langNameEs": "Spanish",
+  "langNameFr": "French",
+  "langNamePt": "Portuguese",
+  "langNameVi": "Vietnamese",
+  "langNameTh": "Thai"
 }

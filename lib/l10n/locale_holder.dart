@@ -12,7 +12,10 @@ Locale _deviceLocale() {
         (l.scriptCode == null && const ['TW', 'HK', 'MO'].contains(l.countryCode));
     return hant ? const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant') : const Locale('zh');
   }
-  if (const ['ko', 'en', 'ja'].contains(l.languageCode)) return Locale(l.languageCode);
+  if (const ['ko', 'en', 'ja', 'de', 'es', 'fr', 'id', 'pt', 'th', 'vi'].contains(l.languageCode)) {
+    return Locale(l.languageCode);
+  }
+  if (l.languageCode == 'in') return const Locale('id'); // 옛 안드로이드의 인도네시아어 코드
   return const Locale('en');
 }
 

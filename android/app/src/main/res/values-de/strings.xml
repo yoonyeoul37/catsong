@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">Musik · Radio · Natur</string>
+    <string name="widget_loading">Wird geladen…</string>
+    <string name="widget_wait">Einen Moment bitte</string>
+    <string name="widget_play_music">Spiel etwas Musik</string>
+    <string name="tab_music">Musik</string>
+    <string name="tab_radio">Radio</string>
+    <string name="tab_nature">Natur</string>
+    <string name="tab_sleep">Schlaf</string>
+    <string name="widget_recent_empty">Zuletzt Gehörtes erscheint hier</string>
+    <string name="sample_song">Lieblingssong</string>
+    <string name="sample_artist">Künstler</string>
+    <string name="sample_station">Radiosender</string>
+    <string name="sample_rain">Regen</string>
+    <string name="sample_nature">Naturklänge</string>
+    <string name="alarm_channel">Wecker</string>
+    <string name="alarm_channel_desc">Paransori-Wecker</string>
+    <string name="alarm_quiet_channel">Wecker (Bildschirm öffnen)</string>
+    <string name="alarm_quiet_desc">Wenn sich der Weckerbildschirm über dem Sperrbildschirm öffnet</string>
+    <string name="alarm_text">Tippen, um den Wecker zu öffnen</string>
+    <string name="headset_channel">Kopfhörer verbunden</string>
+    <string name="action_play">Abspielen</string>
+    <string name="resume_ask">Weiterhören?</string>
+    <string name="rec_channel">Aufnahme</string>
+    <string name="rec_channel_desc">Wird während der Aufnahme angezeigt</string>
+    <string name="rec_title_paused">Paransori · Aufnahme pausiert</string>
+    <string name="rec_title_on">Paransori · Aufnahme läuft</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · Tippen zum Fortsetzen</string>
+    <string name="rec_tap_back">Tippen, um zur Aufnahme zurückzukehren</string>
+    <string name="rec_resume">Fortsetzen</string>
+    <string name="rec_pause">Pause</string>
+    <string name="rec_done">Fertig</string>
+</resources>

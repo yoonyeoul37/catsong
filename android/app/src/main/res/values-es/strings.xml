@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">Música · Radio · Naturaleza</string>
+    <string name="widget_loading">Cargando…</string>
+    <string name="widget_wait">Espera un momento</string>
+    <string name="widget_play_music">Pon algo de música</string>
+    <string name="tab_music">Música</string>
+    <string name="tab_radio">Radio</string>
+    <string name="tab_nature">Naturaleza</string>
+    <string name="tab_sleep">Dormir</string>
+    <string name="widget_recent_empty">Lo que escuchaste hace poco aparece aquí</string>
+    <string name="sample_song">Canción favorita</string>
+    <string name="sample_artist">Artista</string>
+    <string name="sample_station">Emisora</string>
+    <string name="sample_rain">Lluvia</string>
+    <string name="sample_nature">Sonidos naturales</string>
+    <string name="alarm_channel">Alarma matutina</string>
+    <string name="alarm_channel_desc">Alarma matutina de Paransori</string>
+    <string name="alarm_quiet_channel">Alarma (abrir pantalla)</string>
+    <string name="alarm_quiet_desc">Cuando la pantalla de alarma se abre sobre la pantalla de bloqueo</string>
+    <string name="alarm_text">Toca para abrir la pantalla de alarma</string>
+    <string name="headset_channel">Audífonos conectados</string>
+    <string name="action_play">Reproducir</string>
+    <string name="resume_ask">¿Seguir escuchando?</string>
+    <string name="rec_channel">Grabación</string>
+    <string name="rec_channel_desc">Se muestra mientras grabas</string>
+    <string name="rec_title_paused">Paransori · Grabación en pausa</string>
+    <string name="rec_title_on">Paransori · Grabando</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · Toca para continuar</string>
+    <string name="rec_tap_back">Toca para volver a la grabación</string>
+    <string name="rec_resume">Continuar</string>
+    <string name="rec_pause">Pausa</string>
+    <string name="rec_done">Listo</string>
+</resources>

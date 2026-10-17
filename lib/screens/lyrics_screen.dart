@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
+import '../utils/title_font.dart';
 import 'home_screen.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/services.dart';
@@ -731,7 +732,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(tr.lyricsBg,
-                        style: GoogleFonts.doHyeon(
+                        style: titleFont(
                           color: dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F),
                           fontSize: 19,
                         )),

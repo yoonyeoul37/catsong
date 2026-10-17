@@ -1489,5 +1489,17 @@
   "nature15Name": "잔잔한 강물",
   "nature15Desc": "넓은 강물이 잔잔하게 흐르는 소리로 편안한 휴식을 느껴보세요",
   "@genreShuffle": {"placeholders": {"label": {"type": "String"}, "n": {"type": "int"}}},
-  "@regionBrandLine": {"placeholders": {"n": {"type": "int"}}}
+  "@regionBrandLine": {"placeholders": {"n": {"type": "int"}}},
+  "langNameKo": "한국어",
+  "langNameEn": "영어",
+  "langNameJa": "일본어",
+  "langNameZhHant": "중국어 번체",
+  "langNameZhHans": "중국어 간체",
+  "langNameId": "인도네시아어",
+  "langNameDe": "독일어",
+  "langNameEs": "스페인어",
+  "langNameFr": "프랑스어",
+  "langNamePt": "포르투갈어",
+  "langNameVi": "베트남어",
+  "langNameTh": "태국어"
 }

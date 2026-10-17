@@ -4640,4 +4640,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nature15Desc => 'A wide river flowing calmly for a peaceful rest';
+
+  @override
+  String get langNameKo => 'Korean';
+
+  @override
+  String get langNameEn => 'English';
+
+  @override
+  String get langNameJa => 'Japanese';
+
+  @override
+  String get langNameZhHant => 'Traditional Chinese';
+
+  @override
+  String get langNameZhHans => 'Simplified Chinese';
+
+  @override
+  String get langNameId => 'Indonesian';
+
+  @override
+  String get langNameDe => 'German';
+
+  @override
+  String get langNameEs => 'Spanish';
+
+  @override
+  String get langNameFr => 'French';
+
+  @override
+  String get langNamePt => 'Portuguese';
+
+  @override
+  String get langNameVi => 'Vietnamese';
+
+  @override
+  String get langNameTh => 'Thai';
 }

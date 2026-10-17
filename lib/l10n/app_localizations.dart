@@ -5,9 +5,16 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_id.dart';
 import 'app_localizations_ja.dart';
 import 'app_localizations_ko.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_th.dart';
+import 'app_localizations_vi.dart';
 import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
@@ -96,9 +103,16 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('de'),
     Locale('en'),
+    Locale('es'),
+    Locale('fr'),
+    Locale('id'),
     Locale('ja'),
     Locale('ko'),
+    Locale('pt'),
+    Locale('th'),
+    Locale('vi'),
     Locale('zh'),
     Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
   ];
@@ -8497,6 +8511,78 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'넓은 강물이 잔잔하게 흐르는 소리로 편안한 휴식을 느껴보세요'**
   String get nature15Desc;
+
+  /// No description provided for @langNameKo.
+  ///
+  /// In ko, this message translates to:
+  /// **'한국어'**
+  String get langNameKo;
+
+  /// No description provided for @langNameEn.
+  ///
+  /// In ko, this message translates to:
+  /// **'영어'**
+  String get langNameEn;
+
+  /// No description provided for @langNameJa.
+  ///
+  /// In ko, this message translates to:
+  /// **'일본어'**
+  String get langNameJa;
+
+  /// No description provided for @langNameZhHant.
+  ///
+  /// In ko, this message translates to:
+  /// **'중국어 번체'**
+  String get langNameZhHant;
+
+  /// No description provided for @langNameZhHans.
+  ///
+  /// In ko, this message translates to:
+  /// **'중국어 간체'**
+  String get langNameZhHans;
+
+  /// No description provided for @langNameId.
+  ///
+  /// In ko, this message translates to:
+  /// **'인도네시아어'**
+  String get langNameId;
+
+  /// No description provided for @langNameDe.
+  ///
+  /// In ko, this message translates to:
+  /// **'독일어'**
+  String get langNameDe;
+
+  /// No description provided for @langNameEs.
+  ///
+  /// In ko, this message translates to:
+  /// **'스페인어'**
+  String get langNameEs;
+
+  /// No description provided for @langNameFr.
+  ///
+  /// In ko, this message translates to:
+  /// **'프랑스어'**
+  String get langNameFr;
+
+  /// No description provided for @langNamePt.
+  ///
+  /// In ko, this message translates to:
+  /// **'포르투갈어'**
+  String get langNamePt;
+
+  /// No description provided for @langNameVi.
+  ///
+  /// In ko, this message translates to:
+  /// **'베트남어'**
+  String get langNameVi;
+
+  /// No description provided for @langNameTh.
+  ///
+  /// In ko, this message translates to:
+  /// **'태국어'**
+  String get langNameTh;
 }
 
 class _AppLocalizationsDelegate
@@ -8509,8 +8595,19 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'ja', 'ko', 'zh'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+    'de',
+    'en',
+    'es',
+    'fr',
+    'id',
+    'ja',
+    'ko',
+    'pt',
+    'th',
+    'vi',
+    'zh',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -8531,12 +8628,26 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'de':
+      return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'id':
+      return AppLocalizationsId();
     case 'ja':
       return AppLocalizationsJa();
     case 'ko':
       return AppLocalizationsKo();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'th':
+      return AppLocalizationsTh();
+    case 'vi':
+      return AppLocalizationsVi();
     case 'zh':
       return AppLocalizationsZh();
   }

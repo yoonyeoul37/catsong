@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/title_font.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../utils/greeting_images.dart';
@@ -465,13 +466,13 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                 children: [
                   TextSpan(
                     text: tr.mixTitle1,
-                    style: GoogleFonts.doHyeon(
+                    style: titleFont(
                         // 기본 포인트 색이면 파랑, 다른 색이면 먹색 (홈 로고와 같은 규칙)
                         color: context.watch<ThemeProvider>().primaryColor.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : baseColor, fontSize: 20, letterSpacing: -0.5),
                   ),
                   TextSpan(
                     text: tr.mixTitle2,
-                    style: GoogleFonts.doHyeon(
+                    style: titleFont(
                         color: baseColor, fontSize: 20, letterSpacing: -0.5),
                   ),
                 ],

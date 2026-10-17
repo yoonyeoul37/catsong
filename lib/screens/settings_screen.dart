@@ -1173,13 +1173,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (code == 'system') return _langText('system');
     for (final l in ThemeProvider.appLanguages) {
       if (l.$1 == code) {
-        // 중국어는 번체·간체를 지금 앱 언어로 괄호 안에 (중국어 화면에선 이름에 이미 있어서 안 붙임)
-        final zh = Localizations.localeOf(context).languageCode == 'zh'; // 중국어 화면은 이름에 이미 있음
-        final tag = zh ? '' : code == 'zh_Hant' ? _langText('hant') : code == 'zh_Hans' ? _langText('hans') : '';
-        return tag.isEmpty ? l.$2 : '${l.$2} ($tag)';
+        // 괄호 안에 지금 앱 언어로 쓴 이름 (예: Deutsch (독일어)) — 지금 언어 자신이면 이름이 같아서 안 붙임
+        final tag = _langLocalName(code);
+        return tag.isEmpty || tag == l.$2 ? l.$2 : '${l.$2} ($tag)';
       }
     }
     return _langText('system');
+  }
+
+  /// 언어 이름을 지금 앱 언어로 (번역 파일 langName…)
+  String _langLocalName(String code) {
+    final l = AppLocalizations.of(context)!;
+    return switch (code) {
+      'ko' => l.langNameKo,
+      'en' => l.langNameEn,
+      'ja' => l.langNameJa,
+      'zh_Hant' => l.langNameZhHant,
+      'zh_Hans' => l.langNameZhHans,
+      'id' => l.langNameId,
+      'de' => l.langNameDe,
+      'es' => l.langNameEs,
+      'fr' => l.langNameFr,
+      'pt' => l.langNamePt,
+      'vi' => l.langNameVi,
+      'th' => l.langNameTh,
+      _ => '',
+    };
   }
 
   /// 설정 → 언어: 폰 설정 따라가기 + 앱이 아는 언어들 (고르면 바로 바뀌고 기억)
@@ -1208,7 +1227,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   /// 약관 주소: 폰 언어 + 앱 다크/라이트를 붙여서 (페이지가 그대로 맞춰 열림)
   String _policyUrl(String page) {
-    final lang = Localizations.localeOf(context).languageCode; // 설정 → 언어에서 고른 언어
+    // 설정 → 언어에서 고른 언어 — 약관 페이지에 없는 언어(독일어·프랑스어 등)는 영어로
+    // (그냥 보내면 페이지가 폰 언어=한국어로 열려서)
+    final code = Localizations.localeOf(context).languageCode;
+    final lang = const ['ko', 'en', 'ja', 'zh', 'vi', 'hi', 'id', 'th', 'es', 'pt'].contains(code) ? code : 'en';
     final theme = context.read<ThemeProvider>().isDarkMode ? 'dark' : 'light';
     return 'https://www.ssing.kr/$page.html?lang=$lang&theme=$theme';
   }

@@ -1424,5 +1424,17 @@
   "nature14Name": "溪流",
   "nature14Desc": "潺潺溪水聲讓心情平靜，減少雜念",
   "nature15Name": "平靜的河流",
-  "nature15Desc": "寬闊河流平靜流淌的聲音，助你安心休息"
+  "nature15Desc": "寬闊河流平靜流淌的聲音，助你安心休息",
+  "langNameKo": "韓文",
+  "langNameEn": "英文",
+  "langNameJa": "日文",
+  "langNameZhHant": "繁體中文",
+  "langNameZhHans": "簡體中文",
+  "langNameId": "印尼文",
+  "langNameDe": "德文",
+  "langNameEs": "西班牙文",
+  "langNameFr": "法文",
+  "langNamePt": "葡萄牙文",
+  "langNameVi": "越南文",
+  "langNameTh": "泰文"
 }

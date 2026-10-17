@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">Musik · Radio · Alam</string>
+    <string name="widget_loading">Memuat…</string>
+    <string name="widget_wait">Tunggu sebentar</string>
+    <string name="widget_play_music">Putar musik</string>
+    <string name="tab_music">Musik</string>
+    <string name="tab_radio">Radio</string>
+    <string name="tab_nature">Alam</string>
+    <string name="tab_sleep">Tidur</string>
+    <string name="widget_recent_empty">Yang baru kamu dengar muncul di sini</string>
+    <string name="sample_song">Lagu favorit</string>
+    <string name="sample_artist">Artis</string>
+    <string name="sample_station">Stasiun radio</string>
+    <string name="sample_rain">Hujan</string>
+    <string name="sample_nature">Suara alam</string>
+    <string name="alarm_channel">Alarm pagi</string>
+    <string name="alarm_channel_desc">Alarm pagi Paransori</string>
+    <string name="alarm_quiet_channel">Alarm pagi (buka layar)</string>
+    <string name="alarm_quiet_desc">Saat layar alarm terbuka di atas layar kunci</string>
+    <string name="alarm_text">Ketuk untuk membuka layar alarm</string>
+    <string name="headset_channel">Earphone tersambung</string>
+    <string name="action_play">Putar</string>
+    <string name="resume_ask">Lanjut mendengarkan?</string>
+    <string name="rec_channel">Rekaman</string>
+    <string name="rec_channel_desc">Tampil saat merekam</string>
+    <string name="rec_title_paused">Paransori · Rekaman dijeda</string>
+    <string name="rec_title_on">Paransori · Merekam</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · Ketuk untuk melanjutkan</string>
+    <string name="rec_tap_back">Ketuk untuk kembali ke layar rekaman</string>
+    <string name="rec_resume">Lanjutkan</string>
+    <string name="rec_pause">Jeda</string>
+    <string name="rec_done">Selesai</string>
+</resources>

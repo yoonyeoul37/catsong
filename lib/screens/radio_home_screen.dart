@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 import 'dart:ui' show PlatformDispatcher, ImageFilter;
 import 'package:flutter/material.dart';
+import '../utils/title_font.dart';
+import '../utils/device_country.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,7 +28,7 @@ import '../l10n/locale_holder.dart';
 /// 국가 선택 화면을 건너뛰고 바로 그 나라로 들어가고, 없으면 국가 선택 화면으로 간다.
 Future<void> pushRadioEntry(BuildContext context, {bool instant = false}) {
   const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-  final deviceCode = PlatformDispatcher.instance.locale.countryCode;
+  final deviceCode = DeviceCountry.radioCountry(); // 앱 언어의 나라 (독일어 → 독일)
   RadioCountry? matched;
   if (deviceCode != null) {
     for (final c in RadioCountry.supported) {
@@ -236,7 +238,7 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
   }
 
   List<RadioCountry> get _sortedCountries {
-    final deviceCountryCode = PlatformDispatcher.instance.locale.countryCode;
+    final deviceCountryCode = DeviceCountry.radioCountry(usePick: false);
     final list = List<RadioCountry>.from(RadioCountry.supported);
     if (deviceCountryCode != null) {
       final myIndex = list.indexWhere((c) => c.code == deviceCountryCode);
@@ -249,7 +251,7 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
   }
 
   List<Widget> _buildCountryListByContinent(BuildContext context, List<RadioCountry> countries, bool isDarkMode) {
-    final deviceCountryCode = PlatformDispatcher.instance.locale.countryCode;
+    final deviceCountryCode = DeviceCountry.radioCountry(usePick: false);
     const continentOrder = ['ASIA', 'EUROPE', 'NORTH_AMERICA', 'SOUTH_AMERICA', 'MIDDLE_EAST', 'AFRICA', 'OCEANIA'];
     const continentLabels = {
       'ASIA': 'Asia',
@@ -378,6 +380,7 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
   void _onCountryTap(BuildContext context, RadioCountry country) {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
     context.read<RadioProvider>().selectCountry(country);
+    DeviceCountry.rememberPick(country.code); // 다음에 홈 → 라디오도 이 나라로
     final screen = country.code == 'KR'
         ? RadioKoreaScreen()
         : RadioCountryStationsScreen(country: country);
@@ -455,7 +458,7 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
           children: [
             Text(
               'Radio',
-              style: GoogleFonts.doHyeon(
+              style: titleFont(
                 color: isDarkMode ? Colors.white : Colors.black,
                 fontSize: 22,
                 letterSpacing: 1,

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">Música · Rádio · Natureza</string>
+    <string name="widget_loading">Carregando…</string>
+    <string name="widget_wait">Aguarde um momento</string>
+    <string name="widget_play_music">Toque uma música</string>
+    <string name="tab_music">Música</string>
+    <string name="tab_radio">Rádio</string>
+    <string name="tab_nature">Natureza</string>
+    <string name="tab_sleep">Dormir</string>
+    <string name="widget_recent_empty">O que você ouviu por último aparece aqui</string>
+    <string name="sample_song">Música favorita</string>
+    <string name="sample_artist">Artista</string>
+    <string name="sample_station">Emissora</string>
+    <string name="sample_rain">Chuva</string>
+    <string name="sample_nature">Sons da natureza</string>
+    <string name="alarm_channel">Despertador</string>
+    <string name="alarm_channel_desc">Despertador do Paransori</string>
+    <string name="alarm_quiet_channel">Despertador (abrir tela)</string>
+    <string name="alarm_quiet_desc">Quando a tela do despertador abre sobre a tela de bloqueio</string>
+    <string name="alarm_text">Toque para abrir o despertador</string>
+    <string name="headset_channel">Fone conectado</string>
+    <string name="action_play">Tocar</string>
+    <string name="resume_ask">Continuar ouvindo?</string>
+    <string name="rec_channel">Gravação</string>
+    <string name="rec_channel_desc">Aparece durante a gravação</string>
+    <string name="rec_title_paused">Paransori · Gravação pausada</string>
+    <string name="rec_title_on">Paransori · Gravando</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · Toque para continuar</string>
+    <string name="rec_tap_back">Toque para voltar à gravação</string>
+    <string name="rec_resume">Continuar</string>
+    <string name="rec_pause">Pausar</string>
+    <string name="rec_done">Concluído</string>
+</resources>

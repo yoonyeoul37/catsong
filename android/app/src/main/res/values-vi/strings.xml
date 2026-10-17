@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">Nhạc · Radio · Thiên nhiên</string>
+    <string name="widget_loading">Đang tải…</string>
+    <string name="widget_wait">Vui lòng chờ một chút</string>
+    <string name="widget_play_music">Hãy phát một bài nhạc</string>
+    <string name="tab_music">Nhạc</string>
+    <string name="tab_radio">Radio</string>
+    <string name="tab_nature">Thiên nhiên</string>
+    <string name="tab_sleep">Ngủ</string>
+    <string name="widget_recent_empty">Nội dung nghe gần đây sẽ hiện ở đây</string>
+    <string name="sample_song">Bài hát yêu thích</string>
+    <string name="sample_artist">Nghệ sĩ</string>
+    <string name="sample_station">Đài radio</string>
+    <string name="sample_rain">Mưa</string>
+    <string name="sample_nature">Âm thanh thiên nhiên</string>
+    <string name="alarm_channel">Báo thức buổi sáng</string>
+    <string name="alarm_channel_desc">Báo thức buổi sáng Paransori</string>
+    <string name="alarm_quiet_channel">Báo thức (mở màn hình)</string>
+    <string name="alarm_quiet_desc">Khi màn hình báo thức mở trên màn hình khóa</string>
+    <string name="alarm_text">Chạm để mở màn hình báo thức</string>
+    <string name="headset_channel">Đã kết nối tai nghe</string>
+    <string name="action_play">Phát</string>
+    <string name="resume_ask">Nghe tiếp nhé?</string>
+    <string name="rec_channel">Ghi âm</string>
+    <string name="rec_channel_desc">Hiện khi đang ghi âm</string>
+    <string name="rec_title_paused">Paransori · Tạm dừng ghi âm</string>
+    <string name="rec_title_on">Paransori · Đang ghi âm</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · Chạm để tiếp tục</string>
+    <string name="rec_tap_back">Chạm để quay lại màn hình ghi âm</string>
+    <string name="rec_resume">Tiếp tục</string>
+    <string name="rec_pause">Tạm dừng</string>
+    <string name="rec_done">Xong</string>
+</resources>

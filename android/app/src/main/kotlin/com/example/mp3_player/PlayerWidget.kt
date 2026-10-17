@@ -214,6 +214,26 @@ class PlayerWidget : AppWidgetProvider() {
                 mgr.getAppWidgetIds(android.content.ComponentName(context, PlayerWidget2::class.java))
         }
 
+        /// 앱에서 고른 언어(설정 → 언어)의 글자 꺼내기 — '폰 언어'면 그대로
+        fun localized(context: Context): Context {
+            return try {
+                val code = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+                    .getString("flutter.appLanguage", "system") ?: "system"
+                val tag = when (code) {
+                    "system", "" -> return context
+                    "zh_Hant" -> "zh-TW"
+                    "zh_Hans" -> "zh-CN"
+                    "pt" -> "pt-BR"
+                    else -> code
+                }
+                val cfg = android.content.res.Configuration(context.resources.configuration)
+                cfg.setLocale(java.util.Locale.forLanguageTag(tag))
+                context.createConfigurationContext(cfg)
+            } catch (_: Exception) {
+                context
+            }
+        }
+
         /// 바탕화면에 붙은 위젯 전부 다시 그리기 (앱이 켜지고 꺼질 때)
         fun refreshAll(context: Context) {
             try {
@@ -255,10 +275,17 @@ class PlayerWidget : AppWidgetProvider() {
             // 4×3 위젯이면 큰 모양 (위는 똑같고, 아래에 최근에 들은 것)
             val big = appWidgetManager.getAppWidgetInfo(appWidgetId)?.provider?.className == PlayerWidget2::class.java.name
             val views = RemoteViews(context.packageName, if (big) R.layout.widget_player2 else R.layout.widget_player)
+            // 글자는 앱에서 고른 언어로 (위젯은 바탕화면 앱이 그려서, 그냥 두면 폰 언어로 나옴)
+            val lc = localized(context)
+            views.setTextViewText(R.id.widget_go_music_label, lc.getString(R.string.tab_music))
+            views.setTextViewText(R.id.widget_go_radio_label, lc.getString(R.string.tab_radio))
+            views.setTextViewText(R.id.widget_go_nature_label, lc.getString(R.string.tab_nature))
+            views.setTextViewText(R.id.widget_go_sleep_label, lc.getString(R.string.tab_sleep))
+            if (big) views.setTextViewText(R.id.widget_recent_empty, lc.getString(R.string.widget_recent_empty))
             views.setTextViewText(R.id.widget_title,
-                if (loading) context.getString(R.string.widget_loading) else if (empty) context.getString(R.string.app_name) else t)
+                if (loading) lc.getString(R.string.widget_loading) else if (empty) lc.getString(R.string.app_name) else t)
             views.setTextViewText(R.id.widget_artist,
-                if (loading) context.getString(R.string.widget_wait) else if (empty) context.getString(R.string.widget_idle_sub) else a)
+                if (loading) lc.getString(R.string.widget_wait) else if (empty) lc.getString(R.string.widget_idle_sub) else a)
             views.setTextViewText(R.id.widget_schedule, s)
             views.setViewVisibility(R.id.widget_schedule, if (loading || s.isEmpty()) View.GONE else View.VISIBLE)
             views.setImageViewResource(R.id.widget_play_pause,

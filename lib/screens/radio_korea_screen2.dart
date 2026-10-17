@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/material.dart';
+import '../utils/title_font.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
@@ -984,7 +985,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           children: [
             Text(
               'Radio',
-              style: GoogleFonts.doHyeon(
+              style: titleFont(
                 color: baseColor,
                 fontSize: 22,
                 letterSpacing: 1,

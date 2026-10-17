@@ -62,6 +62,13 @@ class ThemeProvider extends ChangeNotifier {
     ('ja', '日本語'),
     ('zh_Hant', '繁體中文'),
     ('zh_Hans', '简体中文'),
+    ('id', 'Bahasa Indonesia'),
+    ('de', 'Deutsch'),
+    ('es', 'Español'),
+    ('fr', 'Français'),
+    ('pt', 'Português'),
+    ('vi', 'Tiếng Việt'),
+    ('th', 'ไทย'),
   ];
 
   /// MaterialApp에 넘길 언어 (null = 폰 설정 따라가기)
@@ -71,7 +78,8 @@ class ThemeProvider extends ChangeNotifier {
         'ja' => const Locale('ja'),
         'zh_Hant' => const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
         'zh_Hans' => const Locale('zh'),
-        _ => null,
+        'system' => null,
+        _ => appLanguages.any((l) => l.$1 == _appLanguage) ? Locale(_appLanguage) : null, // de·es·fr …
       };
 
   Future<void> setAppLanguage(String code) async {
@@ -80,10 +88,10 @@ class ThemeProvider extends ChangeNotifier {
     await prefs.setString('appLanguage', code);
     notifyListeners();
     // 폰에도 알려서 위젯·알림 글자도 같은 언어로 (안드로이드 13 이상)
-    const tags = {'ko': 'ko', 'en': 'en', 'ja': 'ja', 'zh_Hant': 'zh-TW', 'zh_Hans': 'zh-CN'};
+    const tags = {'ko': 'ko', 'en': 'en', 'ja': 'ja', 'zh_Hant': 'zh-TW', 'zh_Hans': 'zh-CN', 'pt': 'pt-BR'};
     try {
       await const MethodChannel('kr.ssing.catsong/media')
-          .invokeMethod('setAppLocale', {'tag': tags[code] ?? ''});
+          .invokeMethod('setAppLocale', {'tag': tags[code] ?? (code == 'system' ? '' : code)});
     } catch (_) {}
   }
 

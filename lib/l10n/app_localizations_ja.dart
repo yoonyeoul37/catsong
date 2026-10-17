@@ -4441,4 +4441,40 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get nature15Desc => '広い川が静かに流れる音で、ゆったり休めます';
+
+  @override
+  String get langNameKo => '韓国語';
+
+  @override
+  String get langNameEn => '英語';
+
+  @override
+  String get langNameJa => '日本語';
+
+  @override
+  String get langNameZhHant => '繁体字中国語';
+
+  @override
+  String get langNameZhHans => '簡体字中国語';
+
+  @override
+  String get langNameId => 'インドネシア語';
+
+  @override
+  String get langNameDe => 'ドイツ語';
+
+  @override
+  String get langNameEs => 'スペイン語';
+
+  @override
+  String get langNameFr => 'フランス語';
+
+  @override
+  String get langNamePt => 'ポルトガル語';
+
+  @override
+  String get langNameVi => 'ベトナム語';
+
+  @override
+  String get langNameTh => 'タイ語';
 }

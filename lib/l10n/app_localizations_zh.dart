@@ -4433,6 +4433,42 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get nature15Desc => '宽阔河流平静流淌的声音，助你安心休息';
+
+  @override
+  String get langNameKo => '韩语';
+
+  @override
+  String get langNameEn => '英语';
+
+  @override
+  String get langNameJa => '日语';
+
+  @override
+  String get langNameZhHant => '繁体中文';
+
+  @override
+  String get langNameZhHans => '简体中文';
+
+  @override
+  String get langNameId => '印尼语';
+
+  @override
+  String get langNameDe => '德语';
+
+  @override
+  String get langNameEs => '西班牙语';
+
+  @override
+  String get langNameFr => '法语';
+
+  @override
+  String get langNamePt => '葡萄牙语';
+
+  @override
+  String get langNameVi => '越南语';
+
+  @override
+  String get langNameTh => '泰语';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -8864,4 +8900,40 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get nature15Desc => '寬闊河流平靜流淌的聲音，助你安心休息';
+
+  @override
+  String get langNameKo => '韓文';
+
+  @override
+  String get langNameEn => '英文';
+
+  @override
+  String get langNameJa => '日文';
+
+  @override
+  String get langNameZhHant => '繁體中文';
+
+  @override
+  String get langNameZhHans => '簡體中文';
+
+  @override
+  String get langNameId => '印尼文';
+
+  @override
+  String get langNameDe => '德文';
+
+  @override
+  String get langNameEs => '西班牙文';
+
+  @override
+  String get langNameFr => '法文';
+
+  @override
+  String get langNamePt => '葡萄牙文';
+
+  @override
+  String get langNameVi => '越南文';
+
+  @override
+  String get langNameTh => '泰文';
 }

@@ -183,6 +183,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
+                android:id="@+id/widget_go_music_label"
                 android:text="@string/tab_music"
                 android:textColor="@color/paran_w_ink"
                 android:textSize="11sp" />
@@ -209,6 +210,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
+                android:id="@+id/widget_go_radio_label"
                 android:text="@string/tab_radio"
                 android:textColor="@color/paran_w_ink"
                 android:textSize="11sp" />
@@ -235,6 +237,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
+                android:id="@+id/widget_go_nature_label"
                 android:text="@string/tab_nature"
                 android:textColor="@color/paran_w_ink"
                 android:textSize="11sp" />
@@ -261,6 +264,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
+                android:id="@+id/widget_go_sleep_label"
                 android:text="@string/tab_sleep"
                 android:textColor="@color/paran_w_ink"
                 android:textSize="11sp" />

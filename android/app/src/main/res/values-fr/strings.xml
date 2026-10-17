@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">Musique · Radio · Nature</string>
+    <string name="widget_loading">Chargement…</string>
+    <string name="widget_wait">Un instant, s\'il vous plaît</string>
+    <string name="widget_play_music">Écoutez de la musique</string>
+    <string name="tab_music">Musique</string>
+    <string name="tab_radio">Radio</string>
+    <string name="tab_nature">Nature</string>
+    <string name="tab_sleep">Sommeil</string>
+    <string name="widget_recent_empty">Vos dernières écoutes s\'affichent ici</string>
+    <string name="sample_song">Titre préféré</string>
+    <string name="sample_artist">Artiste</string>
+    <string name="sample_station">Station de radio</string>
+    <string name="sample_rain">Pluie</string>
+    <string name="sample_nature">Sons de la nature</string>
+    <string name="alarm_channel">Réveil du matin</string>
+    <string name="alarm_channel_desc">Réveil du matin Paransori</string>
+    <string name="alarm_quiet_channel">Réveil (ouvrir l\'écran)</string>
+    <string name="alarm_quiet_desc">Quand l\'écran du réveil s\'ouvre sur l\'écran verrouillé</string>
+    <string name="alarm_text">Touchez pour ouvrir l\'écran du réveil</string>
+    <string name="headset_channel">Écouteurs connectés</string>
+    <string name="action_play">Lire</string>
+    <string name="resume_ask">Reprendre l\'écoute ?</string>
+    <string name="rec_channel">Enregistrement</string>
+    <string name="rec_channel_desc">Affiché pendant l\'enregistrement</string>
+    <string name="rec_title_paused">Paransori · Enregistrement en pause</string>
+    <string name="rec_title_on">Paransori · Enregistrement</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · Touchez pour reprendre</string>
+    <string name="rec_tap_back">Touchez pour revenir à l\'enregistrement</string>
+    <string name="rec_resume">Reprendre</string>
+    <string name="rec_pause">Pause</string>
+    <string name="rec_done">Terminé</string>
+</resources>

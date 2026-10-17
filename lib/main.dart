@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'utils/device_country.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -193,6 +194,7 @@ void main() async {
   await AlarmService.init(); // 아침 알람 (알람 때문에 켜졌는지도 확인)
   await initGreetingScene(); // 첫인사·끝인사 오늘 장면 (지난번과 다르게)
   await WidgetGo.loadLaunch(); // 홈 위젯 바로가기로 켜졌는지
+  await DeviceCountry.load(); // 폰이 있는 나라 (앱 언어를 바꿔도 라디오는 내 나라 목록으로)
   // 설정 → 언어에서 고른 언어 (첫 화면부터 그 언어로)
   try {
     ThemeProvider.preloadLanguage =
@@ -261,6 +263,13 @@ class MyApp extends StatelessWidget {
               Locale('ja'),
               Locale('zh'),
               Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
+              Locale('de'), // 독일어
+              Locale('es'), // 스페인어
+              Locale('fr'), // 프랑스어
+              Locale('id'), // 인도네시아어
+              Locale('pt'), // 포르투갈어 (브라질)
+              Locale('th'), // 태국어
+              Locale('vi'), // 베트남어
             ],
             // 중국어: 대만·홍콩·마카오 → 번체, 그 밖 → 간체 / 지원 안 하는 언어 → 영어
             localeListResolutionCallback: (locales, supported) {
@@ -270,12 +279,19 @@ class MyApp extends StatelessWidget {
                       (l.scriptCode == null && const ['TW', 'HK', 'MO'].contains(l.countryCode));
                   return hant ? const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant') : const Locale('zh');
                 }
-                if (const ['ko', 'en', 'ja'].contains(l.languageCode)) return Locale(l.languageCode);
+                if (const ['ko', 'en', 'ja', 'de', 'es', 'fr', 'id', 'pt', 'th', 'vi'].contains(l.languageCode)) {
+                  return Locale(l.languageCode);
+                }
+                if (l.languageCode == 'in') return const Locale('id'); // 옛 안드로이드의 인도네시아어 코드
               }
               return const Locale('en');
             },
             theme: AppTheme.buildTheme(themeProvider.primaryColor).copyWith(
-              textTheme: themeProvider.fontFamily == 'default'
+              // 베트남어는 고른 글꼴 대신 기본 글꼴 (한글 글꼴엔 베트남어 글자가 없어 섞여 보여서)
+              textTheme: (themeProvider.fontFamily == 'default' ||
+                      (themeProvider.appLocale?.languageCode ??
+                              WidgetsBinding.instance.platformDispatcher.locale.languageCode) ==
+                          'vi')
                   ? AppTheme.buildTheme(themeProvider.primaryColor)
                       .textTheme
                       .apply(fontFamily: 'SpoqaHanSansNeo')

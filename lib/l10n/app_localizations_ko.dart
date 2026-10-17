@@ -4444,4 +4444,40 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get nature15Desc => '넓은 강물이 잔잔하게 흐르는 소리로 편안한 휴식을 느껴보세요';
+
+  @override
+  String get langNameKo => '한국어';
+
+  @override
+  String get langNameEn => '영어';
+
+  @override
+  String get langNameJa => '일본어';
+
+  @override
+  String get langNameZhHant => '중국어 번체';
+
+  @override
+  String get langNameZhHans => '중국어 간체';
+
+  @override
+  String get langNameId => '인도네시아어';
+
+  @override
+  String get langNameDe => '독일어';
+
+  @override
+  String get langNameEs => '스페인어';
+
+  @override
+  String get langNameFr => '프랑스어';
+
+  @override
+  String get langNamePt => '포르투갈어';
+
+  @override
+  String get langNameVi => '베트남어';
+
+  @override
+  String get langNameTh => '태국어';
 }

@@ -1,5 +1,6 @@
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
+import '../utils/title_font.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
@@ -60,13 +61,13 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
                     children: [
                       TextSpan(
                         text: tr.restLabel,
-                        style: GoogleFonts.doHyeon(
+                        style: titleFont(
                             // 기본 포인트 색이면 파랑, 다른 색이면 먹색 (홈 로고와 같은 규칙)
                             color: context.watch<ThemeProvider>().primaryColor.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : baseColor, fontSize: 19),
                       ),
                       TextSpan(
                         text: tr.focusTitlePart,
-                        style: GoogleFonts.doHyeon(
+                        style: titleFont(
                             color: baseColor, fontSize: 19),
                       ),
                     ],

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../utils/title_font.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -202,13 +203,13 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                     children: [
                       TextSpan(
                         text: tr.natureTitle1,
-                        style: GoogleFonts.doHyeon(
+                        style: titleFont(
                             // 기본 포인트 색이면 파랑, 다른 색이면 먹색 (홈 로고와 같은 규칙)
                             color: context.watch<ThemeProvider>().primaryColor.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : baseColor, fontSize: 20),
                       ),
                       TextSpan(
                         text: tr.natureTitle2,
-                        style: GoogleFonts.doHyeon(
+                        style: titleFont(
                             color: baseColor, fontSize: 20),
                       ),
                     ],

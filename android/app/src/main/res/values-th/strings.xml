@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">เพลง · วิทยุ · ธรรมชาติ</string>
+    <string name="widget_loading">กำลังโหลด…</string>
+    <string name="widget_wait">โปรดรอสักครู่</string>
+    <string name="widget_play_music">เปิดเพลงฟังกัน</string>
+    <string name="tab_music">เพลง</string>
+    <string name="tab_radio">วิทยุ</string>
+    <string name="tab_nature">ธรรมชาติ</string>
+    <string name="tab_sleep">นอนหลับ</string>
+    <string name="widget_recent_empty">รายการที่ฟังล่าสุดจะแสดงที่นี่</string>
+    <string name="sample_song">เพลงโปรด</string>
+    <string name="sample_artist">ศิลปิน</string>
+    <string name="sample_station">สถานีวิทยุ</string>
+    <string name="sample_rain">ฝน</string>
+    <string name="sample_nature">เสียงธรรมชาติ</string>
+    <string name="alarm_channel">นาฬิกาปลุกยามเช้า</string>
+    <string name="alarm_channel_desc">นาฬิกาปลุกยามเช้าของ Paransori</string>
+    <string name="alarm_quiet_channel">นาฬิกาปลุก (เปิดหน้าจอ)</string>
+    <string name="alarm_quiet_desc">เมื่อหน้าจอปลุกเปิดขึ้นบนหน้าจอล็อก</string>
+    <string name="alarm_text">แตะเพื่อเปิดหน้าจอปลุก</string>
+    <string name="headset_channel">เชื่อมต่อหูฟังแล้ว</string>
+    <string name="action_play">เล่น</string>
+    <string name="resume_ask">ฟังต่อไหม?</string>
+    <string name="rec_channel">การบันทึกเสียง</string>
+    <string name="rec_channel_desc">แสดงขณะบันทึกเสียง</string>
+    <string name="rec_title_paused">Paransori · หยุดบันทึกชั่วคราว</string>
+    <string name="rec_title_on">Paransori · กำลังบันทึก</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · แตะเพื่อบันทึกต่อ</string>
+    <string name="rec_tap_back">แตะเพื่อกลับไปหน้าบันทึกเสียง</string>
+    <string name="rec_resume">ทำต่อ</string>
+    <string name="rec_pause">หยุดชั่วคราว</string>
+    <string name="rec_done">เสร็จสิ้น</string>
+</resources>

@@ -193,6 +193,24 @@ class Song {
     '動漫': 'anime', '动漫': 'anime',
     'kids': 'kids', 'children': 'kids', "children's": 'kids', '동요': 'kids', '童謡': 'kids', '童謠': 'kids',
     '童谣': 'kids',
+    // 새 언어 7개 (독일어·프랑스어·스페인어·포르투갈어·인도네시아어·베트남어·태국어)
+    'ballade': 'ballad', 'balladen': 'ballad', 'balada': 'ballad', 'baladas': 'ballad', 'baladaromántica': 'ballad', 'trữtình': 'ballad', 'nhạctrữtình': 'ballad', 'เพลงช้า': 'ballad',
+    'tanz': 'dance', 'tanzmusik': 'dance', 'danse': 'dance', 'baile': 'dance', 'dança': 'dance', 'dansa': 'dance', 'nhạcdance': 'dance', 'แดนซ์': 'dance',
+    'popmusik': 'pop', 'musiquepop': 'pop', 'músicapop': 'pop', 'nhạcpop': 'pop', 'vpop': 'pop', 'ป๊อป': 'pop', 'เพลงป๊อป': 'pop', 'ป็อป': 'pop', 'tpop': 'pop', 'thaipop': 'pop', 'opm': 'pop', 'popindonesia': 'pop', 'mpb': 'pop',
+    'rockmusik': 'rock', 'nhạcrock': 'rock', 'ร็อก': 'rock', 'ร็อค': 'rock',
+    'เมทัล': 'metal',
+    'raplatino': 'hiphop', 'rapfrançais': 'hiphop', 'raplatinoamericano': 'hiphop', 'ฮิปฮอป': 'hiphop', 'แร็พ': 'hiphop',
+    'อาร์แอนด์บี': 'rnb',
+    'แจ๊ส': 'jazz', 'nhạcjazz': 'jazz',
+    'klassik': 'classical', 'klassischemusik': 'classical', 'klassisch': 'classical', 'classique': 'classical', 'musiqueclassique': 'classical', 'clásica': 'classical', 'clasica': 'classical', 'músicaclásica': 'classical', 'clássica': 'classical', 'classica': 'classical', 'músicaclássica': 'classical', 'erudita': 'classical', 'klasik': 'classical', 'musikklasik': 'classical', 'cổđiển': 'classical', 'nhạccổđiển': 'classical', 'คลาสสิก': 'classical', 'คลาสสิค': 'classical', 'เพลงคลาสสิก': 'classical',
+    'filmmusik': 'ost', 'bandeoriginale': 'ost', 'musiquedefilm': 'ost', 'bandasonora': 'ost', 'trilhasonora': 'ost', 'nhạcphim': 'ost', 'เพลงประกอบภาพยนตร์': 'ost', 'เพลงประกอบละคร': 'ost',
+    'elektronisch': 'electronic', 'elektronischemusik': 'electronic', 'électronique': 'electronic', 'electronique': 'electronic', 'electrónica': 'electronic', 'eletrônica': 'electronic', 'eletronica': 'electronic', 'elektronik': 'electronic', 'nhạcđiệntử': 'electronic', 'điệntử': 'electronic', 'อิเล็กทรอนิกส์': 'electronic',
+    'volksmusik': 'folk', 'musiquefolk': 'folk', 'folclore': 'folk', 'folklore': 'folk', 'dângca': 'folk', 'nhạcdângca': 'folk', 'ลูกทุ่ง': 'folk', 'ลูกกรุง': 'folk', 'หมอลำ': 'folk',
+    'บลูส์': 'blues',
+    'sertanejo': 'country', 'คันทรี': 'country',
+    'เร็กเก้': 'reggae',
+    'อินดี้': 'indie',
+    'kinderlieder': 'kids', 'kindermusik': 'kids', 'kinder': 'kids', 'enfants': 'kids', 'musiquepourenfants': 'kids', 'infantil': 'kids', 'músicainfantil': 'kids', 'anak': 'kids', 'laguanak': 'kids', 'thiếunhi': 'kids', 'nhạcthiếunhi': 'kids', 'เพลงเด็ก': 'kids',
     // 인터넷 검색(디저)에서 오는 이름
     'films/games': 'ost', 'filmscores': 'ost', 'electro': 'electronic',
   };
@@ -209,6 +227,7 @@ class Song {
     '', 'unknown', '<unknown>', 'other', 'others', 'genre', 'none', 'unknowngenre', '기타',
     'music', 'musica', 'misc', 'miscellaneous', 'various', 'etc',
     '음악', '音楽', '音樂', '音乐', 'その他', '其他',
+    'sonstige', 'sonstiges', 'andere', 'divers', 'autre', 'autres', 'otros', 'otro', 'outros', 'outro', 'lainnya', 'khác', 'อื่นๆ', 'musik', 'musique', 'música', 'nhạc', 'เพลง',
   };
 
   static String _cleanGenre(String raw) {

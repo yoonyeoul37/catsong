@@ -54,11 +54,35 @@ const _kAtoZ = [
 const _kKanaRows = ['あ', 'か', 'さ', 'た', 'な', 'は', 'ま', 'や', 'ら', 'わ'];
 const _kIndexGroupsJa = [..._kKanaRows, 'A-Z', '#'];
 const _kIndexGroupsLatin = [..._kAtoZ, '#'];
+// 태국어: 자음 44개를 11묶음으로 (ก ข ง จ ญ ด บ ม ย ส อ) + A-Z + #
+const _kThaiRows = ['ก', 'ข', 'ง', 'จ', 'ญ', 'ด', 'บ', 'ม', 'ย', 'ส', 'อ'];
+const _kIndexGroupsTh = [..._kThaiRows, 'A-Z', '#'];
+
+/// 태국어 제목 → 자음 묶음 (เ แ โ ใ ไ 처럼 자음 앞에 쓰는 모음은 건너뛰고 뒤 자음으로), 아니면 null
+String? _thaiRow(String t) {
+  for (final c in t.runes) {
+    if (c >= 0x0E40 && c <= 0x0E44) continue; // 앞에 쓰는 모음
+    if (c < 0x0E01 || c > 0x0E2E) return null; // 태국어 자음이 아님
+    if (c == 0x0E01) return 'ก';
+    if (c <= 0x0E06) return 'ข'; // ข ฃ ค ฅ ฆ
+    if (c == 0x0E07) return 'ง';
+    if (c <= 0x0E0C) return 'จ'; // จ ฉ ช ซ ฌ
+    if (c <= 0x0E13) return 'ญ'; // ญ ฎ ฏ ฐ ฑ ฒ ณ
+    if (c <= 0x0E19) return 'ด'; // ด ต ถ ท ธ น
+    if (c <= 0x0E1F) return 'บ'; // บ ป ผ ฝ พ ฟ
+    if (c <= 0x0E21) return 'ม'; // ภ ม
+    if (c <= 0x0E27) return 'ย'; // ย ร ฤ ล ฦ ว
+    if (c <= 0x0E2B) return 'ส'; // ศ ษ ส ห
+    return 'อ'; // ฬ อ ฮ
+  }
+  return null;
+}
 
 /// 막대에 나오는 칸 (폰 언어 코드: ko, ja, en, zh ...)
 List<String> indexGroupsFor(String lang) {
   if (lang == 'ko') return kIndexGroups;
   if (lang == 'ja') return _kIndexGroupsJa;
+  if (lang == 'th') return _kIndexGroupsTh;
   return _kIndexGroupsLatin;
 }
 
@@ -85,6 +109,11 @@ String indexGroupFor(String text, String lang) {
   final t = text.trimLeft();
   if (t.isEmpty) return '#';
   final c = t.runes.first;
+  if (lang == 'th') {
+    final row = _thaiRow(t);
+    if (row != null) return row;
+    return latinLetterOf(c) != null ? 'A-Z' : '#';
+  }
   final ch = latinLetterOf(c) ?? ''; // 악센트 글자는 기본 글자로 (Ä→A, É→E, Ñ→N, Đ→D)
   final isLatin = ch.isNotEmpty;
   if (lang == 'ja') {

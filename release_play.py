@@ -3,7 +3,7 @@
 # 실행: python release_play.py   (mp3_player_new 폴더에서) — 아무것도 안 물어보고 끝까지
 #       python release_play.py "업데이트 내용"   ← 내용을 직접 넣고 싶을 때만
 #  1) build_release.py 로 버전 번호 +1 하고 .aab 만들기
-#  2) 업데이트 내용: 적은 게 없으면 5개 언어 앱 소개 (아래 FULL_NOTES)
+#  2) 업데이트 내용: 적은 게 없으면 12개 언어 앱 소개 (아래 FULL_NOTES, 스토어에 있는 언어만)
 #  3) 플레이 콘솔 프로덕션에 올리고 검토 보내기
 # 처음 한 번 준비: play-key.json (서비스 계정 키) 를 이 폴더에 두기
 import os, sys, subprocess, io
@@ -14,9 +14,11 @@ KEY_FILE = 'play-key.json'
 AAB = os.path.join('build', 'app', 'outputs', 'bundle', 'release', 'app-release.aab')
 TRACK = 'production'
 DEFAULT_NOTES = '작은 개선과 오류 수정'
-# 따로 적은 게 없으면 5개 언어 전체 소개를 출시 노트로 (언어마다 500자까지)
+# 따로 적은 게 없으면 12개 언어 전체 소개를 출시 노트로 (언어마다 500자까지)
+# 스토어 등록 정보에 있는 언어만 보내요 (스페인어는 es-419 · es-ES 중 스토어에 있는 것)
 FULL_NOTES = {
     'ko-KR': """파란소리 – 음악, 라디오, 자연소리를 하나로
+- 12개 언어 지원 (설정 → 언어에서 앱 언어 바꾸기)
 - MP3·동영상 플레이어, 가사 보기와 가사 카드 공유
 - 장르별 정렬·장르 골라 듣기, 곡 정보에서 장르 수정
 - 한국과 100여 개 나라 라디오, 편성표까지
@@ -26,15 +28,17 @@ FULL_NOTES = {
 - TV·스피커로 보내기, 이퀄라이저, 녹음
 - 다크 모드, 포인트 색, 글꼴로 나만의 앱 꾸미기""",
     'en-US': """Paransori – music, radio and nature sounds in one app
-- MP3 & video player with synced lyrics and lyric card sharing
+- Now in 12 languages (Settings → Language)
+- MP3 & video player with synced lyrics and lyric cards
 - Sort and play by genre, edit song genres
-- Live radio from Korea and 100+ countries, with schedules
+- Live radio from Korea and 100+ countries
 - Nature sounds & sound mix for rest, focus and sleep
-- Paran Photo backgrounds: fixed or random, color, B&W, sepia, film
+- Paran Photo backgrounds in color, B&W, sepia or film
 - Sleep timer, morning alarm and home screen widgets
 - Cast to TV and speakers, equalizer, recordings
-- Dark mode, point colors and fonts to make it yours""",
+- Dark mode, point colors and fonts""",
     'ja-JP': """パランソリ – 音楽・ラジオ・自然音をひとつのアプリで
+- 12言語に対応(設定 → 言語でアプリの言語を変更)
 - MP3・動画プレーヤー、歌詞表示と歌詞カードの共有
 - ジャンル別の並べ替え・再生、曲情報でジャンルを編集
 - 韓国と100か国以上のライブラジオ、番組表つき
@@ -44,6 +48,7 @@ FULL_NOTES = {
 - テレビ・スピーカーへのキャスト、イコライザー、録音
 - ダークモード、ポイントカラー、フォントで自分好みに""",
     'zh-TW': """Paransori – 音樂、廣播、大自然聲音一次擁有
+- 支援 12 種語言(設定 → 語言可切換)
 - MP3・影片播放器，歌詞顯示與歌詞卡片分享
 - 依類型排序與播放，可在歌曲資訊中編輯類型
 - 韓國與 100 多個國家的線上廣播，附節目表
@@ -53,6 +58,7 @@ FULL_NOTES = {
 - 投放至電視與喇叭、等化器、錄音
 - 深色模式、主題色與字型，打造專屬風格""",
     'zh-CN': """Paransori – 音乐、电台、大自然声音一次拥有
+- 支持 12 种语言(设置 → 语言可切换)
 - MP3・视频播放器，歌词显示与歌词卡片分享
 - 按类型排序与播放，可在歌曲信息中编辑类型
 - 韩国与 100 多个国家的在线电台，附节目表
@@ -61,6 +67,86 @@ FULL_NOTES = {
 - 睡眠定时、早晨闹钟、桌面小组件
 - 投放到电视与音箱、均衡器、录音
 - 深色模式、主题色与字体，打造专属风格""",
+    'de-DE': """Paransori – Musik, Radio und Naturklänge in einer App
+- Jetzt auf Deutsch und in 11 weiteren Sprachen
+- MP3- & Videoplayer mit Songtexten und Songtext-Karten
+- Nach Genre sortieren und abspielen
+- Live-Radio aus Korea und über 100 Ländern
+- Naturklänge & Sound-Mix zum Entspannen und Schlafen
+- Paran Photo Hintergründe in Farbe, S/W, Sepia oder Film
+- Sleep-Timer, Wecker und Widgets
+- Auf TV & Lautsprecher streamen, Equalizer, Aufnahmen
+- Dunkelmodus, Akzentfarben und Schriften""",
+    'fr-FR': """Paransori – musique, radio et sons de la nature dans une seule app
+- Disponible en français et dans 11 autres langues
+- Lecteur MP3 et vidéo avec paroles et cartes de paroles
+- Tri et écoute par genre
+- Radio en direct de Corée et de plus de 100 pays
+- Sons de la nature et mix pour se détendre et dormir
+- Fonds Paran Photo : couleur, N&B, sépia ou film
+- Minuterie de sommeil, réveil et widgets
+- Diffusion sur TV et enceintes, égaliseur, enregistrements
+- Mode sombre, couleurs et polices""",
+    'es-419': """Paransori – música, radio y sonidos naturales en una sola app
+- Ahora en español y otros 11 idiomas
+- Reproductor de MP3 y video con letras y tarjetas de letras
+- Ordena y escucha por género
+- Radio en vivo de Corea y más de 100 países
+- Sonidos naturales y mezclas para relajarte y dormir
+- Fondos Paran Photo: color, B/N, sepia o película
+- Temporizador, alarma y widgets
+- Envía a TV y bocinas, ecualizador, grabaciones
+- Modo oscuro, colores y fuentes""",
+    'es-ES': """Paransori – música, radio y sonidos naturales en una sola app
+- Ahora en español y otros 11 idiomas
+- Reproductor de MP3 y video con letras y tarjetas de letras
+- Ordena y escucha por género
+- Radio en vivo de Corea y más de 100 países
+- Sonidos naturales y mezclas para relajarte y dormir
+- Fondos Paran Photo: color, B/N, sepia o película
+- Temporizador, alarma y widgets
+- Envía a TV y bocinas, ecualizador, grabaciones
+- Modo oscuro, colores y fuentes""",
+    'pt-BR': """Paransori – música, rádio e sons da natureza em um só app
+- Agora em português e mais 11 idiomas
+- Player de MP3 e vídeo com letras e cards de letras
+- Organize e ouça por gênero
+- Rádio ao vivo da Coreia e de mais de 100 países
+- Sons da natureza e mixes para relaxar e dormir
+- Fundos Paran Photo: cor, P&B, sépia ou filme
+- Timer para dormir, despertador e widgets
+- Transmita para TV e caixas de som, equalizador, gravações
+- Modo escuro, cores e fontes""",
+    'id': """Paransori – musik, radio, dan suara alam dalam satu aplikasi
+- Kini dalam Bahasa Indonesia dan 11 bahasa lain
+- Pemutar MP3 & video dengan lirik dan kartu lirik
+- Urutkan dan putar berdasarkan genre
+- Radio langsung dari Korea dan 100+ negara
+- Suara alam & mix untuk santai dan tidur
+- Latar Paran Photo: warna, hitam putih, sepia, atau film
+- Timer tidur, alarm pagi, dan widget
+- Kirim ke TV & speaker, equalizer, rekaman
+- Mode gelap, warna aksen, dan font""",
+    'vi': """Paransori – nhạc, radio và âm thanh thiên nhiên trong một ứng dụng
+- Đã có tiếng Việt và 11 ngôn ngữ khác
+- Trình phát MP3 & video, lời bài hát và thẻ lời bài hát
+- Sắp xếp và nghe theo thể loại
+- Radio trực tiếp từ Hàn Quốc và hơn 100 quốc gia
+- Âm thanh thiên nhiên & bản trộn để thư giãn, ngủ ngon
+- Hình nền Paran Photo: màu, đen trắng, sepia, film
+- Hẹn giờ tắt, báo thức buổi sáng, tiện ích
+- Phát lên TV & loa, bộ chỉnh âm, ghi âm
+- Chế độ tối, màu nhấn và phông chữ""",
+    'th': """Paransori – เพลง วิทยุ และเสียงธรรมชาติในแอปเดียว
+- รองรับภาษาไทยและอีก 11 ภาษา
+- เครื่องเล่น MP3 และวิดีโอ พร้อมเนื้อเพลงและการ์ดเนื้อเพลง
+- เรียงและฟังตามแนวเพลง
+- วิทยุสดจากเกาหลีและกว่า 100 ประเทศ
+- เสียงธรรมชาติและมิกซ์เสียงเพื่อการพักผ่อนและนอนหลับ
+- พื้นหลัง Paran Photo: สี ขาวดำ ซีเปีย หรือฟิล์ม
+- ตั้งเวลาปิด นาฬิกาปลุก และวิดเจ็ต
+- ส่งไปยังทีวีและลำโพง อีควอไลเซอร์ บันทึกเสียง
+- โหมดมืด สีหลัก และฟอนต์""",
 }
 
 
@@ -111,14 +197,22 @@ def main():
         media = MediaFileUpload(AAB, mimetype='application/octet-stream', resumable=True)
         vc = edits.bundles().upload(packageName=PACKAGE, editId=eid, media_body=media).execute()['versionCode']
         print(f'✔ 앱 번들 올림 (버전 코드 {vc})')
+        # 출시 노트는 스토어 등록 정보에 있는 언어만 (없는 언어까지 보내면 오류가 날 수 있어서)
+        try:
+            have = {x['language'] for x in edits.listings().list(packageName=PACKAGE, editId=eid).execute().get('listings', [])}
+        except Exception:
+            have = set()
+        notes_all = [{'language': k, 'text': v} for k, v in FULL_NOTES.items() if not have or k in have]
+        skipped = [k for k in FULL_NOTES if have and k not in have]
+        if not sys.argv[1:]:
+            print(f'✔ 출시 노트 {len(notes_all)}개 언어' + (f' (스토어에 아직 없는 언어는 빼요: {", ".join(skipped)})' if skipped else ''))
         edits.tracks().update(
             packageName=PACKAGE, editId=eid, track=TRACK,
             body={'track': TRACK, 'releases': [{
                 'versionCodes': [str(vc)],
                 'status': 'completed',
-                # 명령어 뒤에 적은 게 있으면 한국어로 그걸, 없으면 5개 언어 전체 소개
-                'releaseNotes': ([{'language': 'ko-KR', 'text': notes}] if sys.argv[1:]
-                                 else [{'language': k, 'text': v} for k, v in FULL_NOTES.items()]),
+                # 명령어 뒤에 적은 게 있으면 한국어로 그걸, 없으면 12개 언어 전체 소개
+                'releaseNotes': ([{'language': 'ko-KR', 'text': notes}] if sys.argv[1:] else notes_all),
             }]}).execute()
         print('✔ 프로덕션에 새 버전 넣음')
         edits.commit(packageName=PACKAGE, editId=eid).execute()

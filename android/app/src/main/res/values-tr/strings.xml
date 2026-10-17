@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">Müzik · Radyo · Doğa</string>
+    <string name="widget_loading">Yükleniyor…</string>
+    <string name="widget_wait">Lütfen biraz bekle</string>
+    <string name="widget_play_music">Biraz müzik çal</string>
+    <string name="tab_music">Müzik</string>
+    <string name="tab_radio">Radyo</string>
+    <string name="tab_nature">Doğa</string>
+    <string name="tab_sleep">Uyku</string>
+    <string name="widget_recent_empty">Son çalınanlar burada görünür</string>
+    <string name="sample_song">Sevdiğin şarkı</string>
+    <string name="sample_artist">Sanatçı</string>
+    <string name="sample_station">Radyo istasyonu</string>
+    <string name="sample_rain">Yağmur</string>
+    <string name="sample_nature">Doğa sesleri</string>
+    <string name="alarm_channel">Sabah alarmı</string>
+    <string name="alarm_channel_desc">Paransori sabah alarmı</string>
+    <string name="alarm_quiet_channel">Sabah alarmı (ekranı aç)</string>
+    <string name="alarm_quiet_desc">Alarm ekranı kilit ekranının üstünde açıldığında</string>
+    <string name="alarm_text">Alarm ekranını açmak için dokun</string>
+    <string name="headset_channel">Kulaklık bağlandı</string>
+    <string name="action_play">Çal</string>
+    <string name="resume_ask">Dinlemeye devam edilsin mi?</string>
+    <string name="rec_channel">Kayıt</string>
+    <string name="rec_channel_desc">Kayıt sırasında gösterilir</string>
+    <string name="rec_title_paused">Paransori · Kayıt duraklatıldı</string>
+    <string name="rec_title_on">Paransori · Kaydediliyor</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · Devam etmek için dokun</string>
+    <string name="rec_tap_back">Kayıt ekranına dönmek için dokun</string>
+    <string name="rec_resume">Devam et</string>
+    <string name="rec_pause">Duraklat</string>
+    <string name="rec_done">Bitti</string>
+</resources>

@@ -41,6 +41,7 @@ a{color:inherit}
 .list button:first-child{border-top:0}
 .list button[aria-pressed="true"]{font-weight:800}
 .list button[aria-pressed="true"]::after{content:"✓";color:var(--point)}
+.list button small{margin-left:6px;font-size:13px;font-weight:500;color:var(--hint)}
 [hidden]{display:none!important}
 .doc{padding:0 16px 40px}
 .hero{padding:24px 4px 6px}
@@ -134,7 +135,9 @@ a{color:inherit}
     }
     return 'en';
   }
+  var LN = {"ko": {"ko": "한국어", "en": "영어", "ja": "일본어", "zh": "중국어 번체", "vi": "베트남어", "hi": "힌디어", "id": "인도네시아어", "th": "태국어", "es": "스페인어", "pt": "포르투갈어", "de": "독일어", "fr": "프랑스어", "it": "이탈리아어", "pl": "폴란드어", "tr": "튀르키예어", "ru": "러시아어"}, "en": {"ko": "Korean", "en": "English", "ja": "Japanese", "zh": "Traditional Chinese", "vi": "Vietnamese", "hi": "Hindi", "id": "Indonesian", "th": "Thai", "es": "Spanish", "pt": "Portuguese", "de": "German", "fr": "French", "it": "Italian", "pl": "Polish", "tr": "Turkish", "ru": "Russian"}, "ja": {"ko": "韓国語", "en": "英語", "ja": "日本語", "zh": "繁体字中国語", "vi": "ベトナム語", "hi": "ヒンディー語", "id": "インドネシア語", "th": "タイ語", "es": "スペイン語", "pt": "ポルトガル語", "de": "ドイツ語", "fr": "フランス語", "it": "イタリア語", "pl": "ポーランド語", "tr": "トルコ語", "ru": "ロシア語"}, "zh": {"ko": "韓文", "en": "英文", "ja": "日文", "zh": "繁體中文", "vi": "越南文", "hi": "印地文", "id": "印尼文", "th": "泰文", "es": "西班牙文", "pt": "葡萄牙文", "de": "德文", "fr": "法文", "it": "義大利文", "pl": "波蘭文", "tr": "土耳其文", "ru": "俄文"}, "vi": {"ko": "Tiếng Hàn", "en": "Tiếng Anh", "ja": "Tiếng Nhật", "zh": "Tiếng Trung phồn thể", "vi": "Tiếng Việt", "hi": "Tiếng Hindi", "id": "Tiếng Indonesia", "th": "Tiếng Thái", "es": "Tiếng Tây Ban Nha", "pt": "Tiếng Bồ Đào Nha", "de": "Tiếng Đức", "fr": "Tiếng Pháp", "it": "Tiếng Ý", "pl": "Tiếng Ba Lan", "tr": "Tiếng Thổ Nhĩ Kỳ", "ru": "Tiếng Nga"}, "hi": {"ko": "कोरियाई", "en": "अंग्रेज़ी", "ja": "जापानी", "zh": "पारंपरिक चीनी", "vi": "वियतनामी", "hi": "हिन्दी", "id": "इंडोनेशियाई", "th": "थाई", "es": "स्पेनिश", "pt": "पुर्तगाली", "de": "जर्मन", "fr": "फ़्रेंच", "it": "इतालवी", "pl": "पोलिश", "tr": "तुर्की", "ru": "रूसी"}, "id": {"ko": "Korea", "en": "Inggris", "ja": "Jepang", "zh": "Tionghoa Tradisional", "vi": "Vietnam", "hi": "Hindi", "id": "Bahasa Indonesia", "th": "Thai", "es": "Spanyol", "pt": "Portugis", "de": "Jerman", "fr": "Prancis", "it": "Italia", "pl": "Polandia", "tr": "Turki", "ru": "Rusia"}, "th": {"ko": "เกาหลี", "en": "อังกฤษ", "ja": "ญี่ปุ่น", "zh": "จีนตัวเต็ม", "vi": "เวียดนาม", "hi": "ฮินดี", "id": "อินโดนีเซีย", "th": "ไทย", "es": "สเปน", "pt": "โปรตุเกส", "de": "เยอรมัน", "fr": "ฝรั่งเศส", "it": "อิตาลี", "pl": "โปแลนด์", "tr": "ตุรกี", "ru": "รัสเซีย"}, "es": {"ko": "Coreano", "en": "Inglés", "ja": "Japonés", "zh": "Chino tradicional", "vi": "Vietnamita", "hi": "Hindi", "id": "Indonesio", "th": "Tailandés", "es": "Español", "pt": "Portugués", "de": "Alemán", "fr": "Francés", "it": "Italiano", "pl": "Polaco", "tr": "Turco", "ru": "Ruso"}, "pt": {"ko": "Coreano", "en": "Inglês", "ja": "Japonês", "zh": "Chinês tradicional", "vi": "Vietnamita", "hi": "Híndi", "id": "Indonésio", "th": "Tailandês", "es": "Espanhol", "pt": "Português", "de": "Alemão", "fr": "Francês", "it": "Italiano", "pl": "Polonês", "tr": "Turco", "ru": "Russo"}, "de": {"ko": "Koreanisch", "en": "Englisch", "ja": "Japanisch", "zh": "Trad. Chinesisch", "vi": "Vietnamesisch", "hi": "Hindi", "id": "Indonesisch", "th": "Thailändisch", "es": "Spanisch", "pt": "Portugiesisch", "de": "Deutsch", "fr": "Französisch", "it": "Italienisch", "pl": "Polnisch", "tr": "Türkisch", "ru": "Russisch"}, "fr": {"ko": "Coréen", "en": "Anglais", "ja": "Japonais", "zh": "Chinois traditionnel", "vi": "Vietnamien", "hi": "Hindi", "id": "Indonésien", "th": "Thaï", "es": "Espagnol", "pt": "Portugais", "de": "Allemand", "fr": "Français", "it": "Italien", "pl": "Polonais", "tr": "Turc", "ru": "Russe"}, "it": {"ko": "Coreano", "en": "Inglese", "ja": "Giapponese", "zh": "Cinese tradizionale", "vi": "Vietnamita", "hi": "Hindi", "id": "Indonesiano", "th": "Thailandese", "es": "Spagnolo", "pt": "Portoghese", "de": "Tedesco", "fr": "Francese", "it": "Italiano", "pl": "Polacco", "tr": "Turco", "ru": "Russo"}, "pl": {"ko": "Koreański", "en": "Angielski", "ja": "Japoński", "zh": "Chiński tradycyjny", "vi": "Wietnamski", "hi": "Hindi", "id": "Indonezyjski", "th": "Tajski", "es": "Hiszpański", "pt": "Portugalski", "de": "Niemiecki", "fr": "Francuski", "it": "Włoski", "pl": "Polski", "tr": "Turecki", "ru": "Rosyjski"}, "tr": {"ko": "Korece", "en": "İngilizce", "ja": "Japonca", "zh": "Geleneksel Çince", "vi": "Vietnamca", "hi": "Hintçe", "id": "Endonezce", "th": "Tayca", "es": "İspanyolca", "pt": "Portekizce", "de": "Almanca", "fr": "Fransızca", "it": "İtalyanca", "pl": "Lehçe", "tr": "Türkçe", "ru": "Rusça"}, "ru": {"ko": "Корейский", "en": "Английский", "ja": "Японский", "zh": "Китайский (традиционный)", "vi": "Вьетнамский", "hi": "Хинди", "id": "Индонезийский", "th": "Тайский", "es": "Испанский", "pt": "Португальский", "de": "Немецкий", "fr": "Французский", "it": "Итальянский", "pl": "Польский", "tr": "Турецкий", "ru": "Русский"}};
   function show(code, push){
+    if (typeof order !== 'undefined') renderList(code);
     docs.forEach(function(d){ d.hidden = d.getAttribute('data-lang') !== code; });
     document.documentElement.lang = document.querySelector('.doc[data-lang="'+code+'"]').getAttribute('lang');
     list.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.lang === code ? 'true' : 'false'); });
@@ -161,7 +164,15 @@ a{color:inherit}
   var first = pick();
   var order = [first].concat(ORDER.filter(function(c){ return c !== first; }));
   // 언어 목록: 내 나라(폰 언어) 먼저
-  list.innerHTML = order.map(function(c){ return '<button type="button" data-lang="'+c+'" lang="'+c+'">'+NAMES[c]+'</button>'; }).join('');
+  // 언어 목록: 그 나라 말 이름 + (지금 보는 언어로 쓴 이름) — 예: 한국어 화면이면 Deutsch (독일어)
+  function renderList(cur){
+    list.innerHTML = order.map(function(c){
+      var n = (LN[cur] || {})[c];
+      var sub = n && n !== NAMES[c] ? ' <small lang="'+cur+'">('+n+')</small>' : '';
+      return '<button type="button" data-lang="'+c+'" lang="'+c+'"><span>'+NAMES[c]+sub+'</span></button>';
+    }).join('');
+  }
+  renderList(first);
   // 언어 창이 열려 있는 동안 뒤 페이지는 안 움직이게
   // (폰에서도 확실하게: 페이지를 그 자리에 핀으로 고정했다가, 닫으면 원래 위치로)
   var lockY = 0;

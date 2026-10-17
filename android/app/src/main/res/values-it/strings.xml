@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">Musica · Radio · Natura</string>
+    <string name="widget_loading">Caricamento…</string>
+    <string name="widget_wait">Attendi un momento</string>
+    <string name="widget_play_music">Ascolta un po\' di musica</string>
+    <string name="tab_music">Musica</string>
+    <string name="tab_radio">Radio</string>
+    <string name="tab_nature">Natura</string>
+    <string name="tab_sleep">Timer</string>
+    <string name="widget_recent_empty">Qui appare ciò che hai ascoltato di recente</string>
+    <string name="sample_song">Brano preferito</string>
+    <string name="sample_artist">Artista</string>
+    <string name="sample_station">Stazione radio</string>
+    <string name="sample_rain">Pioggia</string>
+    <string name="sample_nature">Suoni della natura</string>
+    <string name="alarm_channel">Sveglia</string>
+    <string name="alarm_channel_desc">Sveglia di Paransori</string>
+    <string name="alarm_quiet_channel">Sveglia (schermata aperta)</string>
+    <string name="alarm_quiet_desc">Quando la schermata sveglia si apre sopra quella di blocco</string>
+    <string name="alarm_text">Tocca per aprire la schermata sveglia</string>
+    <string name="headset_channel">Cuffie collegate</string>
+    <string name="action_play">Riproduci</string>
+    <string name="resume_ask">Continuare l\'ascolto?</string>
+    <string name="rec_channel">Registrazione</string>
+    <string name="rec_channel_desc">Mostrata durante la registrazione</string>
+    <string name="rec_title_paused">Paransori · Registrazione in pausa</string>
+    <string name="rec_title_on">Paransori · Registrazione in corso</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · Tocca per riprendere</string>
+    <string name="rec_tap_back">Tocca per tornare alla registrazione</string>
+    <string name="rec_resume">Riprendi</string>
+    <string name="rec_pause">Pausa</string>
+    <string name="rec_done">Fine</string>
+</resources>

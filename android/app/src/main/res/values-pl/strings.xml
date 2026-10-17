@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">Muzyka · Radio · Natura</string>
+    <string name="widget_loading">Wczytywanie…</string>
+    <string name="widget_wait">Chwileczkę</string>
+    <string name="widget_play_music">Włącz jakąś muzykę</string>
+    <string name="tab_music">Muzyka</string>
+    <string name="tab_radio">Radio</string>
+    <string name="tab_nature">Natura</string>
+    <string name="tab_sleep">Sen</string>
+    <string name="widget_recent_empty">Tu pojawi się to, co ostatnio odtwarzano</string>
+    <string name="sample_song">Ulubiony utwór</string>
+    <string name="sample_artist">Wykonawca</string>
+    <string name="sample_station">Stacja radiowa</string>
+    <string name="sample_rain">Deszcz</string>
+    <string name="sample_nature">Odgłosy natury</string>
+    <string name="alarm_channel">Budzik</string>
+    <string name="alarm_channel_desc">Budzik Paransori</string>
+    <string name="alarm_quiet_channel">Budzik (ekran budzika)</string>
+    <string name="alarm_quiet_desc">Gdy ekran budzika otwiera się na ekranie blokady</string>
+    <string name="alarm_text">Stuknij, aby otworzyć ekran budzika</string>
+    <string name="headset_channel">Podłączono słuchawki</string>
+    <string name="action_play">Odtwórz</string>
+    <string name="resume_ask">Słuchać dalej?</string>
+    <string name="rec_channel">Nagrywanie</string>
+    <string name="rec_channel_desc">Widoczne podczas nagrywania</string>
+    <string name="rec_title_paused">Paransori · Nagrywanie wstrzymane</string>
+    <string name="rec_title_on">Paransori · Nagrywanie</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · Stuknij, aby wznowić</string>
+    <string name="rec_tap_back">Stuknij, aby wrócić do ekranu nagrywania</string>
+    <string name="rec_resume">Wznów</string>
+    <string name="rec_pause">Pauza</string>
+    <string name="rec_done">Gotowe</string>
+</resources>

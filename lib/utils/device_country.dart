@@ -2,6 +2,7 @@ import 'dart:ui' show PlatformDispatcher;
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../l10n/locale_holder.dart';
+import '../models/radio_country.dart';
 
 /// 폰이 있는 나라 (KR, US …) — 앱 언어와 상관없이
 /// 설정 → 언어를 바꾸면 폰이 앱 언어를 'de'처럼 나라 없이 알려 줘서,
@@ -61,6 +62,14 @@ class DeviceCountry {
       'zh': ['CN', 'SG'],
     };
     if (dev != null && (dev == home[lang] || (alsoSpeak[lang]?.contains(dev) ?? false))) return dev;
+    // 폰 언어가 앱에 없는 언어라 영어로 나올 때 (노르웨이어·헝가리어 …) → 폰 나라 라디오
+    // (앱 라디오 나라 목록에 있는 나라만 — 없으면 아래 규칙대로)
+    final phoneLang = PlatformDispatcher.instance.locale.languageCode;
+    const appLangs = ['ko', 'en', 'ja', 'zh', 'de', 'es', 'fr', 'id', 'in', 'pt', 'th', 'vi', 'ru', 'it', 'tr', 'pl'];
+    if (dev != null && lang == 'en' && !appLangs.contains(phoneLang) &&
+        RadioCountry.supported.any((c) => c.code == dev)) {
+      return dev;
+    }
     return home[lang] ?? dev;
   }
 }

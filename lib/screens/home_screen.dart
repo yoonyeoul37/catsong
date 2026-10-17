@@ -4354,11 +4354,11 @@ String _radioSlotImage(DateTime t) {
   return 'assets/radio_media_$slot.jpg';
 }
 
-/// 다크 모드: 홈 사진 색을 반쯤 빼고 살짝 어둡게 (밝기 72% · 색 45%) — 메인 홈 사진 모두 같게
+/// 다크 모드: 홈 사진 색을 조금 빼고 살짝 어둡게 (밝기 80% · 색 55%) — 메인 홈 사진 모두 같게
 const ColorFilter _kDarkPhotoFilter = ColorFilter.matrix(<double>[
-  0.4082, 0.2832, 0.0286, 0, 0,
-  0.0842, 0.6072, 0.0286, 0, 0,
-  0.0842, 0.2832, 0.3526, 0, 0,
+  0.5165, 0.2575, 0.0260, 0, 0,
+  0.0765, 0.6975, 0.0260, 0, 0,
+  0.0765, 0.2575, 0.4660, 0, 0,
   0, 0, 0, 1, 0,
 ]);
 Widget darkPhoto(bool dark, Widget child) =>

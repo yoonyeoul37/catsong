@@ -461,7 +461,11 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            RichText(
+            // 긴 언어(튀르키예어 등)는 칸 안에서 살짝 작게
+            Flexible(
+              child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: RichText(
               text: TextSpan(
                 children: [
                   TextSpan(
@@ -476,6 +480,8 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                         color: baseColor, fontSize: 20, letterSpacing: -0.5),
                   ),
                 ],
+              ),
+            ),
               ),
             ),
             const SizedBox(width: 6),

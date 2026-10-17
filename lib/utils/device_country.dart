@@ -48,12 +48,14 @@ class DeviceCountry {
       'ru': 'RU', 'it': 'IT', 'tr': 'TR', 'pl': 'PL',
     };
     const alsoSpeak = {
-      'en': ['US', 'GB', 'CA', 'AU', 'NZ', 'IE', 'IN', 'PH', 'SG', 'ZA'],
+      // 아프리카·카리브·아시아·오세아니아에서 영어 쓰는 나라도 (라디오 나라 목록에 있는 나라만)
+      'en': ['US', 'GB', 'CA', 'AU', 'NZ', 'IE', 'IN', 'PH', 'SG', 'ZA',
+             'NG', 'KE', 'GH', 'TZ', 'UG', 'ZW', 'JM', 'TT', 'MY', 'PK', 'MT', 'FJ', 'PG'],
       'es': ['ES', 'MX', 'AR', 'CO', 'CL', 'PE', 'VE', 'EC', 'GT', 'CU', 'BO', 'DO', 'HN', 'PY', 'SV', 'NI', 'CR', 'PA', 'UY', 'PR'],
-      'pt': ['BR', 'PT'],
-      'fr': ['FR', 'BE', 'CH', 'CA', 'LU'],
+      'pt': ['BR', 'PT', 'MZ'],
+      'fr': ['FR', 'BE', 'CH', 'CA', 'LU', 'SN', 'CM', 'MA', 'TN', 'MG', 'HT'],
       'de': ['DE', 'AT', 'CH', 'LU'],
-      'ru': ['RU', 'BY', 'KZ', 'KG'],
+      'ru': ['RU', 'BY', 'KZ', 'KG', 'UZ'],
       'it': ['IT', 'CH', 'SM'],
       'zh_Hant': ['TW', 'HK', 'MO'],
       'zh': ['CN', 'SG'],

@@ -588,8 +588,9 @@ class _BoardButton extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(13),
         onTap: onTap,
-        child: SizedBox(
+        child: Container(
           height: 44,
+          padding: const EdgeInsets.symmetric(horizontal: 10), // 긴 글자도 테두리에 안 붙게
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

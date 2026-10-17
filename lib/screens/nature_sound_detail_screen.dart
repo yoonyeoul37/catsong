@@ -967,9 +967,13 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                                         : Colors.white.withOpacity(0.7),
                                     size: 22),
                                 const SizedBox(height: 4),
-                                Text(_formatRemaining(),
-                                    maxLines: 1,
-                                    style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 10)),
+                                // 긴 언어(스페인어·튀르키예어 등)는 칸 안에서 살짝 작게
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(_formatRemaining(),
+                                      maxLines: 1,
+                                      style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 10)),
+                                ),
                               ],
                             ),
                           ),
@@ -1006,7 +1010,11 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                               children: [
                                 Icon(Icons.graphic_eq_rounded, color: Colors.white.withOpacity(0.7), size: 22),
                                 const SizedBox(height: 4),
-                                Text(tr.mixShort, style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 10)),
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(tr.mixShort,
+                                      maxLines: 1, style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 10)),
+                                ),
                               ],
                             ),
                           ),

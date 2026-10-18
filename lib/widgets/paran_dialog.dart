@@ -309,6 +309,8 @@ class ParanRow extends StatelessWidget {
   final bool accent; // 글자를 파랗게 (예: 새로 만들기)
   final bool danger; // 빨갛게 (예: 삭제)
   final VoidCallback? onTap; // 없으면 흐리게 (누를 수 없음)
+  final String? titleFont; // 제목만 다른 글꼴로 (예: 글꼴 고르기 미리보기)
+  final Widget? trailing; // 오른쪽 끝 작은 표시 (예: 받기 ⬇ · 받는 중)
   const ParanRow({
     super.key,
     this.icon,
@@ -318,6 +320,8 @@ class ParanRow extends StatelessWidget {
     this.accent = false,
     this.danger = false,
     this.onTap,
+    this.titleFont,
+    this.trailing,
   });
 
   @override
@@ -350,11 +354,16 @@ class ParanRow extends StatelessWidget {
                     color: danger ? _kRed : (accent || selected ? pt : p.ink),
                     fontSize: 14,
                     fontWeight: accent || selected ? FontWeight.w700 : FontWeight.w500,
+                    fontFamily: titleFont,
                   )),
             ),
             if (trailingText != null) ...[
               const SizedBox(width: 8),
               Text(trailingText!, style: TextStyle(color: p.sub, fontSize: 12.5)),
+            ],
+            if (trailing != null) ...[
+              const SizedBox(width: 8),
+              trailing!,
             ],
             if (selected) ...[
               const SizedBox(width: 8),

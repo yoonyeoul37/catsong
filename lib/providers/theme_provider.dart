@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
+import '../utils/font_downloader.dart';
 
 /// 라디오 목록 화면 글자 크기 — 글자 크기 '보통'일 때 지금처럼 1.25,
 /// 앱 글자 크기 설정과 좁은 폰 자동 줄임(main.dart와 같은 계산)도 같이 따라가게
@@ -166,7 +167,7 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// 설정 → 글꼴 (전부 앱 안에 있어서 인터넷 없이 바로)
+  /// 설정 → 글꼴 (프리텐다드·스포카는 앱 안, 나머지 8종은 고를 때 R2에서 받음 — font_downloader.dart)
   static const List<Map<String, String>> availableFonts = [
     {'key': 'pretendard', 'name': 'Pretendard'},
     {'key': 'default', 'name': 'Spoqa Han Sans Neo'},
@@ -179,6 +180,12 @@ class ThemeProvider extends ChangeNotifier {
     {'key': 'gowun_dodum', 'name': 'GowunDodum'},
     {'key': 'maru_buri', 'name': 'MaruBuri'},
   ];
+
+  /// 글꼴 고르는 창에서 이름을 그 글꼴 모양으로 보여 줄 때 쓰는 글꼴
+  static String previewFamily(String key) => switch (key) {
+        'default' => 'SpoqaHanSansNeo',
+        _ => FontDownloader.remote.containsKey(key) ? '${FontDownloader.remote[key]!.$1}Preview' : 'Pretendard',
+      };
 
   /// 설정 → 글자 크기 3단계 (보통 = 예전 기본 크기 그대로)
   static const textSteps = <(String, double)>[('아주 작게', 0.92), ('작게', 1.0), ('보통', 1.12), ('크게', 1.2), ('아주 크게', 1.3)];
@@ -218,6 +225,13 @@ class ThemeProvider extends ChangeNotifier {
     }
     if (fontFamily != null) {
       _fontFamily = availableFonts.any((f) => f['key'] == fontFamily) ? fontFamily : 'pretendard';
+    }
+    await FontDownloader.init(); // 이미 받아 둔 글꼴 목록
+    // 받아야 하는 글꼴을 쓰고 있으면 뒤에서 불러오기 (그동안은 프리텐다드로 보임)
+    if (FontDownloader.isRemote(_fontFamily)) {
+      FontDownloader.ensure(_fontFamily).then((ok) {
+        if (ok) notifyListeners();
+      });
     }
     if (isDarkMode != null) {
       _isDarkMode = isDarkMode;
@@ -289,7 +303,7 @@ class ThemeProvider extends ChangeNotifier {
       'maru_buri': 'MaruBuri',
     };
     final f = bundled[_fontFamily];
-    if (f != null) return TextTheme(bodyLarge: TextStyle(fontFamily: f));
+    if (f != null) return TextTheme(bodyLarge: TextStyle(fontFamily: FontDownloader.isLoaded(_fontFamily) ? f : 'Pretendard'));
     switch (_fontFamily) {
       case 'noto_sans':
         return GoogleFonts.notoSansKrTextTheme();

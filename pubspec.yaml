@@ -1,7 +1,7 @@
 name: mp3_player
 description: Local MP3 Player App
 publish_to: 'none'
-version: 1.0.0+184
+version: 1.0.0+185
 environment:
   sdk: ^3.12.0
 
@@ -19,6 +19,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.3.2
   http: ^1.6.0
+  path_provider: ^2.1.4
   torch_light: ^1.0.0
   url_launcher: ^6.3.0
   video_player: ^2.9.2
@@ -73,10 +74,11 @@ flutter:
           weight: 500
         - asset: assets/fonts/SpoqaHanSansNeo-Bold.ttf
           weight: 700
-    - family: LINESeedKR
+    # 글꼴 미리보기용 (이름 글자만 담은 아주 작은 글꼴) — 진짜 글꼴은 고를 때 R2에서 받음 (font_downloader.dart)
+    - family: LINESeedKRPreview
       fonts:
-        - asset: assets/fonts/LINESeedKR-Regular.otf
-        - asset: assets/fonts/LINESeedKR-Bold.otf
+        - asset: assets/fonts/preview/LINESeedKRPreview-Regular.otf
+        - asset: assets/fonts/preview/LINESeedKRPreview-Bold.otf
           weight: 700
     # 설정 → 글꼴 (자주 쓰는 한글 2,350자 + 영문만 남긴 가벼운 버전)
     - family: Pretendard
@@ -84,38 +86,38 @@ flutter:
         - asset: assets/fonts/Pretendard-Regular.ttf
         - asset: assets/fonts/Pretendard-Bold.ttf
           weight: 700
-    - family: NanumSquareRound
+    - family: NanumSquareRoundPreview
       fonts:
-        - asset: assets/fonts/NanumSquareRound-Regular.ttf
-        - asset: assets/fonts/NanumSquareRound-Bold.ttf
+        - asset: assets/fonts/preview/NanumSquareRoundPreview-Regular.ttf
+        - asset: assets/fonts/preview/NanumSquareRoundPreview-Bold.ttf
           weight: 700
-    - family: GowunDodum
+    - family: GowunDodumPreview
       fonts:
-        - asset: assets/fonts/GowunDodum-Regular.ttf
-    - family: MaruBuri
+        - asset: assets/fonts/preview/GowunDodumPreview-Regular.ttf
+    - family: MaruBuriPreview
       fonts:
-        - asset: assets/fonts/MaruBuri-Regular.ttf
-        - asset: assets/fonts/MaruBuri-Bold.ttf
+        - asset: assets/fonts/preview/MaruBuriPreview-Regular.ttf
+        - asset: assets/fonts/preview/MaruBuriPreview-Bold.ttf
           weight: 700
-    - family: SUIT
+    - family: SUITPreview
       fonts:
-        - asset: assets/fonts/SUIT-Regular.ttf
-        - asset: assets/fonts/SUIT-Bold.ttf
+        - asset: assets/fonts/preview/SUITPreview-Regular.ttf
+        - asset: assets/fonts/preview/SUITPreview-Bold.ttf
           weight: 700
-    - family: WantedSans
+    - family: WantedSansPreview
       fonts:
-        - asset: assets/fonts/WantedSans-Regular.ttf
-        - asset: assets/fonts/WantedSans-Bold.ttf
+        - asset: assets/fonts/preview/WantedSansPreview-Regular.ttf
+        - asset: assets/fonts/preview/WantedSansPreview-Bold.ttf
           weight: 700
-    - family: NanumGothic
+    - family: NanumGothicPreview
       fonts:
-        - asset: assets/fonts/NanumGothic-Regular.ttf
-        - asset: assets/fonts/NanumGothic-Bold.ttf
+        - asset: assets/fonts/preview/NanumGothicPreview-Regular.ttf
+        - asset: assets/fonts/preview/NanumGothicPreview-Bold.ttf
           weight: 700
-    - family: IBMPlexSansKR
+    - family: IBMPlexSansKRPreview
       fonts:
-        - asset: assets/fonts/IBMPlexSansKR-Regular.ttf
-        - asset: assets/fonts/IBMPlexSansKR-Bold.ttf
+        - asset: assets/fonts/preview/IBMPlexSansKRPreview-Regular.ttf
+        - asset: assets/fonts/preview/IBMPlexSansKRPreview-Bold.ttf
           weight: 700
 
 

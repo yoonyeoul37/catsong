@@ -20,6 +20,7 @@ import 'bulk_art_screen.dart';
 import 'player_screen.dart' show showPlayerStyleMenu;
 import '../utils/home_card_pref.dart';
 import '../utils/point_color.dart';
+import '../utils/font_downloader.dart';
 import 'settings_help_screen.dart';
 import 'policy_web_screen.dart';
 import '../services/loudness.dart';
@@ -1137,6 +1138,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _showFontDialog(BuildContext context) {
     final themeProvider = context.read<ThemeProvider>();
+    String? busyKey; // 지금 받는 중인 글꼴 (그 줄에 동그라미)
     showParanSheet(
       context,
       title: AppLocalizations.of(context)!.fontChange,
@@ -1146,10 +1148,42 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ParanRow(
               icon: Icons.font_download_outlined,
               title: _getFontName(context, font['key']!),
+              // 이름을 그 글꼴 모양으로 (받기 전에도 보이게 이름 글자만 담은 작은 글꼴)
+              titleFont: ThemeProvider.previewFamily(font['key']!),
               selected: themeProvider.fontFamily == font['key'],
-              onTap: () {
-                themeProvider.setFontFamily(font['key']!);
-                Navigator.pop(ctx);
+              // 아직 안 받은 글꼴은 ⬇, 받는 중이면 동그라미
+              trailing: busyKey == font['key']
+                  ? SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2, color: pointColorOf(context)),
+                    )
+                  : FontDownloader.needsDownload(font['key']!)
+                      ? Icon(Icons.download_rounded, size: 18, color: _sTextHint(themeProvider.isDarkMode))
+                      : null,
+              onTap: () async {
+                final key = font['key']!;
+                if (busyKey != null) return; // 받는 중엔 다른 줄 안 눌리게
+                if (!FontDownloader.isLoaded(key)) {
+                  final wasNew = FontDownloader.needsDownload(key); // 처음 받는 글꼴인지
+                  setSheet(() => busyKey = key);
+                  final ok = await FontDownloader.ensure(key);
+                  if (!ctx.mounted) return;
+                  setSheet(() => busyKey = null);
+                  if (!ok) {
+                    showParanToast(context, tr.checkInternet, error: true);
+                    return;
+                  }
+                  // 다 받으면 물방울 "똑" (설정 → 효과음 따라: 소리 모드=소리, 진동 모드=진동, 무음=없음)
+                  if (wasNew && themeProvider.feedbackSoundEnabled) {
+                    const MethodChannel('kr.ssing.catsong/media')
+                        .invokeMethod('feedbackSound', {'low': false})
+                        .catchError((Object _) => null);
+                  }
+                }
+                await themeProvider.setFontFamily(key);
+                // 창은 그대로 두고 ✓만 옮기기 (여러 글꼴을 눌러 보며 비교할 수 있게)
+                if (ctx.mounted) setSheet(() {});
               },
             ),
         ],

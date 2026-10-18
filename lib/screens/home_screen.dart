@@ -3328,7 +3328,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: TextStyle(color: ink, fontSize: 13, fontWeight: FontWeight.w600)),
                       ),
                       const SizedBox(width: 2),
-                      _BounceQ(color: accent),
+                      _BounceQ(
+                        color: accent,
+                        style: GoogleFonts.quicksand(color: accent, fontSize: 19, height: 1.0, fontWeight: FontWeight.w700),
+                      ),
                     ],
                   )
                 else

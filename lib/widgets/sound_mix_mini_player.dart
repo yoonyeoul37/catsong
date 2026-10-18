@@ -173,7 +173,7 @@ class _MiniCloseX extends StatelessWidget {
         child: SizedBox(
           width: 26,
           height: 26,
-          child: Icon(Icons.close_rounded, size: 14, color: const Color(0xFFF4EFE5).withOpacity(0.45)),
+          child: Icon(Icons.close_rounded, size: 17, color: const Color(0xFFF4EFE5).withOpacity(0.45)),
         ),
       );
 }

@@ -160,11 +160,14 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
-            color: selected ? (isDarkMode ? Colors.white : const Color(0xFF17140F)) : Colors.transparent,
+            color: selected ? (isDarkMode ? const Color(0xFF45413B) : const Color(0xFFFBF8F2)) : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
+            boxShadow: selected
+                ? [BoxShadow(color: Colors.black.withOpacity(isDarkMode ? 0.25 : 0.08), blurRadius: 3, offset: const Offset(0, 1))]
+                : null,
           ),
           alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 4),
           // 글자가 커도 한 줄 (넘치면 칸에 맞게 살짝 줄임)
           child: FittedBox(
             fit: BoxFit.scaleDown,
@@ -173,10 +176,10 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
               maxLines: 1,
               style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
                 color: selected
-                    ? (isDarkMode ? const Color(0xFF24221F) : Colors.white)
-                    : baseColor.withOpacity(0.7),
+                    ? (isDarkMode ? Colors.white : const Color(0xFF17140F))
+                    : baseColor.withOpacity(0.55),
                 fontSize: 13,
-                fontWeight: FontWeight.w600,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
               ),
             ),
           ),
@@ -1045,18 +1048,20 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           ],
         ),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(102),
+          preferredSize: const Size.fromHeight(86),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 4, 24, 12),
+            padding: const EdgeInsets.fromLTRB(24, 4, 24, 8),
             child: Column(
               children: [
                 Container(
-                  height: 38,
+                  height: 36,
+                  padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
-                    color: baseColor.withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(10),
+                    color: baseColor.withOpacity(0.07),
+                    borderRadius: BorderRadius.circular(10), // 아래 카드와 같은 둥글기
                   ),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       _toggleButton(tr.all, _ViewMode.all, isDarkMode),
                       _toggleButton(tr.byBroadcaster, _ViewMode.broadcaster, isDarkMode),
@@ -1065,8 +1070,9 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 GestureDetector(
+                  behavior: HitTestBehavior.opaque, // 줄 어디를 눌러도 나라 고르기
                   onTap: () {
                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                     Navigator.push(
@@ -1074,56 +1080,27 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                       MaterialPageRoute(builder: (ctx) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: radioTextScaler(ctx)), child: const RadioHomeScreen())), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
                     );
                   },
-                  child: Container(
-                    width: double.infinity,
-                    height: 38,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: baseColor.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(10), // 홈 카드·위 탭과 같은 둥글기
-                    ),
+                  child: SizedBox(
+                    height: 30,
                     child: Row(
                       children: [
-                        Container(
-                          width: 26,
-                          height: 26,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: isDarkMode
-                                ? const Color(0x14FFFFFF)
-                                : Colors.white.withOpacity(0.8),
-                          ),
-                          child: Icon(
-                            Icons.public,
-                            size: 16,
-                            color: context.watch<ThemeProvider>().primaryColor.value == 0xFF2589E8
-                                ? (isDarkMode ? const Color(0xFF6FB0FF) : const Color(0xFF2F7DE8))
-                                : context.watch<ThemeProvider>().primaryColor,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(tr.selectCountryShort,
-                            style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily, color: baseColor, fontSize: 13, fontWeight: FontWeight.w700)),
-                        Container(
-                          width: 1,
-                          height: 14,
-                          margin: const EdgeInsets.symmetric(horizontal: 10),
-                          color: baseColor.withOpacity(0.18),
-                        ),
-                        const Text('🇰🇷', style: TextStyle(fontSize: 16)),
-                        const SizedBox(width: 6),
+                        const SizedBox(width: 2),
                         Expanded(
-                          child: Text(tr.countryKR,
+                          child: Text(tr.selectCountryShort,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily, 
-                                  color: baseColor.withOpacity(0.7),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500)),
+                              style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
+                                  color: baseColor.withOpacity(0.5), fontSize: 12.5, fontWeight: FontWeight.w500)),
                         ),
+                        const Text('🇰🇷', style: TextStyle(fontSize: 15)),
+                        const SizedBox(width: 6),
+                        Text(tr.countryKR,
+                            maxLines: 1,
+                            style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
+                                color: baseColor, fontSize: 13.5, fontWeight: FontWeight.w700)),
+                        const SizedBox(width: 2),
                         Icon(Icons.keyboard_arrow_down_rounded,
-                            size: 20, color: baseColor.withOpacity(0.5)),
+                            size: 20, color: baseColor.withOpacity(0.45)),
                       ],
                     ),
                   ),

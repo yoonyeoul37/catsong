@@ -46,3 +46,4 @@ app.*.map.json
 play-key.json
 supabase_download/
 upload-keystore.jks
+스토어 사진/

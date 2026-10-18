@@ -63,7 +63,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get repeat => 'Powtarzaj';
 
   @override
-  String get nowPlaying => 'Odtwarzane';
+  String get nowPlaying => 'Teraz odtwarzane';
 
   @override
   String get noSongs => 'Nie znaleziono plików MP3';
@@ -72,7 +72,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get addMusic => 'Dodaj pliki muzyczne na urządzenie';
 
   @override
-  String get scanningMusic => 'Skanowanie muzyki...';
+  String get scanningMusic => 'Wyszukiwanie muzyki...';
 
   @override
   String get editSong => 'Edytuj informacje';
@@ -105,7 +105,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get equalizer => 'Korektor';
 
   @override
-  String get sleepTimer => 'Wyłącznik czasowy';
+  String get sleepTimer => 'Minutnik uśpienia';
 
   @override
   String get playbackSpeed => 'Prędkość odtwarzania';
@@ -138,13 +138,13 @@ class AppLocalizationsPl extends AppLocalizations {
   String get sos => 'Światło awaryjne SOS';
 
   @override
-  String get ringtone => 'Ustaw dzwonek';
+  String get ringtone => 'Ustaw jako dzwonek';
 
   @override
   String get widget => 'Widżet na ekran główny';
 
   @override
-  String get version => 'Informacje o wersji';
+  String get version => 'Wersja';
 
   @override
   String get promoCode => 'Kod promocyjny';
@@ -159,14 +159,13 @@ class AppLocalizationsPl extends AppLocalizations {
   String get noRecentSongs => 'Brak ostatnio odtwarzanych utworów';
 
   @override
-  String get playMusic => 'Włącz jakąś muzykę';
+  String get playMusic => 'Posłuchaj muzyki';
 
   @override
-  String get clearRecent => 'Wyczyść ostatnie utwory';
+  String get clearRecent => 'Wyczyść historię odtwarzania';
 
   @override
-  String get clearRecentConfirm =>
-      'Wyczyścić wszystkie ostatnio odtwarzane utwory?';
+  String get clearRecentConfirm => 'Usunąć całą historię odtwarzania?';
 
   @override
   String get playAll => 'Odtwórz wszystko';
@@ -236,7 +235,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get searchHint => 'Szukaj utworów, wykonawców, albumów...';
 
   @override
-  String get timerCancel => 'Anuluj wyłącznik';
+  String get timerCancel => 'Anuluj minutnik';
 
   @override
   String get set => 'Ustaw';
@@ -260,7 +259,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get off => 'Wył.';
 
   @override
-  String get flashlightError => 'Błąd latarki';
+  String get flashlightError => 'Nie udało się włączyć latarki';
 
   @override
   String get minuteShort => 'min';
@@ -464,7 +463,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get radioTitle => 'Radio';
 
   @override
-  String get radioRecentListening => 'Ostatnio słuchane';
+  String get radioRecentListening => 'Ostatnio słuchane stacje';
 
   @override
   String get radioSelectCountry => 'Wybierz kraj';
@@ -482,16 +481,17 @@ class AppLocalizationsPl extends AppLocalizations {
   String get radioSchedule => 'Ramówka';
 
   @override
-  String get sleepTimerDesc => 'Wyłączy się automatycznie po wybranym czasie';
+  String get sleepTimerDesc =>
+      'Odtwarzanie zatrzyma się automatycznie po wybranym czasie';
 
   @override
-  String get sleepTimerActiveDesc => 'Wyłącznik czasowy działa';
+  String get sleepTimerActiveDesc => 'Minutnik uśpienia jest włączony';
 
   @override
   String get remainingTime => 'Pozostały czas';
 
   @override
-  String get cancelTimerX => '× Anuluj wyłącznik';
+  String get cancelTimerX => '× Anuluj minutnik';
 
   @override
   String get countryKR => 'Korea';
@@ -887,7 +887,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionJeju => 'Jeju';
 
   @override
-  String get radioNoFavorites => 'Brak ulubionych';
+  String get radioNoFavorites => 'Nie masz jeszcze ulubionych stacji';
 
   @override
   String get radioNoFavoritesDesc => 'Stuknij ♡ przy stacji, aby ją dodać';
@@ -907,7 +907,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get radioBroadcastSchedule => 'Ramówka';
 
   @override
-  String get radioPlayFirst => 'Najpierw włącz stację radiową';
+  String get radioPlayFirst => 'Najpierw włącz radio';
 
   @override
   String radioScheduleCompleteToast(Object time, Object title) {
@@ -915,7 +915,7 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
-  String get radioPlaybackFailed => 'Nie udało się odtworzyć.';
+  String get radioPlaybackFailed => 'Nie udało się rozpocząć odtwarzania.';
 
   @override
   String get radioRerun => 'Powtórka';
@@ -1299,8 +1299,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get radioExitConfirmTitle => 'Wyjść z radia?';
 
   @override
-  String get radioExitConfirmMessage =>
-      'Jeśli teraz wyjdziesz, odtwarzanie się zatrzyma.';
+  String get radioExitConfirmMessage => 'Do usłyszenia następnym razem!';
 
   @override
   String get radioExitKeepListening => 'Słuchaj dalej';
@@ -1324,8 +1323,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get musicExitConfirmTitle => 'Zatrzymać muzykę?';
 
   @override
-  String get musicExitConfirmMessage =>
-      'Jeśli teraz wyjdziesz, odtwarzanie się zatrzyma.';
+  String get musicExitConfirmMessage => 'Do usłyszenia następnym razem!';
 
   @override
   String get homeNewSongs => 'Nowe utwory';
@@ -1346,7 +1344,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get homeTipScheduleTitle => 'Zaplanuj radio';
 
   @override
-  String get homeTipScheduleSub => 'Stuknij Ramówka pod odtwarzaczem radia';
+  String get homeTipScheduleSub => 'Stuknij „Zaplanuj” pod odtwarzaczem radia';
 
   @override
   String get homeTipCastTitle => 'Słuchaj na TV lub głośniku';
@@ -1355,10 +1353,10 @@ class AppLocalizationsPl extends AppLocalizations {
   String get homeTipCastSub => 'Ta sama sieć Wi-Fi → menu ⋮ odtwarzacza';
 
   @override
-  String get homeTipSleepTitle => 'Wyłącznik czasowy na noc';
+  String get homeTipSleepTitle => 'Zasypiaj z minutnikiem';
 
   @override
-  String get homeTipSleepSub => 'Stuknij Uśpienie pod odtwarzaczem';
+  String get homeTipSleepSub => 'Stuknij „Sen” pod odtwarzaczem';
 
   @override
   String get homeTodayTip => 'PORADA';
@@ -1489,10 +1487,10 @@ class AppLocalizationsPl extends AppLocalizations {
   String get homeRestHeader => 'Zrób sobie krótką przerwę';
 
   @override
-  String get homeRecentHeader => 'Ostatnio odtwarzane';
+  String get homeRecentHeader => 'Ostatnio słuchane';
 
   @override
-  String get homeRecentEmpty => 'Nic jeszcze nie odtwarzano';
+  String get homeRecentEmpty => 'Nie masz ostatnio słuchanych utworów';
 
   @override
   String get homeRecentEmptySub =>
@@ -1625,13 +1623,13 @@ class AppLocalizationsPl extends AppLocalizations {
   String get dailyTipRingtoneSub => 'Z menu ⋮ utworu';
 
   @override
-  String get dailyTipVideoTitle => 'Zapisz dźwięk z filmu';
+  String get dailyTipVideoTitle => 'Zapisz sam dźwięk z filmu';
 
   @override
   String get dailyTipVideoSub => 'Menu ⋮ filmu → „Zapisz jako muzykę”';
 
   @override
-  String get dailyTipMixTitle => 'Dodaj deszcz do muzyki';
+  String get dailyTipMixTitle => 'Dodaj odgłosy deszczu do muzyki';
 
   @override
   String get dailyTipMixSub => 'Menu ⋮ odtwarzacza → Miks odgłosów natury';
@@ -1647,7 +1645,8 @@ class AppLocalizationsPl extends AppLocalizations {
   String get dailyOffTitle => 'Wyłączyć kartę dnia?';
 
   @override
-  String get dailyOffMessage => 'Możesz ją włączyć ponownie w Ustawieniach.';
+  String get dailyOffMessage =>
+      'Możesz ją ponownie włączyć w Ustawieniach → Karty polecane na ekranie głównym.';
 
   @override
   String get turnOff => 'Wyłącz';
@@ -1785,7 +1784,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get moreCleanSub => 'Popraw chaotyczne tytuły i wykonawców.';
 
   @override
-  String get moreArtTitle => 'Znajdź okładki';
+  String get moreArtTitle => 'Znajdź okładki albumów';
 
   @override
   String get moreArtSub => 'Dodaj okładki do utworów, które ich nie mają.';
@@ -1874,16 +1873,16 @@ class AppLocalizationsPl extends AppLocalizations {
       'Potrzebny jest dostęp do pamięci.\nZezwól na niego w Ustawieniach.';
 
   @override
-  String get musicLoadError => 'Błąd wczytywania muzyki';
+  String get musicLoadError => 'Nie udało się wczytać muzyki';
 
   @override
-  String get musicScanError => 'Błąd skanowania muzyki';
+  String get musicScanError => 'Nie udało się wyszukać muzyki';
 
   @override
   String get sleepAskDuration => 'Po jakim czasie zatrzymać?';
 
   @override
-  String get sleepFadeHint => 'Ostatnia minuta stopniowo cichnie';
+  String get sleepFadeHint => 'W ostatniej minucie dźwięk stopniowo cichnie';
 
   @override
   String get paranPhoto => 'Paran Photo';
@@ -1979,7 +1978,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get repeatPlay => 'Powtarzaj';
 
   @override
-  String get playerScreen => 'Styl odtwarzacza';
+  String get playerScreen => 'Ekran odtwarzania';
 
   @override
   String get viewLyrics => 'Tekst';
@@ -2116,7 +2115,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get lyricsRefetch => 'Szukaj tekstu ponownie';
 
   @override
-  String get lyricsDeleteMine => 'Usuń mój tekst';
+  String get lyricsDeleteMine => 'Usuń dodany tekst';
 
   @override
   String linesSelected(int count) {
@@ -2368,7 +2367,7 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
-  String get pickRightArt => 'Wybierz właściwą okładkę';
+  String get pickRightArt => 'Wybierz odpowiednią okładkę albumu';
 
   @override
   String artAdded(int count) {
@@ -2384,7 +2383,7 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
-  String get noSongsWithoutArt => 'Żadnemu utworowi nie brakuje okładki';
+  String get noSongsWithoutArt => 'Wszystkie utwory mają okładki';
 
   @override
   String get allHaveArt => 'Każdy utwór ma okładkę';
@@ -2396,7 +2395,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String artSummary(int missing, int found) {
-    return 'Bez okładki: $missing · Znaleziono: $found';
+    return 'Bez okładki: $missing · Znalezione: $found';
   }
 
   @override
@@ -2455,7 +2454,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get ringtoneFailedMsg => 'Nie udało się ustawić dzwonka';
 
   @override
-  String get saveCurrentEq => 'Zapisz ustawienia';
+  String get saveCurrentEq => 'Zapisz bieżące ustawienia';
 
   @override
   String get eqNeedsPlay => 'Odtwórz raz utwór, aby użyć korektora';
@@ -2535,7 +2534,8 @@ class AppLocalizationsPl extends AppLocalizations {
       'Dodaj wykonawcę w Edytuj informacje, aby wyszukać';
 
   @override
-  String get accurateNamesHelp => 'Dokładne nazwy wykonawcy i tytułu pomagają';
+  String get accurateNamesHelp =>
+      'Dokładny tytuł i nazwa wykonawcy ułatwią wyszukiwanie';
 
   @override
   String get showLess => 'Mniej';
@@ -2644,10 +2644,10 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
-  String get noVoiceRec => 'Brak nagrań głosowych';
+  String get noVoiceRec => 'Nie masz nagrań głosowych';
 
   @override
-  String get noCallRec => 'Brak nagrań rozmów';
+  String get noCallRec => 'Nie masz nagrań rozmów';
 
   @override
   String get voiceEmptyHint1 => 'Stuknij ';
@@ -2858,7 +2858,8 @@ class AppLocalizationsPl extends AppLocalizations {
   String get alreadyLonger => 'Nagranie jest już dłuższe';
 
   @override
-  String get autoSaveWhen => 'Zapisz automatycznie po osiągnięciu tej długości';
+  String get autoSaveWhen =>
+      'Zapisz automatycznie po osiągnięciu wybranego czasu';
 
   @override
   String get timerOff => 'Wyłącz limit';
@@ -3010,7 +3011,8 @@ class AppLocalizationsPl extends AppLocalizations {
   String get renameFailed => 'Nie udało się zmienić nazwy';
 
   @override
-  String get castFailedRetry => 'Nie udało się wysłać na TV. Spróbuj ponownie.';
+  String get castFailedRetry =>
+      'Nie udało się przesłać na telewizor. Spróbuj ponownie.';
 
   @override
   String get watchOnTv => 'Oglądaj na TV';

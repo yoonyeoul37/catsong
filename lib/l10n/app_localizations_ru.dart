@@ -45,7 +45,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get all => 'Все';
 
   @override
-  String get play => 'Играть';
+  String get play => 'Воспроизвести';
 
   @override
   String get pause => 'Пауза';
@@ -138,7 +138,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sos => 'Сигнал SOS';
 
   @override
-  String get ringtone => 'Сделать рингтоном';
+  String get ringtone => 'Установить как рингтон';
 
   @override
   String get widget => 'Виджет';
@@ -159,16 +159,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noRecentSongs => 'Нет недавно прослушанных песен';
 
   @override
-  String get playMusic => 'Включите музыку';
+  String get playMusic => 'Послушайте музыку';
 
   @override
-  String get clearRecent => 'Очистить недавние';
+  String get clearRecent => 'Очистить историю';
 
   @override
-  String get clearRecentConfirm => 'Очистить все недавно прослушанные песни?';
+  String get clearRecentConfirm => 'Очистить историю прослушивания?';
 
   @override
-  String get playAll => 'Слушать все';
+  String get playAll => 'Воспроизвести всё';
 
   @override
   String get noAlbums => 'Альбомы не найдены';
@@ -259,7 +259,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get off => 'Выкл.';
 
   @override
-  String get flashlightError => 'Ошибка фонарика';
+  String get flashlightError => 'Не удалось включить фонарик';
 
   @override
   String get minuteShort => 'мин';
@@ -433,10 +433,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get lyrics => 'Текст';
 
   @override
-  String get lyricsLoading => 'Загрузка текста...';
+  String get lyricsLoading => 'Загружаем текст песни...';
 
   @override
-  String get lyricsErrorNotFound => 'Текст не найден';
+  String get lyricsErrorNotFound => 'Текст песни не найден';
 
   @override
   String get lyricsErrorNetwork => 'Проверьте подключение к интернету';
@@ -463,7 +463,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get radioTitle => 'Радио';
 
   @override
-  String get radioRecentListening => 'Недавно слушали';
+  String get radioRecentListening => 'Недавно прослушанные';
 
   @override
   String get radioSelectCountry => 'Выбор страны';
@@ -478,7 +478,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get radioSleep => 'Сон';
 
   @override
-  String get radioSchedule => 'Программа';
+  String get radioSchedule => 'Расписание';
 
   @override
   String get sleepTimerDesc => 'Выключится автоматически через выбранное время';
@@ -896,7 +896,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String radioScheduleTitle(Object station) {
-    return 'Программа $station';
+    return 'Программа передач: $station';
   }
 
   @override
@@ -906,15 +906,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get radioBroadcastSchedule => 'Программа';
 
   @override
-  String get radioPlayFirst => 'Сначала включите радиостанцию';
+  String get radioPlayFirst => 'Сначала включите радио';
 
   @override
   String radioScheduleCompleteToast(Object time, Object title) {
-    return '$title: запланировано на $time';
+    return '$title: эфир запланирован на $time';
   }
 
   @override
-  String get radioPlaybackFailed => 'Не удалось воспроизвести.';
+  String get radioPlaybackFailed => 'Не удалось запустить воспроизведение.';
 
   @override
   String get radioRerun => 'Повтор';
@@ -1258,7 +1258,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get selectSong => 'Выберите песню';
 
   @override
-  String get selectRange => 'Выберите отрезок';
+  String get selectRange => 'Выберите фрагмент';
 
   @override
   String get start => 'Начало';
@@ -1342,10 +1342,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get homeTipAlarmSub => 'Музыка, радио или звуки природы';
 
   @override
-  String get homeTipScheduleTitle => 'Запланируйте радио';
+  String get homeTipScheduleTitle => 'Включайте радио по расписанию';
 
   @override
-  String get homeTipScheduleSub => 'Нажмите «Программа» под плеером радио';
+  String get homeTipScheduleSub => 'Нажмите «Запланировать» под радиоплеером';
 
   @override
   String get homeTipCastTitle => 'Слушайте на ТВ или колонке';
@@ -1630,7 +1630,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get dailyTipMixTitle => 'Добавьте дождь к музыке';
 
   @override
-  String get dailyTipMixSub => 'Меню ⋮ плеера → Микс звуков природы';
+  String get dailyTipMixSub => 'Меню ⋮ в плеере → «Микс звуков природы»';
 
   @override
   String get dailyTipLyricsTitle => 'Поделитесь строчкой песни';
@@ -1869,10 +1869,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'Нужен доступ к хранилищу.\nРазрешите его в настройках.';
 
   @override
-  String get musicLoadError => 'Ошибка загрузки музыки';
+  String get musicLoadError => 'Не удалось загрузить музыку';
 
   @override
-  String get musicScanError => 'Ошибка поиска музыки';
+  String get musicScanError => 'Не удалось найти музыку';
 
   @override
   String get sleepAskDuration => 'Через сколько остановить?';
@@ -1968,7 +1968,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get listenOnTv => 'Слушать на ТВ';
 
   @override
-  String get shufflePlay => 'Перемешать';
+  String get shufflePlay => 'Случайный порядок';
 
   @override
   String get repeatPlay => 'Повтор';
@@ -2082,7 +2082,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get clearText => 'Очистить';
 
   @override
-  String get lyricsSaved => 'Сохранено как текст этой песни';
+  String get lyricsSaved => 'Текст песни сохранён';
 
   @override
   String get lyricsDeleteTitle => 'Удалить ваш текст?';
@@ -2420,7 +2420,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get trimTitle => 'Обрезка';
 
   @override
-  String get previewListen => 'Прослушать';
+  String get previewListen => 'Предпрослушивание';
 
   @override
   String get trimAndSave => 'Обрезать и сохранить';
@@ -2522,7 +2522,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get songInfoNotFound => 'Не удалось найти данные об этой песне';
+  String get songInfoNotFound => 'Не удалось найти информацию о песне';
 
   @override
   String get addArtistToSearch =>
@@ -3063,7 +3063,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get audioOnlyOff => 'Останавливается, когда вы выходите из приложения';
 
   @override
-  String get videoScanError => 'Ошибка поиска видео';
+  String get videoScanError => 'Не удалось найти видео';
 
   @override
   String get saveMusicFailed => 'Не удалось сохранить как музыку';
@@ -3112,7 +3112,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get radioShareSub => 'Поделитесь тем, что слушаете.';
+  String get radioShareSub => 'Расскажите друзьям, что слушаете.';
 
   @override
   String get savedSongAdded => 'Добавлено в сохранённые песни';
@@ -3171,7 +3171,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get scheduledToast => 'Запланировано';
 
   @override
-  String get scheduleFull => 'Больше нельзя. Удалите старые в «Расписании».';
+  String get scheduleFull =>
+      'Достигнут лимит. Удалите прошедшие записи в разделе «Расписание».';
 
   @override
   String get nextShort => 'Далее';
@@ -3245,7 +3246,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get scheduleTitle => 'Расписание';
 
   @override
-  String get scheduleSub => 'В заданное время включится эта станция';
+  String get scheduleSub => 'В выбранное время включится эта радиостанция';
 
   @override
   String get mySchedules => 'Мои расписания';
@@ -3291,7 +3292,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get scheduleLimit =>
-      'Не больше 5 расписаний. Удалите старые, чтобы добавить.';
+      'Можно создать до 5 записей. Удалите прошедшие, чтобы добавить новую.';
 
   @override
   String get diceProgramLabel => 'Сейчас в эфире';
@@ -3467,7 +3468,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get favAddHint => 'Нажмите на сердечко, чтобы добавить в избранное';
 
   @override
-  String get noRecentStations => 'Нет недавно прослушанных станций';
+  String get noRecentStations => 'Вы ещё не слушали радиостанции';
 
   @override
   String get loadingMoreStations => 'Загружаем ещё станции';
@@ -3538,7 +3539,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get niceNow => 'Хорошо слушать сейчас';
+  String get niceNow => 'Что послушать сейчас';
 
   @override
   String get tryRolling => 'Бросайте!';
@@ -3640,7 +3641,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get stopMix => 'Остановить микс';
 
   @override
-  String get playMix => 'Включить микс';
+  String get playMix => 'Воспроизвести микс';
 
   @override
   String get myMixDefault => 'Мой микс звуков';
@@ -3687,7 +3688,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get overlayIdleHint => 'Играет вместе с музыкой';
 
   @override
-  String get lastMix => 'Последний микс';
+  String get lastMix => 'Предыдущий микс';
 
   @override
   String get turnBackOn => 'Включить снова';
@@ -3869,7 +3870,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get infoLongTime => 'Послушать снова';
 
   @override
-  String get infoLongTimeD => 'Перемешивает песни, которые вы не слушали месяц';
+  String get infoLongTimeD =>
+      'Воспроизводит в случайном порядке песни, которые вы не слушали месяц';
 
   @override
   String get infoWeek => 'Эта неделя';
@@ -3984,7 +3986,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get headsetAsk => 'Спросить уведомлением';
 
   @override
-  String get headsetPlay => 'Сразу включать';
+  String get headsetPlay => 'Воспроизводить сразу';
 
   @override
   String get batteryTitle => 'Батарея: режим «Без ограничений»';
@@ -4324,7 +4326,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get greetLine4 => 'Ваши звуки ждут вас';
 
   @override
-  String get greetLine5 => 'Расслабьтесь и слушайте';
+  String get greetLine5 => 'Место, где можно отдохнуть душой — Paransori';
 
   @override
   String get byeLine1 => 'Какой день с хорошей музыкой';
@@ -4343,7 +4345,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String genreShuffle(String label, int n) {
-    return 'Перемешиваем: $label · песен: $n';
+    return '$label · $n песен в случайном порядке';
   }
 
   @override
@@ -4577,11 +4579,11 @@ class AppLocalizationsRu extends AppLocalizations {
       'От тихих минут перед сном до моментов, когда нужно сосредоточиться, — найдите звук, который подходит вам сейчас.';
 
   @override
-  String get introFeature5Title => 'Свой микс звуков';
+  String get introFeature5Title => 'Мой звуковой микс';
 
   @override
   String get introFeature5Desc =>
-      'Включайте любимые звуки вместе и создавайте свою атмосферу.';
+      'Сочетайте любимые звуки и создавайте настроение под себя.';
 
   @override
   String get introFeature6Title => 'Утренний будильник';
@@ -4638,7 +4640,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get nature07Desc =>
-      'Ровный дождь помогает сосредоточиться и унимает тревогу';
+      'Монотонный шум дождя помогает сосредоточиться и расслабиться';
 
   @override
   String get nature08Name => 'Дождь по окну';
@@ -4664,7 +4666,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get nature11Desc =>
-      'Звонкое пение птиц снимает стресс и поднимает настроение';
+      'Звонкое пение птиц помогает расслабиться и поднимает настроение';
 
   @override
   String get nature12Name => 'Кукушка и лесные птицы';
@@ -4677,7 +4679,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get nature13Desc =>
-      'Треск дров создаёт уют для глубокого расслабления';
+      'Потрескивание дров создаёт уютную атмосферу для отдыха';
 
   @override
   String get nature14Name => 'Ручей';

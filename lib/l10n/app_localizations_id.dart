@@ -39,7 +39,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get favorites => 'Favorit';
 
   @override
-  String get recent => 'Terbaru';
+  String get recent => 'Riwayat';
 
   @override
   String get all => 'Semua';
@@ -63,7 +63,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get repeat => 'Ulangi';
 
   @override
-  String get nowPlaying => 'Diputar';
+  String get nowPlaying => 'Sedang diputar';
 
   @override
   String get noSongs => 'Tidak ada file MP3';
@@ -72,7 +72,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get addMusic => 'Tambahkan file musik ke perangkatmu';
 
   @override
-  String get scanningMusic => 'Memindai musik...';
+  String get scanningMusic => 'Mencari musik...';
 
   @override
   String get editSong => 'Edit info lagu';
@@ -108,19 +108,19 @@ class AppLocalizationsId extends AppLocalizations {
   String get sleepTimer => 'Timer tidur';
 
   @override
-  String get playbackSpeed => 'Kecepatan putar';
+  String get playbackSpeed => 'Kecepatan pemutaran';
 
   @override
-  String get repeatMode => 'Mode ulang';
+  String get repeatMode => 'Mode pengulangan';
 
   @override
-  String get noRepeat => 'Tanpa ulang';
+  String get noRepeat => 'Tidak diulang';
 
   @override
-  String get repeatOne => 'Ulangi satu';
+  String get repeatOne => 'Ulangi lagu ini';
 
   @override
-  String get repeatAll => 'Ulangi semua';
+  String get repeatAll => 'Ulangi semua lagu';
 
   @override
   String get textSize => 'Ukuran teks';
@@ -144,7 +144,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get widget => 'Widget layar utama';
 
   @override
-  String get version => 'Info versi';
+  String get version => 'Versi';
 
   @override
   String get promoCode => 'Kode promo';
@@ -159,13 +159,13 @@ class AppLocalizationsId extends AppLocalizations {
   String get noRecentSongs => 'Belum ada lagu yang diputar';
 
   @override
-  String get playMusic => 'Putar musik dulu, yuk';
+  String get playMusic => 'Yuk, dengarkan musik';
 
   @override
-  String get clearRecent => 'Hapus lagu terbaru';
+  String get clearRecent => 'Hapus riwayat pemutaran';
 
   @override
-  String get clearRecentConfirm => 'Hapus semua lagu yang baru diputar?';
+  String get clearRecentConfirm => 'Hapus seluruh riwayat pemutaran?';
 
   @override
   String get playAll => 'Putar semua';
@@ -195,7 +195,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get playing => 'Memutar...';
 
   @override
-  String get ringtoneFailed => 'Gagal mengatur nada dering';
+  String get ringtoneFailed => 'Tidak dapat mengatur nada dering';
 
   @override
   String get promoInvalid => 'Kode promo tidak valid';
@@ -207,11 +207,11 @@ class AppLocalizationsId extends AppLocalizations {
   String get confirm => 'OK';
 
   @override
-  String get permissionRequired => 'Perlu izin penyimpanan';
+  String get permissionRequired => 'Izin akses penyimpanan diperlukan';
 
   @override
   String get permissionMessage =>
-      'Izin penyimpanan diperlukan\nuntuk memindai file MP3.';
+      'Untuk mencari file MP3,\nizinkan akses penyimpanan.';
 
   @override
   String get allowPermission => 'Beri izin';
@@ -226,7 +226,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get deleted => 'Dihapus';
 
   @override
-  String get deleteFailed => 'Gagal menghapus';
+  String get deleteFailed => 'Tidak dapat menghapus';
 
   @override
   String get playNext => 'Putar berikutnya';
@@ -281,13 +281,13 @@ class AppLocalizationsId extends AppLocalizations {
   String get bassBooster => 'Penguat bass';
 
   @override
-  String get enhancesBass => 'Mempertebal suara bass';
+  String get enhancesBass => 'Meningkatkan suara bass';
 
   @override
   String get virtualizer => 'Virtualizer';
 
   @override
-  String get surroundEffect => 'Membuat efek suara surround';
+  String get surroundEffect => 'Memberikan efek suara yang lebih luas';
 
   @override
   String get reset => 'Reset';
@@ -463,7 +463,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get radioTitle => 'Radio';
 
   @override
-  String get radioRecentListening => 'Baru didengar';
+  String get radioRecentListening => 'Terakhir didengarkan';
 
   @override
   String get radioSelectCountry => 'Pilih negara';
@@ -472,10 +472,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get radioChannelCount => 'saluran';
 
   @override
-  String get radioPopular200 => '200 Populer';
+  String get radioPopular200 => '200 Terpopuler';
 
   @override
-  String get radioSleep => 'Tidur';
+  String get radioSleep => 'Timer';
 
   @override
   String get radioSchedule => 'Jadwal';
@@ -907,15 +907,15 @@ class AppLocalizationsId extends AppLocalizations {
   String get radioBroadcastSchedule => 'Jadwal siaran';
 
   @override
-  String get radioPlayFirst => 'Putar stasiun radio dulu';
+  String get radioPlayFirst => 'Putar radio terlebih dahulu';
 
   @override
   String radioScheduleCompleteToast(Object time, Object title) {
-    return '$title $time dijadwalkan';
+    return '$title dijadwalkan pada $time';
   }
 
   @override
-  String get radioPlaybackFailed => 'Gagal memutar.';
+  String get radioPlaybackFailed => 'Tidak dapat memutar siaran.';
 
   @override
   String get radioRerun => 'Siaran ulang';
@@ -1040,7 +1040,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get radioSloganCA => 'Suara dari utara';
 
   @override
-  String get radioSloganAU => 'Suara Negeri Kanguru';
+  String get radioSloganAU => 'Suara dari belahan bumi selatan';
 
   @override
   String get radioSloganMX => 'Irama Meksiko';
@@ -1340,7 +1340,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get homeTipAlarmTitle => 'Bangun bersama Paransori';
 
   @override
-  String get homeTipAlarmSub => 'Musik, radio, atau suara alam';
+  String get homeTipAlarmSub => 'Bangun dengan musik, radio, atau suara alam';
 
   @override
   String get homeTipScheduleTitle => 'Jadwalkan radio';
@@ -1349,16 +1349,16 @@ class AppLocalizationsId extends AppLocalizations {
   String get homeTipScheduleSub => 'Ketuk Jadwal di bawah pemutar radio';
 
   @override
-  String get homeTipCastTitle => 'Putar di TV atau speaker';
+  String get homeTipCastTitle => 'Dengarkan lewat TV atau speaker';
 
   @override
   String get homeTipCastSub => 'Wi-Fi yang sama → menu ⋮ pemutar';
 
   @override
-  String get homeTipSleepTitle => 'Timer tidur sebelum tidur';
+  String get homeTipSleepTitle => 'Atur timer sebelum tidur';
 
   @override
-  String get homeTipSleepSub => 'Ketuk Tidur di bawah pemutar';
+  String get homeTipSleepSub => 'Ketuk Timer tidur di layar pemutar';
 
   @override
   String get homeTodayTip => 'TIPS';
@@ -1485,13 +1485,14 @@ class AppLocalizationsId extends AppLocalizations {
   String get homeRestHeader => 'Istirahat sejenak';
 
   @override
-  String get homeRecentHeader => 'Baru diputar';
+  String get homeRecentHeader => 'Baru didengarkan';
 
   @override
   String get homeRecentEmpty => 'Belum ada yang diputar';
 
   @override
-  String get homeRecentEmptySub => 'Yang diputar 30 dtk+ akan muncul di sini';
+  String get homeRecentEmptySub =>
+      'Musik, radio, dan suara alam yang didengarkan minimal 30 detik akan muncul di sini';
 
   @override
   String get cleanLabel => 'Rapikan';
@@ -1535,7 +1536,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get dailyHowAboutThis => 'Bagaimana kalau lagu ini?';
 
   @override
-  String get listen => 'Putar';
+  String get listen => 'Dengarkan';
 
   @override
   String get dailyListenAgain => 'Dengar lagi';
@@ -1590,13 +1591,13 @@ class AppLocalizationsId extends AppLocalizations {
   String get dailyEveningTitle => 'Kerja bagus hari ini';
 
   @override
-  String get dailyEveningLine => 'Rileks dengan suara ombak';
+  String get dailyEveningLine => 'Beristirahat ditemani suara ombak';
 
   @override
   String get dailyNightTitle => 'Malam yang tenang';
 
   @override
-  String get dailyNightLine => 'Rileks dengan suara hujan';
+  String get dailyNightLine => 'Beristirahat ditemani suara hujan';
 
   @override
   String get dailyRightNow => 'Saat ini';
@@ -1620,10 +1621,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get dailyTipVideoSub => 'Menu ⋮ video → \'Simpan sebagai musik\'';
 
   @override
-  String get dailyTipMixTitle => 'Tambah suara hujan ke musikmu';
+  String get dailyTipMixTitle => 'Padukan musik dengan suara hujan';
 
   @override
-  String get dailyTipMixSub => 'Menu ⋮ pemutar → Mix suara alam';
+  String get dailyTipMixSub => 'Menu ⋮ di pemutar → Campur suara alam';
 
   @override
   String get dailyTipLyricsTitle => 'Bagikan sebaris lirik';
@@ -1862,10 +1863,10 @@ class AppLocalizationsId extends AppLocalizations {
       'Izin penyimpanan diperlukan.\nIzinkan di Pengaturan, ya.';
 
   @override
-  String get musicLoadError => 'Gagal memuat musik';
+  String get musicLoadError => 'Tidak dapat memuat musik';
 
   @override
-  String get musicScanError => 'Gagal memindai musik';
+  String get musicScanError => 'Tidak dapat mencari musik';
 
   @override
   String get sleepAskDuration => 'Berhenti memutar setelah berapa lama?';
@@ -1954,7 +1955,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String castPlayingNow(String device) {
-    return 'Sedang diputar di $device';
+    return 'Sedang diputar melalui $device';
   }
 
   @override
@@ -1973,7 +1974,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get viewLyrics => 'Lirik';
 
   @override
-  String get natureMix => 'Mix suara alam';
+  String get natureMix => 'Campur suara alam';
 
   @override
   String get repeatOffChip => 'Mati';
@@ -2083,7 +2084,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get lyricsDeleteMessage =>
-      'Setelah dihapus, kami akan mencarinya lagi secara online.';
+      'Setelah dihapus, lirik akan dicari lagi di internet.';
 
   @override
   String get lyricsBg => 'Latar lirik';
@@ -2166,10 +2167,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get ratioFeed => 'Feed 1:1';
 
   @override
-  String get cardMakeFailed => 'Gagal membuat kartu. Coba lagi, ya.';
+  String get cardMakeFailed => 'Kartu tidak dapat dibuat. Coba lagi, ya.';
 
   @override
-  String get photoLoadFailed => 'Gagal memuat foto';
+  String get photoLoadFailed => 'Foto tidak dapat dimuat';
 
   @override
   String get lyricsCard => 'Kartu lirik';
@@ -2412,7 +2413,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get trimmed => 'Dipotong';
 
   @override
-  String get trimFailed => 'Gagal memotong';
+  String get trimFailed => 'Tidak dapat memotong';
 
   @override
   String get ringtoneSet => 'Dijadikan nada dering';
@@ -2488,7 +2489,7 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get nowListening => 'Sedang diputar';
+  String get nowListening => 'Sedang didengarkan';
 
   @override
   String findingArtistInfo(String artist) {
@@ -3022,10 +3023,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get audioOnlyOff => 'Berhenti saat kamu keluar dari aplikasi';
 
   @override
-  String get videoScanError => 'Gagal memindai video';
+  String get videoScanError => 'Tidak dapat mencari video';
 
   @override
-  String get saveMusicFailed => 'Gagal menyimpan sebagai musik';
+  String get saveMusicFailed => 'Tidak dapat menyimpan sebagai musik';
 
   @override
   String get savedAsMusic => 'Disimpan sebagai musik';
@@ -3291,7 +3292,7 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get youtubeOpenFailed => 'Gagal membuka YouTube';
+  String get youtubeOpenFailed => 'YouTube tidak dapat dibuka';
 
   @override
   String get savedSongDeleted => 'Dihapus dari lagu tersimpan';
@@ -3334,7 +3335,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get popTrend => 'Lagi tren';
 
   @override
-  String get recentListened => 'Terbaru';
+  String get recentListened => 'Riwayat';
 
   @override
   String get myRadio => 'Radioku';
@@ -3427,7 +3428,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get favAddHint => 'Ketuk hati untuk menambah favorit';
 
   @override
-  String get noRecentStations => 'Belum ada stasiun yang diputar';
+  String get noRecentStations => 'Belum ada siaran yang didengarkan';
 
   @override
   String get loadingMoreStations => 'Memuat stasiun lainnya';
@@ -3515,16 +3516,16 @@ class AppLocalizationsId extends AppLocalizations {
       'Stasiun ini tidak bisa dimuat.\nSilakan pilih yang lain.';
 
   @override
-  String get soundPlayFailed => 'Gagal memutar suara';
+  String get soundPlayFailed => 'Suara tidak dapat diputar';
 
   @override
-  String get natureTitle1 => 'Suara';
+  String get natureTitle1 => 'Alam';
 
   @override
   String get natureTitle2 => ' Alam';
 
   @override
-  String get natureSub => 'Suara untuk menenangkan pikiran';
+  String get natureSub => 'Dengarkan suara yang menenangkan';
 
   @override
   String versionsCount(int count) {
@@ -3567,7 +3568,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get mixTitle2 => ' Pribadi';
 
   @override
-  String get mixSub => 'Racik suasana santaimu sendiri.';
+  String get mixSub => 'Ciptakan suasana nyaman dengan suara pilihanmu.';
 
   @override
   String get musicLabel => 'Musik';
@@ -3637,13 +3638,13 @@ class AppLocalizationsId extends AppLocalizations {
   String get turnAllOff => 'Matikan semua';
 
   @override
-  String get overlayOnHint => 'Lapisi musikmu dengan suara alam yang lembut';
+  String get overlayOnHint => 'Padukan musik dengan suara alam yang lembut';
 
   @override
-  String get overlayIdleHint => 'Ikut diputar saat musik menyala';
+  String get overlayIdleHint => 'Suara alam ikut diputar saat musik diputar';
 
   @override
-  String get lastMix => 'Mix terakhir';
+  String get lastMix => 'Campuran terakhir';
 
   @override
   String get turnBackOn => 'Nyalakan lagi';
@@ -3769,7 +3770,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get headsetTitle => 'Putar otomatis di headphone';
 
   @override
-  String get headsetDesc => 'Melanjutkan putar saat headphone tersambung';
+  String get headsetDesc => 'Lanjutkan musik saat headphone tersambung';
 
   @override
   String get descRingtone => 'Jadikan lagu favorit sebagai nada dering';
@@ -3941,7 +3942,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get headsetAsk => 'Tanya lewat notifikasi';
 
   @override
-  String get headsetPlay => 'Langsung putar';
+  String get headsetPlay => 'Putar sekarang';
 
   @override
   String get batteryTitle => 'Atur baterai ke \"Tidak dibatasi\"';
@@ -4270,16 +4271,16 @@ class AppLocalizationsId extends AppLocalizations {
   String get greetLine1 => 'Selamat datang kembali';
 
   @override
-  String get greetLine2 => 'Suara indah, hari yang indah';
+  String get greetLine2 => 'Senang bertemu lagi. Yuk, istirahat sejenak.';
 
   @override
   String get greetLine3 => 'Luangkan waktu untuk dirimu';
 
   @override
-  String get greetLine4 => 'Suaramu sudah menunggu';
+  String get greetLine4 => 'Senang bertemu lagi hari ini';
 
   @override
-  String get greetLine5 => 'Santai dan dengarkan';
+  String get greetLine5 => 'Tempat untuk melepas penat bersama Paransori';
 
   @override
   String get byeLine1 => 'Hari yang seru dengan musik yang asyik';
@@ -4455,7 +4456,7 @@ class AppLocalizationsId extends AppLocalizations {
       'Paransori lahir dari keinginan untuk menghadirkan suara seperti itu.';
 
   @override
-  String get introNameLabel => 'Tentang nama';
+  String get introNameLabel => 'Kisah di balik nama';
 
   @override
   String get introNameStory =>
@@ -4532,7 +4533,7 @@ class AppLocalizationsId extends AppLocalizations {
       'Dari momen tenang sebelum tidur hingga saat kamu perlu fokus, temukan suara yang pas untukmu sekarang.';
 
   @override
-  String get introFeature5Title => 'Mix suara pribadi';
+  String get introFeature5Title => 'Campuran suara pilihanmu';
 
   @override
   String get introFeature5Desc =>
@@ -4546,7 +4547,7 @@ class AppLocalizationsId extends AppLocalizations {
       'Awali harimu dengan semangat lewat lagu favorit, radio, atau suara alam.';
 
   @override
-  String get introMenuTitle => 'Tentang Paransori';
+  String get introMenuTitle => 'Kenali Paransori';
 
   @override
   String get introMenuDesc => 'Temukan cerita di balik Paransori';

@@ -66,13 +66,13 @@ class AppLocalizationsTh extends AppLocalizations {
   String get nowPlaying => 'กำลังเล่น';
 
   @override
-  String get noSongs => 'ไม่พบไฟล์ MP3';
+  String get noSongs => 'ไม่พบไฟล์เพลง MP3';
 
   @override
   String get addMusic => 'เพิ่มไฟล์เพลงลงในอุปกรณ์ของคุณ';
 
   @override
-  String get scanningMusic => 'กำลังสแกนเพลง...';
+  String get scanningMusic => 'กำลังค้นหาเพลง...';
 
   @override
   String get editSong => 'แก้ไขข้อมูลเพลง';
@@ -144,7 +144,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get widget => 'วิดเจ็ตหน้าจอหลัก';
 
   @override
-  String get version => 'ข้อมูลเวอร์ชัน';
+  String get version => 'เวอร์ชัน';
 
   @override
   String get promoCode => 'โค้ดโปรโมชัน';
@@ -159,13 +159,13 @@ class AppLocalizationsTh extends AppLocalizations {
   String get noRecentSongs => 'ยังไม่มีเพลงที่เล่นล่าสุด';
 
   @override
-  String get playMusic => 'ลองเปิดเพลงฟังกัน';
+  String get playMusic => 'ลองฟังเพลงกันเลย';
 
   @override
-  String get clearRecent => 'ล้างเพลงล่าสุด';
+  String get clearRecent => 'ล้างประวัติการเล่น';
 
   @override
-  String get clearRecentConfirm => 'ล้างเพลงที่เล่นล่าสุดทั้งหมดใช่ไหม';
+  String get clearRecentConfirm => 'ต้องการล้างประวัติการเล่นทั้งหมดไหม?';
 
   @override
   String get playAll => 'เล่นทั้งหมด';
@@ -195,7 +195,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get playing => 'กำลังเล่น...';
 
   @override
-  String get ringtoneFailed => 'ตั้งเสียงเรียกเข้าไม่สำเร็จ';
+  String get ringtoneFailed => 'ไม่สามารถตั้งค่าเสียงเรียกเข้าได้';
 
   @override
   String get promoInvalid => 'โค้ดโปรโมชันไม่ถูกต้อง';
@@ -226,7 +226,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get deleted => 'ลบแล้ว';
 
   @override
-  String get deleteFailed => 'ลบไม่สำเร็จ';
+  String get deleteFailed => 'ไม่สามารถลบได้';
 
   @override
   String get playNext => 'เล่นถัดไป';
@@ -259,7 +259,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get off => 'ปิด';
 
   @override
-  String get flashlightError => 'ไฟฉายขัดข้อง';
+  String get flashlightError => 'ไม่สามารถเปิดไฟฉายได้';
 
   @override
   String get minuteShort => 'นาที';
@@ -463,7 +463,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get radioTitle => 'วิทยุ';
 
   @override
-  String get radioRecentListening => 'ฟังล่าสุด';
+  String get radioRecentListening => 'สถานีที่ฟังล่าสุด';
 
   @override
   String get radioSelectCountry => 'เลือกประเทศ';
@@ -889,7 +889,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get radioNoFavorites => 'ยังไม่มีรายการโปรด';
 
   @override
-  String get radioNoFavoritesDesc => 'แตะ ♡ ที่ช่องเพื่อเพิ่ม';
+  String get radioNoFavoritesDesc => 'แตะ ♡ ข้างสถานีเพื่อเพิ่มในรายการโปรด';
 
   @override
   String get radioLoadingPopular => 'กำลังโหลดสถานียอดนิยม...';
@@ -906,15 +906,15 @@ class AppLocalizationsTh extends AppLocalizations {
   String get radioBroadcastSchedule => 'ผังรายการ';
 
   @override
-  String get radioPlayFirst => 'โปรดเปิดสถานีวิทยุก่อน';
+  String get radioPlayFirst => 'กรุณาเปิดวิทยุก่อน';
 
   @override
   String radioScheduleCompleteToast(Object time, Object title) {
-    return 'ตั้งเวลา $title $time แล้ว';
+    return 'ตั้งเวลา $title $time เรียบร้อยแล้ว';
   }
 
   @override
-  String get radioPlaybackFailed => 'เล่นไม่สำเร็จ';
+  String get radioPlaybackFailed => 'ไม่สามารถเล่นได้';
 
   @override
   String get radioRerun => 'รีรัน';
@@ -935,7 +935,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get radioAfterEnd => 'ก่อนปิด';
 
   @override
-  String get radioNoStationsFound => 'ไม่พบสถานี';
+  String get radioNoStationsFound => 'ไม่พบสถานีวิทยุ';
 
   @override
   String get sleepMin => 'นาที';
@@ -979,7 +979,7 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
-  String get radioKoreaTitle => 'วิทยุเกาหลี';
+  String get radioKoreaTitle => 'เสียงจากทั่วโลก';
 
   @override
   String get radioOnAirTitle => 'ON AIR';
@@ -1003,7 +1003,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get radioSloganHK => 'ไปกับจังหวะของเมือง';
 
   @override
-  String get radioSloganGB => 'ที่ซึ่งประเพณีพบปัจจุบัน';
+  String get radioSloganGB => 'เมื่อเรื่องราวดั้งเดิมพบกับเสียงร่วมสมัย';
 
   @override
   String get radioSloganVN => 'ท่วงทำนองแห่งแม่น้ำโขง';
@@ -1123,7 +1123,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get radioSloganFI => 'เสียงแห่งฟินแลนด์';
 
   @override
-  String get radioSloganCZ => 'เสียงแห่งโบฮีเมีย';
+  String get radioSloganCZ => 'เสียงจากเช็กเกีย';
 
   @override
   String get radioSloganRO => 'เสียงแห่งโรมาเนีย';
@@ -1295,10 +1295,10 @@ class AppLocalizationsTh extends AppLocalizations {
   String get radioNextProgram => 'รายการถัดไป';
 
   @override
-  String get radioExitConfirmTitle => 'ออกจากวิทยุไหม';
+  String get radioExitConfirmTitle => 'ต้องการออกจากวิทยุไหม?';
 
   @override
-  String get radioExitConfirmMessage => 'หากออกตอนนี้ เสียงจะหยุดเล่น';
+  String get radioExitConfirmMessage => 'แล้วกลับมาฟังเสียงดีๆ ด้วยกันอีกนะ';
 
   @override
   String get radioExitKeepListening => 'ฟังต่อ';
@@ -1319,10 +1319,10 @@ class AppLocalizationsTh extends AppLocalizations {
   String get rateApp => 'ให้คะแนนแอป';
 
   @override
-  String get musicExitConfirmTitle => 'หยุดเล่นเพลงไหม';
+  String get musicExitConfirmTitle => 'ต้องการหยุดเล่นเพลงไหม?';
 
   @override
-  String get musicExitConfirmMessage => 'หากออกตอนนี้ เพลงจะหยุดเล่น';
+  String get musicExitConfirmMessage => 'แล้วกลับมาฟังเสียงดีๆ ด้วยกันอีกนะ';
 
   @override
   String get homeNewSongs => 'เพลงใหม่';
@@ -1340,7 +1340,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get homeTipAlarmSub => 'เพลง วิทยุ หรือเสียงธรรมชาติ';
 
   @override
-  String get homeTipScheduleTitle => 'ตั้งเวลาเปิดวิทยุ';
+  String get homeTipScheduleTitle => 'ตั้งเวลาให้วิทยุเล่น';
 
   @override
   String get homeTipScheduleSub => 'แตะ ตั้งเวลา ใต้หน้าจอเล่นวิทยุ';
@@ -1483,7 +1483,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get homeRecentHeader => 'เล่นล่าสุด';
 
   @override
-  String get homeRecentEmpty => 'ยังไม่มีรายการที่เล่น';
+  String get homeRecentEmpty => 'ยังไม่มีรายการที่ฟังล่าสุด';
 
   @override
   String get homeRecentEmptySub => 'รายการที่ฟังเกิน 30 วินาทีจะแสดงที่นี่';
@@ -1855,10 +1855,10 @@ class AppLocalizationsTh extends AppLocalizations {
       'ต้องการสิทธิ์เข้าถึงพื้นที่จัดเก็บ\nโปรดอนุญาตในการตั้งค่า';
 
   @override
-  String get musicLoadError => 'เกิดข้อผิดพลาดในการโหลดเพลง';
+  String get musicLoadError => 'ไม่สามารถโหลดเพลงได้';
 
   @override
-  String get musicScanError => 'สแกนเพลงผิดพลาด';
+  String get musicScanError => 'ไม่สามารถค้นหาเพลงได้';
 
   @override
   String get sleepAskDuration => 'หยุดเล่นหลังจากนานเท่าไร';
@@ -2157,10 +2157,10 @@ class AppLocalizationsTh extends AppLocalizations {
   String get ratioFeed => 'ฟีด 1:1';
 
   @override
-  String get cardMakeFailed => 'สร้างการ์ดไม่สำเร็จ โปรดลองอีกครั้ง';
+  String get cardMakeFailed => 'ไม่สามารถสร้างการ์ดได้ ลองอีกครั้งนะ';
 
   @override
-  String get photoLoadFailed => 'โหลดรูปไม่สำเร็จ';
+  String get photoLoadFailed => 'ไม่สามารถโหลดรูปภาพได้';
 
   @override
   String get lyricsCard => 'การ์ดเนื้อเพลง';
@@ -2402,7 +2402,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get trimmed => 'ตัดแล้ว';
 
   @override
-  String get trimFailed => 'ตัดไม่สำเร็จ';
+  String get trimFailed => 'ไม่สามารถตัดไฟล์ได้';
 
   @override
   String get ringtoneSet => 'ตั้งเป็นเสียงเรียกเข้าแล้ว';
@@ -2412,7 +2412,7 @@ class AppLocalizationsTh extends AppLocalizations {
       'เปิด \"แก้ไขการตั้งค่าระบบ\" แล้วกลับมาแตะอีกครั้ง';
 
   @override
-  String get ringtoneFailedMsg => 'ตั้งเสียงเรียกเข้าไม่สำเร็จ';
+  String get ringtoneFailedMsg => 'ไม่สามารถตั้งเป็นเสียงเรียกเข้าได้';
 
   @override
   String get saveCurrentEq => 'บันทึกการตั้งค่า';
@@ -2951,7 +2951,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get saveAsMusic => 'บันทึกเป็นเพลง';
 
   @override
-  String get renameFailed => 'เปลี่ยนชื่อไม่สำเร็จ';
+  String get renameFailed => 'ไม่สามารถเปลี่ยนชื่อได้';
 
   @override
   String get castFailedRetry => 'ส่งไปทีวีไม่สำเร็จ โปรดลองอีกครั้ง';
@@ -3012,10 +3012,10 @@ class AppLocalizationsTh extends AppLocalizations {
   String get audioOnlyOff => 'จะหยุดเมื่อออกจากแอป';
 
   @override
-  String get videoScanError => 'สแกนวิดีโอผิดพลาด';
+  String get videoScanError => 'ไม่สามารถค้นหาวิดีโอได้';
 
   @override
-  String get saveMusicFailed => 'บันทึกเป็นเพลงไม่สำเร็จ';
+  String get saveMusicFailed => 'ไม่สามารถบันทึกเป็นเพลงได้';
 
   @override
   String get savedAsMusic => 'บันทึกเป็นเพลงแล้ว';
@@ -3030,7 +3030,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get savePart => 'บันทึกบางช่วง';
 
   @override
-  String get trimFailed2 => 'ตัดไม่สำเร็จ';
+  String get trimFailed2 => 'ไม่สามารถตัดไฟล์ได้';
 
   @override
   String get trimSaved => 'ตัดและบันทึกแล้ว';
@@ -3061,7 +3061,7 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
-  String get radioShareSub => 'แชร์สิ่งที่คุณกำลังฟัง';
+  String get radioShareSub => 'แชร์สถานีที่คุณกำลังฟัง';
 
   @override
   String get savedSongAdded => 'เพิ่มในเพลงที่บันทึกแล้ว';
@@ -3117,7 +3117,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get partEvening => 'เย็น · กลางคืน';
 
   @override
-  String get scheduledToast => 'ตั้งเวลาแล้ว';
+  String get scheduledToast => 'ตั้งเวลาสำเร็จแล้ว';
 
   @override
   String get scheduleFull => 'เพิ่มไม่ได้แล้ว โปรดลบรายการเก่าในการตั้งเวลา';
@@ -3500,10 +3500,11 @@ class AppLocalizationsTh extends AppLocalizations {
   String get selectCountryShort => 'ประเทศ';
 
   @override
-  String get stationLoadFailed => 'โหลดสถานีนี้ไม่ได้\nโปรดเลือกสถานีอื่น';
+  String get stationLoadFailed =>
+      'ไม่สามารถโหลดสถานีนี้ได้\nโปรดเลือกสถานีอื่น';
 
   @override
-  String get soundPlayFailed => 'เล่นเสียงไม่สำเร็จ';
+  String get soundPlayFailed => 'ไม่สามารถเล่นเสียงได้';
 
   @override
   String get natureTitle1 => 'เสียง';
@@ -3543,7 +3544,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get searchTitleArtist => 'ค้นหาชื่อเพลงหรือศิลปิน';
 
   @override
-  String get noMyMusic => 'ไม่มีเพลงในโทรศัพท์นี้';
+  String get noMyMusic => 'ยังไม่มีเพลงในเครื่อง';
 
   @override
   String get noSearchResults => 'ไม่พบผลลัพธ์';
@@ -3555,7 +3556,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get mixTitle2 => 'ของฉัน';
 
   @override
-  String get mixSub => 'สร้างเสียงผ่อนคลายในแบบของคุณเอง';
+  String get mixSub => 'เลือกผสมเสียงที่ชอบ เพื่อสร้างบรรยากาศในแบบของคุณ';
 
   @override
   String get musicLabel => 'เพลง';
@@ -3631,7 +3632,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get overlayIdleHint => 'จะเล่นไปด้วยเมื่อเปิดเพลง';
 
   @override
-  String get lastMix => 'มิกซ์ล่าสุด';
+  String get lastMix => 'มิกซ์ครั้งล่าสุด';
 
   @override
   String get turnBackOn => 'เปิดอีกครั้ง';
@@ -4512,7 +4513,7 @@ class AppLocalizationsTh extends AppLocalizations {
       'ตั้งแต่ช่วงเวลาเงียบสงบก่อนนอนไปจนถึงตอนที่ต้องการสมาธิ ค้นหาเสียงที่เหมาะกับคุณในตอนนี้';
 
   @override
-  String get introFeature5Title => 'มิกซ์เสียงของคุณเอง';
+  String get introFeature5Title => 'ผสมเสียงในแบบของคุณ';
 
   @override
   String get introFeature5Desc =>

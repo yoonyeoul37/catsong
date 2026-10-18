@@ -45,7 +45,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get all => 'Tout';
 
   @override
-  String get play => 'Lire';
+  String get play => 'Lecture';
 
   @override
   String get pause => 'Pause';
@@ -63,19 +63,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get repeat => 'Répéter';
 
   @override
-  String get nowPlaying => 'En lecture';
+  String get nowPlaying => 'À l’écoute';
 
   @override
-  String get noSongs => 'Aucun fichier MP3 trouvé';
+  String get noSongs => 'Aucun fichier MP3 sur cet appareil';
 
   @override
-  String get addMusic => 'Ajoutez des fichiers audio sur votre appareil';
+  String get addMusic => 'Ajoutez des fichiers audio à votre appareil';
 
   @override
-  String get scanningMusic => 'Recherche de musique...';
+  String get scanningMusic => 'Recherche de vos morceaux...';
 
   @override
-  String get editSong => 'Modifier les infos du titre';
+  String get editSong => 'Modifier les informations du morceau';
 
   @override
   String get save => 'Enregistrer';
@@ -105,7 +105,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get equalizer => 'Égaliseur';
 
   @override
-  String get sleepTimer => 'Minuterie de sommeil';
+  String get sleepTimer => 'Minuteur de veille';
 
   @override
   String get playbackSpeed => 'Vitesse de lecture';
@@ -141,7 +141,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ringtone => 'Définir comme sonnerie';
 
   @override
-  String get widget => 'Widget d\'accueil';
+  String get widget => 'Widget de l’écran d’accueil';
 
   @override
   String get version => 'Version';
@@ -156,26 +156,25 @@ class AppLocalizationsFr extends AppLocalizations {
   String get termsOfService => 'Conditions d\'utilisation';
 
   @override
-  String get noRecentSongs => 'Aucun titre écouté récemment';
+  String get noRecentSongs => 'Aucun morceau écouté récemment';
 
   @override
-  String get playMusic => 'Lancez un peu de musique';
+  String get playMusic => 'Écoutez de la musique';
 
   @override
-  String get clearRecent => 'Effacer les récents';
+  String get clearRecent => 'Effacer l’historique';
 
   @override
-  String get clearRecentConfirm =>
-      'Effacer tous les titres écoutés récemment ?';
+  String get clearRecentConfirm => 'Effacer tout l’historique d’écoute ?';
 
   @override
-  String get playAll => 'Tout lire';
+  String get playAll => 'Tout écouter';
 
   @override
-  String get noAlbums => 'Aucun album trouvé';
+  String get noAlbums => 'Aucun album';
 
   @override
-  String get noArtists => 'Aucun artiste trouvé';
+  String get noArtists => 'Aucun artiste';
 
   @override
   String get searchAlbums => 'Rechercher un album...';
@@ -193,7 +192,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get preview => 'Aperçu';
 
   @override
-  String get playing => 'Lecture...';
+  String get playing => 'En lecture...';
 
   @override
   String get ringtoneFailed => 'Impossible de définir la sonnerie';
@@ -208,11 +207,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get confirm => 'OK';
 
   @override
-  String get permissionRequired => 'Autorisation de stockage requise';
+  String get permissionRequired => 'Accès aux fichiers audio requis';
 
   @override
   String get permissionMessage =>
-      'L\'accès au stockage est nécessaire\npour trouver vos fichiers MP3.';
+      'Autorisez l’accès aux fichiers audio\npour retrouver vos MP3.';
 
   @override
   String get allowPermission => 'Autoriser';
@@ -224,19 +223,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get deleteSong => 'Supprimer le titre';
 
   @override
-  String get deleted => 'Supprimé';
+  String get deleted => 'Élément supprimé';
 
   @override
-  String get deleteFailed => 'Échec de la suppression';
+  String get deleteFailed => 'Suppression impossible';
 
   @override
-  String get playNext => 'Lire ensuite';
+  String get playNext => 'Écouter ensuite';
 
   @override
   String get searchHint => 'Titres, artistes, albums...';
 
   @override
-  String get timerCancel => 'Annuler la minuterie';
+  String get timerCancel => 'Désactiver';
 
   @override
   String get set => 'Définir';
@@ -260,7 +259,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get off => 'Désactivé';
 
   @override
-  String get flashlightError => 'Erreur de la lampe torche';
+  String get flashlightError => 'Impossible d’allumer la lampe torche';
 
   @override
   String get minuteShort => 'min';
@@ -276,7 +275,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'https://www.ssing.kr/terms_of_service_en.html';
 
   @override
-  String get preset => 'Préréglage';
+  String get preset => 'Préréglages';
 
   @override
   String get bassBooster => 'Amplificateur de basses';
@@ -285,7 +284,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get enhancesBass => 'Renforce les basses';
 
   @override
-  String get virtualizer => 'Virtualiseur';
+  String get virtualizer => 'Effet spatial';
 
   @override
   String get surroundEffect => 'Crée un effet de son surround';
@@ -298,10 +297,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get reviewMessage =>
-      'Laissez-nous une note !\nCela nous aide à améliorer l\'app 😊';
+      'Donnez-nous votre avis !\nCela nous aide à améliorer l’application 😊';
 
   @override
-  String get reviewButton => '⭐ Noter l\'app';
+  String get reviewButton => '⭐ Noter l’application';
 
   @override
   String get reviewLater => 'Plus tard';
@@ -367,10 +366,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get fontYeonSung => 'Yeon Sung (Douce)';
 
   @override
-  String get styleCD => 'CD qui tourne';
+  String get styleCD => 'CD en rotation';
 
   @override
-  String get styleCard => 'Carte pochette';
+  String get styleCard => 'Pochette d’album';
 
   @override
   String get hourWord => 'h';
@@ -381,7 +380,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get autoStopCountdownSuffix => 'avant l\'arrêt auto';
+  String get autoStopCountdownSuffix => 'avant l’arrêt automatique';
 
   @override
   String get secondShort => 's';
@@ -479,19 +478,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get radioSleep => 'Sommeil';
 
   @override
-  String get radioSchedule => 'Programmer';
+  String get radioSchedule => 'Programmation';
 
   @override
   String get sleepTimerDesc => 'Arrêt automatique après la durée choisie';
 
   @override
-  String get sleepTimerActiveDesc => 'Minuterie en cours';
+  String get sleepTimerActiveDesc => 'Minuteur en cours';
 
   @override
   String get remainingTime => 'Temps restant';
 
   @override
-  String get cancelTimerX => '× Annuler la minuterie';
+  String get cancelTimerX => '× Annuler le minuteur';
 
   @override
   String get countryKR => 'Corée';

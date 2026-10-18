@@ -3935,7 +3935,10 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                     ),
-                    child: Text(AppLocalizations.of(context)!.timerCancel),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(AppLocalizations.of(context)!.timerCancel, maxLines: 1),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),

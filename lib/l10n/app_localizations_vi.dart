@@ -51,10 +51,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pause => 'Tạm dừng';
 
   @override
-  String get next => 'Tiếp';
+  String get next => 'Tiếp theo';
 
   @override
-  String get previous => 'Trước';
+  String get previous => 'Trước đó';
 
   @override
   String get shuffle => 'Trộn bài';
@@ -66,16 +66,16 @@ class AppLocalizationsVi extends AppLocalizations {
   String get nowPlaying => 'Đang phát';
 
   @override
-  String get noSongs => 'Không tìm thấy tệp MP3';
+  String get noSongs => 'Chưa có tệp MP3 nào';
 
   @override
-  String get addMusic => 'Hãy thêm tệp nhạc vào thiết bị của bạn';
+  String get addMusic => 'Thêm tệp nhạc vào thiết bị để bắt đầu nghe';
 
   @override
-  String get scanningMusic => 'Đang quét nhạc...';
+  String get scanningMusic => 'Đang tìm nhạc...';
 
   @override
-  String get editSong => 'Sửa thông tin bài hát';
+  String get editSong => 'Chỉnh sửa thông tin bài hát';
 
   @override
   String get save => 'Lưu';
@@ -129,13 +129,13 @@ class AppLocalizationsVi extends AppLocalizations {
   String get fontChange => 'Đổi phông chữ';
 
   @override
-  String get playerStyle => 'Kiểu trình phát';
+  String get playerStyle => 'Giao diện trình phát';
 
   @override
   String get flashlight => 'Đèn pin';
 
   @override
-  String get sos => 'Đèn khẩn cấp SOS';
+  String get sos => 'Tín hiệu SOS khẩn cấp';
 
   @override
   String get ringtone => 'Đặt nhạc chuông';
@@ -144,7 +144,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get widget => 'Tiện ích màn hình chính';
 
   @override
-  String get version => 'Thông tin phiên bản';
+  String get version => 'Phiên bản';
 
   @override
   String get promoCode => 'Mã khuyến mãi';
@@ -156,25 +156,25 @@ class AppLocalizationsVi extends AppLocalizations {
   String get termsOfService => 'Điều khoản dịch vụ';
 
   @override
-  String get noRecentSongs => 'Chưa có bài hát phát gần đây';
+  String get noRecentSongs => 'Chưa có bài hát nào được phát gần đây';
 
   @override
-  String get playMusic => 'Hãy phát một bài nhạc';
+  String get playMusic => 'Thử nghe một bài nhạc nhé';
 
   @override
-  String get clearRecent => 'Xóa bài hát gần đây';
+  String get clearRecent => 'Xóa lịch sử phát';
 
   @override
-  String get clearRecentConfirm => 'Xóa tất cả bài hát đã phát gần đây?';
+  String get clearRecentConfirm => 'Xóa toàn bộ lịch sử phát gần đây?';
 
   @override
   String get playAll => 'Phát tất cả';
 
   @override
-  String get noAlbums => 'Không tìm thấy album';
+  String get noAlbums => 'Chưa có album nào';
 
   @override
-  String get noArtists => 'Không tìm thấy nghệ sĩ';
+  String get noArtists => 'Chưa có nghệ sĩ nào';
 
   @override
   String get searchAlbums => 'Tìm album...';
@@ -195,7 +195,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get playing => 'Đang phát...';
 
   @override
-  String get ringtoneFailed => 'Không thể đặt nhạc chuông';
+  String get ringtoneFailed => 'Không đặt được nhạc chuông';
 
   @override
   String get promoInvalid => 'Mã khuyến mãi không hợp lệ';
@@ -207,7 +207,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get confirm => 'Xác nhận';
 
   @override
-  String get permissionRequired => 'Cần quyền truy cập bộ nhớ';
+  String get permissionRequired => 'Cần quyền truy cập tệp nhạc';
 
   @override
   String get permissionMessage => 'Cần quyền truy cập bộ nhớ\nđể quét tệp MP3.';
@@ -222,10 +222,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get deleteSong => 'Xóa bài hát';
 
   @override
-  String get deleted => 'Đã xóa';
+  String get deleted => 'Đã xóa thành công';
 
   @override
-  String get deleteFailed => 'Xóa thất bại';
+  String get deleteFailed => 'Không thể xóa';
 
   @override
   String get playNext => 'Phát tiếp theo';
@@ -258,7 +258,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get off => 'Tắt';
 
   @override
-  String get flashlightError => 'Lỗi đèn pin';
+  String get flashlightError => 'Không bật được đèn pin';
 
   @override
   String get minuteShort => 'phút';
@@ -296,7 +296,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get reviewMessage =>
-      'Hãy để lại đánh giá nhé!\nĐiều đó giúp chúng tôi cải thiện ứng dụng 😊';
+      'Hãy đánh giá ứng dụng nhé!\nÝ kiến của bạn giúp Paransori ngày càng tốt hơn 😊';
 
   @override
   String get reviewButton => '⭐ Đánh giá ngay';
@@ -385,10 +385,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get secondShort => 'giây';
 
   @override
-  String get unknownArtist => 'Nghệ sĩ không rõ';
+  String get unknownArtist => 'Nghệ sĩ không xác định';
 
   @override
-  String get unknownAlbum => 'Album không rõ';
+  String get unknownAlbum => 'Album không xác định';
 
   @override
   String get noTitle => 'Không có tiêu đề';
@@ -438,10 +438,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get lyricsErrorNotFound => 'Không tìm thấy lời bài hát';
 
   @override
-  String get lyricsErrorNetwork => 'Vui lòng kiểm tra kết nối Internet';
+  String get lyricsErrorNetwork => 'Vui lòng kiểm tra kết nối mạng';
 
   @override
-  String get justNow => 'Vừa xong';
+  String get justNow => 'Vừa mới đây';
 
   @override
   String minutesAgo(Object minutes) {
@@ -462,7 +462,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get radioTitle => 'Radio';
 
   @override
-  String get radioRecentListening => 'Nghe gần đây';
+  String get radioRecentListening => 'Đã nghe gần đây';
 
   @override
   String get radioSelectCountry => 'Chọn quốc gia';
@@ -474,7 +474,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get radioPopular200 => 'Top 200';
 
   @override
-  String get radioSleep => 'Hẹn tắt';
+  String get radioSleep => 'Hẹn giờ';
 
   @override
   String get radioSchedule => 'Hẹn giờ';
@@ -483,7 +483,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get sleepTimerDesc => 'Tự động tắt sau khoảng thời gian đã chọn';
 
   @override
-  String get sleepTimerActiveDesc => 'Hẹn giờ đang chạy';
+  String get sleepTimerActiveDesc => 'Bộ hẹn giờ đang hoạt động';
 
   @override
   String get remainingTime => 'Thời gian còn lại';
@@ -774,7 +774,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get countryLB => 'Liban';
 
   @override
-  String get countryGE => 'Gruzia';
+  String get countryGE => 'Georgia';
 
   @override
   String get countryAM => 'Armenia';
@@ -840,13 +840,13 @@ class AppLocalizationsVi extends AppLocalizations {
   String get categoryNational => 'Toàn quốc';
 
   @override
-  String get categorySeoulGyeonggi => 'Seoul/Gyeonggi';
+  String get categorySeoulGyeonggi => 'Seoul / Gyeonggi';
 
   @override
   String get categoryRegionalMBC => 'MBC địa phương';
 
   @override
-  String get categoryRegionalPrivate => 'Đài tư nhân địa phương';
+  String get categoryRegionalPrivate => 'Đài phát thanh địa phương';
 
   @override
   String get categoryTraffic => 'Kênh giao thông';
@@ -858,7 +858,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get regionAll => 'Tất cả';
 
   @override
-  String get regionCapital => 'Vùng thủ đô';
+  String get regionCapital => 'Khu vực thủ đô';
 
   @override
   String get regionBusanGyeongnam => 'Busan/Gyeongnam';
@@ -888,7 +888,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get radioNoFavorites => 'Chưa có mục yêu thích';
 
   @override
-  String get radioNoFavoritesDesc => 'Nhấn ♡ trên một kênh để thêm';
+  String get radioNoFavoritesDesc =>
+      'Nhấn ♡ bên cạnh kênh để thêm vào yêu thích';
 
   @override
   String get radioLoadingPopular => 'Đang tải các đài phổ biến...';

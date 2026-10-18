@@ -66,13 +66,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get nowPlaying => 'Çalıyor';
 
   @override
-  String get noSongs => 'MP3 dosyası bulunamadı';
+  String get noSongs => 'MP3 dosyası bulunamadı.';
 
   @override
-  String get addMusic => 'Cihazına müzik dosyası ekle';
+  String get addMusic => 'Cihazına müzik dosyaları ekle.';
 
   @override
-  String get scanningMusic => 'Müzikler taranıyor...';
+  String get scanningMusic => 'Müzikler aranıyor...';
 
   @override
   String get editSong => 'Şarkı bilgisini düzenle';
@@ -117,7 +117,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noRepeat => 'Tekrar yok';
 
   @override
-  String get repeatOne => 'Birini tekrarla';
+  String get repeatOne => 'Geçerli şarkıyı tekrarla';
 
   @override
   String get repeatAll => 'Tümünü tekrarla';
@@ -138,13 +138,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get sos => 'SOS acil durum ışığı';
 
   @override
-  String get ringtone => 'Zil sesi yap';
+  String get ringtone => 'Zil sesi ayarla';
 
   @override
   String get widget => 'Ana ekran widget\'ı';
 
   @override
-  String get version => 'Sürüm bilgisi';
+  String get version => 'Sürüm';
 
   @override
   String get promoCode => 'Promosyon kodu';
@@ -156,16 +156,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String get termsOfService => 'Hizmet Şartları';
 
   @override
-  String get noRecentSongs => 'Son çalınan şarkı yok';
+  String get noRecentSongs => 'Henüz dinlenen şarkı yok';
 
   @override
-  String get playMusic => 'Biraz müzik çal';
+  String get playMusic => 'Biraz müzik dinlemeye ne dersin?';
 
   @override
-  String get clearRecent => 'Son çalınanları temizle';
+  String get clearRecent => 'Dinleme geçmişini temizle';
 
   @override
-  String get clearRecentConfirm => 'Son çalınan tüm şarkılar temizlensin mi?';
+  String get clearRecentConfirm => 'Dinleme geçmişi temizlensin mi?';
 
   @override
   String get playAll => 'Tümünü çal';
@@ -207,11 +207,11 @@ class AppLocalizationsTr extends AppLocalizations {
   String get confirm => 'Tamam';
 
   @override
-  String get permissionRequired => 'Depolama izni gerekli';
+  String get permissionRequired => 'Depolama izni gerekiyor';
 
   @override
   String get permissionMessage =>
-      'MP3 dosyalarını taramak için\ndepolama izni gerekli.';
+      'MP3 dosyalarını bulmak için\ndepolama izni gerekiyor.';
 
   @override
   String get allowPermission => 'İzin ver';
@@ -235,7 +235,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get searchHint => 'Şarkı, sanatçı, albüm ara...';
 
   @override
-  String get timerCancel => 'Zamanlayıcıyı iptal et';
+  String get timerCancel => 'İptal et';
 
   @override
   String get set => 'Ayarla';
@@ -259,7 +259,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get off => 'Kapalı';
 
   @override
-  String get flashlightError => 'El feneri hatası';
+  String get flashlightError => 'El feneri açılamadı';
 
   @override
   String get minuteShort => 'dk';
@@ -1322,7 +1322,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get musicExitConfirmTitle => 'Müzik durdurulsun mu?';
 
   @override
-  String get musicExitConfirmMessage => 'Şimdi çıkarsan çalma durur.';
+  String get musicExitConfirmMessage => 'Güzel seslerde yine buluşalım.';
 
   @override
   String get homeNewSongs => 'Yeni şarkılar';
@@ -1442,7 +1442,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get menuRadioTitle => 'Radyo istasyonları';
 
   @override
-  String get menuRadioSub => 'Dünyanın dört bir yanından\nradyo dinle.';
+  String get menuRadioSub => 'Farklı radyo yayınlarını\nhemen dinle.';
 
   @override
   String get recentSearches => 'Son aramalar';
@@ -1522,7 +1522,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dailyOftenNight => 'Gece yarısı favorin';
 
   @override
-  String get dailyLongTime => 'Uzun zamandır dinlemedin';
+  String get dailyLongTime => 'Uzun zamandır dinlemediğin şarkılar';
 
   @override
   String get dailySongOfDay => 'Günün şarkısı';
@@ -1548,7 +1548,7 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get dailyNotPlayedSub => 'Bir daha dinlesen mi?';
+  String get dailyNotPlayedSub => 'Yeniden dinlemeye ne dersin?';
 
   @override
   String get dailyShufflePlay => 'Karıştır';
@@ -1580,19 +1580,19 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dailyDayTitle => 'Kısa bir mola ver';
 
   @override
-  String get dailyDayLine => 'Akan bir dereyle rahatla';
+  String get dailyDayLine => 'Dere sesiyle biraz soluklan';
 
   @override
   String get dailyEveningTitle => 'Bugün harikaydın';
 
   @override
-  String get dailyEveningLine => 'Dalga sesleriyle dinlen';
+  String get dailyEveningLine => 'Dalga sesleri eşliğinde dinlen';
 
   @override
   String get dailyNightTitle => 'Bu gece sakin kal';
 
   @override
-  String get dailyNightLine => 'Yağmur sesiyle dinlen';
+  String get dailyNightLine => 'Yağmur sesi eşliğinde dinlen';
 
   @override
   String get dailyRightNow => 'Şu an';
@@ -1619,7 +1619,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dailyTipMixTitle => 'Müziğine yağmur ekle';
 
   @override
-  String get dailyTipMixSub => 'Oynatıcı ⋮ menüsü → Doğa sesi karışımı';
+  String get dailyTipMixSub => 'Oynatıcı ⋮ menüsü → Doğa sesleri miksajı';
 
   @override
   String get dailyTipLyricsTitle => 'Bir söz satırı paylaş';
@@ -1777,7 +1777,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get moreAlarmTitle => 'Sabah alarmı';
 
   @override
-  String get moreAlarmSub => 'Müzik, radyo veya doğa sesiyle uyan';
+  String get moreAlarmSub => 'Sevdiğin müzik, radyo veya doğa sesleriyle uyan';
 
   @override
   String get moreRateSub => 'Puanın bizim için çok değerli.';
@@ -1857,10 +1857,10 @@ class AppLocalizationsTr extends AppLocalizations {
       'Depolama izni gerekli.\nLütfen Ayarlar\'dan izin ver.';
 
   @override
-  String get musicLoadError => 'Müzik yüklenirken hata oluştu';
+  String get musicLoadError => 'Müzikler yüklenemedi';
 
   @override
-  String get musicScanError => 'Müzik tarama hatası';
+  String get musicScanError => 'Müzikler aranırken bir sorun oluştu';
 
   @override
   String get sleepAskDuration => 'Ne kadar sonra dursun?';
@@ -1968,7 +1968,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get viewLyrics => 'Sözler';
 
   @override
-  String get natureMix => 'Doğa sesi karışımı';
+  String get natureMix => 'Doğa sesleri miksajı';
 
   @override
   String get repeatOffChip => 'Kapalı';
@@ -3018,7 +3018,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get audioOnlyOff => 'Uygulamadan çıkınca durur';
 
   @override
-  String get videoScanError => 'Video tarama hatası';
+  String get videoScanError => 'Videolar aranırken bir sorun oluştu';
 
   @override
   String get saveMusicFailed => 'Müzik olarak kaydedilemedi';
@@ -3063,11 +3063,11 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String radioShareText(String name) {
-    return 'Şu an dinlediğim: $name! Paransori\'de benimle dinle 🎧';
+    return 'Şu anda $name dinliyorum! Paransori’de birlikte dinleyelim 🎧';
   }
 
   @override
-  String get radioShareSub => 'Dinlediğini paylaş.';
+  String get radioShareSub => 'Dinlediğin yayını paylaş.';
 
   @override
   String get savedSongAdded => 'Kaydedilen şarkılara eklendi';
@@ -3239,7 +3239,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get whichStation => 'Hangi istasyon?';
 
   @override
-  String get pickFromSchedule => 'Yayın akışından program seç';
+  String get pickFromSchedule => 'Yayın akışından bir program seç';
 
   @override
   String get scheduleAction => 'Planla';
@@ -3251,7 +3251,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get diceProgramLabel => 'Şu an yayında';
 
   @override
-  String get diceNoProgram => 'Program bilgisi yok';
+  String get diceNoProgram => 'Program bilgisi bulunamadı';
 
   @override
   String get diceWhich => 'Hangi istasyon çıkacak?';
@@ -3328,7 +3328,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get popTrend => 'Yükselenler';
 
   @override
-  String get recentListened => 'Son dinlenen';
+  String get recentListened => 'Son dinlenenler';
 
   @override
   String get myRadio => 'Radyom';
@@ -3421,10 +3421,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get favAddHint => 'Favorilere eklemek için kalbe dokun';
 
   @override
-  String get noRecentStations => 'Son dinlenen istasyon yok';
+  String get noRecentStations => 'Henüz dinlenen radyo yok';
 
   @override
-  String get loadingMoreStations => 'Daha fazla istasyon yükleniyor';
+  String get loadingMoreStations => 'Daha fazla radyo yükleniyor...';
 
   @override
   String get nowPlayingSong => 'Şimdi çalan';
@@ -3506,7 +3506,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get stationLoadFailed =>
-      'Bu istasyon yüklenemiyor.\nLütfen başka birini seç.';
+      'Bu radyo yüklenemedi.\nLütfen başka bir kanal seç.';
 
   @override
   String get soundPlayFailed => 'Ses çalınamadı';
@@ -3537,7 +3537,8 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get natureShareText => 'Paransori\'de doğa sesleriyle dinleniyorum 🌊';
+  String get natureShareText =>
+      'Paransori’de doğa sesleriyle huzurlu bir mola veriyorum 🌊';
 
   @override
   String get mixShort => 'Karışım';
@@ -3561,7 +3562,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get mixTitle2 => ' karışımım';
 
   @override
-  String get mixSub => 'Kendi dinlendirici ses ortamını oluştur.';
+  String get mixSub => 'Sevdiğin seslerle kendi ortamını oluştur.';
 
   @override
   String get musicLabel => 'Müzik';
@@ -3593,7 +3594,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get playMix => 'Karışımı çal';
 
   @override
-  String get myMixDefault => 'Ses karışımım';
+  String get myMixDefault => 'Kendi ses miksim';
 
   @override
   String get paransoriMix => 'Paransori Mix';
@@ -3637,7 +3638,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get overlayIdleHint => 'Müzik çalarken birlikte çalar';
 
   @override
-  String get lastMix => 'Son karışım';
+  String get lastMix => 'Son miks';
 
   @override
   String get turnBackOn => 'Yeniden aç';
@@ -3660,7 +3661,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noFavNature => 'Favori doğa sesi yok';
 
   @override
-  String get restFocusSoon => 'Dinlen · Odaklan yakında geliyor';
+  String get restFocusSoon => 'Dinlenme ve odaklanma özelliği yakında';
 
   @override
   String get restLabel => 'Dinlen';
@@ -3675,7 +3676,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get whiteNoise => 'Gürültü';
 
   @override
-  String get restFocusSub => 'Dinlenmek ve odaklanmak için sakin sesler';
+  String get restFocusSub => 'Sakin seslerle dinlen ve odaklan';
 
   @override
   String get comingSoonTitle => 'Yakında';
@@ -3762,7 +3763,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get headsetTitle => 'Kulaklıkta otomatik çal';
 
   @override
-  String get headsetDesc => 'Kulaklık bağlanınca çalmaya devam eder';
+  String get headsetDesc =>
+      'Kulaklık bağlandığında müzik kaldığı yerden devam eder';
 
   @override
   String get descRingtone => 'Sevdiğin şarkıyı zil sesi yap';
@@ -3819,13 +3821,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get infoLongTime => 'Yeniden dinle';
 
   @override
-  String get infoLongTimeD => 'Bir aydır çalmadığın şarkıları karıştırır';
+  String get infoLongTimeD => 'Bir aydır dinlemediğin şarkıları karışık çalar';
 
   @override
   String get infoWeek => 'Bu hafta';
 
   @override
-  String get infoWeekD => 'Son 7 gündeki çalmalar ve en sevdiğin şarkı';
+  String get infoWeekD =>
+      'Son 7 gündeki dinleme sayın ve en çok dinlediğin şarkı';
 
   @override
   String get infoTime => 'Günün saati';

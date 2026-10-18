@@ -48,13 +48,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get play => 'Abspielen';
 
   @override
-  String get pause => 'Pause';
+  String get pause => 'Pausieren';
 
   @override
-  String get next => 'Weiter';
+  String get next => 'Nächster';
 
   @override
-  String get previous => 'Zurück';
+  String get previous => 'Vorheriger';
 
   @override
   String get shuffle => 'Zufällig';
@@ -66,13 +66,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get nowPlaying => 'Läuft gerade';
 
   @override
-  String get noSongs => 'Keine MP3-Dateien gefunden';
+  String get noSongs => 'Keine MP3-Dateien vorhanden';
 
   @override
   String get addMusic => 'Füge Musikdateien zu deinem Gerät hinzu';
 
   @override
-  String get scanningMusic => 'Musik wird gesucht...';
+  String get scanningMusic => 'Musik wird gesucht …';
 
   @override
   String get editSong => 'Titelinfos bearbeiten';
@@ -108,7 +108,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get sleepTimer => 'Sleep-Timer';
 
   @override
-  String get playbackSpeed => 'Wiedergabetempo';
+  String get playbackSpeed => 'Abspielgeschwindigkeit';
 
   @override
   String get repeatMode => 'Wiederholung';
@@ -117,7 +117,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noRepeat => 'Keine Wiederholung';
 
   @override
-  String get repeatOne => 'Titel wiederholen';
+  String get repeatOne => 'Aktuellen Titel wiederholen';
 
   @override
   String get repeatAll => 'Alle wiederholen';
@@ -138,13 +138,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get sos => 'SOS-Notlicht';
 
   @override
-  String get ringtone => 'Als Klingelton';
+  String get ringtone => 'Klingelton festlegen';
 
   @override
   String get widget => 'Startbildschirm-Widget';
 
   @override
-  String get version => 'Versionsinfo';
+  String get version => 'Version';
 
   @override
   String get promoCode => 'Promo-Code';
@@ -156,10 +156,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get termsOfService => 'Nutzungsbedingungen';
 
   @override
-  String get noRecentSongs => 'Noch keine zuletzt gespielten Titel';
+  String get noRecentSongs => 'Noch keine Titel abgespielt';
 
   @override
-  String get playMusic => 'Spiel doch etwas Musik ab';
+  String get playMusic => 'Hör dir etwas Musik an';
 
   @override
   String get clearRecent => 'Verlauf löschen';

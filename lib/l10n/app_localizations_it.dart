@@ -72,10 +72,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get addMusic => 'Aggiungi file musicali al dispositivo';
 
   @override
-  String get scanningMusic => 'Scansione musica...';
+  String get scanningMusic => 'Cerco la tua musica...';
 
   @override
-  String get editSong => 'Modifica info brano';
+  String get editSong => 'Modifica informazioni brano';
 
   @override
   String get save => 'Salva';
@@ -105,7 +105,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get equalizer => 'Equalizzatore';
 
   @override
-  String get sleepTimer => 'Timer spegnimento';
+  String get sleepTimer => 'Timer di spegnimento';
 
   @override
   String get playbackSpeed => 'Velocità di riproduzione';
@@ -129,7 +129,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get fontChange => 'Cambia carattere';
 
   @override
-  String get playerStyle => 'Stile player';
+  String get playerStyle => 'Stile del lettore';
 
   @override
   String get flashlight => 'Torcia';
@@ -138,7 +138,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get sos => 'Luce di emergenza SOS';
 
   @override
-  String get ringtone => 'Imposta suoneria';
+  String get ringtone => 'Imposta come suoneria';
 
   @override
   String get widget => 'Widget home';
@@ -147,7 +147,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get version => 'Info versione';
 
   @override
-  String get promoCode => 'Codice promo';
+  String get promoCode => 'Codice promozionale';
 
   @override
   String get privacyPolicy => 'Informativa sulla privacy';
@@ -162,20 +162,20 @@ class AppLocalizationsIt extends AppLocalizations {
   String get playMusic => 'Ascolta un po\' di musica';
 
   @override
-  String get clearRecent => 'Cancella brani recenti';
+  String get clearRecent => 'Cancella cronologia';
 
   @override
   String get clearRecentConfirm =>
-      'Cancellare tutti i brani ascoltati di recente?';
+      'Vuoi cancellare tutta la cronologia di ascolto?';
 
   @override
   String get playAll => 'Riproduci tutto';
 
   @override
-  String get noAlbums => 'Nessun album trovato';
+  String get noAlbums => 'Nessun album disponibile';
 
   @override
-  String get noArtists => 'Nessun artista trovato';
+  String get noArtists => 'Nessun artista disponibile';
 
   @override
   String get searchAlbums => 'Cerca album...';
@@ -199,20 +199,21 @@ class AppLocalizationsIt extends AppLocalizations {
   String get ringtoneFailed => 'Impossibile impostare la suoneria';
 
   @override
-  String get promoInvalid => 'Codice promo non valido';
+  String get promoInvalid => 'Codice promozionale non valido';
 
   @override
-  String get promoEnter => 'Inserisci il codice promo';
+  String get promoEnter => 'Inserisci il codice promozionale';
 
   @override
   String get confirm => 'Conferma';
 
   @override
-  String get permissionRequired => 'Serve l\'accesso alla memoria';
+  String get permissionRequired =>
+      'Autorizzazione di accesso ai file necessaria';
 
   @override
   String get permissionMessage =>
-      'Per cercare i file MP3\nserve l\'accesso alla memoria.';
+      'Per trovare i file MP3\nè necessario autorizzare l’accesso ai file.';
 
   @override
   String get allowPermission => 'Consenti accesso';
@@ -260,7 +261,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get off => 'Off';
 
   @override
-  String get flashlightError => 'Errore torcia';
+  String get flashlightError => 'Impossibile accendere la torcia';
 
   @override
   String get minuteShort => 'min';
@@ -1349,7 +1350,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get homeTipScheduleSub => 'Tocca Programma sotto il player radio';
 
   @override
-  String get homeTipCastTitle => 'Ascolta su TV o speaker';
+  String get homeTipCastTitle => 'Ascolta sulla TV o sugli altoparlanti';
 
   @override
   String get homeTipCastSub => 'Stessa rete Wi-Fi → menu ⋮ del player';
@@ -1422,7 +1423,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get couldNotDelete => 'Impossibile eliminare';
+  String get couldNotDelete => 'Non è stato possibile eliminare';
 
   @override
   String get menuShareTitle => 'Condividi con gli amici';
@@ -1591,7 +1592,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get dailyEveningTitle => 'Oggi sei stato bravo';
 
   @override
-  String get dailyEveningLine => 'Rilassati con il suono delle onde';
+  String get dailyEveningLine => 'Prenditi una pausa con il suono delle onde';
 
   @override
   String get dailyNightTitle => 'Stasera, con calma';
@@ -1622,7 +1623,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get dailyTipVideoSub => 'Menu ⋮ del video → \'Salva come musica\'';
 
   @override
-  String get dailyTipMixTitle => 'Aggiungi la pioggia alla musica';
+  String get dailyTipMixTitle => 'Aggiungi il suono della pioggia alla musica';
 
   @override
   String get dailyTipMixSub => 'Menu ⋮ del player → Mix suoni natura';
@@ -1865,10 +1866,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Serve l\'accesso alla memoria.\nConsentilo nelle Impostazioni.';
 
   @override
-  String get musicLoadError => 'Errore nel caricamento della musica';
+  String get musicLoadError => 'Non è stato possibile caricare la musica';
 
   @override
-  String get musicScanError => 'Errore nella scansione musica';
+  String get musicScanError => 'Non è stato possibile cercare la musica';
 
   @override
   String get sleepAskDuration => 'Fermare la riproduzione tra quanto?';
@@ -1976,7 +1977,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get viewLyrics => 'Testo';
 
   @override
-  String get natureMix => 'Mix suoni natura';
+  String get natureMix => 'Mix di suoni della natura';
 
   @override
   String get repeatOffChip => 'Off';
@@ -2170,7 +2171,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get ratioFeed => 'Feed 1:1';
 
   @override
-  String get cardMakeFailed => 'Impossibile creare la card. Riprova.';
+  String get cardMakeFailed =>
+      'Non è stato possibile creare la scheda. Riprova.';
 
   @override
   String get photoLoadFailed => 'Impossibile caricare la foto';
@@ -2304,7 +2306,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get readingSongInfo => 'Lettura info brani';
 
   @override
-  String get pleaseWait => 'Attendi un momento';
+  String get pleaseWait => 'Un momento...';
 
   @override
   String get deselectAllShort => 'Deseleziona tutto';
@@ -3031,7 +3033,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get audioOnlyOff => 'Si ferma quando esci dall\'app';
 
   @override
-  String get videoScanError => 'Errore nella scansione video';
+  String get videoScanError => 'Non è stato possibile cercare i video';
 
   @override
   String get saveMusicFailed => 'Impossibile salvare come musica';
@@ -3439,7 +3441,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get favAddHint => 'Tocca il cuore per aggiungere ai preferiti';
 
   @override
-  String get noRecentStations => 'Nessuna stazione ascoltata di recente';
+  String get noRecentStations => 'Nessuna radio ascoltata di recente';
 
   @override
   String get loadingMoreStations => 'Caricamento altre stazioni';
@@ -3524,7 +3526,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get stationLoadFailed =>
-      'Impossibile caricare la stazione.\nScegline un\'altra.';
+      'Non è stato possibile caricare la radio.\nScegli un’altra stazione.';
 
   @override
   String get soundPlayFailed => 'Impossibile riprodurre il suono';
@@ -3580,7 +3582,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get mixTitle2 => ' mix';
 
   @override
-  String get mixSub => 'Crea il tuo paesaggio sonoro rilassante.';
+  String get mixSub => 'Crea la tua atmosfera con i suoni che ami.';
 
   @override
   String get musicLabel => 'Musica';
@@ -3606,10 +3608,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get setSleepTimer => 'Imposta timer';
 
   @override
-  String get stopMix => 'Ferma mix';
+  String get stopMix => 'Ferma il mix';
 
   @override
-  String get playMix => 'Avvia mix';
+  String get playMix => 'Avvia il mix';
 
   @override
   String get myMixDefault => 'Il mio mix di suoni';
@@ -3677,7 +3679,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noFavRadio => 'Nessuna stazione preferita';
 
   @override
-  String get noFavNature => 'Nessun suono della natura preferito';
+  String get noFavNature => 'Nessun suono della natura tra i preferiti';
 
   @override
   String get restFocusSoon => 'Relax · Focus arriverà presto';
@@ -3841,7 +3843,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get infoLongTimeD =>
-      'Riproduce in casuale i brani non ascoltati da un mese';
+      'Riproduce in ordine casuale i brani che non ascolti da un mese';
 
   @override
   String get infoWeek => 'Questa settimana';
@@ -4210,7 +4212,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get pickRadioChannel => 'Scegli stazione radio';
 
   @override
-  String get pickNatureSound => 'Scegli suono della natura';
+  String get pickNatureSound => 'Scegli un suono della natura';
 
   @override
   String get alarmPermTitle => 'Serve il permesso sveglia';
@@ -4259,7 +4261,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noDaysOnce => 'Senza giorni scelti, suona una volta';
 
   @override
-  String get alarmSound => 'Suono sveglia';
+  String get alarmSound => 'Suono della sveglia';
 
   @override
   String get oneSong => 'Un brano';
@@ -4482,7 +4484,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Paransori nasce da due parole coreane, \'paran\' e \'sori\'. \'Paran\' significa blu e fa pensare a cieli limpidi e al mare profondo. \'Sori\' significa suono. Il nome racchiude il nostro desiderio di condividere, attraverso il suono, la freschezza di un cielo terso, la leggerezza di una brezza e la serenità che proviamo nella natura.';
 
   @override
-  String get introEverydayTitle => 'Il suono nella tua giornata';
+  String get introEverydayTitle => 'I suoni della tua giornata';
 
   @override
   String get introMoments =>

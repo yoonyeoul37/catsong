@@ -4542,7 +4542,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get introMenuTitle => 'Paransori hakkında';
 
   @override
-  String get introMenuDesc => 'Uygulamayı tanı.';
+  String get introMenuDesc => 'Paransori\'nin hikâyesini keşfedin';
 
   @override
   String get nature01Name => 'Okyanus dalgaları';

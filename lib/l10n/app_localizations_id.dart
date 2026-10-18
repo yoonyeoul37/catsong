@@ -4549,7 +4549,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get introMenuTitle => 'Tentang Paransori';
 
   @override
-  String get introMenuDesc => 'Kenali aplikasinya.';
+  String get introMenuDesc => 'Temukan cerita di balik Paransori';
 
   @override
   String get nature01Name => 'Ombak laut';

@@ -4529,7 +4529,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get introMenuTitle => 'เกี่ยวกับ Paransori';
 
   @override
-  String get introMenuDesc => 'มาทำความรู้จักแอปกัน';
+  String get introMenuDesc => 'มาฟังเรื่องราวเบื้องหลัง Paransori';
 
   @override
   String get nature01Name => 'คลื่นทะเล';

@@ -4602,7 +4602,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get introMenuTitle => 'O Paransori';
 
   @override
-  String get introMenuDesc => 'Poznaj aplikację.';
+  String get introMenuDesc => 'Poznaj historię aplikacji Paransori';
 
   @override
   String get nature01Name => 'Fale oceanu';

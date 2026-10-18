@@ -12,6 +12,8 @@ import '../models/radio_country.dart';
 import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
+import '../widgets/logo_shine.dart';
+import '../utils/title_font.dart';
 import '../widgets/station_logo.dart';
 import '../widgets/heart_pop.dart';
 import '../widgets/radio_dice.dart';
@@ -1290,39 +1292,14 @@ class _RadioCountryStationsScreenState
           icon: Icon(Icons.arrow_back_ios,
               color: baseColor, size: 18),
         ),
-        // 나라 이름 (누르면 나라 고르기) — 긴 이름은 … 로 줄임
-        title: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (ctx) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: radioTextScaler(ctx)), child: const RadioHomeScreen())), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
-            );
-          },
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(widget.country.flag, style: const TextStyle(fontSize: 18)),
-              const SizedBox(width: 7),
-              Flexible(
-                child: Text(
-                  widget.country.displayName,
-                  maxLines: 1,
-                  softWrap: false,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: baseColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.3,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 2),
-              Icon(Icons.keyboard_arrow_down_rounded, size: 22, color: baseColor.withOpacity(0.5)),
-            ],
-          ),
+        // 국내 라디오와 같은 위쪽: 앱 아이콘 + Radio (나라는 아래 '나라 선택' 상자로)
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // 앱 아이콘 + 제목(회색 빛) / 아래 설명 — 홈 로고와 같은 짜임 (해외는 그 나라 말)
+            Flexible(child: MenuTitle(title: tr.catRadio, sub: tr.catRadioSub, isDark: isDarkMode)),
+          ],
         ),
         actions: [
           // 주사위는 맨 위 사진 카드 안으로 옮김
@@ -1356,6 +1333,72 @@ class _RadioCountryStationsScreenState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // 나라 선택 상자 (국내 라디오 상자와 같은 모양) — 누르면 나라 고르기
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 4, 24, 6),
+              child: GestureDetector(
+                onTap: () {
+                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (ctx) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: radioTextScaler(ctx)), child: const RadioHomeScreen())), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
+                  );
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 38,
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: baseColor.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(10), // 홈 카드·국내 라디오 상자와 같은 둥글기
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 26,
+                        height: 26,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: isDarkMode
+                              ? const Color(0x14FFFFFF)
+                              : Colors.white.withOpacity(0.8),
+                        ),
+                        child: Icon(
+                          Icons.public,
+                          size: 16,
+                          color: context.watch<ThemeProvider>().primaryColor.value == 0xFF2589E8
+                              ? (isDarkMode ? const Color(0xFF6FB0FF) : const Color(0xFF2F7DE8))
+                              : context.watch<ThemeProvider>().primaryColor,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(tr.selectCountryShort,
+                          style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily, color: baseColor, fontSize: 13, fontWeight: FontWeight.w700)),
+                      Container(
+                        width: 1,
+                        height: 14,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        color: baseColor.withOpacity(0.18),
+                      ),
+                      Text(widget.country.flag, style: const TextStyle(fontSize: 16)),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(widget.country.displayName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
+                                color: baseColor.withOpacity(0.7),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500)),
+                      ),
+                      Icon(Icons.keyboard_arrow_down_rounded,
+                          size: 20, color: baseColor.withOpacity(0.5)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             if (_showSearch) Padding(
               padding: const EdgeInsets.fromLTRB(24, 4, 24, 4),
               child: Container(
@@ -2014,66 +2057,6 @@ class _PlayingBarsState extends State<_PlayingBars>
             ),
           );
         }),
-      ),
-    );
-  }
-}
-
-// 상단바에 쓰는 작은 이퀄라이저 막대 (은은하게 움직임)
-class _LogoEqBars extends StatefulWidget {
-  const _LogoEqBars();
-
-  @override
-  State<_LogoEqBars> createState() => _LogoEqBarsState();
-}
-
-class _LogoEqBarsState extends State<_LogoEqBars>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _c;
-
-  @override
-  void initState() {
-    super.initState();
-    _c = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 4200),
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    _c.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final point = context.watch<ThemeProvider>().primaryColor;
-    final eqColor = point.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : point;
-    return SizedBox(
-      height: 14,
-      child: AnimatedBuilder(
-        animation: _c,
-        builder: (context, _) {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: List.generate(3, (i) {
-              final t = _c.value * 2 * math.pi + i * 1.3;
-              final v = 0.35 + 0.65 * (0.5 + 0.5 * math.sin(t));
-              return Padding(
-                padding: EdgeInsets.only(left: i == 0 ? 0 : 2),
-                child: Container(
-                  width: 3,
-                  height: 14 * v,
-                  decoration: BoxDecoration(
-                    color: eqColor,
-                    borderRadius: BorderRadius.circular(1.5),
-                  ),
-                ),
-              );
-            }),
-          );
-        },
       ),
     );
   }

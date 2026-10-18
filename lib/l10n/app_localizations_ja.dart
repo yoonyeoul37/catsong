@@ -4350,7 +4350,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get introMenuTitle => 'Paransoriについて';
 
   @override
-  String get introMenuDesc => 'どんなアプリかご紹介します。';
+  String get introMenuDesc => 'Paransoriに込められたストーリーをご覧ください';
 
   @override
   String get nature01Name => '波の音';

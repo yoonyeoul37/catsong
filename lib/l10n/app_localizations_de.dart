@@ -4575,7 +4575,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get introMenuTitle => 'Über Paransori';
 
   @override
-  String get introMenuDesc => 'Lerne die App kennen.';
+  String get introMenuDesc => 'Entdecke die Geschichte hinter Paransori';
 
   @override
   String get nature01Name => 'Meeresrauschen';

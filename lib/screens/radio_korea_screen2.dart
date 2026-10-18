@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'dart:async';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
@@ -13,6 +12,7 @@ import '../models/radio_station.dart';
 import '../providers/radio_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
+import '../widgets/logo_shine.dart';
 import '../widgets/heart_pop.dart';
 import 'radio_player_screen.dart';
 import '../l10n/app_localizations.dart';
@@ -891,7 +891,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (ctx) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: radioTextScaler(ctx)), child: _BroadcasterStationList(broadcaster: region, stations: stations)), // 라디오 목록 글자 크기 맞추기 (전체 목록과 같게)
+                builder: (ctx) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: radioTextScaler(ctx)), child: _BroadcasterStationList(broadcaster: region, stations: stations, color: _regionColors[region] ?? const Color(0xFF3A342A), icon: _regionIcons[region] ?? Icons.place_rounded)), // 라디오 목록 글자 크기 맞추기 (전체 목록과 같게)
               ),
             );
           },
@@ -1040,22 +1040,8 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              'Radio',
-              style: titleFont(
-                color: baseColor,
-                fontSize: 22,
-                letterSpacing: 1,
-              ),
-            ),
-            // 라디오를 틀면(미니플레이어가 뜨면) 막대는 미니플레이어 하나만 → 여기선 숨기기
-            if (radioProvider.currentStation == null) ...[
-              const SizedBox(width: 6),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 3),
-                child: _LogoEqBars(),
-              ),
-            ],
+            // 앱 아이콘 + 제목(회색 빛) / 아래 설명 — 홈 로고와 같은 짜임 (해외는 그 나라 말)
+            Flexible(child: MenuTitle(title: tr.catRadio, sub: tr.catRadioSub, isDark: isDarkMode)),
           ],
         ),
         bottom: PreferredSize(
@@ -1885,7 +1871,7 @@ class _BroadcasterGridScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (ctx) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: radioTextScaler(ctx)), child: _BroadcasterStationList(broadcaster: key, stations: stations)), // 라디오 목록 글자 크기 맞추기 (전체 목록과 같게)
+                builder: (ctx) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: radioTextScaler(ctx)), child: _BroadcasterStationList(broadcaster: key, stations: stations, color: _cardColors[key] ?? const Color(0xFF3A342A), icon: _cardIcons[key] ?? Icons.radio_rounded)), // 라디오 목록 글자 크기 맞추기 (전체 목록과 같게)
               ),
             );
           },
@@ -1979,7 +1965,84 @@ class _BroadcasterGridScreen extends StatelessWidget {
 class _BroadcasterStationList extends StatelessWidget {
   final String broadcaster;
   final List<_KStation> stations;
-  const _BroadcasterStationList({required this.broadcaster, required this.stations});
+  final Color color; // 머리 색 (격자 칸과 같은 색)
+  final IconData icon; // 머리 오른쪽 워터마크 (격자 칸과 같은 아이콘)
+  const _BroadcasterStationList({
+    required this.broadcaster,
+    required this.stations,
+    required this.color,
+    required this.icon,
+  });
+
+  /// 위쪽 색 띠 머리: 뒤로가기 + 큰 이름 + 채널 수 + 은은한 큰 아이콘
+  Widget _header(BuildContext context) {
+    final top = MediaQuery.of(context).padding.top;
+    return Container(
+      width: double.infinity,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        // 격자 칸과 같은 그라데이션
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [color, color.withOpacity(0.8)],
+        ),
+      ),
+      padding: EdgeInsets.only(top: top),
+      child: Stack(
+        children: [
+          // 오른쪽 아래 큰 아이콘 (배경 무늬처럼 은은하게, 띠 밖으로 살짝 잘리게)
+          Positioned(
+            right: -14,
+            bottom: -26,
+            child: Icon(icon, size: 130, color: Colors.white.withOpacity(0.10)),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 2, 24, 22),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, top: 4),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _BroadcasterGridScreen.gridLabel(context, broadcaster),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 26,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        tr.channelsCount(stations.length),
+                        maxLines: 1,
+                        style: TextStyle(color: Colors.white.withOpacity(0.75), fontSize: 13),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   static RadioStation _toRadioStation(_KStation ks) {
     return RadioStation.fromJson({
@@ -2008,38 +2071,25 @@ class _BroadcasterStationList extends StatelessWidget {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
 
-    return Scaffold(
-      backgroundColor: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        systemOverlayStyle: isDarkMode
-            ? const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-          statusBarBrightness: Brightness.dark,
-        )
-            : const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
-        ),
-        leading: IconButton(
-          onPressed: () {
-            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios, color: baseColor, size: 20),
-        ),
-        title: Text(_BroadcasterGridScreen.gridLabel(context, broadcaster),
-            style: TextStyle(color: baseColor, fontSize: 18, fontWeight: FontWeight.bold)),
+    // 색 띠 위라서 상태바 아이콘은 흰색
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
       ),
-      body: SafeArea(
+      child: Scaffold(
+      backgroundColor: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
+      body: Column(
+        children: [
+          _header(context),
+          Expanded(
+            child: SafeArea(
         top: false,
         child: _DialHost(
           tickColor: baseColor.withOpacity(0.35),
           child: ListView.separated(
-          padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
+          padding: EdgeInsets.fromLTRB(24, 12, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
           itemCount: stations.length,
           separatorBuilder: (_, __) => _DialEffect(child: Divider(height: 1, color: baseColor.withOpacity(0.1))),
           itemBuilder: (context, i) {
@@ -2058,6 +2108,9 @@ class _BroadcasterStationList extends StatelessWidget {
           },
         ),
         ),
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: radioProvider.currentStation != null
           ? Padding(
@@ -2065,66 +2118,7 @@ class _BroadcasterStationList extends StatelessWidget {
         child: const RadioMiniPlayer(),
       )
           : null,
-    );
-  }
-}
-
-// 상단바에 쓰는 작은 이퀄라이저 막대 (은은하게 움직임)
-class _LogoEqBars extends StatefulWidget {
-  const _LogoEqBars();
-
-  @override
-  State<_LogoEqBars> createState() => _LogoEqBarsState();
-}
-
-class _LogoEqBarsState extends State<_LogoEqBars>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _c;
-
-  @override
-  void initState() {
-    super.initState();
-    _c = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 4200),
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    _c.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final point = context.watch<ThemeProvider>().primaryColor;
-    final eqColor = point.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : point;
-    return SizedBox(
-      height: 14,
-      child: AnimatedBuilder(
-        animation: _c,
-        builder: (context, _) {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: List.generate(3, (i) {
-              final t = _c.value * 2 * math.pi + i * 1.3;
-              final v = 0.35 + 0.65 * (0.5 + 0.5 * math.sin(t));
-              return Padding(
-                padding: EdgeInsets.only(left: i == 0 ? 0 : 2),
-                child: Container(
-                  width: 3,
-                  height: 14 * v,
-                  decoration: BoxDecoration(
-                    color: eqColor,
-                    borderRadius: BorderRadius.circular(1.5),
-                  ),
-                ),
-              );
-            }),
-          );
-        },
-      ),
+    ),
     );
   }
 }

@@ -15,7 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'settings_screen.dart';
 import 'radio_home_screen.dart';
 import '../widgets/equalizer_animation.dart';
-import '../widgets/logo_eq_bars.dart';
+import '../widgets/logo_shine.dart';
 import 'nature_sound_detail_screen.dart';
 import '../widgets/paran_dialog.dart';
 import '../widgets/paran_toast.dart';
@@ -189,44 +189,14 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
           },
           icon: Icon(Icons.arrow_back_ios, color: baseColor, size: 20),
         ),
-        titleSpacing: 0,
-        title: Column(
+        centerTitle: true,
+        // 라디오·자연·휴식 같은 위쪽: 앱 아이콘 + 제목 / 설명
+        title: Row(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: tr.natureTitle1,
-                        style: titleFont(
-                            // 기본 포인트 색이면 파랑, 다른 색이면 먹색 (홈 로고와 같은 규칙)
-                            color: context.watch<ThemeProvider>().primaryColor.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : baseColor, fontSize: 20),
-                      ),
-                      TextSpan(
-                        text: tr.natureTitle2,
-                        style: titleFont(
-                            color: baseColor, fontSize: 20),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 6),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 3),
-                  child: LogoEqBars(),
-                ),
-              ],
-            ),
-            const SizedBox(height: 0),
-            Text(
-              tr.natureSub,
-              style: TextStyle(color: baseColor.withOpacity(0.5), fontSize: 11.5),
-            ),
+            // 앱 아이콘 + 제목(회색 빛) / 아래 설명 — 홈 로고와 같은 짜임 (해외는 그 나라 말)
+            Flexible(child: MenuTitle(title: tr.catNature, sub: tr.catNatureSub, isDark: isDarkMode)),
           ],
         ),
         actions: const [

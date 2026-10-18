@@ -4542,7 +4542,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get introMenuTitle => 'Giới thiệu Paransori';
 
   @override
-  String get introMenuDesc => 'Tìm hiểu về ứng dụng.';
+  String get introMenuDesc => 'Khám phá câu chuyện đằng sau Paransori';
 
   @override
   String get nature01Name => 'Sóng biển';

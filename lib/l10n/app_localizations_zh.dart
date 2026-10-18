@@ -4342,7 +4342,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get introMenuTitle => '关于 Paransori';
 
   @override
-  String get introMenuDesc => '了解这款应用。';
+  String get introMenuDesc => '来看看Paransori背后的故事';
 
   @override
   String get nature01Name => '海浪声';
@@ -8821,7 +8821,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get introMenuTitle => '關於 Paransori';
 
   @override
-  String get introMenuDesc => '認識這款應用程式。';
+  String get introMenuDesc => '來看看Paransori背後的故事';
 
   @override
   String get nature01Name => '海浪聲';

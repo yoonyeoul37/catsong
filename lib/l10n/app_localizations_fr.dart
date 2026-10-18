@@ -4576,7 +4576,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get introMenuTitle => 'À propos de Paransori';
 
   @override
-  String get introMenuDesc => 'Découvrez l\'app.';
+  String get introMenuDesc => 'Découvrez l\'histoire derrière Paransori';
 
   @override
   String get nature01Name => 'Vagues de l\'océan';

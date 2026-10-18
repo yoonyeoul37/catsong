@@ -4594,7 +4594,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get introMenuTitle => 'О Paransori';
 
   @override
-  String get introMenuDesc => 'Познакомьтесь с приложением.';
+  String get introMenuDesc => 'Узнайте историю Paransori';
 
   @override
   String get nature01Name => 'Морские волны';

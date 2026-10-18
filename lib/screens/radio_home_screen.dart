@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'dart:ui' show PlatformDispatcher, ImageFilter;
 import 'package:flutter/material.dart';
 import '../utils/title_font.dart';
@@ -13,6 +12,7 @@ import '../providers/theme_provider.dart';
 import 'nature_sounds_screen.dart';
 import '../theme/app_theme.dart';
 import '../widgets/radio_mini_player.dart';
+import '../widgets/logo_shine.dart';
 import 'radio_broadcaster_screen.dart';
 import 'radio_search_screen.dart';
 import 'radio_favorites_screen.dart';
@@ -456,22 +456,8 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              'Radio',
-              style: titleFont(
-                color: isDarkMode ? Colors.white : Colors.black,
-                fontSize: 22,
-                letterSpacing: 1,
-              ),
-            ),
-            // 라디오를 틀면(미니플레이어가 뜨면) 여기 막대는 숨기기
-            if (radioProvider.currentStation == null) ...[
-              const SizedBox(width: 6),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 3),
-                child: _LogoEqBars(),
-              ),
-            ],
+            // 앱 아이콘 + 제목(회색 빛) / 아래 설명 — 홈 로고와 같은 짜임 (해외는 그 나라 말)
+            Flexible(child: MenuTitle(title: tr.catRadio, sub: tr.catRadioSub, isDark: isDarkMode)),
           ],
         ),
         actions: [
@@ -771,66 +757,6 @@ class _RecentSection extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-// 상단바에 쓰는 작은 이퀄라이저 막대 (은은하게 움직임)
-class _LogoEqBars extends StatefulWidget {
-  const _LogoEqBars();
-
-  @override
-  State<_LogoEqBars> createState() => _LogoEqBarsState();
-}
-
-class _LogoEqBarsState extends State<_LogoEqBars>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _c;
-
-  @override
-  void initState() {
-    super.initState();
-    _c = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 4200),
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    _c.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final point = context.watch<ThemeProvider>().primaryColor;
-    final eqColor = point.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : point;
-    return SizedBox(
-      height: 14,
-      child: AnimatedBuilder(
-        animation: _c,
-        builder: (context, _) {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: List.generate(3, (i) {
-              final t = _c.value * 2 * math.pi + i * 1.3;
-              final v = 0.35 + 0.65 * (0.5 + 0.5 * math.sin(t));
-              return Padding(
-                padding: EdgeInsets.only(left: i == 0 ? 0 : 2),
-                child: Container(
-                  width: 3,
-                  height: 14 * v,
-                  decoration: BoxDecoration(
-                    color: eqColor,
-                    borderRadius: BorderRadius.circular(1.5),
-                  ),
-                ),
-              );
-            }),
-          );
-        },
-      ),
     );
   }
 }

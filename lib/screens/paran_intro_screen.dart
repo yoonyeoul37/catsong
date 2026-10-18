@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -8,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../l10n/locale_holder.dart';
 import '../providers/theme_provider.dart';
 import '../utils/point_color.dart';
+import '../utils/title_font.dart';
 
 /// 파란소리 소개 화면 (홈 ⋮ 메뉴 → 파란소리 소개)
 /// 글은 5개 언어(한국어 · 영어 · 일본어 · 번체 · 간체)로 이 파일 안에 있어요.
@@ -82,6 +81,8 @@ class _ParanIntroScreenState extends State<ParanIntroScreen> {
       ),
       child: Scaffold(
         backgroundColor: bg,
+        // 하단 시스템 바(◁ ○ |||) 자리: 마무리 띠와 같은 색으로 따로 두기 → 글이 그 밑으로 안 지나감
+        bottomNavigationBar: Container(color: band, height: MediaQuery.paddingOf(context).bottom),
         body: Stack(
           children: [
             NotificationListener<ScrollNotification>(
@@ -118,28 +119,33 @@ class _ParanIntroScreenState extends State<ParanIntroScreen> {
                           left: 24,
                           right: 24,
                           bottom: 14,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          // 홈 로고와 같은 짜임: 앱 아이콘 + 파란소리(도현) / 아래 설명 한 줄
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Flexible(
-                                    child: Text(t.title,
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.asset('assets/logo_icon.png',
+                                    width: 50, height: 50, filterQuality: FilterQuality.medium),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(t.title,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            color: ink, fontSize: 30, fontWeight: FontWeight.w800, letterSpacing: -1.0)),
-                                  ),
-                                  const SizedBox(width: 7),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 7),
-                                    child: _Bars(color: point, height: 18),
-                                  ),
-                                ],
+                                        style: titleFont(color: ink, fontSize: 30, letterSpacing: -0.5)),
+                                    const SizedBox(height: 1),
+                                    Text(t.tagline,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(color: soft, fontSize: 13.5, fontWeight: FontWeight.w500)),
+                                  ],
+                                ),
                               ),
-                              const SizedBox(height: 3),
-                              Text(t.tagline, style: TextStyle(color: soft, fontSize: 13.5, fontWeight: FontWeight.w500)),
                             ],
                           ),
                         ),
@@ -280,7 +286,7 @@ class _ParanIntroScreenState extends State<ParanIntroScreen> {
                   Container(
                     width: double.infinity,
                     color: band,
-                    padding: EdgeInsets.fromLTRB(28, 30, 28, 28 + MediaQuery.paddingOf(context).bottom),
+                    padding: const EdgeInsets.fromLTRB(28, 30, 28, 28),
                     child: Column(
                       children: [
                         Text(t.closing1,
@@ -291,15 +297,16 @@ class _ParanIntroScreenState extends State<ParanIntroScreen> {
                         const SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: Image.asset('assets/logo_icon.png',
+                                  width: 20, height: 20, filterQuality: FilterQuality.medium),
+                            ),
+                            const SizedBox(width: 7),
                             Text(t.sign,
                                 style: TextStyle(color: ink, fontSize: 16, fontWeight: FontWeight.w700, letterSpacing: -0.3)),
-                            const SizedBox(width: 6),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 4),
-                              child: _Bars(color: point, height: 12),
-                            ),
                           ],
                         ),
                         const SizedBox(height: 12),
@@ -379,68 +386,6 @@ const ColorFilter _kDarkPhotoFilter = ColorFilter.matrix(<double>[
   0.0765, 0.2575, 0.4660, 0, 0,
   0, 0, 0, 1, 0,
 ]);
-
-/// 로고 옆 작은 소리 막대 (천천히 물결처럼 움직임)
-class _Bars extends StatefulWidget {
-  final Color color;
-  final double height;
-  const _Bars({required this.color, required this.height});
-
-  @override
-  State<_Bars> createState() => _BarsState();
-}
-
-class _BarsState extends State<_Bars> with SingleTickerProviderStateMixin {
-  static const _ratios = [0.45, 0.8, 1.0, 0.62];
-  late final AnimationController _c =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 2600));
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // 폰에서 "애니메이션 줄이기"를 켜 두면 멈춘 모양 그대로
-    if (MediaQuery.disableAnimationsOf(context)) {
-      _c.stop();
-    } else if (!_c.isAnimating) {
-      _c.repeat();
-    }
-  }
-
-  @override
-  void dispose() {
-    _c.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final w = widget.height >= 16 ? 3.5 : 3.0;
-    return SizedBox(
-      height: widget.height,
-      child: AnimatedBuilder(
-        animation: _c,
-        builder: (context, _) => Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            for (var i = 0; i < _ratios.length; i++) ...[
-              if (i > 0) SizedBox(width: w * 0.7),
-              Container(
-                width: w,
-                height: widget.height *
-                    (_c.isAnimating
-                        ? (0.35 + 0.65 * (0.5 + 0.5 * math.sin(_c.value * 2 * math.pi + i * 1.1)))
-                            .clamp(0.3, 1.0)
-                        : _ratios[i]),
-                decoration: BoxDecoration(color: widget.color, borderRadius: BorderRadius.circular(w)),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 /// 외국용 이름 칸: 파란 + 소리 (blue + sound)
 class _HangulName extends StatelessWidget {

@@ -1521,7 +1521,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get dailyNotPlayedSub => '오랜만에 다시 들어볼까요';
 
   @override
-  String get dailyShufflePlay => '틀기';
+  String get dailyShufflePlay => '랜덤 듣기';
 
   @override
   String get dailyMyStats => '내 기록';
@@ -4353,7 +4353,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get introMenuTitle => '파란소리 소개';
 
   @override
-  String get introMenuDesc => '어떤 앱인지 알려드려요.';
+  String get introMenuDesc => '파란소리에 담긴 이야기를 만나보세요';
 
   @override
   String get nature01Name => '파도소리';

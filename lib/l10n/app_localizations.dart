@@ -3080,7 +3080,7 @@ abstract class AppLocalizations {
   /// No description provided for @dailyShufflePlay.
   ///
   /// In ko, this message translates to:
-  /// **'틀기'**
+  /// **'랜덤 듣기'**
   String get dailyShufflePlay;
 
   /// No description provided for @dailyMyStats.
@@ -8337,7 +8337,7 @@ abstract class AppLocalizations {
   /// No description provided for @introMenuDesc.
   ///
   /// In ko, this message translates to:
-  /// **'어떤 앱인지 알려드려요.'**
+  /// **'파란소리에 담긴 이야기를 만나보세요'**
   String get introMenuDesc;
 
   /// No description provided for @nature01Name.

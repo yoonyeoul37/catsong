@@ -18,7 +18,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get albums => 'アルバム';
 
   @override
-  String get artists => '歌手';
+  String get artists => 'アーティスト';
 
   @override
   String get playlists => '再生リスト';
@@ -72,7 +72,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get addMusic => 'デバイスに音楽ファイルを追加してください';
 
   @override
-  String get scanningMusic => '音楽をスキャン中...';
+  String get scanningMusic => '音楽を検索中...';
 
   @override
   String get editSong => '曲情報を編集';
@@ -174,7 +174,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get noAlbums => 'アルバムがありません';
 
   @override
-  String get noArtists => 'アーティストがありません';
+  String get noArtists => 'アーティストが見つかりません';
 
   @override
   String get searchAlbums => 'アルバムを検索...';
@@ -207,10 +207,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get confirm => '確認';
 
   @override
-  String get permissionRequired => 'ストレージの許可が必要です';
+  String get permissionRequired => '音楽へのアクセス許可が必要です';
 
   @override
-  String get permissionMessage => 'MP3ファイルをスキャンするには\nストレージの許可が必要です。';
+  String get permissionMessage => 'MP3ファイルを探すには\n音楽へのアクセス許可が必要です。';
 
   @override
   String get allowPermission => '許可する';
@@ -295,7 +295,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get reviewTitle => 'Paransoriはいかがですか？';
 
   @override
-  String get reviewMessage => '評価を残していただけると\nアプリ改善に大変役立ちます 😊';
+  String get reviewMessage => '評価をいただけると\nアプリの改善に役立ちます 😊';
 
   @override
   String get reviewButton => '⭐ 評価を残す';
@@ -374,7 +374,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String autoStopFormat(Object time) {
-    return '$time後に自動的にオフになります';
+    return '$time後に再生を自動停止します';
   }
 
   @override
@@ -464,13 +464,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get radioRecentListening => '最近聴いた';
 
   @override
-  String get radioSelectCountry => '国を選択';
+  String get radioSelectCountry => '国・地域を選択';
 
   @override
   String get radioChannelCount => 'チャンネル';
 
   @override
-  String get radioPopular200 => '人気200';
+  String get radioPopular200 => '人気の200局';
 
   @override
   String get radioSleep => 'スリープ';
@@ -479,10 +479,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get radioSchedule => '予約';
 
   @override
-  String get sleepTimerDesc => '選択した時間後に自動的にオフになります';
+  String get sleepTimerDesc => '設定した時間が経過すると自動で再生を停止します';
 
   @override
-  String get sleepTimerActiveDesc => 'タイマー作動中です';
+  String get sleepTimerActiveDesc => 'タイマーが作動中です';
 
   @override
   String get remainingTime => '残り時間';
@@ -887,10 +887,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get radioNoFavorites => 'お気に入りがありません';
 
   @override
-  String get radioNoFavoritesDesc => 'チャンネル一覧で♡をタップして追加してみてください';
+  String get radioNoFavoritesDesc => 'チャンネル一覧の♡をタップして追加しましょう';
 
   @override
-  String get radioLoadingPopular => '人気放送を読み込み中...';
+  String get radioLoadingPopular => '人気のラジオ局を読み込み中...';
 
   @override
   String radioScheduleTitle(Object station) {
@@ -908,11 +908,11 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String radioScheduleCompleteToast(Object time, Object title) {
-    return '$title $time 予約完了';
+    return '$title $time の予約が完了しました';
   }
 
   @override
-  String get radioPlaybackFailed => '再生に失敗しました。';
+  String get radioPlaybackFailed => '再生できませんでした。';
 
   @override
   String get radioRerun => '再放送';
@@ -933,7 +933,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get radioAfterEnd => '後に終了';
 
   @override
-  String get radioNoStationsFound => '放送が見つかりません';
+  String get radioNoStationsFound => 'ラジオ局が見つかりません';
 
   @override
   String get sleepMin => '分';
@@ -973,11 +973,11 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String sleepAutoStopToast(Object time) {
-    return '$time後に自動的にオフになります';
+    return '$time後に再生を自動停止します';
   }
 
   @override
-  String get radioKoreaTitle => '韓国ラジオ';
+  String get radioKoreaTitle => '韓国のラジオ';
 
   @override
   String get radioOnAirTitle => 'ON AIR';

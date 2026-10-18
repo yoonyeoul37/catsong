@@ -66,16 +66,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nowPlaying => 'Playing';
 
   @override
-  String get noSongs => 'No MP3 files found';
+  String get noSongs => 'No music files found';
 
   @override
-  String get addMusic => 'Add music files to your device';
+  String get addMusic => 'Add music to your phone to get started';
 
   @override
-  String get scanningMusic => 'Scanning music...';
+  String get scanningMusic => 'Finding your music...';
 
   @override
-  String get editSong => 'Edit song info';
+  String get editSong => 'Edit song details';
 
   @override
   String get save => 'Save';
@@ -99,7 +99,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get share => 'Share';
 
   @override
-  String get songInfo => 'Song info';
+  String get songInfo => 'Song details';
 
   @override
   String get equalizer => 'Equalizer';
@@ -144,7 +144,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get widget => 'Home widget';
 
   @override
-  String get version => 'Version info';
+  String get version => 'App version';
 
   @override
   String get promoCode => 'Promo code';
@@ -156,16 +156,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get termsOfService => 'Terms of Service';
 
   @override
-  String get noRecentSongs => 'No recently played songs';
+  String get noRecentSongs => 'Nothing played recently';
 
   @override
-  String get playMusic => 'Play some music';
+  String get playMusic => 'Start listening';
 
   @override
-  String get clearRecent => 'Clear recent songs';
+  String get clearRecent => 'Clear listening history';
 
   @override
-  String get clearRecentConfirm => 'Clear all recently played songs?';
+  String get clearRecentConfirm => 'Clear your listening history?';
 
   @override
   String get playAll => 'Play all';
@@ -195,10 +195,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playing => 'Playing...';
 
   @override
-  String get ringtoneFailed => 'Failed to set ringtone';
+  String get ringtoneFailed => 'Couldn\'t set ringtone';
 
   @override
-  String get promoInvalid => 'Invalid promo code';
+  String get promoInvalid => 'That promo code isn\'t valid';
 
   @override
   String get promoEnter => 'Enter promo code';
@@ -207,14 +207,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirm => 'Confirm';
 
   @override
-  String get permissionRequired => 'Storage permission required';
+  String get permissionRequired => 'Music access needed';
 
   @override
   String get permissionMessage =>
-      'Storage permission is required\nto scan MP3 files.';
+      'Allow access to your music\nto find songs on your phone.';
 
   @override
-  String get allowPermission => 'Allow permission';
+  String get allowPermission => 'Allow access';
 
   @override
   String get retry => 'Retry';
@@ -226,7 +226,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleted => 'Deleted';
 
   @override
-  String get deleteFailed => 'Delete failed';
+  String get deleteFailed => 'Couldn\'t delete';
 
   @override
   String get playNext => 'Play next';
@@ -259,7 +259,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get off => 'Off';
 
   @override
-  String get flashlightError => 'Flashlight error';
+  String get flashlightError => 'Couldn\'t turn on flashlight';
 
   @override
   String get minuteShort => 'min';
@@ -281,13 +281,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bassBooster => 'Bass booster';
 
   @override
-  String get enhancesBass => 'Enhances bass sound';
+  String get enhancesBass => 'Boosts low frequencies';
 
   @override
   String get virtualizer => 'Virtualizer';
 
   @override
-  String get surroundEffect => 'Creates surround sound effect';
+  String get surroundEffect => 'Adds a surround sound effect';
 
   @override
   String get reset => 'Reset';
@@ -297,7 +297,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reviewMessage =>
-      'Please leave a rating!\nIt helps us improve the app 😊';
+      'Enjoying Paransori?\nYour rating helps us improve 😊';
 
   @override
   String get reviewButton => '⭐ Leave a rating';
@@ -366,10 +366,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fontYeonSung => 'Yeon Sung (Soft)';
 
   @override
-  String get styleCD => 'CD rotation';
+  String get styleCD => 'Spinning CD';
 
   @override
-  String get styleCard => 'Album art card';
+  String get styleCard => 'Album art';
 
   @override
   String get hourWord => 'hr';
@@ -380,7 +380,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get autoStopCountdownSuffix => 'until auto stop';
+  String get autoStopCountdownSuffix => 'until playback stops';
 
   @override
   String get secondShort => 'sec';
@@ -463,10 +463,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get radioTitle => 'Radio';
 
   @override
-  String get radioRecentListening => 'Recently listened';
+  String get radioRecentListening => 'Recently played';
 
   @override
-  String get radioSelectCountry => 'Select country';
+  String get radioSelectCountry => 'Choose a country';
 
   @override
   String get radioChannelCount => 'channels';
@@ -481,11 +481,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get radioSchedule => 'Schedule';
 
   @override
-  String get sleepTimerDesc =>
-      'Turns off automatically after the selected time';
+  String get sleepTimerDesc => 'Stops playback after the time you choose';
 
   @override
-  String get sleepTimerActiveDesc => 'Timer is running';
+  String get sleepTimerActiveDesc => 'Your sleep timer is running';
 
   @override
   String get remainingTime => 'Time remaining';
@@ -797,7 +796,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get countryME => 'Montenegro';
 
   @override
-  String get countryBA => 'Bosnia';
+  String get countryBA => 'Bosnia and Herzegovina';
 
   @override
   String get countryMT => 'Malta';
@@ -848,13 +847,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categoryRegionalMBC => 'Regional MBC';
 
   @override
-  String get categoryRegionalPrivate => 'Regional private';
+  String get categoryRegionalPrivate => 'Local commercial stations';
 
   @override
-  String get categoryTraffic => 'Traffic broadcasting';
+  String get categoryTraffic => 'Traffic radio';
 
   @override
-  String get categoryEtc => 'Others';
+  String get categoryEtc => 'Other';
 
   @override
   String get regionAll => 'All';
@@ -890,7 +889,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get radioNoFavorites => 'No favorites yet';
 
   @override
-  String get radioNoFavoritesDesc => 'Tap ♡ on a channel to add it';
+  String get radioNoFavoritesDesc => 'Tap ♡ on a station to save it';
 
   @override
   String get radioLoadingPopular => 'Loading popular stations...';
@@ -907,18 +906,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get radioBroadcastSchedule => 'Schedule';
 
   @override
-  String get radioPlayFirst => 'Please play a radio station first';
+  String get radioPlayFirst => 'Play a radio station first';
 
   @override
   String radioScheduleCompleteToast(Object time, Object title) {
-    return '$title $time scheduled';
+    return 'Scheduled $title for $time';
   }
 
   @override
-  String get radioPlaybackFailed => 'Playback failed.';
+  String get radioPlaybackFailed => 'Couldn\'t play this station';
 
   @override
-  String get radioRerun => 'Rerun';
+  String get radioRerun => 'Replay';
 
   @override
   String get radioLive => '● LIVE';
@@ -927,7 +926,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get radioStatusConnecting => 'Connecting...';
 
   @override
-  String get radioStatusFailed => 'Connection failed';
+  String get radioStatusFailed => 'Couldn\'t connect';
 
   @override
   String get radioStatusPaused => 'Paused';
@@ -980,7 +979,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get radioKoreaTitle => 'Korea Radio';
+  String get radioKoreaTitle => 'Korean Radio';
 
   @override
   String get radioOnAirTitle => 'ON AIR';
@@ -1488,7 +1487,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeRecentEmpty => 'Nothing played yet';
 
   @override
-  String get homeRecentEmptySub => 'Anything played for 30s+ shows up here';
+  String get homeRecentEmptySub => 'Listen for 30 seconds to see it here';
 
   @override
   String get cleanLabel => 'Clean up';
@@ -1523,7 +1522,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dailyOftenNight => 'Your late-night favorite';
 
   @override
-  String get dailyLongTime => 'Long time no listen';
+  String get dailyLongTime => 'It’s been a while';
 
   @override
   String get dailySongOfDay => 'Song of the day';
@@ -1549,7 +1548,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get dailyNotPlayedSub => 'Give them another listen?';
+  String get dailyNotPlayedSub => 'Want to hear them again?';
 
   @override
   String get dailyShufflePlay => 'Shuffle';
@@ -1617,10 +1616,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dailyTipVideoSub => 'Video ⋮ menu → \'Save as music\'';
 
   @override
-  String get dailyTipMixTitle => 'Add rain to your music';
+  String get dailyTipMixTitle => 'Add the sound of rain to your music';
 
   @override
-  String get dailyTipMixSub => 'Player ⋮ menu → Nature sound mix';
+  String get dailyTipMixSub => 'Player ⋮ menu → Mix nature sounds';
 
   @override
   String get dailyTipLyricsTitle => 'Share a line of lyrics';
@@ -1629,7 +1628,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dailyTipLyricsSub => 'Long-press lyrics to share as a card';
 
   @override
-  String get dailyOffTitle => 'Turn off the daily card?';
+  String get dailyOffTitle => 'Hide the daily card?';
 
   @override
   String get dailyOffMessage => 'You can turn it back on anytime in Settings.';
@@ -1857,10 +1856,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Storage permission is needed.\nPlease allow it in Settings.';
 
   @override
-  String get musicLoadError => 'Error loading music';
+  String get musicLoadError => 'Couldn\'t load your music';
 
   @override
-  String get musicScanError => 'Music scan error';
+  String get musicScanError => 'Couldn\'t find your music';
 
   @override
   String get sleepAskDuration => 'Stop playing after how long?';
@@ -1968,7 +1967,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get viewLyrics => 'Lyrics';
 
   @override
-  String get natureMix => 'Nature sound mix';
+  String get natureMix => 'Mix nature sounds';
 
   @override
   String get repeatOffChip => 'Off';
@@ -2076,8 +2075,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lyricsDeleteTitle => 'Delete your lyrics?';
 
   @override
-  String get lyricsDeleteMessage =>
-      'We\'ll search online again after deleting.';
+  String get lyricsDeleteMessage => 'We’ll look for lyrics online again.';
 
   @override
   String get lyricsBg => 'Lyrics background';
@@ -2121,7 +2119,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get checkInternet => 'Check your internet connection';
 
   @override
-  String get lyricsNotFoundYet => 'Couldn\'t find lyrics for this song yet';
+  String get lyricsNotFoundYet => 'No lyrics available for this song yet';
 
   @override
   String get retryWhenOnline => 'You can search again once connected';
@@ -2160,7 +2158,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ratioFeed => 'Feed 1:1';
 
   @override
-  String get cardMakeFailed => 'Couldn\'t make the card. Please try again.';
+  String get cardMakeFailed => 'Couldn\'t create the card. Try again.';
 
   @override
   String get photoLoadFailed => 'Couldn\'t load the photo';
@@ -2293,7 +2291,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get readingSongInfo => 'Reading song info';
 
   @override
-  String get pleaseWait => 'Please wait a moment';
+  String get pleaseWait => 'Just a moment...';
 
   @override
   String get deselectAllShort => 'Deselect all';
@@ -2349,7 +2347,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get noSongsWithoutArt => 'No songs are missing art';
+  String get noSongsWithoutArt => 'All songs have album art';
 
   @override
   String get allHaveArt => 'Every song has album art';
@@ -2412,7 +2410,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get allowModifySettings =>
-      'Turn on \"Modify system settings\", then come back and tap again';
+      'Allow “Modify system settings,” then try again';
 
   @override
   String get ringtoneFailedMsg => 'Couldn\'t set the ringtone';
@@ -2513,7 +2511,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get artistAlbums => 'Albums by this artist';
 
   @override
-  String get mayHaveErrors => '(may contain errors)';
+  String get mayHaveErrors => '(may not be accurate)';
 
   @override
   String get sourcesLabel => 'Sources';
@@ -2615,7 +2613,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get callEmptyHint =>
-      'Turn on call recording in your Phone app\nand recorded calls will appear here';
+      'Enable call recording in your Phone app\nto see your recordings here';
 
   @override
   String get recManage => 'Manage recordings';
@@ -2668,7 +2666,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteRecTitle => 'Delete this recording?';
 
   @override
-  String get trashInfo => 'It moves to the trash and is deleted after 30 days.';
+  String get trashInfo =>
+      'Moved to Trash and permanently deleted after 30 days.';
 
   @override
   String lockedKept(int count) {
@@ -2695,8 +2694,8 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count recordings will be gone for good.',
-      one: '1 recording will be gone for good.',
+      other: 'These $count recordings will be permanently deleted.',
+      one: 'This recording will be permanently deleted.',
     );
     return '$_temp0';
   }
@@ -2857,14 +2856,14 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count videos will be gone for good.',
-      one: '1 video will be gone for good.',
+      other: 'These $count videos will be permanently deleted.',
+      one: 'This video will be permanently deleted.',
     );
     return '$_temp0';
   }
 
   @override
-  String get deleteVideoForeverMsg => 'This video will be gone for good.';
+  String get deleteVideoForeverMsg => 'This video will be permanently deleted.';
 
   @override
   String get sortByName => 'Name';
@@ -2919,7 +2918,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get videoPermTitle => 'Let\'s load the videos on your phone';
 
   @override
-  String get videoPermSub => 'Please allow video access once';
+  String get videoPermSub => 'Allow access to your videos to continue';
 
   @override
   String get videoPermStep1 => 'Tap \"Allow in Settings\" below';
@@ -2956,7 +2955,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get renameFailed => 'Couldn\'t rename';
 
   @override
-  String get castFailedRetry => 'Couldn\'t send to TV. Please try again.';
+  String get castFailedRetry => 'Couldn\'t cast to your TV. Try again.';
 
   @override
   String get watchOnTv => 'Watch on TV';
@@ -3014,10 +3013,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get audioOnlyOff => 'Stops when you leave the app';
 
   @override
-  String get videoScanError => 'Video scan error';
+  String get videoScanError => 'Couldn\'t find your videos';
 
   @override
-  String get saveMusicFailed => 'Couldn\'t save as music';
+  String get saveMusicFailed => 'Couldn\'t save the audio';
 
   @override
   String get savedAsMusic => 'Saved as music';
@@ -3064,7 +3063,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get radioShareSub => 'Share what you\'re listening to.';
+  String get radioShareSub => 'Share this station with someone.';
 
   @override
   String get savedSongAdded => 'Added to saved songs';
@@ -3123,7 +3122,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scheduledToast => 'Scheduled';
 
   @override
-  String get scheduleFull => 'Can\'t add more. Delete old ones in Schedules.';
+  String get scheduleFull =>
+      'Schedule limit reached. Remove an existing schedule to add another.';
 
   @override
   String get nextShort => 'Next';
@@ -3140,7 +3140,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchCountry => 'Search country';
 
   @override
-  String get noCountryFound => 'No country found';
+  String get noCountryFound => 'No countries found';
 
   @override
   String get currentCountry => 'Current country';
@@ -3242,13 +3242,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scheduleAction => 'Schedule';
 
   @override
-  String get scheduleLimit => 'Up to 5 schedules. Delete old ones to add more.';
+  String get scheduleLimit =>
+      'You can have up to 5 schedules. Remove one to add another.';
 
   @override
   String get diceProgramLabel => 'On air now';
 
   @override
-  String get diceNoProgram => 'No program info';
+  String get diceNoProgram => 'No program details available';
 
   @override
   String get diceWhich => 'Which station will it be?';
@@ -3298,7 +3299,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get savedSongsEmpty =>
-      'Tap ♡ next to songs played on air\nto collect them here';
+      'Tap ♡ beside a song playing on the radio\nto save it here';
 
   @override
   String get searchingTv => 'Looking for TVs on the same Wi-Fi';
@@ -3412,7 +3413,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get genreSertanejo => 'Sertanejo';
 
   @override
-  String get noRegionStations => 'No stations with region info';
+  String get noRegionStations => 'No stations with region details';
 
   @override
   String get favAddHint => 'Tap the heart to add favorites';
@@ -3427,7 +3428,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nowPlayingSong => 'Now playing';
 
   @override
-  String get noSongInfoYet => 'No song info yet';
+  String get noSongInfoYet => 'Song details aren’t available yet';
 
   @override
   String get trendingSort => 'Sorted by rising listeners';
@@ -3503,10 +3504,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stationLoadFailed =>
-      'Can\'t load this station.\nPlease choose another one.';
+      'Couldn\'t load this station.\nTry another one.';
 
   @override
-  String get soundPlayFailed => 'Couldn\'t play the sound';
+  String get soundPlayFailed => 'Couldn\'t play this sound';
 
   @override
   String get natureTitle1 => 'Nature';
@@ -3515,7 +3516,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get natureTitle2 => ' Sounds';
 
   @override
-  String get natureSub => 'Sounds to calm your mind';
+  String get natureSub => 'Find a little calm in nature';
 
   @override
   String versionsCount(int count) {
@@ -3546,7 +3547,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchTitleArtist => 'Search title or artist';
 
   @override
-  String get noMyMusic => 'No music on this phone';
+  String get noMyMusic => 'No music saved on this phone';
 
   @override
   String get noSearchResults => 'No results';
@@ -3558,7 +3559,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mixTitle2 => ' Mix';
 
   @override
-  String get mixSub => 'Create your own relaxing soundscape.';
+  String get mixSub => 'Blend your favorite sounds into a relaxing soundscape.';
 
   @override
   String get musicLabel => 'Music';
@@ -3590,7 +3591,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playMix => 'Play mix';
 
   @override
-  String get myMixDefault => 'My sound mix';
+  String get myMixDefault => 'My Mix';
 
   @override
   String get paransoriMix => 'Paransori Mix';
@@ -3628,7 +3629,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get turnAllOff => 'Turn all off';
 
   @override
-  String get overlayOnHint => 'Layer nature sounds softly under your music';
+  String get overlayOnHint => 'Play nature sounds softly alongside your music';
 
   @override
   String get overlayIdleHint => 'Plays along when music is on';
@@ -3651,10 +3652,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get noFavRadio => 'No favorite stations';
+  String get noFavRadio => 'No favorite radio stations yet';
 
   @override
-  String get noFavNature => 'No favorite nature sounds';
+  String get noFavNature => 'No favorite nature sounds yet';
 
   @override
   String get restFocusSoon => 'Rest · Focus is coming soon';
@@ -3672,7 +3673,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get whiteNoise => 'Noise';
 
   @override
-  String get restFocusSub => 'Calm sounds to rest and focus';
+  String get restFocusSub => 'Sounds for rest and focus';
 
   @override
   String get comingSoonTitle => 'Coming soon';
@@ -3748,7 +3749,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get secTools => 'Tools';
 
   @override
-  String get descEq => 'Tune the sound to your taste';
+  String get descEq => 'Make the sound your own';
 
   @override
   String get loudnessTitle => 'Volume leveling';
@@ -3760,7 +3761,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get headsetTitle => 'Auto-play on headphones';
 
   @override
-  String get headsetDesc => 'Resumes playback when headphones connect';
+  String get headsetDesc => 'Resume playback when headphones connect';
 
   @override
   String get descRingtone => 'Set a favorite song as your ringtone';
@@ -3798,7 +3799,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get soundEffectInfo =>
-      'A soft drop sound when you edit, save or delete. Vibrates in vibrate mode and stays silent when muted.';
+      'Plays a soft sound when you edit, save, or delete. Uses vibration in vibrate mode and stays quiet when muted.';
 
   @override
   String get voiceGuide => 'Voice greeting';
@@ -3829,7 +3830,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get infoTime => 'Time of day';
 
   @override
-  String get infoTimeD => 'Nature sounds for morning, day, evening and night';
+  String get infoTimeD => 'Nature sounds for every part of your day';
 
   @override
   String get infoTips => 'Handy features';
@@ -3841,7 +3842,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get infoAlarm => 'Tomorrow\'s alarm';
 
   @override
-  String get infoAlarmD => 'If an alarm is on, shows wake-up time from 7 PM';
+  String get infoAlarmD =>
+      'Shows your next alarm after 7 PM when an alarm is set';
 
   @override
   String get pcMusic => 'Music';
@@ -3912,7 +3914,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get headsetNote =>
-      'Resumes your song, radio or nature sound softly and slowly turns it up.\nIt won\'t work if the app is fully closed.';
+      'Gently resumes your music, radio, or nature sounds when headphones connect.\nDoesn’t work if the app is fully closed.';
 
   @override
   String get accentSheetHint =>
@@ -4060,10 +4062,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get helpCantOpen =>
-      'Can\'t open settings. Please follow \"Set it manually\" below.';
+      'Couldn\'t open Settings. Follow the steps under “Set it manually.”';
 
   @override
-  String get mailBodyAsk => 'What\'s the problem?\n(Please write here)';
+  String get mailBodyAsk => 'How can we help?\n(Describe the issue here)';
 
   @override
   String get mailBodyAuto => '── Added automatically ──';
@@ -4085,7 +4087,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String mailCopied(String mail) {
-    return 'No mail app found, so the address was copied ($mail)';
+    return 'No email app found. Email address copied: $mail';
   }
 
   @override
@@ -4155,25 +4157,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get alarmOffKeep => 'Stop alarm, keep listening';
 
   @override
-  String get alarmNeedExact => 'Allow Alarms & reminders so the alarm can ring';
+  String get alarmNeedExact =>
+      'Allow Alarms & reminders so your alarm can ring on time';
 
   @override
-  String get noSongsOnPhone => 'No songs on this phone';
+  String get noSongsOnPhone => 'No music found on this phone';
 
   @override
-  String get pickAlarmSong => 'Choose alarm song';
+  String get pickAlarmSong => 'Choose an alarm song';
 
   @override
   String get searchTitleOrArtist => 'Search title or artist';
 
   @override
-  String get makePlaylistFirst => 'Create a playlist first';
+  String get makePlaylistFirst => 'Create a playlist to get started';
 
   @override
   String get pickPlaylist => 'Choose playlist';
 
   @override
-  String get addFavStationFirst => 'Add stations to radio favorites first';
+  String get addFavStationFirst => 'Add a station to your favorites first';
 
   @override
   String get pickRadioChannel => 'Choose radio station';
@@ -4182,18 +4185,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pickNatureSound => 'Choose nature sound';
 
   @override
-  String get alarmPermTitle => 'Alarm permission needed';
+  String get alarmPermTitle => 'Allow alarm access';
 
   @override
   String get alarmPermMsg =>
-      'To wake you on time, allow \"Alarms & reminders\". It saves as soon as you come back.';
+      'Allow “Alarms & reminders” so your alarm can ring on time. Your settings will be saved when you return.';
 
   @override
   String get fullScreenTitle => 'Show alarm on lock screen';
 
   @override
   String get fullScreenMsg =>
-      'Allow \"Full-screen notifications\" to show the alarm over the lock screen. The alarm still rings without it.';
+      'Allow full-screen notifications to show the alarm on your lock screen. It will still ring without this permission.';
 
   @override
   String get alarmBatteryAsk =>
@@ -4225,7 +4228,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get repeatLabel => 'Repeat';
 
   @override
-  String get noDaysOnce => 'With no days picked, it rings once';
+  String get noDaysOnce => 'If no days are selected, the alarm rings once';
 
   @override
   String get alarmSound => 'Alarm sound';
@@ -4234,7 +4237,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get oneSong => 'One song';
 
   @override
-  String get oneSongSub => 'Repeats the song you pick';
+  String get oneSongSub => 'Repeat the song you choose';
 
   @override
   String get favChannels => 'Favorite stations';
@@ -4250,7 +4253,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get alarmVolumeNote =>
-      'Rings at this volume even if your phone is quiet, then goes back after';
+      'Uses this volume even if your phone is silent, then restores your previous volume.';
 
   @override
   String get changeAction => 'Change';
@@ -4271,7 +4274,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get greetLine5 => 'Relax and listen';
 
   @override
-  String get byeLine1 => 'What a day with good music';
+  String get byeLine1 => 'A day well spent with music';
 
   @override
   String get byeLine2 => 'You did great today';
@@ -4297,7 +4300,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get genreNone => 'No genre';
 
   @override
-  String get genreTypeOwn => 'Type your own';
+  String get genreTypeOwn => 'Enter a genre';
 
   @override
   String get songGenreBallad => 'Ballad';
@@ -4398,24 +4401,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stationCatCommunity => 'Community radio';
 
   @override
-  String get stationCatPrivate => 'Regional private';
+  String get stationCatPrivate => 'Local commercial stations';
 
   @override
   String get smsSheetTitle => 'Text the show';
 
   @override
   String get smsSheetDesc =>
-      'Send a text to this number to share a story or request a song.';
+      'Text the station to share a story or request a song.';
 
   @override
   String get smsSheetFee =>
-      'An information fee applies: 50 KRW for short texts, 100 KRW for long texts or photos.';
+      'Message fees apply: ₩50 for a short text, or ₩100 for a long text or photo.';
 
   @override
   String get smsSheetSend => 'Send text';
 
   @override
-  String get languageMenuDesc => 'Show the app in another language.';
+  String get languageMenuDesc => 'Choose the language used in the app.';
 
   @override
   String get languagePhone => 'Phone language';
@@ -4430,7 +4433,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get introTitle => 'Paransori';
 
   @override
-  String get introTagline => 'Adding clarity to your everyday.';
+  String get introTagline => 'A little clarity for every day.';
 
   @override
   String get introQuestion => 'If sound had a color,\nwhat would it be?';
@@ -4441,7 +4444,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get introStarted =>
-      'Paransori began with the wish to capture sounds like these.';
+      'Paransori began with a simple wish: to bring these sounds into everyday life.';
 
   @override
   String get introNameLabel => 'About the name';
@@ -4459,7 +4462,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get introEveryday1 =>
-      'Paransori hopes to be there, lightly, in all the different moments of your day.';
+      'Paransori is here for the little moments throughout your day.';
 
   @override
   String get introEveryday2 =>
@@ -4477,14 +4480,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get introWish2 =>
-      'Paransori began in Korea and now joins people all around the world. We hope it adds a little joy and ease to each of your days.';
+      'Created in Korea, Paransori is made for listeners everywhere. We hope it brings a little more ease and joy to your day.';
 
   @override
   String get introClosing1 =>
-      'A space for sound you can turn to anytime, anywhere.';
+      'Your place for music, radio, and nature sounds, anytime.';
 
   @override
-  String get introClosing2 => 'So your day can be a little clearer.';
+  String get introClosing2 => 'A little more calm in every day.';
 
   @override
   String get introSign => 'Paransori.';
@@ -4497,7 +4500,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get introFeature1Desc =>
-      'Relax with the music saved on your phone and fill your time with the songs you love.';
+      'Enjoy the music saved on your phone, wherever your day takes you.';
 
   @override
   String get introFeature2Title => 'World radio';
@@ -4518,14 +4521,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get introFeature4Desc =>
-      'From quiet moments before sleep to times when you need to focus, find the sound that suits you right now.';
+      'Whether you’re winding down for bed or settling in to focus, find the sounds that fit the moment.';
 
   @override
-  String get introFeature5Title => 'Your own sound mix';
+  String get introFeature5Title => 'Your sound mix';
 
   @override
   String get introFeature5Desc =>
-      'Play your favorite sounds together and create a mood that\'s all yours.';
+      'Blend music and nature sounds to create your own atmosphere.';
 
   @override
   String get introFeature6Title => 'Morning alarm';
@@ -4545,34 +4548,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nature01Desc =>
-      'Steady waves calm your mind and help you rest and sleep deeply';
+      'Let the steady rhythm of ocean waves help you unwind';
 
   @override
   String get nature02Name => 'Gentle waves';
 
   @override
   String get nature02Desc =>
-      'Soft, gentle waves rolling in for a peaceful rest';
+      'Soft waves rolling onto the shore for a peaceful break';
 
   @override
   String get nature03Name => 'Seagulls and waves';
 
   @override
-  String get nature03Desc => 'Waves with seagull calls for a lively beach mood';
+  String get nature03Desc =>
+      'Seagull calls and rolling waves bring the beach to you';
 
   @override
   String get nature04Name => 'Waves on rocks';
 
   @override
   String get nature04Desc =>
-      'Waves crashing hard against rocks for a dynamic sea';
+      'Waves crashing against rocks along a rugged coast';
 
   @override
   String get nature05Name => 'Distant seagulls';
 
   @override
-  String get nature05Desc =>
-      'A quiet shore with seagulls softly calling far away';
+  String get nature05Desc => 'Distant seagull calls along a quiet shoreline';
 
   @override
   String get nature06Name => 'Rough waves';
@@ -4584,62 +4587,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nature07Name => 'Rain';
 
   @override
-  String get nature07Desc =>
-      'Steady rain helps you focus and soothes an anxious mind';
+  String get nature07Desc => 'The gentle rhythm of rain for a moment of calm';
 
   @override
   String get nature08Name => 'Rain on the window';
 
   @override
-  String get nature08Desc =>
-      'Soft rain tapping on the window to help you fall asleep';
+  String get nature08Desc => 'Raindrops tapping softly against a window';
 
   @override
   String get nature09Name => 'Forest rain and birds';
 
   @override
   String get nature09Desc =>
-      'Rain in the forest blended with birdsong to calm your mind';
+      'Forest rainfall and birdsong for a peaceful escape';
 
   @override
   String get nature10Name => 'Heavy night rain';
 
   @override
-  String get nature10Desc =>
-      'Heavy rain falling in a forest at night for deep relaxation';
+  String get nature10Desc => 'Heavy nighttime rain falling through the forest';
 
   @override
   String get nature11Name => 'Birdsong';
 
   @override
-  String get nature11Desc => 'Clear birdsong eases stress and lifts your mood';
+  String get nature11Desc => 'Bright birdsong to welcome a peaceful moment';
 
   @override
   String get nature12Name => 'Cuckoo and forest birds';
 
   @override
-  String get nature12Desc =>
-      'Forest birdsong with a cuckoo for a fresh morning';
+  String get nature12Desc => 'A cuckoo calling among the birds of the forest';
 
   @override
   String get nature13Name => 'Campfire';
 
   @override
-  String get nature13Desc =>
-      'Crackling firewood creates a cozy mood for deep relaxation';
+  String get nature13Desc => 'The cozy crackle of a warm campfire';
 
   @override
   String get nature14Name => 'Stream';
 
   @override
-  String get nature14Desc =>
-      'A babbling stream calms your mind and quiets busy thoughts';
+  String get nature14Desc => 'The gentle flow of a babbling stream';
 
   @override
   String get nature15Name => 'Calm river';
 
   @override
-  String get nature15Desc => 'A wide river flowing calmly for a peaceful rest';
+  String get nature15Desc =>
+      'A slow, steady river flowing through a quiet landscape';
 
   @override
   String get langNameKo => 'Korean';

@@ -1298,7 +1298,35 @@ class _RadioCountryStationsScreenState
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // 앱 아이콘 + 제목(회색 빛) / 아래 설명 — 홈 로고와 같은 짜임 (해외는 그 나라 말)
-            Flexible(child: MenuTitle(title: tr.catRadio, sub: tr.catRadioSub, isDark: isDarkMode)),
+            Flexible(
+              child: MenuTitle(
+                title: tr.catRadio,
+                sub: tr.catRadioSub,
+                isDark: isDarkMode,
+                // 이 화면은 설명 대신 '지금 보는 나라' — 누르면 나라 고르기
+                subWidget: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(widget.country.flag,
+                        textScaler: TextScaler.noScaling, style: const TextStyle(fontSize: 12, height: 1.2)),
+                    const SizedBox(width: 4),
+                    Text(widget.country.displayName,
+                        maxLines: 1,
+                        textScaler: TextScaler.noScaling,
+                        style: TextStyle(
+                            color: baseColor.withOpacity(0.6), fontSize: 11.5, fontWeight: FontWeight.w600, height: 1.2)),
+                    Icon(Icons.keyboard_arrow_down_rounded, size: 15, color: baseColor.withOpacity(0.5)),
+                  ],
+                ),
+                onTap: () {
+                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (ctx) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: radioTextScaler(ctx)), child: const RadioHomeScreen())), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
+                  );
+                },
+              ),
+            ),
           ],
         ),
         actions: [
@@ -1333,72 +1361,6 @@ class _RadioCountryStationsScreenState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 나라 선택 상자 (국내 라디오 상자와 같은 모양) — 누르면 나라 고르기
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 4, 24, 6),
-              child: GestureDetector(
-                onTap: () {
-                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (ctx) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: radioTextScaler(ctx)), child: const RadioHomeScreen())), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
-                  );
-                },
-                child: Container(
-                  width: double.infinity,
-                  height: 38,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  decoration: BoxDecoration(
-                    color: baseColor.withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(10), // 홈 카드·국내 라디오 상자와 같은 둥글기
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 26,
-                        height: 26,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: isDarkMode
-                              ? const Color(0x14FFFFFF)
-                              : Colors.white.withOpacity(0.8),
-                        ),
-                        child: Icon(
-                          Icons.public,
-                          size: 16,
-                          color: context.watch<ThemeProvider>().primaryColor.value == 0xFF2589E8
-                              ? (isDarkMode ? const Color(0xFF6FB0FF) : const Color(0xFF2F7DE8))
-                              : context.watch<ThemeProvider>().primaryColor,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(tr.selectCountryShort,
-                          style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily, color: baseColor, fontSize: 13, fontWeight: FontWeight.w700)),
-                      Container(
-                        width: 1,
-                        height: 14,
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
-                        color: baseColor.withOpacity(0.18),
-                      ),
-                      Text(widget.country.flag, style: const TextStyle(fontSize: 16)),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(widget.country.displayName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
-                                color: baseColor.withOpacity(0.7),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500)),
-                      ),
-                      Icon(Icons.keyboard_arrow_down_rounded,
-                          size: 20, color: baseColor.withOpacity(0.5)),
-                    ],
-                  ),
-                ),
-              ),
-            ),
             if (_showSearch) Padding(
               padding: const EdgeInsets.fromLTRB(24, 4, 24, 4),
               child: Container(

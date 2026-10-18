@@ -18,7 +18,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get albums => '专辑';
 
   @override
-  String get artists => '艺术家';
+  String get artists => '歌手';
 
   @override
   String get playlists => '播放列表';
@@ -72,7 +72,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addMusic => '请将音乐文件添加至设备';
 
   @override
-  String get scanningMusic => '正在扫描音乐...';
+  String get scanningMusic => '正在查找音乐...';
 
   @override
   String get editSong => '编辑歌曲信息';
@@ -90,7 +90,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get title => '标题';
 
   @override
-  String get artist => '艺术家';
+  String get artist => '歌手';
 
   @override
   String get album => '专辑';
@@ -174,13 +174,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noAlbums => '找不到专辑';
 
   @override
-  String get noArtists => '找不到艺术家';
+  String get noArtists => '暂无歌手';
 
   @override
   String get searchAlbums => '搜索专辑...';
 
   @override
-  String get searchArtists => '搜索艺术家...';
+  String get searchArtists => '搜索歌手...';
 
   @override
   String get close => '关闭';
@@ -384,7 +384,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get secondShort => '秒';
 
   @override
-  String get unknownArtist => '未知艺术家';
+  String get unknownArtist => '未知歌手';
 
   @override
   String get unknownAlbum => '未知专辑';
@@ -464,13 +464,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get radioRecentListening => '最近收听';
 
   @override
-  String get radioSelectCountry => '选择国家';
+  String get radioSelectCountry => '选择国家或地区';
 
   @override
   String get radioChannelCount => '个频道';
 
   @override
-  String get radioPopular200 => '热门200个';
+  String get radioPopular200 => '热门200个电台';
 
   @override
   String get radioSleep => '睡眠';
@@ -479,10 +479,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get radioSchedule => '预约';
 
   @override
-  String get sleepTimerDesc => '选择的时间后将自动关闭';
+  String get sleepTimerDesc => '到达设定时间后自动停止播放';
 
   @override
-  String get sleepTimerActiveDesc => '计时器运行中';
+  String get sleepTimerActiveDesc => '定时器正在运行';
 
   @override
   String get remainingTime => '剩余时间';
@@ -887,10 +887,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get radioNoFavorites => '没有收藏的频道';
 
   @override
-  String get radioNoFavoritesDesc => '在频道列表中点击♡来添加收藏';
+  String get radioNoFavoritesDesc => '点击电台列表中的♡即可收藏';
 
   @override
-  String get radioLoadingPopular => '正在加载热门广播...';
+  String get radioLoadingPopular => '正在加载热门电台...';
 
   @override
   String radioScheduleTitle(Object station) {
@@ -908,11 +908,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String radioScheduleCompleteToast(Object time, Object title) {
-    return '$title $time 预约完成';
+    return '已预约 $title $time';
   }
 
   @override
-  String get radioPlaybackFailed => '播放失败。';
+  String get radioPlaybackFailed => '播放失败，请重试。';
 
   @override
   String get radioRerun => '重播';
@@ -933,7 +933,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get radioAfterEnd => '后结束';
 
   @override
-  String get radioNoStationsFound => '找不到广播';
+  String get radioNoStationsFound => '未找到电台';
 
   @override
   String get sleepMin => '分';
@@ -973,7 +973,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String sleepAutoStopToast(Object time) {
-    return '$time后自动关闭';
+    return '$time后自动停止播放';
   }
 
   @override
@@ -4497,7 +4497,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get albums => '專輯';
 
   @override
-  String get artists => '藝術家';
+  String get artists => '歌手';
 
   @override
   String get playlists => '播放清單';
@@ -4551,7 +4551,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get addMusic => '請將音樂檔案新增至裝置';
 
   @override
-  String get scanningMusic => '正在掃描音樂...';
+  String get scanningMusic => '正在尋找音樂...';
 
   @override
   String get editSong => '編輯歌曲資訊';
@@ -4569,7 +4569,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get title => '標題';
 
   @override
-  String get artist => '藝術家';
+  String get artist => '歌手';
 
   @override
   String get album => '專輯';
@@ -4653,13 +4653,13 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get noAlbums => '找不到專輯';
 
   @override
-  String get noArtists => '找不到藝術家';
+  String get noArtists => '目前沒有歌手';
 
   @override
   String get searchAlbums => '搜尋專輯...';
 
   @override
-  String get searchArtists => '搜尋藝術家...';
+  String get searchArtists => '搜尋歌手...';
 
   @override
   String get close => '關閉';
@@ -4863,7 +4863,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get secondShort => '秒';
 
   @override
-  String get unknownArtist => '未知藝術家';
+  String get unknownArtist => '未知歌手';
 
   @override
   String get unknownAlbum => '未知專輯';
@@ -4943,13 +4943,13 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get radioRecentListening => '最近收聽';
 
   @override
-  String get radioSelectCountry => '選擇國家';
+  String get radioSelectCountry => '選擇國家或地區';
 
   @override
   String get radioChannelCount => '個頻道';
 
   @override
-  String get radioPopular200 => '熱門200個';
+  String get radioPopular200 => '熱門200個電台';
 
   @override
   String get radioSleep => '睡眠';
@@ -4958,10 +4958,10 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get radioSchedule => '預約';
 
   @override
-  String get sleepTimerDesc => '選擇的時間後將自動關閉';
+  String get sleepTimerDesc => '設定時間一到，就會自動停止播放';
 
   @override
-  String get sleepTimerActiveDesc => '計時器運作中';
+  String get sleepTimerActiveDesc => '計時器正在運作';
 
   @override
   String get remainingTime => '剩餘時間';
@@ -5366,10 +5366,10 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get radioNoFavorites => '沒有收藏的頻道';
 
   @override
-  String get radioNoFavoritesDesc => '在頻道列表中點擊♡來新增收藏';
+  String get radioNoFavoritesDesc => '點選電台清單中的♡即可加入收藏';
 
   @override
-  String get radioLoadingPopular => '正在載入熱門廣播...';
+  String get radioLoadingPopular => '正在載入熱門電台...';
 
   @override
   String radioScheduleTitle(Object station) {
@@ -5387,11 +5387,11 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String radioScheduleCompleteToast(Object time, Object title) {
-    return '$title $time 預約完成';
+    return '已預約 $title $time';
   }
 
   @override
-  String get radioPlaybackFailed => '播放失敗。';
+  String get radioPlaybackFailed => '播放失敗，請再試一次。';
 
   @override
   String get radioRerun => '重播';
@@ -5412,7 +5412,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get radioAfterEnd => '後結束';
 
   @override
-  String get radioNoStationsFound => '找不到廣播';
+  String get radioNoStationsFound => '找不到電台';
 
   @override
   String get sleepMin => '分';
@@ -5452,7 +5452,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String sleepAutoStopToast(Object time) {
-    return '$time後自動關閉';
+    return '$time後自動停止播放';
   }
 
   @override

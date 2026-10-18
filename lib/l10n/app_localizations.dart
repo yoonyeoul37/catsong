@@ -254,7 +254,7 @@ abstract class AppLocalizations {
   /// No description provided for @scanningMusic.
   ///
   /// In ko, this message translates to:
-  /// **'음악을 스캔하는 중...'**
+  /// **'음악을 찾는 중...'**
   String get scanningMusic;
 
   /// No description provided for @editSong.
@@ -428,13 +428,13 @@ abstract class AppLocalizations {
   /// No description provided for @playMusic.
   ///
   /// In ko, this message translates to:
-  /// **'음악을 재생해보세요'**
+  /// **'음악을 재생해 보세요'**
   String get playMusic;
 
   /// No description provided for @clearRecent.
   ///
   /// In ko, this message translates to:
-  /// **'최근 재생 전체 삭제'**
+  /// **'최근 재생 기록 삭제'**
   String get clearRecent;
 
   /// No description provided for @clearRecentConfirm.
@@ -500,13 +500,13 @@ abstract class AppLocalizations {
   /// No description provided for @ringtoneFailed.
   ///
   /// In ko, this message translates to:
-  /// **'벨소리 설정에 실패했습니다'**
+  /// **'벨소리를 설정하지 못했어요'**
   String get ringtoneFailed;
 
   /// No description provided for @promoInvalid.
   ///
   /// In ko, this message translates to:
-  /// **'올바르지 않은 코드입니다'**
+  /// **'유효하지 않은 코드예요'**
   String get promoInvalid;
 
   /// No description provided for @promoEnter.
@@ -524,13 +524,13 @@ abstract class AppLocalizations {
   /// No description provided for @permissionRequired.
   ///
   /// In ko, this message translates to:
-  /// **'저장소 접근 권한 필요'**
+  /// **'음악 파일 접근 권한이 필요해요'**
   String get permissionRequired;
 
   /// No description provided for @permissionMessage.
   ///
   /// In ko, this message translates to:
-  /// **'MP3 파일을 스캔하려면\n저장소 접근 권한이 필요합니다.'**
+  /// **'MP3 파일을 찾으려면\n음악 파일 접근 권한이 필요해요.'**
   String get permissionMessage;
 
   /// No description provided for @allowPermission.
@@ -554,13 +554,13 @@ abstract class AppLocalizations {
   /// No description provided for @deleted.
   ///
   /// In ko, this message translates to:
-  /// **'삭제됐습니다'**
+  /// **'삭제했어요'**
   String get deleted;
 
   /// No description provided for @deleteFailed.
   ///
   /// In ko, this message translates to:
-  /// **'삭제 실패'**
+  /// **'삭제하지 못했어요'**
   String get deleteFailed;
 
   /// No description provided for @playNext.
@@ -626,7 +626,7 @@ abstract class AppLocalizations {
   /// No description provided for @flashlightError.
   ///
   /// In ko, this message translates to:
-  /// **'손전등 오류'**
+  /// **'손전등을 켜지 못했어요'**
   String get flashlightError;
 
   /// No description provided for @minuteShort.
@@ -716,7 +716,7 @@ abstract class AppLocalizations {
   /// No description provided for @fontDefault.
   ///
   /// In ko, this message translates to:
-  /// **'기본 폰트'**
+  /// **'기본 글꼴'**
   String get fontDefault;
 
   /// No description provided for @fontNotoSans.
@@ -896,7 +896,7 @@ abstract class AppLocalizations {
   /// No description provided for @selectAll.
   ///
   /// In ko, this message translates to:
-  /// **'전체선택'**
+  /// **'전체 선택'**
   String get selectAll;
 
   /// No description provided for @noVideosFound.
@@ -974,7 +974,7 @@ abstract class AppLocalizations {
   /// No description provided for @lyricsErrorNetwork.
   ///
   /// In ko, this message translates to:
-  /// **'인터넷 연결을 확인해주세요'**
+  /// **'인터넷 연결을 확인해 주세요'**
   String get lyricsErrorNetwork;
 
   /// No description provided for @justNow.
@@ -1028,7 +1028,7 @@ abstract class AppLocalizations {
   /// No description provided for @radioPopular200.
   ///
   /// In ko, this message translates to:
-  /// **'인기 200개'**
+  /// **'인기 채널 200개'**
   String get radioPopular200;
 
   /// No description provided for @radioSleep.
@@ -1046,7 +1046,7 @@ abstract class AppLocalizations {
   /// No description provided for @sleepTimerDesc.
   ///
   /// In ko, this message translates to:
-  /// **'선택한 시간 후 자동으로 꺼집니다'**
+  /// **'설정한 시간이 지나면 자동으로 재생이 멈춰요'**
   String get sleepTimerDesc;
 
   /// No description provided for @sleepTimerActiveDesc.
@@ -1892,7 +1892,7 @@ abstract class AppLocalizations {
   /// No description provided for @radioPlayFirst.
   ///
   /// In ko, this message translates to:
-  /// **'먼저 라디오를 재생해주세요'**
+  /// **'라디오를 먼저 재생해 주세요'**
   String get radioPlayFirst;
 
   /// No description provided for @radioScheduleCompleteToast.
@@ -1904,7 +1904,7 @@ abstract class AppLocalizations {
   /// No description provided for @radioPlaybackFailed.
   ///
   /// In ko, this message translates to:
-  /// **'재생에 실패했습니다.'**
+  /// **'라디오를 재생하지 못했어요'**
   String get radioPlaybackFailed;
 
   /// No description provided for @radioRerun.
@@ -2600,7 +2600,7 @@ abstract class AppLocalizations {
   /// No description provided for @playbackSpeedLabel.
   ///
   /// In ko, this message translates to:
-  /// **'재생속도'**
+  /// **'재생 속도'**
   String get playbackSpeedLabel;
 
   /// No description provided for @updateReadyTitle.
@@ -2612,7 +2612,7 @@ abstract class AppLocalizations {
   /// No description provided for @updateReadyMessage.
   ///
   /// In ko, this message translates to:
-  /// **'새로운 기능이 다운로드됐어요.\n지금 재시작을 권장합니다.'**
+  /// **'업데이트를 다운로드했어요.\n적용하려면 앱을 다시 시작해 주세요.'**
   String get updateReadyMessage;
 
   /// No description provided for @updateReadyButton.
@@ -2702,13 +2702,13 @@ abstract class AppLocalizations {
   /// No description provided for @homeTipWidgetTitle.
   ///
   /// In ko, this message translates to:
-  /// **'바탕화면 위젯을 놓아 보세요'**
+  /// **'홈 화면에 위젯을 추가해 보세요'**
   String get homeTipWidgetTitle;
 
   /// No description provided for @homeTipWidgetSub.
   ///
   /// In ko, this message translates to:
-  /// **'바탕화면을 꾹 → 위젯 → 파란소리'**
+  /// **'홈 화면 길게 누르기 → 위젯 → 파란소리'**
   String get homeTipWidgetSub;
 
   /// No description provided for @homeTipAlarmTitle.
@@ -2726,7 +2726,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeTipScheduleTitle.
   ///
   /// In ko, this message translates to:
-  /// **'원하는 시간에 라디오 켜기'**
+  /// **'원하는 시간에 라디오 듣기'**
   String get homeTipScheduleTitle;
 
   /// No description provided for @homeTipScheduleSub.
@@ -2774,7 +2774,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeColorTitle.
   ///
   /// In ko, this message translates to:
-  /// **'나만의 색으로 꾸며보세요'**
+  /// **'좋아하는 색으로 꾸며 보세요'**
   String get homeColorTitle;
 
   /// No description provided for @homeColorSub.
@@ -2798,7 +2798,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeColorHint.
   ///
   /// In ko, this message translates to:
-  /// **'설정 → 꾸미기 → 강조 색상에서\n다시 변경할 수 있습니다.'**
+  /// **'설정 → 꾸미기 → 강조 색상에서\n언제든 바꿀 수 있어요.'**
   String get homeColorHint;
 
   /// No description provided for @done.
@@ -2858,7 +2858,7 @@ abstract class AppLocalizations {
   /// No description provided for @menuShareSub.
   ///
   /// In ko, this message translates to:
-  /// **'파란소리를 친구에게\n소개해보세요.'**
+  /// **'친구에게 파란소리를\n소개해 보세요.'**
   String get menuShareSub;
 
   /// No description provided for @shareAppMessage.
@@ -2894,7 +2894,7 @@ abstract class AppLocalizations {
   /// No description provided for @menuRadioSub.
   ///
   /// In ko, this message translates to:
-  /// **'다양한 라디오 방송을\n바로 들어보세요.'**
+  /// **'다양한 라디오 방송을\n바로 들어 보세요.'**
   String get menuRadioSub;
 
   /// No description provided for @recentSearches.
@@ -2954,7 +2954,7 @@ abstract class AppLocalizations {
   /// No description provided for @catRestSub.
   ///
   /// In ko, this message translates to:
-  /// **'백색소음 · 집중 소리 (준비중)'**
+  /// **'백색소음 · 집중 소리 (준비 중)'**
   String get catRestSub;
 
   /// No description provided for @homeSoundsHeader.
@@ -2984,7 +2984,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeRecentEmptySub.
   ///
   /// In ko, this message translates to:
-  /// **'30초 이상 들은 곡·라디오·자연이 여기에 모여요'**
+  /// **'30초 이상 들은 음악·라디오·자연소리가 여기에 모여요'**
   String get homeRecentEmptySub;
 
   /// No description provided for @cleanLabel.
@@ -2996,7 +2996,7 @@ abstract class AppLocalizations {
   /// No description provided for @cleanTitle.
   ///
   /// In ko, this message translates to:
-  /// **'곡 제목 {count}개를 깔끔하게'**
+  /// **'곡 제목 {count}개를 정리해 볼까요?'**
   String cleanTitle(int count);
 
   /// No description provided for @later.
@@ -3074,7 +3074,7 @@ abstract class AppLocalizations {
   /// No description provided for @dailyNotPlayedSub.
   ///
   /// In ko, this message translates to:
-  /// **'오랜만에 다시 들어볼까요'**
+  /// **'오랜만에 다시 들어 볼까요?'**
   String get dailyNotPlayedSub;
 
   /// No description provided for @dailyShufflePlay.
@@ -3122,7 +3122,7 @@ abstract class AppLocalizations {
   /// No description provided for @dailyDayLine.
   ///
   /// In ko, this message translates to:
-  /// **'시냇물 소리 들으며 한숨 돌려요'**
+  /// **'시냇물 소리를 들으며 잠시 쉬어가요'**
   String get dailyDayLine;
 
   /// No description provided for @dailyEveningTitle.
@@ -3134,7 +3134,7 @@ abstract class AppLocalizations {
   /// No description provided for @dailyEveningLine.
   ///
   /// In ko, this message translates to:
-  /// **'파도소리 틀어놓고 쉬어요'**
+  /// **'파도소리와 함께 쉬어가요'**
   String get dailyEveningLine;
 
   /// No description provided for @dailyNightTitle.
@@ -3146,7 +3146,7 @@ abstract class AppLocalizations {
   /// No description provided for @dailyNightLine.
   ///
   /// In ko, this message translates to:
-  /// **'빗소리 틀어놓고 쉬어요'**
+  /// **'빗소리와 함께 쉬어가요'**
   String get dailyNightLine;
 
   /// No description provided for @dailyRightNow.
@@ -3158,7 +3158,7 @@ abstract class AppLocalizations {
   /// No description provided for @dailyTipBatteryTitle.
   ///
   /// In ko, this message translates to:
-  /// **'화면 꺼도 계속 들어요'**
+  /// **'화면을 꺼도 계속 들어요'**
   String get dailyTipBatteryTitle;
 
   /// No description provided for @dailyTipBatterySub.
@@ -3182,7 +3182,7 @@ abstract class AppLocalizations {
   /// No description provided for @dailyTipVideoTitle.
   ///
   /// In ko, this message translates to:
-  /// **'동영상 노래만 저장'**
+  /// **'동영상에서 음악만 저장'**
   String get dailyTipVideoTitle;
 
   /// No description provided for @dailyTipVideoSub.
@@ -3212,7 +3212,7 @@ abstract class AppLocalizations {
   /// No description provided for @dailyTipLyricsSub.
   ///
   /// In ko, this message translates to:
-  /// **'가사를 꾹 누르면 카드로 보내요'**
+  /// **'가사를 길게 누르면 카드로 공유할 수 있어요'**
   String get dailyTipLyricsSub;
 
   /// No description provided for @dailyOffTitle.
@@ -3284,13 +3284,13 @@ abstract class AppLocalizations {
   /// No description provided for @within3Days.
   ///
   /// In ko, this message translates to:
-  /// **'3일 안'**
+  /// **'최근 3일'**
   String get within3Days;
 
   /// No description provided for @withinWeek.
   ///
   /// In ko, this message translates to:
-  /// **'일주일 안'**
+  /// **'최근 일주일'**
   String get withinWeek;
 
   /// No description provided for @colorParansori.
@@ -3470,7 +3470,7 @@ abstract class AppLocalizations {
   /// No description provided for @moreCleanSub.
   ///
   /// In ko, this message translates to:
-  /// **'지저분한 제목·가수를 깔끔하게 정리해요.'**
+  /// **'복잡한 제목과 가수 정보를 깔끔하게 정리해요.'**
   String get moreCleanSub;
 
   /// No description provided for @moreArtTitle.
@@ -3482,7 +3482,7 @@ abstract class AppLocalizations {
   /// No description provided for @moreArtSub.
   ///
   /// In ko, this message translates to:
-  /// **'앨범 사진 없는 곡에 사진을 넣어요.'**
+  /// **'앨범 사진이 없는 곡에 사진을 추가해요.'**
   String get moreArtSub;
 
   /// No description provided for @moreAlarmTitle.
@@ -3542,7 +3542,7 @@ abstract class AppLocalizations {
   /// No description provided for @brandLine2.
   ///
   /// In ko, this message translates to:
-  /// **'당신의 하루에 편안한 소리를 더합니다.'**
+  /// **'당신의 하루에 편안한 소리를 더해요.'**
   String get brandLine2;
 
   /// No description provided for @addToPlaylist.
@@ -3644,13 +3644,13 @@ abstract class AppLocalizations {
   /// No description provided for @musicLoadError.
   ///
   /// In ko, this message translates to:
-  /// **'음악을 불러오는 중 오류가 발생했습니다'**
+  /// **'음악을 불러오지 못했어요'**
   String get musicLoadError;
 
   /// No description provided for @musicScanError.
   ///
   /// In ko, this message translates to:
-  /// **'음악 스캔 오류'**
+  /// **'음악 파일을 찾지 못했어요'**
   String get musicScanError;
 
   /// No description provided for @sleepAskDuration.
@@ -3698,7 +3698,7 @@ abstract class AppLocalizations {
   /// No description provided for @paranSuggestSub.
   ///
   /// In ko, this message translates to:
-  /// **'예쁜 사진 위로 음악이 흘러요'**
+  /// **'좋아하는 사진을 배경으로 음악을 들어요'**
   String get paranSuggestSub;
 
   /// No description provided for @noThanks.
@@ -3764,13 +3764,13 @@ abstract class AppLocalizations {
   /// No description provided for @photoRandomSub.
   ///
   /// In ko, this message translates to:
-  /// **'곡이 바뀌면 배경도 바뀝니다.'**
+  /// **'곡이 바뀔 때마다 배경 사진도 바뀌어요.'**
   String get photoRandomSub;
 
   /// No description provided for @photoFixedSub.
   ///
   /// In ko, this message translates to:
-  /// **'배경 사진이 고정됩니다.'**
+  /// **'배경 사진을 그대로 유지해요.'**
   String get photoFixedSub;
 
   /// No description provided for @manage.
@@ -3974,7 +3974,7 @@ abstract class AppLocalizations {
   /// No description provided for @lyricsSyncTitle.
   ///
   /// In ko, this message translates to:
-  /// **'가사 박자 맞추기'**
+  /// **'가사 타이밍 맞추기'**
   String get lyricsSyncTitle;
 
   /// No description provided for @secondsValue.
@@ -4046,7 +4046,7 @@ abstract class AppLocalizations {
   /// No description provided for @lyricsSaved.
   ///
   /// In ko, this message translates to:
-  /// **'이 노래 가사로 저장했어요'**
+  /// **'이 곡의 가사로 저장했어요'**
   String get lyricsSaved;
 
   /// No description provided for @lyricsDeleteTitle.
@@ -4088,7 +4088,7 @@ abstract class AppLocalizations {
   /// No description provided for @lyricsSyncShort.
   ///
   /// In ko, this message translates to:
-  /// **'박자 맞추기'**
+  /// **'타이밍 맞추기'**
   String get lyricsSyncShort;
 
   /// No description provided for @lyricsRefetch.
@@ -4106,7 +4106,7 @@ abstract class AppLocalizations {
   /// No description provided for @linesSelected.
   ///
   /// In ko, this message translates to:
-  /// **'{count}줄 골랐어요'**
+  /// **'{count}줄 선택했어요'**
   String linesSelected(int count);
 
   /// No description provided for @linesSelectHint.
@@ -4208,7 +4208,7 @@ abstract class AppLocalizations {
   /// No description provided for @cardMakeFailed.
   ///
   /// In ko, this message translates to:
-  /// **'카드를 만들지 못했어요. 다시 해주세요.'**
+  /// **'카드를 만들지 못했어요. 다시 시도해 주세요.'**
   String get cardMakeFailed;
 
   /// No description provided for @photoLoadFailed.
@@ -4448,7 +4448,7 @@ abstract class AppLocalizations {
   /// No description provided for @allTidy.
   ///
   /// In ko, this message translates to:
-  /// **'모든 곡의 제목·가수가 깔끔해요'**
+  /// **'모든 곡의 제목과 가수 정보가 정리돼 있어요'**
   String get allTidy;
 
   /// No description provided for @cleanableCount.
@@ -4472,7 +4472,7 @@ abstract class AppLocalizations {
   /// No description provided for @pickRightArt.
   ///
   /// In ko, this message translates to:
-  /// **'맞는 앨범 사진을 골라주세요'**
+  /// **'맞는 앨범 사진을 골라 주세요'**
   String get pickRightArt;
 
   /// No description provided for @artAdded.
@@ -4988,7 +4988,7 @@ abstract class AppLocalizations {
   /// No description provided for @recRenameHint.
   ///
   /// In ko, this message translates to:
-  /// **'예) 엄마랑 통화'**
+  /// **'예) 엄마와 통화'**
   String get recRenameHint;
 
   /// No description provided for @deleteRecsTitle.
@@ -5012,7 +5012,7 @@ abstract class AppLocalizations {
   /// No description provided for @lockedKept.
   ///
   /// In ko, this message translates to:
-  /// **'잠긴 녹음 {count}개는 남겨둬요.'**
+  /// **'잠긴 녹음 {count}개는 삭제하지 않아요.'**
   String lockedKept(int count);
 
   /// No description provided for @toTrash.
@@ -5036,7 +5036,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteForeverMsg.
   ///
   /// In ko, this message translates to:
-  /// **'녹음 {count}개를 영구 삭제하면 되살릴 수 없어요.'**
+  /// **'녹음 {count}개를 영구 삭제하면 복구할 수 없어요.'**
   String deleteForeverMsg(int count);
 
   /// No description provided for @deletedForever.
@@ -5253,7 +5253,7 @@ abstract class AppLocalizations {
   /// No description provided for @longVideoMsg.
   ///
   /// In ko, this message translates to:
-  /// **'10분이 넘는 영상은 카카오톡으로 안 보내질 수 있어요.\n구글 드라이브나 메일로 보내면 잘 가요.'**
+  /// **'10분이 넘는 동영상은 카카오톡으로 전송되지 않을 수 있어요.\n구글 드라이브나 이메일로 보내 보세요.'**
   String get longVideoMsg;
 
   /// No description provided for @send.
@@ -5277,13 +5277,13 @@ abstract class AppLocalizations {
   /// No description provided for @deleteVideosForeverMsg.
   ///
   /// In ko, this message translates to:
-  /// **'동영상 {count}개를 영구 삭제하면 되살릴 수 없어요.'**
+  /// **'동영상 {count}개를 영구 삭제하면 복구할 수 없어요.'**
   String deleteVideosForeverMsg(int count);
 
   /// No description provided for @deleteVideoForeverMsg.
   ///
   /// In ko, this message translates to:
-  /// **'이 동영상을 영구 삭제하면 되살릴 수 없어요.'**
+  /// **'이 동영상을 영구 삭제하면 복구할 수 없어요.'**
   String get deleteVideoForeverMsg;
 
   /// No description provided for @sortByName.
@@ -5307,7 +5307,7 @@ abstract class AppLocalizations {
   /// No description provided for @dateUnknown.
   ///
   /// In ko, this message translates to:
-  /// **'날짜 모름'**
+  /// **'날짜 알 수 없음'**
   String get dateUnknown;
 
   /// No description provided for @monthNames.
@@ -5373,7 +5373,7 @@ abstract class AppLocalizations {
   /// No description provided for @videoPermStep1.
   ///
   /// In ko, this message translates to:
-  /// **'아래 설정에서 허용하기 누르기'**
+  /// **'아래에서 \'설정에서 허용하기\' 누르기'**
   String get videoPermStep1;
 
   /// No description provided for @videoPermStep1Note.
@@ -5385,13 +5385,13 @@ abstract class AppLocalizations {
   /// No description provided for @videoPermStep2.
   ///
   /// In ko, this message translates to:
-  /// **'권한 → 사진 및 동영상 누르기'**
+  /// **'권한 → 사진 및 동영상 선택'**
   String get videoPermStep2;
 
   /// No description provided for @videoPermStep3.
   ///
   /// In ko, this message translates to:
-  /// **'허용 고르고 돌아오기'**
+  /// **'허용한 뒤 앱으로 돌아오기'**
   String get videoPermStep3;
 
   /// No description provided for @videoPermStep3Note.
@@ -5547,7 +5547,7 @@ abstract class AppLocalizations {
   /// No description provided for @videoScanError.
   ///
   /// In ko, this message translates to:
-  /// **'비디오 스캔 오류'**
+  /// **'동영상을 불러오지 못했어요'**
   String get videoScanError;
 
   /// No description provided for @saveMusicFailed.
@@ -5619,7 +5619,7 @@ abstract class AppLocalizations {
   /// No description provided for @trimVideoNote.
   ///
   /// In ko, this message translates to:
-  /// **'원본은 그대로 두고 잘라낸 영상을 새로 저장해요 (Movies/Paransori)\n다시 압축하지 않아 화질 그대로예요. 시작이 1초쯤 앞당겨질 수 있어요'**
+  /// **'원본은 그대로 두고 잘라낸 동영상을 새로 저장해요 (Movies/Paransori)\n재압축하지 않아 화질이 유지되지만, 시작 지점이 약 1초 앞당겨질 수 있어요.'**
   String get trimVideoNote;
 
   /// No description provided for @castNeedsPlaying.
@@ -5739,7 +5739,7 @@ abstract class AppLocalizations {
   /// No description provided for @scheduleFull.
   ///
   /// In ko, this message translates to:
-  /// **'예약을 더 넣을 수 없어요. 예약 창에서 지난 예약을 지워주세요'**
+  /// **'예약을 더 추가할 수 없어요. 지난 예약을 삭제해 주세요'**
   String get scheduleFull;
 
   /// No description provided for @nextShort.
@@ -5871,7 +5871,7 @@ abstract class AppLocalizations {
   /// No description provided for @scheduleSub.
   ///
   /// In ko, this message translates to:
-  /// **'정한 시간이 되면 그 방송으로 바꿔줘요'**
+  /// **'정해진 시간이 되면 선택한 방송으로 전환해요'**
   String get scheduleSub;
 
   /// No description provided for @mySchedules.
@@ -5961,7 +5961,7 @@ abstract class AppLocalizations {
   /// No description provided for @scheduleLimit.
   ///
   /// In ko, this message translates to:
-  /// **'예약은 5개까지예요. 지난 예약을 지우면 새로 넣을 수 있어요'**
+  /// **'예약은 최대 5개까지 가능해요. 지난 예약을 삭제한 뒤 추가해 주세요'**
   String get scheduleLimit;
 
   /// No description provided for @diceProgramLabel.
@@ -5985,7 +5985,7 @@ abstract class AppLocalizations {
   /// No description provided for @diceGot.
   ///
   /// In ko, this message translates to:
-  /// **'{n}이(가) 나왔어요!'**
+  /// **'{n}이(가) 선택됐어요!'**
   String diceGot(int n);
 
   /// No description provided for @nowPlayingBadge.
@@ -6117,7 +6117,7 @@ abstract class AppLocalizations {
   /// No description provided for @recentListened.
   ///
   /// In ko, this message translates to:
-  /// **'최근청취'**
+  /// **'최근 청취'**
   String get recentListened;
 
   /// No description provided for @myRadio.
@@ -6297,7 +6297,7 @@ abstract class AppLocalizations {
   /// No description provided for @favAddHint.
   ///
   /// In ko, this message translates to:
-  /// **'하트를 눌러 즐겨찾기에 추가해보세요'**
+  /// **'하트를 눌러 즐겨찾기에 추가해 보세요'**
   String get favAddHint;
 
   /// No description provided for @noRecentStations.
@@ -6429,7 +6429,7 @@ abstract class AppLocalizations {
   /// No description provided for @selectCountryShort.
   ///
   /// In ko, this message translates to:
-  /// **'국가선택'**
+  /// **'국가 선택'**
   String get selectCountryShort;
 
   /// No description provided for @stationLoadFailed.
@@ -6459,7 +6459,7 @@ abstract class AppLocalizations {
   /// No description provided for @natureSub.
   ///
   /// In ko, this message translates to:
-  /// **'마음이 편안해지는 소리를 들어보세요'**
+  /// **'마음이 편안해지는 자연의 소리를 만나보세요'**
   String get natureSub;
 
   /// No description provided for @versionsCount.
@@ -6525,7 +6525,7 @@ abstract class AppLocalizations {
   /// No description provided for @mixSub.
   ///
   /// In ko, this message translates to:
-  /// **'나만의 힐링 사운드를 만들어보세요.'**
+  /// **'좋아하는 음악과 자연소리로 나만의 분위기를 만들어 보세요.'**
   String get mixSub;
 
   /// No description provided for @musicLabel.
@@ -6573,13 +6573,13 @@ abstract class AppLocalizations {
   /// No description provided for @stopMix.
   ///
   /// In ko, this message translates to:
-  /// **'믹스 정지하기'**
+  /// **'믹스 정지'**
   String get stopMix;
 
   /// No description provided for @playMix.
   ///
   /// In ko, this message translates to:
-  /// **'믹스 재생하기'**
+  /// **'믹스 재생'**
   String get playMix;
 
   /// No description provided for @myMixDefault.
@@ -6645,7 +6645,7 @@ abstract class AppLocalizations {
   /// No description provided for @overlayOnHint.
   ///
   /// In ko, this message translates to:
-  /// **'음악 위에 자연소리를 살짝 깔아 같이 들어요'**
+  /// **'음악에 자연소리를 더해 함께 들어요'**
   String get overlayOnHint;
 
   /// No description provided for @overlayIdleHint.
@@ -6657,7 +6657,7 @@ abstract class AppLocalizations {
   /// No description provided for @lastMix.
   ///
   /// In ko, this message translates to:
-  /// **'지난번 섞기'**
+  /// **'지난번 믹스'**
   String get lastMix;
 
   /// No description provided for @turnBackOn.
@@ -6699,7 +6699,7 @@ abstract class AppLocalizations {
   /// No description provided for @restFocusSoon.
   ///
   /// In ko, this message translates to:
-  /// **'휴식 · 집중 기능은 준비중이에요'**
+  /// **'휴식 · 집중 기능은 준비 중이에요'**
   String get restFocusSoon;
 
   /// No description provided for @restLabel.
@@ -6735,7 +6735,7 @@ abstract class AppLocalizations {
   /// No description provided for @comingSoonTitle.
   ///
   /// In ko, this message translates to:
-  /// **'준비중입니다'**
+  /// **'준비 중이에요'**
   String get comingSoonTitle;
 
   /// No description provided for @comingSoonCategory.
@@ -6939,7 +6939,7 @@ abstract class AppLocalizations {
   /// No description provided for @heroNoAd.
   ///
   /// In ko, this message translates to:
-  /// **'광고 없는 음악, 편안한 일상'**
+  /// **'광고 없이 편안하게 즐기는 음악'**
   String get heroNoAd;
 
   /// No description provided for @heroDefault.
@@ -6981,7 +6981,7 @@ abstract class AppLocalizations {
   /// No description provided for @voiceGuideInfo.
   ///
   /// In ko, this message translates to:
-  /// **'앱을 켜고 끌 때 짧은 인사말이 나와요.'**
+  /// **'앱을 켜고 끌 때 짧은 인사말을 들려줘요.'**
   String get voiceGuideInfo;
 
   /// No description provided for @infoTodaySong.
@@ -6993,7 +6993,7 @@ abstract class AppLocalizations {
   /// No description provided for @infoTodaySongD.
   ///
   /// In ko, this message translates to:
-  /// **'내 음악 중에서 날마다 한 곡을 골라 줘요'**
+  /// **'내 음악에서 매일 한 곡을 골라 줘요'**
   String get infoTodaySongD;
 
   /// No description provided for @infoLongTime.
@@ -7005,7 +7005,7 @@ abstract class AppLocalizations {
   /// No description provided for @infoLongTimeD.
   ///
   /// In ko, this message translates to:
-  /// **'한 달 동안 안 들은 곡을 섞어서 틀어요'**
+  /// **'한 달 동안 안 들은 곡을 랜덤으로 들려줘요'**
   String get infoLongTimeD;
 
   /// No description provided for @infoWeek.
@@ -7041,7 +7041,7 @@ abstract class AppLocalizations {
   /// No description provided for @infoTipsD.
   ///
   /// In ko, this message translates to:
-  /// **'벨소리 만들기, 빗소리 섞기 같은 팁'**
+  /// **'벨소리 만들기, 빗소리 믹스 같은 팁'**
   String get infoTipsD;
 
   /// No description provided for @infoAlarm.
@@ -7053,7 +7053,7 @@ abstract class AppLocalizations {
   /// No description provided for @infoAlarmD.
   ///
   /// In ko, this message translates to:
-  /// **'알람을 켜 두면 저녁 7시부터 내일 깨울 시간'**
+  /// **'알람을 설정하면 저녁 7시부터 내일 알람 시간을 보여줘요'**
   String get infoAlarmD;
 
   /// No description provided for @pcMusic.
@@ -7185,13 +7185,13 @@ abstract class AppLocalizations {
   /// No description provided for @batteryAskHeadset.
   ///
   /// In ko, this message translates to:
-  /// **'폰이 오래 쉬고 있을 때도 이어폰 연결을 바로 알아차리려면 배터리 사용을 \"제한 없음\"으로 해 주세요.\n허용 안 해도 쓸 수 있지만, 가끔 늦거나 안 될 수 있어요.'**
+  /// **'휴대폰을 오래 사용하지 않을 때도 이어폰 연결을 바로 감지하려면 배터리 사용을 \"제한 없음\"으로 설정해 주세요.\n설정하지 않아도 사용할 수 있지만, 반응이 늦거나 작동하지 않을 수 있어요.'**
   String get batteryAskHeadset;
 
   /// No description provided for @headsetNote.
   ///
   /// In ko, this message translates to:
-  /// **'듣다가 멈춘 곡·라디오·자연을 아주 작게 시작해서 천천히 키워요.\n앱을 완전히 끄면 동작하지 않아요.'**
+  /// **'이전에 듣던 음악·라디오·자연소리를 작은 음량으로 시작해 서서히 키워요.\n앱을 완전히 종료하면 작동하지 않아요.'**
   String get headsetNote;
 
   /// No description provided for @accentSheetHint.
@@ -7509,7 +7509,7 @@ abstract class AppLocalizations {
   /// No description provided for @helpIntro.
   ///
   /// In ko, this message translates to:
-  /// **'앱 사용 중 문제가 발생하면 아래 안내를 확인하세요.'**
+  /// **'앱 사용 중 문제가 생기면 아래 안내를 확인해 주세요.'**
   String get helpIntro;
 
   /// No description provided for @setManually.
@@ -7533,7 +7533,7 @@ abstract class AppLocalizations {
   /// No description provided for @tellUsModel.
   ///
   /// In ko, this message translates to:
-  /// **'휴대폰 모델과 문제 상황을 알려주세요.'**
+  /// **'휴대폰 모델과 문제가 발생한 상황을 알려 주세요.'**
   String get tellUsModel;
 
   /// No description provided for @emailUs.
@@ -7635,7 +7635,7 @@ abstract class AppLocalizations {
   /// No description provided for @noSongsOnPhone.
   ///
   /// In ko, this message translates to:
-  /// **'폰에 있는 노래가 없어요'**
+  /// **'휴대폰에 저장된 음악이 없어요'**
   String get noSongsOnPhone;
 
   /// No description provided for @pickAlarmSong.
@@ -7695,19 +7695,19 @@ abstract class AppLocalizations {
   /// No description provided for @fullScreenTitle.
   ///
   /// In ko, this message translates to:
-  /// **'잠금화면에 알람 화면 띄우기'**
+  /// **'잠금 화면에 알람 표시'**
   String get fullScreenTitle;
 
   /// No description provided for @fullScreenMsg.
   ///
   /// In ko, this message translates to:
-  /// **'\"전체 화면 알림\"을 허용하면 잠금화면 위로 알람 화면이 바로 떠요. 허용 안 해도 알람 소리는 울려요.'**
+  /// **'\"전체 화면 알림\"을 허용하면 잠금 화면에 알람 화면이 표시돼요. 허용하지 않아도 알람 소리는 울려요.'**
   String get fullScreenMsg;
 
   /// No description provided for @alarmBatteryAsk.
   ///
   /// In ko, this message translates to:
-  /// **'정해진 시간에 알람 곡을 틀려면 배터리 사용을 \"제한 없음\"으로 해 주는 게 좋아요.\n허용 안 해도 대부분 잘 울리지만, 일부 폰은 절전 때문에 늦을 수 있어요.'**
+  /// **'정해진 시간에 음악이 재생되도록 하려면 배터리 사용을 \"제한 없음\"으로 해 주는 게 좋아요.\n허용 안 해도 대부분 잘 울리지만, 일부 폰은 절전 때문에 늦을 수 있어요.'**
   String get alarmBatteryAsk;
 
   /// No description provided for @wakeYouAt.
@@ -7803,7 +7803,7 @@ abstract class AppLocalizations {
   /// No description provided for @alarmVolumeNote.
   ///
   /// In ko, this message translates to:
-  /// **'폰 소리를 줄여 놔도 이 크기로 울리고, 끄면 원래대로 돌아가요'**
+  /// **'휴대폰 음량과 관계없이 설정한 크기로 울려요. 알람을 끄면 이전 음량으로 돌아가요'**
   String get alarmVolumeNote;
 
   /// No description provided for @changeAction.
@@ -7833,7 +7833,7 @@ abstract class AppLocalizations {
   /// No description provided for @greetLine4.
   ///
   /// In ko, this message translates to:
-  /// **'오늘 하루도 반가워요'**
+  /// **'오늘도 만나서 반가워요'**
   String get greetLine4;
 
   /// No description provided for @greetLine5.
@@ -7875,7 +7875,7 @@ abstract class AppLocalizations {
   /// No description provided for @genreShuffle.
   ///
   /// In ko, this message translates to:
-  /// **'{label} {n}곡 섞어서 재생'**
+  /// **'{label} {n}곡 랜덤 재생'**
   String genreShuffle(String label, int n);
 
   /// No description provided for @genrePickTitle.
@@ -8109,7 +8109,7 @@ abstract class AppLocalizations {
   /// No description provided for @smsSheetFee.
   ///
   /// In ko, this message translates to:
-  /// **'짧은 문자 50원 · 긴 문자·사진 100원의 정보이용료가 붙어요.'**
+  /// **'짧은 문자 50원, 긴 문자·사진 100원의 정보이용료가 부과돼요.'**
   String get smsSheetFee;
 
   /// No description provided for @smsSheetSend.
@@ -8265,7 +8265,7 @@ abstract class AppLocalizations {
   /// No description provided for @introFeature1Desc.
   ///
   /// In ko, this message translates to:
-  /// **'휴대폰에 저장된 음악을 느긋하게 감상하며, 좋아하는 노래로 나만의 시간을 채워보세요.'**
+  /// **'휴대폰에 저장된 음악을 편안하게 감상하며 좋아하는 노래로 나만의 시간을 채워 보세요.'**
   String get introFeature1Desc;
 
   /// No description provided for @introFeature2Title.
@@ -8277,7 +8277,7 @@ abstract class AppLocalizations {
   /// No description provided for @introFeature2Desc.
   ///
   /// In ko, this message translates to:
-  /// **'다양한 나라의 라디오 방송을 들으며 새로운 음악과 이야기, 세상의 소리를 만나보세요.'**
+  /// **'여러 나라의 라디오를 들으며 새로운 음악과 이야기, 세상의 소리를 만나 보세요.'**
   String get introFeature2Desc;
 
   /// No description provided for @introFeature3Title.
@@ -8289,7 +8289,7 @@ abstract class AppLocalizations {
   /// No description provided for @introFeature3Desc.
   ///
   /// In ko, this message translates to:
-  /// **'빗소리, 바람 소리, 숲의 소리 등 자연이 들려주는 편안한 소리를 즐겨보세요.'**
+  /// **'빗소리, 바람 소리, 숲의 소리 등 자연이 들려주는 편안한 소리를 즐겨 보세요.'**
   String get introFeature3Desc;
 
   /// No description provided for @introFeature4Title.
@@ -8301,7 +8301,7 @@ abstract class AppLocalizations {
   /// No description provided for @introFeature4Desc.
   ///
   /// In ko, this message translates to:
-  /// **'잠들기 전 조용한 시간부터 집중이 필요한 순간까지, 지금 나에게 어울리는 소리를 찾아보세요.'**
+  /// **'잠들기 전부터 집중이 필요한 순간까지, 지금 나에게 어울리는 소리를 찾아보세요.'**
   String get introFeature4Desc;
 
   /// No description provided for @introFeature5Title.
@@ -8313,7 +8313,7 @@ abstract class AppLocalizations {
   /// No description provided for @introFeature5Desc.
   ///
   /// In ko, this message translates to:
-  /// **'좋아하는 소리들을 함께 재생하며 나만의 분위기를 만들어보세요.'**
+  /// **'좋아하는 소리를 함께 재생하며 나만의 분위기를 만들어 보세요.'**
   String get introFeature5Desc;
 
   /// No description provided for @introFeature6Title.
@@ -8325,7 +8325,7 @@ abstract class AppLocalizations {
   /// No description provided for @introFeature6Desc.
   ///
   /// In ko, this message translates to:
-  /// **'좋아하는 노래, 라디오, 자연의 소리로 기분 좋게 하루를 시작해 보세요.'**
+  /// **'좋아하는 노래와 라디오, 자연소리로 기분 좋게 하루를 시작해 보세요.'**
   String get introFeature6Desc;
 
   /// No description provided for @introMenuTitle.
@@ -8349,7 +8349,7 @@ abstract class AppLocalizations {
   /// No description provided for @nature01Desc.
   ///
   /// In ko, this message translates to:
-  /// **'규칙적인 파도 소리는 마음을 차분히 가라앉혀 깊은 휴식과 수면에 도움을 줘요'**
+  /// **'규칙적으로 밀려오는 파도 소리와 함께 마음을 가라앉히고 편안히 쉬어가요'**
   String get nature01Desc;
 
   /// No description provided for @nature02Name.
@@ -8421,7 +8421,7 @@ abstract class AppLocalizations {
   /// No description provided for @nature07Desc.
   ///
   /// In ko, this message translates to:
-  /// **'일정한 빗소리는 집중력을 높이고 불안한 마음을 편안하게 다독여줘요'**
+  /// **'일정하게 내리는 빗소리를 들으며 마음을 차분히 가라앉히고 집중해 보세요'**
   String get nature07Desc;
 
   /// No description provided for @nature08Name.
@@ -8469,7 +8469,7 @@ abstract class AppLocalizations {
   /// No description provided for @nature11Desc.
   ///
   /// In ko, this message translates to:
-  /// **'청아한 새소리는 스트레스를 줄이고 상쾌한 기분을 만들어줘요'**
+  /// **'맑고 청아한 새소리와 함께 상쾌한 기분을 느껴 보세요'**
   String get nature11Desc;
 
   /// No description provided for @nature12Name.
@@ -8493,7 +8493,7 @@ abstract class AppLocalizations {
   /// No description provided for @nature13Desc.
   ///
   /// In ko, this message translates to:
-  /// **'타닥타닥 장작 타는 소리는 아늑한 분위기로 깊은 이완을 도와줘요'**
+  /// **'타닥타닥 장작 타는 소리와 함께 아늑한 시간을 보내요'**
   String get nature13Desc;
 
   /// No description provided for @nature14Name.
@@ -8505,7 +8505,7 @@ abstract class AppLocalizations {
   /// No description provided for @nature14Desc.
   ///
   /// In ko, this message translates to:
-  /// **'졸졸 흐르는 시냇물 소리는 마음을 편안하게 하고 잡생각을 줄여줘요'**
+  /// **'졸졸 흐르는 시냇물 소리를 들으며 잠시 생각을 내려놓아요'**
   String get nature14Desc;
 
   /// No description provided for @nature15Name.

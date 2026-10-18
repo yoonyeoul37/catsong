@@ -72,7 +72,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get addMusic => '기기에 음악 파일을 추가해 주세요';
 
   @override
-  String get scanningMusic => '음악을 스캔하는 중...';
+  String get scanningMusic => '음악을 찾는 중...';
 
   @override
   String get editSong => '곡 정보 편집';
@@ -159,10 +159,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get noRecentSongs => '최근 재생한 곡이 없습니다';
 
   @override
-  String get playMusic => '음악을 재생해보세요';
+  String get playMusic => '음악을 재생해 보세요';
 
   @override
-  String get clearRecent => '최근 재생 전체 삭제';
+  String get clearRecent => '최근 재생 기록 삭제';
 
   @override
   String get clearRecentConfirm => '최근 재생 목록을 모두 삭제할까요?';
@@ -195,10 +195,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get playing => '재생 중...';
 
   @override
-  String get ringtoneFailed => '벨소리 설정에 실패했습니다';
+  String get ringtoneFailed => '벨소리를 설정하지 못했어요';
 
   @override
-  String get promoInvalid => '올바르지 않은 코드입니다';
+  String get promoInvalid => '유효하지 않은 코드예요';
 
   @override
   String get promoEnter => '프로모션 코드를 입력하세요';
@@ -207,10 +207,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get confirm => '확인';
 
   @override
-  String get permissionRequired => '저장소 접근 권한 필요';
+  String get permissionRequired => '음악 파일 접근 권한이 필요해요';
 
   @override
-  String get permissionMessage => 'MP3 파일을 스캔하려면\n저장소 접근 권한이 필요합니다.';
+  String get permissionMessage => 'MP3 파일을 찾으려면\n음악 파일 접근 권한이 필요해요.';
 
   @override
   String get allowPermission => '권한 허용';
@@ -222,10 +222,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get deleteSong => '곡 삭제';
 
   @override
-  String get deleted => '삭제됐습니다';
+  String get deleted => '삭제했어요';
 
   @override
-  String get deleteFailed => '삭제 실패';
+  String get deleteFailed => '삭제하지 못했어요';
 
   @override
   String get playNext => '다음에 재생';
@@ -258,7 +258,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get off => '꺼짐';
 
   @override
-  String get flashlightError => '손전등 오류';
+  String get flashlightError => '손전등을 켜지 못했어요';
 
   @override
   String get minuteShort => '분';
@@ -303,7 +303,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get reviewLater => '나중에 할게요';
 
   @override
-  String get fontDefault => '기본 폰트';
+  String get fontDefault => '기본 글꼴';
 
   @override
   String get fontNotoSans => 'Noto Sans KR (깔끔)';
@@ -397,7 +397,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get selectAll => '전체선택';
+  String get selectAll => '전체 선택';
 
   @override
   String get noVideosFound => '동영상이 없습니다';
@@ -436,7 +436,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get lyricsErrorNotFound => '가사를 찾을 수 없습니다';
 
   @override
-  String get lyricsErrorNetwork => '인터넷 연결을 확인해주세요';
+  String get lyricsErrorNetwork => '인터넷 연결을 확인해 주세요';
 
   @override
   String get justNow => '방금 전';
@@ -469,7 +469,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get radioChannelCount => '개 채널';
 
   @override
-  String get radioPopular200 => '인기 200개';
+  String get radioPopular200 => '인기 채널 200개';
 
   @override
   String get radioSleep => '수면';
@@ -478,7 +478,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get radioSchedule => '예약';
 
   @override
-  String get sleepTimerDesc => '선택한 시간 후 자동으로 꺼집니다';
+  String get sleepTimerDesc => '설정한 시간이 지나면 자동으로 재생이 멈춰요';
 
   @override
   String get sleepTimerActiveDesc => '타이머가 작동 중입니다';
@@ -903,7 +903,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get radioBroadcastSchedule => '편성표';
 
   @override
-  String get radioPlayFirst => '먼저 라디오를 재생해주세요';
+  String get radioPlayFirst => '라디오를 먼저 재생해 주세요';
 
   @override
   String radioScheduleCompleteToast(Object time, Object title) {
@@ -911,7 +911,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get radioPlaybackFailed => '재생에 실패했습니다.';
+  String get radioPlaybackFailed => '라디오를 재생하지 못했어요';
 
   @override
   String get radioRerun => '재방송';
@@ -1273,13 +1273,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get timerLabel => '타이머';
 
   @override
-  String get playbackSpeedLabel => '재생속도';
+  String get playbackSpeedLabel => '재생 속도';
 
   @override
   String get updateReadyTitle => '업데이트 준비 완료';
 
   @override
-  String get updateReadyMessage => '새로운 기능이 다운로드됐어요.\n지금 재시작을 권장합니다.';
+  String get updateReadyMessage => '업데이트를 다운로드했어요.\n적용하려면 앱을 다시 시작해 주세요.';
 
   @override
   String get updateReadyButton => '지금 재시작';
@@ -1324,10 +1324,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get homeNewSongs => '새로 들어온 곡';
 
   @override
-  String get homeTipWidgetTitle => '바탕화면 위젯을 놓아 보세요';
+  String get homeTipWidgetTitle => '홈 화면에 위젯을 추가해 보세요';
 
   @override
-  String get homeTipWidgetSub => '바탕화면을 꾹 → 위젯 → 파란소리';
+  String get homeTipWidgetSub => '홈 화면 길게 누르기 → 위젯 → 파란소리';
 
   @override
   String get homeTipAlarmTitle => '아침 알람으로 깨워 드려요';
@@ -1336,7 +1336,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get homeTipAlarmSub => '음악·라디오·자연 소리로 일어나요';
 
   @override
-  String get homeTipScheduleTitle => '원하는 시간에 라디오 켜기';
+  String get homeTipScheduleTitle => '원하는 시간에 라디오 듣기';
 
   @override
   String get homeTipScheduleSub => '라디오 재생 화면 아래 [예약]';
@@ -1360,7 +1360,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get accentColor => '강조 색상';
 
   @override
-  String get homeColorTitle => '나만의 색으로 꾸며보세요';
+  String get homeColorTitle => '좋아하는 색으로 꾸며 보세요';
 
   @override
   String get homeColorSub => '숲 · 노을 · 벚꽃 등 10가지 색';
@@ -1372,7 +1372,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get homeColorQuestion => '오늘 기분에 어울리는 색은?';
 
   @override
-  String get homeColorHint => '설정 → 꾸미기 → 강조 색상에서\n다시 변경할 수 있습니다.';
+  String get homeColorHint => '설정 → 꾸미기 → 강조 색상에서\n언제든 바꿀 수 있어요.';
 
   @override
   String get done => '완료';
@@ -1406,7 +1406,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get menuShareTitle => '친구에게 공유하기';
 
   @override
-  String get menuShareSub => '파란소리를 친구에게\n소개해보세요.';
+  String get menuShareSub => '친구에게 파란소리를\n소개해 보세요.';
 
   @override
   String get shareAppMessage => '파란소리 앱으로 음악 들어요! 🎧';
@@ -1424,7 +1424,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get menuRadioTitle => '방송국 바로가기';
 
   @override
-  String get menuRadioSub => '다양한 라디오 방송을\n바로 들어보세요.';
+  String get menuRadioSub => '다양한 라디오 방송을\n바로 들어 보세요.';
 
   @override
   String get recentSearches => '최근 검색';
@@ -1454,7 +1454,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get catRest => '휴식 · 집중';
 
   @override
-  String get catRestSub => '백색소음 · 집중 소리 (준비중)';
+  String get catRestSub => '백색소음 · 집중 소리 (준비 중)';
 
   @override
   String get homeSoundsHeader => '이런 소리는 어때요?';
@@ -1469,14 +1469,14 @@ class AppLocalizationsKo extends AppLocalizations {
   String get homeRecentEmpty => '최근 들은 곡이 없어요';
 
   @override
-  String get homeRecentEmptySub => '30초 이상 들은 곡·라디오·자연이 여기에 모여요';
+  String get homeRecentEmptySub => '30초 이상 들은 음악·라디오·자연소리가 여기에 모여요';
 
   @override
   String get cleanLabel => '곡 정리';
 
   @override
   String cleanTitle(int count) {
-    return '곡 제목 $count개를 깔끔하게';
+    return '곡 제목 $count개를 정리해 볼까요?';
   }
 
   @override
@@ -1518,7 +1518,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get dailyNotPlayedSub => '오랜만에 다시 들어볼까요';
+  String get dailyNotPlayedSub => '오랜만에 다시 들어 볼까요?';
 
   @override
   String get dailyShufflePlay => '랜덤 듣기';
@@ -1544,25 +1544,25 @@ class AppLocalizationsKo extends AppLocalizations {
   String get dailyDayTitle => '잠깐 쉬어가요';
 
   @override
-  String get dailyDayLine => '시냇물 소리 들으며 한숨 돌려요';
+  String get dailyDayLine => '시냇물 소리를 들으며 잠시 쉬어가요';
 
   @override
   String get dailyEveningTitle => '오늘도 수고했어요';
 
   @override
-  String get dailyEveningLine => '파도소리 틀어놓고 쉬어요';
+  String get dailyEveningLine => '파도소리와 함께 쉬어가요';
 
   @override
   String get dailyNightTitle => '늦은 밤엔 잔잔하게';
 
   @override
-  String get dailyNightLine => '빗소리 틀어놓고 쉬어요';
+  String get dailyNightLine => '빗소리와 함께 쉬어가요';
 
   @override
   String get dailyRightNow => '지금 이 시간';
 
   @override
-  String get dailyTipBatteryTitle => '화면 꺼도 계속 들어요';
+  String get dailyTipBatteryTitle => '화면을 꺼도 계속 들어요';
 
   @override
   String get dailyTipBatterySub => '배터리를 \'제한 없음\'으로 바꿔 주세요';
@@ -1574,7 +1574,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get dailyTipRingtoneSub => '곡 ⋮ 메뉴에서 바로 만들어요';
 
   @override
-  String get dailyTipVideoTitle => '동영상 노래만 저장';
+  String get dailyTipVideoTitle => '동영상에서 음악만 저장';
 
   @override
   String get dailyTipVideoSub => '동영상 ⋮ 메뉴에서 \'음악으로 저장\'';
@@ -1589,7 +1589,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get dailyTipLyricsTitle => '가사 한 줄 공유';
 
   @override
-  String get dailyTipLyricsSub => '가사를 꾹 누르면 카드로 보내요';
+  String get dailyTipLyricsSub => '가사를 길게 누르면 카드로 공유할 수 있어요';
 
   @override
   String get dailyOffTitle => '오늘의 카드를 끌까요?';
@@ -1625,10 +1625,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get yesterday => '어제';
 
   @override
-  String get within3Days => '3일 안';
+  String get within3Days => '최근 3일';
 
   @override
-  String get withinWeek => '일주일 안';
+  String get withinWeek => '최근 일주일';
 
   @override
   String get colorParansori => '파란소리';
@@ -1722,13 +1722,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get moreCleanTitle => '음악 정보 일괄 정리';
 
   @override
-  String get moreCleanSub => '지저분한 제목·가수를 깔끔하게 정리해요.';
+  String get moreCleanSub => '복잡한 제목과 가수 정보를 깔끔하게 정리해요.';
 
   @override
   String get moreArtTitle => '앨범 사진 자동 찾기';
 
   @override
-  String get moreArtSub => '앨범 사진 없는 곡에 사진을 넣어요.';
+  String get moreArtSub => '앨범 사진이 없는 곡에 사진을 추가해요.';
 
   @override
   String get moreAlarmTitle => '아침 알람';
@@ -1758,7 +1758,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get brandLine1 => '오늘도 파란소리와 함께';
 
   @override
-  String get brandLine2 => '당신의 하루에 편안한 소리를 더합니다.';
+  String get brandLine2 => '당신의 하루에 편안한 소리를 더해요.';
 
   @override
   String get addToPlaylist => '재생목록에 추가';
@@ -1813,10 +1813,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get storagePermissionNeeded => '저장소 접근 권한이 필요합니다.\n설정에서 권한을 허용해 주세요.';
 
   @override
-  String get musicLoadError => '음악을 불러오는 중 오류가 발생했습니다';
+  String get musicLoadError => '음악을 불러오지 못했어요';
 
   @override
-  String get musicScanError => '음악 스캔 오류';
+  String get musicScanError => '음악 파일을 찾지 못했어요';
 
   @override
   String get sleepAskDuration => '몇 시간 몇 분 후 정지할까요?';
@@ -1840,7 +1840,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get paranSuggestTitle => '파란포토로 들어볼까요?';
 
   @override
-  String get paranSuggestSub => '예쁜 사진 위로 음악이 흘러요';
+  String get paranSuggestSub => '좋아하는 사진을 배경으로 음악을 들어요';
 
   @override
   String get noThanks => '괜찮아요';
@@ -1873,10 +1873,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get photoFixed => '고정';
 
   @override
-  String get photoRandomSub => '곡이 바뀌면 배경도 바뀝니다.';
+  String get photoRandomSub => '곡이 바뀔 때마다 배경 사진도 바뀌어요.';
 
   @override
-  String get photoFixedSub => '배경 사진이 고정됩니다.';
+  String get photoFixedSub => '배경 사진을 그대로 유지해요.';
 
   @override
   String get manage => '관리';
@@ -1986,7 +1986,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get textSample => '가';
 
   @override
-  String get lyricsSyncTitle => '가사 박자 맞추기';
+  String get lyricsSyncTitle => '가사 타이밍 맞추기';
 
   @override
   String secondsValue(String value) {
@@ -2025,7 +2025,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get clearText => '비우기';
 
   @override
-  String get lyricsSaved => '이 노래 가사로 저장했어요';
+  String get lyricsSaved => '이 곡의 가사로 저장했어요';
 
   @override
   String get lyricsDeleteTitle => '직접 넣은 가사를 지울까요?';
@@ -2046,7 +2046,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get paransoriPhotos => '파란소리 사진';
 
   @override
-  String get lyricsSyncShort => '박자 맞추기';
+  String get lyricsSyncShort => '타이밍 맞추기';
 
   @override
   String get lyricsRefetch => '가사 다시 찾기';
@@ -2056,7 +2056,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String linesSelected(int count) {
-    return '$count줄 골랐어요';
+    return '$count줄 선택했어요';
   }
 
   @override
@@ -2108,7 +2108,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ratioFeed => '피드 1:1';
 
   @override
-  String get cardMakeFailed => '카드를 만들지 못했어요. 다시 해주세요.';
+  String get cardMakeFailed => '카드를 만들지 못했어요. 다시 시도해 주세요.';
 
   @override
   String get photoLoadFailed => '사진을 불러오지 못했어요';
@@ -2234,7 +2234,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get nothingToClean => '정리할 곡이 없어요';
 
   @override
-  String get allTidy => '모든 곡의 제목·가수가 깔끔해요';
+  String get allTidy => '모든 곡의 제목과 가수 정보가 정리돼 있어요';
 
   @override
   String cleanableCount(int count) {
@@ -2252,7 +2252,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get pickRightArt => '맞는 앨범 사진을 골라주세요';
+  String get pickRightArt => '맞는 앨범 사진을 골라 주세요';
 
   @override
   String artAdded(int count) {
@@ -2542,7 +2542,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get lockedCantDelete => '잠긴 녹음은 삭제할 수 없어요';
 
   @override
-  String get recRenameHint => '예) 엄마랑 통화';
+  String get recRenameHint => '예) 엄마와 통화';
 
   @override
   String deleteRecsTitle(int count) {
@@ -2557,7 +2557,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String lockedKept(int count) {
-    return '잠긴 녹음 $count개는 남겨둬요.';
+    return '잠긴 녹음 $count개는 삭제하지 않아요.';
   }
 
   @override
@@ -2571,7 +2571,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String deleteForeverMsg(int count) {
-    return '녹음 $count개를 영구 삭제하면 되살릴 수 없어요.';
+    return '녹음 $count개를 영구 삭제하면 복구할 수 없어요.';
   }
 
   @override
@@ -2706,7 +2706,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get longVideoMsg =>
-      '10분이 넘는 영상은 카카오톡으로 안 보내질 수 있어요.\n구글 드라이브나 메일로 보내면 잘 가요.';
+      '10분이 넘는 동영상은 카카오톡으로 전송되지 않을 수 있어요.\n구글 드라이브나 이메일로 보내 보세요.';
 
   @override
   String get send => '보내기';
@@ -2721,11 +2721,11 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String deleteVideosForeverMsg(int count) {
-    return '동영상 $count개를 영구 삭제하면 되살릴 수 없어요.';
+    return '동영상 $count개를 영구 삭제하면 복구할 수 없어요.';
   }
 
   @override
-  String get deleteVideoForeverMsg => '이 동영상을 영구 삭제하면 되살릴 수 없어요.';
+  String get deleteVideoForeverMsg => '이 동영상을 영구 삭제하면 복구할 수 없어요.';
 
   @override
   String get sortByName => '이름순';
@@ -2737,7 +2737,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get sortShortVideo => '짧은 영상순';
 
   @override
-  String get dateUnknown => '날짜 모름';
+  String get dateUnknown => '날짜 알 수 없음';
 
   @override
   String get monthNames => '1월,2월,3월,4월,5월,6월,7월,8월,9월,10월,11월,12월';
@@ -2782,16 +2782,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get videoPermSub => '동영상 접근을 한 번만 허용해 주세요';
 
   @override
-  String get videoPermStep1 => '아래 설정에서 허용하기 누르기';
+  String get videoPermStep1 => '아래에서 \'설정에서 허용하기\' 누르기';
 
   @override
   String get videoPermStep1Note => '파란소리 앱 설정이 바로 열려요';
 
   @override
-  String get videoPermStep2 => '권한 → 사진 및 동영상 누르기';
+  String get videoPermStep2 => '권한 → 사진 및 동영상 선택';
 
   @override
-  String get videoPermStep3 => '허용 고르고 돌아오기';
+  String get videoPermStep3 => '허용한 뒤 앱으로 돌아오기';
 
   @override
   String get videoPermStep3Note => '돌아오면 바로 목록이 나와요';
@@ -2874,7 +2874,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get audioOnlyOff => '앱을 나가면 멈춰요';
 
   @override
-  String get videoScanError => '비디오 스캔 오류';
+  String get videoScanError => '동영상을 불러오지 못했어요';
 
   @override
   String get saveMusicFailed => '음악으로 저장하지 못했어요';
@@ -2911,7 +2911,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get trimVideoNote =>
-      '원본은 그대로 두고 잘라낸 영상을 새로 저장해요 (Movies/Paransori)\n다시 압축하지 않아 화질 그대로예요. 시작이 1초쯤 앞당겨질 수 있어요';
+      '원본은 그대로 두고 잘라낸 동영상을 새로 저장해요 (Movies/Paransori)\n재압축하지 않아 화질이 유지되지만, 시작 지점이 약 1초 앞당겨질 수 있어요.';
 
   @override
   String get castNeedsPlaying => '방송이 나오고 있을 때 TV로 보낼 수 있어요';
@@ -2981,7 +2981,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get scheduledToast => '예약했어요';
 
   @override
-  String get scheduleFull => '예약을 더 넣을 수 없어요. 예약 창에서 지난 예약을 지워주세요';
+  String get scheduleFull => '예약을 더 추가할 수 없어요. 지난 예약을 삭제해 주세요';
 
   @override
   String get nextShort => '다음';
@@ -3055,7 +3055,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get scheduleTitle => '예약';
 
   @override
-  String get scheduleSub => '정한 시간이 되면 그 방송으로 바꿔줘요';
+  String get scheduleSub => '정해진 시간이 되면 선택한 방송으로 전환해요';
 
   @override
   String get mySchedules => '내 예약';
@@ -3100,7 +3100,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get scheduleAction => '예약하기';
 
   @override
-  String get scheduleLimit => '예약은 5개까지예요. 지난 예약을 지우면 새로 넣을 수 있어요';
+  String get scheduleLimit => '예약은 최대 5개까지 가능해요. 지난 예약을 삭제한 뒤 추가해 주세요';
 
   @override
   String get diceProgramLabel => '지금 하는 프로그램';
@@ -3113,7 +3113,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String diceGot(int n) {
-    return '$n이(가) 나왔어요!';
+    return '$n이(가) 선택됐어요!';
   }
 
   @override
@@ -3182,7 +3182,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get popTrend => '요즘 뜨는';
 
   @override
-  String get recentListened => '최근청취';
+  String get recentListened => '최근 청취';
 
   @override
   String get myRadio => '내 라디오';
@@ -3272,7 +3272,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get noRegionStations => '지역 정보가 있는 방송국이 없어요';
 
   @override
-  String get favAddHint => '하트를 눌러 즐겨찾기에 추가해보세요';
+  String get favAddHint => '하트를 눌러 즐겨찾기에 추가해 보세요';
 
   @override
   String get noRecentStations => '최근 들은 방송이 없어요';
@@ -3350,7 +3350,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get byRegion => '지역별';
 
   @override
-  String get selectCountryShort => '국가선택';
+  String get selectCountryShort => '국가 선택';
 
   @override
   String get stationLoadFailed => '방송을 불러올 수 없습니다.\n다른 채널을 선택해 주세요.';
@@ -3365,7 +3365,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get natureTitle2 => ' 휴식';
 
   @override
-  String get natureSub => '마음이 편안해지는 소리를 들어보세요';
+  String get natureSub => '마음이 편안해지는 자연의 소리를 만나보세요';
 
   @override
   String versionsCount(int count) {
@@ -3402,7 +3402,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get mixTitle2 => ' 소리';
 
   @override
-  String get mixSub => '나만의 힐링 사운드를 만들어보세요.';
+  String get mixSub => '좋아하는 음악과 자연소리로 나만의 분위기를 만들어 보세요.';
 
   @override
   String get musicLabel => '음악';
@@ -3428,10 +3428,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get setSleepTimer => '수면 타이머 설정';
 
   @override
-  String get stopMix => '믹스 정지하기';
+  String get stopMix => '믹스 정지';
 
   @override
-  String get playMix => '믹스 재생하기';
+  String get playMix => '믹스 재생';
 
   @override
   String get myMixDefault => '나만의 소리 믹스';
@@ -3472,13 +3472,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get turnAllOff => '모두 끄기';
 
   @override
-  String get overlayOnHint => '음악 위에 자연소리를 살짝 깔아 같이 들어요';
+  String get overlayOnHint => '음악에 자연소리를 더해 함께 들어요';
 
   @override
   String get overlayIdleHint => '음악이 재생될 때 같이 나와요';
 
   @override
-  String get lastMix => '지난번 섞기';
+  String get lastMix => '지난번 믹스';
 
   @override
   String get turnBackOn => '다시 켜기';
@@ -3501,7 +3501,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get noFavNature => '즐겨찾는 자연소리가 없어요';
 
   @override
-  String get restFocusSoon => '휴식 · 집중 기능은 준비중이에요';
+  String get restFocusSoon => '휴식 · 집중 기능은 준비 중이에요';
 
   @override
   String get restLabel => '휴식';
@@ -3519,7 +3519,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get restFocusSub => '편안한 소리로 쉬고, 마음을 모아 집중해 보세요';
 
   @override
-  String get comingSoonTitle => '준비중입니다';
+  String get comingSoonTitle => '준비 중이에요';
 
   @override
   String comingSoonCategory(String name) {
@@ -3623,7 +3623,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get descHelp => '권한, 배터리 및 알림 설정을 안내해요';
 
   @override
-  String get heroNoAd => '광고 없는 음악, 편안한 일상';
+  String get heroNoAd => '광고 없이 편안하게 즐기는 음악';
 
   @override
   String get heroDefault => '음악 · 라디오 · 자연';
@@ -3645,19 +3645,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String get voiceGuide => '음성 안내';
 
   @override
-  String get voiceGuideInfo => '앱을 켜고 끌 때 짧은 인사말이 나와요.';
+  String get voiceGuideInfo => '앱을 켜고 끌 때 짧은 인사말을 들려줘요.';
 
   @override
   String get infoTodaySong => '오늘의 한 곡';
 
   @override
-  String get infoTodaySongD => '내 음악 중에서 날마다 한 곡을 골라 줘요';
+  String get infoTodaySongD => '내 음악에서 매일 한 곡을 골라 줘요';
 
   @override
   String get infoLongTime => '오랜만에 듣기';
 
   @override
-  String get infoLongTimeD => '한 달 동안 안 들은 곡을 섞어서 틀어요';
+  String get infoLongTimeD => '한 달 동안 안 들은 곡을 랜덤으로 들려줘요';
 
   @override
   String get infoWeek => '이번 주 기록';
@@ -3675,13 +3675,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get infoTips => '알아두면 좋은 기능';
 
   @override
-  String get infoTipsD => '벨소리 만들기, 빗소리 섞기 같은 팁';
+  String get infoTipsD => '벨소리 만들기, 빗소리 믹스 같은 팁';
 
   @override
   String get infoAlarm => '내일 알람';
 
   @override
-  String get infoAlarmD => '알람을 켜 두면 저녁 7시부터 내일 깨울 시간';
+  String get infoAlarmD => '알람을 설정하면 저녁 7시부터 내일 알람 시간을 보여줘요';
 
   @override
   String get pcMusic => '음악';
@@ -3748,11 +3748,11 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get batteryAskHeadset =>
-      '폰이 오래 쉬고 있을 때도 이어폰 연결을 바로 알아차리려면 배터리 사용을 \"제한 없음\"으로 해 주세요.\n허용 안 해도 쓸 수 있지만, 가끔 늦거나 안 될 수 있어요.';
+      '휴대폰을 오래 사용하지 않을 때도 이어폰 연결을 바로 감지하려면 배터리 사용을 \"제한 없음\"으로 설정해 주세요.\n설정하지 않아도 사용할 수 있지만, 반응이 늦거나 작동하지 않을 수 있어요.';
 
   @override
   String get headsetNote =>
-      '듣다가 멈춘 곡·라디오·자연을 아주 작게 시작해서 천천히 키워요.\n앱을 완전히 끄면 동작하지 않아요.';
+      '이전에 듣던 음악·라디오·자연소리를 작은 음량으로 시작해 서서히 키워요.\n앱을 완전히 종료하면 작동하지 않아요.';
 
   @override
   String get accentSheetHint => '체크·스위치·막대 같은 작은 곳의 색이 바뀌어요';
@@ -3914,7 +3914,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get helpIntro => '앱 사용 중 문제가 발생하면 아래 안내를 확인하세요.';
+  String get helpIntro => '앱 사용 중 문제가 생기면 아래 안내를 확인해 주세요.';
 
   @override
   String get setManually => '직접 설정하기';
@@ -3926,7 +3926,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get needMoreHelp => '추가 도움이 필요하신가요?';
 
   @override
-  String get tellUsModel => '휴대폰 모델과 문제 상황을 알려주세요.';
+  String get tellUsModel => '휴대폰 모델과 문제가 발생한 상황을 알려 주세요.';
 
   @override
   String get emailUs => '이메일 문의';
@@ -3983,7 +3983,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get alarmNeedExact => '알람 및 리마인더를 허용해야 울릴 수 있어요';
 
   @override
-  String get noSongsOnPhone => '폰에 있는 노래가 없어요';
+  String get noSongsOnPhone => '휴대폰에 저장된 음악이 없어요';
 
   @override
   String get pickAlarmSong => '알람 곡 고르기';
@@ -4014,15 +4014,15 @@ class AppLocalizationsKo extends AppLocalizations {
       '정해진 시간에 깨우려면 \"알람 및 리마인더\"를 허용해 주세요. 허용하고 돌아오면 바로 저장돼요.';
 
   @override
-  String get fullScreenTitle => '잠금화면에 알람 화면 띄우기';
+  String get fullScreenTitle => '잠금 화면에 알람 표시';
 
   @override
   String get fullScreenMsg =>
-      '\"전체 화면 알림\"을 허용하면 잠금화면 위로 알람 화면이 바로 떠요. 허용 안 해도 알람 소리는 울려요.';
+      '\"전체 화면 알림\"을 허용하면 잠금 화면에 알람 화면이 표시돼요. 허용하지 않아도 알람 소리는 울려요.';
 
   @override
   String get alarmBatteryAsk =>
-      '정해진 시간에 알람 곡을 틀려면 배터리 사용을 \"제한 없음\"으로 해 주는 게 좋아요.\n허용 안 해도 대부분 잘 울리지만, 일부 폰은 절전 때문에 늦을 수 있어요.';
+      '정해진 시간에 음악이 재생되도록 하려면 배터리 사용을 \"제한 없음\"으로 해 주는 게 좋아요.\n허용 안 해도 대부분 잘 울리지만, 일부 폰은 절전 때문에 늦을 수 있어요.';
 
   @override
   String wakeYouAt(String time) {
@@ -4074,7 +4074,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get alarmVolume => '알람 소리 크기';
 
   @override
-  String get alarmVolumeNote => '폰 소리를 줄여 놔도 이 크기로 울리고, 끄면 원래대로 돌아가요';
+  String get alarmVolumeNote => '휴대폰 음량과 관계없이 설정한 크기로 울려요. 알람을 끄면 이전 음량으로 돌아가요';
 
   @override
   String get changeAction => '바꾸기';
@@ -4089,7 +4089,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get greetLine3 => '편안한 하루 되세요';
 
   @override
-  String get greetLine4 => '오늘 하루도 반가워요';
+  String get greetLine4 => '오늘도 만나서 반가워요';
 
   @override
   String get greetLine5 => '마음이 쉬어가는 곳, 파란소리';
@@ -4111,7 +4111,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String genreShuffle(String label, int n) {
-    return '$label $n곡 섞어서 재생';
+    return '$label $n곡 랜덤 재생';
   }
 
   @override
@@ -4231,7 +4231,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get smsSheetDesc => '이 번호로 문자를 보내면 방송에 사연이나 신청곡을 보낼 수 있어요.';
 
   @override
-  String get smsSheetFee => '짧은 문자 50원 · 긴 문자·사진 100원의 정보이용료가 붙어요.';
+  String get smsSheetFee => '짧은 문자 50원, 긴 문자·사진 100원의 정보이용료가 부과돼요.';
 
   @override
   String get smsSheetSend => '문자 보내기';
@@ -4315,39 +4315,40 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get introFeature1Desc =>
-      '휴대폰에 저장된 음악을 느긋하게 감상하며, 좋아하는 노래로 나만의 시간을 채워보세요.';
+      '휴대폰에 저장된 음악을 편안하게 감상하며 좋아하는 노래로 나만의 시간을 채워 보세요.';
 
   @override
   String get introFeature2Title => '세계의 라디오';
 
   @override
   String get introFeature2Desc =>
-      '다양한 나라의 라디오 방송을 들으며 새로운 음악과 이야기, 세상의 소리를 만나보세요.';
+      '여러 나라의 라디오를 들으며 새로운 음악과 이야기, 세상의 소리를 만나 보세요.';
 
   @override
   String get introFeature3Title => '자연의 소리';
 
   @override
-  String get introFeature3Desc => '빗소리, 바람 소리, 숲의 소리 등 자연이 들려주는 편안한 소리를 즐겨보세요.';
+  String get introFeature3Desc =>
+      '빗소리, 바람 소리, 숲의 소리 등 자연이 들려주는 편안한 소리를 즐겨 보세요.';
 
   @override
   String get introFeature4Title => '휴식과 집중';
 
   @override
   String get introFeature4Desc =>
-      '잠들기 전 조용한 시간부터 집중이 필요한 순간까지, 지금 나에게 어울리는 소리를 찾아보세요.';
+      '잠들기 전부터 집중이 필요한 순간까지, 지금 나에게 어울리는 소리를 찾아보세요.';
 
   @override
   String get introFeature5Title => '나만의 소리 조합';
 
   @override
-  String get introFeature5Desc => '좋아하는 소리들을 함께 재생하며 나만의 분위기를 만들어보세요.';
+  String get introFeature5Desc => '좋아하는 소리를 함께 재생하며 나만의 분위기를 만들어 보세요.';
 
   @override
   String get introFeature6Title => '아침 알람';
 
   @override
-  String get introFeature6Desc => '좋아하는 노래, 라디오, 자연의 소리로 기분 좋게 하루를 시작해 보세요.';
+  String get introFeature6Desc => '좋아하는 노래와 라디오, 자연소리로 기분 좋게 하루를 시작해 보세요.';
 
   @override
   String get introMenuTitle => '파란소리 소개';
@@ -4359,7 +4360,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get nature01Name => '파도소리';
 
   @override
-  String get nature01Desc => '규칙적인 파도 소리는 마음을 차분히 가라앉혀 깊은 휴식과 수면에 도움을 줘요';
+  String get nature01Desc => '규칙적으로 밀려오는 파도 소리와 함께 마음을 가라앉히고 편안히 쉬어가요';
 
   @override
   String get nature02Name => '잔잔한 파도';
@@ -4395,7 +4396,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get nature07Name => '빗소리';
 
   @override
-  String get nature07Desc => '일정한 빗소리는 집중력을 높이고 불안한 마음을 편안하게 다독여줘요';
+  String get nature07Desc => '일정하게 내리는 빗소리를 들으며 마음을 차분히 가라앉히고 집중해 보세요';
 
   @override
   String get nature08Name => '창문에 떨어지는 비';
@@ -4419,7 +4420,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get nature11Name => '새소리';
 
   @override
-  String get nature11Desc => '청아한 새소리는 스트레스를 줄이고 상쾌한 기분을 만들어줘요';
+  String get nature11Desc => '맑고 청아한 새소리와 함께 상쾌한 기분을 느껴 보세요';
 
   @override
   String get nature12Name => '뻐꾸기와 숲속 새소리';
@@ -4431,13 +4432,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get nature13Name => '모닥불';
 
   @override
-  String get nature13Desc => '타닥타닥 장작 타는 소리는 아늑한 분위기로 깊은 이완을 도와줘요';
+  String get nature13Desc => '타닥타닥 장작 타는 소리와 함께 아늑한 시간을 보내요';
 
   @override
   String get nature14Name => '시냇물';
 
   @override
-  String get nature14Desc => '졸졸 흐르는 시냇물 소리는 마음을 편안하게 하고 잡생각을 줄여줘요';
+  String get nature14Desc => '졸졸 흐르는 시냇물 소리를 들으며 잠시 생각을 내려놓아요';
 
   @override
   String get nature15Name => '잔잔한 강물';

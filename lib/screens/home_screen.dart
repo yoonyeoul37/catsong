@@ -2306,9 +2306,27 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Icon(Icons.tune_rounded, size: 18, color: baseColor.withOpacity(0.7)),
               const SizedBox(width: 6),
-              Text(tr.homeSoundsHeader,
-                  style: titleFont( // 로고와 같은 글꼴
-                      color: baseColor, fontSize: 16.5, fontWeight: FontWeight.w400)),
+              // 끝의 물음표만 떼어서 통통 튀게 — 둥근 물음표 · 살짝 크게 · 포인트 색 (물음표 없는 언어는 글만)
+              Builder(builder: (_) {
+                final h = tr.homeSoundsHeader;
+                final q = RegExp(r'\s*[?？]$').firstMatch(h);
+                final st = titleFont( // 로고와 같은 글꼴
+                    color: baseColor, fontSize: 16.5, fontWeight: FontWeight.w400);
+                if (q == null) return Text(h, style: st);
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(h.substring(0, q.start), style: st),
+                    const SizedBox(width: 3),
+                    _BounceQ(
+                      color: pointColorOf(context),
+                      style: GoogleFonts.quicksand(
+                          color: pointColorOf(context), fontSize: 20, height: 1.0, fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                );
+              }),
             ],
           ),
           const SizedBox(height: 16),
@@ -4317,7 +4335,8 @@ Widget _recentTile(bool isDarkMode, Color pastel, IconData icon) {
 /// 통통 튀는 큰 물음표: 두 번 톡톡 튀고 잠깐 쉬기를 반복
 class _BounceQ extends StatefulWidget {
   final Color color;
-  const _BounceQ({required this.color});
+  final TextStyle? style; // 주면 이 글자 모양으로 (홈 '이런 소리는 어때요?' 제목)
+  const _BounceQ({required this.color, this.style});
 
   @override
   State<_BounceQ> createState() => _BounceQState();
@@ -4355,8 +4374,8 @@ class _BounceQState extends State<_BounceQ> with SingleTickerProviderStateMixin 
             scaleY: 1 - land * 1.6,
             alignment: Alignment.bottomCenter,
             child: Text('?',
-                textScaler: TextScaler.noScaling,
-                style: TextStyle(
+                textScaler: widget.style != null ? null : TextScaler.noScaling,
+                style: widget.style ?? TextStyle(
                   color: widget.color,
                   fontSize: 19,
                   height: 1.0,

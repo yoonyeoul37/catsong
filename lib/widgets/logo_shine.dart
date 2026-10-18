@@ -66,14 +66,16 @@ class MenuTitle extends StatelessWidget {
   final String title; // 홈 카드 이름 (라디오 · 자연 · 휴식 · 집중)
   final String sub; // 홈 카드 설명
   final bool isDark;
-  const MenuTitle({super.key, required this.title, required this.sub, required this.isDark});
+  final Widget? subWidget; // 설명 글 대신 넣을 것 (나라별 라디오: 국기 + 나라 ▾)
+  final VoidCallback? onTap; // 누르면 (나라별 라디오: 나라 고르기)
+  const MenuTitle({super.key, required this.title, required this.sub, required this.isDark, this.subWidget, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final base = isDark ? Colors.white : Colors.black;
     // 위쪽은 이름표라서 '(준비중)' 같은 끝 괄호는 빼기
     final shortSub = sub.replaceAll(RegExp(r'\s*[\x28（][^\x29）]*[\x29）]\s*$'), '');
-    return Row(
+    final row = Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -101,21 +103,24 @@ class MenuTitle extends StatelessWidget {
                   style: titleFont(color: base, fontSize: 20, letterSpacing: 0.3),
                 ),
               ),
-              // 설명 한 줄: 긴 언어는 넘치지 않게 살짝 작아짐
+              // 설명 한 줄 (또는 넣어 준 것): 긴 언어는 넘치지 않게 살짝 작아짐
               FittedBox(
                 fit: BoxFit.scaleDown,
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  shortSub,
-                  maxLines: 1,
-                  textScaler: TextScaler.noScaling,
-                  style: TextStyle(color: base.withOpacity(0.5), fontSize: 11.5, height: 1.2),
-                ),
+                child: subWidget ??
+                    Text(
+                      shortSub,
+                      maxLines: 1,
+                      textScaler: TextScaler.noScaling,
+                      style: TextStyle(color: base.withOpacity(0.5), fontSize: 11.5, height: 1.2),
+                    ),
               ),
             ],
           ),
         ),
       ],
     );
+    if (onTap == null) return row;
+    return GestureDetector(behavior: HitTestBehavior.opaque, onTap: onTap, child: row);
   }
 }

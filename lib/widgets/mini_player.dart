@@ -135,7 +135,7 @@ class MiniPlayer extends StatelessWidget {
                           alignment: Alignment.center,
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(10),
                               child: song.albumArt != null
                                   ? Image.memory(
                                 Uint8List.fromList(song.albumArt!),
@@ -149,7 +149,7 @@ class MiniPlayer extends StatelessWidget {
                                 height: 44,
                                 decoration: BoxDecoration(
                                   color: primaryColor.withOpacity(0.4),
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Center(
                                   child: Image.asset(
@@ -166,7 +166,7 @@ class MiniPlayer extends StatelessWidget {
                               height: 44,
                               decoration: BoxDecoration(
                                 color: Colors.black.withOpacity(0.35),
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               child: Center(
                                 child: AlbumEqOverlay(

@@ -972,7 +972,7 @@ class _RadioCountryStationsScreenState
         child: Container(
           height: 180,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
                 color: ink.withOpacity(isDark ? 0.45 : 0.13),
@@ -984,7 +984,7 @@ class _RadioCountryStationsScreenState
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(10),
             child: Stack(
               fit: StackFit.expand,
               children: [
@@ -1729,7 +1729,7 @@ class _StationTile extends StatelessWidget {
                       height: 46,
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.45),
-                        borderRadius: BorderRadius.circular(46 * 0.2),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       alignment: Alignment.center,
                       child: _PlayingBars(),

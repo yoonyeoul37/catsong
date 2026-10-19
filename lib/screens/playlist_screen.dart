@@ -466,7 +466,7 @@ class _PlaylistCover extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: ClipRRect(borderRadius: BorderRadius.circular(size * 0.2), child: child),
+      child: ClipRRect(borderRadius: BorderRadius.circular(10), child: child),
     );
   }
 }

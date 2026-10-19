@@ -349,7 +349,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                     child: Row(
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(10),
                           child: paranPhoto(
                             _natureThumbImage(primary.name, primary.category, primary.assetPath ?? ''),
                             thumb: true,
@@ -361,7 +361,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                               height: 52,
                               decoration: BoxDecoration(
                                 color: soundColor,
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               child: Icon(primary.icon, color: Colors.white, size: 22),
                             ),

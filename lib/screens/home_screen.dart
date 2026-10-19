@@ -3400,11 +3400,11 @@ class _HomeScreenState extends State<HomeScreen> {
   /// 오늘의 카드 왼쪽: 곡 앨범 사진 (없으면 글자 타일)
   Widget _cardArt(Song s, double size, bool isDark) => Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(size * 0.18),
+          borderRadius: BorderRadius.circular(size >= 40 ? 10 : size * 0.25),
           boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 6, offset: const Offset(0, 2))],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(size * 0.18),
+          borderRadius: BorderRadius.circular(size >= 40 ? 10 : size * 0.25),
           child: s.albumArt != null
               ? darkPhoto(isDark, Image.memory(Uint8List.fromList(s.albumArt!),
                   width: size, height: size, fit: BoxFit.cover, gaplessPlayback: true, cacheWidth: (size * 3).round()))

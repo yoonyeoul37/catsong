@@ -341,7 +341,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         height: 180,
         margin: const EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
               color: ink.withOpacity(isDark ? 0.45 : 0.13),
@@ -353,7 +353,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
           child: Stack(
             fit: StackFit.expand,
             children: [

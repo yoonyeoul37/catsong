@@ -23,7 +23,7 @@ class StationLogo extends StatelessWidget {
 
     if (logoUrl != null && logoUrl!.isNotEmpty) {
       return ClipRRect(
-        borderRadius: BorderRadius.circular(size * 0.2),
+        borderRadius: BorderRadius.circular(size <= 60 ? 10 : size * 0.2),
         child: Image.network(
           logoUrl!,
           width: size, height: size,
@@ -92,7 +92,7 @@ class _Fallback extends StatelessWidget {
       width: size, height: size,
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(size * 0.2),
+        borderRadius: BorderRadius.circular(size <= 60 ? 10 : size * 0.2),
       ),
       child: Center(
         child: Text(initials,

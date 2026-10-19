@@ -111,7 +111,7 @@ class AlbumScreen extends StatelessWidget {
           AspectRatio(
             aspectRatio: 1,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(10),
               child: album.songs.first.albumArt != null
                   ? Image.memory(
                 Uint8List.fromList(album.songs.first.albumArt!),
@@ -121,7 +121,7 @@ class AlbumScreen extends StatelessWidget {
                   : Container(
                 color: (context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black).withOpacity(0.15),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(10),
                   child: Image.asset(noAlbumImagePath(album.name), fit: BoxFit.cover),
                 ),
               ),

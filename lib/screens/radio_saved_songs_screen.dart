@@ -184,7 +184,7 @@ class _RadioSavedSongsListState extends State<RadioSavedSongsList> {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: baseColor.withOpacity(0.06),
-                      borderRadius: BorderRadius.circular(46 * 0.2),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: flag.isEmpty
                         ? Icon(CupertinoIcons.music_note, size: 20, color: baseColor.withOpacity(0.45))

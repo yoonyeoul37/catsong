@@ -469,6 +469,11 @@ class AppLocalizationsId extends AppLocalizations {
   String get radioSelectCountry => 'Pilih negara';
 
   @override
+  String countryTotal(int count) {
+    return '$count negara';
+  }
+
+  @override
   String get radioChannelCount => 'saluran';
 
   @override
@@ -836,6 +841,45 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get countryPR => 'Puerto Riko';
+
+  @override
+  String get countryDZ => 'Aljazair';
+
+  @override
+  String get countryQA => 'Qatar';
+
+  @override
+  String get countryBH => 'Bahrain';
+
+  @override
+  String get countryKW => 'Kuwait';
+
+  @override
+  String get countryPS => 'Palestina';
+
+  @override
+  String get countryYE => 'Yaman';
+
+  @override
+  String get countryLY => 'Libya';
+
+  @override
+  String get countryOM => 'Oman';
+
+  @override
+  String get countrySD => 'Sudan';
+
+  @override
+  String get countryCI => 'Pantai Gading';
+
+  @override
+  String get countryAO => 'Angola';
+
+  @override
+  String get countryBY => 'Belarus';
+
+  @override
+  String get countryMD => 'Moldova';
 
   @override
   String get categoryNational => 'Nasional';

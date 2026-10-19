@@ -1019,6 +1019,12 @@ abstract class AppLocalizations {
   /// **'국가 선택'**
   String get radioSelectCountry;
 
+  /// No description provided for @countryTotal.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}개 나라'**
+  String countryTotal(int count);
+
   /// No description provided for @radioChannelCount.
   ///
   /// In ko, this message translates to:
@@ -1756,6 +1762,84 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'푸에르토리코'**
   String get countryPR;
+
+  /// No description provided for @countryDZ.
+  ///
+  /// In ko, this message translates to:
+  /// **'알제리'**
+  String get countryDZ;
+
+  /// No description provided for @countryQA.
+  ///
+  /// In ko, this message translates to:
+  /// **'카타르'**
+  String get countryQA;
+
+  /// No description provided for @countryBH.
+  ///
+  /// In ko, this message translates to:
+  /// **'바레인'**
+  String get countryBH;
+
+  /// No description provided for @countryKW.
+  ///
+  /// In ko, this message translates to:
+  /// **'쿠웨이트'**
+  String get countryKW;
+
+  /// No description provided for @countryPS.
+  ///
+  /// In ko, this message translates to:
+  /// **'팔레스타인'**
+  String get countryPS;
+
+  /// No description provided for @countryYE.
+  ///
+  /// In ko, this message translates to:
+  /// **'예멘'**
+  String get countryYE;
+
+  /// No description provided for @countryLY.
+  ///
+  /// In ko, this message translates to:
+  /// **'리비아'**
+  String get countryLY;
+
+  /// No description provided for @countryOM.
+  ///
+  /// In ko, this message translates to:
+  /// **'오만'**
+  String get countryOM;
+
+  /// No description provided for @countrySD.
+  ///
+  /// In ko, this message translates to:
+  /// **'수단'**
+  String get countrySD;
+
+  /// No description provided for @countryCI.
+  ///
+  /// In ko, this message translates to:
+  /// **'코트디부아르'**
+  String get countryCI;
+
+  /// No description provided for @countryAO.
+  ///
+  /// In ko, this message translates to:
+  /// **'앙골라'**
+  String get countryAO;
+
+  /// No description provided for @countryBY.
+  ///
+  /// In ko, this message translates to:
+  /// **'벨라루스'**
+  String get countryBY;
+
+  /// No description provided for @countryMD.
+  ///
+  /// In ko, this message translates to:
+  /// **'몰도바'**
+  String get countryMD;
 
   /// No description provided for @categoryNational.
   ///

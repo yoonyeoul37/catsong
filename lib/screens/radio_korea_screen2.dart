@@ -69,9 +69,9 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
   static const Map<String, Color> _regionColors = {
     '수도권': Color(0xFF14356B),
     '부산/경남': Color(0xFF0D4C6E),
-    '대구/경북': Color(0xFF7A1F1F),
-    '광주/전남': Color(0xFF1E4A2E),
-    '전북': Color(0xFF4A1E5C),
+    '대구/경북': Color(0xFF4A1E5C), // 자주 (정치색 오해 없게 빨강·녹색 안 씀)
+    '광주/전남': Color(0xFF5A4632), // 회갈
+    '전북': Color(0xFF33405A), // 회청
     '대전/충남': Color(0xFF6B4A1E),
     '충북': Color(0xFF2E5C5C),
     '강원': Color(0xFF3A2E5C),
@@ -906,8 +906,8 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  _regionColors[region] ?? const Color(0xFF3A342A),
-                  (_regionColors[region] ?? const Color(0xFF3A342A)).withOpacity(0.8),
+                  _softDark(_regionColors[region] ?? const Color(0xFF3A342A), isDarkMode),
+                  _softDark(_regionColors[region] ?? const Color(0xFF3A342A), isDarkMode).withOpacity(0.8),
                 ],
               ),
               borderRadius: BorderRadius.circular(10), // 홈 카드와 같은 둥글기
@@ -1762,6 +1762,13 @@ class _LiveDotState extends State<_LiveDot> with SingleTickerProviderStateMixin 
   }
 }
 
+/// 다크 모드에서 박스 색을 차분하게 (홈 카드처럼 색 반쯤 빼고 살짝 어둡게)
+Color _softDark(Color c, bool dark) {
+  if (!dark) return c;
+  final h = HSLColor.fromColor(c);
+  return h.withSaturation(h.saturation * 0.5).withLightness(h.lightness * 0.85).toColor();
+}
+
 class _BroadcasterGridScreen extends StatelessWidget {
   final RadioProvider radioProvider;
   const _BroadcasterGridScreen({required this.radioProvider});
@@ -1860,8 +1867,8 @@ class _BroadcasterGridScreen extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  _cardColors[key] ?? const Color(0xFF3A342A),
-                  (_cardColors[key] ?? const Color(0xFF3A342A)).withOpacity(0.8),
+                  _softDark(_cardColors[key] ?? const Color(0xFF3A342A), isDarkMode),
+                  _softDark(_cardColors[key] ?? const Color(0xFF3A342A), isDarkMode).withOpacity(0.8),
                 ],
               ),
               borderRadius: BorderRadius.circular(10), // 홈 카드와 같은 둥글기
@@ -1954,6 +1961,7 @@ class _BroadcasterStationList extends StatelessWidget {
   /// 위쪽 색 띠 머리: 뒤로가기 + 큰 이름 + 채널 수 + 은은한 큰 아이콘
   Widget _header(BuildContext context) {
     final top = MediaQuery.of(context).padding.top;
+    final color = _softDark(this.color, context.watch<ThemeProvider>().isDarkMode);
     return Container(
       width: double.infinity,
       clipBehavior: Clip.antiAlias,

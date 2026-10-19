@@ -134,6 +134,19 @@ class RadioCountry {
       case 'NI': return l.countryNI;
       case 'SV': return l.countrySV;
       case 'PR': return l.countryPR;
+      case 'DZ': return l.countryDZ;
+      case 'QA': return l.countryQA;
+      case 'BH': return l.countryBH;
+      case 'KW': return l.countryKW;
+      case 'PS': return l.countryPS;
+      case 'YE': return l.countryYE;
+      case 'LY': return l.countryLY;
+      case 'OM': return l.countryOM;
+      case 'SD': return l.countrySD;
+      case 'CI': return l.countryCI;
+      case 'AO': return l.countryAO;
+      case 'BY': return l.countryBY;
+      case 'MD': return l.countryMD;
       default: return name;
     }
   }
@@ -243,6 +256,8 @@ class RadioCountry {
     RadioCountry(code: 'MT', name: '몰타', flag: '🇲🇹', continent: 'EUROPE', broadcasters: []),
     RadioCountry(code: 'LU', name: '룩셈부르크', flag: '🇱🇺', continent: 'EUROPE', broadcasters: []),
     RadioCountry(code: 'CY', name: '키프로스', flag: '🇨🇾', continent: 'EUROPE', broadcasters: []),
+    RadioCountry(code: 'BY', name: '벨라루스', flag: '🇧🇾', continent: 'EUROPE', broadcasters: []),
+    RadioCountry(code: 'MD', name: '몰도바', flag: '🇲🇩', continent: 'EUROPE', broadcasters: []),
     // ── NORTH AMERICA ──
     RadioCountry(code: 'US', name: '미국', flag: '🇺🇸', continent: 'NORTH_AMERICA', broadcasters: [
       RadioBroadcaster(id: 'NPR', name: 'NPR', keyword: 'NPR'),
@@ -289,6 +304,12 @@ class RadioCountry {
     RadioCountry(code: 'EG', name: '이집트', flag: '🇪🇬', continent: 'MIDDLE_EAST', broadcasters: []),
     RadioCountry(code: 'JO', name: '요르단', flag: '🇯🇴', continent: 'MIDDLE_EAST', broadcasters: []),
     RadioCountry(code: 'LB', name: '레바논', flag: '🇱🇧', continent: 'MIDDLE_EAST', broadcasters: []),
+    RadioCountry(code: 'QA', name: '카타르', flag: '🇶🇦', continent: 'MIDDLE_EAST', broadcasters: []),
+    RadioCountry(code: 'BH', name: '바레인', flag: '🇧🇭', continent: 'MIDDLE_EAST', broadcasters: []),
+    RadioCountry(code: 'KW', name: '쿠웨이트', flag: '🇰🇼', continent: 'MIDDLE_EAST', broadcasters: []),
+    RadioCountry(code: 'OM', name: '오만', flag: '🇴🇲', continent: 'MIDDLE_EAST', broadcasters: []),
+    RadioCountry(code: 'YE', name: '예멘', flag: '🇾🇪', continent: 'MIDDLE_EAST', broadcasters: []),
+    RadioCountry(code: 'PS', name: '팔레스타인', flag: '🇵🇸', continent: 'MIDDLE_EAST', broadcasters: []),
     // ── AFRICA ──
     RadioCountry(code: 'ZA', name: '남아프리카', flag: '🇿🇦', continent: 'AFRICA', broadcasters: []),
     RadioCountry(code: 'NG', name: '나이지리아', flag: '🇳🇬', continent: 'AFRICA', broadcasters: []),
@@ -304,6 +325,11 @@ class RadioCountry {
     RadioCountry(code: 'ZW', name: '짐바브웨', flag: '🇿🇼', continent: 'AFRICA', broadcasters: []),
     RadioCountry(code: 'MZ', name: '모잠비크', flag: '🇲🇿', continent: 'AFRICA', broadcasters: []),
     RadioCountry(code: 'MG', name: '마다가스카르', flag: '🇲🇬', continent: 'AFRICA', broadcasters: []),
+    RadioCountry(code: 'DZ', name: '알제리', flag: '🇩🇿', continent: 'AFRICA', broadcasters: []),
+    RadioCountry(code: 'LY', name: '리비아', flag: '🇱🇾', continent: 'AFRICA', broadcasters: []),
+    RadioCountry(code: 'SD', name: '수단', flag: '🇸🇩', continent: 'AFRICA', broadcasters: []),
+    RadioCountry(code: 'CI', name: '코트디부아르', flag: '🇨🇮', continent: 'AFRICA', broadcasters: []),
+    RadioCountry(code: 'AO', name: '앙골라', flag: '🇦🇴', continent: 'AFRICA', broadcasters: []),
     // ── OCEANIA ──
     RadioCountry(code: 'AU', name: '호주', flag: '🇦🇺', continent: 'OCEANIA', broadcasters: []),
     RadioCountry(code: 'NZ', name: '뉴질랜드', flag: '🇳🇿', continent: 'OCEANIA', broadcasters: []),

@@ -1525,6 +1525,7 @@ const Map<String, double> _utcFixed = {
   'PK': 5, 'UZ': 5, 'KZ': 5, 'AE': 4, 'AZ': 4, 'AM': 4, 'GE': 4, 'IR': 3.5,
   'SA': 3, 'IQ': 3, 'JO': 3, 'TR': 3, 'KE': 3, 'ET': 3, 'TZ': 3, 'UG': 3, 'MG': 3,
   'ZA': 2, 'ZW': 2, 'MZ': 2, 'NG': 1, 'CM': 1, 'TN': 1, 'GH': 0, 'SN': 0, 'IS': 0,
+  'QA': 3, 'BH': 3, 'KW': 3, 'YE': 3, 'BY': 3, 'OM': 4, 'LY': 2, 'SD': 2, 'DZ': 1, 'AO': 1, 'CI': 0,
   'AR': -3, 'UY': -3, 'VE': -4, 'BO': -4, 'DO': -4, 'PR': -4, 'TT': -4,
   'CO': -5, 'PE': -5, 'EC': -5, 'PA': -5, 'JM': -5,
   'GT': -6, 'HN': -6, 'NI': -6, 'SV': -6, 'CR': -6, 'PG': 10, 'FJ': 12,
@@ -1535,7 +1536,7 @@ const Map<String, double> _utcEu = {
   'ES': 1, 'FR': 1, 'DE': 1, 'IT': 1, 'NL': 1, 'BE': 1, 'LU': 1, 'CH': 1, 'AT': 1,
   'SE': 1, 'NO': 1, 'DK': 1, 'PL': 1, 'CZ': 1, 'SK': 1, 'HU': 1, 'HR': 1, 'SI': 1,
   'RS': 1, 'BA': 1, 'ME': 1, 'MK': 1, 'AL': 1, 'MT': 1,
-  'FI': 2, 'EE': 2, 'LV': 2, 'LT': 2, 'RO': 2, 'BG': 2, 'GR': 2, 'CY': 2, 'UA': 2,
+  'FI': 2, 'EE': 2, 'LV': 2, 'LT': 2, 'RO': 2, 'BG': 2, 'GR': 2, 'CY': 2, 'UA': 2, 'MD': 2,
 };
 
 DateTime _lastSundayUtc(int y, int m) {

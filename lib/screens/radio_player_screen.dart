@@ -1903,8 +1903,9 @@ class _NextProgramLineState extends State<_NextProgramLine> {
     if (idx < 0) {
       idx = widget.scheduleList.indexWhere((p) => _titleOf(p) == currentTitle);
     }
-    if (idx < 0 || idx + 1 >= widget.scheduleList.length) return const SizedBox.shrink();
-    final next = widget.scheduleList[idx + 1];
+    if (idx < 0 || widget.scheduleList.length < 2) return const SizedBox.shrink();
+    // 오늘 마지막 방송이면 → 다음 날 첫 방송 (편성표가 하루치만 있는 CBS·EBS 등)
+    final next = widget.scheduleList[(idx + 1) % widget.scheduleList.length];
     final nextTitle = _titleOf(next);
     if (nextTitle.isEmpty) return const SizedBox.shrink();
     final nextStart = _formatStart(_startOf(next));

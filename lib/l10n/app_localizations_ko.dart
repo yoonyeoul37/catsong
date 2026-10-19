@@ -466,6 +466,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get radioSelectCountry => '국가 선택';
 
   @override
+  String countryTotal(int count) {
+    return '$count개 나라';
+  }
+
+  @override
   String get radioChannelCount => '개 채널';
 
   @override
@@ -833,6 +838,45 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get countryPR => '푸에르토리코';
+
+  @override
+  String get countryDZ => '알제리';
+
+  @override
+  String get countryQA => '카타르';
+
+  @override
+  String get countryBH => '바레인';
+
+  @override
+  String get countryKW => '쿠웨이트';
+
+  @override
+  String get countryPS => '팔레스타인';
+
+  @override
+  String get countryYE => '예멘';
+
+  @override
+  String get countryLY => '리비아';
+
+  @override
+  String get countryOM => '오만';
+
+  @override
+  String get countrySD => '수단';
+
+  @override
+  String get countryCI => '코트디부아르';
+
+  @override
+  String get countryAO => '앙골라';
+
+  @override
+  String get countryBY => '벨라루스';
+
+  @override
+  String get countryMD => '몰도바';
 
   @override
   String get categoryNational => '전국';

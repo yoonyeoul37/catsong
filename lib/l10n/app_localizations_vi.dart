@@ -468,6 +468,11 @@ class AppLocalizationsVi extends AppLocalizations {
   String get radioSelectCountry => 'Chọn quốc gia';
 
   @override
+  String countryTotal(int count) {
+    return '$count quốc gia';
+  }
+
+  @override
   String get radioChannelCount => 'kênh';
 
   @override
@@ -835,6 +840,45 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get countryPR => 'Puerto Rico';
+
+  @override
+  String get countryDZ => 'Algeria';
+
+  @override
+  String get countryQA => 'Qatar';
+
+  @override
+  String get countryBH => 'Bahrain';
+
+  @override
+  String get countryKW => 'Kuwait';
+
+  @override
+  String get countryPS => 'Palestine';
+
+  @override
+  String get countryYE => 'Yemen';
+
+  @override
+  String get countryLY => 'Libya';
+
+  @override
+  String get countryOM => 'Oman';
+
+  @override
+  String get countrySD => 'Sudan';
+
+  @override
+  String get countryCI => 'Bờ Biển Ngà';
+
+  @override
+  String get countryAO => 'Angola';
+
+  @override
+  String get countryBY => 'Belarus';
+
+  @override
+  String get countryMD => 'Moldova';
 
   @override
   String get categoryNational => 'Toàn quốc';

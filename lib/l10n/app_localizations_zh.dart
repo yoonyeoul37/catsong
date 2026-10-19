@@ -467,6 +467,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get radioSelectCountry => '选择国家或地区';
 
   @override
+  String countryTotal(int count) {
+    return '$count个国家';
+  }
+
+  @override
   String get radioChannelCount => '个频道';
 
   @override
@@ -834,6 +839,45 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get countryPR => '波多黎各';
+
+  @override
+  String get countryDZ => '阿尔及利亚';
+
+  @override
+  String get countryQA => '卡塔尔';
+
+  @override
+  String get countryBH => '巴林';
+
+  @override
+  String get countryKW => '科威特';
+
+  @override
+  String get countryPS => '巴勒斯坦';
+
+  @override
+  String get countryYE => '也门';
+
+  @override
+  String get countryLY => '利比亚';
+
+  @override
+  String get countryOM => '阿曼';
+
+  @override
+  String get countrySD => '苏丹';
+
+  @override
+  String get countryCI => '科特迪瓦';
+
+  @override
+  String get countryAO => '安哥拉';
+
+  @override
+  String get countryBY => '白俄罗斯';
+
+  @override
+  String get countryMD => '摩尔多瓦';
 
   @override
   String get categoryNational => '全国';
@@ -4946,6 +4990,11 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get radioSelectCountry => '選擇國家或地區';
 
   @override
+  String countryTotal(int count) {
+    return '$count 個國家';
+  }
+
+  @override
   String get radioChannelCount => '個頻道';
 
   @override
@@ -5313,6 +5362,45 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get countryPR => '波多黎各';
+
+  @override
+  String get countryDZ => '阿爾及利亞';
+
+  @override
+  String get countryQA => '卡達';
+
+  @override
+  String get countryBH => '巴林';
+
+  @override
+  String get countryKW => '科威特';
+
+  @override
+  String get countryPS => '巴勒斯坦';
+
+  @override
+  String get countryYE => '葉門';
+
+  @override
+  String get countryLY => '利比亞';
+
+  @override
+  String get countryOM => '阿曼';
+
+  @override
+  String get countrySD => '蘇丹';
+
+  @override
+  String get countryCI => '象牙海岸';
+
+  @override
+  String get countryAO => '安哥拉';
+
+  @override
+  String get countryBY => '白俄羅斯';
+
+  @override
+  String get countryMD => '摩爾多瓦';
 
   @override
   String get categoryNational => '全國';

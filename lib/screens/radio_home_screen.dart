@@ -345,6 +345,16 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
                   letterSpacing: tr.localeName == 'en' ? 1.2 : 0,
                 ),
               ),
+              // 이 대륙 나라 수 (맨 위 '내 나라' 카드로 간 나라도 포함)
+              const SizedBox(width: 6),
+              Text(
+                '${countries.where((c) => c.continent == continent).length}',
+                style: TextStyle(
+                  color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.3),
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               const SizedBox(width: 10),
               Expanded(
                 child: Container(
@@ -476,14 +486,34 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
               child: Builder(builder: (context) {
                 final items = <Widget>[
                   if (_query.isEmpty) ...[
-                    Text(
-                      AppLocalizations.of(context)!.radioSelectCountry,
-                      style: TextStyle(
-                        color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.65),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 2,
-                      ),
+                    // 국가 선택 · 128개 나라 (나라 수는 목록을 세서 → 나라를 늘리면 저절로 바뀜)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.radioSelectCountry,
+                          style: TextStyle(
+                            color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.65),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            '· ${AppLocalizations.of(context)!.countryTotal(countries.length)}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.35),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 4),
                     ..._buildCountryListByContinent(context, countries, isDarkMode),
@@ -789,6 +819,7 @@ const Map<String, String> _countryKoAlias = {
   'TW': '타이완', 'US': '미합중국 아메리카', 'GB': '잉글랜드 브리튼 영국',
   'TR': '튀르키예 터키', 'NL': '네덜란드 홀랜드', 'MM': '미얀마 버마',
   'AE': '아랍에미리트 두바이', 'CZ': '체코 체코공화국', 'NZ': '뉴질랜드',
+  'CI': '아이보리코스트 상아해안', 'BY': '벨로루시',
 };
 
 /// 나라 영어 이름 (한국어 화면에서도 영어로 찾을 수 있게)
@@ -805,7 +836,7 @@ const Map<String, String> _countryEn = {
   'UA': 'Ukraine', 'HU': 'Hungary', 'HR': 'Croatia', 'RS': 'Serbia', 'BG': 'Bulgaria',
   'SK': 'Slovakia', 'LT': 'Lithuania', 'LV': 'Latvia', 'EE': 'Estonia', 'IS': 'Iceland',
   'SI': 'Slovenia', 'AL': 'Albania', 'MK': 'North Macedonia', 'ME': 'Montenegro', 'BA': 'Bosnia Herzegovina',
-  'MT': 'Malta', 'LU': 'Luxembourg', 'CY': 'Cyprus',
+  'MT': 'Malta', 'LU': 'Luxembourg', 'CY': 'Cyprus', 'BY': 'Belarus', 'MD': 'Moldova',
   'US': 'United States USA America', 'CA': 'Canada', 'MX': 'Mexico', 'CU': 'Cuba', 'JM': 'Jamaica',
   'DO': 'Dominican Republic', 'TT': 'Trinidad and Tobago', 'HT': 'Haiti', 'GT': 'Guatemala', 'HN': 'Honduras',
   'NI': 'Nicaragua', 'SV': 'El Salvador', 'PA': 'Panama', 'CR': 'Costa Rica', 'PR': 'Puerto Rico',
@@ -813,8 +844,10 @@ const Map<String, String> _countryEn = {
   'VE': 'Venezuela', 'EC': 'Ecuador', 'BO': 'Bolivia', 'PY': 'Paraguay', 'UY': 'Uruguay',
   'TR': 'Turkey Turkiye', 'SA': 'Saudi Arabia', 'AE': 'United Arab Emirates UAE Dubai', 'IQ': 'Iraq', 'IR': 'Iran',
   'IL': 'Israel', 'EG': 'Egypt', 'JO': 'Jordan', 'LB': 'Lebanon',
+  'QA': 'Qatar', 'BH': 'Bahrain', 'KW': 'Kuwait', 'OM': 'Oman', 'YE': 'Yemen', 'PS': 'Palestine',
   'ZA': 'South Africa', 'NG': 'Nigeria', 'KE': 'Kenya', 'GH': 'Ghana', 'TZ': 'Tanzania',
   'MA': 'Morocco', 'TN': 'Tunisia', 'ET': 'Ethiopia', 'UG': 'Uganda', 'CM': 'Cameroon',
   'SN': 'Senegal', 'ZW': 'Zimbabwe', 'MZ': 'Mozambique', 'MG': 'Madagascar',
+  'DZ': 'Algeria', 'LY': 'Libya', 'SD': 'Sudan', 'CI': 'Cote d Ivoire Ivory Coast', 'AO': 'Angola',
   'AU': 'Australia', 'NZ': 'New Zealand', 'FJ': 'Fiji', 'PG': 'Papua New Guinea',
 };

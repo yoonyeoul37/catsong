@@ -216,7 +216,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Consumer<ThemeProvider>(
             builder: (context, t, _) => _buildTile(context,
                 icon: Icons.language_rounded,
-                title: l.languageTab,
+                title: _langTitle(l),
                 desc: _langText('desc'),
                 subtitle: _langName(t.appLanguage),
                 onTap: () => _showLanguageSheet(context),
@@ -1213,6 +1213,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
     }
     return _langText('system');
+  }
+
+  /// 설정 → 언어 줄 제목: 앱 언어가 폰 언어와 다르면 폰 언어로 한 번 더 (예: اللغة (언어))
+  Locale? _sysLocale; // 폰 전체 언어 (앱 언어 아님)
+  bool _sysAsked = false;
+  String _langTitle(AppLocalizations l) {
+    if (!_sysAsked) {
+      _sysAsked = true;
+      const MethodChannel('kr.ssing.catsong/media').invokeMethod<String>('getSystemLanguage').then((tag) {
+        if (tag == null || tag.isEmpty || !mounted) return;
+        final parts = tag.split('-');
+        String? script = parts.skip(1).where((p) => p.length == 4).firstOrNull;
+        final country = parts.skip(1).where((p) => p.length == 2).firstOrNull;
+        if (parts[0] == 'zh' && script == null && const ['TW', 'HK', 'MO'].contains(country)) script = 'Hant';
+        setState(() => _sysLocale = Locale.fromSubtags(languageCode: parts[0], scriptCode: script));
+      }).catchError((_) {});
+    }
+    final phone = _sysLocale;
+    if (phone == null || phone.languageCode == Localizations.localeOf(context).languageCode) return l.languageTab;
+    String p;
+    try {
+      p = lookupAppLocalizations(phone).languageTab;
+    } catch (_) {
+      p = lookupAppLocalizations(const Locale('en')).languageTab; // 앱에 없는 폰 언어면 영어로
+    }
+    return p == l.languageTab ? l.languageTab : '${l.languageTab} (\u2068$p\u2069)';
   }
 
   /// 언어 이름을 지금 앱 언어로 (번역 파일 langName…)

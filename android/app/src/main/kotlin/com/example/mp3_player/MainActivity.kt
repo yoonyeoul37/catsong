@@ -1046,6 +1046,20 @@ class MainActivity : AudioServiceActivity() {
                     PlayerWidget.refreshAll(this)
                     result.success(true)
                 }
+                "getSystemLanguage" -> {
+                    // 앱 언어 말고 폰 전체 언어 (설정 → 언어 줄에 '(언어)'처럼 붙일 때)
+                    try {
+                        val loc = if (Build.VERSION.SDK_INT >= 33)
+                            getSystemService(android.app.LocaleManager::class.java).systemLocales.get(0)
+                        else if (Build.VERSION.SDK_INT >= 24)
+                            android.content.res.Resources.getSystem().configuration.locales.get(0)
+                        else
+                            @Suppress("DEPRECATION") android.content.res.Resources.getSystem().configuration.locale
+                        result.success(loc.toLanguageTag())
+                    } catch (_: Exception) {
+                        result.success(null)
+                    }
+                }
                 "moveToBackground" -> {
                     moveTaskToBack(true)
                     result.success(true)

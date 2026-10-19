@@ -654,10 +654,10 @@ class _MyCountryCard extends StatelessWidget {
     final isKo = Localizations.localeOf(context).languageCode == 'ko';
     String count;
     if (country.code == 'KR') {
-      count = '${koreanStations.length}${l.radioChannelCount}';
+      count = chCountText(koreanStations.length, l);
     } else {
       final n = context.watch<RadioProvider>().getCountryStationCount(country.code);
-      count = n != null ? '$n${l.radioChannelCount}' : l.radioPopular200;
+      count = n != null ? chCountText(n, l) : l.radioPopular200;
     }
     return Material(
       color: bg,
@@ -733,14 +733,14 @@ class _CountryListTile extends StatelessWidget {
                   Builder(builder: (ctx) {
                     if (country.code == 'KR') {
                       return Text(
-                        '${koreanStations.length}${AppLocalizations.of(context)!.radioChannelCount}',
+                        chCountText(koreanStations.length, AppLocalizations.of(context)!),
                         style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 12.5),
                       );
                     }
                     final count = ctx.watch<RadioProvider>().getCountryStationCount(country.code);
                     return Text(
                       count != null
-                          ? '$count${AppLocalizations.of(context)!.radioChannelCount}'
+                          ? chCountText(count, AppLocalizations.of(context)!)
                           : AppLocalizations.of(context)!.radioPopular200,
                       style: TextStyle(color: baseColor.withOpacity(0.4), fontSize: 12.5),
                     );
@@ -949,3 +949,10 @@ const Map<String, String> _countryEn = {
   'DZ': 'Algeria', 'LY': 'Libya', 'SD': 'Sudan', 'CI': 'Cote d Ivoire Ivory Coast', 'AO': 'Angola',
   'AU': 'Australia', 'NZ': 'New Zealand', 'FJ': 'Fiji', 'PG': 'Papua New Guinea',
 };
+
+/// '115 channels' · '115 قناة' (숫자 뒤 띄어쓰기) — 한·중·일은 '115개 채널'·'115チャンネル'처럼 붙임
+String chCountText(Object n, AppLocalizations l) {
+  final s = l.radioChannelCount;
+  final tight = RegExp(r'^[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]').hasMatch(s);
+  return tight ? '$n$s' : '$n $s';
+}

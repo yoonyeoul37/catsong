@@ -78,6 +78,8 @@ class ThemeProvider extends ChangeNotifier {
     ('ru', 'Русский'),
     ('uk', 'Українська'),
     ('hi', 'हिन्दी'),
+    ('ar', 'العربية'),
+    ('ur', 'اردو'),
     ('th', 'ไทย'),
   ];
 

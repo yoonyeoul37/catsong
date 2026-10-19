@@ -147,6 +147,7 @@ class NatureMiniPlayer extends StatelessWidget {
                       ],
                     ),
                   ),
+                  Row(textDirection: TextDirection.ltr, mainAxisSize: MainAxisSize.min, children: [ // ⏮ ▶ ⏭ 순서는 어느 언어나 같게
                   // 이전 자연소리 (음악 미니플레이어와 같은 모양)
                   IconButton(
                     onPressed: () => step(-1),
@@ -180,6 +181,7 @@ class NatureMiniPlayer extends StatelessWidget {
                     padding: const EdgeInsets.all(4),
                     constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
                   ),
+                  ]),
                 ],
               ),
             ),

@@ -4561,6 +4561,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get langNameHu => '匈牙利语';
+
+  @override
+  String get langNameAr => '阿拉伯语';
+
+  @override
+  String get langNameUr => '乌尔都语';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -9120,4 +9126,10 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get langNameHu => '匈牙利文';
+
+  @override
+  String get langNameAr => '阿拉伯文';
+
+  @override
+  String get langNameUr => '烏爾都文';
 }

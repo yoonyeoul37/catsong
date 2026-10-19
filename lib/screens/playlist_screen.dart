@@ -46,7 +46,7 @@ class PlaylistScreen extends StatelessWidget {
       slivers: [
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 8, 8),
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 8, 8),
             child: Row(
               children: [
                 Text(AppLocalizations.of(context)!.playlists,
@@ -133,7 +133,7 @@ class PlaylistScreen extends StatelessWidget {
                           fontSize: 15,
                           fontWeight: FontWeight.w500)),
                   const SizedBox(height: 3),
-                  Text('${AppLocalizations.of(context)!.playlistLabel} • ${playlist.songCount}${AppLocalizations.of(context)!.songCountSuffix}',
+                  Text('${AppLocalizations.of(context)!.playlistLabel} • ${AppLocalizations.of(context)!.songsCount(playlist.songCount)}',
                       style: TextStyle(
                           color: baseColor.withOpacity(0.38), fontSize: 12)),
                 ],

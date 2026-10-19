@@ -4808,4 +4808,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get langNameHu => 'Hongrois';
+
+  @override
+  String get langNameAr => 'Arabe';
+
+  @override
+  String get langNameUr => 'Ourdou';
 }

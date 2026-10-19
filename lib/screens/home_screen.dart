@@ -430,12 +430,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return SizedBox(
       height: _indexHeaderH,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(22, 14, 12, 2),
+        padding: const EdgeInsetsDirectional.fromSTEB(22, 14, 12, 2),
         child: Align(
-          alignment: Alignment.bottomLeft,
+          alignment: AlignmentDirectional.bottomStart,
           child: FittedBox( // 글자가 크면 칸에 맞게 살짝 줄임 (아래 잘림 막기)
             fit: BoxFit.scaleDown,
-            alignment: Alignment.bottomLeft,
+            alignment: AlignmentDirectional.bottomStart,
             child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -476,12 +476,12 @@ class _HomeScreenState extends State<HomeScreen> {
       height: _indexHeaderH,
       child: Padding(
         // 글자 시작을 앨범 이미지 시작 위치에 맞춤, 위쪽 여백으로 구간 구분
-        padding: const EdgeInsets.fromLTRB(22, 14, 12, 2),
+        padding: const EdgeInsetsDirectional.fromSTEB(22, 14, 12, 2),
         child: Align(
-          alignment: Alignment.bottomLeft,
+          alignment: AlignmentDirectional.bottomStart,
           child: FittedBox( // 글자가 크면 칸에 맞게 살짝 줄임
             fit: BoxFit.scaleDown,
-            alignment: Alignment.bottomLeft,
+            alignment: AlignmentDirectional.bottomStart,
             child: Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
@@ -1926,7 +1926,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(width: 12),
         ] else
           Transform.translate(
-            offset: const Offset(-12, 0),
+            offset: Offset(Directionality.of(context) == TextDirection.rtl ? 12 : -12, 0), // 아랍어에선 반대쪽으로
             child: TextButton(
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,

@@ -279,6 +279,8 @@ class MyApp extends StatelessWidget {
               Locale('ro'), // 루마니아어
               Locale('cs'), // 체코어
               Locale('hu'), // 헝가리어
+              Locale('ar'), // 아랍어 (오른쪽→왼쪽 화면은 Flutter가 알아서 뒤집음)
+              Locale('ur'), // 우르두어
             ],
             // 중국어: 대만·홍콩·마카오 → 번체, 그 밖 → 간체 / 지원 안 하는 언어 → 영어
             localeListResolutionCallback: (locales, supported) {
@@ -288,7 +290,7 @@ class MyApp extends StatelessWidget {
                       (l.scriptCode == null && const ['TW', 'HK', 'MO'].contains(l.countryCode));
                   return hant ? const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant') : const Locale('zh');
                 }
-                if (const ['ko', 'en', 'ja', 'de', 'es', 'fr', 'id', 'pt', 'th', 'vi', 'ru', 'it', 'tr', 'pl', 'uk', 'hi', 'ro', 'cs', 'hu'].contains(l.languageCode)) {
+                if (const ['ko', 'en', 'ja', 'de', 'es', 'fr', 'id', 'pt', 'th', 'vi', 'ru', 'it', 'tr', 'pl', 'uk', 'hi', 'ro', 'cs', 'hu', 'ar', 'ur'].contains(l.languageCode)) {
                   return Locale(l.languageCode);
                 }
                 if (l.languageCode == 'in') return const Locale('id'); // 옛 안드로이드의 인도네시아어 코드
@@ -298,7 +300,7 @@ class MyApp extends StatelessWidget {
             theme: AppTheme.buildTheme(themeProvider.primaryColor).copyWith(
               // 베트남어·러시아어·튀르키예어·폴란드어는 고른 글꼴 대신 기본 글꼴 (한글 글꼴엔 그 글자가 없어 섞여 보여서)
               textTheme: (themeProvider.fontFamily == 'default' ||
-                      const ['vi', 'ru', 'tr', 'pl', 'uk', 'ro', 'cs', 'hu', 'hi'].contains(themeProvider.appLocale?.languageCode ??
+                      const ['vi', 'ru', 'tr', 'pl', 'uk', 'ro', 'cs', 'hu', 'hi', 'ar', 'ur'].contains(themeProvider.appLocale?.languageCode ??
                           WidgetsBinding.instance.platformDispatcher.locale.languageCode))
                   ? AppTheme.buildTheme(themeProvider.primaryColor)
                       .textTheme

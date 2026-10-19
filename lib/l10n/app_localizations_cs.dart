@@ -4801,4 +4801,10 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get langNameHu => 'Maďarština';
+
+  @override
+  String get langNameAr => 'Arabština';
+
+  @override
+  String get langNameUr => 'Urdština';
 }

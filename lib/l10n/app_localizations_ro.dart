@@ -4806,4 +4806,10 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get langNameHu => 'Maghiară';
+
+  @override
+  String get langNameAr => 'Arabă';
+
+  @override
+  String get langNameUr => 'Urdu';
 }

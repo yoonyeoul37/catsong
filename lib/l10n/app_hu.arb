@@ -1463,5 +1463,7 @@
   "langNameHi": "Hindi",
   "langNameRo": "Román",
   "langNameCs": "Cseh",
-  "langNameHu": "Magyar"
+  "langNameHu": "Magyar",
+  "langNameAr": "Arab",
+  "langNameUr": "Urdu"
 }

@@ -218,7 +218,7 @@ class MiniPlayer extends StatelessWidget {
                                   const SizedBox(width: 6),
                                   // 시간은 늘 다 보이게 (좁으면 가수 이름이 줄어듦)
                                   Text(
-                                    '${playerProvider.formatDuration(playerProvider.position)} / ${playerProvider.formatDuration(playerProvider.duration)}',
+                                    '\u2066${playerProvider.formatDuration(playerProvider.position)} / ${playerProvider.formatDuration(playerProvider.duration)}\u2069',
                                     maxLines: 1,
                                     softWrap: false,
                                     style: TextStyle(
@@ -230,6 +230,7 @@ class MiniPlayer extends StatelessWidget {
                             ],
                           ),
                         ),
+                        Row(textDirection: TextDirection.ltr, mainAxisSize: MainAxisSize.min, children: [ // ⏮ ▶ ⏭ 순서는 어느 언어나 같게
                         // 이전 버튼 (녹음이면 10초 뒤로)
                         IconButton(
                           onPressed: () {
@@ -285,6 +286,7 @@ class MiniPlayer extends StatelessWidget {
                           constraints: const BoxConstraints(
                               minWidth: 36, minHeight: 36),
                         ),
+                        ]),
                         // 녹음이면 배속 (누를 때마다 1.0 → 1.25 → 1.5 → 2.0)
                         if (isRec)
                           GestureDetector(

@@ -291,7 +291,7 @@ class ParanCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           for (var i = 0; i < children.length; i++) ...[
-            if (i > 0 && padding == null) Container(height: 0.5, margin: const EdgeInsets.only(left: 46), color: p.line),
+            if (i > 0 && padding == null) Container(height: 0.5, margin: const EdgeInsetsDirectional.only(start: 46), color: p.line),
             children[i],
           ],
         ],

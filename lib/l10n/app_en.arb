@@ -1554,5 +1554,7 @@
   "langNameHi": "Hindi",
   "langNameRo": "Romanian",
   "langNameCs": "Czech",
-  "langNameHu": "Hungarian"
+  "langNameHu": "Hungarian",
+  "langNameAr": "Arabic",
+  "langNameUr": "Urdu"
 }

@@ -256,6 +256,7 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
                     alignment: Alignment.centerLeft,
                     child: Text(label, maxLines: 1, style: TextStyle(color: sub, fontSize: 13)))),
             Expanded(
+              child: Directionality(textDirection: TextDirection.ltr, // 막대는 아랍어에서도 왼쪽=0초
               child: SliderTheme(
                 data: sliderTheme,
                 child: Slider(
@@ -276,6 +277,7 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
                     if (ready) _ctrl.seekTo(Duration(milliseconds: (v * 1000).toInt()));
                   },
                 ),
+              ),
               ),
             ),
             SizedBox(
@@ -451,6 +453,7 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
                   }),
                   const SizedBox(height: 6),
                   Row(
+                    textDirection: TextDirection.ltr, // 시작(왼쪽) ~ 끝(오른쪽)
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       timeChip(_fmt(_start)),

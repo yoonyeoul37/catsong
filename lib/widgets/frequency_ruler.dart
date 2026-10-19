@@ -47,7 +47,8 @@ class _FrequencyRulerState extends State<FrequencyRuler>
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
 
-    return Column(
+    // 주파수 눈금은 아랍어에서도 88(왼쪽) → 108(오른쪽)
+    return Directionality(textDirection: TextDirection.ltr, child: Column(
       children: [
         SizedBox(
           height: 34,
@@ -110,7 +111,7 @@ class _FrequencyRulerState extends State<FrequencyRuler>
           ],
         ),
       ],
-    );
+    ));
   }
 }
 

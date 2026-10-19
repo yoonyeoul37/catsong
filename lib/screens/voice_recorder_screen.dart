@@ -531,11 +531,12 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
                         pickerTextStyle: TextStyle(color: Colors.white, fontSize: 21),
                       ),
                     ),
+                    child: Directionality(textDirection: TextDirection.ltr, // 아랍어에서 '분' 글자가 숫자와 겹쳐서 왼쪽→오른쪽으로
                     child: CupertinoTimerPicker(
                       mode: CupertinoTimerPickerMode.hm,
                       initialTimerDuration: picked,
                       onTimerDurationChanged: (d) => picked = d,
-                    ),
+                    )),
                   ),
                 ),
                 const SizedBox(height: 8),

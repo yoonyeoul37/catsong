@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_ar.dart';
 import 'app_localizations_cs.dart';
 import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
@@ -23,6 +24,7 @@ import 'app_localizations_ru.dart';
 import 'app_localizations_th.dart';
 import 'app_localizations_tr.dart';
 import 'app_localizations_uk.dart';
+import 'app_localizations_ur.dart';
 import 'app_localizations_vi.dart';
 import 'app_localizations_zh.dart';
 
@@ -112,6 +114,7 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('ar'),
     Locale('cs'),
     Locale('de'),
     Locale('en'),
@@ -130,6 +133,7 @@ abstract class AppLocalizations {
     Locale('th'),
     Locale('tr'),
     Locale('uk'),
+    Locale('ur'),
     Locale('vi'),
     Locale('zh'),
     Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
@@ -8781,6 +8785,18 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'헝가리어'**
   String get langNameHu;
+
+  /// No description provided for @langNameAr.
+  ///
+  /// In ko, this message translates to:
+  /// **'아랍어'**
+  String get langNameAr;
+
+  /// No description provided for @langNameUr.
+  ///
+  /// In ko, this message translates to:
+  /// **'우르두어'**
+  String get langNameUr;
 }
 
 class _AppLocalizationsDelegate
@@ -8794,6 +8810,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) => <String>[
+    'ar',
     'cs',
     'de',
     'en',
@@ -8812,6 +8829,7 @@ class _AppLocalizationsDelegate
     'th',
     'tr',
     'uk',
+    'ur',
     'vi',
     'zh',
   ].contains(locale.languageCode);
@@ -8835,6 +8853,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'ar':
+      return AppLocalizationsAr();
     case 'cs':
       return AppLocalizationsCs();
     case 'de':
@@ -8871,6 +8891,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsTr();
     case 'uk':
       return AppLocalizationsUk();
+    case 'ur':
+      return AppLocalizationsUr();
     case 'vi':
       return AppLocalizationsVi();
     case 'zh':

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">میوزک · ریڈیو · فطرت</string>
+    <string name="widget_loading">لوڈ ہو رہا ہے…</string>
+    <string name="widget_wait">براہ کرم تھوڑا انتظار کریں</string>
+    <string name="widget_play_music">کچھ میوزک چلائیں</string>
+    <string name="tab_music">میوزک</string>
+    <string name="tab_radio">ریڈیو</string>
+    <string name="tab_nature">فطرت</string>
+    <string name="tab_sleep">نیند</string>
+    <string name="widget_recent_empty">حال ہی میں چلائی گئی چیزیں یہاں نظر آئیں گی</string>
+    <string name="sample_song">پسندیدہ گانا</string>
+    <string name="sample_artist">فنکار</string>
+    <string name="sample_station">ریڈیو اسٹیشن</string>
+    <string name="sample_rain">بارش</string>
+    <string name="sample_nature">فطرت کی آوازیں</string>
+    <string name="alarm_channel">صبح کا الارم</string>
+    <string name="alarm_channel_desc">Paransori صبح کا الارم</string>
+    <string name="alarm_quiet_channel">صبح کا الارم (اسکرین کھولیں)</string>
+    <string name="alarm_quiet_desc">جب الارم اسکرین لاک اسکرین پر کھلے</string>
+    <string name="alarm_text">الارم اسکرین کھولنے کے لیے دبائیں</string>
+    <string name="headset_channel">ایئرفون جڑ گیا</string>
+    <string name="action_play">چلائیں</string>
+    <string name="resume_ask">سننا جاری رکھیں؟</string>
+    <string name="rec_channel">ریکارڈنگ</string>
+    <string name="rec_channel_desc">ریکارڈنگ کے دوران دکھایا جاتا ہے</string>
+    <string name="rec_title_paused">Paransori · ریکارڈنگ رکی ہوئی</string>
+    <string name="rec_title_on">Paransori · ریکارڈنگ</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · دوبارہ شروع کرنے کے لیے دبائیں</string>
+    <string name="rec_tap_back">ریکارڈنگ اسکرین پر واپس جانے کے لیے دبائیں</string>
+    <string name="rec_resume">دوبارہ شروع</string>
+    <string name="rec_pause">روکیں</string>
+    <string name="rec_done">ہو گیا</string>
+</resources>

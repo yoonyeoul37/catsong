@@ -511,7 +511,8 @@ class _MenuCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
               ],
-              _LineIcon(_kIconChevron, size: 18, color: p.chevron, stroke: 2.0),
+              Transform.flip(flipX: Directionality.of(context) == TextDirection.rtl, // 아랍어에선 < 방향
+                  child: _LineIcon(_kIconChevron, size: 18, color: p.chevron, stroke: 2.0)),
             ],
           ),
         ),
@@ -596,7 +597,8 @@ class _IntroCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              _LineIcon(_kIconChevron, size: 18, color: point.withOpacity(0.85), stroke: 2.0),
+              Transform.flip(flipX: Directionality.of(context) == TextDirection.rtl, // 아랍어에선 < 방향
+                  child: _LineIcon(_kIconChevron, size: 18, color: point.withOpacity(0.85), stroke: 2.0)),
             ],
           ),
         ),
@@ -626,7 +628,7 @@ class _MenuGroup extends StatelessWidget {
       child: Column(
         children: [
           for (var i = 0; i < children.length; i++) ...[
-            if (i > 0) Container(height: 0.6, margin: const EdgeInsets.only(left: 60), color: line),
+            if (i > 0) Container(height: 0.6, margin: const EdgeInsetsDirectional.only(start: 60), color: line),
             children[i],
           ],
         ],

@@ -103,11 +103,12 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
                         pickerTextStyle: TextStyle(color: textColor, fontSize: 20),
                       ),
                     ),
+                    child: Directionality(textDirection: TextDirection.ltr, // 아랍어에서 '분' 글자가 숫자와 겹쳐서 왼쪽→오른쪽으로
                     child: CupertinoTimerPicker(
                       mode: CupertinoTimerPickerMode.hm,
                       initialTimerDuration: picked,
                       onTimerDurationChanged: (d) => picked = d,
-                    ),
+                    )),
                   ),
                 ),
                 Padding(
@@ -383,7 +384,7 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
               const SizedBox(width: 10),
               Expanded(
                 child: Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: AlignmentDirectional.centerStart, // 아랍어에선 오른쪽(아이콘 옆)
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: onLabelTap,

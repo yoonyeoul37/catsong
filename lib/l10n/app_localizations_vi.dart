@@ -4775,4 +4775,10 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get langNameHu => 'Tiếng Hungary';
+
+  @override
+  String get langNameAr => 'Tiếng Ả Rập';
+
+  @override
+  String get langNameUr => 'Tiếng Urdu';
 }

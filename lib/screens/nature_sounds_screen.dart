@@ -431,7 +431,7 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                       if (i > 0)
                         Container(
                             height: 0.6,
-                            margin: const EdgeInsets.only(left: 78, right: 12),
+                            margin: const EdgeInsetsDirectional.only(start: 78, end: 12),
                             color: baseColor.withOpacity(0.07)),
                       _natureCards[i],
                     ],

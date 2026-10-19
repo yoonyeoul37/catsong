@@ -1713,6 +1713,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Row(
+                      textDirection: TextDirection.ltr, // 아랍어에서도 Paran + Sori 순서
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         // "파란"만 숨쉬기 (재생 중일 때만)
@@ -2708,7 +2709,8 @@ class _PlayerScreenState extends State<PlayerScreen>
             ],
           ),
           const SizedBox(height: 8),
-          TweenAnimationBuilder<double>(
+          Directionality(textDirection: TextDirection.ltr, // 재생 막대는 아랍어에서도 왼쪽→오른쪽
+          child: TweenAnimationBuilder<double>(
             // 잡고 있을 때만 1.4배 (6 → 8.4), 놓으면 부드럽게 돌아옴
             tween: Tween(end: _isSeeking ? 8.4 : 6.0),
             duration: const Duration(milliseconds: 180),
@@ -2737,7 +2739,9 @@ class _PlayerScreenState extends State<PlayerScreen>
             ),
           ),
           ),
+          ),
           Row(
+            textDirection: TextDirection.ltr,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(playerProvider.formatDuration(playerProvider.position),
@@ -2750,6 +2754,7 @@ class _PlayerScreenState extends State<PlayerScreen>
           ),
           const SizedBox(height: 8),
           Row(
+            textDirection: TextDirection.ltr, // ⏮ ▶ ⏭ 순서는 어느 언어나 같게
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconButton(
@@ -2870,11 +2875,12 @@ class _PlayerScreenState extends State<PlayerScreen>
                         pickerTextStyle: TextStyle(color: textColor, fontSize: 20),
                       ),
                     ),
+                    child: Directionality(textDirection: TextDirection.ltr, // 아랍어에서 '분' 글자가 숫자와 겹쳐서 왼쪽→오른쪽으로
                     child: CupertinoTimerPicker(
                       mode: CupertinoTimerPickerMode.hm,
                       initialTimerDuration: picked,
                       onTimerDurationChanged: (d) => picked = d,
-                    ),
+                    )),
                   ),
                 ),
                 Padding(
@@ -3838,11 +3844,12 @@ class _SleepTimerDialogState extends State<_SleepTimerDialog> {
                         pickerTextStyle: TextStyle(color: textColor, fontSize: 20),
                       ),
                     ),
+                    child: Directionality(textDirection: TextDirection.ltr, // 아랍어에서 '분' 글자가 숫자와 겹쳐서 왼쪽→오른쪽으로
                     child: CupertinoTimerPicker(
                       mode: CupertinoTimerPickerMode.hm,
                       initialTimerDuration: picked,
                       onTimerDurationChanged: (d) => picked = d,
-                    ),
+                    )),
                   ),
                 ),
                 Padding(

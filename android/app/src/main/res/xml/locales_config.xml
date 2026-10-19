@@ -23,4 +23,6 @@
     <locale android:name="ro"/>
     <locale android:name="cs"/>
     <locale android:name="hu"/>
+    <locale android:name="ar"/>
+    <locale android:name="ur"/>
 </locale-config>

@@ -724,7 +724,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 12),
           Padding(
-            padding: const EdgeInsets.only(left: 42),
+            padding: const EdgeInsetsDirectional.only(start: 42),
             child: Row(
               children: [
                 for (var i = 0; i < ThemeProvider.pointColors.length; i++) ...[
@@ -802,7 +802,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (!isFirst)
-                Container(height: 0.5, margin: const EdgeInsets.only(left: 58), color: _sBorder(isDarkMode)),
+                Container(height: 0.5, margin: const EdgeInsetsDirectional.only(start: 58), color: _sBorder(isDarkMode)),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: desc != null ? 11 : 14),
                 // 한 줄로: 아이콘 · 이름 ········ 작은 회색 글자 · 스위치/›
@@ -1240,6 +1240,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       'ro' => l.langNameRo,
       'cs' => l.langNameCs,
       'hu' => l.langNameHu,
+      'ar' => l.langNameAr,
+      'ur' => l.langNameUr,
       _ => '',
     };
   }
@@ -1273,7 +1275,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // 설정 → 언어에서 고른 언어 — 약관 페이지에 없는 언어(독일어·프랑스어 등)는 영어로
     // (그냥 보내면 페이지가 폰 언어=한국어로 열려서)
     final code = Localizations.localeOf(context).languageCode;
-    final lang = const ['ko', 'en', 'ja', 'zh', 'vi', 'hi', 'id', 'th', 'es', 'pt', 'de', 'fr', 'ru', 'it', 'tr', 'pl', 'uk', 'ro', 'cs', 'hu']
+    final lang = const ['ko', 'en', 'ja', 'zh', 'vi', 'hi', 'id', 'th', 'es', 'pt', 'de', 'fr', 'ru', 'it', 'tr', 'pl', 'uk', 'ro', 'cs', 'hu', 'ar', 'ur']
             .contains(code)
         ? code
         : 'en';

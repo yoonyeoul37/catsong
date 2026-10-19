@@ -66,6 +66,39 @@ const _kIndexGroupsRu = [..._kCyrRows, 'A-Z', '#'];
 // 힌디어: 모음(अ) + 자음을 소리 나는 자리별 7묶음 (क च ट त प य श) + A-Z + #
 const _kHindiRows = ['अ', 'क', 'च', 'ट', 'त', 'प', 'य', 'श'];
 const _kIndexGroupsHi = [..._kHindiRows, 'A-Z', '#'];
+// 아랍어·우르두어: 모양 비슷한 글자끼리 18칸 + A-Z + # (우르두어는 ک ہ ی 모양으로)
+const _kArabicRows = ['ا', 'ب', 'ج', 'د', 'ر', 'س', 'ص', 'ط', 'ع', 'ف', 'ق', 'ك', 'ل', 'م', 'ن', 'ه', 'و', 'ي'];
+const _kUrduRows = ['ا', 'ب', 'ج', 'د', 'ر', 'س', 'ص', 'ط', 'ع', 'ف', 'ق', 'ک', 'ل', 'م', 'ن', 'ہ', 'و', 'ی'];
+const _kIndexGroupsAr = [..._kArabicRows, 'A-Z', '#'];
+const _kIndexGroupsUr = [..._kUrduRows, 'A-Z', '#'];
+// 첫 글자 → 몇 번째 칸
+const _arabicGroupOf = <String, int>{
+  'ا': 0, 'آ': 0, 'أ': 0, 'إ': 0, 'ٱ': 0, 'ء': 0,
+  'ب': 1, 'ت': 1, 'ث': 1, 'پ': 1, 'ٹ': 1,
+  'ج': 2, 'ح': 2, 'خ': 2, 'چ': 2,
+  'د': 3, 'ذ': 3, 'ڈ': 3,
+  'ر': 4, 'ز': 4, 'ڑ': 4, 'ژ': 4,
+  'س': 5, 'ش': 5,
+  'ص': 6, 'ض': 6,
+  'ط': 7, 'ظ': 7,
+  'ع': 8, 'غ': 8,
+  'ف': 9,
+  'ق': 10,
+  'ك': 11, 'ک': 11, 'گ': 11,
+  'ل': 12,
+  'م': 13,
+  'ن': 14, 'ں': 14,
+  'ه': 15, 'ہ': 15, 'ھ': 15, 'ة': 15,
+  'و': 16, 'ؤ': 16,
+  'ي': 17, 'ى': 17, 'ی': 17, 'ے': 17, 'ئ': 17,
+};
+
+/// 아랍 글자 첫 글자 → 막대 칸, 아니면 null
+String? _arabicRow(int c, bool urdu) {
+  final i = _arabicGroupOf[String.fromCharCode(c)];
+  if (i == null) return null;
+  return (urdu ? _kUrduRows : _kArabicRows)[i];
+}
 
 /// 힌디어(데바나가리) 첫 글자 → 막대 칸, 아니면 null
 String? _hindiRow(int c) {
@@ -119,6 +152,8 @@ List<String> indexGroupsFor(String lang) {
   if (lang == 'th') return _kIndexGroupsTh;
   if (lang == 'ru' || lang == 'uk') return _kIndexGroupsRu;
   if (lang == 'hi') return _kIndexGroupsHi;
+  if (lang == 'ar') return _kIndexGroupsAr;
+  if (lang == 'ur') return _kIndexGroupsUr;
   return _kIndexGroupsLatin;
 }
 
@@ -147,6 +182,11 @@ String indexGroupFor(String text, String lang) {
   final c = t.runes.first;
   if (lang == 'th') {
     final row = _thaiRow(t);
+    if (row != null) return row;
+    return latinLetterOf(c) != null ? 'A-Z' : '#';
+  }
+  if (lang == 'ar' || lang == 'ur') {
+    final row = _arabicRow(c, lang == 'ur');
     if (row != null) return row;
     return latinLetterOf(c) != null ? 'A-Z' : '#';
   }

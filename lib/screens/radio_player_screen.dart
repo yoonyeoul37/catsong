@@ -1691,7 +1691,7 @@ class _ProgramCard extends StatelessWidget {
     final sbsEnd = program['end_time'] as String? ?? '';
 
     if (kbsStart.isNotEmpty && kbsEnd.isNotEmpty) {
-      return '${radioProvider.formatScheduleTime(kbsStart)} ~ ${radioProvider.formatScheduleTime(kbsEnd)}';
+      return '\u2066${radioProvider.formatScheduleTime(kbsStart)} ~ ${radioProvider.formatScheduleTime(kbsEnd)}\u2069'; // 아랍어에서도 시작 ~ 끝 순서
     } else if (mbcStart.isNotEmpty && mbcEnd.isNotEmpty) {
       String fmt(String t) {
         if (t.contains(':')) {
@@ -1705,9 +1705,9 @@ class _ProgramCard extends StatelessWidget {
         if (h >= 24) h -= 24;
         return '${h.toString().padLeft(2, '0')}:${t.substring(2, 4)}';
       }
-      return '${fmt(mbcStart)} ~ ${fmt(mbcEnd)}';
+      return '\u2066${fmt(mbcStart)} ~ ${fmt(mbcEnd)}\u2069';
     } else if (sbsStart.isNotEmpty && sbsEnd.isNotEmpty) {
-      return '$sbsStart ~ $sbsEnd';
+      return '\u2066$sbsStart ~ $sbsEnd\u2069';
     }
     return '';
   }
@@ -2067,6 +2067,7 @@ class _Controls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      textDirection: TextDirection.ltr, // ⏮ ▶ ⏭ 순서는 어느 언어나 같게
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // 이전
@@ -3040,7 +3041,7 @@ class _ScheduleListSheet extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(color: _rBg, fontSize: 16, fontWeight: FontWeight.w800)),
                     SizedBox(height: 3),
-                    Text('${_hm(cur.start)} – ${_hm(cur.end)} · ${tr.minutesLeft(cur.end - nowM)}',
+                    Text('\u2066${_hm(cur.start)} – ${_hm(cur.end)}\u2069 · ${tr.minutesLeft(cur.end - nowM)}',
                         style: TextStyle(color: _rBg.withOpacity(0.7), fontSize: 12)),
                     SizedBox(height: 10),
                     ClipRRect(

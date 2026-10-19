@@ -4569,4 +4569,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get langNameHu => 'ハンガリー語';
+
+  @override
+  String get langNameAr => 'アラビア語';
+
+  @override
+  String get langNameUr => 'ウルドゥー語';
 }

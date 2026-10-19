@@ -124,6 +124,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                     alignment: Alignment.centerLeft,
                     child: Text(label, maxLines: 1, style: TextStyle(color: sub, fontSize: 13)))),
             Expanded(
+              child: Directionality(textDirection: TextDirection.ltr, // 막대는 아랍어에서도 왼쪽=0초
               child: SliderTheme(
                 data: sliderTheme,
                 child: Slider(
@@ -132,6 +133,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                   max: (_selectedSong!.duration / 1000).toDouble(),
                   onChanged: onChanged,
                 ),
+              ),
               ),
             ),
             SizedBox(
@@ -286,6 +288,7 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
                     }),
                     const SizedBox(height: 6),
                     Row(
+                      textDirection: TextDirection.ltr, // 시작(왼쪽) ~ 끝(오른쪽)
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         timeChip(_formatTime(_startValue.toInt())),

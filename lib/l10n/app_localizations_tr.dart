@@ -4774,4 +4774,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get langNameHu => 'Macarca';
+
+  @override
+  String get langNameAr => 'Arapça';
+
+  @override
+  String get langNameUr => 'Urduca';
 }

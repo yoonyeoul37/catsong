@@ -453,7 +453,7 @@ class _ArtistApi {
     await translateBio(info, lang);
   }
 
-  static const _nonLatin = {'ko', 'ja', 'zh', 'th', 'hi', 'ru', 'ar', 'he', 'el', 'uk'};
+  static const _nonLatin = {'ko', 'ja', 'zh', 'th', 'hi', 'ru', 'ar', 'he', 'el', 'uk', 'ur'};
 
   /// 소개가 아직 영어 그대로인지
   static bool needsTranslate(_Info info, String lang) {

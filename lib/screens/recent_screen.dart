@@ -36,7 +36,7 @@ class RecentScreen extends StatelessWidget {
       slivers: [
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 8, 8),
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 8, 8),
             child: Row(
               children: [
                 Text(AppLocalizations.of(context)!.recent,

@@ -4798,4 +4798,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get langNameHu => 'Húngaro';
+
+  @override
+  String get langNameAr => 'Árabe';
+
+  @override
+  String get langNameUr => 'Urdu';
 }

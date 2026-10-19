@@ -122,7 +122,7 @@ class MenuCard extends StatelessWidget {
       child: Column(
         children: [
           for (var i = 0; i < children.length; i++) ...[
-            if (i > 0) Container(height: 0.5, margin: const EdgeInsets.only(left: 48), color: line),
+            if (i > 0) Container(height: 0.5, margin: const EdgeInsetsDirectional.only(start: 48), color: line),
             children[i],
           ],
         ],

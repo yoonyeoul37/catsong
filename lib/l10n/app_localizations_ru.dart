@@ -4821,4 +4821,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get langNameHu => 'Венгерский';
+
+  @override
+  String get langNameAr => 'Арабский';
+
+  @override
+  String get langNameUr => 'Урду';
 }

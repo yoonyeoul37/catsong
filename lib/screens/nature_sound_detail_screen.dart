@@ -213,11 +213,12 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                         pickerTextStyle: TextStyle(color: textColor, fontSize: 20),
                       ),
                     ),
+                    child: Directionality(textDirection: TextDirection.ltr, // 아랍어에서 '분' 글자가 숫자와 겹쳐서 왼쪽→오른쪽으로
                     child: CupertinoTimerPicker(
                       mode: CupertinoTimerPickerMode.hm,
                       initialTimerDuration: picked,
                       onTimerDurationChanged: (d) => picked = d,
-                    ),
+                    )),
                   ),
                 ),
                 Padding(
@@ -949,6 +950,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                       borderRadius: BorderRadius.circular(22),
                     ),
                     child: Row(
+                      textDirection: TextDirection.ltr, // ⏮ ▶ ⏭ 순서는 어느 언어나 같게
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         GestureDetector(

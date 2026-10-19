@@ -280,6 +280,7 @@ class OverseasRadioView extends StatelessWidget {
                             const Spacer(),
                             // 아래 조작 버튼
                             Row(
+                              textDirection: TextDirection.ltr, // ⏮ ▶ ⏭ 순서는 어느 언어나 같게
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 IconButton(

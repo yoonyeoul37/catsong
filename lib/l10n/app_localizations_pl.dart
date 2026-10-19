@@ -4831,4 +4831,10 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get langNameHu => 'Węgierski';
+
+  @override
+  String get langNameAr => 'Arabski';
+
+  @override
+  String get langNameUr => 'Urdu';
 }

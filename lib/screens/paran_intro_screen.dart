@@ -306,6 +306,7 @@ class _ParanIntroScreenState extends State<ParanIntroScreen> {
                             ),
                             const SizedBox(width: 7),
                             Text(t.sign,
+                                textDirection: TextDirection.ltr, // 아랍어에서도 Paransori. (점이 뒤)
                                 style: TextStyle(color: ink, fontSize: 16, fontWeight: FontWeight.w700, letterSpacing: -0.3)),
                           ],
                         ),
@@ -341,8 +342,8 @@ class _ParanIntroScreenState extends State<ParanIntroScreen> {
             ),
 
             // ── 뒤로 (사진 위에 떠 있는 동그란 버튼) ──
-            Positioned(
-              left: 12,
+            PositionedDirectional(
+              start: 12, // 아랍어에선 오른쪽 위
               top: top + 8,
               child: Material(
                 color: Colors.black.withOpacity(0.22),
@@ -403,6 +404,7 @@ class _HangulName extends StatelessWidget {
           ],
         );
     return Row(
+      textDirection: TextDirection.ltr, // 아랍어에서도 파란 + 소리 순서
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

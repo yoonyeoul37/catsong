@@ -4573,4 +4573,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get langNameHu => '헝가리어';
+
+  @override
+  String get langNameAr => '아랍어';
+
+  @override
+  String get langNameUr => '우르두어';
 }

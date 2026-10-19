@@ -4808,4 +4808,10 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get langNameHu => 'Угорська';
+
+  @override
+  String get langNameAr => 'Арабська';
+
+  @override
+  String get langNameUr => 'Урду';
 }

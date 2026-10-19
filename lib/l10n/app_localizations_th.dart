@@ -4757,4 +4757,10 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get langNameHu => 'ฮังการี';
+
+  @override
+  String get langNameAr => 'อาหรับ';
+
+  @override
+  String get langNameUr => 'อูรดู';
 }

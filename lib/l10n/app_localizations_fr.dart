@@ -1405,6 +1405,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get homeTipSleepSub => 'Touchez Sommeil sous le lecteur';
 
   @override
+  String get homeTipNameTitle => 'Pourquoi « Paransori » ?';
+
+  @override
+  String get homeTipNameSub => 'L’histoire de notre nom';
+
+  @override
+  String get homeTipNameAction => 'Voir';
+
+  @override
   String get homeTodayTip => 'ASTUCE';
 
   @override

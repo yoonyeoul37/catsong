@@ -1398,6 +1398,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get homeTipSleepSub => '재생 화면 아래 [수면]을 눌러요';
 
   @override
+  String get homeTipNameTitle => '왜 이름이 \'Paransori\'일까요?';
+
+  @override
+  String get homeTipNameSub => '이름에 담긴 이야기를 들려드려요';
+
+  @override
+  String get homeTipNameAction => '보기';
+
+  @override
   String get homeTodayTip => '오늘의 팁';
 
   @override

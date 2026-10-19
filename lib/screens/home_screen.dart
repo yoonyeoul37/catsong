@@ -77,6 +77,7 @@ import 'sleep_focus_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/more_menu_sheet.dart';
+import 'paran_intro_screen.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:permission_handler/permission_handler.dart';
 
@@ -677,7 +678,14 @@ class _HomeScreenState extends State<HomeScreen> {
     (tr.homeTipScheduleTitle, tr.homeTipScheduleSub),
     (tr.homeTipCastTitle, tr.homeTipCastSub),
     (tr.homeTipSleepTitle, tr.homeTipSleepSub),
+    (tr.homeTipNameTitle, tr.homeTipNameSub), // 왜 이름이 Paransori일까요? → 소개 화면
   ];
+
+  /// 파란소리 소개 화면 열기 (홈 로고 누르기 · 이름 팁 '보기')
+  void _openIntro() {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const ParanIntroScreen()));
+  }
 
   Widget _buildHomeCard(bool isDark) {
     if (!MainCardPref.on.value) return const SizedBox.shrink(); // 설정에서 끔
@@ -754,10 +762,10 @@ class _HomeScreenState extends State<HomeScreen> {
       label: tr.homeTodayTip,
       title: t.$1,
       sub: t.$2,
-      action: i == 1 ? tr.set : null,
+      action: i == 1 ? tr.set : (i == 5 ? tr.homeTipNameAction : null),
       onAction: i == 1
           ? () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AlarmScreen()))
-          : null,
+          : (i == 5 ? _openIntro : null),
       onClose: () => _closeHomeCard('tip'),
       dot: dot,
       dots: dots,
@@ -1544,7 +1552,11 @@ class _HomeScreenState extends State<HomeScreen> {
       titleSpacing: 20,
       title: _isSearching
           ? _buildSearchField()
-          : Builder(builder: (ctx) {
+          // 로고(아이콘 + 파란소리)를 누르면 파란소리 소개
+          : GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: _openIntro,
+              child: Builder(builder: (ctx) {
         final isKorean = Localizations.localeOf(context).languageCode == 'ko';
         return Row(
           mainAxisSize: MainAxisSize.min,
@@ -1657,7 +1669,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
           ],
         );
-      }),
+      })),
       actions: [
         if (!_isSearching) ...[
           if (_showMusicLibrary) ...[

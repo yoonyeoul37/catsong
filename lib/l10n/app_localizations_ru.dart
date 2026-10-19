@@ -1404,6 +1404,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get homeTipSleepSub => 'Нажмите «Сон» под плеером';
 
   @override
+  String get homeTipNameTitle => 'Почему «Paransori»?';
+
+  @override
+  String get homeTipNameSub => 'История нашего названия';
+
+  @override
+  String get homeTipNameAction => 'Открыть';
+
+  @override
   String get homeTodayTip => 'СОВЕТ';
 
   @override

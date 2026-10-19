@@ -147,12 +147,51 @@ class RadioProvider extends ChangeNotifier {
     _initAudioSession();
     _loadFromPrefs();
     loadSavedSongs();
+    _loadBlocklist(); // 안 나오는 해외 방송 목록
     _startScheduleRefreshTimer();
     _scheduleService.loadSchedule().then((_) {
       fetchJsonSchedule('CBS 음악FM');
       fetchJsonSchedule('CBS 표준FM');
       notifyListeners();
     });
+  }
+
+  // ── 안 나오는 해외 방송 빼기 (두 번 점검해서 확실히 안 나온 방송 · 백신이 막는 주소) ──
+  Set<String> _blockedUuids = {};
+  List<String> _blockedDomains = [];
+  static const _blockUrl = 'https://files.ssing.kr/radio/block.json';
+
+  bool _isBlocked(RadioStation s) {
+    if (_blockedUuids.contains(s.stationUuid)) return true;
+    if (_blockedDomains.isEmpty) return false;
+    for (final u in [s.streamUrl, s.urlResolved ?? '']) {
+      final host = (Uri.tryParse(u)?.host ?? '').toLowerCase();
+      if (host.isEmpty) continue;
+      if (_blockedDomains.any((d) => host == d || host.endsWith('.$d'))) return true;
+    }
+    return false;
+  }
+
+  void _applyBlock(String body) {
+    final j = json.decode(body) as Map<String, dynamic>;
+    _blockedUuids = {for (final u in (j['uuids'] as List? ?? [])) u.toString()};
+    _blockedDomains = [for (final d in (j['domains'] as List? ?? [])) d.toString().toLowerCase()];
+  }
+
+  /// 저장해 둔 목록 먼저 (인터넷 없어도) → 새 목록 받으면 바꿔 끼우고 저장
+  Future<void> _loadBlocklist() async {
+    final p = await SharedPreferences.getInstance();
+    try {
+      final cached = p.getString('radio_block_json');
+      if (cached != null) _applyBlock(cached);
+    } catch (_) {}
+    try {
+      final r = await http.get(Uri.parse(_blockUrl)).timeout(const Duration(seconds: 10));
+      if (r.statusCode == 200) {
+        _applyBlock(r.body);
+        await p.setString('radio_block_json', r.body);
+      }
+    } catch (_) {}
   }
 
   Future<void> _initAudioSession() async {
@@ -447,7 +486,11 @@ class RadioProvider extends ChangeNotifier {
   Timer? _playedTimer; // 30초 이상 들었을 때만 최근에 넣기
   bool _userPaused = false; // 사용자가 직접 멈춤 → 자동 다시 연결 안 함
   Timer? _stallTimer; // 너무 오래 '불러오는 중'이면 다시 연결
-  int _stallRetries = 0; // 연달아 다시 연결한 횟수 (3번까지)
+  int _stallRetries = 0;
+  // 브라우저 이름표로는 웹페이지만 주는 해외 방송 → 재생기 이름표로 다시 (한 번 바꾸면 앱 켜져 있는 동안 기억)
+  final Set<String> _playerUa = {};
+  static const _browserUa = 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36';
+  static const _playerUaName = 'VLC/3.0.20 LibVLC/3.0.20'; // 연달아 다시 연결한 횟수 (3번까지)
 
   /// [secs]초 뒤에도 소리가 안 나오면 새로 연결 (와이파이↔LTE 바뀔 때 뱅뱅 도는 것 막기)
   void _armStall([int secs = 10]) {
@@ -457,6 +500,8 @@ class RadioProvider extends ChangeNotifier {
       if (st == null || _userPaused || _isActuallyPlaying) return;
       if (_playerState == RadioPlayerState.idle) return;
       if (_stallRetries >= 3) return; // 계속 안 되면 그만 (방송 자체 문제일 수 있음)
+      // 해외 방송이면 다음 연결은 재생기 이름표로 (옛날 방송 서버는 브라우저에겐 웹페이지를 줌)
+      if ((st.countryCode ?? '') != 'KR') _playerUa.add(st.stationUuid);
       _stallRetries++;
       debugPrint('$secs초 넘게 소리 없음 → 다시 연결 ($_stallRetries번째)');
       playStation(st, force: true);
@@ -573,11 +618,19 @@ class RadioProvider extends ChangeNotifier {
       await WakelockPlus.disable().catchError((Object _) {});
       _startForeground(station, playUrl);
 
+      // 해외 방송: 주소가 서버 첫 화면(http://주소:8000/)이거나 한 번 안 나왔던 방송이면 재생기 이름표로
+      final isKr = (station.countryCode ?? '') == 'KR';
+      final path = Uri.tryParse(playUrl)?.path ?? '';
+      if (!isKr && (path.isEmpty || path == '/')) _playerUa.add(station.stationUuid);
+      final ua = (!isKr && _playerUa.contains(station.stationUuid)) ? _playerUaName : _browserUa;
+      try {
+        await (_player.platform as NativePlayer).setProperty('user-agent', ua);
+      } catch (_) {}
       await _player.open(
         Media(
           playUrl,
           httpHeaders: {
-            'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36',
+            'User-Agent': ua,
             'Referer': _getReferer(station),
             'Origin': _getOrigin(station),
           },
@@ -809,6 +862,7 @@ class RadioProvider extends ChangeNotifier {
           }
           final s = RadioStation.fromJson(m);
           if (s.streamUrl.isEmpty) continue;
+          if (_isBlocked(s)) continue; // 안 나오는 방송 빼기
           final key = _nameKey(s.name);
           if (key.isEmpty || !_countryNameKeys.add(key)) continue; // 인기 많은 쪽 하나만 남김
           final lang = (m['language'] ?? '').toString().split(',').first.trim();
@@ -1000,6 +1054,7 @@ class RadioProvider extends ChangeNotifier {
               if (m['lastcheckok'] == 0) continue;
               final s = RadioStation.fromJson(m);
               if (s.streamUrl.isEmpty) continue;
+              if (_isBlocked(s)) continue; // 안 나오는 방송 빼기
               if (normState(s.state ?? '', code) != state) continue;
               final key = _nameKey(s.name);
               if (key.isEmpty || !_countryNameKeys.add(key)) continue;
@@ -2283,7 +2338,7 @@ class RadioProvider extends ChangeNotifier {
           final List<dynamic> data = json.decode(response.body);
           _broadcasterStations = data
               .map((j) => RadioStation.fromJson(j as Map<String, dynamic>))
-              .where((s) => s.streamUrl.isNotEmpty)
+              .where((s) => s.streamUrl.isNotEmpty && !_isBlocked(s))
               .toList();
           _mergeFavoriteFlags(_broadcasterStations);
           notifyListeners();
@@ -2322,7 +2377,7 @@ class RadioProvider extends ChangeNotifier {
           final List<dynamic> data = json.decode(response.body);
           _searchResults = data
               .map((j) => RadioStation.fromJson(j as Map<String, dynamic>))
-              .where((s) => s.streamUrl.isNotEmpty)
+              .where((s) => s.streamUrl.isNotEmpty && !_isBlocked(s))
               .toList();
           _mergeFavoriteFlags(_searchResults);
           notifyListeners();

@@ -1403,6 +1403,15 @@ class AppLocalizationsVi extends AppLocalizations {
   String get homeTipSleepSub => 'Nhấn Hẹn tắt bên dưới trình phát';
 
   @override
+  String get homeTipNameTitle => 'Vì sao là \"Paransori\"?';
+
+  @override
+  String get homeTipNameSub => 'Câu chuyện đằng sau cái tên';
+
+  @override
+  String get homeTipNameAction => 'Xem';
+
+  @override
   String get homeTodayTip => 'MẸO';
 
   @override

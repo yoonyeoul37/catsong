@@ -2843,6 +2843,24 @@ abstract class AppLocalizations {
   /// **'재생 화면 아래 [수면]을 눌러요'**
   String get homeTipSleepSub;
 
+  /// No description provided for @homeTipNameTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'왜 이름이 \'Paransori\'일까요?'**
+  String get homeTipNameTitle;
+
+  /// No description provided for @homeTipNameSub.
+  ///
+  /// In ko, this message translates to:
+  /// **'이름에 담긴 이야기를 들려드려요'**
+  String get homeTipNameSub;
+
+  /// No description provided for @homeTipNameAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'보기'**
+  String get homeTipNameAction;
+
   /// No description provided for @homeTodayTip.
   ///
   /// In ko, this message translates to:

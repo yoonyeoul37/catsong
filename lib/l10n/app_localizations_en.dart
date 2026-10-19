@@ -1402,6 +1402,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeTipSleepSub => 'Tap Sleep under the player';
 
   @override
+  String get homeTipNameTitle => 'Why \"Paransori\"?';
+
+  @override
+  String get homeTipNameSub => 'The story behind our name';
+
+  @override
+  String get homeTipNameAction => 'View';
+
+  @override
   String get homeTodayTip => 'TIP';
 
   @override

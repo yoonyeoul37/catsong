@@ -1406,6 +1406,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get homeTipSleepSub => 'Tippe unter dem Player auf Schlaf';
 
   @override
+  String get homeTipNameTitle => 'Warum „Paransori“?';
+
+  @override
+  String get homeTipNameSub => 'Die Geschichte hinter unserem Namen';
+
+  @override
+  String get homeTipNameAction => 'Ansehen';
+
+  @override
   String get homeTodayTip => 'TIPP';
 
   @override

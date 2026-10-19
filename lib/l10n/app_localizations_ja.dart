@@ -1399,6 +1399,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get homeTipSleepSub => '再生画面の下の[スリープ]をタップ';
 
   @override
+  String get homeTipNameTitle => 'なぜ「Paransori」なの？';
+
+  @override
+  String get homeTipNameSub => '名前にこめた想いをご紹介します';
+
+  @override
+  String get homeTipNameAction => '見る';
+
+  @override
   String get homeTodayTip => '今日のヒント';
 
   @override

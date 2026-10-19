@@ -1402,6 +1402,15 @@ class AppLocalizationsTh extends AppLocalizations {
   String get homeTipSleepSub => 'แตะ ตั้งเวลาปิด ใต้หน้าจอเล่น';
 
   @override
+  String get homeTipNameTitle => 'ทำไมถึงชื่อ \"Paransori\"?';
+
+  @override
+  String get homeTipNameSub => 'เรื่องราวเบื้องหลังชื่อของเรา';
+
+  @override
+  String get homeTipNameAction => 'ดู';
+
+  @override
   String get homeTodayTip => 'เคล็ดลับ';
 
   @override

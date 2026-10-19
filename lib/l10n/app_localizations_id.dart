@@ -1405,6 +1405,15 @@ class AppLocalizationsId extends AppLocalizations {
   String get homeTipSleepSub => 'Ketuk Timer tidur di layar pemutar';
 
   @override
+  String get homeTipNameTitle => 'Kenapa \"Paransori\"?';
+
+  @override
+  String get homeTipNameSub => 'Kisah di balik nama kami';
+
+  @override
+  String get homeTipNameAction => 'Lihat';
+
+  @override
   String get homeTodayTip => 'TIPS';
 
   @override

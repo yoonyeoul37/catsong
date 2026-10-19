@@ -1403,6 +1403,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get homeTipSleepSub => 'Oynatıcının altındaki Uyku\'ya dokun';
 
   @override
+  String get homeTipNameTitle => 'Neden \"Paransori\"?';
+
+  @override
+  String get homeTipNameSub => 'Adımızın ardındaki hikâye';
+
+  @override
+  String get homeTipNameAction => 'Gör';
+
+  @override
   String get homeTodayTip => 'İPUCU';
 
   @override

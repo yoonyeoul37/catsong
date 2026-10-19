@@ -1399,6 +1399,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get homeTipSleepSub => '点播放画面下方的[睡眠]';
 
   @override
+  String get homeTipNameTitle => '为什么叫“Paransori”？';
+
+  @override
+  String get homeTipNameSub => '来看看名字背后的故事';
+
+  @override
+  String get homeTipNameAction => '查看';
+
+  @override
   String get homeTodayTip => '今日小贴士';
 
   @override
@@ -5920,6 +5929,15 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get homeTipSleepSub => '點播放畫面下方的[睡眠]';
+
+  @override
+  String get homeTipNameTitle => '為什麼叫「Paransori」？';
+
+  @override
+  String get homeTipNameSub => '來看看名字背後的故事';
+
+  @override
+  String get homeTipNameAction => '查看';
 
   @override
   String get homeTodayTip => '今日小提示';

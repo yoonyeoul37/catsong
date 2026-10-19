@@ -143,13 +143,23 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
                   children: [
                     Icon(Icons.mic_none, color: baseColor.withOpacity(0.55), size: 18),
                     const SizedBox(width: 6),
-                    Text(tr.recordings,
-                        style: TextStyle(
-                            color: baseColor, fontSize: 15, fontWeight: FontWeight.w900, letterSpacing: -0.5)),
-                    const SizedBox(width: 8),
-                    Text('(${everything.length})',
-                        style: TextStyle(color: baseColor.withOpacity(0.38), fontSize: 13)),
-                    const Spacer(),
+                    // 제목이 긴 언어(루마니아어 등)는 끝을 … 로 (오른쪽 정렬·검색 버튼 자리 지키기)
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: Text(tr.recordings,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: baseColor, fontSize: 15, fontWeight: FontWeight.w900, letterSpacing: -0.5)),
+                          ),
+                          const SizedBox(width: 8),
+                          Text('(${everything.length})',
+                              style: TextStyle(color: baseColor.withOpacity(0.38), fontSize: 13)),
+                        ],
+                      ),
+                    ),
                     // 지금 정렬 (누르면 바로 아래 작은 카드)
                     PopupMenuButton<int>(
                       tooltip: tr.sortLabel,

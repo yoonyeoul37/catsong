@@ -117,7 +117,12 @@ class _RingtoneScreenState extends State<RingtoneScreen> {
     );
     Widget rangeRow(String label, double value, ValueChanged<double> onChanged) => Row(
           children: [
-            SizedBox(width: 40, child: Text(label, style: TextStyle(color: sub, fontSize: 13))),
+            SizedBox( // 시작/끝: 긴 언어도 한 줄로 (칸에 맞게 살짝 줄임)
+                width: 56,
+                child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text(label, maxLines: 1, style: TextStyle(color: sub, fontSize: 13)))),
             Expanded(
               child: SliderTheme(
                 data: sliderTheme,

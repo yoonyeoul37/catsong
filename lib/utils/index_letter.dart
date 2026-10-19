@@ -63,6 +63,27 @@ const _kCyrRows = [
   'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Э', 'Ю', 'Я',
 ];
 const _kIndexGroupsRu = [..._kCyrRows, 'A-Z', '#'];
+// 힌디어: 모음(अ) + 자음을 소리 나는 자리별 7묶음 (क च ट त प य श) + A-Z + #
+const _kHindiRows = ['अ', 'क', 'च', 'ट', 'त', 'प', 'य', 'श'];
+const _kIndexGroupsHi = [..._kHindiRows, 'A-Z', '#'];
+
+/// 힌디어(데바나가리) 첫 글자 → 막대 칸, 아니면 null
+String? _hindiRow(int c) {
+  if ((c >= 0x0904 && c <= 0x0914) || c == 0x0960 || c == 0x0961 || (c >= 0x0972 && c <= 0x0977)) {
+    return 'अ'; // 모음 글자 (अ आ इ ई उ ऊ ए ऐ ओ औ …)
+  }
+  if (c >= 0x0958 && c <= 0x095F) { // 점 붙은 자음 (क़ ख़ ग़ ज़ ड़ ढ़ फ़ य़)
+    return const ['क', 'क', 'क', 'च', 'ट', 'ट', 'प', 'य'][c - 0x0958];
+  }
+  if (c < 0x0915 || c > 0x0939) return null;
+  if (c <= 0x0919) return 'क'; // क ख ग घ ङ
+  if (c <= 0x091E) return 'च'; // च छ ज झ ञ
+  if (c <= 0x0923) return 'ट'; // ट ठ ड ढ ण
+  if (c <= 0x0929) return 'त'; // त थ द ध न
+  if (c <= 0x092E) return 'प'; // प फ ब भ म
+  if (c <= 0x0935) return 'य'; // य र ल व
+  return 'श'; // श ष स ह
+}
 
 /// 러시아어(키릴) 첫 글자 → 막대 칸, 아니면 null (우크라이나어 Є·І·Ї·Ґ도 비슷한 글자로)
 String? _cyrRow(int c) {
@@ -97,6 +118,7 @@ List<String> indexGroupsFor(String lang) {
   if (lang == 'ja') return _kIndexGroupsJa;
   if (lang == 'th') return _kIndexGroupsTh;
   if (lang == 'ru' || lang == 'uk') return _kIndexGroupsRu;
+  if (lang == 'hi') return _kIndexGroupsHi;
   return _kIndexGroupsLatin;
 }
 
@@ -125,6 +147,11 @@ String indexGroupFor(String text, String lang) {
   final c = t.runes.first;
   if (lang == 'th') {
     final row = _thaiRow(t);
+    if (row != null) return row;
+    return latinLetterOf(c) != null ? 'A-Z' : '#';
+  }
+  if (lang == 'hi') {
+    final row = _hindiRow(c);
     if (row != null) return row;
     return latinLetterOf(c) != null ? 'A-Z' : '#';
   }

@@ -350,13 +350,18 @@ void showNatureOverlaySheet(BuildContext context) {
                                 children: [
                                   Row(
                                     children: [
-                                      Text(natureName(k),
-                                          style: TextStyle(
-                                              color: const Color(0xFF17140F)
-                                                  .withOpacity(o.volumeOf(k) > 0 ? 1 : 0.6),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600)),
-                                      const Spacer(),
+                                      // 이름이 길면 끝을 … 로 (종류 고르기 칸은 오른쪽에 그대로)
+                                      Expanded(
+                                        child: Text(natureName(k),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                color: const Color(0xFF17140F)
+                                                    .withOpacity(o.volumeOf(k) > 0 ? 1 : 0.6),
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600)),
+                                      ),
+                                      const SizedBox(width: 8),
                                       // 종류 고르기 (여러 개 있을 때만)
                                       if ((NatureOverlay.variants[k]?.length ?? 0) > 1)
                                         PopupMenuButton<String>(
@@ -390,6 +395,7 @@ void showNatureOverlaySheet(BuildContext context) {
                                               ),
                                           ],
                                           child: Container(
+                                            constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(ctx).width * 0.4),
                                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                             margin: const EdgeInsets.only(right: 8),
                                             decoration: BoxDecoration(
@@ -399,9 +405,13 @@ void showNatureOverlaySheet(BuildContext context) {
                                             child: Row(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                Text(natureName(o.variantOf(k)),
-                                                    style: const TextStyle(
-                                                        color: Color(0xFF5A5348), fontSize: 12)),
+                                                Flexible(
+                                                  child: Text(natureName(o.variantOf(k)),
+                                                      maxLines: 1,
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: const TextStyle(
+                                                          color: Color(0xFF5A5348), fontSize: 12)),
+                                                ),
                                                 const Icon(Icons.expand_more, size: 16, color: Color(0xFF8A857B)),
                                               ],
                                             ),

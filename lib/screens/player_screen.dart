@@ -2032,6 +2032,7 @@ class _PlayerScreenState extends State<PlayerScreen>
               ),
             ),
             // 오른쪽: 지금 상태 표시 (보여주기만, 누르면 줄 전체 동작 그대로)
+            if (trailing != null) const SizedBox(width: 10), // 줄 이름이 길어도 값과 붙지 않게
             if (trailing != null) trailingTappable ? trailing : IgnorePointer(child: trailing),
             if (arrow) ...[
               const SizedBox(width: 2),

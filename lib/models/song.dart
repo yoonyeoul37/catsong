@@ -264,6 +264,15 @@ class Song {
     if (_none.contains(low)) return '';
     final alias = _genreAlias[low];
     if (alias != null) return '@$alias'; // 많이 쓰는 장르 → 폰 언어로 보여 줌
+    // 한글 여러 낱말 장르 (팝 발라드 · 팝 댄스 · 국내 록) → 뒤 낱말부터 아는 장르 찾기
+    // (안 그러면 외국어 화면에서 한글 그대로 나옴)
+    if (RegExp(r'[가-힣]').hasMatch(g)) {
+      final words = g.toLowerCase().split(RegExp(r'[\s/]+')).where((w) => w.isNotEmpty).toList();
+      for (final w in words.reversed) {
+        final a = _genreAlias[w.replaceAll(RegExp(r'[\-_.]'), '')];
+        if (a != null) return '@$a';
+      }
+    }
     // 목록에 없는 영어 장르는 대소문자만 다른 것도 같게 (POP, pop → Pop)
     if (RegExp(r'^[A-Za-z ]+$').hasMatch(g)) {
       return g

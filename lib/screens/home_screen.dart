@@ -1537,7 +1537,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // 로고: 왼쪽 앱 아이콘(색 고정) + 글씨는 먹색(다크는 크림색), 글자 위로 회색 빛이 지나감 (포인트 색과 상관없이)
     // 로고 글자: 순검정·순흰색 대신 먹색 / 크림색 (화면 톤과 맞게)
     final logoInk = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final logoShine = isDarkMode ? Colors.white : const Color(0xFF968F85);
+    final logoShine = isDarkMode ? const Color(0xFFA8A29A) : const Color(0xFF968F85); // 다크: 라디오·자연 제목과 같은 회색 빛 (흰 빛은 크림 글자 위에서 안 보임)
     return AppBar(
       backgroundColor: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
       elevation: 0,

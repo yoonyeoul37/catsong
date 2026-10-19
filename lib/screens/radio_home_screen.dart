@@ -84,6 +84,11 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
   final stt.SpeechToText _speech = stt.SpeechToText();
   bool _isListening = false;
 
+  // ── 대륙 탭 (D안) · 검색칸은 오른쪽 위 돋보기로 열기 ──
+  String _continent = 'ALL'; // 'ALL' = 전체
+  bool _searchOpen = false;
+  final FocusNode _searchFocus = FocusNode();
+
   Future<void> _toggleListening() async {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
     if (_isListening) {
@@ -131,6 +136,7 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
   void dispose() {
     _speech.cancel();
     _search.dispose();
+    _searchFocus.dispose();
     super.dispose();
   }
 
@@ -164,6 +170,7 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
           Expanded(
             child: TextField(
               controller: _search,
+              focusNode: _searchFocus,
               onChanged: (v) => setState(() => _query = v.trim()),
               textInputAction: TextInputAction.search,
               style: TextStyle(color: ink, fontSize: 15),
@@ -301,7 +308,7 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
         break;
       }
     }
-    if (myCountry != null) {
+    if (myCountry != null && _continent == 'ALL') {
       final mine = myCountry;
       widgets.add(Padding(
         padding: const EdgeInsets.only(top: 10),
@@ -310,7 +317,9 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
     }
 
     for (final continent in sorted) {
-      final group = countries.where((c) => c.continent == continent && c.code != myCountry?.code).toList();
+      if (_continent != 'ALL' && continent != _continent) continue; // 대륙 탭: 고른 대륙만
+      // 전체에선 내 나라가 위 카드로 가니 빼고, 대륙을 고르면 목록에 그대로 둠
+      final group = countries.where((c) => c.continent == continent && (_continent != 'ALL' || c.code != myCountry?.code)).toList();
       if (group.isEmpty) continue;
 
       // 유저 나라를 해당 대륙 맨 위로
@@ -385,6 +394,93 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
       }
     }
     return widgets;
+  }
+
+  /// 대륙 탭 (D안): 글자만, 고른 곳은 진하게 + 아래 작은 점 — 옆으로 넘기기
+  Widget _continentTabs(List<RadioCountry> countries, bool isDark) {
+    const order = ['ASIA', 'EUROPE', 'NORTH_AMERICA', 'SOUTH_AMERICA', 'MIDDLE_EAST', 'AFRICA', 'OCEANIA'];
+    // 목록과 같게: 내 대륙을 맨 앞으로
+    final myCode = DeviceCountry.radioCountry(usePick: false);
+    String? myCont;
+    for (final c in countries) {
+      if (c.code == myCode) {
+        myCont = c.continent;
+        break;
+      }
+    }
+    final list = List<String>.from(order);
+    if (myCont != null && list.remove(myCont)) list.insert(0, myCont);
+    final keys = ['ALL', ...list.where((k) => countries.any((c) => c.continent == k))];
+    String label(String k) => switch (k) {
+          'ALL' => tr.all,
+          'ASIA' => tr.continentAsia,
+          'EUROPE' => tr.continentEurope,
+          'NORTH_AMERICA' => tr.continentNorthAmerica,
+          'SOUTH_AMERICA' => tr.continentSouthAmerica,
+          'MIDDLE_EAST' => tr.continentMiddleEast,
+          'AFRICA' => tr.continentAfrica,
+          'OCEANIA' => tr.continentOceania,
+          _ => k,
+        };
+    final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    // 높이는 글자 크기에 맞게 (고정 높이면 글자를 크게 한 폰에서 넘침)
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final k in keys)
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                if (_continent == k) return;
+                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                setState(() => _continent = k);
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 22),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text.rich(
+                      TextSpan(text: label(k), children: [
+                        // 전체 옆에만 작고 연한 나라 수 (나라를 늘리면 저절로 바뀜)
+                        if (k == 'ALL')
+                          TextSpan(
+                            text: ' ${countries.length}',
+                            style: TextStyle(
+                              color: ink.withOpacity(0.35),
+                              fontSize: 11.5,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                      ]),
+                      style: TextStyle(
+                        color: _continent == k ? ink : ink.withOpacity(0.38),
+                        fontSize: 13.5,
+                        fontWeight: _continent == k ? FontWeight.w700 : FontWeight.w600,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    // 고른 곳 아래 작은 점
+                    AnimatedOpacity(
+                      opacity: _continent == k ? 1 : 0,
+                      duration: const Duration(milliseconds: 180),
+                      child: Container(
+                        width: 4,
+                        height: 4,
+                        decoration: BoxDecoration(color: ink, shape: BoxShape.circle),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 
   void _onCountryTap(BuildContext context, RadioCountry country) {
@@ -471,51 +567,53 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
           ],
         ),
         actions: [
+          // 돋보기: 누르면 검색칸 열기 / 다시 누르면(✕) 닫고 검색어 지우기
+          IconButton(
+            onPressed: () {
+              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+              setState(() {
+                _searchOpen = !_searchOpen;
+                if (!_searchOpen) {
+                  _search.clear();
+                  _query = '';
+                  if (_isListening) {
+                    _speech.stop();
+                    _isListening = false;
+                  }
+                }
+              });
+              if (_searchOpen) {
+                WidgetsBinding.instance.addPostFrameCallback((_) => _searchFocus.requestFocus());
+              } else {
+                FocusScope.of(context).unfocus();
+              }
+            },
+            icon: Icon(_searchOpen ? Icons.close_rounded : Icons.search_rounded,
+                color: isDarkMode ? Colors.white : Colors.black, size: 24),
+          ),
           const SizedBox(width: 6),
         ],
       ),
       body: SafeArea(
         child: Column(
           children: [
-            // 나라 검색칸
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 4, 20, 4),
-              child: _searchField(isDarkMode),
-            ),
+            // 나라 검색칸: 오른쪽 위 돋보기를 눌렀을 때만
+            if (_searchOpen)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 4, 20, 4),
+                child: _searchField(isDarkMode),
+              ),
+            // 대륙 탭 (검색하는 동안은 숨김)
+            if (_query.isEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 6, bottom: 2),
+                child: _continentTabs(countries, isDarkMode),
+              ),
             Expanded(
               child: Builder(builder: (context) {
                 final items = <Widget>[
                   if (_query.isEmpty) ...[
-                    // 국가 선택 · 128개 나라 (나라 수는 목록을 세서 → 나라를 늘리면 저절로 바뀜)
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.radioSelectCountry,
-                          style: TextStyle(
-                            color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.65),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 2,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Flexible(
-                          child: Text(
-                            '· ${AppLocalizations.of(context)!.countryTotal(countries.length)}',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.35),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
+                    // (전체 나라 수는 위 대륙 탭 '전체' 옆에)
                     ..._buildCountryListByContinent(context, countries, isDarkMode),
                   ] else
                     ..._searchResults(countries, isDarkMode),
@@ -523,7 +621,7 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
                 ];
                 // 음악 곡 목록처럼: 내리고 올릴 때 화면에 들어오는 줄이 옆에서 스르륵
                 return ListView.builder(
-                  key: ValueKey(_query), // 검색어 바뀌면 처음부터 다시 스르륵
+                  key: ValueKey('$_query|$_continent'), // 검색어·대륙 바뀌면 처음부터 다시 스르륵
                   keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                   padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
                   itemCount: items.length,

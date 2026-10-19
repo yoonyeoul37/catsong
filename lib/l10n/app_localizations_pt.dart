@@ -1531,6 +1531,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get catRest => 'Descanso · Foco';
 
   @override
+  String get menuHeadRadio => 'Rádio';
+
+  @override
+  String get menuHeadNature => 'Sons da natureza';
+
+  @override
+  String get menuHeadRest => 'Descanso e foco';
+
+  @override
   String get catRestSub => 'Ruído branco · Foco (em breve)';
 
   @override
@@ -4539,11 +4548,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get introEveryday1 =>
-      'O Paransori quer estar presente, de leve, em cada momento do seu dia.';
+      'O Paransori quer acompanhar você com tranquilidade nos vários momentos do dia a dia.';
 
   @override
   String get introEveryday2 =>
-      'Uma música, um programa de rádio conhecido, o barulhinho suave da chuva — qualquer um deles pode deixar um dia comum um pouco mais bonito. Por isso, estamos criando um espaço simples, fácil e gostoso de usar para todo mundo.';
+      'Uma música, um programa de rádio conhecido ou o som suave da chuva podem deixar um dia comum um pouco melhor. Por isso, estamos fazendo do Paransori um espaço de som com menos complicação e mais prazer em ouvir, fácil e confortável para todos.';
 
   @override
   String get introSoundsTitle => 'Sons que você encontra no Paransori';
@@ -4553,11 +4562,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get introWish1 =>
-      'Ouvir os sons que você ama está mais perto do que parece — quando a manhã começa, enquanto você trabalha e nas noites tranquilas, quando o dia vai terminando.';
+      'O tempo de ouvir os sons que amamos está mais perto do que imaginamos: ao começar a manhã, no meio do trabalho e nas noites tranquilas, quando o dia termina.\n\nQueremos que qualquer pessoa encontre os sons que deseja de forma fácil e confortável. Por isso reunimos vários tipos de som em um só lugar, para que você aproveite cada momento de escuta sem complicação.';
 
   @override
   String get introWish2 =>
-      'O Paransori nasceu na Coreia e hoje acompanha pessoas no mundo todo. Esperamos trazer um pouco mais de alegria e leveza a cada um dos seus dias.';
+      'O Paransori nasceu na Coreia e espera estar com pessoas do mundo todo, trazendo um pouco mais de alegria e tranquilidade ao dia a dia de cada um.';
 
   @override
   String get introClosing1 =>

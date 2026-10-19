@@ -1530,6 +1530,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get catRest => 'Ruhe · Fokus';
 
   @override
+  String get menuHeadRadio => 'Radio';
+
+  @override
+  String get menuHeadNature => 'Naturklänge';
+
+  @override
+  String get menuHeadRest => 'Ruhe & Fokus';
+
+  @override
   String get catRestSub => 'Weißes Rauschen · Fokus (bald)';
 
   @override
@@ -4549,11 +4558,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get introEveryday1 =>
-      'Paransori möchte dich ganz leicht durch all die verschiedenen Momente deines Tages begleiten.';
+      'Paransori möchte dich in ganz unterschiedlichen Momenten deines Alltags entspannt begleiten.';
 
   @override
   String get introEveryday2 =>
-      'Ein einziger Song, eine vertraute Radiosendung, das leise Prasseln von Regen – all das kann einen gewöhnlichen Tag ein wenig schöner machen. Deshalb gestalten wir einen Ort, der einfach, leicht und für alle angenehm ist.';
+      'Ein Song, eine vertraute Radiosendung oder leiser Regen – manchmal reicht das schon, um einen gewöhnlichen Tag ein bisschen schöner zu machen. Deshalb gestalten wir Paransori als einen Ort für Klänge, der weniger kompliziert ist und mehr Freude am Zuhören bringt – einfach und angenehm für alle.';
 
   @override
   String get introSoundsTitle => 'Klänge in Paransori';
@@ -4563,11 +4572,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get introWish1 =>
-      'Zeit mit deinen Lieblingsklängen ist näher, als du denkst – wenn dein Morgen beginnt, während du arbeitest und in ruhigen Nächten, wenn der Tag ausklingt.';
+      'Die Zeit mit Klängen, die wir lieben, ist näher, als wir denken – wenn der Morgen beginnt, mitten bei der Arbeit und in ruhigen Nächten, wenn der Tag ausklingt.\n\nWir wünschen uns, dass alle die Klänge, die sie hören möchten, einfach und entspannt finden. Darum vereinen wir viele Arten von Klang an einem Ort – damit du jeden Moment des Zuhörens ganz ohne Umstände genießen kannst.';
 
   @override
   String get introWish2 =>
-      'Paransori hat in Korea begonnen und begleitet heute Menschen auf der ganzen Welt. Wir hoffen, dass es jedem deiner Tage ein wenig Freude und Leichtigkeit schenkt.';
+      'Paransori hat in Korea begonnen. Wir hoffen, Menschen auf der ganzen Welt zu begleiten und ihrem Alltag ein wenig Freude und Gelassenheit zu schenken.';
 
   @override
   String get introClosing1 =>

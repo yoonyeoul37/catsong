@@ -1531,6 +1531,15 @@ class AppLocalizationsPl extends AppLocalizations {
   String get catRest => 'Relaks · Skupienie';
 
   @override
+  String get menuHeadRadio => 'Radio';
+
+  @override
+  String get menuHeadNature => 'Dźwięki natury';
+
+  @override
+  String get menuHeadRest => 'Odpoczynek i skupienie';
+
+  @override
   String get catRestSub => 'Biały szum · Skupienie (wkrótce)';
 
   @override
@@ -4578,11 +4587,11 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get introEveryday1 =>
-      'Paransori chce być przy tobie, lekko i dyskretnie, w różnych chwilach twojego dnia.';
+      'Paransori chce spokojnie towarzyszyć ci w różnych chwilach codzienności.';
 
   @override
   String get introEveryday2 =>
-      'Jedna piosenka, znajoma audycja, cichy szum deszczu — każda z tych rzeczy może sprawić, że zwykły dzień stanie się odrobinę jaśniejszy. Dlatego tworzymy miejsce proste, łatwe i przyjemne dla każdego.';
+      'Jedna piosenka, znana audycja radiowa czy cichy szum deszczu potrafią sprawić, że zwykły dzień staje się trochę przyjemniejszy. Dlatego tworzymy Paransori jako przestrzeń dźwięków, w której jest mniej komplikacji, a więcej radości ze słuchania – prostą i wygodną dla każdego.';
 
   @override
   String get introSoundsTitle => 'Dźwięki, które znajdziesz w Paransori';
@@ -4592,11 +4601,11 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get introWish1 =>
-      'Czas spędzony na słuchaniu ulubionych dźwięków jest bliżej, niż myślisz — gdy zaczyna się poranek, podczas pracy i w ciche noce, gdy dzień dobiega końca.';
+      'Czas na słuchanie ulubionych dźwięków jest bliżej, niż myślimy – gdy zaczyna się poranek, w trakcie pracy i w ciche wieczory, gdy dzień dobiega końca.\n\nChcemy, by każdy mógł łatwo i wygodnie znaleźć dźwięki, których szuka. Dlatego zbieramy różne dźwięki w jednym miejscu, by każda chwila słuchania była po prostu przyjemnością – bez zbędnych komplikacji.';
 
   @override
   String get introWish2 =>
-      'Paransori powstało w Korei, a dziś towarzyszy ludziom na całym świecie. Mamy nadzieję, że doda odrobinę radości i lekkości każdemu twojemu dniu.';
+      'Paransori powstało w Korei. Mamy nadzieję towarzyszyć ludziom na całym świecie i dodawać ich codzienności odrobinę radości i spokoju.';
 
   @override
   String get introClosing1 =>

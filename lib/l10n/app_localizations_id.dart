@@ -1529,6 +1529,15 @@ class AppLocalizationsId extends AppLocalizations {
   String get catRest => 'Santai · Fokus';
 
   @override
+  String get menuHeadRadio => 'Radio';
+
+  @override
+  String get menuHeadNature => 'Suara alam';
+
+  @override
+  String get menuHeadRest => 'Istirahat & fokus';
+
+  @override
   String get catRestSub => 'White noise · Fokus (segera)';
 
   @override
@@ -4524,11 +4533,11 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get introEveryday1 =>
-      'Paransori ingin hadir dengan ringan di setiap momen harimu.';
+      'Paransori ingin menemani kamu dengan nyaman di berbagai momen sehari-hari.';
 
   @override
   String get introEveryday2 =>
-      'Satu lagu, acara radio yang akrab, rintik hujan yang lembut — semuanya bisa membuat hari biasa sedikit lebih cerah. Karena itu kami membangun ruang yang sederhana, mudah, dan menyenangkan untuk semua orang.';
+      'Satu lagu, siaran radio yang akrab, atau suara hujan yang lembut bisa membuat hari biasa terasa sedikit lebih menyenangkan. Karena itu, kami membangun Paransori sebagai ruang suara yang lebih sederhana dan lebih menyenangkan untuk didengar, mudah dan nyaman digunakan oleh siapa saja.';
 
   @override
   String get introSoundsTitle => 'Suara yang ada di Paransori';
@@ -4538,11 +4547,11 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get introWish1 =>
-      'Waktu untuk mendengar suara yang kamu sukai lebih dekat dari yang kamu kira — saat pagi dimulai, saat bekerja, dan di malam yang tenang saat hari berakhir.';
+      'Waktu untuk mendengarkan suara yang kita sukai sebenarnya lebih dekat dari yang kita kira: saat pagi dimulai, di sela pekerjaan, hingga malam yang tenang saat hari berakhir.\n\nKami ingin semua orang bisa menemukan suara yang mereka inginkan dengan mudah dan nyaman. Karena itu, kami mengumpulkan berbagai suara dalam satu tempat, agar kamu bisa menikmati setiap momen mendengarkan tanpa ribet.';
 
   @override
   String get introWish2 =>
-      'Paransori berawal di Korea dan kini menemani orang-orang di seluruh dunia. Semoga ia menambah sedikit kebahagiaan dan ketenangan di setiap harimu.';
+      'Berawal dari Korea, Paransori berharap bisa menemani orang-orang di seluruh dunia dan menambahkan sedikit kegembiraan serta ketenangan dalam keseharian mereka.';
 
   @override
   String get introClosing1 =>

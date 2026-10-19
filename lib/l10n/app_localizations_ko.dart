@@ -1507,6 +1507,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get catRest => '휴식 · 집중';
 
   @override
+  String get menuHeadRadio => '라디오';
+
+  @override
+  String get menuHeadNature => '자연소리';
+
+  @override
+  String get menuHeadRest => '휴식과 집중';
+
+  @override
   String get catRestSub => '백색소음 · 집중 소리 (준비 중)';
 
   @override
@@ -4331,11 +4340,11 @@ class AppLocalizationsKo extends AppLocalizations {
       '바쁜 하루 중 잠시 쉬어가고 싶을 때,\n좋아하는 음악이 생각날 때,\n새로운 라디오 방송을 만나고 싶을 때,\n자연의 소리와 함께 조용한 시간을 보내고 싶을 때.';
 
   @override
-  String get introEveryday1 => '파란소리는 일상의 다양한 순간에 가볍게 함께하고 싶습니다.';
+  String get introEveryday1 => '파란소리는 일상의 다양한 순간에 편안하게 함께하고 싶습니다.';
 
   @override
   String get introEveryday2 =>
-      '음악 한 곡, 익숙한 라디오 방송, 잔잔한 빗소리 하나가 평범한 하루를 조금 더 기분 좋게 만들어 줄 수 있으니까요. 그래서 파란소리는 복잡하지 않고, 누구나 쉽고 즐겁게 사용할 수 있는 공간을 만들어가고 있습니다.';
+      '음악 한 곡, 익숙한 라디오 방송, 잔잔한 빗소리 하나가 평범한 하루를 조금 더 기분 좋게 만들어 줄 수 있으니까요. 그래서 파란소리는 복잡함은 덜고, 듣는 즐거움은 더해 누구나 쉽고 편안하게 사용할 수 있는 소리의 공간을 만들어가고 있습니다.';
 
   @override
   String get introSoundsTitle => '파란소리에서 만나는 소리';
@@ -4345,11 +4354,11 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get introWish1 =>
-      '좋아하는 소리를 듣는 시간은 생각보다 우리 가까이에 있습니다. 아침을 시작할 때도, 일하는 중에도, 하루를 마무리하는 조용한 밤에도.';
+      '좋아하는 소리를 듣는 시간은 생각보다 우리 가까이에 있습니다. 아침을 시작할 때도, 일하는 중에도, 하루를 마무리하는 조용한 밤에도.\n\n파란소리는 누구나 원하는 소리를 쉽고 편안하게 만날 수 있기를 바랍니다. 다양한 소리를 하나의 공간에 담고, 듣는 순간만큼은 복잡함 없이 온전히 즐길 수 있도록 만들어가고 있습니다.';
 
   @override
   String get introWish2 =>
-      '한국에서 시작된 파란소리가 이제 세계 여러 곳의 사람들과 함께하며, 저마다의 일상에 작은 즐거움과 여유를 더할 수 있기를 바랍니다.';
+      '한국에서 시작된 파란소리가 세계 여러 곳의 사람들과 함께하며, 저마다의 일상에 작은 즐거움과 여유를 더할 수 있기를 바랍니다.';
 
   @override
   String get introClosing1 => '언제 어디서나 편안하게 찾을 수 있는 소리의 공간.';

@@ -1530,6 +1530,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get catRest => 'Relax · Focus';
 
   @override
+  String get menuHeadRadio => 'Radio';
+
+  @override
+  String get menuHeadNature => 'Suoni della natura';
+
+  @override
+  String get menuHeadRest => 'Riposo & concentrazione';
+
+  @override
   String get catRestSub => 'Rumore bianco · Focus (presto)';
 
   @override
@@ -4545,11 +4554,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get introEveryday1 =>
-      'Paransori vuole esserci, con leggerezza, in tutti i momenti della tua giornata.';
+      'Paransori vuole accompagnarti con leggerezza nei tanti momenti della tua giornata.';
 
   @override
   String get introEveryday2 =>
-      'Una canzone, un programma radio familiare, il lieve picchiettare della pioggia: basta poco per rendere una giornata normale un po\' più luminosa. Per questo creiamo uno spazio semplice, facile e piacevole per tutti.';
+      'Una canzone, un programma radio familiare o il suono delicato della pioggia possono rendere una giornata qualunque un po’ più piacevole. Per questo facciamo di Paransori uno spazio sonoro con meno complicazioni e più piacere di ascoltare, semplice e comodo per tutti.';
 
   @override
   String get introSoundsTitle => 'I suoni che trovi in Paransori';
@@ -4559,11 +4568,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get introWish1 =>
-      'Il tempo per ascoltare i suoni che ami è più vicino di quanto pensi: quando inizia la mattina, mentre lavori e nelle notti tranquille a fine giornata.';
+      'Il tempo per ascoltare i suoni che amiamo è più vicino di quanto pensiamo: all’inizio della mattina, durante il lavoro e nelle sere tranquille, quando la giornata finisce.\n\nVorremmo che chiunque potesse trovare i suoni che desidera in modo semplice e comodo. Per questo riuniamo tanti tipi di suoni in un unico posto, così puoi goderti ogni momento di ascolto senza complicazioni.';
 
   @override
   String get introWish2 =>
-      'Paransori è nato in Corea e oggi accompagna persone in tutto il mondo. Speriamo che porti un po\' di gioia e serenità in ogni tua giornata.';
+      'Nata in Corea, l’app Paransori spera di accompagnare persone di tutto il mondo, aggiungendo un po’ di gioia e serenità alla vita di ogni giorno.';
 
   @override
   String get introClosing1 =>

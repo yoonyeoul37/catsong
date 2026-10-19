@@ -174,11 +174,12 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
             child: Text(
               label,
               maxLines: 1,
+              textScaler: TextScaler.noScaling, // 탭은 라디오 글자 크기 설정과 상관없이 고정
               style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
                 color: selected
                     ? (isDarkMode ? Colors.white : const Color(0xFF17140F))
                     : baseColor.withOpacity(0.55),
-                fontSize: 13,
+                fontSize: 14,
                 fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
               ),
             ),

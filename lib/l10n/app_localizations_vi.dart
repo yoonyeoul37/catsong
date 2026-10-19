@@ -1527,6 +1527,15 @@ class AppLocalizationsVi extends AppLocalizations {
   String get catRest => 'Thư giãn · Tập trung';
 
   @override
+  String get menuHeadRadio => 'Radio';
+
+  @override
+  String get menuHeadNature => 'Âm thanh thiên nhiên';
+
+  @override
+  String get menuHeadRest => 'Nghỉ ngơi & tập trung';
+
+  @override
   String get catRestSub => 'Tiếng ồn trắng · Tập trung (sắp có)';
 
   @override
@@ -4517,11 +4526,11 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get introEveryday1 =>
-      'Paransori mong được nhẹ nhàng đồng hành trong mọi khoảnh khắc của ngày bạn.';
+      'Paransori mong được nhẹ nhàng đồng hành cùng bạn trong những khoảnh khắc khác nhau của cuộc sống thường ngày.';
 
   @override
   String get introEveryday2 =>
-      'Một bài hát, một chương trình radio quen thuộc, tiếng mưa rơi khe khẽ — bất cứ điều gì trong đó cũng có thể làm một ngày bình thường thêm tươi sáng. Vì vậy, chúng tôi đang xây dựng một không gian đơn giản, dễ dùng và thú vị cho tất cả mọi người.';
+      'Một bài hát, một chương trình radio quen thuộc hay tiếng mưa rơi khe khẽ cũng có thể khiến một ngày bình thường trở nên dễ chịu hơn. Vì vậy, Paransori đang tạo nên một không gian âm thanh bớt phức tạp, thêm niềm vui khi lắng nghe, để ai cũng có thể sử dụng dễ dàng và thoải mái.';
 
   @override
   String get introSoundsTitle => 'Âm thanh bạn sẽ gặp trong Paransori';
@@ -4531,11 +4540,11 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get introWish1 =>
-      'Thời gian lắng nghe những âm thanh bạn yêu thích gần hơn bạn nghĩ — khi buổi sáng bắt đầu, khi bạn làm việc, và trong những đêm yên tĩnh khi ngày dần khép lại.';
+      'Khoảng thời gian lắng nghe những âm thanh mình yêu thích gần hơn chúng ta tưởng: khi bắt đầu buổi sáng, giữa giờ làm việc, hay trong những đêm yên tĩnh khép lại một ngày.\n\nChúng tôi mong ai cũng có thể tìm thấy âm thanh mình muốn một cách dễ dàng và thoải mái. Vì vậy, chúng tôi gom nhiều loại âm thanh vào cùng một nơi, để bạn tận hưởng trọn vẹn từng khoảnh khắc lắng nghe mà không phải bận tâm điều gì.';
 
   @override
   String get introWish2 =>
-      'Paransori bắt đầu từ Hàn Quốc và nay đồng hành cùng mọi người khắp thế giới. Chúng tôi mong ứng dụng mang thêm chút niềm vui và thư thái cho mỗi ngày của bạn.';
+      'Bắt đầu từ Hàn Quốc, Paransori mong được đồng hành cùng mọi người trên khắp thế giới, mang thêm chút niềm vui và thư thái vào cuộc sống mỗi ngày.';
 
   @override
   String get introClosing1 =>

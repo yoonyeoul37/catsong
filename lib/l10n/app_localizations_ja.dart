@@ -1508,6 +1508,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get catRest => '休息・集中';
 
   @override
+  String get menuHeadRadio => 'ラジオ';
+
+  @override
+  String get menuHeadNature => '自然の音';
+
+  @override
+  String get menuHeadRest => '休息と集中';
+
+  @override
   String get catRestSub => 'ホワイトノイズ・集中（準備中）';
 
   @override
@@ -4331,11 +4340,11 @@ class AppLocalizationsJa extends AppLocalizations {
       '忙しい一日の中で、少しひと息つきたいとき、\n好きな音楽を聴きたくなったとき、\n新しいラジオ番組に出会いたいとき、\n自然の音とともに静かな時間を過ごしたいとき。';
 
   @override
-  String get introEveryday1 => 'Paransoriは、毎日のさまざまな瞬間に、気軽に寄り添いたいと思っています。';
+  String get introEveryday1 => 'Paransoriは、毎日のいろいろな瞬間に、心地よく寄り添いたいと思っています。';
 
   @override
   String get introEveryday2 =>
-      '一曲の音楽、聴き慣れたラジオ番組、静かな雨音ひとつが、いつもの一日を少しだけ心地よくしてくれるから。だからParansoriは、複雑ではなく、誰もが簡単に楽しく使える場所を目指しています。';
+      '一曲の音楽、聴き慣れたラジオ番組、静かな雨の音。それだけで、いつもの一日が少しだけ心地よくなるから。だからParansoriは、わずらわしさを減らして聴く楽しさを増やし、誰でも気軽に心地よく使える音の空間をつくっています。';
 
   @override
   String get introSoundsTitle => 'Paransoriで出会える音';
@@ -4345,11 +4354,11 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get introWish1 =>
-      '好きな音を聴く時間は、思っているよりもずっと身近にあります。朝を迎えるときも、仕事の合間にも、一日を締めくくる静かな夜にも。';
+      '好きな音を聴く時間は、思っているよりずっと身近にあります。朝のはじまりにも、仕事の合間にも、一日を終える静かな夜にも。\n\n聴きたい音に、誰もが気軽に心地よく出会えるように。Paransoriはさまざまな音をひとつの場所に集め、聴いているあいだは何も気にせず、ただ楽しめる空間をつくっています。';
 
   @override
   String get introWish2 =>
-      '韓国で生まれたParansoriが、いま世界のさまざまな場所の人々とともに、それぞれの毎日に小さな楽しさとゆとりを添えられたらうれしいです。';
+      '韓国で生まれたParansoriが、世界のいろいろな場所で人々と出会い、それぞれの毎日に小さな楽しさとゆとりを添えられますように。';
 
   @override
   String get introClosing1 => 'いつでも、どこでも、気軽に立ち寄れる音の場所。';

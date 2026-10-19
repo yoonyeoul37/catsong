@@ -1525,6 +1525,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get catRest => 'Dinlen · Odaklan';
 
   @override
+  String get menuHeadRadio => 'Radyo';
+
+  @override
+  String get menuHeadNature => 'Doğa sesleri';
+
+  @override
+  String get menuHeadRest => 'Dinlenme ve odak';
+
+  @override
   String get catRestSub => 'Beyaz gürültü · Odak (yakında)';
 
   @override
@@ -4519,11 +4528,11 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get introEveryday1 =>
-      'Paransori, gününün farklı anlarında hafifçe yanında olmayı umuyor.';
+      'Paransori, gündelik hayatın farklı anlarında sana rahatça eşlik etmek istiyor.';
 
   @override
   String get introEveryday2 =>
-      'Tek bir şarkı, tanıdık bir radyo programı, yağmurun yumuşak tıpırtısı — bunların her biri sıradan bir günü biraz daha aydınlatabilir. Bu yüzden herkes için sade, kolay ve keyifli bir alan oluşturuyoruz.';
+      'Tek bir şarkı, tanıdık bir radyo programı ya da yumuşak bir yağmur sesi, sıradan bir günü biraz daha güzel kılabilir. Bu yüzden Paransori\'yi karmaşayı azaltan ve dinleme keyfini artıran, herkesin kolayca ve rahatça kullanabileceği bir ses alanı olarak geliştiriyoruz.';
 
   @override
   String get introSoundsTitle => 'Paransori\'de bulacağın sesler';
@@ -4533,11 +4542,11 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get introWish1 =>
-      'Sevdiğin sesleri dinleyerek geçen zaman sandığından daha yakın — sabah güne başlarken, çalışırken ve gün biterken sessiz gecelerde.';
+      'Sevdiğimiz sesleri dinlediğimiz zaman sandığımızdan daha yakın: güne başlarken, çalışırken ve günün sona erdiği sakin gecelerde.\n\nHerkesin istediği seslere kolayca ve rahatça ulaşabilmesini istiyoruz. Bu yüzden birçok farklı sesi tek bir yerde topluyoruz; böylece dinlediğin her anın karmaşa olmadan tadını çıkarabilirsin.';
 
   @override
   String get introWish2 =>
-      'Paransori Kore\'de doğdu ve artık dünyanın dört bir yanındaki insanlara ulaşıyor. Her gününe biraz neşe ve rahatlık katmasını umuyoruz.';
+      'Kore\'de başlayan Paransori\'nin dünyanın dört bir yanındaki insanlara eşlik etmesini ve her güne biraz neşe ve huzur katmasını diliyoruz.';
 
   @override
   String get introClosing1 =>

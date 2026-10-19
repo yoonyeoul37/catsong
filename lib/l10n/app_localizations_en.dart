@@ -1525,6 +1525,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get catRest => 'Rest · Focus';
 
   @override
+  String get menuHeadRadio => 'Radio';
+
+  @override
+  String get menuHeadNature => 'Nature Sounds';
+
+  @override
+  String get menuHeadRest => 'Rest & Focus';
+
+  @override
   String get catRestSub => 'White noise · Focus (soon)';
 
   @override
@@ -4515,11 +4524,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get introEveryday1 =>
-      'Paransori is here for the little moments throughout your day.';
+      'Paransori hopes to be a comfortable companion in all kinds of everyday moments.';
 
   @override
   String get introEveryday2 =>
-      'A single song, a familiar radio show, the soft patter of rain — any of these can make an ordinary day a little brighter. That\'s why we\'re building a space that\'s simple, easy and enjoyable for everyone.';
+      'A single song, a familiar radio show, or the soft sound of rain can make an ordinary day feel a little better. That\'s why we\'re building Paransori as a space for sound with less complexity and more joy in listening — easy and comfortable for anyone to use.';
 
   @override
   String get introSoundsTitle => 'Sounds you\'ll find in Paransori';
@@ -4529,11 +4538,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get introWish1 =>
-      'Time spent listening to the sounds you love is closer than you think — as your morning begins, while you work, and on quiet nights as the day winds down.';
+      'Time with the sounds we love is closer than we think — as the morning begins, in the middle of work, and on quiet nights as the day winds down.\n\nWe hope everyone can find the sounds they want, easily and comfortably. So we bring many kinds of sound together in one place, letting you simply enjoy every moment of listening, free from complexity.';
 
   @override
   String get introWish2 =>
-      'Created in Korea, Paransori is made for listeners everywhere. We hope it brings a little more ease and joy to your day.';
+      'Paransori began in Korea, and we hope it can be part of people\'s lives around the world, adding a little joy and ease to every day.';
 
   @override
   String get introClosing1 =>

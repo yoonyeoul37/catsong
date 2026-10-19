@@ -1235,6 +1235,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       'it' => l.langNameIt,
       'tr' => l.langNameTr,
       'pl' => l.langNamePl,
+      'uk' => l.langNameUk,
+      'hi' => l.langNameHi,
+      'ro' => l.langNameRo,
+      'cs' => l.langNameCs,
+      'hu' => l.langNameHu,
       _ => '',
     };
   }
@@ -1268,7 +1273,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // 설정 → 언어에서 고른 언어 — 약관 페이지에 없는 언어(독일어·프랑스어 등)는 영어로
     // (그냥 보내면 페이지가 폰 언어=한국어로 열려서)
     final code = Localizations.localeOf(context).languageCode;
-    final lang = const ['ko', 'en', 'ja', 'zh', 'vi', 'hi', 'id', 'th', 'es', 'pt', 'de', 'fr', 'ru', 'it', 'tr', 'pl']
+    final lang = const ['ko', 'en', 'ja', 'zh', 'vi', 'hi', 'id', 'th', 'es', 'pt', 'de', 'fr', 'ru', 'it', 'tr', 'pl', 'uk', 'ro', 'cs', 'hu']
             .contains(code)
         ? code
         : 'en';

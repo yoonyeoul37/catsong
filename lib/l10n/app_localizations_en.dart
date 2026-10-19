@@ -1534,6 +1534,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuHeadRest => 'Rest & Focus';
 
   @override
+  String get menuHeadMusic => 'My Music';
+
+  @override
   String get catRestSub => 'White noise · Focus (soon)';
 
   @override
@@ -4748,4 +4751,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get langNamePl => 'Polish';
+
+  @override
+  String get langNameUk => 'Ukrainian';
+
+  @override
+  String get langNameHi => 'Hindi';
+
+  @override
+  String get langNameRo => 'Romanian';
+
+  @override
+  String get langNameCs => 'Czech';
+
+  @override
+  String get langNameHu => 'Hungarian';
 }

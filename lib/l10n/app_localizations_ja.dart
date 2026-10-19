@@ -1517,6 +1517,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get menuHeadRest => '休息と集中';
 
   @override
+  String get menuHeadMusic => 'マイミュージック';
+
+  @override
   String get catRestSub => 'ホワイトノイズ・集中（準備中）';
 
   @override
@@ -4551,4 +4554,19 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get langNamePl => 'ポーランド語';
+
+  @override
+  String get langNameUk => 'ウクライナ語';
+
+  @override
+  String get langNameHi => 'ヒンディー語';
+
+  @override
+  String get langNameRo => 'ルーマニア語';
+
+  @override
+  String get langNameCs => 'チェコ語';
+
+  @override
+  String get langNameHu => 'ハンガリー語';
 }

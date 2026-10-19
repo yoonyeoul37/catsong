@@ -519,6 +519,7 @@
   "menuHeadRadio": "電台",
   "menuHeadNature": "自然之聲",
   "menuHeadRest": "休息與專注",
+  "menuHeadMusic": "我的音樂",
   "catRestSub": "白噪音 · 專注（準備中）",
   "homeSoundsHeader": "來聽聽這些聲音吧",
   "homeRestHeader": "休息一下吧",
@@ -1460,5 +1461,10 @@
   "langNameRu": "俄文",
   "langNameIt": "義大利文",
   "langNameTr": "土耳其文",
-  "langNamePl": "波蘭文"
+  "langNamePl": "波蘭文",
+  "langNameUk": "烏克蘭文",
+  "langNameHi": "印地文",
+  "langNameRo": "羅馬尼亞文",
+  "langNameCs": "捷克文",
+  "langNameHu": "匈牙利文"
 }

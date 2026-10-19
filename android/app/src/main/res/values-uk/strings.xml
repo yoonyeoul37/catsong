@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">Музика · Радіо · Природа</string>
+    <string name="widget_loading">Завантаження…</string>
+    <string name="widget_wait">Зачекайте трохи</string>
+    <string name="widget_play_music">Увімкніть музику</string>
+    <string name="tab_music">Музика</string>
+    <string name="tab_radio">Радіо</string>
+    <string name="tab_nature">Природа</string>
+    <string name="tab_sleep">Сон</string>
+    <string name="widget_recent_empty">Тут з’являться недавні</string>
+    <string name="sample_song">Улюблена пісня</string>
+    <string name="sample_artist">Виконавець</string>
+    <string name="sample_station">Радіостанція</string>
+    <string name="sample_rain">Дощ</string>
+    <string name="sample_nature">Звуки природи</string>
+    <string name="alarm_channel">Ранковий будильник</string>
+    <string name="alarm_channel_desc">Ранковий будильник Paransori</string>
+    <string name="alarm_quiet_channel">Ранковий будильник (екран)</string>
+    <string name="alarm_quiet_desc">Коли екран будильника відкривається поверх блокування</string>
+    <string name="alarm_text">Торкніться, щоб відкрити будильник</string>
+    <string name="headset_channel">Навушники під’єднано</string>
+    <string name="action_play">Відтворити</string>
+    <string name="resume_ask">Продовжити слухати?</string>
+    <string name="rec_channel">Запис</string>
+    <string name="rec_channel_desc">Показується під час запису</string>
+    <string name="rec_title_paused">Paransori · Запис на паузі</string>
+    <string name="rec_title_on">Paransori · Запис</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · Торкніться, щоб продовжити</string>
+    <string name="rec_tap_back">Торкніться, щоб повернутися до запису</string>
+    <string name="rec_resume">Продовжити</string>
+    <string name="rec_pause">Пауза</string>
+    <string name="rec_done">Готово</string>
+</resources>

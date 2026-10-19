@@ -1517,6 +1517,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get menuHeadRest => '休息与专注';
 
   @override
+  String get menuHeadMusic => '我的音乐';
+
+  @override
   String get catRestSub => '白噪音 · 专注（准备中）';
 
   @override
@@ -4543,6 +4546,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get langNamePl => '波兰语';
+
+  @override
+  String get langNameUk => '乌克兰语';
+
+  @override
+  String get langNameHi => '印地语';
+
+  @override
+  String get langNameRo => '罗马尼亚语';
+
+  @override
+  String get langNameCs => '捷克语';
+
+  @override
+  String get langNameHu => '匈牙利语';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -6056,6 +6074,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get menuHeadRest => '休息與專注';
+
+  @override
+  String get menuHeadMusic => '我的音樂';
 
   @override
   String get catRestSub => '白噪音 · 專注（準備中）';
@@ -9084,4 +9105,19 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get langNamePl => '波蘭文';
+
+  @override
+  String get langNameUk => '烏克蘭文';
+
+  @override
+  String get langNameHi => '印地文';
+
+  @override
+  String get langNameRo => '羅馬尼亞文';
+
+  @override
+  String get langNameCs => '捷克文';
+
+  @override
+  String get langNameHu => '匈牙利文';
 }

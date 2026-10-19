@@ -516,6 +516,7 @@
   "menuHeadRadio": "วิทยุ",
   "menuHeadNature": "เสียงธรรมชาติ",
   "menuHeadRest": "พักผ่อนและโฟกัส",
+  "menuHeadMusic": "เพลงของฉัน",
   "catRestSub": "ไวต์นอยส์ · โฟกัส (เร็วๆ นี้)",
   "homeSoundsHeader": "ลองฟังเสียงเหล่านี้ไหม",
   "homeRestHeader": "พักสักครู่",
@@ -1457,5 +1458,10 @@
   "langNameRu": "รัสเซีย",
   "langNameIt": "อิตาลี",
   "langNameTr": "ตุรกี",
-  "langNamePl": "โปแลนด์"
+  "langNamePl": "โปแลนด์",
+  "langNameUk": "ยูเครน",
+  "langNameHi": "ฮินดี",
+  "langNameRo": "โรมาเนีย",
+  "langNameCs": "เช็ก",
+  "langNameHu": "ฮังการี"
 }

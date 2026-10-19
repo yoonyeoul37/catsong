@@ -516,6 +516,7 @@
   "menuHeadRadio": "Radio",
   "menuHeadNature": "Suara alam",
   "menuHeadRest": "Istirahat & fokus",
+  "menuHeadMusic": "Musikku",
   "catRestSub": "White noise · Fokus (segera)",
   "homeSoundsHeader": "Bagaimana dengan suara ini?",
   "homeRestHeader": "Istirahat sejenak",
@@ -1457,5 +1458,10 @@
   "langNameRu": "Rusia",
   "langNameIt": "Italia",
   "langNameTr": "Turki",
-  "langNamePl": "Polandia"
+  "langNamePl": "Polandia",
+  "langNameUk": "Ukraina",
+  "langNameHi": "Hindi",
+  "langNameRo": "Rumania",
+  "langNameCs": "Ceko",
+  "langNameHu": "Hungaria"
 }

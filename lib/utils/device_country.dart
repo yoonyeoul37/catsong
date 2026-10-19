@@ -47,6 +47,7 @@ class DeviceCountry {
       'ko': 'KR', 'en': 'US', 'ja': 'JP', 'zh': 'CN', 'zh_Hant': 'TW', 'de': 'DE', 'es': 'ES',
       'fr': 'FR', 'id': 'ID', 'pt': 'BR', 'vi': 'VN', 'th': 'TH',
       'ru': 'RU', 'it': 'IT', 'tr': 'TR', 'pl': 'PL',
+      'uk': 'UA', 'hi': 'IN', 'ro': 'RO', 'cs': 'CZ', 'hu': 'HU',
     };
     const alsoSpeak = {
       // 아프리카·카리브·아시아·오세아니아에서 영어 쓰는 나라도 (라디오 나라 목록에 있는 나라만)
@@ -58,6 +59,7 @@ class DeviceCountry {
       'de': ['DE', 'AT', 'CH', 'LU'],
       'ru': ['RU', 'BY', 'KZ', 'KG', 'UZ', 'MD'],
       'it': ['IT', 'CH', 'SM'],
+      'ro': ['RO', 'MD'],
       'zh_Hant': ['TW', 'HK', 'MO'],
       'zh': ['CN', 'SG'],
     };
@@ -65,7 +67,7 @@ class DeviceCountry {
     // 폰 언어가 앱에 없는 언어라 영어로 나올 때 (노르웨이어·헝가리어 …) → 폰 나라 라디오
     // (앱 라디오 나라 목록에 있는 나라만 — 없으면 아래 규칙대로)
     final phoneLang = PlatformDispatcher.instance.locale.languageCode;
-    const appLangs = ['ko', 'en', 'ja', 'zh', 'de', 'es', 'fr', 'id', 'in', 'pt', 'th', 'vi', 'ru', 'it', 'tr', 'pl'];
+    const appLangs = ['ko', 'en', 'ja', 'zh', 'de', 'es', 'fr', 'id', 'in', 'pt', 'th', 'vi', 'ru', 'it', 'tr', 'pl', 'uk', 'hi', 'ro', 'cs', 'hu'];
     if (dev != null && lang == 'en' && !appLangs.contains(phoneLang) &&
         RadioCountry.supported.any((c) => c.code == dev)) {
       return dev;

@@ -492,6 +492,7 @@
   "menuHeadRadio": "라디오",
   "menuHeadNature": "자연소리",
   "menuHeadRest": "휴식과 집중",
+  "menuHeadMusic": "내 음악",
   "catRestSub": "백색소음 · 집중 소리 (준비 중)",
   "homeSoundsHeader": "이런 소리는 어때요?",
   "homeRestHeader": "잠시 쉬어가요",
@@ -1526,5 +1527,10 @@
   "langNameRu": "러시아어",
   "langNameIt": "이탈리아어",
   "langNameTr": "튀르키예어",
-  "langNamePl": "폴란드어"
+  "langNamePl": "폴란드어",
+  "langNameUk": "우크라이나어",
+  "langNameHi": "힌디어",
+  "langNameRo": "루마니아어",
+  "langNameCs": "체코어",
+  "langNameHu": "헝가리어"
 }

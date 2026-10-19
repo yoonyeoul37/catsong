@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">Hudba · Rádio · Příroda</string>
+    <string name="widget_loading">Načítání…</string>
+    <string name="widget_wait">Chvíli strpení</string>
+    <string name="widget_play_music">Pusťte si hudbu</string>
+    <string name="tab_music">Hudba</string>
+    <string name="tab_radio">Rádio</string>
+    <string name="tab_nature">Příroda</string>
+    <string name="tab_sleep">Spánek</string>
+    <string name="widget_recent_empty">Zde se zobrazí nedávno přehrávané</string>
+    <string name="sample_song">Oblíbená skladba</string>
+    <string name="sample_artist">Interpret</string>
+    <string name="sample_station">Rozhlasová stanice</string>
+    <string name="sample_rain">Déšť</string>
+    <string name="sample_nature">Zvuky přírody</string>
+    <string name="alarm_channel">Ranní budík</string>
+    <string name="alarm_channel_desc">Ranní budík Paransori</string>
+    <string name="alarm_quiet_channel">Ranní budík (otevřít obrazovku)</string>
+    <string name="alarm_quiet_desc">Když se obrazovka budíku otevře přes zamykací obrazovku</string>
+    <string name="alarm_text">Klepnutím otevřete obrazovku budíku</string>
+    <string name="headset_channel">Sluchátka připojena</string>
+    <string name="action_play">Přehrát</string>
+    <string name="resume_ask">Pokračovat v poslechu?</string>
+    <string name="rec_channel">Nahrávání</string>
+    <string name="rec_channel_desc">Zobrazuje se během nahrávání</string>
+    <string name="rec_title_paused">Paransori · Nahrávání pozastaveno</string>
+    <string name="rec_title_on">Paransori · Nahrávání</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · Klepnutím pokračujte</string>
+    <string name="rec_tap_back">Klepnutím se vrátíte k nahrávání</string>
+    <string name="rec_resume">Pokračovat</string>
+    <string name="rec_pause">Pozastavit</string>
+    <string name="rec_done">Hotovo</string>
+</resources>

@@ -1536,6 +1536,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get menuHeadRest => 'Nghỉ ngơi & tập trung';
 
   @override
+  String get menuHeadMusic => 'Nhạc của tôi';
+
+  @override
   String get catRestSub => 'Tiếng ồn trắng · Tập trung (sắp có)';
 
   @override
@@ -4757,4 +4760,19 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get langNamePl => 'Tiếng Ba Lan';
+
+  @override
+  String get langNameUk => 'Tiếng Ukraina';
+
+  @override
+  String get langNameHi => 'Tiếng Hindi';
+
+  @override
+  String get langNameRo => 'Tiếng Romania';
+
+  @override
+  String get langNameCs => 'Tiếng Séc';
+
+  @override
+  String get langNameHu => 'Tiếng Hungary';
 }

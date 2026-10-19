@@ -96,7 +96,7 @@ List<String> indexGroupsFor(String lang) {
   if (lang == 'ko') return kIndexGroups;
   if (lang == 'ja') return _kIndexGroupsJa;
   if (lang == 'th') return _kIndexGroupsTh;
-  if (lang == 'ru') return _kIndexGroupsRu;
+  if (lang == 'ru' || lang == 'uk') return _kIndexGroupsRu;
   return _kIndexGroupsLatin;
 }
 
@@ -128,7 +128,7 @@ String indexGroupFor(String text, String lang) {
     if (row != null) return row;
     return latinLetterOf(c) != null ? 'A-Z' : '#';
   }
-  if (lang == 'ru') {
+  if (lang == 'ru' || lang == 'uk') {
     final row = _cyrRow(c);
     if (row != null) return row;
     return latinLetterOf(c) != null ? 'A-Z' : '#';

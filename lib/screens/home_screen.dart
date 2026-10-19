@@ -51,6 +51,7 @@ import '../widgets/radio_mini_player.dart';
 import '../providers/radio_provider.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/locale_holder.dart';
+import '../widgets/logo_shine.dart';
 import '../utils/point_color.dart' show pointColorName;
 import 'package:marquee/marquee.dart';
 import 'package:flutter/services.dart';
@@ -432,7 +433,10 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.fromLTRB(22, 14, 12, 2),
         child: Align(
           alignment: Alignment.bottomLeft,
-          child: Row(
+          child: FittedBox( // 글자가 크면 칸에 맞게 살짝 줄임 (아래 잘림 막기)
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.bottomLeft,
+            child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
@@ -459,6 +463,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
+          ),
         ),
       ),
     );
@@ -474,7 +479,10 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.fromLTRB(22, 14, 12, 2),
         child: Align(
           alignment: Alignment.bottomLeft,
-          child: Row(
+          child: FittedBox( // 글자가 크면 칸에 맞게 살짝 줄임
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.bottomLeft,
+            child: Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
@@ -495,6 +503,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ],
+          ),
           ),
         ),
       ),
@@ -1553,6 +1562,9 @@ class _HomeScreenState extends State<HomeScreen> {
       title: _isSearching
           ? _buildSearchField()
           // 로고(아이콘 + 파란소리)를 누르면 파란소리 소개
+          // 음악 화면: 다른 메뉴와 같은 제목 (내 음악 + 소리 막대 / MY MUSIC), 버튼이 많아서 왼쪽 정렬
+          : _showMusicLibrary
+              ? MenuTitle(title: tr.menuHeadMusic, sub: '', isDark: isDarkMode, caps: 'MY MUSIC', alignStart: true)
           : GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: _openIntro,
@@ -2319,7 +2331,10 @@ class _HomeScreenState extends State<HomeScreen> {
               Icon(Icons.tune_rounded, size: 18, color: baseColor.withOpacity(0.7)),
               const SizedBox(width: 6),
               // 끝의 물음표만 떼어서 통통 튀게 — 둥근 물음표 · 살짝 크게 · 포인트 색 (물음표 없는 언어는 글만)
-              Builder(builder: (_) {
+              Flexible(child: FittedBox( // 긴 언어(헝가리어 등)는 한 줄에 맞게 살짝 줄임
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Builder(builder: (_) {
                 final h = tr.homeSoundsHeader;
                 final q = RegExp(r'\s*[?？]$').firstMatch(h);
                 final st = titleFont( // 로고와 같은 글꼴
@@ -2339,6 +2354,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 );
               }),
+              )),
             ],
           ),
           const SizedBox(height: 16),

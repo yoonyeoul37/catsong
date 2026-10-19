@@ -1539,6 +1539,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get menuHeadRest => 'Riposo & concentrazione';
 
   @override
+  String get menuHeadMusic => 'La mia musica';
+
+  @override
   String get catRestSub => 'Rumore bianco · Focus (presto)';
 
   @override
@@ -4785,4 +4788,19 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get langNamePl => 'Polacco';
+
+  @override
+  String get langNameUk => 'Ucraino';
+
+  @override
+  String get langNameHi => 'Hindi';
+
+  @override
+  String get langNameRo => 'Rumeno';
+
+  @override
+  String get langNameCs => 'Ceco';
+
+  @override
+  String get langNameHu => 'Ungherese';
 }

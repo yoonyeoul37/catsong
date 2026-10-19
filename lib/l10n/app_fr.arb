@@ -516,6 +516,7 @@
   "menuHeadRadio": "Radio",
   "menuHeadNature": "Sons de la nature",
   "menuHeadRest": "Repos & concentration",
+  "menuHeadMusic": "Ma musique",
   "catRestSub": "Bruit blanc · Concentration (bientôt)",
   "homeSoundsHeader": "Et si vous écoutiez ces sons ?",
   "homeRestHeader": "Faites une petite pause",
@@ -1457,5 +1458,10 @@
   "langNameRu": "Russe",
   "langNameIt": "Italien",
   "langNameTr": "Turc",
-  "langNamePl": "Polonais"
+  "langNamePl": "Polonais",
+  "langNameUk": "Ukrainien",
+  "langNameHi": "Hindi",
+  "langNameRo": "Roumain",
+  "langNameCs": "Tchèque",
+  "langNameHu": "Hongrois"
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">म्यूज़िक · रेडियो · प्रकृति</string>
+    <string name="widget_loading">लोड हो रहा है…</string>
+    <string name="widget_wait">कृपया थोड़ा इंतज़ार करें</string>
+    <string name="widget_play_music">कुछ म्यूज़िक चलाएँ</string>
+    <string name="tab_music">म्यूज़िक</string>
+    <string name="tab_radio">रेडियो</string>
+    <string name="tab_nature">प्रकृति</string>
+    <string name="tab_sleep">स्लीप</string>
+    <string name="widget_recent_empty">हाल में चलाई गई चीज़ें यहाँ दिखेंगी</string>
+    <string name="sample_song">पसंदीदा गाना</string>
+    <string name="sample_artist">आर्टिस्ट</string>
+    <string name="sample_station">रेडियो स्टेशन</string>
+    <string name="sample_rain">बारिश</string>
+    <string name="sample_nature">प्रकृति की आवाज़ें</string>
+    <string name="alarm_channel">सुबह का अलार्म</string>
+    <string name="alarm_channel_desc">Paransori सुबह का अलार्म</string>
+    <string name="alarm_quiet_channel">सुबह का अलार्म (स्क्रीन खुली)</string>
+    <string name="alarm_quiet_desc">जब अलार्म स्क्रीन लॉक स्क्रीन के ऊपर खुले</string>
+    <string name="alarm_text">अलार्म स्क्रीन खोलने के लिए दबाएँ</string>
+    <string name="headset_channel">ईयरफ़ोन जुड़ा</string>
+    <string name="action_play">चलाएँ</string>
+    <string name="resume_ask">सुनना जारी रखें?</string>
+    <string name="rec_channel">रिकॉर्डिंग</string>
+    <string name="rec_channel_desc">रिकॉर्डिंग के दौरान दिखता है</string>
+    <string name="rec_title_paused">Paransori · रिकॉर्डिंग रुकी</string>
+    <string name="rec_title_on">Paransori · रिकॉर्डिंग</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · फिर शुरू करने के लिए दबाएँ</string>
+    <string name="rec_tap_back">रिकॉर्डिंग स्क्रीन पर लौटने के लिए दबाएँ</string>
+    <string name="rec_resume">फिर शुरू करें</string>
+    <string name="rec_pause">रोकें</string>
+    <string name="rec_done">हो गया</string>
+</resources>

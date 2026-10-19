@@ -1533,6 +1533,9 @@ class AppLocalizationsTh extends AppLocalizations {
   String get menuHeadRest => 'พักผ่อนและโฟกัส';
 
   @override
+  String get menuHeadMusic => 'เพลงของฉัน';
+
+  @override
   String get catRestSub => 'ไวต์นอยส์ · โฟกัส (เร็วๆ นี้)';
 
   @override
@@ -4739,4 +4742,19 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get langNamePl => 'โปแลนด์';
+
+  @override
+  String get langNameUk => 'ยูเครน';
+
+  @override
+  String get langNameHi => 'ฮินดี';
+
+  @override
+  String get langNameRo => 'โรมาเนีย';
+
+  @override
+  String get langNameCs => 'เช็ก';
+
+  @override
+  String get langNameHu => 'ฮังการี';
 }

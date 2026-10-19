@@ -71,7 +71,9 @@ class MenuTitle extends StatelessWidget {
   final bool isDark;
   final Widget? subWidget; // 영문 부제 대신 넣을 것 (나라별 라디오: 국기 + 나라 ▾)
   final VoidCallback? onTap; // 누르면 (나라별 라디오: 나라 고르기)
-  const MenuTitle({super.key, required this.title, required this.sub, required this.isDark, this.subWidget, this.onTap});
+  final String? caps; // 영문 부제를 직접 (내 음악: MY MUSIC)
+  final bool alignStart; // 왼쪽 정렬 (음악 화면: 오른쪽 버튼이 많아서)
+  const MenuTitle({super.key, required this.title, required this.sub, required this.isDark, this.subWidget, this.onTap, this.caps, this.alignStart = false});
 
   /// 위쪽 제목 (홈 카드 이름은 그대로 두고 여기만): 라디오 · 자연소리 · 휴식과 집중
   String _headTitle() {
@@ -83,7 +85,7 @@ class MenuTitle extends StatelessWidget {
 
   /// 영문 부제 — 제목이 이미 같은 영어면(Radio / RADIO) 같은 말 두 번 대신 PARANSORI
   String? _capsFor(String head) {
-    String? c;
+    String? c = caps;
     if (title == tr.catRadio) c = 'RADIO';
     if (title == tr.catNature) c = 'NATURE SOUNDS';
     if (title == tr.catRest) c = 'REST & FOCUS';
@@ -134,7 +136,7 @@ class MenuTitle extends StatelessWidget {
 
     final col = Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: alignStart ? CrossAxisAlignment.start : CrossAxisAlignment.center,
       children: [
         titleRow,
         const SizedBox(height: 3),

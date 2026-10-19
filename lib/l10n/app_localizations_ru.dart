@@ -1539,6 +1539,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get menuHeadRest => 'Отдых и фокус';
 
   @override
+  String get menuHeadMusic => 'Моя музыка';
+
+  @override
   String get catRestSub => 'Белый шум · Фокус (скоро)';
 
   @override
@@ -4803,4 +4806,19 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get langNamePl => 'Польский';
+
+  @override
+  String get langNameUk => 'Украинский';
+
+  @override
+  String get langNameHi => 'Хинди';
+
+  @override
+  String get langNameRo => 'Румынский';
+
+  @override
+  String get langNameCs => 'Чешский';
+
+  @override
+  String get langNameHu => 'Венгерский';
 }

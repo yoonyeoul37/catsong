@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">Zene · Rádió · Természet</string>
+    <string name="widget_loading">Betöltés…</string>
+    <string name="widget_wait">Egy pillanat</string>
+    <string name="widget_play_music">Indíts el egy zenét</string>
+    <string name="tab_music">Zene</string>
+    <string name="tab_radio">Rádió</string>
+    <string name="tab_nature">Természet</string>
+    <string name="tab_sleep">Alvás</string>
+    <string name="widget_recent_empty">A legutóbb lejátszottak itt jelennek meg</string>
+    <string name="sample_song">Kedvenc dal</string>
+    <string name="sample_artist">Előadó</string>
+    <string name="sample_station">Rádióadó</string>
+    <string name="sample_rain">Eső</string>
+    <string name="sample_nature">Természethangok</string>
+    <string name="alarm_channel">Reggeli ébresztő</string>
+    <string name="alarm_channel_desc">Paransori reggeli ébresztő</string>
+    <string name="alarm_quiet_channel">Reggeli ébresztő (képernyő megnyitása)</string>
+    <string name="alarm_quiet_desc">Amikor az ébresztő képernyője a lezárási képernyő fölött nyílik meg</string>
+    <string name="alarm_text">Koppints az ébresztő képernyő megnyitásához</string>
+    <string name="headset_channel">Fülhallgató csatlakoztatva</string>
+    <string name="action_play">Lejátszás</string>
+    <string name="resume_ask">Folytatod a hallgatást?</string>
+    <string name="rec_channel">Felvétel</string>
+    <string name="rec_channel_desc">Felvétel közben látható</string>
+    <string name="rec_title_paused">Paransori · Felvétel szünetel</string>
+    <string name="rec_title_on">Paransori · Felvétel</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · Koppints a folytatáshoz</string>
+    <string name="rec_tap_back">Koppints a felvétel képernyőre való visszatéréshez</string>
+    <string name="rec_resume">Folytatás</string>
+    <string name="rec_pause">Szünet</string>
+    <string name="rec_done">Kész</string>
+</resources>

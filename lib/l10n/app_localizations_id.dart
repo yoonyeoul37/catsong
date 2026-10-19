@@ -1538,6 +1538,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get menuHeadRest => 'Istirahat & fokus';
 
   @override
+  String get menuHeadMusic => 'Musikku';
+
+  @override
   String get catRestSub => 'White noise · Fokus (segera)';
 
   @override
@@ -4765,4 +4768,19 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get langNamePl => 'Polandia';
+
+  @override
+  String get langNameUk => 'Ukraina';
+
+  @override
+  String get langNameHi => 'Hindi';
+
+  @override
+  String get langNameRo => 'Rumania';
+
+  @override
+  String get langNameCs => 'Ceko';
+
+  @override
+  String get langNameHu => 'Hungaria';
 }

@@ -516,6 +516,7 @@
   "menuHeadRadio": "Радио",
   "menuHeadNature": "Звуки природы",
   "menuHeadRest": "Отдых и фокус",
+  "menuHeadMusic": "Моя музыка",
   "catRestSub": "Белый шум · Фокус (скоро)",
   "homeSoundsHeader": "Как насчёт этих звуков?",
   "homeRestHeader": "Сделайте паузу",
@@ -1457,5 +1458,10 @@
   "langNameRu": "Русский",
   "langNameIt": "Итальянский",
   "langNameTr": "Турецкий",
-  "langNamePl": "Польский"
+  "langNamePl": "Польский",
+  "langNameUk": "Украинский",
+  "langNameHi": "Хинди",
+  "langNameRo": "Румынский",
+  "langNameCs": "Чешский",
+  "langNameHu": "Венгерский"
 }

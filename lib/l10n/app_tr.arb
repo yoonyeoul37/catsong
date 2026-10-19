@@ -516,6 +516,7 @@
   "menuHeadRadio": "Radyo",
   "menuHeadNature": "Doğa sesleri",
   "menuHeadRest": "Dinlenme ve odak",
+  "menuHeadMusic": "Müziğim",
   "catRestSub": "Beyaz gürültü · Odak (yakında)",
   "homeSoundsHeader": "Bu seslere ne dersin?",
   "homeRestHeader": "Kısa bir mola ver",
@@ -1457,5 +1458,10 @@
   "langNameRu": "Rusça",
   "langNameIt": "İtalyanca",
   "langNameTr": "Türkçe",
-  "langNamePl": "Lehçe"
+  "langNamePl": "Lehçe",
+  "langNameUk": "Ukraynaca",
+  "langNameHi": "Hintçe",
+  "langNameRo": "Rumence",
+  "langNameCs": "Çekçe",
+  "langNameHu": "Macarca"
 }

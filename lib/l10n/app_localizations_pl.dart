@@ -1540,6 +1540,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get menuHeadRest => 'Odpoczynek i skupienie';
 
   @override
+  String get menuHeadMusic => 'Moja muzyka';
+
+  @override
   String get catRestSub => 'Biały szum · Skupienie (wkrótce)';
 
   @override
@@ -4813,4 +4816,19 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get langNamePl => 'Polski';
+
+  @override
+  String get langNameUk => 'Ukraiński';
+
+  @override
+  String get langNameHi => 'Hindi';
+
+  @override
+  String get langNameRo => 'Rumuński';
+
+  @override
+  String get langNameCs => 'Czeski';
+
+  @override
+  String get langNameHu => 'Węgierski';
 }

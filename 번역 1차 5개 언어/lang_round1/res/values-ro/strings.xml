@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Paransori</string>
+    <string name="widget_idle_sub">Muzică · Radio · Natură</string>
+    <string name="widget_loading">Se încarcă…</string>
+    <string name="widget_wait">Așteaptă o clipă</string>
+    <string name="widget_play_music">Pornește muzica</string>
+    <string name="tab_music">Muzică</string>
+    <string name="tab_radio">Radio</string>
+    <string name="tab_nature">Natură</string>
+    <string name="tab_sleep">Somn</string>
+    <string name="widget_recent_empty">Elementele redate recent apar aici</string>
+    <string name="sample_song">Melodie preferată</string>
+    <string name="sample_artist">Artist</string>
+    <string name="sample_station">Post de radio</string>
+    <string name="sample_rain">Ploaie</string>
+    <string name="sample_nature">Sunete din natură</string>
+    <string name="alarm_channel">Alarmă de dimineață</string>
+    <string name="alarm_channel_desc">Alarma de dimineață Paransori</string>
+    <string name="alarm_quiet_channel">Alarmă de dimineață (deschide ecranul)</string>
+    <string name="alarm_quiet_desc">Când ecranul alarmei se deschide peste ecranul de blocare</string>
+    <string name="alarm_text">Atinge pentru a deschide ecranul alarmei</string>
+    <string name="headset_channel">Căști conectate</string>
+    <string name="action_play">Redă</string>
+    <string name="resume_ask">Continui să asculți?</string>
+    <string name="rec_channel">Înregistrare</string>
+    <string name="rec_channel_desc">Afișat în timpul înregistrării</string>
+    <string name="rec_title_paused">Paransori · Înregistrare în pauză</string>
+    <string name="rec_title_on">Paransori · Se înregistrează</string>
+    <string name="rec_tap_resume">%1$02d:%2$02d · Atinge pentru a relua</string>
+    <string name="rec_tap_back">Atinge pentru a reveni la ecranul de înregistrare</string>
+    <string name="rec_resume">Reia</string>
+    <string name="rec_pause">Pauză</string>
+    <string name="rec_done">Gata</string>
+</resources>

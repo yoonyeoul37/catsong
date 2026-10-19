@@ -1516,6 +1516,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get menuHeadRest => '휴식과 집중';
 
   @override
+  String get menuHeadMusic => '내 음악';
+
+  @override
   String get catRestSub => '백색소음 · 집중 소리 (준비 중)';
 
   @override
@@ -4555,4 +4558,19 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get langNamePl => '폴란드어';
+
+  @override
+  String get langNameUk => '우크라이나어';
+
+  @override
+  String get langNameHi => '힌디어';
+
+  @override
+  String get langNameRo => '루마니아어';
+
+  @override
+  String get langNameCs => '체코어';
+
+  @override
+  String get langNameHu => '헝가리어';
 }

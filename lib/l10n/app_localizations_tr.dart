@@ -1534,6 +1534,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get menuHeadRest => 'Dinlenme ve odak';
 
   @override
+  String get menuHeadMusic => 'Müziğim';
+
+  @override
   String get catRestSub => 'Beyaz gürültü · Odak (yakında)';
 
   @override
@@ -4756,4 +4759,19 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get langNamePl => 'Lehçe';
+
+  @override
+  String get langNameUk => 'Ukraynaca';
+
+  @override
+  String get langNameHi => 'Hintçe';
+
+  @override
+  String get langNameRo => 'Rumence';
+
+  @override
+  String get langNameCs => 'Çekçe';
+
+  @override
+  String get langNameHu => 'Macarca';
 }

@@ -516,6 +516,7 @@
   "menuHeadRadio": "Radio",
   "menuHeadNature": "Âm thanh thiên nhiên",
   "menuHeadRest": "Nghỉ ngơi & tập trung",
+  "menuHeadMusic": "Nhạc của tôi",
   "catRestSub": "Tiếng ồn trắng · Tập trung (sắp có)",
   "homeSoundsHeader": "Nghe thử những âm thanh này?",
   "homeRestHeader": "Nghỉ ngơi một chút",
@@ -1457,5 +1458,10 @@
   "langNameRu": "Tiếng Nga",
   "langNameIt": "Tiếng Ý",
   "langNameTr": "Tiếng Thổ Nhĩ Kỳ",
-  "langNamePl": "Tiếng Ba Lan"
+  "langNamePl": "Tiếng Ba Lan",
+  "langNameUk": "Tiếng Ukraina",
+  "langNameHi": "Tiếng Hindi",
+  "langNameRo": "Tiếng Romania",
+  "langNameCs": "Tiếng Séc",
+  "langNameHu": "Tiếng Hungary"
 }

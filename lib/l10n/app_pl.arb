@@ -516,6 +516,7 @@
   "menuHeadRadio": "Radio",
   "menuHeadNature": "Dźwięki natury",
   "menuHeadRest": "Odpoczynek i skupienie",
+  "menuHeadMusic": "Moja muzyka",
   "catRestSub": "Biały szum · Skupienie (wkrótce)",
   "homeSoundsHeader": "Może te dźwięki?",
   "homeRestHeader": "Zrób sobie krótką przerwę",
@@ -1457,5 +1458,10 @@
   "langNameRu": "Rosyjski",
   "langNameIt": "Włoski",
   "langNameTr": "Turecki",
-  "langNamePl": "Polski"
+  "langNamePl": "Polski",
+  "langNameUk": "Ukraiński",
+  "langNameHi": "Hindi",
+  "langNameRo": "Rumuński",
+  "langNameCs": "Czeski",
+  "langNameHu": "Węgierski"
 }

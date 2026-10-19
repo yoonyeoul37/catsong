@@ -516,6 +516,7 @@
   "menuHeadRadio": "ラジオ",
   "menuHeadNature": "自然の音",
   "menuHeadRest": "休息と集中",
+  "menuHeadMusic": "マイミュージック",
   "catRestSub": "ホワイトノイズ・集中（準備中）",
   "homeSoundsHeader": "こんな音はいかが？",
   "homeRestHeader": "ひと休みしよう",
@@ -1457,5 +1458,10 @@
   "langNameRu": "ロシア語",
   "langNameIt": "イタリア語",
   "langNameTr": "トルコ語",
-  "langNamePl": "ポーランド語"
+  "langNamePl": "ポーランド語",
+  "langNameUk": "ウクライナ語",
+  "langNameHi": "ヒンディー語",
+  "langNameRo": "ルーマニア語",
+  "langNameCs": "チェコ語",
+  "langNameHu": "ハンガリー語"
 }

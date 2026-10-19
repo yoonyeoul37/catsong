@@ -4509,7 +4509,7 @@ class AppLocalizationsId extends AppLocalizations {
       'Paransori lahir dari keinginan untuk menghadirkan suara seperti itu.';
 
   @override
-  String get introNameLabel => 'Kisah di balik nama';
+  String get introNameLabel => 'Makna di balik Paransori';
 
   @override
   String get introNameStory =>

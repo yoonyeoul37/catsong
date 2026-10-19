@@ -8277,7 +8277,7 @@ abstract class AppLocalizations {
   /// No description provided for @introNameLabel.
   ///
   /// In ko, this message translates to:
-  /// **'이름 이야기'**
+  /// **'파란소리에 담긴 의미'**
   String get introNameLabel;
 
   /// No description provided for @introNameStory.

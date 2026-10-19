@@ -4504,7 +4504,7 @@ class AppLocalizationsTr extends AppLocalizations {
       'Paransori, böyle sesleri yakalama isteğiyle başladı.';
 
   @override
-  String get introNameLabel => 'Adın hikâyesi';
+  String get introNameLabel => 'Paransori\'nin anlamı';
 
   @override
   String get introNameStory =>

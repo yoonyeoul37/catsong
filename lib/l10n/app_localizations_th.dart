@@ -4490,7 +4490,7 @@ class AppLocalizationsTh extends AppLocalizations {
       'Paransori เริ่มต้นจากความตั้งใจที่จะเก็บเสียงแบบนี้ไว้';
 
   @override
-  String get introNameLabel => 'ที่มาของชื่อ';
+  String get introNameLabel => 'ความหมายของ Paransori';
 
   @override
   String get introNameStory =>

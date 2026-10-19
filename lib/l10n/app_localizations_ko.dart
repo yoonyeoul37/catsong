@@ -4317,7 +4317,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get introStarted => '파란소리는 그런 소리를 담고 싶은\n마음에서 시작되었습니다.';
 
   @override
-  String get introNameLabel => '이름 이야기';
+  String get introNameLabel => '파란소리에 담긴 의미';
 
   @override
   String get introNameStory =>

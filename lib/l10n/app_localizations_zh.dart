@@ -4310,7 +4310,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get introStarted => 'Paransori 源自想要传递这样声音的心意。';
 
   @override
-  String get introNameLabel => '名字的由来';
+  String get introNameLabel => 'Paransori 的含义';
 
   @override
   String get introNameStory =>
@@ -8842,7 +8842,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get introStarted => 'Paransori 源自想要傳遞這樣聲音的心意。';
 
   @override
-  String get introNameLabel => '名字的由來';
+  String get introNameLabel => 'Paransori 的含義';
 
   @override
   String get introNameStory =>

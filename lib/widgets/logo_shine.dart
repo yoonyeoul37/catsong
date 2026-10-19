@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/title_font.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../l10n/locale_holder.dart';
 
 /// 로고·제목 글자 위로 은은한 빛이 왼쪽 → 오른쪽으로 계속 지나감 (색 없이 회색/흰색)
 /// 홈 로고 "파란"과 같은 움직임 — 라디오·자연·휴식 제목에도 같이 씀
@@ -70,9 +72,21 @@ class MenuTitle extends StatelessWidget {
   final VoidCallback? onTap; // 누르면 (나라별 라디오: 나라 고르기)
   const MenuTitle({super.key, required this.title, required this.sub, required this.isDark, this.subWidget, this.onTap});
 
+  /// 제목 아래 작은 영문 대문자 (홈 로고 PARANSORI처럼) — 제목이 이미 같은 영어면(Radio) PARANSORI
+  String? _capsFor() {
+    String? c;
+    if (title == tr.catRadio) c = 'RADIO';
+    if (title == tr.catNature) c = 'NATURE';
+    if (title == tr.catRest) c = 'REST·FOCUS';
+    if (c == null) return null;
+    final plain = title.toUpperCase().replaceAll(RegExp(r'[\s·・]'), '');
+    return plain == c.replaceAll('·', '') ? 'PARANSORI' : c;
+  }
+
   @override
   Widget build(BuildContext context) {
     final base = isDark ? Colors.white : Colors.black;
+    final caps = subWidget == null ? _capsFor() : null;
     // 위쪽은 이름표라서 '(준비중)' 같은 끝 괄호는 빼기
     final shortSub = sub.replaceAll(RegExp(r'\s*[\x28（][^\x29）]*[\x29）]\s*$'), '');
     final row = Row(
@@ -87,9 +101,10 @@ class MenuTitle extends StatelessWidget {
         ),
         const SizedBox(width: 9),
         Flexible(
+          child: IntrinsicWidth(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: caps != null ? CrossAxisAlignment.stretch : CrossAxisAlignment.start,
             children: [
               // 제목 위로만 회색 빛 (다크 모드는 흰 글자 위로 연한 회색 빛)
               LogoShine(
@@ -103,6 +118,25 @@ class MenuTitle extends StatelessWidget {
                   style: titleFont(color: base, fontSize: 20, letterSpacing: 0.3),
                 ),
               ),
+              // C안: 작은 영문 대문자를 제목 폭에 맞춰 고르게 (홈 로고 PARANSORI와 같은 짜임)
+              if (caps != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 2, left: 1, right: 1),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      for (final ch in caps.split(''))
+                        Text(ch,
+                            textScaler: TextScaler.noScaling,
+                            style: GoogleFonts.quicksand(
+                                color: base.withOpacity(0.55),
+                                fontSize: 9,
+                                height: 1.0,
+                                fontWeight: FontWeight.w700)),
+                    ],
+                  ),
+                )
+              else
               // 설명 한 줄 (또는 넣어 준 것): 긴 언어는 넘치지 않게 살짝 작아짐
               FittedBox(
                 fit: BoxFit.scaleDown,
@@ -116,6 +150,7 @@ class MenuTitle extends StatelessWidget {
                     ),
               ),
             ],
+          ),
           ),
         ),
       ],

@@ -4555,7 +4555,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Paransori родился из желания сохранить такие звуки.';
 
   @override
-  String get introNameLabel => 'О названии';
+  String get introNameLabel => 'Что значит Paransori';
 
   @override
   String get introNameStory =>

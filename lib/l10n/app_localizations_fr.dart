@@ -4533,7 +4533,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Paransori est né de l\'envie de capturer des sons comme ceux-là.';
 
   @override
-  String get introNameLabel => 'L\'histoire du nom';
+  String get introNameLabel => 'Le sens de Paransori';
 
   @override
   String get introNameStory =>

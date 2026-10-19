@@ -4317,7 +4317,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get introStarted => 'Paransoriは、そんな音を届けたいという想いから始まりました。';
 
   @override
-  String get introNameLabel => '名前の由来';
+  String get introNameLabel => 'Paransoriにこめた意味';
 
   @override
   String get introNameStory =>

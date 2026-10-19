@@ -4534,7 +4534,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Paransori entstand aus dem Wunsch, genau solche Klänge einzufangen.';
 
   @override
-  String get introNameLabel => 'Über den Namen';
+  String get introNameLabel => 'Was Paransori bedeutet';
 
   @override
   String get introNameStory =>

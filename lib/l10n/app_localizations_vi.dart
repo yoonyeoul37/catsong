@@ -4502,7 +4502,7 @@ class AppLocalizationsVi extends AppLocalizations {
       'Paransori ra đời từ mong muốn lưu giữ những âm thanh như thế.';
 
   @override
-  String get introNameLabel => 'Về cái tên';
+  String get introNameLabel => 'Ý nghĩa của Paransori';
 
   @override
   String get introNameStory =>

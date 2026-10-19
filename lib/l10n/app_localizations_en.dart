@@ -4500,7 +4500,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Paransori began with a simple wish: to bring these sounds into everyday life.';
 
   @override
-  String get introNameLabel => 'The story behind our name';
+  String get introNameLabel => 'The Meaning Behind Paransori';
 
   @override
   String get introNameStory =>

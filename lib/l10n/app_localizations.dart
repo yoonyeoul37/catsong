@@ -8265,7 +8265,7 @@ abstract class AppLocalizations {
   /// No description provided for @introNameStory.
   ///
   /// In ko, this message translates to:
-  /// **'\'파란소리\'라는 이름에는 맑은 하늘과 푸른 바다가 주는 청량함, 시원한 바람이 전하는 상쾌함, 그리고 자연 속에서 느끼는 편안함을 담았습니다.'**
+  /// **'\'파란소리\'라는 이름에는 맑은 하늘과 푸른 바다가 주는 청량함, 시원한 바람이 전하는 상쾌함, 그리고 자연 속에서 느끼는 편안함을 담았습니다.\n\n영문 이름 \'Paransori\'는 우리말 \'파란소리\'를 영어로 번역하지 않고, 한글의 소리를 로마자로 옮긴 이름입니다. \'파란\'은 \'Paran\', \'소리\'는 \'Sori\'로 표기하고, 하나의 이름으로 이었습니다.\n\n우리말이 가진 고유한 느낌을 간직하면서, 세계 어디에서나 같은 이름으로 기억되기를 바라는 마음을 담았습니다.'**
   String get introNameStory;
 
   /// No description provided for @introEverydayTitle.

@@ -4504,7 +4504,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get introNameStory =>
-      'Paransori berasal dari dua kata Korea, \'paran\' dan \'sori\'. \'Paran\' berarti biru, mengingatkan pada langit cerah dan laut biru yang dalam. \'Sori\' berarti suara. Nama ini membawa harapan kami untuk berbagi, lewat suara, kesegaran langit cerah, sejuknya angin lembut, dan rasa nyaman yang kita rasakan di alam.';
+      'Dalam bahasa Korea, \"paran\" berarti biru dan \"sori\" berarti suara. Keduanya membentuk \"Paransori\" — nama yang terinspirasi dari langit biru yang cerah, laut yang tenang, angin yang menyegarkan, dan ketenangan alam.\n\nAlih-alih menerjemahkan nama kami menjadi \"Blue Sound\", kami memilih mempertahankan pelafalan asli bahasa Korea, yang ditulis dengan huruf Latin sebagai \"Paransori\".\n\nNama ini lahir di Korea, dan kami berharap nama ini menjadi akrab bagi orang-orang di seluruh dunia, membawa sedikit lebih banyak ketenangan dan kegembiraan dalam keseharian.';
 
   @override
   String get introEverydayTitle => 'Suara di keseharianmu';

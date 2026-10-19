@@ -4491,11 +4491,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'Paransori began with a simple wish: to bring these sounds into everyday life.';
 
   @override
-  String get introNameLabel => 'About the name';
+  String get introNameLabel => 'The story behind our name';
 
   @override
   String get introNameStory =>
-      'Paransori comes from two Korean words, \'paran\' and \'sori\'. \'Paran\' means blue, bringing to mind clear skies and the deep blue sea. \'Sori\' means sound. The name carries our wish to share, through sound, the freshness of a clear sky, the coolness of a gentle breeze, and the comfort we feel in nature.';
+      'In Korean, \"paran\" means blue, and \"sori\" means sound. Together, they form \"Paransori\" — a name inspired by clear blue skies, peaceful seas, refreshing breezes, and the comfort of nature.\n\nRather than translating our name into \"Blue Sound,\" we chose to preserve its original Korean pronunciation, written in the Latin alphabet as \"Paransori.\"\n\nBorn in Korea, we hope this name will become familiar to people around the world, bringing a little more calm and joy to everyday life.';
 
   @override
   String get introEverydayTitle => 'Sound in your everyday';

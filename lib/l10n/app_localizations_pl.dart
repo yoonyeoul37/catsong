@@ -4558,7 +4558,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get introNameStory =>
-      'Paransori pochodzi od dwóch koreańskich słów: „paran” i „sori”. „Paran” oznacza błękit, przywodzący na myśl czyste niebo i głębokie, niebieskie morze. „Sori” oznacza dźwięk. W tej nazwie kryje się nasze pragnienie, by za pomocą dźwięku dzielić się świeżością czystego nieba, chłodem łagodnej bryzy i ukojeniem, jakie daje nam natura.';
+      'Po koreańsku „paran” oznacza niebieski, a „sori” – dźwięk. Razem tworzą „Paransori” – nazwę zainspirowaną czystym błękitnym niebem, spokojnym morzem, orzeźwiającą bryzą i ukojeniem, jakie daje natura.\n\nZamiast tłumaczyć naszą nazwę jako „Blue Sound”, postanowiliśmy zachować jej oryginalne koreańskie brzmienie, zapisane alfabetem łacińskim jako „Paransori”.\n\nTa nazwa narodziła się w Korei. Mamy nadzieję, że stanie się bliska ludziom na całym świecie i wniesie do codzienności trochę więcej spokoju i radości.';
 
   @override
   String get introEverydayTitle => 'Dźwięk w twojej codzienności';

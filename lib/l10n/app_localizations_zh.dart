@@ -4305,7 +4305,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get introNameStory =>
-      'Paransori（파란소리）这个名字来自韩语中的“파란（Paran）”和“소리（Sori）”。“Paran”意为蓝色，让人联想到晴朗的天空和蔚蓝的大海；“Sori”则是我们所听到的声音。这个名字承载着我们的心愿：用声音传递晴空的清爽、凉风的舒畅，以及置身大自然时的安宁。';
+      '在韩语中，“paran”是蓝色，“sori”是声音。两者合在一起，就是“Paransori”——这个名字的灵感来自湛蓝的天空、平静的大海、清爽的微风，以及大自然带来的舒适。\n\n我们没有把它翻译成“Blue Sound”，而是保留了韩语原本的发音，用拉丁字母写作“Paransori”。\n\n这个诞生于韩国的名字，希望能被世界各地的人们熟悉，为每一天带来多一点平静与快乐。';
 
   @override
   String get introEverydayTitle => '与声音相伴的日常';
@@ -8828,7 +8828,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get introNameStory =>
-      'Paransori（파란소리）這個名字來自韓語中的「파란（Paran）」和「소리（Sori）」。「Paran」意為藍色，讓人聯想到晴朗的天空和蔚藍的大海；「Sori」則是我們所聽到的聲音。這個名字承載著我們的心願：用聲音傳遞晴空的清爽、涼風的舒暢，以及置身大自然時的安寧。';
+      '在韓語中，「paran」是藍色，「sori」是聲音。兩者合在一起，就是「Paransori」——這個名字的靈感來自湛藍的天空、平靜的大海、清爽的微風，以及大自然帶來的舒適。\n\n我們沒有把它翻譯成「Blue Sound」，而是保留了韓語原本的發音，用拉丁字母寫作「Paransori」。\n\n這個誕生於韓國的名字，希望能被世界各地的人們熟悉，為每一天帶來多一點平靜與快樂。';
 
   @override
   String get introEverydayTitle => '與聲音相伴的日常';

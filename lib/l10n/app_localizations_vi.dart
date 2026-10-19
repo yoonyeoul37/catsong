@@ -4497,7 +4497,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get introNameStory =>
-      'Paransori được ghép từ hai từ tiếng Hàn: \'paran\' và \'sori\'. \'Paran\' nghĩa là màu xanh, gợi nhớ bầu trời trong và biển xanh thẳm. \'Sori\' nghĩa là âm thanh. Cái tên gửi gắm mong muốn của chúng tôi: qua âm thanh, chia sẻ sự trong lành của bầu trời, sự mát dịu của làn gió và cảm giác bình yên giữa thiên nhiên.';
+      'Trong tiếng Hàn, \"paran\" nghĩa là màu xanh lam, còn \"sori\" nghĩa là âm thanh. Ghép lại, chúng tạo thành \"Paransori\" — cái tên lấy cảm hứng từ bầu trời xanh trong, biển cả êm đềm, những làn gió mát lành và sự dễ chịu của thiên nhiên.\n\nThay vì dịch tên thành \"Blue Sound\", chúng tôi chọn giữ nguyên cách phát âm tiếng Hàn và viết bằng chữ cái Latinh là \"Paransori\".\n\nCái tên này ra đời tại Hàn Quốc, và chúng tôi mong nó sẽ trở nên thân quen với mọi người trên khắp thế giới, mang thêm một chút bình yên và niềm vui vào cuộc sống mỗi ngày.';
 
   @override
   String get introEverydayTitle => 'Âm thanh trong mỗi ngày';

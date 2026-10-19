@@ -4499,7 +4499,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get introNameStory =>
-      'Paransori, Korece iki kelimeden gelir: \'paran\' ve \'sori\'. \'Paran\' mavi demektir; akla berrak gökyüzünü ve masmavi denizi getirir. \'Sori\' ise ses demektir. Bu ad; berrak bir gökyüzünün ferahlığını, hafif bir esintinin serinliğini ve doğada hissettiğimiz huzuru sesle paylaşma dileğimizi taşır.';
+      'Korecede \"paran\" mavi, \"sori\" ise ses demektir. İkisi bir araya gelerek \"Paransori\"yi oluşturur: berrak mavi gökyüzünden, sakin denizlerden, ferahlatıcı esintilerden ve doğanın huzurundan ilham alan bir isim.\n\nAdımızı \"Blue Sound\" olarak çevirmek yerine, Korece özgün telaffuzunu koruyup Latin harfleriyle \"Paransori\" olarak yazmayı seçtik.\n\nKore\'de doğan bu ismin dünyanın dört bir yanındaki insanlara tanıdık gelmesini ve günlük hayata biraz daha huzur ve neşe katmasını diliyoruz.';
 
   @override
   String get introEverydayTitle => 'Gündelik hayatında ses';

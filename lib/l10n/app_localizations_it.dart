@@ -4525,7 +4525,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get introNameStory =>
-      'Paransori nasce da due parole coreane, \'paran\' e \'sori\'. \'Paran\' significa blu e fa pensare a cieli limpidi e al mare profondo. \'Sori\' significa suono. Il nome racchiude il nostro desiderio di condividere, attraverso il suono, la freschezza di un cielo terso, la leggerezza di una brezza e la serenità che proviamo nella natura.';
+      'In coreano, \"paran\" significa blu e \"sori\" significa suono. Insieme formano \"Paransori\": un nome ispirato ai cieli azzurri e limpidi, al mare calmo, alla brezza fresca e alla serenità della natura.\n\nInvece di tradurre il nostro nome in \"Blue Sound\", abbiamo scelto di mantenere la sua pronuncia coreana originale, scritta in alfabeto latino come \"Paransori\".\n\nQuesto nome è nato in Corea e speriamo che diventi familiare a persone di tutto il mondo, portando un po’ più di calma e di gioia nella vita di ogni giorno.';
 
   @override
   String get introEverydayTitle => 'I suoni della tua giornata';

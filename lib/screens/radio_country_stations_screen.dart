@@ -744,6 +744,7 @@ class _RadioCountryStationsScreenState
       setState(() {
         _chip = c;
         if (c == 'podcast') {
+          PodNewMark.seen(); // 색연필 동그라미 지우기
           _mode = _ViewMode.podcast;
           _sub = null;
         } else if (c == 'mine') {
@@ -808,14 +809,17 @@ class _RadioCountryStationsScreenState
                                 size: 14, color: _chip == c ? baseColor : dim),
                             const SizedBox(width: 4),
                           ],
-                          Text(
-                            names[c]!,
-                            softWrap: false,
-                            style: TextStyle(
-                              color: _chip == c ? baseColor : dim,
-                              fontSize: 15,
-                              fontWeight: _chip == c ? FontWeight.w800 : FontWeight.w600,
-                              letterSpacing: -0.2,
+                          PodPencilCircle( // 팟캐스트만 색연필 동그라미
+                            enabled: c == 'podcast',
+                            child: Text(
+                              names[c]!,
+                              softWrap: false,
+                              style: TextStyle(
+                                color: _chip == c ? baseColor : dim,
+                                fontSize: 15,
+                                fontWeight: _chip == c ? FontWeight.w800 : FontWeight.w600,
+                                letterSpacing: -0.2,
+                              ),
                             ),
                           ),
                         ],

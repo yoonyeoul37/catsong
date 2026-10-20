@@ -12,6 +12,7 @@ import '../providers/theme_provider.dart';
 import '../services/alarm_service.dart';
 import '../widgets/paran_toast.dart';
 import '../l10n/locale_holder.dart';
+import 'feedback_screen.dart';
 
 /// 설정 도움말을 한 번이라도 열어봤는지 (⋮ 메뉴의 작은 점 표시용)
 class HelpSeen {
@@ -499,20 +500,35 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
                         width: double.infinity,
                         height: 48,
                         child: OutlinedButton.icon(
-                          onPressed: _mailUs,
+                          onPressed: () {
+                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const FeedbackScreen()));
+                          },
                           style: OutlinedButton.styleFrom(
                             backgroundColor: card,
                             foregroundColor: ink,
                             side: BorderSide(color: line2),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           ),
-                          icon: const Icon(Icons.edit_outlined, size: 19),
-                          label: Text(tr.emailUs,
+                          icon: const Icon(Icons.chat_bubble_outline_rounded, size: 18),
+                          label: Text(fbText('의견 보내기', 'Send feedback'),
                               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Center(child: Text(_contactMail, style: TextStyle(color: hint, fontSize: 12))),
+                      // 메일 주소: 누르면 메일 앱 (예전처럼)
+                      Center(
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: _mailUs,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            child: Text(_contactMail,
+                                style: TextStyle(
+                                    color: hint, fontSize: 12, decoration: TextDecoration.underline, decorationColor: hint)),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

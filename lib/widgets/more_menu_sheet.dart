@@ -16,6 +16,7 @@ import '../screens/bulk_art_screen.dart';
 import '../screens/settings_help_screen.dart';
 import '../screens/alarm_screen.dart';
 import '../screens/paran_intro_screen.dart';
+import '../screens/feedback_screen.dart';
 import '../services/alarm_service.dart';
 import '../l10n/locale_holder.dart';
 
@@ -52,6 +53,9 @@ const String _kIconHelp =
 const String _kIconAlarm =
     '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/>'
     '<path d="M5 3 2 6"/><path d="M22 6l-3-3"/>';
+// 의견 보내기: 말풍선
+const String _kIconChat =
+    '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>';
 const String _kIconClose =
     '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
 
@@ -153,6 +157,7 @@ void showMoreMenuSheet(
         ),
       ),
       onHelp: () => openPage(ctx, MaterialPageRoute(builder: (_) => const SettingsHelpScreen())),
+      onFeedback: () => openPage(ctx, MaterialPageRoute(builder: (_) => const FeedbackScreen())),
       onAlarm: () => openPage(ctx, MaterialPageRoute(builder: (_) => const AlarmScreen())),
       onIntro: () => openPage(ctx, MaterialPageRoute(builder: (_) => const ParanIntroScreen())),
       onHomepage: () async {
@@ -253,6 +258,7 @@ class _MoreMenuSheet extends StatelessWidget {
   final VoidCallback onSettings;
   final VoidCallback onHomepage;
   final VoidCallback onHelp;
+  final VoidCallback onFeedback;
   final VoidCallback onAlarm;
   final VoidCallback onIntro;
   final bool showSongTools;
@@ -271,6 +277,7 @@ class _MoreMenuSheet extends StatelessWidget {
     required this.onSettings,
     required this.onHomepage,
     required this.onHelp,
+    required this.onFeedback,
     required this.onAlarm,
     required this.onIntro,
   });
@@ -342,6 +349,14 @@ class _MoreMenuSheet extends StatelessWidget {
                     title: tr.menuRateTitle,
                     subtitle: tr.moreRateSub,
                     onTap: onRate,
+                  ),
+                  // 의견 보내기 (앱에 대해 말하는 줄끼리: 공유 · 평가 · 의견)
+                  _MenuCard(
+                    p: p,
+                    icon: _kIconChat,
+                    title: fbText('의견 보내기', 'Send feedback'),
+                    subtitle: fbText('불편한 점이나 바라는 점', 'Problems or ideas'),
+                    onTap: onFeedback,
                   ),
                   _MenuCard(
                     p: p,

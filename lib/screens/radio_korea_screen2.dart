@@ -158,6 +158,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
       child: GestureDetector(
         onTap: () {
           const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+          if (mode == _ViewMode.podcast) PodNewMark.seen(); // 색연필 동그라미 지우기
           setState(() => _mode = mode);
         },
         child: AnimatedContainer(
@@ -171,8 +172,10 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           ),
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(horizontal: 4),
-          // 글자가 커도 한 줄 (넘치면 칸에 맞게 살짝 줄임)
-          child: FittedBox(
+          // 글자가 커도 한 줄 (넘치면 칸에 맞게 살짝 줄임) · 팟캐스트는 색연필 동그라미
+          child: PodPencilCircle(
+            enabled: mode == _ViewMode.podcast,
+            child: FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
               label,
@@ -186,6 +189,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                 fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
               ),
             ),
+          ),
           ),
         ),
       ),

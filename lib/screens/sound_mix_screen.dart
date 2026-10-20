@@ -783,16 +783,10 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
       case 'ko':
         farewellAsset = 'assets/farewell_ko_v4.mp3';
         break;
-      case 'ja':
-        farewellAsset = 'assets/farewell_ja.mp3';
-        break;
-      case 'zh':
-        farewellAsset = 'assets/farewell_zh.mp3';
-        break;
       default:
-        farewellAsset = 'assets/farewell_en.mp3';
+        farewellAsset = 'assets/greet_outro.mp3'; // 해외: 끝인사 멜로디
     }
-    if (langCode == 'ko' && context.read<ThemeProvider>().voiceGreetingEnabled) { // 목소리는 한국어만
+    if (context.read<ThemeProvider>().voiceGreetingEnabled) { // 한국어는 목소리 · 해외는 멜로디
       final farewellPlayer = AudioPlayer();
       farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
     }

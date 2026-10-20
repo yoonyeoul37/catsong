@@ -144,6 +144,8 @@ flutter:
 
     - assets/farewell_ko_v4.mp3
     - assets/welcome_ko_v4.mp3
+    - assets/greet_intro.mp3   # 해외 첫인사 멜로디
+    - assets/greet_outro.mp3   # 해외 끝인사 멜로디
 
     - assets/music_night_bg.png
 

@@ -78,6 +78,8 @@ import 'sleep_focus_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/more_menu_sheet.dart';
+import '../podcast/podcast.dart';
+import '../podcast/podcast_screens.dart' show PodcastMiniPlayer;
 import 'paran_intro_screen.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:permission_handler/permission_handler.dart';
@@ -1529,6 +1531,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (context.watch<SoundMixProvider>().hasSession) {
                     return const SoundMixMiniPlayer();
                   }
+                  if (context.watch<PodcastPlayer>().active) {
+                    return const PodcastMiniPlayer();
+                  }
                   return const SizedBox.shrink();
                 },
               ),
@@ -2164,7 +2169,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final cut = DateTime.now().subtract(const Duration(days: 7));
       final seen = <String>{};
       final out = <RecentContentEntry>[];
-      for (final e in context.watch<RecentContentProvider>().entries) {
+      for (final e in _withPodcasts(context.watch<RecentContentProvider>().entries, context.watch<PodcastPlayer>())) {
         if (e.playedAt.isBefore(cut)) continue;
         if (songUris != null && e.type == RecentContentType.music && !songUris.contains(e.songUri)) continue;
         if (!seen.add('${e.type.name}|${e.key}')) continue;
@@ -2799,6 +2804,29 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (item.natureAssetPath != null) {
                             context.read<PlayerProvider>().playNatureSound(item.natureAssetPath!, item.title);
                           }
+                        };
+                        break;
+                      case RecentContentType.podcast:
+                        typeIcon = Icons.podcasts_rounded;
+                        typeColor = const Color(0xFFB4876A);
+                        final pd = item.podcastData ?? const {};
+                        final pShow = PodcastShow.fromJson(Map<String, dynamic>.from(pd['show'] ?? const {}));
+                        final pEp = PodcastEpisode.fromJson(Map<String, dynamic>.from(pd['ep'] ?? const {}));
+                        final pArt = pEp.art.isNotEmpty ? pEp.art : pShow.art;
+                        final pTile = _recentTile(isDarkMode, const Color(0xFFE4DCCD), Icons.podcasts_rounded);
+                        thumbnail = pArt.startsWith('http')
+                            ? CachedNetworkImage(
+                                imageUrl: pArt,
+                                width: 72,
+                                height: 72,
+                                fit: BoxFit.cover,
+                                memCacheWidth: 216,
+                                placeholder: (_, __) => pTile,
+                                errorWidget: (_, __, ___) => pTile,
+                              )
+                            : pTile;
+                        onTapAction = () {
+                          if (pEp.url.isNotEmpty) PodcastPlayer.instance.play(pShow, pEp); // 듣던 곳부터
                         };
                         break;
                       case RecentContentType.sleep:
@@ -4583,4 +4611,21 @@ class _TipPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _TipPainter old) => old.hole != hole;
+}
+
+/// 홈 '최근에 들었어요': 음악·라디오·자연 기록 + 팟캐스트 기록(따로 저장)을 시간순으로 섞기
+List<RecentContentEntry> _withPodcasts(List<RecentContentEntry> base, PodcastPlayer pod) {
+  if (pod.recent.isEmpty) return base;
+  final pods = [
+    for (final r in pod.recent)
+      RecentContentEntry(
+        type: RecentContentType.podcast,
+        key: r.episode.guid,
+        title: r.episode.title,
+        subtitle: r.show.title,
+        playedAt: r.at,
+        podcastData: {'show': r.show.toJson(), 'ep': r.episode.toJson()},
+      ),
+  ];
+  return [...base, ...pods]..sort((a, b) => b.playedAt.compareTo(a.playedAt));
 }

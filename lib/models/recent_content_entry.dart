@@ -1,4 +1,4 @@
-enum RecentContentType { music, radio, nature, sleep }
+enum RecentContentType { music, radio, nature, sleep, podcast }
 
 class RecentContentEntry {
   final RecentContentType type;
@@ -11,6 +11,7 @@ class RecentContentEntry {
   final String? songUri;
   final Map<String, dynamic>? stationData;
   final String? natureAssetPath;
+  final Map<String, dynamic>? podcastData; // 팟캐스트: {show, ep} (홈에서만 씀)
 
   RecentContentEntry({
     required this.type,
@@ -21,6 +22,7 @@ class RecentContentEntry {
     this.songUri,
     this.stationData,
     this.natureAssetPath,
+    this.podcastData,
   });
 
   Map<String, dynamic> toJson() => {
@@ -32,6 +34,7 @@ class RecentContentEntry {
     'songUri': songUri,
     'stationData': stationData,
     'natureAssetPath': natureAssetPath,
+    'podcastData': podcastData,
   };
 
   factory RecentContentEntry.fromJson(Map<String, dynamic> json) {
@@ -49,6 +52,7 @@ class RecentContentEntry {
           ? Map<String, dynamic>.from(json['stationData'])
           : null,
       natureAssetPath: json['natureAssetPath']?.toString(),
+      podcastData: json['podcastData'] != null ? Map<String, dynamic>.from(json['podcastData']) : null,
     );
   }
 }

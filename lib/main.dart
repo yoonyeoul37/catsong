@@ -21,6 +21,7 @@ import 'providers/lyrics_provider.dart';
 import 'providers/video_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/radio_provider.dart';
+import 'podcast/podcast.dart';
 import 'providers/start_screen_provider.dart';
 import 'providers/sound_mix_provider.dart';
 import 'providers/recent_content_provider.dart';
@@ -97,6 +98,7 @@ void main() async {
     ),
   );
   playerProvider.setAudioHandler(globalAudioHandler);
+  PodcastPlayer.instance.attach(playerProvider); // 팟캐스트도 같은 재생기·알림창
   soundMixProvider.attachPlayerProvider(playerProvider);
   radioAudioHandler = simpleHandler;
 
@@ -244,6 +246,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => StartScreenProvider()),
         ChangeNotifierProvider.value(value: recentContentProvider),
         ChangeNotifierProvider.value(value: soundMixProvider),
+        ChangeNotifierProvider.value(value: PodcastPlayer.instance),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

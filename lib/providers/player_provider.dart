@@ -318,7 +318,7 @@ class PlayerProvider extends ChangeNotifier {
   int _stallSkips = 0;
 
   void _checkStall(ProcessingState ps) {
-    if (ps != ProcessingState.buffering || !_player.playing || _stallFixing) return;
+    if (podcastActive || ps != ProcessingState.buffering || !_player.playing || _stallFixing) return;
     final pos = _player.position.inMilliseconds;
     final now = DateTime.now();
     // 자리가 달라졌거나 5초 지났으면 새로 세기
@@ -351,6 +351,7 @@ class PlayerProvider extends ChangeNotifier {
   }
 
   void _onSongCompleted() {
+    if (podcastActive) return; // 팟캐스트는 끝나면 그대로 (podcast.dart가 정리)
     switch (_loopMode) {
       case LoopMode.one:
         _player.seek(Duration.zero);
@@ -386,6 +387,7 @@ class PlayerProvider extends ChangeNotifier {
     _onStopRadio?.call();
     _onStopMixMusic?.call();
     _natureSoundName = null;
+    podcastActive = false;
 
     _currentIndex = index;
     _isLoading = true;
@@ -400,6 +402,7 @@ class PlayerProvider extends ChangeNotifier {
         handler.setRadioMode(false);
         handler.setMixMode(false);
         handler.setNatureMode(false); // 자연 소리 듣다 음악으로 바꿔도 다음·이전 곡이 되게
+        handler.setPodcastMode(false);
         handler.updateMediaItem(MediaItem(
           id: song.uri!,
           title: song.titleDisplay,
@@ -415,6 +418,7 @@ class PlayerProvider extends ChangeNotifier {
       await _player.setAudioSource(AudioSource.uri(Uri.parse(song.uri!)));
       // 자연소리가 남긴 "무한반복" 설정을 꺼준다 (반복은 앱이 직접 처리함)
       await _player.setLoopMode(LoopMode.off);
+      if (_player.speed != _playbackSpeed) await _player.setSpeed(_playbackSpeed); // 팟캐스트 속도가 음악에 남지 않게
       _applyLoudness(song); // 곡마다 소리 크기 맞추기
       _startedAt = DateTime.now();
       await _player.play();
@@ -488,6 +492,28 @@ class PlayerProvider extends ChangeNotifier {
     }
   }
 
+  /// 팟캐스트가 재생기를 쓰는 동안 true (곡 끝·걸림 때 음악 다음 곡으로 넘어가지 않게)
+  bool podcastActive = false;
+
+  /// 팟캐스트 틀기 전: 라디오·믹스·자연소리·음악 자리를 비우고 알림창을 팟캐스트 모드로
+  void preparePodcast({required VoidCallback onBack, required VoidCallback onForward}) {
+    _onStopRadio?.call();
+    _onStopMixMusic?.call();
+    _natureSoundName = null;
+    _natureTimer?.cancel();
+    _listenSong = null;
+    _currentIndex = -1;
+    podcastActive = true;
+    final h = _audioHandler;
+    if (h is SimpleAudioHandler) {
+      h.setRadioMode(false);
+      h.setMixMode(false);
+      h.setNatureMode(false);
+      h.setPodcastMode(true, onBack: onBack, onForward: onForward);
+    }
+    notifyListeners();
+  }
+
   static const List<Map<String, String>> natureSoundOrder = [
     {'name': '파도소리', 'assetPath': 'https://files.ssing.kr/nature-sounds/wave_sound.mp3'},
     {'name': '잔잔한 파도', 'assetPath': 'https://files.ssing.kr/nature-sounds/wave_calm_sound.mp3'},
@@ -517,6 +543,7 @@ class PlayerProvider extends ChangeNotifier {
   Future<void> playNatureSound(String assetPath, String displayName) async {
     _onStopRadio?.call();
     _natureSoundName = displayName;
+    podcastActive = false;
     _listenSong = null;
     // 30초 이상 들었을 때만 "최근에 들었어요"에 넣기
     _natureTimer?.cancel();
@@ -534,6 +561,7 @@ class PlayerProvider extends ChangeNotifier {
       handler.setRadioMode(false);
       handler.setMixMode(false);
       handler.setNatureMode(true);
+      handler.setPodcastMode(false);
       handler.onNaturePlay = () => resumeNatureSound();
       handler.onNaturePause = () => pauseNatureSound();
       handler.onNatureNext = () => playAdjacentNatureSound(1);
@@ -552,6 +580,7 @@ class PlayerProvider extends ChangeNotifier {
           : AudioSource.asset(assetPath);
       await _player.setAudioSource(source);
       await _player.setLoopMode(LoopMode.one);
+      await _player.setSpeed(1.0);
       _setNorm(1.0); // 자연은 크기 맞추기 안 함
       await _player.play();
       await WakelockPlus.enable().catchError((Object _) {});
@@ -834,6 +863,15 @@ class SimpleAudioHandler extends BaseAudioHandler {
   VoidCallback? onNatureNext;
   VoidCallback? onNaturePrevious;
 
+  bool _podcastMode = false;
+  VoidCallback? onPodcastBack; // 알림창 ⏮ = 15초 뒤로
+  VoidCallback? onPodcastForward; // 알림창 ⏭ = 30초 앞으로
+  void setPodcastMode(bool enabled, {VoidCallback? onBack, VoidCallback? onForward}) {
+    _podcastMode = enabled;
+    if (onBack != null) onPodcastBack = onBack;
+    if (onForward != null) onPodcastForward = onForward;
+  }
+
   /// ×로 닫은 뒤 알림창(미디어 출력) 카드의 재생 버튼: 닫았던 걸 다시 틀기
   Future<void> Function()? onResumeLast;
 
@@ -1026,6 +1064,8 @@ class SimpleAudioHandler extends BaseAudioHandler {
       onMixNext!();
     } else if (_natureMode && onNatureNext != null) {
       onNatureNext!();
+    } else if (_podcastMode && onPodcastForward != null) {
+      onPodcastForward!();
     } else {
       await _provider.playNext();
     }
@@ -1039,6 +1079,8 @@ class SimpleAudioHandler extends BaseAudioHandler {
       onMixPrevious!();
     } else if (_natureMode && onNaturePrevious != null) {
       onNaturePrevious!();
+    } else if (_podcastMode && onPodcastBack != null) {
+      onPodcastBack!();
     } else {
       await _provider.playPrevious();
     }
@@ -1050,6 +1092,7 @@ class SimpleAudioHandler extends BaseAudioHandler {
     _radioMode = false;
     _mixMode = false;
     _natureMode = false;
+    _podcastMode = false;
     if (playbackState.value.processingState != AudioProcessingState.idle) {
       playbackState.add(playbackState.value.copyWith(
         processingState: AudioProcessingState.idle,

@@ -17,6 +17,8 @@ import '../utils/title_font.dart';
 import '../widgets/station_logo.dart';
 import '../widgets/heart_pop.dart';
 import '../widgets/radio_dice.dart';
+import '../podcast/podcast.dart';
+import '../podcast/podcast_screens.dart';
 import 'radio_saved_songs_screen.dart';
 import 'radio_player_screen.dart';
 import 'radio_home_screen.dart';
@@ -33,7 +35,7 @@ class RadioCountryStationsScreen extends StatefulWidget {
       _RadioCountryStationsScreenState();
 }
 
-enum _ViewMode { all, broadcaster, region, recent, favorite, saved }
+enum _ViewMode { all, broadcaster, region, recent, favorite, saved, podcast }
 
 class _RadioCountryStationsScreenState
     extends State<RadioCountryStationsScreen> {
@@ -92,6 +94,7 @@ class _RadioCountryStationsScreenState
 
   Widget _buildModeBody(BuildContext context, RadioProvider radioProvider,
       List<RadioStation> allStations, Color baseColor, bool isDarkMode, Color primaryColor) {
+    if (_mode == _ViewMode.podcast) return PodcastTab(country: widget.country.code); // 이 나라 인기 팟캐스트
     if (_mode == _ViewMode.saved) return const RadioSavedSongsList();
     if (_mode == _ViewMode.broadcaster) {
       final Map<String, List<RadioStation>> grouped = {};
@@ -712,8 +715,8 @@ class _RadioCountryStationsScreenState
       'region': _optionsFor('region', all, radio),
       'lang': _optionsFor('lang', all, radio),
     };
-    final names = {'mine': tr.myRadio, 'pop': tr.popularTab, 'genre': tr.genreTab, 'region': tr.regionTab, 'lang': tr.languageTab};
-    final chips = ['mine', 'pop', for (final k in ['genre', 'region', 'lang']) if (opts[k]!.isNotEmpty) k];
+    final names = {'mine': tr.myRadio, 'pop': tr.popularTab, 'podcast': podText('팟캐스트', 'Podcasts'), 'genre': tr.genreTab, 'region': tr.regionTab, 'lang': tr.languageTab};
+    final chips = ['mine', 'pop', 'podcast', for (final k in ['genre', 'region', 'lang']) if (opts[k]!.isNotEmpty) k];
     final popOpts = _hasTrend(all, radio) ? const [(_popMost, 0), (_popTrend, 0)] : const <(String, int)>[];
     final code = widget.country.code;
     final mineCounts = [
@@ -740,7 +743,10 @@ class _RadioCountryStationsScreenState
       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
       setState(() {
         _chip = c;
-        if (c == 'mine') {
+        if (c == 'podcast') {
+          _mode = _ViewMode.podcast;
+          _sub = null;
+        } else if (c == 'mine') {
           _mode = _ViewMode.favorite;
           _sub = null;
         } else {
@@ -750,7 +756,7 @@ class _RadioCountryStationsScreenState
         }
         _savedChip = null;
       });
-      if (c != 'mine') _saveChip();
+      if (c != 'mine' && c != 'podcast') _saveChip();
       toTop();
     }
 
@@ -1610,7 +1616,9 @@ class _RadioCountryStationsScreenState
             bottom: MediaQuery.of(context).viewPadding.bottom),
         child: const RadioMiniPlayer(),
       )
-          : SizedBox(height: MediaQuery.of(context).viewPadding.bottom),
+          : (context.watch<PodcastPlayer>().active
+              ? Padding(padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom), child: const PodcastMiniPlayer())
+              : SizedBox(height: MediaQuery.of(context).viewPadding.bottom)),
     ),
     );
   }
@@ -2063,7 +2071,9 @@ class _GroupedStationListScreen extends StatelessWidget {
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom),
         child: const RadioMiniPlayer(),
       )
-          : null,
+          : (context.watch<PodcastPlayer>().active
+              ? Padding(padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom), child: const PodcastMiniPlayer())
+              : null),
     );
   }
 }

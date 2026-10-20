@@ -406,6 +406,7 @@ class HeadsetResume {
           if (m != null && m.allSongs.isEmpty && !m.isLoading) m.initialize();
           await _playSaved({'type': 'music', 'uri': key}, r); // 그 곡부터 목록 순서대로
         case RecentContentType.sleep:
+        case RecentContentType.podcast: // 팟캐스트는 이 기록에 안 들어감 (홈에서만 따로 섞어 보여 줌)
           break;
       }
     } catch (err) {
@@ -492,6 +493,7 @@ class HeadsetResume {
           if (i >= 0) await pp.playFromList(all, i);
           break;
         case RecentContentType.sleep:
+        case RecentContentType.podcast: // 팟캐스트는 이 기록에 안 들어감 (홈에서만 따로 섞어 보여 줌)
           break;
       }
     } catch (err) {

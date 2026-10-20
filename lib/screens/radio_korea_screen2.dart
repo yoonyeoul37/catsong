@@ -20,12 +20,14 @@ import '../l10n/app_localizations.dart';
 import '../providers/theme_provider.dart';
 import 'radio_home_screen.dart';
 import '../widgets/radio_dice.dart';
+import '../podcast/podcast.dart';
+import '../podcast/podcast_screens.dart';
 import '../widgets/more_menu_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../l10n/locale_holder.dart';
 import '../utils/point_color.dart';
 import 'paran_intro_screen.dart';
-enum _ViewMode { all, broadcaster, region, recent }
+enum _ViewMode { all, broadcaster, region, podcast, recent }
 
 class RadioKoreaScreen extends StatefulWidget {
   const RadioKoreaScreen({super.key});
@@ -1075,6 +1077,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                       _toggleButton(tr.all, _ViewMode.all, isDarkMode),
                       _toggleButton(tr.byBroadcaster, _ViewMode.broadcaster, isDarkMode),
                       _toggleButton(tr.byRegion, _ViewMode.region, isDarkMode),
+                      _toggleButton(podText('팟캐스트', 'Podcasts'), _ViewMode.podcast, isDarkMode),
                       _toggleButton(tr.recentListened, _ViewMode.recent, isDarkMode),
                     ],
                   ),
@@ -1127,6 +1130,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
               _ViewMode.all => _buildAllList(context, radioProvider),
               _ViewMode.broadcaster => _buildBroadcasterGrid(context, radioProvider),
               _ViewMode.region => _buildRegionGrid(context),
+              _ViewMode.podcast => const PodcastTab(country: 'kr'),
               _ViewMode.recent => _buildRecentList(context, radioProvider),
             },
           ),
@@ -1139,7 +1143,9 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
             bottom: MediaQuery.of(context).viewPadding.bottom),
         child: const RadioMiniPlayer(),
       )
-          : null,
+          : (context.watch<PodcastPlayer>().active
+              ? Padding(padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom), child: const PodcastMiniPlayer())
+              : null),
     );
   }
 }
@@ -2112,7 +2118,9 @@ class _BroadcasterStationList extends StatelessWidget {
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom),
         child: const RadioMiniPlayer(),
       )
-          : null,
+          : (context.watch<PodcastPlayer>().active
+              ? Padding(padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom), child: const PodcastMiniPlayer())
+              : null),
     ),
     );
   }

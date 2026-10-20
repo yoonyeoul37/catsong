@@ -1858,7 +1858,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   subtitle: tr.menuShareSub,
                                   onTap: () {
                                     Navigator.pop(ctx);
-                                    Share.share('${tr.shareAppMessage}\nhttps://play.google.com/store/apps/details?id=kr.ssing.catsong');
+                                    Share.share('${tr.shareAppMessage}\nhttps://ssing.kr/app/'); // 카톡 미리보기가 나오는 주소 (누르면 플레이 스토어로)
                                   },
                                 ),
                                 const SizedBox(width: 12),

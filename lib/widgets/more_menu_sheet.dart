@@ -132,7 +132,7 @@ void showMoreMenuSheet(
       onFindArt: () => openPage(ctx, MaterialPageRoute(builder: (_) => const BulkArtScreen())),
       onShare: () {
         Navigator.pop(ctx);
-        Share.share('${shareText ?? tr.shareAppMessage}\n$_kStoreUrl');
+        Share.share('${shareText ?? tr.shareAppMessage}\nhttps://ssing.kr/app/'); // 카톡 미리보기가 나오는 주소 (누르면 플레이 스토어로)
       },
       onRate: () async {
         Navigator.pop(ctx);

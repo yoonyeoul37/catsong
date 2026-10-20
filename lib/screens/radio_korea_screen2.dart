@@ -163,12 +163,14 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
+          // B2: 박스 없이 고른 탭 아래에만 진한 밑줄
           decoration: BoxDecoration(
-            color: selected ? (isDarkMode ? const Color(0xFF45413B) : const Color(0xFFFBF8F2)) : Colors.transparent,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: selected
-                ? [BoxShadow(color: Colors.black.withOpacity(isDarkMode ? 0.25 : 0.08), blurRadius: 3, offset: const Offset(0, 1))]
-                : null,
+            border: Border(
+              bottom: BorderSide(
+                color: selected ? (isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F)) : Colors.transparent,
+                width: 2,
+              ),
+            ),
           ),
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -1068,25 +1070,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
             padding: const EdgeInsets.fromLTRB(24, 4, 24, 8),
             child: Column(
               children: [
-                Container(
-                  height: 36,
-                  padding: const EdgeInsets.all(3),
-                  decoration: BoxDecoration(
-                    color: baseColor.withOpacity(0.07),
-                    borderRadius: BorderRadius.circular(10), // 아래 카드와 같은 둥글기
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _toggleButton(tr.all, _ViewMode.all, isDarkMode),
-                      _toggleButton(tr.byBroadcaster, _ViewMode.broadcaster, isDarkMode),
-                      _toggleButton(tr.byRegion, _ViewMode.region, isDarkMode),
-                      _toggleButton(podText('팟캐스트', 'Podcasts'), _ViewMode.podcast, isDarkMode),
-                      _toggleButton(tr.recentListened, _ViewMode.recent, isDarkMode),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 6),
+                // B2: 국가 선택을 위로 (가끔 바꾸는 것) → 아래 탭 → 목록
                 GestureDetector(
                   behavior: HitTestBehavior.opaque, // 줄 어디를 눌러도 나라 고르기
                   onTap: () {
@@ -1101,24 +1085,37 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                     child: Row(
                       children: [
                         const SizedBox(width: 2),
-                        Expanded(
-                          child: Text(tr.selectCountryShort,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
-                                  color: baseColor.withOpacity(0.5), fontSize: 12.5, fontWeight: FontWeight.w500)),
-                        ),
-                        const Text('🇰🇷', style: TextStyle(fontSize: 15)),
+                        // '국가 선택' 글자 없이 국기 · 나라 이름 · ▾만 왼쪽에
+                        const Text('🇰🇷', style: TextStyle(fontSize: 13.5)),
                         const SizedBox(width: 6),
                         Text(tr.countryKR,
                             maxLines: 1,
                             style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
-                                color: baseColor, fontSize: 13.5, fontWeight: FontWeight.w700)),
+                                color: baseColor, fontSize: 12.5, fontWeight: FontWeight.w700)),
                         const SizedBox(width: 2),
                         Icon(Icons.keyboard_arrow_down_rounded,
-                            size: 20, color: baseColor.withOpacity(0.45)),
+                            size: 18, color: baseColor.withOpacity(0.45)),
+                        const Spacer(), // 줄 나머지도 눌리게 (나라 고르기)
                       ],
                     ),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                // B2: 탭은 박스 없이 글자 + 아래 얇은 선 (고른 탭만 진한 밑줄)
+                Container(
+                  height: 36,
+                  decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(color: baseColor.withOpacity(0.12), width: 0.5)),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _toggleButton(tr.all, _ViewMode.all, isDarkMode),
+                      _toggleButton(tr.byBroadcaster, _ViewMode.broadcaster, isDarkMode),
+                      _toggleButton(tr.byRegion, _ViewMode.region, isDarkMode),
+                      _toggleButton(podText('팟캐스트', 'Podcasts'), _ViewMode.podcast, isDarkMode),
+                      _toggleButton(tr.recentListened, _ViewMode.recent, isDarkMode),
+                    ],
                   ),
                 ),
               ],

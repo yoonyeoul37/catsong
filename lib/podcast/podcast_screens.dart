@@ -2251,11 +2251,13 @@ class PodPencilCircle extends StatefulWidget {
 }
 
 class _PodPencilCircleState extends State<PodPencilCircle> with SingleTickerProviderStateMixin {
-  late final AnimationController _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 1100));
+  late final AnimationController _c;
 
   @override
   void initState() {
     super.initState();
+    // 처음부터 만들어 두기 (안 쓰던 탭이 닫힐 때 dispose에서 새로 만들다 오류 나던 것)
+    _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 1100));
     if (widget.enabled) {
       PodNewMark.load();
       PodNewMark.show.addListener(_go);

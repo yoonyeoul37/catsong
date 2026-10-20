@@ -1061,46 +1061,42 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // 앱 아이콘 + 제목(회색 빛) / 아래 설명 — 홈 로고와 같은 짜임 (해외는 그 나라 말)
-            Flexible(child: MenuTitle(title: tr.catRadio, sub: tr.catRadioSub, isDark: isDarkMode)),
+            // 해외 라디오와 같게: 제목 아래 설명 대신 '지금 보는 나라' — 누르면 나라 고르기
+            Flexible(
+              child: MenuTitle(
+                title: tr.catRadio,
+                sub: tr.catRadioSub,
+                isDark: isDarkMode,
+                subWidget: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('🇰🇷', textScaler: TextScaler.noScaling, style: TextStyle(fontSize: 12, height: 1.2)),
+                    const SizedBox(width: 4),
+                    Text(tr.countryKR,
+                        maxLines: 1,
+                        textScaler: TextScaler.noScaling,
+                        style: TextStyle(
+                            color: baseColor.withOpacity(0.6), fontSize: 11.5, fontWeight: FontWeight.w600, height: 1.2)),
+                    Icon(Icons.keyboard_arrow_down_rounded, size: 15, color: baseColor.withOpacity(0.5)),
+                  ],
+                ),
+                onTap: () {
+                  const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (ctx) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: radioTextScaler(ctx)), child: const RadioHomeScreen())), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
+                  );
+                },
+              ),
+            ),
           ],
         ),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(86),
+          preferredSize: const Size.fromHeight(48), // 나라는 위 제목 아래로 옮겨서 탭 한 줄만
           child: Padding(
             padding: const EdgeInsets.fromLTRB(24, 4, 24, 8),
             child: Column(
               children: [
-                // B2: 국가 선택을 위로 (가끔 바꾸는 것) → 아래 탭 → 목록
-                GestureDetector(
-                  behavior: HitTestBehavior.opaque, // 줄 어디를 눌러도 나라 고르기
-                  onTap: () {
-                    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (ctx) => MediaQuery(data: MediaQuery.of(ctx).copyWith(textScaler: radioTextScaler(ctx)), child: const RadioHomeScreen())), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
-                    );
-                  },
-                  child: SizedBox(
-                    height: 30,
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 2),
-                        // '국가 선택' 글자 없이 국기 · 나라 이름 · ▾만 왼쪽에
-                        const Text('🇰🇷', style: TextStyle(fontSize: 13.5)),
-                        const SizedBox(width: 6),
-                        Text(tr.countryKR,
-                            maxLines: 1,
-                            style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
-                                color: baseColor, fontSize: 12.5, fontWeight: FontWeight.w700)),
-                        const SizedBox(width: 2),
-                        Icon(Icons.keyboard_arrow_down_rounded,
-                            size: 18, color: baseColor.withOpacity(0.45)),
-                        const Spacer(), // 줄 나머지도 눌리게 (나라 고르기)
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 4),
                 // B2: 탭은 박스 없이 글자 + 아래 얇은 선 (고른 탭만 진한 밑줄)
                 Container(
                   height: 36,

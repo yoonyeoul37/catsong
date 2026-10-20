@@ -2980,7 +2980,7 @@ abstract class AppLocalizations {
   /// No description provided for @shareAppMessage.
   ///
   /// In ko, this message translates to:
-  /// **'파란소리 앱으로 음악 들어요! 🎧'**
+  /// **'파란소리로 같이 들어요 🎧'**
   String get shareAppMessage;
 
   /// No description provided for @menuRateTitle.

@@ -1462,7 +1462,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get menuShareSub => '친구에게 파란소리를\n소개해 보세요.';
 
   @override
-  String get shareAppMessage => '파란소리 앱으로 음악 들어요! 🎧';
+  String get shareAppMessage => '파란소리로 같이 들어요 🎧';
 
   @override
   String get menuRateTitle => '앱 평가하기';

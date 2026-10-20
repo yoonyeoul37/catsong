@@ -1463,7 +1463,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get menuShareSub => '把Paransori\n推荐给朋友吧。';
 
   @override
-  String get shareAppMessage => '我在用Paransori听音乐！🎧';
+  String get shareAppMessage => '一起用Paransori听吧 🎧';
 
   @override
   String get menuRateTitle => '给应用评分';
@@ -6028,7 +6028,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get menuShareSub => '把Paransori\n推薦給朋友吧。';
 
   @override
-  String get shareAppMessage => '我在用Paransori聽音樂！🎧';
+  String get shareAppMessage => '一起用Paransori聽吧 🎧';
 
   @override
   String get menuRateTitle => '為應用程式評分';

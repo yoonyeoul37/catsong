@@ -1483,7 +1483,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get menuShareSub => 'Řekněte přátelům\no Paransori.';
 
   @override
-  String get shareAppMessage => 'Poslouchám hudbu v Paransori! 🎧';
+  String get shareAppMessage => 'Poslouchejme spolu v Paransori 🎧';
 
   @override
   String get menuRateTitle => 'Ohodnotit aplikaci';

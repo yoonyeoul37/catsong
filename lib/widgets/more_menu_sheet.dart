@@ -132,7 +132,7 @@ void showMoreMenuSheet(
       onFindArt: () => openPage(ctx, MaterialPageRoute(builder: (_) => const BulkArtScreen())),
       onShare: () {
         Navigator.pop(ctx);
-        Share.share('${shareText ?? tr.shareAppMessage}\nhttps://ssing.kr/app/'); // 카톡 미리보기가 나오는 주소 (누르면 플레이 스토어로)
+        Share.share('${shareText ?? tr.shareAppMessage}\nhttps://ssing.kr/app/${_shareLangDir(tr.localeName)}'); // 앱 언어에 맞는 카톡 미리보기 주소 (누르면 플레이 스토어로)
       },
       onRate: () async {
         Navigator.pop(ctx);
@@ -787,4 +787,12 @@ class _SoundBarsState extends State<_SoundBars>
       ),
     );
   }
+}
+
+/// 공유 주소의 언어 폴더 (한국어는 app/ 바로, 그 밖은 app/en/ 처럼 · 없는 언어는 영어)
+String _shareLangDir(String localeName) {
+  const dirs = {'en', 'ja', 'zh', 'zh-Hant', 'de', 'es', 'fr', 'it', 'pt', 'pl', 'ru', 'tr', 'id', 'vi', 'th', 'uk', 'hi', 'ro', 'cs', 'hu', 'ar', 'ur'};
+  final l = localeName.replaceAll('_', '-');
+  if (l == 'ko') return '';
+  return dirs.contains(l) ? '$l/' : 'en/';
 }

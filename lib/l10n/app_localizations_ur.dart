@@ -1482,7 +1482,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get menuShareSub => 'اپنے دوستوں کو\nParansori کے بارے میں بتائیں۔';
 
   @override
-  String get shareAppMessage => 'میں Paransori پر میوزک سن رہا ہوں! 🎧';
+  String get shareAppMessage => 'آئیں Paransori پر مل کر سنیں 🎧';
 
   @override
   String get menuRateTitle => 'ایپ کو ریٹ کریں';

@@ -1482,7 +1482,7 @@ class AppLocalizationsRo extends AppLocalizations {
   String get menuShareSub => 'Spune-le prietenilor\ndespre Paransori.';
 
   @override
-  String get shareAppMessage => 'Ascult muzică pe Paransori! 🎧';
+  String get shareAppMessage => 'Hai să ascultăm împreună pe Paransori 🎧';
 
   @override
   String get menuRateTitle => 'Evaluează aplicația';

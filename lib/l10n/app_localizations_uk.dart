@@ -1485,7 +1485,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get menuShareSub => 'Розкажіть друзям\nпро Paransori.';
 
   @override
-  String get shareAppMessage => 'Я слухаю музику в Paransori! 🎧';
+  String get shareAppMessage => 'Слухаймо разом у Paransori 🎧';
 
   @override
   String get menuRateTitle => 'Оцінити додаток';

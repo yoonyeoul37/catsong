@@ -1485,7 +1485,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get menuShareSub => 'Расскажите друзьям\nо Paransori.';
 
   @override
-  String get shareAppMessage => 'Слушаю музыку в Paransori! 🎧';
+  String get shareAppMessage => 'Давай слушать вместе в Paransori 🎧';
 
   @override
   String get menuRateTitle => 'Оценить приложение';

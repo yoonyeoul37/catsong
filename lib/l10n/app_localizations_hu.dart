@@ -1480,7 +1480,7 @@ class AppLocalizationsHu extends AppLocalizations {
   String get menuShareSub => 'Mesélj a barátaidnak\na Paransoriról.';
 
   @override
-  String get shareAppMessage => 'A Paransorin hallgatok zenét! 🎧';
+  String get shareAppMessage => 'Hallgassuk együtt a Paransorin 🎧';
 
   @override
   String get menuRateTitle => 'Értékeld az appot';

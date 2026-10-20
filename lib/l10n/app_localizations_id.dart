@@ -1484,7 +1484,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get menuShareSub => 'Ceritakan Paransori\nke teman-temanmu.';
 
   @override
-  String get shareAppMessage => 'Aku lagi dengar musik di Paransori! 🎧';
+  String get shareAppMessage => 'Yuk dengarkan bareng di Paransori 🎧';
 
   @override
   String get menuRateTitle => 'Nilai aplikasi';

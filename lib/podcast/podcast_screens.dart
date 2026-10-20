@@ -144,6 +144,15 @@ class _PodcastTabState extends State<PodcastTab> {
     ('웃음', 'Comedy', '가볍게 듣기', 'Easy listening', '코미디', 'comedy', Color(0xFFEADBD3), Color(0xFF3B302C)),
     ('잠들기 전', 'Sleep', '조용한 이야기', 'Calm stories', '수면', 'sleep', Color(0xFFDCDBE6), Color(0xFF302F3A)),
   ];
+  // 주제 카드 오른쪽 아래 연한 아이콘 (위 주제 순서와 같게)
+  static const _topicIcons = [
+    Icons.radio_rounded,
+    Icons.newspaper_rounded,
+    Icons.menu_book_rounded,
+    Icons.translate_rounded,
+    Icons.sentiment_satisfied_alt_rounded,
+    Icons.bedtime_rounded,
+  ];
 
   String get _cc => widget.country.toLowerCase();
 
@@ -732,23 +741,37 @@ class _PodcastTabState extends State<PodcastTab> {
               child: Container(
                 width: w,
                 height: 66,
-                padding: const EdgeInsets.fromLTRB(14, 12, 12, 12),
+                clipBehavior: Clip.antiAlias, // 살짝 걸친 아이콘은 카드 안에서만
                 decoration: BoxDecoration(
                   color: dark ? _topics[i].$8 : _topics[i].$7,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Stack(
                   children: [
-                    Text(podText(_topics[i].$1, _topics[i].$2),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: _text(dark), fontSize: 13.5, fontWeight: FontWeight.w600)),
-                    Text(podText(_topics[i].$3, _topics[i].$4),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: _sub(dark), fontSize: 11)),
+                    // 오른쪽 아래 연한 아이콘 (글자 뒤에 은은하게 · 아랍어는 왼쪽 아래)
+                    PositionedDirectional(
+                      end: 8,
+                      bottom: 6,
+                      child: Icon(_topicIcons[i % _topicIcons.length],
+                          size: 28, color: _text(dark).withOpacity(dark ? 0.12 : 0.09)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(14, 12, 12, 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(podText(_topics[i].$1, _topics[i].$2),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: _text(dark), fontSize: 13.5, fontWeight: FontWeight.w600)),
+                          Text(podText(_topics[i].$3, _topics[i].$4),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: _sub(dark), fontSize: 11)),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

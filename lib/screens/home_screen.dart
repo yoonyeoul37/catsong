@@ -1612,9 +1612,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         // PARANSORI: 작은 대문자를 고르게 벌려서 '파' 왼쪽 끝 ~ '리' 오른쪽 끝까지
                         Transform.translate(
-                          offset: const Offset(0, -4),
+                          offset: const Offset(0.5, -4), // PARANSORI 전체를 오른쪽으로 살짝
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 2, right: 5.7),
+                            padding: const EdgeInsets.only(left: 2, right: 8.5), // 오른쪽 여백을 늘려 자간 줄이기
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [

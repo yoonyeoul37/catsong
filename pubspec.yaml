@@ -202,11 +202,11 @@ flutter:
 
 flutter_native_splash:
   color: "#F4EFE5"                  # 라이트: 앱과 같은 크림색 (첫인사 바탕도 같은 색)
-  color_dark: "#24221F"             # 다크: 앱과 같은 진한 갈색
+  color_dark: "#F4EFE5"             # 다크 모드에서도 크림색 고정
   image: assets/splash_logo.png     # 오래된 폰(안드로이드 11 이하): 가운데 둥근 아이콘
   android_12:
     color: "#F4EFE5"
-    color_dark: "#24221F"
+    color_dark: "#F4EFE5"
     image: assets/splash_logo.png   # 안드로이드 12 이상도 둥근 네모 아이콘 (동그라미 안에 쏙 → 안 잘림)
     icon_background_color: "#F4EFE5"       # 동그라미 배경을 바탕색과 같게 (잘린 티 안 나게)
-    icon_background_color_dark: "#24221F"
+    icon_background_color_dark: "#F4EFE5"

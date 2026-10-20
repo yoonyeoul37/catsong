@@ -618,9 +618,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
         onTap: () => setState(() => _showIntro = false),
         child: Scaffold(
           // 시작 화면과 같은 색 (라이트 크림 · 다크 진한 갈색) → 넘어갈 때 번쩍이지 않게
-          backgroundColor: context.watch<ThemeProvider>().isDarkMode
-              ? const Color(0xFF24221F)
-              : const Color(0xFFF4EFE5),
+          backgroundColor: const Color(0xFFF4EFE5), // 스플래시와 같은 크림색 고정 (다크 모드에서도)
           body: _IntroView(
             path: introAssetPath(context),
             onDone: () {

@@ -182,7 +182,7 @@ class _DiceBoardState extends State<_DiceBoard> with TickerProviderStateMixin {
     await _out.forward(from: 0); // 쏙 사라짐
     if (!mounted) return;
     setState(() => _cur = pick);
-    context.read<RadioProvider>().playStation(pick.station);
+    context.read<RadioProvider>().playStation(pick.station, force: true); // 이전 방송이 아직 연결 중이어도 새로 나온 방송으로
     _info.forward(from: 0);
     _busy = false;
   }

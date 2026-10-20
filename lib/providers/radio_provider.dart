@@ -509,12 +509,15 @@ class RadioProvider extends ChangeNotifier {
   }
   Timer? _playedTick; // 듣는 동안 5분마다: 프로그램 사진이 바뀌면 '최근에 들었어요' 사진도 새로
 
+  int _playGen = 0; // 가장 마지막에 누른 방송 번호 (늦게 끝난 예전 요청이 새 방송을 덮어쓰지 않게)
+
   Future<void> playStation(RadioStation station, {bool force = false}) async {
     // force: 네트워크가 바뀌어서 다시 연결할 때는 '불러오는 중'이어도 새로 시작
     if (_playerState == RadioPlayerState.loading && !force) {
       debugPrint('이미 로딩 중 - 중복 호출 무시');
       return;
     }
+    final gen = ++_playGen;
     _userPaused = false;
     _armStall(15); // 연결하는 데 15초 넘게 걸리면 한 번 더
     // 30초 이상 들었을 때만 "최근에 들었어요"에 넣기
@@ -633,6 +636,7 @@ class RadioProvider extends ChangeNotifier {
         }
       }
 
+      if (gen != _playGen) return; // 주소 찾는 사이 다른 방송을 눌렀으면 이건 그만
       debugPrint('FINAL_URL: $playUrl');
       _lastPlayUrl = playUrl;
       _lastPlayStationId = station.stationUuid;
@@ -660,10 +664,12 @@ class RadioProvider extends ChangeNotifier {
         play: true,
       );
 
+      if (gen != _playGen) return; // 연결되는 사이 다른 방송을 눌렀으면 기록 안 함
       await recordListened(station);
       _updateWidget(station.name, _mediaSubtitle(station), true); // 알림창과 같은 한글 설명
 
     } catch (e) {
+      if (gen != _playGen) return; // 예전 요청이 실패한 건 무시 (지금 방송은 따로 연결 중)
       debugPrint('라디오 재생 실패: $e');
       _errorMessage = tr.stationLoadFailed;
       _setPlayerState(RadioPlayerState.error);

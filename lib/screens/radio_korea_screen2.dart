@@ -164,7 +164,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
             color: selected ? (isDarkMode ? const Color(0xFF45413B) : const Color(0xFFFBF8F2)) : Colors.transparent,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(10),
             boxShadow: selected
                 ? [BoxShadow(color: Colors.black.withOpacity(isDarkMode ? 0.25 : 0.08), blurRadius: 3, offset: const Offset(0, 1))]
                 : null,

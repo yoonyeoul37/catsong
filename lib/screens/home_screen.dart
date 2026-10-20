@@ -2675,7 +2675,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                 }
                 return SizedBox(
-                height: 142,
+                height: 156, // 종류 글자 한 줄 더 (예전 142)
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: recentContent.length,
@@ -2883,22 +2883,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     child: darkPhoto(isDarkMode, thumbnail),
                                   ),
-                                  Positioned(
-                                    left: 4,
-                                    top: 4,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(3),
-                                      decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(0.4),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(typeIcon, size: 10, color: Colors.white),
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),
                             const SizedBox(height: 6),
+                            // 종류: 작은 아이콘 + 글자 (음악 · 라디오 · 팟캐스트 · 자연소리 · 휴식)
+                            Row(
+                              children: [
+                                Icon(typeIcon, size: 10, color: baseColor.withOpacity(0.42)),
+                                const SizedBox(width: 3),
+                                Flexible(
+                                  child: Text(_recentTypeName(item.type),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          color: baseColor.withOpacity(0.42), fontSize: 9.5, fontWeight: FontWeight.w700)),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 1),
                             Text(item.type == RecentContentType.nature ? natureName(item.title) : item.title,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -4629,3 +4632,12 @@ List<RecentContentEntry> _withPodcasts(List<RecentContentEntry> base, PodcastPla
   ];
   return [...base, ...pods]..sort((a, b) => b.playedAt.compareTo(a.playedAt));
 }
+
+/// '최근에 들었어요' 카드 종류 이름 (팟캐스트는 번역할 때 23개 언어로)
+String _recentTypeName(RecentContentType t) => switch (t) {
+      RecentContentType.music => tr.catMusic,
+      RecentContentType.radio => tr.catRadio,
+      RecentContentType.nature => tr.catNature,
+      RecentContentType.sleep => tr.catRest,
+      RecentContentType.podcast => podText('팟캐스트', 'Podcast'),
+    };

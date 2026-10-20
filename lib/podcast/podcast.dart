@@ -8,9 +8,21 @@ import 'package:audio_service/audio_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/player_provider.dart';
 import '../l10n/locale_holder.dart';
+import 'podcast_text.dart';
 
-/// 팟캐스트 글자: 한국어면 한국어, 그 밖은 영어 (번역은 3단계에서 23개 언어로)
-String podText(String ko, String en) => tr.localeName.startsWith('ko') ? ko : en;
+/// 팟캐스트 글자: 한국어면 한국어 / 그 밖은 번역표(podcast_text.dart) → 없으면 영어
+String podText(String ko, String en) {
+  final l = tr.localeName;
+  if (l.startsWith('ko')) return ko;
+  return podTr[ko]?[podLangOf(l)] ?? en;
+}
+
+/// 숫자·이름이 들어가는 글자: '{n}일 전'처럼 자리를 비워 두고 값을 넣기
+String podFmt(String ko, String en, Map<String, Object> v) {
+  var t = podText(ko, en);
+  v.forEach((key, x) => t = t.replaceAll('{$key}', '$x'));
+  return t;
+}
 
 // ───────────────────────── 자료 ─────────────────────────
 
@@ -86,6 +98,7 @@ class PodcastEpisode {
         published: j['published'] is int ? DateTime.fromMillisecondsSinceEpoch(j['published']) : null,
         durationSec: j['dur'] is int ? j['dur'] : 0,
         art: '${j['art'] ?? ''}',
+        desc: '${j['desc'] ?? ''}',
       );
 }
 
@@ -96,15 +109,58 @@ class PodcastApi {
   static final Map<String, List<PodcastShow>> _charts = {};
   static final Map<String, List<PodcastEpisode>> _episodes = {};
   static final Map<String, PodcastShow> _shows = {}; // 회차 목록에서 읽은 그림·이름으로 채운 것
+  static final Map<String, String> _feedOf = {}; // 애플 번호 → 회차 목록 주소 (폰에도 저장)
+  static bool _feedOfLoaded = false;
 
-  /// 나라별 인기 순위 (앱 켜져 있는 동안 한 번만 받음)
+  static Future<void> _loadFeedOf() async {
+    if (_feedOfLoaded) return;
+    _feedOfLoaded = true;
+    try {
+      final raw = (await SharedPreferences.getInstance()).getString('pod_feed_ids');
+      if (raw != null) (jsonDecode(raw) as Map).forEach((k, v) => _feedOf['$k'] = '$v');
+    } catch (_) {}
+  }
+
+  /// 나라별 인기 순위 — 한 번 본 나라는 폰에 저장해서 바로 (하루 지나면 새로 · 인터넷이 안 되면 저장된 것)
   static Future<List<PodcastShow>> top(String country, {int n = 50}) async {
     final cc = country.toLowerCase();
     final hit = _charts[cc];
     if (hit != null) return hit;
+    List<PodcastShow>? saved;
+    var fresh = false;
+    try {
+      final raw = (await SharedPreferences.getInstance()).getString('pod_chart_$cc');
+      if (raw != null) {
+        final j = jsonDecode(raw) as Map<String, dynamic>;
+        saved = [for (final x in (j['list'] as List)) PodcastShow.fromJson(Map<String, dynamic>.from(x))];
+        final at = DateTime.fromMillisecondsSinceEpoch(j['at'] is int ? j['at'] : 0);
+        fresh = DateTime.now().difference(at) < const Duration(hours: 24);
+        if (saved.isEmpty) saved = null;
+      }
+    } catch (_) {}
+    if (saved != null && fresh) return _charts[cc] = saved; // 하루 안에 받은 것 → 바로
+    try {
+      final list = await _fetchTop(cc, n);
+      _saveChart(cc, list);
+      return _charts[cc] = list;
+    } catch (_) {
+      if (saved != null) return _charts[cc] = saved; // 못 받으면 예전 순위라도
+      rethrow;
+    }
+  }
+
+  static Future<void> _saveChart(String cc, List<PodcastShow> list) async {
+    try {
+      if (list.isEmpty) return;
+      (await SharedPreferences.getInstance()).setString('pod_chart_$cc',
+          jsonEncode({'at': DateTime.now().millisecondsSinceEpoch, 'list': [for (final x in list) x.toJson()]}));
+    } catch (_) {}
+  }
+
+  static Future<List<PodcastShow>> _fetchTop(String cc, int n) async {
     final r = await http
         .get(Uri.parse('https://rss.applemarketingtools.com/api/v2/$cc/podcasts/top/$n/podcasts.json'), headers: _ua)
-        .timeout(const Duration(seconds: 15));
+        .timeout(const Duration(seconds: 6)); // 순위가 없는 나라는 빨리 미국 순위로
     if (r.statusCode != 200) throw Exception('chart ${r.statusCode}');
     final res = (jsonDecode(utf8.decode(r.bodyBytes))['feed']['results'] as List?) ?? const [];
     final list = <PodcastShow>[
@@ -119,11 +175,23 @@ class PodcastApi {
               : '',
         ),
     ];
-    return _charts[cc] = list;
+    if (list.isEmpty) throw Exception('chart empty');
+    return list;
   }
+
+  static final Map<String, List<PodcastShow>> _searches = {}; // 앱 켜져 있는 동안 같은 검색은 바로
 
   /// 검색 (그 나라 스토어에서)
   static Future<List<PodcastShow>> search(String term, String country) async {
+    final key = '${country.toLowerCase()}|$term';
+    final hit = _searches[key];
+    if (hit != null) return hit;
+    final list = await _search(term, country);
+    if (_searches.length > 40) _searches.remove(_searches.keys.first);
+    return _searches[key] = list;
+  }
+
+  static Future<List<PodcastShow>> _search(String term, String country) async {
     final u = Uri.https('itunes.apple.com', '/search', {
       'term': term,
       'media': 'podcast',
@@ -150,12 +218,21 @@ class PodcastApi {
   /// 순위에서 고른 건 회차 목록 주소가 없어서 한 번 더 물어봄
   static Future<PodcastShow> withFeed(PodcastShow s, String country) async {
     if (s.feedUrl.isNotEmpty) return s;
+    await _loadFeedOf();
+    final known = _feedOf[s.id];
+    if (known != null && known.isNotEmpty) return s.copyWith(feedUrl: known); // 전에 물어본 것 → 바로
     final u = Uri.https('itunes.apple.com', '/lookup', {'id': s.id, 'entity': 'podcast', 'country': country.toLowerCase()});
     final r = await http.get(u, headers: _ua).timeout(const Duration(seconds: 15));
     final res = (jsonDecode(utf8.decode(r.bodyBytes))['results'] as List?) ?? const [];
     if (res.isEmpty || '${res.first['feedUrl'] ?? ''}'.isEmpty) throw Exception('no feed');
     final x = res.first;
-    return s.copyWith(feedUrl: '${x['feedUrl']}', art: '${x['artworkUrl600'] ?? s.art}');
+    final feed = '${x['feedUrl']}';
+    _feedOf[s.id] = feed;
+    try {
+      if (_feedOf.length > 300) _feedOf.remove(_feedOf.keys.first);
+      (await SharedPreferences.getInstance()).setString('pod_feed_ids', jsonEncode(_feedOf));
+    } catch (_) {}
+    return s.copyWith(feedUrl: feed, art: '${x['artworkUrl600'] ?? s.art}');
   }
 
   static PodcastShow? showInfo(String id) => _shows[id];
@@ -166,33 +243,65 @@ class PodcastApi {
     if (hit != null && !refresh) return hit;
     final r = await http.get(Uri.parse(s.feedUrl), headers: _ua).timeout(const Duration(seconds: 25));
     if (r.statusCode != 200) throw Exception('feed ${r.statusCode}');
-    final doc = XmlDocument.parse(utf8.decode(r.bodyBytes, allowMalformed: true));
-    final channel = doc.findAllElements('channel').first;
-    final showArt = _attr(_child(channel, 'itunes:image'), 'href') ??
-        _child(_child(channel, 'image'), 'url')?.innerText.trim() ??
-        s.art;
-    _shows[s.id] = s.copyWith(
-      art: s.art.isNotEmpty ? s.art : showArt,
-      title: s.title.isNotEmpty ? s.title : (_child(channel, 'title')?.innerText.trim() ?? ''),
+    // 큰 파일 읽기는 뒤에서 (화면이 멈칫하지 않게)
+    final parsed = await compute(_parseFeed, (r.bodyBytes as List<int>, s.art));
+    final info = s.copyWith(
+      art: s.art.isNotEmpty ? s.art : parsed.$1,
+      title: s.title.isNotEmpty ? s.title : parsed.$2,
     );
-    final list = <PodcastEpisode>[];
-    for (final it in channel.findElements('item')) {
-      final enc = _child(it, 'enclosure');
-      final url = _attr(enc, 'url') ?? '';
-      if (url.isEmpty) continue;
-      final title = _child(it, 'title')?.innerText.trim() ?? '';
-      list.add(PodcastEpisode(
-        guid: (_child(it, 'guid')?.innerText.trim().isNotEmpty ?? false) ? _child(it, 'guid')!.innerText.trim() : url,
-        title: title,
-        url: url,
-        published: _parseDate(_child(it, 'pubDate')?.innerText ?? ''),
-        durationSec: _parseDuration(_child(it, 'itunes:duration')?.innerText ?? ''),
-        art: _attr(_child(it, 'itunes:image'), 'href') ?? showArt,
-        desc: _plain(_child(it, 'description')?.innerText ?? _child(it, 'itunes:summary')?.innerText ?? ''),
-      ));
-      if (list.length >= 200) break;
-    }
+    _shows[s.id] = info;
+    final list = parsed.$3;
+    _saveFeed(s.feedUrl, info, list); // 다음에 바로 보이게 폰에 저장
     return _episodes[s.feedUrl] = list;
+  }
+
+  /// 폰에 저장해 둔 회차 목록 (한 번 연 팟캐스트) — 없으면 null
+  static Future<List<PodcastEpisode>?> savedEpisodes(PodcastShow s) async {
+    if (s.feedUrl.isEmpty) return null;
+    final hit = _episodes[s.feedUrl];
+    if (hit != null) return hit;
+    try {
+      final raw = (await SharedPreferences.getInstance()).getString(_feedKey(s.feedUrl));
+      if (raw == null) return null;
+      final j = jsonDecode(raw) as Map<String, dynamic>;
+      final info = j['show'];
+      if (info is Map) _shows[s.id] = PodcastShow.fromJson(Map<String, dynamic>.from(info));
+      final eps = [for (final x in (j['eps'] as List)) PodcastEpisode.fromJson(Map<String, dynamic>.from(x))];
+      return eps.isEmpty ? null : eps;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// 회차 목록 저장 (최근 연 20개까지 · 설명 글자는 맨 위 회차만 → 작게)
+  static Future<void> _saveFeed(String feedUrl, PodcastShow info, List<PodcastEpisode> eps) async {
+    try {
+      final sp = await SharedPreferences.getInstance();
+      final key = _feedKey(feedUrl);
+      await sp.setString(
+          key,
+          jsonEncode({
+            'show': info.toJson(),
+            'eps': [for (var i = 0; i < eps.length; i++) i == 0 ? {...eps[i].toJson(), 'desc': eps[i].desc} : eps[i].toJson()],
+          }));
+      final keys = (sp.getStringList('pod_feed_keys') ?? <String>[])
+        ..remove(key)
+        ..insert(0, key);
+      while (keys.length > 20) {
+        await sp.remove(keys.removeLast());
+      }
+      await sp.setStringList('pod_feed_keys', keys);
+    } catch (_) {}
+  }
+
+  /// 주소 → 짧은 저장 이름 (언제나 같은 값)
+  static String _feedKey(String url) {
+    var h = 0x811c9dc5;
+    for (final c in url.codeUnits) {
+      h ^= c;
+      h = (h * 0x01000193) & 0xffffffff;
+    }
+    return 'pod_feed_${h.toRadixString(16)}';
   }
 
   static XmlElement? _child(XmlElement? e, String qname) {
@@ -248,6 +357,35 @@ class PodcastApi {
   }
 }
 
+/// 회차 목록 파일 읽기 (뒤에서 따로 돌아감) → (그림, 이름, 회차들)
+(String, String, List<PodcastEpisode>) _parseFeed((List<int>, String) input) {
+  final doc = XmlDocument.parse(utf8.decode(input.$1, allowMalformed: true));
+  final channel = doc.findAllElements('channel').first;
+  final showArt = PodcastApi._attr(PodcastApi._child(channel, 'itunes:image'), 'href') ??
+      PodcastApi._child(PodcastApi._child(channel, 'image'), 'url')?.innerText.trim() ??
+      input.$2;
+  final showTitle = PodcastApi._child(channel, 'title')?.innerText.trim() ?? '';
+  final list = <PodcastEpisode>[];
+  for (final it in channel.findElements('item')) {
+    final enc = PodcastApi._child(it, 'enclosure');
+    final url = PodcastApi._attr(enc, 'url') ?? '';
+    if (url.isEmpty) continue;
+    final guid = PodcastApi._child(it, 'guid')?.innerText.trim() ?? '';
+    list.add(PodcastEpisode(
+      guid: guid.isNotEmpty ? guid : url,
+      title: PodcastApi._child(it, 'title')?.innerText.trim() ?? '',
+      url: url,
+      published: PodcastApi._parseDate(PodcastApi._child(it, 'pubDate')?.innerText ?? ''),
+      durationSec: PodcastApi._parseDuration(PodcastApi._child(it, 'itunes:duration')?.innerText ?? ''),
+      art: PodcastApi._attr(PodcastApi._child(it, 'itunes:image'), 'href') ?? showArt,
+      desc: PodcastApi._plain(
+          PodcastApi._child(it, 'description')?.innerText ?? PodcastApi._child(it, 'itunes:summary')?.innerText ?? ''),
+    ));
+    if (list.length >= 200) break;
+  }
+  return (showArt, showTitle, list);
+}
+
 /// '오늘' · '어제' · '3일 전' · '10월 3일' / 'Today' · 'Yesterday' · '3 days ago' · '2025.10.3'
 String podDateText(DateTime? d) {
   if (d == null) return '';
@@ -255,8 +393,8 @@ String podDateText(DateTime? d) {
   final days = DateTime(now.year, now.month, now.day).difference(DateTime(d.year, d.month, d.day)).inDays;
   if (days <= 0) return podText('오늘', 'Today');
   if (days == 1) return podText('어제', 'Yesterday');
-  if (days < 7) return podText('$days일 전', '$days days ago');
-  if (d.year == now.year) return podText('${d.month}월 ${d.day}일', '${d.month}/${d.day}');
+  if (days < 7) return podFmt('{n}일 전', '{n} days ago', {'n': days});
+  if (d.year == now.year) return podFmt('{m}월 {d}일', '{m}/{d}', {'m': d.month, 'd': d.day});
   return '${d.year}.${d.month}.${d.day}';
 }
 
@@ -264,8 +402,8 @@ String podDateText(DateTime? d) {
 String podDurText(int sec) {
   if (sec <= 0) return '';
   final h = sec ~/ 3600, m = (sec % 3600) ~/ 60;
-  if (h > 0) return podText('$h시간 $m분', '${h}h ${m}m');
-  return podText('${m < 1 ? 1 : m}분', '${m < 1 ? 1 : m}m');
+  if (h > 0) return podFmt('{h}시간 {m}분', '{h}h {m}m', {'h': h, 'm': m});
+  return podFmt('{m}분', '{m}m', {'m': m < 1 ? 1 : m});
 }
 
 /// 재생 시간 '12:40' · '1:02:05'
@@ -303,6 +441,14 @@ class PodcastPlayer extends ChangeNotifier {
   final Set<String> _done = {}; // 끝까지 들은 회차
   final List<PodRecent> recent = []; // 홈 '최근에 들었어요'용 (30초 넘게 들은 회차, 최근 10개)
   Timer? _recentTimer;
+  // ── 수면 타이머 (라디오와 같게: 끝나기 1분 전부터 천천히 작게 → 멈춤) ──
+  Timer? _sleepTimer;
+  Timer? _sleepCountdown;
+  Duration? sleepRemaining;
+  final ValueNotifier<Duration?> sleepTick = ValueNotifier<Duration?>(null); // 남은 시간 글자만
+  bool _sleepFading = false;
+  bool get isSleepTimerActive => _sleepTimer != null;
+
   PodcastShow? lastShow; // 이어 듣기
   PodcastEpisode? lastEpisode;
 
@@ -384,9 +530,34 @@ class PodcastPlayer extends ChangeNotifier {
         pp.player.pause();
         _persist();
         notifyListeners();
+        _playNextOlder(); // 같은 팟캐스트에서 아직 안 들은 바로 이전 회차로
       }
     });
     _load();
+  }
+
+  /// 다 들으면: 같은 팟캐스트에서 바로 이전(더 오래된) 회차 중 아직 안 들은 것으로 이어서
+  Future<void> _playNextOlder() async {
+    final s = show, e = episode;
+    if (s == null || e == null || s.feedUrl.isEmpty) return;
+    var eps = PodcastApi._episodes[s.feedUrl] ?? await PodcastApi.savedEpisodes(s);
+    if (eps == null) {
+      try {
+        eps = await PodcastApi.episodes(s);
+      } catch (_) {
+        return; // 인터넷이 안 되면 그냥 멈춘 채로
+      }
+    }
+    // 기다리는 동안 다른 걸 틀었으면 그만
+    if (!active || episode?.guid != e.guid) return;
+    final i = eps.indexWhere((x) => x.guid == e.guid);
+    if (i < 0) return;
+    for (var j = i + 1; j < eps.length; j++) {
+      if (!_done.contains(eps[j].guid)) {
+        await play(s, eps[j]);
+        return;
+      }
+    }
   }
 
   /// 음악·자연소리를 틀면 팟캐스트는 비켜 줌
@@ -397,6 +568,7 @@ class PodcastPlayer extends ChangeNotifier {
       _savePos();
       _mine = false;
       _saveTick?.cancel();
+      cancelSleepTimer(); // 음악 쪽은 음악 타이머가 따로 있음
       notifyListeners();
       return;
     }
@@ -496,6 +668,49 @@ class PodcastPlayer extends ChangeNotifier {
     _savePos();
   }
 
+  void setSleepTimer(Duration d) {
+    cancelSleepTimer();
+    sleepRemaining = d;
+    sleepTick.value = d;
+    _sleepTimer = Timer(d, () async {
+      final p = _p;
+      if (p != null && active) {
+        await p.pause();
+        _savePos();
+      }
+      cancelSleepTimer(); // 소리 크기도 원래대로
+    });
+    _sleepCountdown = Timer.periodic(const Duration(seconds: 1), (_) {
+      final r = sleepRemaining;
+      if (r == null || r.inSeconds <= 0) return;
+      sleepRemaining = r - const Duration(seconds: 1);
+      final left = sleepRemaining!.inSeconds;
+      // 끝나기 1분 전부터 천천히 작게 (뚝 끊겨서 잠이 깨지 않게)
+      if (left < 60 && active) {
+        _sleepFading = true;
+        _p?.setVolume((left / 60).clamp(0.0, 1.0).toDouble());
+      }
+      sleepTick.value = sleepRemaining;
+      if (left % 60 == 59) notifyListeners(); // 'N분' 표시는 분이 바뀔 때만
+    });
+    notifyListeners();
+  }
+
+  void cancelSleepTimer() {
+    if (_sleepTimer == null && _sleepCountdown == null) return;
+    if (_sleepFading) {
+      _sleepFading = false;
+      _p?.setVolume(1.0);
+    }
+    _sleepTimer?.cancel();
+    _sleepCountdown?.cancel();
+    _sleepTimer = null;
+    _sleepCountdown = null;
+    sleepRemaining = null;
+    sleepTick.value = null;
+    notifyListeners();
+  }
+
   static const speeds = [1.0, 1.25, 1.5, 2.0, 0.8];
   Future<void> nextSpeed() async {
     final i = speeds.indexOf(speed);
@@ -511,6 +726,7 @@ class PodcastPlayer extends ChangeNotifier {
     if (pp == null) return;
     _savePos();
     _saveTick?.cancel();
+    cancelSleepTimer();
     final s = show, e = episode;
     _mine = false;
     episode = null;

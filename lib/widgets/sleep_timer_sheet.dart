@@ -9,6 +9,7 @@ import 'paran_toast.dart';
 import 'paran_dialog.dart';
 import '../providers/theme_provider.dart';
 import '../l10n/locale_holder.dart';
+import '../podcast/podcast.dart';
 
 // ── 라디오 창 색 (라이트: 베이지 · 다크: 어두운 갈색) — 창을 그릴 때마다 다크 모드인지 맞춤 ──
 bool _rdDark = false;
@@ -19,7 +20,8 @@ Color get _rSub => _rdDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
 Color get _rLine => _rdDark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
 
 class SleepTimerSheet extends StatefulWidget {
-  const SleepTimerSheet({super.key});
+  final bool podcast; // true: 팟캐스트 타이머 (모양은 라디오와 똑같음)
+  const SleepTimerSheet({super.key, this.podcast = false});
 
   @override
   State<SleepTimerSheet> createState() => _SleepTimerSheetState();
@@ -35,7 +37,10 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
     final l = AppLocalizations.of(context)!;
     final primaryColor = _rInk; // 먹색 (다크는 크림색)
     final radioProvider = context.watch<RadioProvider>();
-    final sleep = radioProvider.sleepRemaining;
+    final pod = context.watch<PodcastPlayer>();
+    final forPod = widget.podcast;
+    final timerOn = forPod ? pod.isSleepTimerActive : radioProvider.isSleepTimerActive;
+    final sleep = forPod ? pod.sleepRemaining : radioProvider.sleepRemaining;
     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
 
     final quickOptions = [
@@ -99,7 +104,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                           )),
                       SizedBox(height: 2),
                       Text(
-                        radioProvider.isSleepTimerActive
+                        timerOn
                             ? l.sleepTimerActiveDesc
                             : l.sleepTimerDesc,
                         style: TextStyle(
@@ -115,7 +120,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
             ),
             SizedBox(height: 20),
 
-            if (radioProvider.isSleepTimerActive && sleep != null) ...[
+            if (timerOn && sleep != null) ...[
               Text(
                 l.remainingTime,
                 style: TextStyle(
@@ -127,7 +132,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
               ),
               SizedBox(height: 10),
               ValueListenableBuilder<Duration?>(
-                valueListenable: radioProvider.sleepTick,
+                valueListenable: forPod ? pod.sleepTick : radioProvider.sleepTick,
                 builder: (_, d, __) => Text(
                   _formatCountdown(d ?? sleep),
                   style: TextStyle(
@@ -152,7 +157,11 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
               SizedBox(height: 12),
               GestureDetector(
                 onTap: () {
-                  context.read<RadioProvider>().cancelSleepTimer();
+                  if (forPod) {
+                    context.read<PodcastPlayer>().cancelSleepTimer();
+                  } else {
+                    context.read<RadioProvider>().cancelSleepTimer();
+                  }
                   Navigator.pop(context);
                 },
                 child: Center(
@@ -173,7 +182,9 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
               Text(tr.sleepFadeHint, style: TextStyle(color: _rSub, fontSize: 12)),
               SizedBox(
                 height: 180,
-                child: CupertinoTheme(
+                child: Directionality(
+                  textDirection: TextDirection.ltr, // 아랍어에서 '분' 글자가 숫자에 겹치지 않게
+                  child: CupertinoTheme(
                   data: CupertinoThemeData(
                     brightness: _rdDark ? Brightness.dark : Brightness.light,
                     textTheme: CupertinoTextThemeData(
@@ -189,6 +200,7 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                     },
                   ),
                 ),
+                ),
               ),
               SizedBox(height: 16),
 
@@ -198,9 +210,13 @@ class _SleepTimerSheetState extends State<SleepTimerSheet> {
                   onPressed: () {
                     if (_wheelDuration.inMinutes <= 0) return;
                     _selectedMinutes = _wheelDuration.inMinutes;
-                    context.read<RadioProvider>().setSleepTimer(
-                      _wheelDuration,
-                    );
+                    if (forPod) {
+                      context.read<PodcastPlayer>().setSleepTimer(_wheelDuration);
+                    } else {
+                      context.read<RadioProvider>().setSleepTimer(
+                        _wheelDuration,
+                      );
+                    }
                     Navigator.pop(context);
                     showParanToast(context, l.sleepAutoStopToast(_formatSelected(l, _selectedMinutes)));
                   },

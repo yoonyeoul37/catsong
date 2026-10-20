@@ -17,7 +17,7 @@ import '../models/radio_country.dart';
 import 'player_provider.dart' show SimpleAudioHandler, PlayerProvider;
 import '../services/schedule_service.dart';
 import '../l10n/locale_holder.dart';
-import '../screens/radio_korea_screen2.dart' show koreanStationDesc;
+import '../screens/radio_korea_screen2.dart' show koreanStationDesc, koreanRadioStations;
 import '../l10n/locale_holder.dart';
 
 enum RadioPlayerState { idle, loading, playing, paused, error }
@@ -556,8 +556,30 @@ class RadioProvider extends ChangeNotifier {
         _currentProgramMap.remove(station.name);
         _nowPlayingMap.remove(station.name);
       }
-      final qIdx = _currentQueue.indexWhere((s) => s.name == station.name);
-      if (qIdx >= 0) _currentQueueIndex = qIdx;
+      var qIdx = _currentQueue.indexWhere((s) => s.name == station.name);
+      if (qIdx < 0) {
+        // 목록 없이 틀었을 때(주사위·최근 청취 등): 이 방송이 들어 있는 목록으로 ⏮⏭ 맞추기
+        final kr = koreanRadioStations();
+        final k = kr.indexWhere((s) => s.name == station.name);
+        if (k >= 0) {
+          _currentQueue = kr; // 국내: 국내 전체 목록
+          qIdx = k;
+        } else {
+          final cc = (station.countryCode ?? '').toUpperCase();
+          final pool = (cc.isNotEmpty && (_countryCode ?? '').toUpperCase() == cc)
+              ? _countryStations
+              : <RadioStation>[];
+          final j = pool.indexWhere((s) => s.stationUuid == station.stationUuid);
+          if (j >= 0) {
+            _currentQueue = List.from(pool); // 해외: 지금 보는 나라 목록
+            qIdx = j;
+          } else {
+            _currentQueue = [station]; // 목록을 찾을 수 없으면 이 방송 하나만
+            qIdx = 0;
+          }
+        }
+      }
+      _currentQueueIndex = qIdx;
       _startSchedule(station); // 편성표는 소리 연결을 기다리지 않고 바로 받기 시작
       notifyListeners();
 

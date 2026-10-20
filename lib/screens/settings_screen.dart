@@ -25,6 +25,7 @@ import 'settings_help_screen.dart';
 import 'policy_web_screen.dart';
 import '../services/loudness.dart';
 import '../services/headset_resume.dart';
+import '../services/sos_service.dart';
 import '../l10n/locale_holder.dart';
 
 // 화면 공통 색 (베이지 바탕 · 흰 카드 · 먹색 글자)
@@ -53,7 +54,10 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _isFlashlightOn = false;
-  bool _isSosOn = false;
+  bool get _isSosOn => SosService.isOn; // SOS는 앱 전체에서 하나 (sos_service.dart)
+  void _onSosChanged() {
+    if (mounted) setState(() {});
+  }
 
   // 돋보기: 설정 글자만 크게 (기본 → 크게 → 아주 크게) — 설정 도움말과 같은 크기를 같이 기억
   static const _zoomLevels = [1.0, 1.2, 1.4];
@@ -80,6 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
+    SosService.on.addListener(_onSosChanged);
     HomeCardPref.load();
     MainCardPref.load();
     SharedPreferences.getInstance().then((p) {
@@ -90,9 +95,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   void dispose() {
+    SosService.on.removeListener(_onSosChanged);
     _removeBubbleNow();
-    _isSosOn = false;
-    TorchLight.disableTorch();
+    if (!SosService.isOn) TorchLight.disableTorch(); // 그냥 손전등만 끄기 (SOS는 다른 화면에서도 계속)
     super.dispose();
   }
 
@@ -863,7 +868,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         await TorchLight.disableTorch();
         setState(() => _isFlashlightOn = false);
       } else {
-        if (_isSosOn) { setState(() => _isSosOn = false); await TorchLight.disableTorch(); await Future.delayed(const Duration(milliseconds: 200)); }
+        if (_isSosOn) { await SosService.stop(); await Future.delayed(const Duration(milliseconds: 200)); }
         await TorchLight.enableTorch();
         setState(() => _isFlashlightOn = true);
       }
@@ -874,25 +879,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _toggleSOS(BuildContext context) async {
     if (_isSosOn) {
-      setState(() => _isSosOn = false);
-      await TorchLight.disableTorch();
+      await SosService.stop();
     } else {
       if (_isFlashlightOn) { await TorchLight.disableTorch(); setState(() => _isFlashlightOn = false); await Future.delayed(const Duration(milliseconds: 200)); }
-      setState(() => _isSosOn = true);
-      _startSOS();
+      SosService.start(); // 앱 어느 화면에서든 계속 깜빡임
     }
-  }
-
-  Future<void> _startSOS() async {
-    final p = [200, 200, 200, 200, 200, 400, 600, 200, 600, 200, 600, 400, 200, 200, 200, 200, 200, 800];
-    while (_isSosOn && mounted) {
-      for (int i = 0; i < p.length; i++) {
-        if (!_isSosOn || !mounted) break;
-        if (i % 2 == 0) { await TorchLight.enableTorch(); } else { await TorchLight.disableTorch(); }
-        await Future.delayed(Duration(milliseconds: p[i]));
-      }
-    }
-    if (mounted) await TorchLight.disableTorch();
   }
 
   /// 프로모션 코드 — 아래에서 올라오는 베이지 카드 (입력 → 틀리면 빨간 안내 → 성공하면 혜택 카드)

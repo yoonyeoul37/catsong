@@ -27,6 +27,7 @@ import 'providers/recent_content_provider.dart';
 import 'screens/home_screen.dart';
 import 'services/alarm_service.dart';
 import 'services/headset_resume.dart';
+import 'services/sos_service.dart';
 import 'widgets/photo_dialog.dart';
 import 'theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
@@ -345,7 +346,14 @@ class MyApp extends StatelessWidget {
                     gradient: AppTheme.dynamicBackgroundGradient(
                         themeProvider.primaryColor),
                   ),
-                  child: child!,
+                  // SOS가 켜져 있으면 어느 화면이든 위쪽에 작은 빨간 'SOS ✕' 띠
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      child!,
+                      const Positioned(top: 0, left: 0, right: 0, child: SosBanner()),
+                    ],
+                  ),
                 ),
               );
             },

@@ -355,7 +355,7 @@ class _MoreMenuSheet extends StatelessWidget {
                     p: p,
                     icon: _kIconChat,
                     title: fbText('의견 보내기', 'Send feedback'),
-                    subtitle: fbText('불편한 점이나 바라는 점', 'Problems or ideas'),
+                    subtitle: fbText('파란소리에 바라는 점을 들려주세요.', 'Tell us what you’d like from Paransori.'),
                     onTap: onFeedback,
                   ),
                   _MenuCard(

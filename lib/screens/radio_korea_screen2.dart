@@ -1070,14 +1070,18 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                 subWidget: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text('🇰🇷', textScaler: TextScaler.noScaling, style: TextStyle(fontSize: 12, height: 1.2)),
-                    const SizedBox(width: 4),
-                    Text(tr.countryKR,
-                        maxLines: 1,
-                        textScaler: TextScaler.noScaling,
-                        style: TextStyle(
-                            color: baseColor.withOpacity(0.6), fontSize: 11.5, fontWeight: FontWeight.w600, height: 1.2)),
-                    Icon(Icons.keyboard_arrow_down_rounded, size: 15, color: baseColor.withOpacity(0.5)),
+                    // 나라 표시 한 단계 크게 (A안: 국기 14.5 · 이름 13.5 진하게 · ▾ 17)
+                    const Text('🇰🇷', textScaler: TextScaler.noScaling, style: TextStyle(fontSize: 14.5, height: 1.2)),
+                    const SizedBox(width: 5),
+                    Flexible(
+                      child: Text(tr.countryKR,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textScaler: TextScaler.noScaling,
+                          style: TextStyle(
+                              color: baseColor, fontSize: 13.5, fontWeight: FontWeight.w600, height: 1.2)),
+                    ),
+                    Icon(Icons.keyboard_arrow_down_rounded, size: 17, color: baseColor.withOpacity(0.5)),
                   ],
                 ),
                 onTap: () {

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 const _paranBase =
     'https://files.ssing.kr/app-images';
@@ -63,5 +66,76 @@ void precacheParanPhoto(String path, BuildContext context) {
         ResizeImage(CachedNetworkImageProvider('$_paranBase/$name'), width: screenPhotoWidth(context)),
         context,
         onError: (_, __) {}); // 미리 받기 실패해도 조용히
+  }
+}
+
+
+/// 파란포토 사진 목록 — R2(app-images/paranphoto/list.json)에서 받아 씀
+///  · 사진 추가: R2 app-images/paranphoto 에 번호.jpg + 번호_thumb.jpg 올리고 list.json에 번호만 추가 (앱 업데이트 필요 없음)
+///  · list.json 모양: {"파란포토": ["001", "002"]}  (묶음을 더 만들면 사진 고르기 창에 카테고리 칩이 생김)
+///                    또는 그냥 ["001", "002"]
+///  · 인터넷이 안 되면 마지막으로 받은 목록 → 그것도 없으면 앱 안 기본 목록(001~010)
+class ParanPhotoList {
+  static const _url = '$_paranBase/paranphoto/list.json';
+  static const _prefKey = 'paranPhotoListJson';
+  static Map<String, List<String>>? _list;
+  static bool _fetched = false;
+
+  /// 지금 쓸 목록 (받은 게 없으면 앱 안 기본 목록)
+  static Map<String, List<String>> of(Map<String, List<String>> builtin) => _list ?? builtin;
+
+  static Map<String, List<String>>? _parse(String body) {
+    try {
+      final j = jsonDecode(body);
+      String path(Object? n) {
+        final v = n is int ? n.toString().padLeft(3, '0') : n.toString().trim();
+        return 'assets/paranphoto/$v.png';
+      }
+      final out = <String, List<String>>{};
+      if (j is List) {
+        final l = [for (final n in j) path(n)];
+        if (l.isNotEmpty) out['파란포토'] = l;
+      } else if (j is Map) {
+        j.forEach((k, v) {
+          if (v is List && v.isNotEmpty) out[k.toString()] = [for (final n in v) path(n)];
+        });
+      }
+      return out.isEmpty ? null : out;
+    } catch (_) {
+      return null; // 목록 파일이 잘못돼도 앱은 그대로 (기본 목록)
+    }
+  }
+
+  /// 지난번에 받은 목록 먼저 (재생 화면 설정 불러올 때)
+  static void readCache(SharedPreferences prefs) {
+    if (_list != null) return;
+    final s = prefs.getString(_prefKey);
+    if (s != null) _list = _parse(s);
+  }
+
+  /// 새 목록 받기 (앱 켜고 한 번만) — 목록이 바뀌었으면 true
+  static Future<bool> refresh() async {
+    if (_fetched) return false;
+    _fetched = true;
+    try {
+      // 한 시간마다 주소를 살짝 바꿔서 예전 목록이 캐시에 남아 있지 않게
+      final hour = DateTime.now().millisecondsSinceEpoch ~/ 3600000;
+      final r = await http.get(Uri.parse('$_url?h=$hour')).timeout(const Duration(seconds: 8));
+      if (r.statusCode != 200) {
+        _fetched = false;
+        return false;
+      }
+      final body = utf8.decode(r.bodyBytes);
+      final parsed = _parse(body);
+      if (parsed == null) return false;
+      final prefs = await SharedPreferences.getInstance();
+      final changed = prefs.getString(_prefKey) != body || _list == null;
+      await prefs.setString(_prefKey, body);
+      _list = parsed;
+      return changed;
+    } catch (_) {
+      _fetched = false; // 다음에 재생 화면 열 때 다시
+      return false;
+    }
   }
 }

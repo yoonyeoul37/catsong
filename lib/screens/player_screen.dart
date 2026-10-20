@@ -124,13 +124,14 @@ class _PlayerScreenState extends State<PlayerScreen>
 
   // ───── 파란포토 사진 (클라우드플레어 R2: app-images/paranphoto/001.jpg + 001_thumb.jpg) ─────
   //  · 이름은 'assets/paranphoto/번호.png'로 적으면 paran_photo.dart가 R2에서 받아와요
-  //  · 사진 추가: R2에 큰 사진·작은 사진(_thumb)을 올리고 아래 묶음에 한 줄 추가
+  //  · 사진 추가: R2에 큰 사진·작은 사진(_thumb)을 올리고 R2 paranphoto/list.json에 번호만 추가 (앱 업데이트 필요 없음)
+  //    아래 묶음은 목록을 못 받았을 때 쓰는 기본 목록
   //  · 카테고리 나누기: '비 오는 날': [...] 처럼 묶음을 더 만들면 사진 고르기 창에 칩이 저절로 생겨요
   //    (묶음이 하나뿐이면 칩은 안 보이고 전체 · 내 사진 · 고른 사진만)
   static const String _paranDefault = 'assets/paranphoto/001.png'; // 처음 쓰는 사람 기본 사진
   static const Map<String, String> _nightCategoryCover = {}; // 카테고리 칩 사진 (비우면 그 묶음 첫 사진)
 
-  static const Map<String, List<String>> _nightCategoryPhotos = {
+  static const Map<String, List<String>> _builtinPhotos = {
     '파란포토': [
       'assets/paranphoto/001.png',
       'assets/paranphoto/002.png',
@@ -144,6 +145,8 @@ class _PlayerScreenState extends State<PlayerScreen>
       'assets/paranphoto/010.png',
     ],
   };
+  // 지금 쓸 사진 목록: R2에서 받은 것 (없으면 위 기본 목록)
+  static Map<String, List<String>> get _nightCategoryPhotos => ParanPhotoList.of(_builtinPhotos);
   Color _dominantColor = const Color(0xFF1A1A1A);
   bool _showSwipeHint = false;
   bool _hasSeenParanPhoto = true;
@@ -179,6 +182,10 @@ class _PlayerScreenState extends State<PlayerScreen>
     _startEqAnimations();
 
     _loadStyle();
+    // 새 사진 목록 받기 (앱 켜고 한 번만) — 바뀌었으면 화면 다시
+    ParanPhotoList.refresh().then((changed) {
+      if (changed && mounted) setState(() {});
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final playerProvider = context.read<PlayerProvider>();
       final currentSong = playerProvider.currentSong;
@@ -354,6 +361,7 @@ class _PlayerScreenState extends State<PlayerScreen>
   Future<void> _loadStyle() async {
     final prefs = await SharedPreferences.getInstance();
     final shown = false;
+    ParanPhotoList.readCache(prefs); // 지난번에 받은 사진 목록 먼저 (새 사진 고른 사람 그대로)
     var fixedOld = false; // 예전 사진(봄·여름…)을 정리했는지
     setState(() {
       _albumArtStyle = prefs.getInt('albumArtStyle') ?? 6; // 처음엔 파란포토로 시작

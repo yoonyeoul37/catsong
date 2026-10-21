@@ -2351,7 +2351,7 @@ class _PlayerScreenState extends State<PlayerScreen>
                   decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.28),
                     borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: pointColorOf(context, onDark: true).withOpacity(0.30)),
+                    border: Border.all(color: Colors.white.withOpacity(0.10)),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,

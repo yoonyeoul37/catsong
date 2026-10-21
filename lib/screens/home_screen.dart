@@ -2574,10 +2574,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Text(item.$1,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: titleFont( // 로고와 같은 글꼴
-                                            color: const Color(0xFF17140F),
-                                            fontSize: 12.5,
-                                            fontWeight: FontWeight.w400)),
+                                        style: const TextStyle( // 큰 카드 설명과 같은 기본 글꼴 (설정 글꼴 따라감)
+                                            color: Color(0xFF17140F),
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600)),
                                   ),
                                 ),
                               ),

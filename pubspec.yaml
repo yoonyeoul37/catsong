@@ -143,10 +143,8 @@ flutter:
     - assets/radio_mood_bg.jpg
     - assets/logo_icon.png
 
-    - assets/farewell_ko_v4.mp3
-    - assets/welcome_ko_v4.mp3
-    - assets/greet_intro.mp3   # 해외 첫인사 멜로디
-    - assets/greet_outro.mp3   # 해외 끝인사 멜로디
+    - assets/greet_intro.mp3   # 첫인사 멜로디 (모든 언어)
+    - assets/greet_outro.mp3   # 끝인사 멜로디 (모든 언어)
 
     - assets/music_night_bg.png
 

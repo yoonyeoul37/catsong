@@ -393,9 +393,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
     if (!mounted || AlarmService.launchedByAlarm) return;
     if (WidgetGo.launched || WidgetGo.target.value != null) return; // 위젯으로 켜졌으면 인삿말 없이
     if (!context.read<ThemeProvider>().voiceGreetingEnabled) return;
-    final langCode = Localizations.localeOf(context).languageCode;
-    final welcomeAsset = langCode == 'ko' ? 'assets/welcome_ko_v4.mp3' : 'assets/greet_intro.mp3'; // 해외: 첫인사 멜로디
-    if (welcomeAsset == null) return;
+    const welcomeAsset = 'assets/greet_intro.mp3'; // 첫인사: 어느 언어나 멜로디 (한국어 목소리는 '파란소리 자료'에 보관)
 
     // 소리 주도권(오디오 포커스)은 안 가져감 → 라디오·음악과 부딪히지 않게
     final p = AudioPlayer(handleInterruptions: false, handleAudioSessionActivation: false);

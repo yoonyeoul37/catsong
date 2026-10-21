@@ -11,7 +11,7 @@ class SongClean {
 class SongTitleCleaner {
   // 괄호 안에 있으면 지울 군더더기 (뮤비·가사·화질 등)
   static final _junk = RegExp(
-    r'(\b(official|m/?v|music\s*video|video|audio|lyrics?|visuali[sz]er|teaser|performance|dance\s*practice|full\s*album|hd|hq|4k|\d{3,4}p|color\s*coded|eng\s*sub|kor\s*sub|sub)\b|가사|자막|듣기|고음질|음원|공식)',
+    r'(\b(official|m/?v|music\s*video|video|audio|lyrics?|visuali[sz]er|teaser|performance|dance\s*practice|full\s*album|hd|hq|4k|\d{3,4}p|\d{2,3}\s*k(?:bps)?|color\s*coded|eng\s*sub|kor\s*sub|sub)\b|가사|자막|듣기|고음질|음원|공식)',
     caseSensitive: false,
   );
 
@@ -26,6 +26,9 @@ class SongTitleCleaner {
     r'(\b(1thek|smtown|hybe|jyp|yg\s*entertainment|stone\s*music|mnet|kbs\s*kpop|mbckpop|mbc\s*kpop|genie\s*music|kakao\s*entertainment|dingo|bangtantv|big\s*hit|starship|warner\s*music|sony\s*music|universal\s*music|vevo|m2|entertainment|records|label|labels)\b|원더케이|딩고|지니뮤직)',
     caseSensitive: false,
   );
+
+  // 음질 표시: 192k, 320k, 128kbps
+  static final _bitrate = RegExp(r'^\d{2,3}\s*k(bps)?$', caseSensitive: false);
 
   static bool _looksUnknown(String a) {
     final l = a.toLowerCase().trim();
@@ -113,7 +116,7 @@ class SongTitleCleaner {
       var titleIdx = -1;
       var nextIsTitle = false;
       for (final s in raw) {
-        if (partRe.hasMatch(s)) continue; // Part. 09, CD 2 → 빼기
+        if (partRe.hasMatch(s) || _bitrate.hasMatch(s)) continue; // Part. 09, CD 2, 192k → 빼기
         if (numOnly.hasMatch(s)) {
           nextIsTitle = true; // "03 - 노래"처럼 번호만 따로 있으면 다음 칸이 제목
           continue;
@@ -159,6 +162,9 @@ class SongTitleCleaner {
         a = afterBar; // "Hype Boy (Official Audio) | NewJeans"
       }
     }
+
+    // 맨 뒤 음질 숫자 "노래 320k", "노래 - 192kbps" 떼기
+    t = t.replaceAll(RegExp(r'[\s\-–—_]+\d{2,3}\s*k(bps)?\s*$', caseSensitive: false), '');
 
     // 맨 앞 트랙 번호 "01. 노래", "03 - 노래" 떼기
     t = t.replaceFirst(RegExp(r'^\d{1,3}\s*[.\-_)]\s*'), '');

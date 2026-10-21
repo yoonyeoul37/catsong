@@ -26,6 +26,50 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
       };
   String _selectedCategory = '전체';
 
+  /// 라디오·자연과 같은 탭: 박스 없이 글자 + 고른 탭만 아래 진한 밑줄
+  Widget _restTab(String category, bool isDarkMode) {
+    final selected = _selectedCategory == category;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    return Expanded(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+          setState(() => _selectedCategory = category);
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: selected ? (isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F)) : Colors.transparent,
+                width: 2,
+              ),
+            ),
+          ),
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          // 글자가 커도 한 줄 (넘치면 칸에 맞게 살짝 줄임)
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              _catLabel(category),
+              maxLines: 1,
+              textScaler: TextScaler.noScaling,
+              style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
+                color: selected
+                    ? (isDarkMode ? Colors.white : const Color(0xFF17140F))
+                    : baseColor.withOpacity(0.55),
+                fontSize: 14,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
@@ -59,58 +103,30 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
         actions: const [
           SizedBox(width: 8),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(48),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 4, 24, 8),
+            child: Container(
+              height: 36,
+              decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color: baseColor.withOpacity(0.12), width: 0.5)),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (final c in categories) _restTab(c, isDarkMode),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              const SizedBox(height: 8),
-              Container(
-                height: 38,
-                decoration: BoxDecoration(
-                  color: baseColor.withOpacity(0.08),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Row(
-                    children: categories.map((category) {
-                      final isSelected = _selectedCategory == category;
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                            setState(() => _selectedCategory = category);
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? (isDarkMode ? Colors.white : const Color(0xFF17140F))
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              _catLabel(category),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: isSelected
-                                    ? (isDarkMode ? const Color(0xFF24221F) : Colors.white)
-                                    : baseColor.withOpacity(0.7),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
               Expanded(
                 child: Center(
                   child: Column(

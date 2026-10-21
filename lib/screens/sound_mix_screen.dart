@@ -777,16 +777,8 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
   }
 
   void _showFarewellAndExit(BuildContext context) {
-    final langCode = Localizations.localeOf(context).languageCode;
-    late final String farewellAsset;
-    switch (langCode) {
-      case 'ko':
-        farewellAsset = 'assets/farewell_ko_v4.mp3';
-        break;
-      default:
-        farewellAsset = 'assets/greet_outro.mp3'; // 해외: 끝인사 멜로디
-    }
-    if (context.read<ThemeProvider>().voiceGreetingEnabled) { // 한국어는 목소리 · 해외는 멜로디
+    const farewellAsset = 'assets/greet_outro.mp3'; // 끝인사: 어느 언어나 멜로디 (한국어 목소리는 '파란소리 자료'에 보관)
+    if (context.read<ThemeProvider>().voiceGreetingEnabled) { // 어느 언어나 멜로디
       final farewellPlayer = AudioPlayer();
       farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
     }

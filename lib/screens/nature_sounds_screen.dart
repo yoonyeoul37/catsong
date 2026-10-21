@@ -138,6 +138,199 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
     }
   }
 
+  static const _categories = ['전체', '파도소리', '빗소리', '새소리', '모닥불', '시냇물'];
+
+  /// 라디오와 같은 탭: 박스 없이 글자 + 고른 탭만 아래 진한 밑줄
+  Widget _natureTab(String category, bool isDarkMode) {
+    final selected = _selectedCategory == category;
+    final baseColor = isDarkMode ? Colors.white : Colors.black;
+    return Expanded(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+          setState(() => _selectedCategory = category);
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: selected ? (isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F)) : Colors.transparent,
+                width: 2,
+              ),
+            ),
+          ),
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          // 글자가 커도 한 줄 (넘치면 칸에 맞게 살짝 줄임)
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              category == '전체' ? tr.all : natureName(category),
+              maxLines: 1,
+              textScaler: TextScaler.noScaling,
+              style: TextStyle(fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
+                color: selected
+                    ? (isDarkMode ? Colors.white : const Color(0xFF17140F))
+                    : baseColor.withOpacity(0.55),
+                fontSize: 14,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 지금 시간에 어울리는 소리: 아침 새소리 · 낮 시냇물 · 저녁 모닥불 · 밤 빗소리
+  _NatureSound? _niceSoundNow() {
+    final h = DateTime.now().hour;
+    final cat = (h >= 5 && h < 11)
+        ? '새소리'
+        : (h >= 11 && h < 17)
+            ? '시냇물'
+            : (h >= 17 && h < 22)
+                ? '모닥불'
+                : '빗소리';
+    final ready = _sounds.where((s) => s.isReady).toList();
+    if (ready.isEmpty) return null;
+    return ready.firstWhere((s) => s.category == cat, orElse: () => ready.first);
+  }
+
+  /// 전체 탭 맨 위 사진 카드 (라디오 '지금 듣기 좋은' 카드와 같은 모양)
+  Widget _natureNiceCard(_NatureSound s, Color soundColor, void Function(_NatureSound, Color) open,
+      PlayerProvider pp, bool isDark) {
+    final point = context.watch<ThemeProvider>().primaryColor;
+    final accent = point.value == 0xFF2589E8 ? const Color(0xFF2F7DE8) : point;
+    const ink = Color(0xFF17140F);
+    final playingThis = pp.natureSoundName == s.name && pp.isPlaying;
+    return GestureDetector(
+      onTap: () => open(s, soundColor),
+      child: Container(
+        height: 180,
+        margin: const EdgeInsets.only(bottom: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: ink.withOpacity(isDark ? 0.45 : 0.13),
+              blurRadius: 20,
+              spreadRadius: -3,
+              offset: const Offset(0, 10),
+            ),
+            BoxShadow(color: ink.withOpacity(0.06), blurRadius: 4, offset: const Offset(0, 2)),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Positioned(
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 68, // 사진은 글자 띠 위에만
+                // 다크 모드: 라디오 카드와 같게 색 반쯤 빼고 살짝 어둡게
+                child: ColorFiltered(
+                  colorFilter: isDark
+                      ? const ColorFilter.matrix(<double>[
+                          0.4082, 0.2832, 0.0286, 0, 0,
+                          0.0842, 0.6072, 0.0286, 0, 0,
+                          0.0842, 0.2832, 0.3526, 0, 0,
+                          0, 0, 0, 1, 0,
+                        ])
+                      : const ColorFilter.mode(Colors.transparent, BlendMode.dst),
+                  child: paranPhoto(
+                    _natureThumbImage(s.name, s.category, s.assetPath ?? ''),
+                    fit: BoxFit.cover,
+                    fallback: Container(color: soundColor),
+                  ),
+                ),
+              ),
+              // 사진 아래 크림 띠 (라디오 카드와 같은 색)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(14, 8, 10, 9),
+                  decoration: const BoxDecoration(color: Color(0xFFFBF8F2)),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(tr.niceNow,
+                                textScaler: TextScaler.noScaling,
+                                style: TextStyle(color: accent, fontSize: 10.5, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
+                            const SizedBox(height: 1),
+                            Text(natureName(s.name),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                textScaler: TextScaler.noScaling,
+                                style: const TextStyle(color: ink, fontSize: 17, fontWeight: FontWeight.w700, letterSpacing: -0.3)),
+                            Text(natureDesc(s.name, s.description),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                textScaler: TextScaler.noScaling,
+                                style: TextStyle(color: ink.withOpacity(0.62), fontSize: 12)),
+                          ],
+                        ),
+                      ),
+                      // ▶ 바로 듣기 (라디오 주사위 자리 · 같은 베이지 동그라미)
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => _toggleSound(s, playingThis),
+                        child: Container(
+                          width: 38,
+                          height: 38,
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(color: Color(0xFFEDE7DA), shape: BoxShape.circle),
+                          child: Icon(playingThis ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                              color: ink, size: 22),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 전체 탭 묶음 제목: 이름 · 개수 뒤로 가는 선 (라디오와 같음)
+  Widget _natureGroupTitle(String category, bool first, Color baseColor) {
+    final count = _sounds.where((s) => s.category == category).length;
+    return Padding(
+      padding: EdgeInsets.only(top: first ? 6 : 22, bottom: 6),
+      child: Row(
+        children: [
+          Flexible(
+            child: Text(
+              natureName(category),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: baseColor.withOpacity(0.72), fontSize: 12.5, fontWeight: FontWeight.w700),
+            ),
+          ),
+          const SizedBox(width: 6),
+          Text('$count',
+              style: GoogleFonts.quicksand(color: baseColor.withOpacity(0.5), fontSize: 12, fontWeight: FontWeight.w700)),
+          const SizedBox(width: 10),
+          Expanded(child: Container(height: 1, color: baseColor.withOpacity(0.18))),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
@@ -202,64 +395,31 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
         actions: const [
           SizedBox(width: 8),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(48),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 4, 24, 8),
+            child: Container(
+              height: 36,
+              decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color: baseColor.withOpacity(0.12), width: 0.5)),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (final c in _categories) _natureTab(c, isDarkMode),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
       body: SafeArea(
         top: false,
         child: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
         child: Column(
           children: [
-            
-            Builder(builder: (context) {
-              final categories = ['전체', '파도소리', '빗소리', '새소리', '모닥불', '시냇물'];
-              return Container(
-                height: 38,
-                decoration: BoxDecoration(
-                  color: baseColor.withOpacity(0.08),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: categories.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 4),
-                  itemBuilder: (context, index) {
-                    final category = categories[index];
-                    final count = category == '전체'
-                        ? _sounds.length
-                        : _sounds.where((s) => s.category == category).length;
-                    final isSelected = _selectedCategory == category;
-                    return GestureDetector(
-                      onTap: () {
-                        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                        setState(() => _selectedCategory = category);
-                      },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        padding: const EdgeInsets.symmetric(horizontal: 14),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? (isDarkMode ? Colors.white : const Color(0xFF17140F))
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          '${category == '전체' ? tr.all : natureName(category)}($count)',
-                          style: TextStyle(
-                            color: isSelected
-                                ? (isDarkMode ? const Color(0xFF24221F) : Colors.white)
-                                : baseColor.withOpacity(0.7),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              );
-            }),
-            const SizedBox(height: 16),
             ...(() {
               const soundColors = <String, Color>{
                 '파도소리': Color(0xFF4A7BA6),
@@ -338,14 +498,9 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                     );
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                    // 듣는 중: 바탕 위에 살짝 밝은 칸
-                    decoration: BoxDecoration(
-                      color: isGroupPlaying
-                          ? (isDarkMode ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.55))
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    // 듣는 중: 라디오와 같은 연한 강조색 칸
+                    color: isGroupPlaying ? primaryColor.withOpacity(0.08) : Colors.transparent,
                     child: Row(
                       children: [
                         ClipRRect(
@@ -423,20 +578,42 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                   ),
                 );
               }).toList();
-              // 흰 카드 없이 바탕 위에 줄만 (국가 목록과 같은 방식, 아주 연한 구분선)
+              // 라디오와 같게: 줄 사이 선 · 전체 탭은 소리 종류별 묶음 제목
+              final cardCats = grouped.values.map((v) => v.first.category).toList();
+              final order = List<int>.generate(_natureCards.length, (i) => i);
+              final showTitles = _selectedCategory == '전체';
+              if (showTitles) {
+                int rank(String c) {
+                  final r = _categories.indexOf(c);
+                  return r < 0 ? 999 : r;
+                }
+                order.sort((a, b) {
+                  final d = rank(cardCats[a]).compareTo(rank(cardCats[b]));
+                  return d != 0 ? d : a.compareTo(b);
+                });
+              }
+              final rows = <Widget>[];
+              // 전체 탭 맨 위: 지금 듣기 좋은 사진 카드 (라디오와 같음)
+              if (showTitles) {
+                final nice = _niceSoundNow();
+                if (nice != null) {
+                  rows.add(_natureNiceCard(nice, soundColors[nice.category] ?? primaryColor, openVariant,
+                      playerProvider, isDarkMode));
+                }
+              }
+              String? lastCat;
+              for (final i in order) {
+                final cat = cardCats[i];
+                if (showTitles && cat != lastCat) {
+                  rows.add(_natureGroupTitle(cat, lastCat == null, baseColor)); // 제목 앞뒤는 선 없이
+                } else if (rows.isNotEmpty) {
+                  rows.add(Divider(height: 1, color: baseColor.withOpacity(0.1)));
+                }
+                lastCat = cat;
+                rows.add(_natureCards[i]);
+              }
               return [
-                Column(
-                  children: [
-                    for (var i = 0; i < _natureCards.length; i++) ...[
-                      if (i > 0)
-                        Container(
-                            height: 0.6,
-                            margin: const EdgeInsetsDirectional.only(start: 78, end: 12),
-                            color: baseColor.withOpacity(0.07)),
-                      _natureCards[i],
-                    ],
-                  ],
-                ),
+                Column(children: rows),
               ];
             })(),
           ],

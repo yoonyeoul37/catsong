@@ -1829,9 +1829,8 @@ class _PodBarItem extends StatelessWidget {
 
 /// 종료: 작별 인사 → 소리 천천히 작게 → 앱 닫기 (라디오 재생 화면과 같은 순서)
 void _podFarewellAndExit(BuildContext context) {
-  final langCode = Localizations.localeOf(context).languageCode;
-  final farewellAsset = langCode == 'ko' ? 'assets/farewell_ko_v4.mp3' : 'assets/greet_outro.mp3';
-  if (context.read<ThemeProvider>().voiceGreetingEnabled) { // 한국어는 목소리 · 해외는 멜로디
+  const farewellAsset = 'assets/greet_outro.mp3'; // 끝인사: 어느 언어나 멜로디 (한국어 목소리는 '파란소리 자료'에 보관)
+  if (context.read<ThemeProvider>().voiceGreetingEnabled) { // 어느 언어나 멜로디
     final farewellPlayer = AudioPlayer();
     farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
   }

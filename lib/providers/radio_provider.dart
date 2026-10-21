@@ -910,6 +910,44 @@ class RadioProvider extends ChangeNotifier {
     return -1;
   }
 
+  /// 차 화면(안드로이드 오토)용 나라별 인기 방송 — 화면에 보이는 목록은 건드리지 않음
+  Future<List<RadioStation>> fetchTopForCar(String countryCode, {int limit = 60}) async {
+    List<String> servers;
+    try {
+      servers = await _getApiServers();
+    } catch (_) {
+      return const [];
+    }
+    for (final server in servers) {
+      try {
+        final uri = Uri.https(server, '/json/stations/bycountrycodeexact/$countryCode', {
+          'order': 'clickcount',
+          'reverse': 'true',
+          'limit': '${limit * 2}',
+          'hidebroken': 'true',
+          'lastcheckok': '1',
+          'codec': 'MP3,AAC,AAC+,OGG',
+        });
+        final response = await http.get(uri, headers: _apiHeaders).timeout(const Duration(seconds: 8));
+        if (response.statusCode != 200) continue;
+        final List<dynamic> data = json.decode(response.body);
+        final keys = <String>{};
+        final out = <RadioStation>[];
+        for (final j in data) {
+          final s = RadioStation.fromJson(j as Map<String, dynamic>);
+          if (s.streamUrl.isEmpty || _isBlocked(s)) continue; // 안 나오는 방송 빼기
+          final key = _nameKey(s.name);
+          if (key.isEmpty || !keys.add(key)) continue; // 같은 방송은 인기 많은 쪽 하나만
+          out.add(s);
+          if (out.length >= limit) break;
+        }
+        _mergeFavoriteFlags(out);
+        return out;
+      } catch (_) {}
+    }
+    return const [];
+  }
+
   Future<void> fetchTopStations(String countryCode, {int limit = 200, int retryCount = 0}) async {
     if (retryCount == 0) {
       _countryCode = countryCode;

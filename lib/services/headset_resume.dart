@@ -18,6 +18,7 @@ import '../models/song.dart';
 import '../utils/index_letter.dart';
 import '../utils/device_country.dart';
 import '../screens/radio_korea_screen2.dart' show koreanRadioStations;
+import 'car_browse.dart';
 
 /// 이어폰·블루투스를 연결하면 듣던 것 이어서 듣기
 /// 0 끄기 · 1 알림으로 묻기 · 2 바로 재생 (작게 시작해서 천천히 커짐)
@@ -89,6 +90,7 @@ class HeadsetResume {
       return;
     }
     if (method != 'onHeadsetConnected' || mode.value == 0) return;
+    if (CarBrowse.inCarRecently) return; // 차(안드로이드 오토)에 연결 중이면 저절로 틀지 않기 (구글 규칙)
     final t = _target();
     if (t == null) return;
     if (mode.value == 1) {
@@ -554,6 +556,9 @@ class HeadsetResume {
   }
 
   /// 음악 화면과 같은 순서 (제목 / 가수 / 장르 정렬 · 초성 묶음) — 위젯 '첫 곡'이 화면 맨 위 곡과 같게
+  /// 차 화면 '전체 곡'도 음악 화면과 같은 순서로
+  static Future<List<Song>> screenOrder(List<Song> songs) => _screenOrder(songs);
+
   static Future<List<Song>> _screenOrder(List<Song> songs) async {
     var byArtist = false, byGenre = false;
     try {

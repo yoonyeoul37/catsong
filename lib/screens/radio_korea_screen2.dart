@@ -1452,6 +1452,25 @@ const niceDefaults = [
 List<RadioStation> koreanRadioStations() =>
     koreanStationsSorted.map(_RadioKoreaScreenState._toRadioStation).toList();
 
+/// 차 화면(안드로이드 오토)용 국내 방송: (방송, 칸 큰 글자, 칸 작은 글자, 칸 색)
+/// 라디오 화면 순서 그대로 · 칸 색은 '방송사별' 칸과 같은 색
+List<(RadioStation, String, String, int)> koreanStationsForCar() => [
+      for (final k in koreanStationsSorted)
+        (
+          _RadioKoreaScreenState._toRadioStation(k),
+          k.broadcaster == '공동체' ? k.name.split(' ').first : k.broadcaster,
+          [
+            k.broadcaster != '공동체' && k.name.startsWith(k.broadcaster)
+                ? k.name.substring(k.broadcaster.length).trim()
+                : k.name,
+            if (k.subLabel.isNotEmpty && k.subLabel != '서울') k.subLabel,
+          ].where((x) => x.isNotEmpty).join(' · '),
+          (_BroadcasterGridScreen._cardColors[_BroadcasterGridScreen._keyOf(k.broadcaster)] ??
+                  const Color(0xFF3A342A))
+              .value,
+        ),
+    ];
+
 RadioStation? niceKoreanStationNow({Set<String> skip = const {}, int day = 0}) {
   final h = DateTime.now().hour;
   final s = (h >= 5 && h < 11) ? 0 : (h >= 11 && h < 17) ? 1 : (h >= 17 && h < 22) ? 2 : 3;

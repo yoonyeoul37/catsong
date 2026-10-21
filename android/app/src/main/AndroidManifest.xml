@@ -123,6 +123,17 @@
             </intent-filter>
         </receiver>
 
+        <!-- 안드로이드 오토: 음악·라디오(미디어) 앱으로 알리기 -->
+        <meta-data
+            android:name="com.google.android.gms.car.application"
+            android:resource="@xml/automotive_app_desc" />
+
+        <!-- 안드로이드 오토 칸 그림 (차 화면이 읽어 가는 그림 파일, 읽기만) -->
+        <provider
+            android:name=".ArtProvider"
+            android:authorities="kr.ssing.catsong.art"
+            android:exported="true" />
+
         <meta-data
             android:name="flutterEmbedding"
             android:value="2"/>

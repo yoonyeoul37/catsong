@@ -28,6 +28,7 @@ import 'providers/recent_content_provider.dart';
 import 'screens/home_screen.dart';
 import 'services/alarm_service.dart';
 import 'services/headset_resume.dart';
+import 'services/car_browse.dart';
 import 'services/sos_service.dart';
 import 'widgets/photo_dialog.dart';
 import 'theme/app_theme.dart';
@@ -95,6 +96,7 @@ void main() async {
       androidResumeOnClick: false, // 끝나면 알림을 남기지 않고 지움
       
       preloadArtwork: false,
+      androidBrowsableRootExtras: CarBrowse.rootExtras, // 안드로이드 오토: 칸 모양 · 검색 지원
     ),
   );
   playerProvider.setAudioHandler(globalAudioHandler);
@@ -111,7 +113,7 @@ void main() async {
     await playerProvider.player.stop();
     playerProvider.clearNatureSoundState();
     playerProvider.clearCurrentSong();
-    await WakelockPlus.disable();
+    await WakelockPlus.disable().catchError((Object _) {}); // 차·위젯처럼 앱 화면이 없을 때 오류 안 나게
   });
 
   playerProvider.setOnStopRadio(() async {
@@ -155,6 +157,7 @@ void main() async {
 
   HeadsetResume.init(playerProvider, radioProvider); // 이어폰 연결하면 이어서 듣기
   HeadsetResume.attachRecent(recentContentProvider, musicProvider); // 위젯 재생: 마지막에 듣던 것
+  CarBrowse.init(playerProvider, radioProvider, musicProvider); // 안드로이드 오토 (차 화면)
   LyricsProvider.shared.attachWidget(playerProvider); // 위젯에 지금 가사 한 줄
   // 앱이 꺼져 있을 때 위젯 재생을 눌렀으면 (화면 없이 엔진만 켜짐) → 마지막에 듣던 것 바로
   try {

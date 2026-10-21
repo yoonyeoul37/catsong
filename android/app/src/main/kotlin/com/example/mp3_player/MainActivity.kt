@@ -2096,14 +2096,37 @@ object HeadsetWatch {
             val now = System.currentTimeMillis()
             if (now - startedAt < 2500) return // 처음 등록할 때 이미 연결돼 있던 건 무시
             if (added == null || added.none { it.isSink && isHeadset(it.type) }) return
+            // 차(안드로이드 오토 · 차 블루투스)면 저절로 틀지 않기 (구글 차 앱 규칙: 자동 재생 금지)
+            if (added.any { it.isSink && isHeadset(it.type) && isCar(it) }) return
             if (now - lastAt < 4000) return // 블루투스는 신호가 여러 번 와서 한 번만
             lastAt = now
             channel?.invokeMethod("onHeadsetConnected", null)
         }
     }
 
+    private var appCtx: android.content.Context? = null
+
+    /// 차인지: 폰이 차 모드(안드로이드 오토)거나, 블루투스 기기 종류가 차 오디오·핸즈프리
+    private fun isCar(d: AudioDeviceInfo): Boolean {
+        val ctx = appCtx ?: return false
+        try {
+            val ui = ctx.getSystemService(android.content.Context.UI_MODE_SERVICE) as android.app.UiModeManager
+            if (ui.currentModeType == android.content.res.Configuration.UI_MODE_TYPE_CAR) return true
+        } catch (_: Exception) {}
+        if (d.type != AudioDeviceInfo.TYPE_BLUETOOTH_A2DP || Build.VERSION.SDK_INT < 28) return false
+        return try {
+            val bm = ctx.getSystemService(android.content.Context.BLUETOOTH_SERVICE) as android.bluetooth.BluetoothManager
+            val c = bm.adapter?.getRemoteDevice(d.address)?.bluetoothClass?.deviceClass
+            c == android.bluetooth.BluetoothClass.Device.AUDIO_VIDEO_CAR_AUDIO ||
+                c == android.bluetooth.BluetoothClass.Device.AUDIO_VIDEO_HANDSFREE
+        } catch (_: Exception) {
+            false // 블루투스 권한이 없으면 모름 → 앱 쪽(차 화면이 목록을 물어봤는지)으로 한 번 더 막음
+        }
+    }
+
     fun start(ctx: android.content.Context, ch: MethodChannel) {
         channel = ch
+        appCtx = ctx.applicationContext
         if (registered) return
         registered = true
         startedAt = System.currentTimeMillis()

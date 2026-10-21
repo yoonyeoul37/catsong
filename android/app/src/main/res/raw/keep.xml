@@ -1,3 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools"
-    tools:keep="@raw/water_drop,@raw/water_drop_low" />
+    tools:keep="@raw/water_drop,@raw/water_drop_low,@drawable/paran_ic_back15,@drawable/paran_ic_fwd30,@drawable/paran_ic_podcast" />

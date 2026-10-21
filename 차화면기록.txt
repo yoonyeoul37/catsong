@@ -1,0 +1,231 @@
+--------- beginning of main
+10-22 05:50:41.062 13260 13260 I flutter : [IMPORTANT:flutter/shell/common/shell.cc(528)] [Action Required]: Impeller opt-out deprecated.
+10-22 05:50:41.062 13260 13260 I flutter :     The application opted out of Impeller by either using the
+10-22 05:50:41.062 13260 13260 I flutter :     `--no-enable-impeller` flag or the
+10-22 05:50:41.062 13260 13260 I flutter :     `io.flutter.embedding.android.EnableImpeller` `AndroidManifest.xml` entry.
+10-22 05:50:41.062 13260 13260 I flutter :     These options are going to go away in an upcoming Flutter release. Remove
+10-22 05:50:41.062 13260 13260 I flutter :     the explicit opt-out. If you need to opt-out, please report a bug describing
+10-22 05:50:41.062 13260 13260 I flutter :     the issue.
+10-22 05:50:41.062 13260 13260 I flutter : 
+10-22 05:50:41.062 13260 13260 I flutter :     https://github.com/flutter/flutter/issues/new?template=02_bug.yml
+10-22 05:50:41.062 13260 13260 I flutter : 
+10-22 05:50:41.354 13260 13314 I flutter : The Dart VM service is listening on http://127.0.0.1:43831/Gh8U5iLIX9Q=/
+10-22 05:50:43.210 13260 13260 I flutter : media_kit: NativeReferenceHolder: Allocated -5476376631243644928
+10-22 05:50:44.577 13260 13260 I flutter : mpv HLS 설정 완료
+10-22 05:50:45.186 13260 13260 I flutter : 편성표 로드 성공
+10-22 05:50:45.189 13260 13260 I flutter : === fetchJsonSchedule 호출: CBS 음악FM ===
+10-22 05:50:45.189 13260 13260 I flutter : === hasSchedule: true ===
+10-22 05:50:45.193 13260 13260 I flutter : === getCurrentProgram: {title: 이명희의 내가 매일 기쁘게, start: 04:00, end: 06:00, image: https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000222/cbs17122939613369.png} ===
+10-22 05:50:45.194 13260 13260 I flutter : === fetchJsonSchedule 호출: CBS 표준FM ===
+10-22 05:50:45.195 13260 13260 I flutter : === hasSchedule: true ===
+10-22 05:50:45.195 13260 13260 I flutter : === getCurrentProgram: {title: 성서강해, start: 05:30, end: 05:55, image: https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16907924296569.jpg} ===
+10-22 05:50:46.342 13260 13260 I flutter : === 화면 크기: Size(0.0, 0.0) ===
+10-22 05:50:49.609 13260 13260 I flutter : 스캔 완료: 74개 곡 발견
+10-22 05:50:49.864 13260 13260 I flutter : 업데이트 확인 오류: PlatformException(REQUIRE_FOREGROUND_ACTIVITY, in_app_update requires a foreground activity, null, null)
+10-22 05:51:06.781 13796 13796 I flutter : [IMPORTANT:flutter/shell/common/shell.cc(528)] [Action Required]: Impeller opt-out deprecated.
+10-22 05:51:06.781 13796 13796 I flutter :     The application opted out of Impeller by either using the
+10-22 05:51:06.781 13796 13796 I flutter :     `--no-enable-impeller` flag or the
+10-22 05:51:06.781 13796 13796 I flutter :     `io.flutter.embedding.android.EnableImpeller` `AndroidManifest.xml` entry.
+10-22 05:51:06.781 13796 13796 I flutter :     These options are going to go away in an upcoming Flutter release. Remove
+10-22 05:51:06.781 13796 13796 I flutter :     the explicit opt-out. If you need to opt-out, please report a bug describing
+10-22 05:51:06.781 13796 13796 I flutter :     the issue.
+10-22 05:51:06.781 13796 13796 I flutter : 
+10-22 05:51:06.781 13796 13796 I flutter :     https://github.com/flutter/flutter/issues/new?template=02_bug.yml
+10-22 05:51:06.781 13796 13796 I flutter : 
+10-22 05:51:07.017 13796 14265 I flutter : The Dart VM service is listening on http://127.0.0.1:36403/b69gCLqnHro=/
+10-22 05:51:10.412 13796 13796 I flutter : media_kit: NativeReferenceHolder: Allocated -5476376631344259072
+10-22 05:51:12.233 13796 13796 I flutter : mpv HLS 설정 완료
+10-22 05:51:13.392 13796 13796 I flutter : === 화면 크기: Size(384.0, 832.0) ===
+10-22 05:51:14.715 13796 13796 I flutter : 편성표 로드 성공
+10-22 05:51:14.719 13796 13796 I flutter : === fetchJsonSchedule 호출: CBS 음악FM ===
+10-22 05:51:14.720 13796 13796 I flutter : === hasSchedule: true ===
+10-22 05:51:14.724 13796 13796 I flutter : === getCurrentProgram: {title: 이명희의 내가 매일 기쁘게, start: 04:00, end: 06:00, image: https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000222/cbs17122939613369.png} ===
+10-22 05:51:14.725 13796 13796 I flutter : === fetchJsonSchedule 호출: CBS 표준FM ===
+10-22 05:51:14.725 13796 13796 I flutter : === hasSchedule: true ===
+10-22 05:51:14.726 13796 13796 I flutter : === getCurrentProgram: {title: 성서강해, start: 05:30, end: 05:55, image: https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16907924296569.jpg} ===
+10-22 05:51:15.405 13796 13796 I flutter : === 화면 크기: Size(384.0, 832.0) ===
+10-22 05:51:18.000 13796 13796 I flutter : 업데이트 확인 오류: PlatformException(TASK_FAILURE, -10: Install Error(-10): The app is not owned by any user on this device. An app is "owned" if it has been acquired from Play. (https://developer.android.com/reference/com/google/android/play/core/install/model/InstallErrorCode#ERROR_APP_NOT_OWNED), null, null)
+10-22 05:51:20.346 13796 13796 I flutter : 비디오 스캔 완료: 11개
+10-22 05:51:20.347 13796 13796 I flutter : 비디오 목록: [ㄴㄷㅅ, ㄴㄸ, 20261008_164140, 20261008_163858, 20261008_160250, 20261008_160215, 20261008_155723, 20261008_155154, 20261008_155103, 20261008_153443, 20261008_131829]
+10-22 05:51:22.502 13796 13796 I flutter : 스캔 완료: 74개 곡 발견
+10-22 05:51:22.635 13796 13796 I flutter : 업데이트 확인 오류: PlatformException(TASK_FAILURE, -10: Install Error(-10): The app is not owned by any user on this device. An app is "owned" if it has been acquired from Play. (https://developer.android.com/reference/com/google/android/play/core/install/model/InstallErrorCode#ERROR_APP_NOT_OWNED), null, null)
+10-22 05:52:23.937 15202 15202 I flutter : [IMPORTANT:flutter/shell/common/shell.cc(528)] [Action Required]: Impeller opt-out deprecated.
+10-22 05:52:23.937 15202 15202 I flutter :     The application opted out of Impeller by either using the
+10-22 05:52:23.937 15202 15202 I flutter :     `--no-enable-impeller` flag or the
+10-22 05:52:23.937 15202 15202 I flutter :     `io.flutter.embedding.android.EnableImpeller` `AndroidManifest.xml` entry.
+10-22 05:52:23.937 15202 15202 I flutter :     These options are going to go away in an upcoming Flutter release. Remove
+10-22 05:52:23.937 15202 15202 I flutter :     the explicit opt-out. If you need to opt-out, please report a bug describing
+10-22 05:52:23.937 15202 15202 I flutter :     the issue.
+10-22 05:52:23.937 15202 15202 I flutter : 
+10-22 05:52:23.937 15202 15202 I flutter :     https://github.com/flutter/flutter/issues/new?template=02_bug.yml
+10-22 05:52:23.937 15202 15202 I flutter : 
+10-22 05:52:24.173 15202 15389 I flutter : The Dart VM service is listening on http://127.0.0.1:33013/FTUh5Emlabw=/
+10-22 05:52:26.194 15202 15202 I flutter : media_kit: NativeReferenceHolder: Allocated -5476376631187468288
+10-22 05:52:27.247 15202 15202 I flutter : mpv HLS 설정 완료
+10-22 05:52:27.710 15202 15202 I flutter : 편성표 로드 성공
+10-22 05:52:27.713 15202 15202 I flutter : === fetchJsonSchedule 호출: CBS 음악FM ===
+10-22 05:52:27.714 15202 15202 I flutter : === hasSchedule: true ===
+10-22 05:52:27.717 15202 15202 I flutter : === getCurrentProgram: {title: 이명희의 내가 매일 기쁘게, start: 04:00, end: 06:00, image: https://www.cbs.co.kr/data/cbs/upload/save/program/cbs_P000222/cbs17122939613369.png} ===
+10-22 05:52:27.719 15202 15202 I flutter : === fetchJsonSchedule 호출: CBS 표준FM ===
+10-22 05:52:27.719 15202 15202 I flutter : === hasSchedule: true ===
+10-22 05:52:27.719 15202 15202 I flutter : === getCurrentProgram: {title: 성서강해, start: 05:30, end: 05:55, image: https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16907924296569.jpg} ===
+10-22 05:52:29.045 15202 15202 I flutter : === 화면 크기: Size(0.0, 0.0) ===
+10-22 05:52:30.850 15202 15202 I flutter : 스캔 완료: 74개 곡 발견
+10-22 05:52:30.962 15202 15202 I flutter : 업데이트 확인 오류: PlatformException(REQUIRE_FOREGROUND_ACTIVITY, in_app_update requires a foreground activity, null, null)
+10-22 05:52:31.135 15202 15202 I flutter : stream.playing: false
+10-22 05:52:31.136 15202 15202 I flutter : stream.buffering: false
+10-22 05:53:18.680 15202 15202 I flutter : fetchScheduleByUrl 호출됨: KBS Cool FM / codes: {local: 00, channel: 25}
+10-22 05:53:18.933 15202 15202 I flutter : === _updateNotification: KBS Cool FM / program: null ===
+10-22 05:53:18.934 15202 15202 I flutter : === 라디오 재생 시작 ===
+10-22 05:53:18.934 15202 15202 I flutter : 방송국: KBS Cool FM
+10-22 05:53:18.934 15202 15202 I flutter : station.url: https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/25
+10-22 05:53:18.934 15202 15202 I flutter : station.url_resolved: null
+10-22 05:53:19.003 15202 15202 I flutter : KBS API URL 추출: https://2fm-ad.gscdn.kbs.co.kr/2fm_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8yZm0tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTI3ODg3Mjl9fX1dfQ__&Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA&Signature=K~KwJhTTSsNQvbXSIimZvwr0fyn46ygsucTA0r8fO~Rcbkubu-~I9qtMxuFSzvUSMkgOw8gIPFYqJ3QXu3Dnpu0jscmAfa4dAQWRwz-Z7m9vl3AI-7SOCYsZNslBWlxX9ktuMRiOeiHfoXTFpyXATkw8ey9FYX2sP1aI9Q8pzG3Ib-Bq440zgn2Nd~D37rlbcHGmgcd5mYgbTkI1WRp7iJwAFww1i9gzH72mfOwLs1R~n3dH7Oflue1yY35Ua5QHvl-6IkLQLO1VJDG1pxOEEl90DWr7JaKWDoUQnnIg0EszIrxYDUxocNwxNR42p1LqlozCUrQ7YaJjXNEDnAgZaA__
+10-22 05:53:19.005 15202 15202 I flutter : 리다이렉트 URL 추출: https://2fm-ad.gscdn.kbs.co.kr/2fm_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8yZm0tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTI3ODg3Mjl9fX1dfQ__&Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA&Signature=K~KwJhTTSsNQvbXSIimZvwr0fyn46ygsucTA0r8fO~Rcbkubu-~I9qtMxuFSzvUSMkgOw8gIPFYqJ3QXu3Dnpu0jscmAfa4dAQWRwz-Z7m9vl3AI-7SOCYsZNslBWlxX9ktuMRiOeiHfoXTFpyXATkw8ey9FYX2sP1aI9Q8pzG3Ib-Bq440zgn2Nd~D37rlbcHGmgcd5mYgbTkI1WRp7iJwAFww1i9gzH72mfOwLs1R~n3dH7Oflue1yY35Ua5QHvl-6IkLQLO1VJDG1pxOEEl90DWr7JaKWDoUQnnIg0EszIrxYDUxocNwxNR42p1LqlozCUrQ7YaJjXNEDnAgZaA__
+10-22 05:53:19.005 15202 15202 I flutter : FINAL_URL: https://2fm-ad.gscdn.kbs.co.kr/2fm_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8yZm0tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTI3ODg3Mjl9fX1dfQ__&Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA&Signature=K~KwJhTTSsNQvbXSIimZvwr0fyn46ygsucTA0r8fO~Rcbkubu-~I9qtMxuFSzvUSMkgOw8gIPFYqJ3QXu3Dnpu0jscmAfa4dAQWRwz-Z7m9vl3AI-7SOCYsZNslBWlxX9ktuMRiOeiHfoXTFpyXATkw8ey9FYX2sP1aI9Q8pzG3Ib-Bq440zgn2Nd~D37rlbcHGmgcd5mYgbTkI1WRp7iJwAFww1i9gzH72mfOwLs1R~n3dH7Oflue1yY35Ua5QHvl-6IkLQLO1VJDG1pxOEEl90DWr7JaKWDoUQnnIg0EszIrxYDUxocNwxNR42p1LqlozCUrQ7YaJjXNEDnAgZaA__
+10-22 05:53:19.030 15202 15202 I flutter : 포그라운드 서비스 시작
+10-22 05:53:19.153 15202 15202 I flutter : stream.playing: true
+10-22 05:53:19.176 15202 15202 I flutter : stream.buffering: true
+10-22 05:53:19.795 15202 15202 I flutter : stream.buffering: false
+10-22 05:55:01.037 15202 15202 I flutter : === fetchJsonSchedule 호출: CBS 표준FM ===
+10-22 05:55:01.038 15202 15202 I flutter : === hasSchedule: true ===
+10-22 05:55:01.039 15202 15202 I flutter : === getCurrentProgram: {title: 크리스천 칼럼, start: 05:55, end: 06:00, image: https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16907927065782.jpg} ===
+10-22 05:55:09.975 15202 15202 I flutter : 오디오 인터럽트 발생 - 라디오 정지
+10-22 05:55:09.982 15202 15202 I flutter : stream.playing: false
+10-22 05:55:31.470 15202 15202 I flutter : 오디오 인터럽트 종료 - 라디오 재개
+10-22 05:55:31.472 15202 15202 I flutter : fetchScheduleByUrl 호출됨: KBS Cool FM / codes: {local: 00, channel: 25}
+10-22 05:55:31.678 15202 15202 I flutter : === 라디오 재생 시작 ===
+10-22 05:55:31.679 15202 15202 I flutter : 방송국: KBS Cool FM
+10-22 05:55:31.679 15202 15202 I flutter : station.url: https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/25
+10-22 05:55:31.679 15202 15202 I flutter : station.url_resolved: null
+10-22 05:55:31.706 15202 15202 I flutter : === _updateNotification: KBS Cool FM / program: null ===
+10-22 05:55:31.747 15202 15202 I flutter : KBS API URL 추출: https://2fm-ad.gscdn.kbs.co.kr/2fm_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8yZm0tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTI3ODg5MDl9fX1dfQ__&Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA&Signature=hsB8B1Ex1-qF8NrHW~3humAEPA-ipLlrnjreXe~ZXpJonEAUyvvGrWXwMwskH6~QIeczMYzRYm5t3BlvOBk5okrdbopr80gmI2EsEo78yIS-67I8AO23bZzOVSeqQKo2b6if2WJJiHRRJQTwt57aNLv74I9tfNrdV0WavuJnYgn79ILltTt9vAz2YJ5tBkHUQIcukJNnmZrVfvtCn9tg5midPypL~m0v8iPa0B-0PbwFmRveHg6KSvS7ByGAR4oXIB4fOL4c~leYxFydVo8VLDuiUUya3n0XntCccRc556lmTh0-UOn5rhAceKZRIsp7CG~MQTYzbhXz1iC3C5WOUQ__
+10-22 05:55:31.747 15202 15202 I flutter : 리다이렉트 URL 추출: https://2fm-ad.gscdn.kbs.co.kr/2fm_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8yZm0tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTI3ODg5MDl9fX1dfQ__&Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA&Signature=hsB8B1Ex1-qF8NrHW~3humAEPA-ipLlrnjreXe~ZXpJonEAUyvvGrWXwMwskH6~QIeczMYzRYm5t3BlvOBk5okrdbopr80gmI2EsEo78yIS-67I8AO23bZzOVSeqQKo2b6if2WJJiHRRJQTwt57aNLv74I9tfNrdV0WavuJnYgn79ILltTt9vAz2YJ5tBkHUQIcukJNnmZrVfvtCn9tg5midPypL~m0v8iPa0B-0PbwFmRveHg6KSvS7ByGAR4oXIB4fOL4c~leYxFydVo8VLDuiUUya3n0XntCccRc556lmTh0-UOn5rhAceKZRIsp7CG~MQTYzbhXz1iC3C5WOUQ__
+10-22 05:55:31.747 15202 15202 I flutter : FINAL_URL: https://2fm-ad.gscdn.kbs.co.kr/2fm_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8yZm0tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTI3ODg5MDl9fX1dfQ__&Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA&Signature=hsB8B1Ex1-qF8NrHW~3humAEPA-ipLlrnjreXe~ZXpJonEAUyvvGrWXwMwskH6~QIeczMYzRYm5t3BlvOBk5okrdbopr80gmI2EsEo78yIS-67I8AO23bZzOVSeqQKo2b6if2WJJiHRRJQTwt57aNLv74I9tfNrdV0WavuJnYgn79ILltTt9vAz2YJ5tBkHUQIcukJNnmZrVfvtCn9tg5midPypL~m0v8iPa0B-0PbwFmRveHg6KSvS7ByGAR4oXIB4fOL4c~leYxFydVo8VLDuiUUya3n0XntCccRc556lmTh0-UOn5rhAceKZRIsp7CG~MQTYzbhXz1iC3C5WOUQ__
+10-22 05:55:31.750 15202 15202 I flutter : 포그라운드 서비스 시작
+10-22 05:55:31.898 15202 15202 I flutter : stream.playing: true
+10-22 05:55:31.903 15202 15202 I flutter : stream.buffering: true
+10-22 05:55:32.223 15202 15202 I flutter : stream.buffering: false
+10-22 05:55:41.588 15202 15202 I flutter : 오디오 인터럽트 발생 - 라디오 정지
+10-22 05:55:41.601 15202 15202 I flutter : stream.playing: false
+10-22 05:55:41.918 15202 15202 I flutter : 10초 넘게 소리 없음 → 다시 연결 (1번째)
+10-22 05:55:41.918 15202 15202 I flutter : fetchScheduleByUrl 호출됨: KBS Cool FM / codes: {local: 00, channel: 25}
+10-22 05:55:42.121 15202 15202 I flutter : === 라디오 재생 시작 ===
+10-22 05:55:42.121 15202 15202 I flutter : 방송국: KBS Cool FM
+10-22 05:55:42.121 15202 15202 I flutter : station.url: https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/25
+10-22 05:55:42.121 15202 15202 I flutter : station.url_resolved: null
+10-22 05:55:42.225 15202 15202 I flutter : === _updateNotification: KBS Cool FM / program: null ===
+10-22 05:55:42.236 15202 15202 I flutter : KBS API URL 추출: https://2fm-ad.gscdn.kbs.co.kr/2fm_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8yZm0tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTI3ODg5MDl9fX1dfQ__&Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA&Signature=hsB8B1Ex1-qF8NrHW~3humAEPA-ipLlrnjreXe~ZXpJonEAUyvvGrWXwMwskH6~QIeczMYzRYm5t3BlvOBk5okrdbopr80gmI2EsEo78yIS-67I8AO23bZzOVSeqQKo2b6if2WJJiHRRJQTwt57aNLv74I9tfNrdV0WavuJnYgn79ILltTt9vAz2YJ5tBkHUQIcukJNnmZrVfvtCn9tg5midPypL~m0v8iPa0B-0PbwFmRveHg6KSvS7ByGAR4oXIB4fOL4c~leYxFydVo8VLDuiUUya3n0XntCccRc556lmTh0-UOn5rhAceKZRIsp7CG~MQTYzbhXz1iC3C5WOUQ__
+10-22 05:55:42.237 15202 15202 I flutter : 리다이렉트 URL 추출: https://2fm-ad.gscdn.kbs.co.kr/2fm_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8yZm0tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTI3ODg5MDl9fX1dfQ__&Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA&Signature=hsB8B1Ex1-qF8NrHW~3humAEPA-ipLlrnjreXe~ZXpJonEAUyvvGrWXwMwskH6~QIeczMYzRYm5t3BlvOBk5okrdbopr80gmI2EsEo78yIS-67I8AO23bZzOVSeqQKo2b6if2WJJiHRRJQTwt57aNLv74I9tfNrdV0WavuJnYgn79ILltTt9vAz2YJ5tBkHUQIcukJNnmZrVfvtCn9tg5midPypL~m0v8iPa0B-0PbwFmRveHg6KSvS7ByGAR4oXIB4fOL4c~leYxFydVo8VLDuiUUya3n0XntCccRc556lmTh0-UOn5rhAceKZRIsp7CG~MQTYzbhXz1iC3C5WOUQ__
+10-22 05:55:42.237 15202 15202 I flutter : FINAL_URL: https://2fm-ad.gscdn.kbs.co.kr/2fm_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8yZm0tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTI3ODg5MDl9fX1dfQ__&Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA&Signature=hsB8B1Ex1-qF8NrHW~3humAEPA-ipLlrnjreXe~ZXpJonEAUyvvGrWXwMwskH6~QIeczMYzRYm5t3BlvOBk5okrdbopr80gmI2EsEo78yIS-67I8AO23bZzOVSeqQKo2b6if2WJJiHRRJQTwt57aNLv74I9tfNrdV0WavuJnYgn79ILltTt9vAz2YJ5tBkHUQIcukJNnmZrVfvtCn9tg5midPypL~m0v8iPa0B-0PbwFmRveHg6KSvS7ByGAR4oXIB4fOL4c~leYxFydVo8VLDuiUUya3n0XntCccRc556lmTh0-UOn5rhAceKZRIsp7CG~MQTYzbhXz1iC3C5WOUQ__
+10-22 05:55:42.243 15202 15202 I flutter : 포그라운드 서비스 시작
+10-22 05:55:42.467 15202 15202 I flutter : stream.playing: true
+10-22 05:55:42.477 15202 15202 I flutter : stream.buffering: true
+10-22 05:55:42.931 15202 15202 I flutter : stream.buffering: false
+10-22 05:55:51.118 15202 15202 I flutter : 오디오 인터럽트 종료 - 라디오 재개
+10-22 05:55:56.064 15202 15202 I flutter : 오디오 인터럽트 발생 - 라디오 정지
+10-22 05:55:56.067 15202 15202 I flutter : stream.playing: false
+10-22 05:56:05.616 15202 15202 I flutter : 오디오 인터럽트 종료 - 라디오 재개
+10-22 05:56:05.617 15202 15202 I flutter : fetchScheduleByUrl 호출됨: KBS Cool FM / codes: {local: 00, channel: 25}
+10-22 05:56:05.822 15202 15202 I flutter : === 라디오 재생 시작 ===
+10-22 05:56:05.822 15202 15202 I flutter : 방송국: KBS Cool FM
+10-22 05:56:05.822 15202 15202 I flutter : station.url: https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/25
+10-22 05:56:05.822 15202 15202 I flutter : station.url_resolved: null
+10-22 05:56:05.896 15202 15202 I flutter : === _updateNotification: KBS Cool FM / program: null ===
+10-22 05:56:05.920 15202 15202 I flutter : KBS API URL 추출: https://2fm-ad.gscdn.kbs.co.kr/2fm_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8yZm0tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTI3ODg5MDl9fX1dfQ__&Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA&Signature=hsB8B1Ex1-qF8NrHW~3humAEPA-ipLlrnjreXe~ZXpJonEAUyvvGrWXwMwskH6~QIeczMYzRYm5t3BlvOBk5okrdbopr80gmI2EsEo78yIS-67I8AO23bZzOVSeqQKo2b6if2WJJiHRRJQTwt57aNLv74I9tfNrdV0WavuJnYgn79ILltTt9vAz2YJ5tBkHUQIcukJNnmZrVfvtCn9tg5midPypL~m0v8iPa0B-0PbwFmRveHg6KSvS7ByGAR4oXIB4fOL4c~leYxFydVo8VLDuiUUya3n0XntCccRc556lmTh0-UOn5rhAceKZRIsp7CG~MQTYzbhXz1iC3C5WOUQ__
+10-22 05:56:05.920 15202 15202 I flutter : 리다이렉트 URL 추출: https://2fm-ad.gscdn.kbs.co.kr/2fm_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8yZm0tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTI3ODg5MDl9fX1dfQ__&Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA&Signature=hsB8B1Ex1-qF8NrHW~3humAEPA-ipLlrnjreXe~ZXpJonEAUyvvGrWXwMwskH6~QIeczMYzRYm5t3BlvOBk5okrdbopr80gmI2EsEo78yIS-67I8AO23bZzOVSeqQKo2b6if2WJJiHRRJQTwt57aNLv74I9tfNrdV0WavuJnYgn79ILltTt9vAz2YJ5tBkHUQIcukJNnmZrVfvtCn9tg5midPypL~m0v8iPa0B-0PbwFmRveHg6KSvS7ByGAR4oXIB4fOL4c~leYxFydVo8VLDuiUUya3n0XntCccRc556lmTh0-UOn5rhAceKZRIsp7CG~MQTYzbhXz1iC3C5WOUQ__
+10-22 05:56:05.920 15202 15202 I flutter : FINAL_URL: https://2fm-ad.gscdn.kbs.co.kr/2fm_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8yZm0tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTI3ODg5MDl9fX1dfQ__&Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA&Signature=hsB8B1Ex1-qF8NrHW~3humAEPA-ipLlrnjreXe~ZXpJonEAUyvvGrWXwMwskH6~QIeczMYzRYm5t3BlvOBk5okrdbopr80gmI2EsEo78yIS-67I8AO23bZzOVSeqQKo2b6if2WJJiHRRJQTwt57aNLv74I9tfNrdV0WavuJnYgn79ILltTt9vAz2YJ5tBkHUQIcukJNnmZrVfvtCn9tg5midPypL~m0v8iPa0B-0PbwFmRveHg6KSvS7ByGAR4oXIB4fOL4c~leYxFydVo8VLDuiUUya3n0XntCccRc556lmTh0-UOn5rhAceKZRIsp7CG~MQTYzbhXz1iC3C5WOUQ__
+10-22 05:56:05.922 15202 15202 I flutter : 포그라운드 서비스 시작
+10-22 05:56:06.075 15202 15202 I flutter : stream.playing: true
+10-22 05:56:06.082 15202 15202 I flutter : stream.buffering: true
+10-22 05:56:06.402 15202 15202 I flutter : stream.buffering: false
+10-22 05:58:37.352 15202 15202 I flutter : === fetchMbcSchedule 호출됨: MBC 표준FM ===
+10-22 05:58:37.353 15202 15202 I flutter : === sType: FM ===
+10-22 05:58:37.354 15202 15202 I flutter : === MBC API 호출: sType=FM, date=2026-10-22 ===
+10-22 05:58:37.567 15202 15202 I flutter : === 라디오 재생 시작 ===
+10-22 05:58:37.567 15202 15202 I flutter : 방송국: MBC 표준FM
+10-22 05:58:37.567 15202 15202 I flutter : station.url: http://serpent0.duckdns.org:8088/mbcsfm.pls
+10-22 05:58:37.567 15202 15202 I flutter : station.url_resolved: null
+10-22 05:58:37.641 15202 15202 I flutter : === MBC API statusCode: 200 ===
+10-22 05:58:37.654 15202 15202 I flutter : === MBC API body 앞부분: [
+10-22 05:58:37.654 15202 15202 I flutter :   {
+10-22 05:58:37.654 15202 15202 I flutter :     "IsToday": "Y",
+10-22 05:58:37.654 15202 15202 I flutter :     "BroadDate": "2026-10-22",
+10-22 05:58:37.654 15202 15202 I flutter :     "ScheduleDesc": "1",
+10-22 05:58:37.654 15202 15202 I flutter :     "BroadcastID": "1003824100000100000",
+10-22 05:58:37.654 15202 15202 I flutter :     "BroadcastID2": "",
+10-22 05:58:37.656 15202 15202 I flutter :     "Title": "아침&뉴스, 류수민입니다",
+10-22 05:58:37.656 15202 15202 I flutter :     "HomepageURL": "https://www.imbc.com/broad/radio/fm/gmnews/index.html",
+10-22 05:58:37.656 15202 15202 I flutter :     "SubTitle": "",
+10-22 05:58:37.657 15202 15202 I flutter :     "StartTime": "0615",
+10-22 05:58:37.657 15202 15202 I flutter :     "Day": "목",
+10-22 05:58:37.657 15202 15202 I flutter :     "RunningTime": "45",
+10-22 05:58:37.657 15202 15202 I flutter :     "SubCategoryID": "6",
+10-22 05:58:37.657 15202 15202 I flutter :     "Players": "류수민",
+10-22 05:58:37.657 15202 15202 I flutter :     "Photo": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png",
+10-22 05:58:37.657 15202 15202 I flutter :     "EndT ===
+10-22 05:58:37.658 15202 15202 I flutter : === MBC data.length: 12 ===
+10-22 05:58:37.659 15202 15202 I flutter : === _updateNotification: MBC 표준FM / program: null ===
+10-22 05:58:37.692 15202 15202 I flutter : MBC 토큰 URL 추출: https://minisw.imbc.com/dsfm/_definst_/sfm.stream/playlist.m3u8?_lsu_sa_=64C1491763B23DD4D342B5C13241064DE5F43665FE0742973C103Aa9B6073A9630a2931131922149D04F39012Bb4D18DF702DD7314BF0B96F7F22D4DF502E08489CB59320824062C03DCE5B59D7AA346FC66F1FB4F3D09DAF1DFD1E589F011D037BCA46B49A1ACAEBDB0E7C9D7871A0D
+10-22 05:58:37.692 15202 15202 I flutter : 리다이렉트 URL 추출: https://minisw.imbc.com/dsfm/_definst_/sfm.stream/playlist.m3u8?_lsu_sa_=64C1491763B23DD4D342B5C13241064DE5F43665FE0742973C103Aa9B6073A9630a2931131922149D04F39012Bb4D18DF702DD7314BF0B96F7F22D4DF502E08489CB59320824062C03DCE5B59D7AA346FC66F1FB4F3D09DAF1DFD1E589F011D037BCA46B49A1ACAEBDB0E7C9D7871A0D
+10-22 05:58:37.692 15202 15202 I flutter : FINAL_URL: https://minisw.imbc.com/dsfm/_definst_/sfm.stream/playlist.m3u8?_lsu_sa_=64C1491763B23DD4D342B5C13241064DE5F43665FE0742973C103Aa9B6073A9630a2931131922149D04F39012Bb4D18DF702DD7314BF0B96F7F22D4DF502E08489CB59320824062C03DCE5B59D7AA346FC66F1FB4F3D09DAF1DFD1E589F011D037BCA46B49A1ACAEBDB0E7C9D7871A0D
+10-22 05:58:37.700 15202 15202 I flutter : 포그라운드 서비스 시작
+10-22 05:58:37.782 15202 15202 I flutter : stream.playing: false
+10-22 05:58:37.937 15202 15202 I flutter : stream.playing: true
+10-22 05:58:37.946 15202 15202 I flutter : stream.buffering: true
+10-22 05:58:38.988 15202 15202 I flutter : stream.buffering: false
+10-22 06:00:01.046 15202 15202 I flutter : === fetchJsonSchedule 호출: CBS 음악FM ===
+10-22 06:00:01.047 15202 15202 I flutter : === hasSchedule: true ===
+10-22 06:00:01.048 15202 15202 I flutter : === getCurrentProgram: {title: 정민아의 Amazing Grace, start: 06:00, end: 07:00, image: https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16843139081839.png} ===
+10-22 06:00:01.052 15202 15202 I flutter : === fetchJsonSchedule 호출: CBS 표준FM ===
+10-22 06:00:01.052 15202 15202 I flutter : === hasSchedule: true ===
+10-22 06:00:01.052 15202 15202 I flutter : === getCurrentProgram: {title: 정민아의 Amazing Grace, start: 06:00, end: 07:00, image: https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16843139081839.png} ===
+10-22 06:02:27.027 15202 15202 I flutter : fetchSchedule 호출됨: KBS Cool FM / channelCode: 25
+10-22 06:02:27.033 15202 15202 I flutter : === fetchMbcSchedule 호출됨: MBC 표준FM ===
+10-22 06:02:27.034 15202 15202 I flutter : === sType: FM ===
+10-22 06:02:27.034 15202 15202 I flutter : === MBC API 호출: sType=FM, date=2026-10-22 ===
+10-22 06:02:27.139 15202 15202 I flutter : === MBC API statusCode: 200 ===
+10-22 06:02:27.140 15202 15202 I flutter : === MBC API body 앞부분: [
+10-22 06:02:27.140 15202 15202 I flutter :   {
+10-22 06:02:27.140 15202 15202 I flutter :     "IsToday": "Y",
+10-22 06:02:27.140 15202 15202 I flutter :     "BroadDate": "2026-10-22",
+10-22 06:02:27.140 15202 15202 I flutter :     "ScheduleDesc": "1",
+10-22 06:02:27.140 15202 15202 I flutter :     "BroadcastID": "1003824100000100000",
+10-22 06:02:27.140 15202 15202 I flutter :     "BroadcastID2": "",
+10-22 06:02:27.140 15202 15202 I flutter :     "Title": "아침&뉴스, 류수민입니다",
+10-22 06:02:27.140 15202 15202 I flutter :     "HomepageURL": "https://www.imbc.com/broad/radio/fm/gmnews/index.html",
+10-22 06:02:27.140 15202 15202 I flutter :     "SubTitle": "",
+10-22 06:02:27.140 15202 15202 I flutter :     "StartTime": "0615",
+10-22 06:02:27.140 15202 15202 I flutter :     "Day": "목",
+10-22 06:02:27.140 15202 15202 I flutter :     "RunningTime": "45",
+10-22 06:02:27.140 15202 15202 I flutter :     "SubCategoryID": "6",
+10-22 06:02:27.140 15202 15202 I flutter :     "Players": "류수민",
+10-22 06:02:27.141 15202 15202 I flutter :     "Photo": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png",
+10-22 06:02:27.141 15202 15202 I flutter :     "EndT ===
+10-22 06:02:27.142 15202 15202 I flutter : === MBC data.length: 12 ===
+10-22 06:02:27.143 15202 15202 I flutter : === _updateNotification: MBC 표준FM / program: null ===
+10-22 06:03:03.396 15202 15202 I flutter : 오디오 인터럽트 발생 - 라디오 정지
+10-22 06:03:03.404 15202 15202 I flutter : stream.playing: false
+10-22 06:04:33.575 25040 25040 I flutter : [IMPORTANT:flutter/shell/common/shell.cc(528)] [Action Required]: Impeller opt-out deprecated.
+10-22 06:04:33.575 25040 25040 I flutter :     The application opted out of Impeller by either using the
+10-22 06:04:33.575 25040 25040 I flutter :     `--no-enable-impeller` flag or the
+10-22 06:04:33.575 25040 25040 I flutter :     `io.flutter.embedding.android.EnableImpeller` `AndroidManifest.xml` entry.
+10-22 06:04:33.575 25040 25040 I flutter :     These options are going to go away in an upcoming Flutter release. Remove
+10-22 06:04:33.575 25040 25040 I flutter :     the explicit opt-out. If you need to opt-out, please report a bug describing
+10-22 06:04:33.575 25040 25040 I flutter :     the issue.
+10-22 06:04:33.575 25040 25040 I flutter : 
+10-22 06:04:33.575 25040 25040 I flutter :     https://github.com/flutter/flutter/issues/new?template=02_bug.yml
+10-22 06:04:33.575 25040 25040 I flutter : 
+10-22 06:04:33.821 25040 25266 I flutter : The Dart VM service is listening on http://127.0.0.1:43337/FraLWgupyB0=/
+10-22 06:04:35.858 25040 25040 I flutter : media_kit: NativeReferenceHolder: Allocated -5476376631359320064
+10-22 06:04:37.612 25040 25040 I flutter : mpv HLS 설정 완료
+10-22 06:04:38.786 25040 25040 I flutter : === 화면 크기: Size(384.0, 832.0) ===
+10-22 06:04:40.959 25040 25040 I flutter : 편성표 로드 성공
+10-22 06:04:40.962 25040 25040 I flutter : === fetchJsonSchedule 호출: CBS 음악FM ===
+10-22 06:04:40.962 25040 25040 I flutter : === hasSchedule: true ===
+10-22 06:04:40.967 25040 25040 I flutter : === getCurrentProgram: {title: 정민아의 Amazing Grace, start: 06:00, end: 07:00, image: https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16843139081839.png} ===
+10-22 06:04:40.969 25040 25040 I flutter : === fetchJsonSchedule 호출: CBS 표준FM ===
+10-22 06:04:40.970 25040 25040 I flutter : === hasSchedule: true ===
+10-22 06:04:40.970 25040 25040 I flutter : === getCurrentProgram: {title: 정민아의 Amazing Grace, start: 06:00, end: 07:00, image: https://www.cbs.co.kr/data/cbs/upload/save/program/cbs16843139081839.png} ===
+10-22 06:04:41.148 25040 25040 I flutter : === 화면 크기: Size(384.0, 832.0) ===
+10-22 06:04:42.018 25040 25040 I flutter : 업데이트 확인 오류: PlatformException(TASK_FAILURE, -10: Install Error(-10): The app is not owned by any user on this device. An app is "owned" if it has been acquired from Play. (https://developer.android.com/reference/com/google/android/play/core/install/model/InstallErrorCode#ERROR_APP_NOT_OWNED), null, null)

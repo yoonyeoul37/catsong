@@ -12,6 +12,8 @@ import '../services/sound_effects.dart';
 import '../services/cast_service.dart';
 import '../services/loudness.dart';
 import '../services/headset_resume.dart';
+import '../services/car_browse.dart';
+import 'package:rxdart/rxdart.dart' show ValueStream;
 import '../utils/no_album_helper.dart';
 import '../utils/widget_go.dart';
 import '../l10n/locale_holder.dart';
@@ -974,9 +976,10 @@ class SimpleAudioHandler extends BaseAudioHandler {
   PlaybackState _transformEvent(PlaybackEvent event) {
     return PlaybackState(
       controls: [
-        MediaControl.skipToPrevious,
+        // 팟캐스트: 15초 뒤로 · 30초 앞으로 모양 (차 화면 · 알림창 둘 다)
+        _podcastMode ? _back15 : MediaControl.skipToPrevious,
         if (_player.playing) MediaControl.pause else MediaControl.play,
-        MediaControl.skipToNext,
+        _podcastMode ? _fwd30 : MediaControl.skipToNext,
       ],
       androidCompactActionIndices: const [0, 1, 2],
       processingState: const {
@@ -1001,6 +1004,34 @@ class SimpleAudioHandler extends BaseAudioHandler {
       ));
     } catch (e) {}
   }
+
+  // ───── 안드로이드 오토 (차 화면) ─────
+  // 기본 '되감기 · 빨리 감기' 자리에 15초 · 30초 아이콘 (안드로이드 13 이상은 차 화면 · 알림창 버튼으로, 그 밑은 알림창 버튼으로)
+  static const _back15 = MediaControl(androidIcon: 'drawable/paran_ic_back15', label: '-15s', action: MediaAction.rewind);
+  static const _fwd30 = MediaControl(androidIcon: 'drawable/paran_ic_fwd30', label: '+30s', action: MediaAction.fastForward);
+
+  @override
+  Future<void> rewind() async => onPodcastBack?.call();
+
+  @override
+  Future<void> fastForward() async => onPodcastForward?.call();
+
+  @override
+  Future<List<MediaItem>> getChildren(String parentMediaId, [Map<String, dynamic>? options]) =>
+      CarBrowse.children(parentMediaId);
+
+  @override
+  ValueStream<Map<String, dynamic>> subscribeToChildren(String parentMediaId) =>
+      CarBrowse.subscribe(parentMediaId);
+
+  @override
+  Future<List<MediaItem>> search(String query, [Map<String, dynamic>? extras]) => CarBrowse.search(query);
+
+  @override
+  Future<void> playFromMediaId(String mediaId, [Map<String, dynamic>? extras]) => CarBrowse.play(mediaId);
+
+  @override
+  Future<void> playFromSearch(String query, [Map<String, dynamic>? extras]) => CarBrowse.playFromSearch(query);
 
   @override
   Future<void> onTaskRemoved() async {

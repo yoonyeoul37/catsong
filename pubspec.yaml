@@ -11,6 +11,7 @@ dependencies:
   flutter_native_splash: ^2.4.0
   just_audio: ^0.9.46
   audio_service: ^0.18.15
+  rxdart: '>=0.26.0 <0.29.0' # 차 화면 목록 바뀜 알리기 (audio_service가 이미 쓰는 것)
   permission_handler: ^11.3.0
   speech_to_text: ^7.0.0
   image_picker: ^1.1.2

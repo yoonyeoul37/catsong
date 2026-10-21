@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 홈 위젯 세로 2×3: 위 사진 + 아래 제목 · 이전/재생/다음 · 바로가기 4개 -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="130dp"
+    android:minHeight="220dp"
+    android:minResizeWidth="130dp"
+    android:minResizeHeight="200dp"
+    android:targetCellWidth="2"
+    android:targetCellHeight="3"
+    android:updatePeriodMillis="1800000"
+    android:initialLayout="@layout/widget_player3"
+    android:previewLayout="@layout/widget_player3"
+    android:resizeMode="horizontal|vertical"
+    android:widgetCategory="home_screen">
+</appwidget-provider>

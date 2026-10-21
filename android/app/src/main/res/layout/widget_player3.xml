@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 홈 위젯 세로 2×3 (A안): 위 사진 + 아래 크림 칸 (제목 · 이전/재생/다음 · 바로가기 아이콘 4개) -->
+<!-- 아래 칸 높이 148dp는 PlayerWidget.kt TALL_BOTTOM 과 같아야 함 (사진 자르는 크기) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/paran_widget_bg"
+    android:clipToOutline="true"
+    android:orientation="vertical">
+
+    <!-- 위: 사진 (누르면 앱 열기) -->
+    <FrameLayout
+        android:id="@+id/widget_top"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/widget_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/paran_widget_photo_empty" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
+            android:shadowColor="#66000000"
+            android:shadowDy="1"
+            android:shadowRadius="4"
+            android:text="Paransori"
+            android:textColor="#F2FFFFFF"
+            android:textSize="11.5sp"
+            android:textStyle="bold" />
+
+        <!-- ⋮ 메뉴 (누르면 바탕화면 위에 작은 창) -->
+        <ImageView
+            android:id="@+id/widget_more"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/paran_widget_badge"
+            android:padding="6dp"
+            android:src="@drawable/paran_ic_more"
+            android:tint="#FFFFFF"
+            android:visibility="gone" />
+
+        <!-- 수면 타이머 남은 시간 -->
+        <LinearLayout
+            android:id="@+id/widget_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/paran_widget_badge"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="7dp"
+            android:paddingEnd="8dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="11dp"
+                android:layout_height="11dp"
+                android:layout_marginEnd="3dp"
+                android:src="@drawable/paran_ic_timer"
+                android:tint="#FFFFFF" />
+
+            <Chronometer
+                android:id="@+id/widget_timer_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- 아래: 크림 칸 (148dp) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="148dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="13dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="13dp">
+
+            <TextView
+                android:id="@+id/widget_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/app_name"
+                android:textColor="@color/paran_w_ink"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/widget_artist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/widget_idle_sub"
+                android:textColor="@color/paran_w_sub"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/widget_schedule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text=""
+                android:textColor="@color/paran_w_sub"
+                android:textSize="10sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <!-- 이전 · 재생 · 다음 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp">
+
+            <ImageView
+                android:id="@+id/widget_prev"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="9dp"
+                android:src="@drawable/paran_ic_prev"
+                android:tint="@color/paran_w_ink" />
+
+            <ImageView
+                android:id="@+id/widget_play_pause"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/paran_widget_play_ink"
+                android:padding="11dp"
+                android:src="@drawable/paran_ic_play"
+                android:tint="@color/paran_w_bg" />
+
+            <ImageView
+                android:id="@+id/widget_next"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="9dp"
+                android:src="@drawable/paran_ic_next"
+                android:tint="@color/paran_w_ink" />
+        </LinearLayout>
+
+        <!-- 얇은 줄 -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:background="@color/paran_w_line" />
+
+        <!-- 바로가기 4개 (아이콘만) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/widget_go_music"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/tab_music">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/paran_ic_music"
+                android:tint="@color/paran_w_sub" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/widget_go_radio"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/tab_radio">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/paran_ic_radio"
+                android:tint="@color/paran_w_sub" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/widget_go_nature"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/tab_nature">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/paran_ic_leaf"
+                android:tint="@color/paran_w_sub" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/widget_go_sleep"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/tab_sleep">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/paran_ic_moon"
+                android:tint="@color/paran_w_sub" />
+        </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

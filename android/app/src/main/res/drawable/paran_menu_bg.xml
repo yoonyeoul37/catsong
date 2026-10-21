@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 위젯 ⋮ 메뉴 창 바탕 (위젯과 같은 크림색 · 다크는 먹색) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/paran_w_bg" />
+    <corners android:radius="@dimen/paran_w_radius" />
+</shape>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 휠 가운데 고른 줄 띠 (앱 휠과 같은 연한 회색) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/paran_w_band" />
+    <corners android:radius="8dp" />
+</shape>

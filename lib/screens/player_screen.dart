@@ -2349,9 +2349,17 @@ class _PlayerScreenState extends State<PlayerScreen>
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.28),
+                    // 검정 배경에서도 카드가 보이게: 반투명 검정 위에 연한 흰빛 (위가 조금 더 밝게)
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.alphaBlend(Colors.white.withOpacity(0.10), Colors.black.withOpacity(0.28)),
+                        Color.alphaBlend(Colors.white.withOpacity(0.04), Colors.black.withOpacity(0.28)),
+                      ],
+                    ),
                     borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: Colors.white.withOpacity(0.10)),
+                    border: Border.all(color: Colors.white.withOpacity(0.16)),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,

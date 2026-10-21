@@ -541,7 +541,25 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
     final isPlaying = isThisOne && watchedIsPlaying;
     final isFavorite = _favoriteNames.contains(currentName);
 
-    return Scaffold(
+    // 홈에서 열었으면 → 자연소리 목록으로 (위쪽 < 버튼과 휴대폰 뒤로가기 같게)
+    void goToList() {
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const NatureSoundsScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              FadeTransition(opacity: animation, child: child),
+          transitionDuration: const Duration(milliseconds: 250),
+        ),
+      );
+    }
+
+    return PopScope(
+      canPop: widget.openedFromList,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) goToList();
+      },
+      child: Scaffold(
       backgroundColor: currentColor,
       body: Stack(
         children: [
@@ -592,15 +610,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                             if (widget.openedFromList) {
                               Navigator.pop(context);
                             } else {
-                              Navigator.of(context).pushReplacement(
-                                PageRouteBuilder(
-                                  pageBuilder: (context, animation, secondaryAnimation) =>
-                                      const NatureSoundsScreen(),
-                                  transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-                                      FadeTransition(opacity: animation, child: child),
-                                  transitionDuration: const Duration(milliseconds: 250),
-                                ),
-                              );
+                              goToList();
                             }
                           },
                           child: Container(
@@ -993,6 +1003,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
           ),
         ],
       ),
+    ),
     );
   }
 }

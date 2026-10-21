@@ -490,7 +490,9 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
     final screen = country.code == 'KR'
         ? RadioKoreaScreen()
         : RadioCountryStationsScreen(country: country);
-    Navigator.push(
+    // 나라를 고르면 그 위에 쌓인 라디오 화면(이전 나라·나라 고르기)은 지우고 홈 바로 위에
+    // → 나라를 여러 번 바꿔도 뒤로가기 한 번에 홈으로
+    Navigator.pushAndRemoveUntil(
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: radioTextScaler(context)), child: screen), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
@@ -499,6 +501,7 @@ class _RadioHomeScreenState extends State<RadioHomeScreen> {
         },
         transitionDuration: const Duration(milliseconds: 250),
       ),
+      (route) => route.isFirst,
     );
   }
 

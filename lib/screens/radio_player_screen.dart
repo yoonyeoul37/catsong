@@ -424,7 +424,33 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
       );
     }
 
-    return Scaffold(
+    // 목록이 아닌 곳(미니플레이어·홈)에서 열었으면 → 목록 화면으로 (위쪽 ∨ 버튼과 휴대폰 뒤로가기 같게)
+    void goToList() {
+      final country = radioProvider.selectedCountry;
+      // 한국 방송이면 항상 한국 목록으로
+      final Widget listScreen = current.countryCode == 'KR'
+          ? const RadioKoreaScreen()
+          : country == null
+              ? const RadioHomeScreen()
+              : country.code == 'KR'
+                  ? const RadioKoreaScreen()
+                  : RadioCountryStationsScreen(country: country);
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: radioTextScaler(context)), child: listScreen), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              FadeTransition(opacity: animation, child: child),
+          transitionDuration: const Duration(milliseconds: 250),
+        ),
+      );
+    }
+
+    return PopScope(
+      canPop: widget.openedFromList,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) goToList();
+      },
+      child: Scaffold(
       backgroundColor: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
       bottomNavigationBar: GestureDetector(
         behavior: HitTestBehavior.translucent,
@@ -665,23 +691,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                 if (widget.openedFromList) {
                                   Navigator.pop(context);
                                 } else {
-                                  final country = radioProvider.selectedCountry;
-                                  // 한국 방송이면 항상 한국 목록으로
-                                  final Widget listScreen = current.countryCode == 'KR'
-                                      ? const RadioKoreaScreen()
-                                      : country == null
-                                          ? const RadioHomeScreen()
-                                          : country.code == 'KR'
-                                              ? const RadioKoreaScreen()
-                                              : RadioCountryStationsScreen(country: country);
-                                  Navigator.of(context).pushReplacement(
-                                    PageRouteBuilder(
-                                      pageBuilder: (context, animation, secondaryAnimation) => MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: radioTextScaler(context)), child: listScreen), // 라디오 목록 글자 크기 맞추기 (다른 길과 같게)
-                                      transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-                                          FadeTransition(opacity: animation, child: child),
-                                      transitionDuration: const Duration(milliseconds: 250),
-                                    ),
-                                  );
+                                  goToList();
                                 }
                               },
                               child: Icon(Icons.expand_more, color: baseColor, size: 16),
@@ -1314,6 +1324,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
 
         ],
       ),
+    ),
     );
   }
 }

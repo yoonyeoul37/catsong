@@ -14,6 +14,10 @@ import '../models/recent_content_entry.dart';
 import '../models/radio_station.dart';
 import '../l10n/locale_holder.dart';
 import '../utils/nature_sound_catalog.dart';
+import '../models/song.dart';
+import '../utils/index_letter.dart';
+import '../utils/device_country.dart';
+import '../screens/radio_korea_screen2.dart' show koreanRadioStations;
 
 /// 이어폰·블루투스를 연결하면 듣던 것 이어서 듣기
 /// 0 끄기 · 1 알림으로 묻기 · 2 바로 재생 (작게 시작해서 천천히 커짐)
@@ -201,7 +205,7 @@ class HeadsetResume {
         for (var k = 0; k < 40 && m.allSongs.isEmpty; k++) {
           await Future.delayed(const Duration(milliseconds: 250));
         }
-        final all = m.songs.isNotEmpty ? m.songs : m.allSongs;
+        final all = await _screenOrder(m.allSongs);
         final i = all.indexWhere((s) => s.uri == d['uri']);
         if (i < 0) return false;
         await pp.playFromList(all, i); // 그 곡부터 목록 순서대로 계속
@@ -240,7 +244,7 @@ class HeadsetResume {
           for (var k = 0; k < 40 && m.allSongs.isEmpty; k++) {
             await Future.delayed(const Duration(milliseconds: 250));
           }
-          final all = m.songs.isNotEmpty ? m.songs : m.allSongs;
+          final all = await _screenOrder(m.allSongs);
           if (all.isNotEmpty) pp.playFromList(all, 0); // 첫 곡부터 목록 순서대로
           break;
         case 'radio':
@@ -248,7 +252,16 @@ class HeadsetResume {
             await radio.togglePlayPause();
             return;
           }
-          // 마지막에 듣던 방송 (없으면 최근에 들은 방송) + 다음·이전용 목록
+          // 국내: 라디오 목록 순서 그대로 맨 위 방송부터 (다음·이전 → 목록 순서대로)
+          if (DeviceCountry.radioCountry() == 'KR') {
+            final kr = koreanRadioStations();
+            if (kr.isNotEmpty) {
+              radio.setQueue(kr, 0);
+              await radio.playStation(kr.first);
+              break;
+            }
+          }
+          // 해외: 마지막에 듣던 방송 (없으면 최근에 들은 방송) + 다음·이전용 목록
           final list = <RadioStation>[];
           final rp = await SharedPreferences.getInstance();
           final saved = rp.getString('widget_last_radio');
@@ -488,7 +501,7 @@ class HeadsetResume {
             await Future.delayed(const Duration(milliseconds: 250));
           }
           // 마지막 곡부터 시작해서 내 음악 목록 순서대로 계속 (한 곡만 나오고 끝나지 않게)
-          final all = m.songs.isNotEmpty ? m.songs : m.allSongs;
+          final all = await _screenOrder(m.allSongs);
           final i = all.indexWhere((s) => s.uri == e.songUri);
           if (i >= 0) await pp.playFromList(all, i);
           break;
@@ -499,6 +512,52 @@ class HeadsetResume {
     } catch (err) {
       debugPrint('위젯 재생 오류: $err');
     }
+  }
+
+  /// 음악 화면과 같은 순서 (제목 / 가수 / 장르 정렬 · 초성 묶음) — 위젯 '첫 곡'이 화면 맨 위 곡과 같게
+  static Future<List<Song>> _screenOrder(List<Song> songs) async {
+    var byArtist = false, byGenre = false;
+    try {
+      final p = await SharedPreferences.getInstance();
+      byArtist = p.getBool('song_sort_by_artist') ?? false;
+      byGenre = (p.getBool('song_sort_by_genre') ?? false) && !byArtist;
+    } catch (_) {}
+    int byTitle(Song a, Song b) => a.titleDisplay.toLowerCase().compareTo(b.titleDisplay.toLowerCase());
+    if (byGenre) {
+      // 장르: 곡 많은 장르부터, 장르 없는 곡은 맨 아래, 장르 안에서는 제목순
+      final byG = <String, List<Song>>{};
+      for (final s in songs) {
+        byG.putIfAbsent(s.genreKey, () => []).add(s);
+      }
+      final keys = byG.keys.where((k) => k.isNotEmpty).toList()
+        ..sort((a, b) {
+          final c = byG[b]!.length.compareTo(byG[a]!.length);
+          return c != 0 ? c : a.toLowerCase().compareTo(b.toLowerCase());
+        });
+      if (byG.containsKey('')) keys.add('');
+      return [for (final k in keys) ...(byG[k]!..sort(byTitle))];
+    }
+    // 제목 · 가수: 초성(글자) 묶음 순서대로, 묶음 안에서는 가나다순
+    final lang = tr.localeName.split('_').first;
+    String keyOf(Song s) => byArtist ? s.artistDisplay : s.titleDisplay;
+    final byGroup = <String, List<Song>>{};
+    for (final s in songs) {
+      byGroup.putIfAbsent(indexGroupFor(keyOf(s), lang), () => []).add(s);
+    }
+    final out = <Song>[];
+    for (final g in indexGroupsFor(lang)) {
+      final list = byGroup[g];
+      if (list == null) continue;
+      list.sort((a, b) {
+        if (byArtist) {
+          final c = a.artistDisplay.toLowerCase().compareTo(b.artistDisplay.toLowerCase());
+          if (c != 0) return c;
+        }
+        return byTitle(a, b);
+      });
+      out.addAll(list);
+    }
+    return out.isEmpty ? songs : out;
   }
 
   /// 3초 동안 천천히 원래 크기로 (처음엔 아주 천천히)

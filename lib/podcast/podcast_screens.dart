@@ -250,7 +250,13 @@ class _PodcastTabState extends State<PodcastTab> {
         : null;
     final searching = _query.isNotEmpty;
 
-    return FutureBuilder<List<PodcastShow>>(
+    // 주제·검색 결과를 보는 중이면 뒤로가기 → 인기 순위로 (화면을 나가지 않게)
+    return PopScope(
+      canPop: !searching && !_searchOpen,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _backToChart();
+      },
+      child: FutureBuilder<List<PodcastShow>>(
       future: _results ?? _chart,
       builder: (context, snap) {
         final list = snap.data ?? const <PodcastShow>[];
@@ -400,6 +406,7 @@ class _PodcastTabState extends State<PodcastTab> {
           ],
         );
       },
+    ),
     );
   }
 

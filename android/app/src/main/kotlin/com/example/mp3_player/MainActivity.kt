@@ -1066,8 +1066,12 @@ class MainActivity : AudioServiceActivity() {
                 }
                 "closeApp" -> {
                     result.success(true)
-                    finishAffinity()
-                    android.os.Process.killProcess(android.os.Process.myPid())
+                    // 화면을 최근 앱 목록까지 완전히 닫고 → 0.5초 뒤 앱 정리
+                    // (바로 강제 종료하면 화면 기록이 남아서 잠금 해제 때 다시 켜짐)
+                    finishAndRemoveTask()
+                    android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                        android.os.Process.killProcess(android.os.Process.myPid())
+                    }, 500)
                 }
                 "showHeadsetAsk" -> {
                     showHeadsetAsk(call.argument<String>("title") ?: getString(R.string.resume_ask),

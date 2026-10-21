@@ -522,7 +522,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               t.feedbackSoundEnabled,
               () => t.setFeedbackSoundEnabled(!t.feedbackSoundEnabled)),
           const SizedBox(width: 8),
-          tile(Icons.record_voice_over_outlined, tr.voiceGuide, tr.voiceGuideInfo, t.voiceGreetingEnabled,
+          tile(Icons.music_note_outlined, tr.voiceGuide, tr.voiceGuideInfo, t.voiceGreetingEnabled,
               () => t.setVoiceGreetingEnabled(!t.voiceGreetingEnabled)),
         ],
       ),

@@ -3707,10 +3707,10 @@ class AppLocalizationsKo extends AppLocalizations {
       '수정·저장·삭제가 끝나면 물방울 소리로 알려줘요. 진동 모드면 진동, 무음이면 조용해요.';
 
   @override
-  String get voiceGuide => '음성 안내';
+  String get voiceGuide => '인사 멜로디';
 
   @override
-  String get voiceGuideInfo => '앱을 켜고 끌 때 짧은 인사말을 들려줘요.';
+  String get voiceGuideInfo => '앱을 켜고 끌 때 짧은 멜로디가 나와요.';
 
   @override
   String get infoTodaySong => '오늘의 한 곡';

@@ -3707,10 +3707,10 @@ class AppLocalizationsJa extends AppLocalizations {
       '編集・保存・削除が終わると水滴の音でお知らせします。マナーモードでは振動、消音時は鳴りません。';
 
   @override
-  String get voiceGuide => '音声案内';
+  String get voiceGuide => 'メロディー';
 
   @override
-  String get voiceGuideInfo => 'アプリの起動・終了時に短いあいさつが流れます（準備中）。';
+  String get voiceGuideInfo => 'アプリの起動・終了時に短いメロディーが流れます。';
 
   @override
   String get infoTodaySong => '今日の一曲';

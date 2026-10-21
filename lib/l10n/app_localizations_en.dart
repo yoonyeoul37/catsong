@@ -3867,11 +3867,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'Plays a soft sound when you edit, save, or delete. Uses vibration in vibrate mode and stays quiet when muted.';
 
   @override
-  String get voiceGuide => 'Voice greeting';
+  String get voiceGuide => 'Melody';
 
   @override
   String get voiceGuideInfo =>
-      'A short greeting plays when you open or close the app (coming soon).';
+      'A short melody plays when you open or close the app.';
 
   @override
   String get infoTodaySong => 'Song of the day';

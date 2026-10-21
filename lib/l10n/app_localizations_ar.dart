@@ -3906,10 +3906,10 @@ class AppLocalizationsAr extends AppLocalizations {
       'يُصدر صوتًا خفيفًا عند التعديل أو الحفظ أو الحذف. يهتز في وضع الاهتزاز ويصمت في الوضع الصامت.';
 
   @override
-  String get voiceGuide => 'ترحيب صوتي';
+  String get voiceGuide => 'نغمة';
 
   @override
-  String get voiceGuideInfo => 'تحية قصيرة عند فتح التطبيق أو إغلاقه (قريبًا).';
+  String get voiceGuideInfo => 'تُعزف نغمة قصيرة عند فتح التطبيق أو إغلاقه.';
 
   @override
   String get infoTodaySong => 'أغنية اليوم';

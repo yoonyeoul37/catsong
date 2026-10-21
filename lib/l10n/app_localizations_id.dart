@@ -3876,11 +3876,11 @@ class AppLocalizationsId extends AppLocalizations {
       'Bunyi tetes air yang lembut saat kamu mengedit, menyimpan, atau menghapus. Bergetar di mode getar dan senyap saat dibisukan.';
 
   @override
-  String get voiceGuide => 'Sapaan suara';
+  String get voiceGuide => 'Melodi';
 
   @override
   String get voiceGuideInfo =>
-      'Sapaan singkat diputar saat kamu membuka atau menutup aplikasi (segera hadir).';
+      'Melodi singkat diputar saat kamu membuka atau menutup aplikasi.';
 
   @override
   String get infoTodaySong => 'Lagu hari ini';

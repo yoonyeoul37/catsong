@@ -3893,11 +3893,11 @@ class AppLocalizationsFr extends AppLocalizations {
       'Un léger bruit de goutte quand vous modifiez, enregistrez ou supprimez. Vibre en mode vibreur, silencieux en mode muet.';
 
   @override
-  String get voiceGuide => 'Accueil vocal';
+  String get voiceGuide => 'Mélodie';
 
   @override
   String get voiceGuideInfo =>
-      'Un court message à l\'ouverture et à la fermeture de l\'app (bientôt).';
+      'Une courte mélodie à l\'ouverture et à la fermeture de l\'app.';
 
   @override
   String get infoTodaySong => 'Le titre du jour';

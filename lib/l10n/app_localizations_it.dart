@@ -3891,11 +3891,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Un leggero suono di goccia quando modifichi, salvi o elimini. In modalità vibrazione vibra, in silenzioso resta muto.';
 
   @override
-  String get voiceGuide => 'Saluto vocale';
+  String get voiceGuide => 'Melodia';
 
   @override
-  String get voiceGuideInfo =>
-      'Un breve saluto quando apri o chiudi l\'app (in arrivo).';
+  String get voiceGuideInfo => 'Una breve melodia quando apri o chiudi l\'app.';
 
   @override
   String get infoTodaySong => 'Brano del giorno';

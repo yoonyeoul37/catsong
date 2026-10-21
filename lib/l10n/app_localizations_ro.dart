@@ -3905,11 +3905,11 @@ class AppLocalizationsRo extends AppLocalizations {
       'Redă un sunet discret când editezi, salvezi sau ștergi. Vibrează în modul vibrații și tace când sunetul e oprit.';
 
   @override
-  String get voiceGuide => 'Salut vocal';
+  String get voiceGuide => 'Melodie';
 
   @override
   String get voiceGuideInfo =>
-      'Un salut scurt se aude când deschizi sau închizi aplicația (în curând).';
+      'O melodie scurtă se aude când deschizi sau închizi aplicația.';
 
   @override
   String get infoTodaySong => 'Melodia zilei';

@@ -7115,13 +7115,13 @@ abstract class AppLocalizations {
   /// No description provided for @voiceGuide.
   ///
   /// In ko, this message translates to:
-  /// **'음성 안내'**
+  /// **'인사 멜로디'**
   String get voiceGuide;
 
   /// No description provided for @voiceGuideInfo.
   ///
   /// In ko, this message translates to:
-  /// **'앱을 켜고 끌 때 짧은 인사말을 들려줘요.'**
+  /// **'앱을 켜고 끌 때 짧은 멜로디가 나와요.'**
   String get voiceGuideInfo;
 
   /// No description provided for @infoTodaySong.

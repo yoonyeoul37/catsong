@@ -3919,11 +3919,11 @@ class AppLocalizationsRu extends AppLocalizations {
       'Мягкий звук капли при изменении, сохранении или удалении. В режиме вибрации — вибрация, в беззвучном — тишина.';
 
   @override
-  String get voiceGuide => 'Голосовое приветствие';
+  String get voiceGuide => 'Мелодия';
 
   @override
   String get voiceGuideInfo =>
-      'Короткое приветствие при открытии и закрытии приложения (скоро).';
+      'Короткая мелодия при открытии и закрытии приложения.';
 
   @override
   String get infoTodaySong => 'Песня дня';

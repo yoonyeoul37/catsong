@@ -3913,11 +3913,11 @@ class AppLocalizationsUk extends AppLocalizations {
       'Тихий звук після змін, збереження чи видалення. У режимі вібрації — вібрація, у беззвучному — тиша.';
 
   @override
-  String get voiceGuide => 'Голосове привітання';
+  String get voiceGuide => 'Мелодія';
 
   @override
   String get voiceGuideInfo =>
-      'Коротке привітання, коли відкриваєте чи закриваєте додаток (незабаром).';
+      'Коротка мелодія, коли відкриваєте чи закриваєте додаток.';
 
   @override
   String get infoTodaySong => 'Пісня дня';

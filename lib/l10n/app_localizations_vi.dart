@@ -3871,11 +3871,11 @@ class AppLocalizationsVi extends AppLocalizations {
       'Tiếng giọt nước nhẹ khi bạn sửa, lưu hoặc xóa. Rung khi ở chế độ rung và im lặng khi tắt tiếng.';
 
   @override
-  String get voiceGuide => 'Lời chào bằng giọng nói';
+  String get voiceGuide => 'Giai điệu';
 
   @override
   String get voiceGuideInfo =>
-      'Một lời chào ngắn khi bạn mở hoặc đóng ứng dụng (sắp ra mắt).';
+      'Một giai điệu ngắn phát khi bạn mở hoặc đóng ứng dụng.';
 
   @override
   String get infoTodaySong => 'Bài hát hôm nay';

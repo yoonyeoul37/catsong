@@ -3704,10 +3704,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get soundEffectInfo => '编辑、保存、删除完成时用水滴声提示。振动模式下振动，静音时不出声。';
 
   @override
-  String get voiceGuide => '语音问候';
+  String get voiceGuide => '问候旋律';
 
   @override
-  String get voiceGuideInfo => '打开或关闭应用时播放简短问候（即将推出）。';
+  String get voiceGuideInfo => '打开或关闭应用时播放一段简短的旋律。';
 
   @override
   String get infoTodaySong => '今日一曲';
@@ -8269,10 +8269,10 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get soundEffectInfo => '編輯、儲存、刪除完成時用水滴聲提示。震動模式下震動，靜音時不出聲。';
 
   @override
-  String get voiceGuide => '語音問候';
+  String get voiceGuide => '問候旋律';
 
   @override
-  String get voiceGuideInfo => '開啟或關閉應用程式時播放簡短問候（即將推出）。';
+  String get voiceGuideInfo => '開啟或關閉應用程式時播放一段簡短的旋律。';
 
   @override
   String get infoTodaySong => '今日一曲';

@@ -3895,11 +3895,11 @@ class AppLocalizationsDe extends AppLocalizations {
       'Ein sanfter Tropfen-Ton beim Bearbeiten, Speichern oder Löschen. Im Vibrationsmodus vibriert es, stumm bleibt es leise.';
 
   @override
-  String get voiceGuide => 'Sprachgruß';
+  String get voiceGuide => 'Melodie';
 
   @override
   String get voiceGuideInfo =>
-      'Beim Öffnen und Schließen der App ertönt ein kurzer Gruß (demnächst).';
+      'Beim Öffnen und Schließen der App ertönt eine kurze Melodie.';
 
   @override
   String get infoTodaySong => 'Titel des Tages';

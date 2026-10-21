@@ -3862,11 +3862,10 @@ class AppLocalizationsTh extends AppLocalizations {
       'มีเสียงหยดน้ำเบาๆ เมื่อแก้ไข บันทึก หรือลบ จะสั่นในโหมดสั่น และเงียบเมื่อปิดเสียง';
 
   @override
-  String get voiceGuide => 'เสียงทักทาย';
+  String get voiceGuide => 'เมโลดี้';
 
   @override
-  String get voiceGuideInfo =>
-      'มีเสียงทักทายสั้นๆ เมื่อเปิดหรือปิดแอป (เร็วๆ นี้)';
+  String get voiceGuideInfo => 'มีเมโลดี้สั้นๆ เมื่อเปิดหรือปิดแอป';
 
   @override
   String get infoTodaySong => 'เพลงประจำวัน';

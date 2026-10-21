@@ -3870,11 +3870,11 @@ class AppLocalizationsTr extends AppLocalizations {
       'Düzenleme, kaydetme veya silmede yumuşak bir damla sesi. Titreşim modunda titrer, sessizde ses çıkarmaz.';
 
   @override
-  String get voiceGuide => 'Sesli karşılama';
+  String get voiceGuide => 'Melodi';
 
   @override
   String get voiceGuideInfo =>
-      'Uygulamayı açarken veya kapatırken kısa bir karşılama çalar (yakında).';
+      'Uygulamayı açarken veya kapatırken kısa bir melodi çalar.';
 
   @override
   String get infoTodaySong => 'Günün şarkısı';

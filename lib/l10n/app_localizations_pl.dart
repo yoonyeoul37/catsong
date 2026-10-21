@@ -3928,11 +3928,11 @@ class AppLocalizationsPl extends AppLocalizations {
       'Cichy dźwięk kropli przy edycji, zapisie lub usuwaniu. W trybie wibracji wibruje, a po wyciszeniu milczy.';
 
   @override
-  String get voiceGuide => 'Powitanie głosowe';
+  String get voiceGuide => 'Melodia';
 
   @override
   String get voiceGuideInfo =>
-      'Krótkie powitanie przy otwieraniu i zamykaniu aplikacji (wkrótce).';
+      'Krótka melodia przy otwieraniu i zamykaniu aplikacji.';
 
   @override
   String get infoTodaySong => 'Utwór dnia';

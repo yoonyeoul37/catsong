@@ -3881,11 +3881,11 @@ class AppLocalizationsHu extends AppLocalizations {
       'Halk hangot ad szerkesztéskor, mentéskor vagy törléskor. Rezgő módban rezeg, némítva csendes marad.';
 
   @override
-  String get voiceGuide => 'Hangos köszöntés';
+  String get voiceGuide => 'Dallam';
 
   @override
   String get voiceGuideInfo =>
-      'Rövid köszöntés szól az app megnyitásakor vagy bezárásakor (hamarosan).';
+      'Rövid dallam szól az app megnyitásakor vagy bezárásakor.';
 
   @override
   String get infoTodaySong => 'A nap dala';

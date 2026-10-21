@@ -3879,11 +3879,11 @@ class AppLocalizationsUr extends AppLocalizations {
       'ترمیم، محفوظ یا حذف کرنے پر ہلکی آواز چلتی ہے۔ وائبریٹ موڈ میں وائبریشن ہوتی ہے اور خاموش موڈ میں کچھ نہیں بجتا۔';
 
   @override
-  String get voiceGuide => 'آواز میں خوش آمدید';
+  String get voiceGuide => 'دھن';
 
   @override
   String get voiceGuideInfo =>
-      'ایپ کھولنے یا بند کرنے پر ایک مختصر سلام چلتا ہے (جلد آ رہا ہے)۔';
+      'ایپ کھولنے یا بند کرنے پر ایک مختصر دھن چلتی ہے۔';
 
   @override
   String get infoTodaySong => 'آج کا گانا';

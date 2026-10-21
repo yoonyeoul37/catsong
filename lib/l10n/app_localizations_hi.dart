@@ -3875,11 +3875,11 @@ class AppLocalizationsHi extends AppLocalizations {
       'बदलने, सेव करने या हटाने पर हल्की आवाज़ आती है। वाइब्रेट मोड में वाइब्रेशन होता है और साइलेंट में कुछ नहीं।';
 
   @override
-  String get voiceGuide => 'वॉइस ग्रीटिंग';
+  String get voiceGuide => 'धुन';
 
   @override
   String get voiceGuideInfo =>
-      'ऐप खोलने या बंद करने पर छोटा-सा अभिवादन सुनाई देता है (जल्द आ रहा है)।';
+      'ऐप खोलने या बंद करने पर एक छोटी-सी धुन बजती है।';
 
   @override
   String get infoTodaySong => 'आज का गाना';

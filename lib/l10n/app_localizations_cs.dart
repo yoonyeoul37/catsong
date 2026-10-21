@@ -3912,11 +3912,11 @@ class AppLocalizationsCs extends AppLocalizations {
       'Při úpravě, uložení nebo smazání zazní jemný zvuk. V režimu vibrací zavibruje, při ztlumení je potichu.';
 
   @override
-  String get voiceGuide => 'Hlasový pozdrav';
+  String get voiceGuide => 'Melodie';
 
   @override
   String get voiceGuideInfo =>
-      'Při otevření nebo zavření aplikace zazní krátký pozdrav (již brzy).';
+      'Při otevření nebo zavření aplikace zazní krátká melodie.';
 
   @override
   String get infoTodaySong => 'Skladba dne';

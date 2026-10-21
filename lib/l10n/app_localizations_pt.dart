@@ -3886,11 +3886,11 @@ class AppLocalizationsPt extends AppLocalizations {
       'Um som suave de gota ao editar, salvar ou excluir. Vibra no modo vibrar e fica em silêncio no modo silencioso.';
 
   @override
-  String get voiceGuide => 'Saudação por voz';
+  String get voiceGuide => 'Melodia';
 
   @override
   String get voiceGuideInfo =>
-      'Uma saudação curta toca ao abrir ou fechar o app (em breve).';
+      'Uma melodia curta toca ao abrir ou fechar o app.';
 
   @override
   String get infoTodaySong => 'Música do dia';

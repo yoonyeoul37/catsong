@@ -372,7 +372,7 @@ class _MoreMenuSheet extends StatelessWidget {
                     p: p,
                     icon: _kIconMoon,
                     title: tr.darkMode,
-                    subtitle: tr.darkModeInfo,
+                    subtitle: dark ? tr.inUse : tr.darkModeInfo, // 켜져 있으면 '사용 중', 꺼져 있으면 설명
                     onTap: () => context.read<ThemeProvider>().setDarkMode(!dark),
                     trailing: _MiniToggle(on: dark, p: p),
                   ),

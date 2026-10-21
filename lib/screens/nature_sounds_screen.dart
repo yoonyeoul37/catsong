@@ -184,13 +184,13 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
     );
   }
 
-  /// 지금 시간에 어울리는 소리: 아침 새소리 · 낮 시냇물 · 저녁 모닥불 · 밤 빗소리
+  /// 지금 시간에 어울리는 소리: 아침 새소리 · 낮 파도·시냇물(하루씩 번갈아) · 저녁 모닥불 · 밤 빗소리
   _NatureSound? _niceSoundNow() {
     final h = DateTime.now().hour;
     final cat = (h >= 5 && h < 11)
         ? '새소리'
         : (h >= 11 && h < 17)
-            ? '시냇물'
+            ? ((DateTime.now().millisecondsSinceEpoch ~/ 86400000).isEven ? '파도소리' : '시냇물')
             : (h >= 17 && h < 22)
                 ? '모닥불'
                 : '빗소리';
@@ -198,6 +198,15 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
     if (ready.isEmpty) return null;
     return ready.firstWhere((s) => s.category == cat, orElse: () => ready.first);
   }
+
+  /// 카드 사진: 소리 종류별 그림 (사람이 앉아 듣는 장면)
+  static String _niceImage(String category) => switch (category) {
+        '새소리' => 'assets/nature_hero_morning.jpg',
+        '파도소리' => 'assets/nature_hero_wave.jpg',
+        '시냇물' => 'assets/nature_hero_stream.jpg',
+        '모닥불' => 'assets/nature_hero_evening.jpg',
+        _ => 'assets/nature_hero_night.jpg',
+      };
 
   /// 전체 탭 맨 위 사진 카드 (라디오 '지금 듣기 좋은' 카드와 같은 모양)
   Widget _natureNiceCard(_NatureSound s, Color soundColor, void Function(_NatureSound, Color) open,
@@ -243,10 +252,12 @@ class _NatureSoundsScreenState extends State<NatureSoundsScreen> {
                           0, 0, 0, 1, 0,
                         ])
                       : const ColorFilter.mode(Colors.transparent, BlendMode.dst),
-                  child: paranPhoto(
-                    _natureThumbImage(s.name, s.category, s.assetPath ?? ''),
+                  child: Image.asset(
+                    _niceImage(s.category),
                     fit: BoxFit.cover,
-                    fallback: Container(color: soundColor),
+                    alignment: const Alignment(0, -0.2),
+                    cacheWidth: 800,
+                    errorBuilder: (_, __, ___) => Container(color: soundColor),
                   ),
                 ),
               ),

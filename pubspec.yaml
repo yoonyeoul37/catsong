@@ -172,6 +172,11 @@ flutter:
     - assets/radio_hero_day.jpg
     - assets/radio_hero_evening.jpg
     - assets/radio_hero_night.jpg
+    - assets/nature_hero_morning.jpg
+    - assets/nature_hero_wave.jpg
+    - assets/nature_hero_stream.jpg
+    - assets/nature_hero_evening.jpg
+    - assets/nature_hero_night.jpg
     - assets/hello_music.jpg
     - assets/hello_radio.jpg
     - assets/hello_nature.jpg

@@ -32,4 +32,27 @@
     <string name="rec_resume">繼續</string>
     <string name="rec_pause">暫停</string>
     <string name="rec_done">完成</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">隨機播放</string>
+    <string name="w_menu_repeat">循環</string>
+    <string name="w_menu_on">開</string>
+    <string name="w_menu_off">關</string>
+    <string name="w_menu_repeat_one">單曲循環</string>
+    <string name="w_menu_repeat_all">列表循環</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">睡眠計時器</string>
+    <string name="w_sleep_ask">多久後停止播放？</string>
+    <string name="w_sleep_hint">結束前1分鐘開始逐漸變小</string>
+    <string name="w_sleep_set">設定</string>
+    <string name="w_sleep_cancel">取消計時器</string>
+    <string name="w_unit_hr">小時</string>
+    <string name="w_unit_min">分</string>
+    <string name="w_sleep_fmt_m">%1$d分</string>
+    <string name="w_sleep_fmt_hm">%1$d小時 %2$d分</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">更換小工具相片</string>
+    <string name="w_photo_reset">恢復預設相片</string>
+    <string name="w_photo_hint">拖曳並雙指縮放，選擇顯示範圍</string>
+    <string name="w_photo_cancel">取消</string>
+    <string name="w_photo_done">完成</string>
 </resources>

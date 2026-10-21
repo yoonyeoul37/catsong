@@ -32,4 +32,27 @@
     <string name="rec_resume">Tiếp tục</string>
     <string name="rec_pause">Tạm dừng</string>
     <string name="rec_done">Xong</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">Phát ngẫu nhiên</string>
+    <string name="w_menu_repeat">Lặp lại</string>
+    <string name="w_menu_on">Bật</string>
+    <string name="w_menu_off">Tắt</string>
+    <string name="w_menu_repeat_one">Lặp một bài</string>
+    <string name="w_menu_repeat_all">Lặp tất cả</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">Hẹn giờ tắt</string>
+    <string name="w_sleep_ask">Dừng phát sau bao lâu?</string>
+    <string name="w_sleep_hint">Âm lượng nhỏ dần trong phút cuối</string>
+    <string name="w_sleep_set">Đặt</string>
+    <string name="w_sleep_cancel">Hủy hẹn giờ</string>
+    <string name="w_unit_hr">giờ</string>
+    <string name="w_unit_min">phút</string>
+    <string name="w_sleep_fmt_m">%1$d phút</string>
+    <string name="w_sleep_fmt_hm">%1$d giờ %2$d phút</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">Đổi ảnh tiện ích</string>
+    <string name="w_photo_reset">Dùng ảnh mặc định</string>
+    <string name="w_photo_hint">Kéo và thu phóng để chọn phần hiển thị</string>
+    <string name="w_photo_cancel">Hủy</string>
+    <string name="w_photo_done">Xong</string>
 </resources>

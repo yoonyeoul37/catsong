@@ -32,4 +32,27 @@
     <string name="rec_resume">Folytatás</string>
     <string name="rec_pause">Szünet</string>
     <string name="rec_done">Kész</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">Véletlenszerű</string>
+    <string name="w_menu_repeat">Ismétlés</string>
+    <string name="w_menu_on">Be</string>
+    <string name="w_menu_off">Ki</string>
+    <string name="w_menu_repeat_one">Egy szám ismétlése</string>
+    <string name="w_menu_repeat_all">Összes ismétlése</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">Elalvásidőzítő</string>
+    <string name="w_sleep_ask">Mennyi idő múlva álljon le?</string>
+    <string name="w_sleep_hint">Az utolsó percben fokozatosan elhalkul</string>
+    <string name="w_sleep_set">Beállítás</string>
+    <string name="w_sleep_cancel">Időzítő törlése</string>
+    <string name="w_unit_hr">óra</string>
+    <string name="w_unit_min">perc</string>
+    <string name="w_sleep_fmt_m">%1$d perc</string>
+    <string name="w_sleep_fmt_hm">%1$d óra %2$d perc</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">Widgetfotó módosítása</string>
+    <string name="w_photo_reset">Alapértelmezett fotó</string>
+    <string name="w_photo_hint">Mozgasd és nagyítsd a kivágás kiválasztásához</string>
+    <string name="w_photo_cancel">Mégse</string>
+    <string name="w_photo_done">Kész</string>
 </resources>

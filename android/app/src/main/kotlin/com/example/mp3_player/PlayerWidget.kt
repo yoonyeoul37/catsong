@@ -54,6 +54,17 @@ class PlayerWidget : AppWidgetProvider() {
                     toApp(if (a == ACTION_REPEAT) "widgetRepeat" else "widgetShuffle", null) {}
                 }
             }
+            a == ACTION_SLEEP -> {
+                // ⋮ 창에서 맞춘 수면 타이머 → 앱(다트)에게 (앱이 막 깨어나는 중이면 조금 기다렸다가)
+                val m = intent.getIntExtra("minutes", 0)
+                if (MainActivity.mediaChannel != null) {
+                    toApp("widgetSleep", m) {}
+                } else {
+                    android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                        try { MainActivity.mediaChannel?.invokeMethod("widgetSleep", m) } catch (_: Exception) {}
+                    }, 1500)
+                }
+            }
             a.startsWith(ACTION_KIND) -> {
                 // 아래 버튼: 음악 · 라디오 · 자연 바로 재생 (앱 안 열고)
                 if (tooSoon(context)) return
@@ -115,9 +126,11 @@ class PlayerWidget : AppWidgetProvider() {
         const val ACTION_KIND = "kr.ssing.catsong.PLAY_KIND_" // 뒤에 music · radio · nature
         const val ACTION_REPEAT = "kr.ssing.catsong.REPEAT"
         const val ACTION_SHUFFLE = "kr.ssing.catsong.SHUFFLE"
+        const val ACTION_SLEEP = "kr.ssing.catsong.SLEEP" // ⋮ 창 → 수면 타이머 (minutes, 0이면 끄기)
         private const val PREFS = "paran_widget"
         private const val TAP_GAP = 1000L    // 이 시간 안에 또 누르면 무시 (1초)
         private const val LOAD_MAX = 10000L  // '불러오는 중…' 은 길어도 10초까지만
+        private const val TALL_BOTTOM = 148  // 세로 2×3 위젯 아래 크림 칸 높이(dp)
 
         /// 1초 안에 또 누른 거면 true (무시)
         private fun tooSoon(context: Context): Boolean {
@@ -207,11 +220,12 @@ class PlayerWidget : AppWidgetProvider() {
             })
         }
 
-        /// 바탕화면에 붙은 파란소리 위젯 전부 (4×2 + 4×3)
+        /// 바탕화면에 붙은 파란소리 위젯 전부 (4×2 + 4×3 + 세로 2×3)
         fun allIds(context: Context): IntArray {
             val mgr = AppWidgetManager.getInstance(context)
             return mgr.getAppWidgetIds(android.content.ComponentName(context, PlayerWidget::class.java)) +
-                mgr.getAppWidgetIds(android.content.ComponentName(context, PlayerWidget2::class.java))
+                mgr.getAppWidgetIds(android.content.ComponentName(context, PlayerWidget2::class.java)) +
+                mgr.getAppWidgetIds(android.content.ComponentName(context, PlayerWidget3::class.java))
         }
 
         /// 앱에서 고른 언어(설정 → 언어)의 글자 꺼내기 — '폰 언어'면 그대로
@@ -273,14 +287,26 @@ class PlayerWidget : AppWidgetProvider() {
             val empty = t == null || t == "플레이쏭" || t == "캣송"
 
             // 4×3 위젯이면 큰 모양 (위는 똑같고, 아래에 최근에 들은 것)
-            val big = appWidgetManager.getAppWidgetInfo(appWidgetId)?.provider?.className == PlayerWidget2::class.java.name
-            val views = RemoteViews(context.packageName, if (big) R.layout.widget_player2 else R.layout.widget_player)
+            val cls = appWidgetManager.getAppWidgetInfo(appWidgetId)?.provider?.className
+            val big = cls == PlayerWidget2::class.java.name
+            // 세로 2×3이면 위 사진 + 아래 크림 칸 (제목 · 버튼 · 바로가기 아이콘만)
+            val tall = cls == PlayerWidget3::class.java.name
+            val views = RemoteViews(context.packageName,
+                if (tall) R.layout.widget_player3 else if (big) R.layout.widget_player2 else R.layout.widget_player)
             // 글자는 앱에서 고른 언어로 (위젯은 바탕화면 앱이 그려서, 그냥 두면 폰 언어로 나옴)
             val lc = localized(context)
-            views.setTextViewText(R.id.widget_go_music_label, lc.getString(R.string.tab_music))
-            views.setTextViewText(R.id.widget_go_radio_label, lc.getString(R.string.tab_radio))
-            views.setTextViewText(R.id.widget_go_nature_label, lc.getString(R.string.tab_nature))
-            views.setTextViewText(R.id.widget_go_sleep_label, lc.getString(R.string.tab_sleep))
+            if (tall) {
+                // 세로 위젯은 바로가기 글자 없이 아이콘만 → 읽어 주기용 이름만
+                views.setContentDescription(R.id.widget_go_music, lc.getString(R.string.tab_music))
+                views.setContentDescription(R.id.widget_go_radio, lc.getString(R.string.tab_radio))
+                views.setContentDescription(R.id.widget_go_nature, lc.getString(R.string.tab_nature))
+                views.setContentDescription(R.id.widget_go_sleep, lc.getString(R.string.tab_sleep))
+            } else {
+                views.setTextViewText(R.id.widget_go_music_label, lc.getString(R.string.tab_music))
+                views.setTextViewText(R.id.widget_go_radio_label, lc.getString(R.string.tab_radio))
+                views.setTextViewText(R.id.widget_go_nature_label, lc.getString(R.string.tab_nature))
+                views.setTextViewText(R.id.widget_go_sleep_label, lc.getString(R.string.tab_sleep))
+            }
             if (big) views.setTextViewText(R.id.widget_recent_empty, lc.getString(R.string.widget_recent_empty))
             views.setTextViewText(R.id.widget_title,
                 if (loading) lc.getString(R.string.widget_loading) else if (empty) lc.getString(R.string.app_name) else t)
@@ -290,26 +316,31 @@ class PlayerWidget : AppWidgetProvider() {
             views.setViewVisibility(R.id.widget_schedule, if (loading || s.isEmpty()) View.GONE else View.VISIBLE)
             views.setImageViewResource(R.id.widget_play_pause,
                 if (playing || loading) R.drawable.paran_ic_pause else R.drawable.paran_ic_play)
-            // 섞기 · 반복 (음악일 때만, 꺼져 있으면 흐리게)
+            // ⋮ 메뉴: 듣는 게 있으면 언제나 (랜덤·반복 줄은 창에서 음악일 때만) — 세 위젯 모두 같음
             val fp = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
-            val music = try { fp.getBoolean("flutter.w_music", false) } catch (_: Exception) { false }
-            val loop = try { fp.getLong("flutter.w_loop", 0L) } catch (_: Exception) { 0L }
-            val shuf = try { fp.getBoolean("flutter.w_shuffle", false) } catch (_: Exception) { false }
-            views.setViewVisibility(R.id.widget_modes, if (music && !empty) View.VISIBLE else View.GONE)
-            views.setImageViewResource(R.id.widget_repeat,
-                if (loop == 1L) R.drawable.paran_ic_repeat_one else R.drawable.paran_ic_repeat)
-            fun mode(id: Int, on: Boolean) {
-                views.setInt(id, "setBackgroundResource",
-                    if (on) R.drawable.paran_widget_mode_on else R.drawable.paran_widget_mode_bg)
-                views.setInt(id, "setColorFilter", if (on) 0xFF17140F.toInt() else 0xFFFFFFFF.toInt())
-                views.setInt(id, "setImageAlpha", if (on) 255 else 200)
+            views.setViewVisibility(R.id.widget_more, if (!empty) View.VISIBLE else View.GONE)
+            // 수면 타이머 남은 시간 (음악·자연 'm' · 라디오 'r' 중 늦게 끝나는 것) — 1초마다 저절로 줄어듦
+            val sleepEnd = maxOf(
+                try { fp.getLong("flutter.w_sleep_m", 0L) } catch (_: Exception) { 0L },
+                try { fp.getLong("flutter.w_sleep_r", 0L) } catch (_: Exception) { 0L })
+            val sleepLeft = sleepEnd - System.currentTimeMillis()
+            if (sleepLeft > 0 && android.os.Build.VERSION.SDK_INT >= 24) {
+                views.setViewVisibility(R.id.widget_timer, View.VISIBLE)
+                views.setChronometer(R.id.widget_timer_text,
+                    android.os.SystemClock.elapsedRealtime() + sleepLeft, null, true)
+                views.setChronometerCountDown(R.id.widget_timer_text, true)
+            } else {
+                views.setViewVisibility(R.id.widget_timer, View.GONE)
+                views.setChronometer(R.id.widget_timer_text, android.os.SystemClock.elapsedRealtime(), null, false)
             }
-            mode(R.id.widget_repeat, loop != 0L)
-            mode(R.id.widget_shuffle, shuf)
             // 4×3: 아래 '최근에 들었어요' 줄 (사진 칸 높이도 그만큼 빼기)
             // 4×2: 바로가기 64 / 4×3: 바로가기 54(46 + 위 8) + 최근 줄
-            val bottomDp = if (big) 54 + recentRows(context, views, if (empty) null else t) else 64
-            photo(context, appWidgetManager, appWidgetId, bottomDp, big)?.let { views.setImageViewBitmap(R.id.widget_photo, it) }
+            // 세로 2×3: 아래 크림 칸 148 (widget_player3.xml 과 같은 값)
+            val bottomDp = if (tall) TALL_BOTTOM else if (big) 54 + recentRows(context, views, if (empty) null else t) else 64
+            val photoBmp = photo(context, appWidgetManager, appWidgetId, bottomDp, big, tall)
+            photoBmp?.let { views.setImageViewBitmap(R.id.widget_photo, it) }
+            // 이 위젯 사진 칸 모양 (가로 ÷ 세로) → ⋮ 창 자르기 틀을 같은 모양으로
+            val photoAspect = photoBmp?.let { it.width.toFloat() / it.height } ?: 2f
 
             // 사진 부분 누르면 앱 열기
             val open = Intent(context, MainActivity::class.java).apply {
@@ -326,8 +357,14 @@ class PlayerWidget : AppWidgetProvider() {
             // 재생: 앱이 켜져 있으면 앱에게 바로 / 꺼져 있으면 앱을 열면서 마지막에 듣던 것
             views.setOnClickPendingIntent(R.id.widget_play_pause, media(ACTION_PLAY_PAUSE, 2))
             views.setOnClickPendingIntent(R.id.widget_next, media(ACTION_NEXT, 3))
-            views.setOnClickPendingIntent(R.id.widget_repeat, media(ACTION_REPEAT, 4))
-            views.setOnClickPendingIntent(R.id.widget_shuffle, media(ACTION_SHUFFLE, 5))
+            // ⋮ → 바탕화면 위 작은 창 (앱 화면은 안 열림)
+            val menu = Intent(context, WidgetMenuActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                putExtra("aspect", photoAspect)
+            }
+            // 위젯마다 따로 (사진 칸 모양이 달라서 — 같은 번호면 마지막 위젯 값으로 덮임)
+            views.setOnClickPendingIntent(R.id.widget_more, PendingIntent.getActivity(
+                context, 1000 + appWidgetId, menu, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE))
 
             // 바로가기 4개
             val go = listOf(
@@ -412,11 +449,12 @@ class PlayerWidget : AppWidgetProvider() {
 
         /// 지금 시간대 라디오 사진 (아침 5–11 · 낮 11–17 · 저녁 17–22 · 밤)
         /// 위젯 띠 모양으로 자르고, 모서리 둥글게, 아래쪽은 글자가 보이게 살짝 어둡게
-        private fun photo(context: Context, mgr: AppWidgetManager, id: Int, bottomDp: Int, big: Boolean): Bitmap? {
+        private fun photo(context: Context, mgr: AppWidgetManager, id: Int, bottomDp: Int, big: Boolean,
+                          tall: Boolean = false): Bitmap? {
             // 사진 칸 크기(dp): 위젯 크기 - 아래 줄 (4×2 바로가기 64 · 4×3 최근에 들은 것)
             val opt = mgr.getAppWidgetOptions(id)
             val vw = opt.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH).takeIf { it > 0 } ?: 250
-            val vh = ((opt.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT).takeIf { it > 0 } ?: if (big) 280 else 180) - bottomDp)
+            val vh = ((opt.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT).takeIf { it > 0 } ?: if (tall) 270 else if (big) 280 else 180) - bottomDp)
                 .coerceAtLeast(56)
             // 바깥 모서리 크기(dp) = res/values 의 paran_w_radius (안드로이드 12 이상은 폰이 정한 크기)
             val dens = context.resources.displayMetrics.density
@@ -428,29 +466,67 @@ class PlayerWidget : AppWidgetProvider() {
             var n = pick(day)
             if (n == pick(day - 1)) n = (n + 1) % 6
             val path = "flutter_assets/assets/widget_photo${n + 1}.jpg"
+            // 직접 넣은 사진(⋮ → 위젯 사진 바꾸기)이 있으면 그걸로
+            val custom = java.io.File(context.filesDir, "widget_photo.jpg")
+            val useCustom = custom.exists()
+            fun openSrc(): java.io.InputStream = if (useCustom) custom.inputStream() else context.assets.open(path)
             return try {
                 val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-                context.assets.open(path).use { BitmapFactory.decodeStream(it, null, bounds) }
+                openSrc().use { BitmapFactory.decodeStream(it, null, bounds) }
                 var sample = 1
                 while (bounds.outWidth / (sample * 2) >= 560) sample *= 2
-                val src = context.assets.open(path).use {
+                val src = openSrc().use {
                     BitmapFactory.decodeStream(it, null, BitmapFactory.Options().apply { inSampleSize = sample })
                 } ?: return null
-                val w = src.width
-                val bh = (w * vh.toFloat() / vw).toInt().coerceIn(1, src.height)
-                val top = ((src.height - bh) * 0.35f).toInt()
+                // 자를 곳 (sl · top = 왼쪽 위, w · bh = 크기)
+                val left: Int
+                val top: Int
+                val w: Int
+                val bh: Int
+                if (useCustom) {
+                    // 자르기 화면에서 정한 곳을 가운데로, 이 위젯 사진 칸 모양에 맞게
+                    val wp = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+                    val cx = wp.getFloat("photo_cx", 0.5f)
+                    val cy = wp.getFloat("photo_cy", 0.5f)
+                    val zoom = wp.getFloat("photo_zoom", 1f).coerceIn(1f, 4f)
+                    val aspect = vw.toFloat() / vh
+                    var cw = src.width.toFloat()
+                    var ch = cw / aspect
+                    if (ch > src.height) {
+                        ch = src.height.toFloat()
+                        cw = ch * aspect
+                    }
+                    w = (cw / zoom).toInt().coerceIn(1, src.width)
+                    bh = (ch / zoom).toInt().coerceIn(1, src.height)
+                    left = (cx * src.width - w / 2f).toInt().coerceIn(0, src.width - w)
+                    top = (cy * src.height - bh / 2f).toInt().coerceIn(0, src.height - bh)
+                } else {
+                    left = 0
+                    w = src.width
+                    bh = (w * vh.toFloat() / vw).toInt().coerceIn(1, src.height)
+                    top = ((src.height - bh) * 0.35f).toInt()
+                }
                 val out = Bitmap.createBitmap(w, bh, Bitmap.Config.ARGB_8888)
                 val c = Canvas(out)
-                val r = radiusDp * w / vw
+                // 세로 위젯 + 안드로이드 12 이상: 폰이 바깥 모서리를 깎아 주니 사진은 그대로 (두 번 깎이면 틈이 생김)
+                val r = if (tall && android.os.Build.VERSION.SDK_INT >= 31) 0f else radiusDp * w / vw
                 c.clipPath(Path().apply {
                     addRoundRect(RectF(0f, 0f, w.toFloat(), bh.toFloat()),
                         floatArrayOf(r, r, r, r, 0f, 0f, 0f, 0f), Path.Direction.CW)
                 })
-                c.drawBitmap(src, Rect(0, top, w, top + bh), Rect(0, 0, w, bh), Paint(Paint.FILTER_BITMAP_FLAG))
-                c.drawRect(0f, 0f, w.toFloat(), bh.toFloat(), Paint().apply {
-                    shader = LinearGradient(0f, bh * 0.25f, 0f, bh.toFloat(),
-                        0x00000000, 0x99000000.toInt(), Shader.TileMode.CLAMP)
-                })
+                c.drawBitmap(src, Rect(left, top, left + w, top + bh), Rect(0, 0, w, bh), Paint(Paint.FILTER_BITMAP_FLAG))
+                if (tall) {
+                    // 세로 위젯: 글자가 사진 밖(아래 크림 칸)이라 위쪽만 살짝 (Paransori · ⋮ 잘 보이게)
+                    c.drawRect(0f, 0f, w.toFloat(), bh.toFloat(), Paint().apply {
+                        shader = LinearGradient(0f, 0f, 0f, bh * 0.45f,
+                            0x47000000, 0x00000000, Shader.TileMode.CLAMP)
+                    })
+                } else {
+                    c.drawRect(0f, 0f, w.toFloat(), bh.toFloat(), Paint().apply {
+                        shader = LinearGradient(0f, bh * 0.25f, 0f, bh.toFloat(),
+                            0x00000000, 0x99000000.toInt(), Shader.TileMode.CLAMP)
+                    })
+                }
                 src.recycle()
                 out
             } catch (e: Exception) {

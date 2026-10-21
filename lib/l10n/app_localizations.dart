@@ -3820,7 +3820,7 @@ abstract class AppLocalizations {
   /// No description provided for @sleepFadeHint.
   ///
   /// In ko, this message translates to:
-  /// **'끝나기 1분 전부터 천천히 작아져요'**
+  /// **'종료 1분 전부터 소리가 작아져요'**
   String get sleepFadeHint;
 
   /// No description provided for @paranPhoto.

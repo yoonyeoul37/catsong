@@ -32,4 +32,27 @@
     <string name="rec_resume">Lanjutkan</string>
     <string name="rec_pause">Jeda</string>
     <string name="rec_done">Selesai</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">Acak</string>
+    <string name="w_menu_repeat">Ulangi</string>
+    <string name="w_menu_on">Aktif</string>
+    <string name="w_menu_off">Nonaktif</string>
+    <string name="w_menu_repeat_one">Ulangi satu</string>
+    <string name="w_menu_repeat_all">Ulangi semua</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">Timer tidur</string>
+    <string name="w_sleep_ask">Berhenti memutar setelah berapa lama?</string>
+    <string name="w_sleep_hint">Suara mengecil pelan di menit terakhir</string>
+    <string name="w_sleep_set">Atur</string>
+    <string name="w_sleep_cancel">Batalkan timer</string>
+    <string name="w_unit_hr">jam</string>
+    <string name="w_unit_min">mnt</string>
+    <string name="w_sleep_fmt_m">%1$d mnt</string>
+    <string name="w_sleep_fmt_hm">%1$d jam %2$d mnt</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">Ganti foto widget</string>
+    <string name="w_photo_reset">Pakai foto bawaan</string>
+    <string name="w_photo_hint">Geser dan cubit untuk memilih bagian yang tampil</string>
+    <string name="w_photo_cancel">Batal</string>
+    <string name="w_photo_done">Selesai</string>
 </resources>

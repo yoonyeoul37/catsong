@@ -32,4 +32,27 @@
     <string name="rec_resume">Devam et</string>
     <string name="rec_pause">Duraklat</string>
     <string name="rec_done">Bitti</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">Karışık çal</string>
+    <string name="w_menu_repeat">Tekrarla</string>
+    <string name="w_menu_on">Açık</string>
+    <string name="w_menu_off">Kapalı</string>
+    <string name="w_menu_repeat_one">Bir şarkıyı tekrarla</string>
+    <string name="w_menu_repeat_all">Tümünü tekrarla</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">Uyku zamanlayıcı</string>
+    <string name="w_sleep_ask">Ne kadar sonra dursun?</string>
+    <string name="w_sleep_hint">Son dakikada sesi yavaşça kısılır</string>
+    <string name="w_sleep_set">Ayarla</string>
+    <string name="w_sleep_cancel">İptal et</string>
+    <string name="w_unit_hr">sa</string>
+    <string name="w_unit_min">dk</string>
+    <string name="w_sleep_fmt_m">%1$d dk</string>
+    <string name="w_sleep_fmt_hm">%1$d sa %2$d dk</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">Widget fotoğrafını değiştir</string>
+    <string name="w_photo_reset">Varsayılan fotoğraf</string>
+    <string name="w_photo_hint">Görünecek alanı seçmek için sürükleyip yakınlaştırın</string>
+    <string name="w_photo_cancel">İptal</string>
+    <string name="w_photo_done">Bitti</string>
 </resources>

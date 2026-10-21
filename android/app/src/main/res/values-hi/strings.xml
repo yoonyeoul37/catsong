@@ -32,4 +32,27 @@
     <string name="rec_resume">फिर शुरू करें</string>
     <string name="rec_pause">रोकें</string>
     <string name="rec_done">हो गया</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">शफ़ल</string>
+    <string name="w_menu_repeat">दोहराएँ</string>
+    <string name="w_menu_on">चालू</string>
+    <string name="w_menu_off">बंद</string>
+    <string name="w_menu_repeat_one">एक गाना दोहराएँ</string>
+    <string name="w_menu_repeat_all">सभी दोहराएँ</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">स्लीप टाइमर</string>
+    <string name="w_sleep_ask">कितनी देर बाद बंद करें?</string>
+    <string name="w_sleep_hint">आख़िरी मिनट में धीरे-धीरे आवाज़ कम होगी</string>
+    <string name="w_sleep_set">सेट करें</string>
+    <string name="w_sleep_cancel">टाइमर रद्द करें</string>
+    <string name="w_unit_hr">घंटे</string>
+    <string name="w_unit_min">मिनट</string>
+    <string name="w_sleep_fmt_m">%1$d मिनट</string>
+    <string name="w_sleep_fmt_hm">%1$d घंटे %2$d मिनट</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">विजेट फ़ोटो बदलें</string>
+    <string name="w_photo_reset">डिफ़ॉल्ट फ़ोटो</string>
+    <string name="w_photo_hint">दिखने वाला हिस्सा चुनने के लिए खिसकाएँ और ज़ूम करें</string>
+    <string name="w_photo_cancel">रद्द करें</string>
+    <string name="w_photo_done">हो गया</string>
 </resources>

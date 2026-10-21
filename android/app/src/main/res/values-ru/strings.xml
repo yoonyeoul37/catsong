@@ -32,4 +32,27 @@
     <string name="rec_resume">Продолжить</string>
     <string name="rec_pause">Пауза</string>
     <string name="rec_done">Готово</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">Случайный порядок</string>
+    <string name="w_menu_repeat">Повтор</string>
+    <string name="w_menu_on">Вкл.</string>
+    <string name="w_menu_off">Выкл.</string>
+    <string name="w_menu_repeat_one">Повтор трека</string>
+    <string name="w_menu_repeat_all">Повтор всех</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">Таймер сна</string>
+    <string name="w_sleep_ask">Через сколько остановить?</string>
+    <string name="w_sleep_hint">В последнюю минуту звук плавно затихнет</string>
+    <string name="w_sleep_set">Установить</string>
+    <string name="w_sleep_cancel">Отменить таймер</string>
+    <string name="w_unit_hr">ч</string>
+    <string name="w_unit_min">мин</string>
+    <string name="w_sleep_fmt_m">%1$d мин</string>
+    <string name="w_sleep_fmt_hm">%1$d ч %2$d мин</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">Сменить фото виджета</string>
+    <string name="w_photo_reset">Фото по умолчанию</string>
+    <string name="w_photo_hint">Двигайте и масштабируйте, чтобы выбрать область</string>
+    <string name="w_photo_cancel">Отмена</string>
+    <string name="w_photo_done">Готово</string>
 </resources>

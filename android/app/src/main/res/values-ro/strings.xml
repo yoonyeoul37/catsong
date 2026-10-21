@@ -32,4 +32,27 @@
     <string name="rec_resume">Reia</string>
     <string name="rec_pause">Pauză</string>
     <string name="rec_done">Gata</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">Aleatoriu</string>
+    <string name="w_menu_repeat">Repetare</string>
+    <string name="w_menu_on">Activat</string>
+    <string name="w_menu_off">Dezactivat</string>
+    <string name="w_menu_repeat_one">Repetă o piesă</string>
+    <string name="w_menu_repeat_all">Repetă tot</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">Temporizator somn</string>
+    <string name="w_sleep_ask">Oprești redarea după cât timp?</string>
+    <string name="w_sleep_hint">Sunetul scade treptat în ultimul minut</string>
+    <string name="w_sleep_set">Setează</string>
+    <string name="w_sleep_cancel">Anulează temporizatorul</string>
+    <string name="w_unit_hr">h</string>
+    <string name="w_unit_min">min</string>
+    <string name="w_sleep_fmt_m">%1$d min</string>
+    <string name="w_sleep_fmt_hm">%1$d h %2$d min</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">Schimbă fotografia widgetului</string>
+    <string name="w_photo_reset">Fotografie implicită</string>
+    <string name="w_photo_hint">Trage și mărește pentru a alege încadrarea</string>
+    <string name="w_photo_cancel">Anulează</string>
+    <string name="w_photo_done">Gata</string>
 </resources>

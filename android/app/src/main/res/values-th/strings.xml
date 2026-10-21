@@ -32,4 +32,27 @@
     <string name="rec_resume">ทำต่อ</string>
     <string name="rec_pause">หยุดชั่วคราว</string>
     <string name="rec_done">เสร็จสิ้น</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">สุ่มเพลง</string>
+    <string name="w_menu_repeat">เล่นซ้ำ</string>
+    <string name="w_menu_on">เปิด</string>
+    <string name="w_menu_off">ปิด</string>
+    <string name="w_menu_repeat_one">เล่นซ้ำเพลงเดียว</string>
+    <string name="w_menu_repeat_all">เล่นซ้ำทั้งหมด</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">ตั้งเวลาปิด</string>
+    <string name="w_sleep_ask">หยุดเล่นหลังจากนานเท่าไร</string>
+    <string name="w_sleep_hint">เสียงจะค่อยๆ เบาลงในนาทีสุดท้าย</string>
+    <string name="w_sleep_set">ตั้งค่า</string>
+    <string name="w_sleep_cancel">ยกเลิกตัวจับเวลา</string>
+    <string name="w_unit_hr">ชม.</string>
+    <string name="w_unit_min">นาที</string>
+    <string name="w_sleep_fmt_m">%1$d นาที</string>
+    <string name="w_sleep_fmt_hm">%1$d ชม. %2$d นาที</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">เปลี่ยนรูปวิดเจ็ต</string>
+    <string name="w_photo_reset">ใช้รูปเริ่มต้น</string>
+    <string name="w_photo_hint">ลากและซูมเพื่อเลือกส่วนที่แสดง</string>
+    <string name="w_photo_cancel">ยกเลิก</string>
+    <string name="w_photo_done">เสร็จสิ้น</string>
 </resources>

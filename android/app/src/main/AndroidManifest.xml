@@ -156,6 +156,26 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info2" />
         </receiver>
+
+        <!-- 위젯 ⋮ 메뉴 창 (바탕화면 위에 작은 창만, 앱 화면은 안 열림 · 최근 앱에도 안 남음) -->
+        <activity
+            android:name=".WidgetMenuActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:theme="@style/WidgetMenuTheme" />
+
+        <!-- 홈 위젯 세로 2×3 (버튼은 모두 PlayerWidget이 받음) -->
+        <receiver
+            android:name=".PlayerWidget3"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info3" />
+        </receiver>
         <!-- 아침 알람: 시간이 되면 알람 화면 띄우기 -->
         <receiver
             android:name=".AlarmReceiver"

@@ -32,4 +32,27 @@
     <string name="rec_resume">再開</string>
     <string name="rec_pause">一時停止</string>
     <string name="rec_done">完了</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">ランダム再生</string>
+    <string name="w_menu_repeat">リピート</string>
+    <string name="w_menu_on">オン</string>
+    <string name="w_menu_off">オフ</string>
+    <string name="w_menu_repeat_one">1曲リピート</string>
+    <string name="w_menu_repeat_all">全曲リピート</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">スリープタイマー</string>
+    <string name="w_sleep_ask">何時間何分後に停止しますか？</string>
+    <string name="w_sleep_hint">終了1分前から少しずつ小さくなります</string>
+    <string name="w_sleep_set">設定</string>
+    <string name="w_sleep_cancel">タイマーをキャンセル</string>
+    <string name="w_unit_hr">時間</string>
+    <string name="w_unit_min">分</string>
+    <string name="w_sleep_fmt_m">%1$d分</string>
+    <string name="w_sleep_fmt_hm">%1$d時間 %2$d分</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">ウィジェットの写真を変更</string>
+    <string name="w_photo_reset">元の写真に戻す</string>
+    <string name="w_photo_hint">動かしたり2本指で拡大したりして表示範囲を決めます</string>
+    <string name="w_photo_cancel">キャンセル</string>
+    <string name="w_photo_done">完了</string>
 </resources>

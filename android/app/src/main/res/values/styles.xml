@@ -19,4 +19,14 @@
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
+    <!-- 위젯 ⋮ 메뉴 창: 투명 바탕 위 작은 창 (시간·분 휠이 예쁘게 나오게 머티리얼 모양) -->
+    <style name="WidgetMenuTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:colorAccent">@color/paran_w_point</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
 </resources>

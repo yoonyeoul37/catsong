@@ -32,4 +32,27 @@
     <string name="rec_resume">Pokračovat</string>
     <string name="rec_pause">Pozastavit</string>
     <string name="rec_done">Hotovo</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">Náhodně</string>
+    <string name="w_menu_repeat">Opakovat</string>
+    <string name="w_menu_on">Zap.</string>
+    <string name="w_menu_off">Vyp.</string>
+    <string name="w_menu_repeat_one">Opakovat skladbu</string>
+    <string name="w_menu_repeat_all">Opakovat vše</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">Časovač spánku</string>
+    <string name="w_sleep_ask">Za jak dlouho přehrávání zastavit?</string>
+    <string name="w_sleep_hint">V poslední minutě se zvuk ztiší</string>
+    <string name="w_sleep_set">Nastavit</string>
+    <string name="w_sleep_cancel">Zrušit časovač</string>
+    <string name="w_unit_hr">h</string>
+    <string name="w_unit_min">min</string>
+    <string name="w_sleep_fmt_m">%1$d min</string>
+    <string name="w_sleep_fmt_hm">%1$d h %2$d min</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">Změnit fotku widgetu</string>
+    <string name="w_photo_reset">Výchozí fotka</string>
+    <string name="w_photo_hint">Posuňte a přibližte pro výběr výřezu</string>
+    <string name="w_photo_cancel">Zrušit</string>
+    <string name="w_photo_done">Hotovo</string>
 </resources>

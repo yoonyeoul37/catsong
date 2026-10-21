@@ -177,6 +177,9 @@ class PlayerProvider extends ChangeNotifier {
         case 'widgetShuffle':
           toggleShuffle(); // 위젯: 섞기 켜기·끄기
           break;
+        case 'widgetSleep':
+          HeadsetResume.widgetSleep(call.arguments as int? ?? 0); // 위젯 ⋮ → 수면 타이머 (0이면 끄기)
+          break;
         case 'widgetGo':
           WidgetGo.launched = true; // 위젯으로 켜졌으면 인삿말 목소리 안 함
           WidgetGo.target.value = call.arguments as String?; // 홈 위젯 바로가기
@@ -810,6 +813,7 @@ class PlayerProvider extends ChangeNotifier {
     _endSleepFade();
     _sleepTimerDuration = duration;
     _sleepTimerEnd = DateTime.now().add(duration);
+    HeadsetResume.saveSleepEnd('m', _sleepTimerEnd); // 위젯에 남은 시간
     final fadeAt = duration - const Duration(minutes: 1);
     _sleepFadeStart = Timer(fadeAt.isNegative ? Duration.zero : fadeAt, _beginSleepFade);
     _sleepTimer = Timer(duration, () {
@@ -818,6 +822,7 @@ class PlayerProvider extends ChangeNotifier {
       _sleepTimer = null;
       _sleepTimerDuration = null;
       _sleepTimerEnd = null;
+      HeadsetResume.saveSleepEnd('m', null);
       notifyListeners();
     });
     notifyListeners();
@@ -828,6 +833,7 @@ class PlayerProvider extends ChangeNotifier {
     _endSleepFade();
     _sleepTimer = null;
     _sleepTimerDuration = null;
+    if (_sleepTimerEnd != null) HeadsetResume.saveSleepEnd('m', null);
     _sleepTimerEnd = null;
     notifyListeners();
   }

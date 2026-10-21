@@ -32,4 +32,27 @@
     <string name="rec_resume">دوبارہ شروع</string>
     <string name="rec_pause">روکیں</string>
     <string name="rec_done">ہو گیا</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">بے ترتیب</string>
+    <string name="w_menu_repeat">دہرائیں</string>
+    <string name="w_menu_on">آن</string>
+    <string name="w_menu_off">آف</string>
+    <string name="w_menu_repeat_one">ایک گانا دہرائیں</string>
+    <string name="w_menu_repeat_all">سب دہرائیں</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">سلیپ ٹائمر</string>
+    <string name="w_sleep_ask">کتنی دیر بعد بند کریں؟</string>
+    <string name="w_sleep_hint">آخری منٹ میں آواز آہستہ کم ہوتی ہے</string>
+    <string name="w_sleep_set">سیٹ کریں</string>
+    <string name="w_sleep_cancel">ٹائمر منسوخ کریں</string>
+    <string name="w_unit_hr">گھنٹہ</string>
+    <string name="w_unit_min">منٹ</string>
+    <string name="w_sleep_fmt_m">%1$d منٹ</string>
+    <string name="w_sleep_fmt_hm">%1$d گھنٹہ %2$d منٹ</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">ویجیٹ تصویر بدلیں</string>
+    <string name="w_photo_reset">ڈیفالٹ تصویر</string>
+    <string name="w_photo_hint">دکھنے والا حصہ چننے کے لیے سرکائیں اور زوم کریں</string>
+    <string name="w_photo_cancel">منسوخ</string>
+    <string name="w_photo_done">ہو گیا</string>
 </resources>

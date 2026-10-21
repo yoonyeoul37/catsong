@@ -1896,7 +1896,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get sleepAskDuration => '몇 시간 몇 분 후 정지할까요?';
 
   @override
-  String get sleepFadeHint => '끝나기 1분 전부터 천천히 작아져요';
+  String get sleepFadeHint => '종료 1분 전부터 소리가 작아져요';
 
   @override
   String get paranPhoto => '파란포토';

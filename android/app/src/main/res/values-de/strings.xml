@@ -32,4 +32,27 @@
     <string name="rec_resume">Fortsetzen</string>
     <string name="rec_pause">Pause</string>
     <string name="rec_done">Fertig</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">Zufallswiedergabe</string>
+    <string name="w_menu_repeat">Wiederholen</string>
+    <string name="w_menu_on">An</string>
+    <string name="w_menu_off">Aus</string>
+    <string name="w_menu_repeat_one">Titel wiederholen</string>
+    <string name="w_menu_repeat_all">Alle wiederholen</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">Sleep-Timer</string>
+    <string name="w_sleep_ask">Wann soll die Wiedergabe stoppen?</string>
+    <string name="w_sleep_hint">Wird in der letzten Minute leiser</string>
+    <string name="w_sleep_set">Festlegen</string>
+    <string name="w_sleep_cancel">Timer beenden</string>
+    <string name="w_unit_hr">Std.</string>
+    <string name="w_unit_min">Min.</string>
+    <string name="w_sleep_fmt_m">%1$d Min.</string>
+    <string name="w_sleep_fmt_hm">%1$d Std. %2$d Min.</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">Widget-Foto ändern</string>
+    <string name="w_photo_reset">Standardfoto verwenden</string>
+    <string name="w_photo_hint">Verschieben und zoomen, um den Ausschnitt zu wählen</string>
+    <string name="w_photo_cancel">Abbrechen</string>
+    <string name="w_photo_done">Fertig</string>
 </resources>

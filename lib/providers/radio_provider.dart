@@ -16,6 +16,7 @@ import '../models/radio_station.dart';
 import '../models/radio_country.dart';
 import 'player_provider.dart' show SimpleAudioHandler, PlayerProvider;
 import '../services/schedule_service.dart';
+import '../services/headset_resume.dart' show HeadsetResume;
 import '../l10n/locale_holder.dart';
 import '../screens/radio_korea_screen2.dart' show koreanStationDesc, koreanRadioStations;
 import '../l10n/locale_holder.dart';
@@ -2455,6 +2456,7 @@ class RadioProvider extends ChangeNotifier {
     cancelSleepTimer();
     _sleepRemaining = duration;
     sleepTick.value = duration;
+    HeadsetResume.saveSleepEnd('r', DateTime.now().add(duration)); // 위젯에 남은 시간
     _sleepTimer = Timer(duration, () async {
       await _player.stop();
       if (_sleepFading) {
@@ -2493,6 +2495,7 @@ class RadioProvider extends ChangeNotifier {
     _scheduleCheckTimer?.cancel();
     _sleepTimer?.cancel();
     _sleepCountdown?.cancel();
+    if (_sleepRemaining != null) HeadsetResume.saveSleepEnd('r', null); // 위젯 남은 시간 지우기
     _sleepTimer = null;
     _sleepCountdown = null;
     _sleepRemaining = null;

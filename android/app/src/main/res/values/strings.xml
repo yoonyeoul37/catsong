@@ -32,4 +32,27 @@
     <string name="rec_resume">Resume</string>
     <string name="rec_pause">Pause</string>
     <string name="rec_done">Done</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">Shuffle</string>
+    <string name="w_menu_repeat">Repeat</string>
+    <string name="w_menu_on">On</string>
+    <string name="w_menu_off">Off</string>
+    <string name="w_menu_repeat_one">Repeat one</string>
+    <string name="w_menu_repeat_all">Repeat all</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">Sleep timer</string>
+    <string name="w_sleep_ask">Stop playing after how long?</string>
+    <string name="w_sleep_hint">Fades out during the last minute</string>
+    <string name="w_sleep_set">Set</string>
+    <string name="w_sleep_cancel">Cancel timer</string>
+    <string name="w_unit_hr">hr</string>
+    <string name="w_unit_min">min</string>
+    <string name="w_sleep_fmt_m">%1$d min</string>
+    <string name="w_sleep_fmt_hm">%1$d hr %2$d min</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">Change widget photo</string>
+    <string name="w_photo_reset">Use default photo</string>
+    <string name="w_photo_hint">Drag and pinch to choose what shows</string>
+    <string name="w_photo_cancel">Cancel</string>
+    <string name="w_photo_done">Done</string>
 </resources>

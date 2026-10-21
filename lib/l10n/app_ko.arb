@@ -623,7 +623,7 @@
   "musicLoadError": "음악을 불러오지 못했어요",
   "musicScanError": "음악 파일을 찾지 못했어요",
   "sleepAskDuration": "몇 시간 몇 분 후 정지할까요?",
-  "sleepFadeHint": "끝나기 1분 전부터 천천히 작아져요",
+  "sleepFadeHint": "종료 1분 전부터 소리가 작아져요",
   "paranPhoto": "파란포토",
   "paranPhotoSwitched": "파란포토로 바꿨어요",
   "backToAlbum": "앨범으로 되돌리기",

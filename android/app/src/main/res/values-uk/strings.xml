@@ -32,4 +32,27 @@
     <string name="rec_resume">Продовжити</string>
     <string name="rec_pause">Пауза</string>
     <string name="rec_done">Готово</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">Випадковий порядок</string>
+    <string name="w_menu_repeat">Повтор</string>
+    <string name="w_menu_on">Увімк.</string>
+    <string name="w_menu_off">Вимк.</string>
+    <string name="w_menu_repeat_one">Повтор треку</string>
+    <string name="w_menu_repeat_all">Повтор усіх</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">Таймер сну</string>
+    <string name="w_sleep_ask">Через скільки зупинити?</string>
+    <string name="w_sleep_hint">Звук стихає протягом останньої хвилини</string>
+    <string name="w_sleep_set">Задати</string>
+    <string name="w_sleep_cancel">Скасувати таймер</string>
+    <string name="w_unit_hr">год</string>
+    <string name="w_unit_min">хв</string>
+    <string name="w_sleep_fmt_m">%1$d хв</string>
+    <string name="w_sleep_fmt_hm">%1$d год %2$d хв</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">Змінити фото віджета</string>
+    <string name="w_photo_reset">Фото за замовчуванням</string>
+    <string name="w_photo_hint">Рухайте й масштабуйте, щоб вибрати область</string>
+    <string name="w_photo_cancel">Скасувати</string>
+    <string name="w_photo_done">Готово</string>
 </resources>

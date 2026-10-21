@@ -32,4 +32,27 @@
     <string name="rec_resume">Continuar</string>
     <string name="rec_pause">Pausar</string>
     <string name="rec_done">Concluído</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">Aleatório</string>
+    <string name="w_menu_repeat">Repetir</string>
+    <string name="w_menu_on">Ativado</string>
+    <string name="w_menu_off">Desativado</string>
+    <string name="w_menu_repeat_one">Repetir uma</string>
+    <string name="w_menu_repeat_all">Repetir todas</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">Temporizador de sono</string>
+    <string name="w_sleep_ask">Parar de tocar depois de quanto tempo?</string>
+    <string name="w_sleep_hint">O som diminui aos poucos no último minuto</string>
+    <string name="w_sleep_set">Definir</string>
+    <string name="w_sleep_cancel">Cancelar timer</string>
+    <string name="w_unit_hr">h</string>
+    <string name="w_unit_min">min</string>
+    <string name="w_sleep_fmt_m">%1$d min</string>
+    <string name="w_sleep_fmt_hm">%1$d h %2$d min</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">Trocar foto do widget</string>
+    <string name="w_photo_reset">Usar foto padrão</string>
+    <string name="w_photo_hint">Arraste e use dois dedos para escolher o enquadramento</string>
+    <string name="w_photo_cancel">Cancelar</string>
+    <string name="w_photo_done">Concluído</string>
 </resources>

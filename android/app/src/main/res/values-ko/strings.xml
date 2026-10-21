@@ -32,4 +32,27 @@
     <string name="rec_resume">이어서</string>
     <string name="rec_pause">일시정지</string>
     <string name="rec_done">완료</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">랜덤 듣기</string>
+    <string name="w_menu_repeat">반복</string>
+    <string name="w_menu_on">켜짐</string>
+    <string name="w_menu_off">꺼짐</string>
+    <string name="w_menu_repeat_one">한 곡 반복</string>
+    <string name="w_menu_repeat_all">전체 반복</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">수면 타이머</string>
+    <string name="w_sleep_ask">몇 시간 몇 분 후 정지할까요?</string>
+    <string name="w_sleep_hint">종료 1분 전부터 소리가 작아져요</string>
+    <string name="w_sleep_set">설정</string>
+    <string name="w_sleep_cancel">타이머 취소</string>
+    <string name="w_unit_hr">시간</string>
+    <string name="w_unit_min">분</string>
+    <string name="w_sleep_fmt_m">%1$d분</string>
+    <string name="w_sleep_fmt_hm">%1$d시간 %2$d분</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">위젯 사진 바꾸기</string>
+    <string name="w_photo_reset">기본 사진으로</string>
+    <string name="w_photo_hint">움직이고 두 손가락으로 키워서 보일 곳을 정해요</string>
+    <string name="w_photo_cancel">취소</string>
+    <string name="w_photo_done">완료</string>
 </resources>

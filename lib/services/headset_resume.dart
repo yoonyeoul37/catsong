@@ -127,6 +127,45 @@ class HeadsetResume {
     }
   }
 
+  // ───── 위젯 ⋮ → 수면 타이머 ─────
+  /// 위젯에서 수면 타이머 맞추기 — 지금 듣는 것(라디오 / 음악·자연소리)에 맞춰, 0분이면 끄기
+  static void widgetSleep(int minutes) {
+    final pp = _pp, radio = _radio;
+    if (pp == null || radio == null) return;
+    if (minutes <= 0) {
+      if (pp.isSleepTimerActive) pp.cancelSleepTimer();
+      if (radio.isSleepTimerActive) radio.cancelSleepTimer();
+      return;
+    }
+    final d = Duration(minutes: minutes);
+    final onRadio = radio.isPlaying || radio.isLoading || (!pp.isPlaying && radio.currentStation != null);
+    if (onRadio) {
+      if (pp.isSleepTimerActive) pp.cancelSleepTimer();
+      radio.setSleepTimer(d);
+    } else {
+      if (radio.isSleepTimerActive) radio.cancelSleepTimer();
+      pp.setSleepTimer(d);
+    }
+  }
+
+  static Future<void> _sleepChain = Future.value();
+
+  /// 수면 타이머 끝나는 시각을 위젯이 읽게 저장 ('m' 음악·자연 · 'r' 라디오) + 위젯 다시 그리기
+  /// 앱에서 맞춘 타이머도 여기로 와서 위젯에 남은 시간이 보임
+  static void saveSleepEnd(String k, DateTime? end) {
+    _sleepChain = _sleepChain.then((_) async {
+      try {
+        final p = await SharedPreferences.getInstance();
+        if (end == null) {
+          await p.remove('w_sleep_$k');
+        } else {
+          await p.setInt('w_sleep_$k', end.millisecondsSinceEpoch);
+        }
+        await _ch.invokeMethod('refreshWidget');
+      } catch (_) {}
+    });
+  }
+
   // ───── 홈 위젯 재생 버튼 ─────
   static RecentContentProvider? _recent;
   static MusicProvider? _music;

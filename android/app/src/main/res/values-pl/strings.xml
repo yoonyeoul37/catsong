@@ -32,4 +32,27 @@
     <string name="rec_resume">Wznów</string>
     <string name="rec_pause">Pauza</string>
     <string name="rec_done">Gotowe</string>
+    <!-- 위젯 ⋮ 메뉴 창 -->
+    <string name="w_menu_shuffle">Losowo</string>
+    <string name="w_menu_repeat">Powtarzaj</string>
+    <string name="w_menu_on">Wł.</string>
+    <string name="w_menu_off">Wył.</string>
+    <string name="w_menu_repeat_one">Powtarzaj utwór</string>
+    <string name="w_menu_repeat_all">Powtarzaj wszystko</string>
+    <!-- 위젯 ⋮ 수면 타이머 -->
+    <string name="w_menu_sleep">Minutnik uśpienia</string>
+    <string name="w_sleep_ask">Po jakim czasie zatrzymać?</string>
+    <string name="w_sleep_hint">W ostatniej minucie dźwięk stopniowo cichnie</string>
+    <string name="w_sleep_set">Ustaw</string>
+    <string name="w_sleep_cancel">Anuluj minutnik</string>
+    <string name="w_unit_hr">godz.</string>
+    <string name="w_unit_min">min</string>
+    <string name="w_sleep_fmt_m">%1$d min</string>
+    <string name="w_sleep_fmt_hm">%1$d godz. %2$d min</string>
+    <!-- 위젯 ⋮ 사진 바꾸기 -->
+    <string name="w_photo_change">Zmień zdjęcie widżetu</string>
+    <string name="w_photo_reset">Domyślne zdjęcie</string>
+    <string name="w_photo_hint">Przesuń i powiększ, aby wybrać kadr</string>
+    <string name="w_photo_cancel">Anuluj</string>
+    <string name="w_photo_done">Gotowe</string>
 </resources>

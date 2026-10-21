@@ -6,4 +6,10 @@
     <color name="paran_w_chip">#FFFFFF</color>
     <color name="paran_w_ink">#17140F</color>
     <color name="paran_w_sub">#5A5348</color>
+    <color name="paran_w_line">#1417140F</color>
+    <color name="paran_w_point">#2F7DE8</color>
+    <color name="paran_w_sheet">#F4EFE5</color>
+    <color name="paran_w_band">#1F767680</color>
+    <color name="paran_w_text">#000000</color>
+    <color name="paran_w_hint">#80000000</color>
 </resources>

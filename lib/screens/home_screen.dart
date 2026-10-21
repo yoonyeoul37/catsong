@@ -1571,7 +1571,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.asset('assets/logo_icon.png',
-                    width: 33, height: 33, filterQuality: FilterQuality.medium),
+                    width: 29, height: 29, filterQuality: FilterQuality.medium),
               ),
             ),
             const SizedBox(width: 10),
@@ -1597,7 +1597,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   textScaler: TextScaler.noScaling, // 로고는 텍스트 크기 설정과 상관없이 고정
                                   style: GoogleFonts.doHyeon(
                                       color: logoInk,
-                                      fontSize: 22,
+                                      fontSize: 18,
                                       letterSpacing: -0.5)),
                             ),
                           ],
@@ -1606,7 +1606,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Transform.translate(
                           offset: const Offset(0.5, -4), // PARANSORI 전체를 오른쪽으로 살짝
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 2, right: 8.5), // 오른쪽 여백을 늘려 자간 줄이기
+                            padding: const EdgeInsets.only(left: 2, right: 7), // 오른쪽 여백을 늘려 자간 줄이기
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -1615,7 +1615,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       textScaler: TextScaler.noScaling,
                                       style: GoogleFonts.quicksand(
                                           color: logoInk.withOpacity(0.7),
-                                          fontSize: 9.5,
+                                          fontSize: 8,
                                           height: 1.0,
                                           fontWeight: FontWeight.w700)),
                               ],
@@ -1646,7 +1646,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     color: logoInk.withOpacity(0.55), fontWeight: FontWeight.w500)),
                               ]),
                               textScaler: TextScaler.noScaling, // 로고는 텍스트 크기 설정과 상관없이 고정
-                              style: const TextStyle(fontSize: 21, height: 1.15, letterSpacing: -0.3),
+                              style: const TextStyle(fontSize: 17, height: 1.15, letterSpacing: -0.3),
                             ),
                           ),
                           // MUSIC · RADIO · NATURE: 'Paransori' 폭에 딱 맞게 (작은 대문자)

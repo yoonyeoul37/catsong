@@ -59,7 +59,7 @@ import '../providers/theme_provider.dart';
 import 'nature_sounds_screen.dart';
 import 'nature_sound_detail_screen.dart';
 import 'radio_player_screen.dart';
-import 'radio_korea_screen2.dart' show niceKoreanStationNow, koreanRadioStations, koreanStationDesc;
+import 'radio_korea_screen2.dart' show niceKoreanStationNow, koreanRadioStations, koreanStationDesc, niceDefaults;
 import '../utils/nature_sound_catalog.dart';
 import '../utils/paran_photo.dart';
 import '../utils/no_album_helper.dart';
@@ -2245,30 +2245,26 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-    // 편안한 라디오: 하루에 하나씩 돌아가며 (보이는 이름, 방송국 이름, 주파수, 주소)
-    const restRadios = [
-      ('KBS 클래식FM', 'KBS Classic FM', '93.1 MHz',
-          'https://cfpwwwapi.kbs.co.kr/api/v1/landing/live/channel_code/24'),
-      ('국악FM', '국악FM', '99.1 MHz',
-          'http://mgugaklive.nowcdn.co.kr/gugakradio/gugakradio.stream/playlist.m3u8'),
-      ('CBS 음악FM', 'CBS 음악FM', '93.9 MHz',
-          'https://m-aac.cbs.co.kr/mweb_cbs939/_definst_/cbs939.stream/playlist.m3u8'),
+    // 편안한 라디오: 주요 방송(KBS·MBC·SBS 서울) + CBS 음악FM 중 하루에 하나 (국악 뺌)
+    // 라디오 '지금 듣기 좋은'(지금 시간대 추천 3개)와 안 겹치게 빼고 고르기
+    const restRadioNames = [
+      'KBS Classic FM', 'KBS 제1라디오', 'KBS 해피FM', 'KBS Cool FM',
+      'MBC 표준FM', 'MBC FM4U', 'MBC 올댓뮤직',
+      'SBS 파워FM', 'SBS 러브FM',
+      'CBS 음악FM',
     ];
-    final todayRadio = restRadios[daySeed % restRadios.length];
-    final restStation = RadioStation.fromJson({
-      'stationuuid': 'kr_${todayRadio.$2.hashCode.abs()}',
-      'name': todayRadio.$2,
-      'url': todayRadio.$4,
-      'url_resolved': '',
-      'homepage': '',
-      'favicon': '',
-      'tags': '',
-      'frequency': todayRadio.$3,
-      'country': 'South Korea',
-      'countrycode': 'KR',
-      'bitrate': 0,
-      'votes': 0,
-    });
+    final restHour = now.hour;
+    final restSlot = (restHour >= 5 && restHour < 11)
+        ? 0
+        : (restHour >= 11 && restHour < 17)
+            ? 1
+            : (restHour >= 17 && restHour < 22)
+                ? 2
+                : 3;
+    final restPool = restRadioNames.where((n) => !niceDefaults[restSlot].contains(n)).toList();
+    final restName = restPool[daySeed % restPool.length];
+    final allKr = koreanRadioStations();
+    final restStation = allKr.firstWhere((s) => s.name == restName, orElse: () => allKr.first);
 
     // (카드 글자, 사진, 눌렀을 때)
     final recommended = <(String, String, VoidCallback)>[
@@ -2292,8 +2288,16 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       (
         Localizations.localeOf(context).languageCode == 'ko'
-            ? todayRadio.$1
-            : (const {'KBS 클래식FM': 'KBS Classic FM', '국악FM': 'Gugak FM', 'CBS 음악FM': 'CBS Music FM'}[todayRadio.$1] ?? todayRadio.$2),
+            ? (const {'KBS Classic FM': 'KBS 클래식FM', 'KBS Cool FM': 'KBS 쿨FM'}[restName] ?? restName)
+            : (const {
+                'KBS 제1라디오': 'KBS Radio 1',
+                'KBS 해피FM': 'KBS Happy FM',
+                'MBC 표준FM': 'MBC Standard FM',
+                'MBC 올댓뮤직': 'MBC All That Music',
+                'SBS 파워FM': 'SBS Power FM',
+                'SBS 러브FM': 'SBS Love FM',
+                'CBS 음악FM': 'CBS Music FM',
+              }[restName] ?? restName),
         'assets/rest_radio.jpg',
         () => Navigator.push(
               context,

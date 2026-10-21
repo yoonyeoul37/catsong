@@ -4228,7 +4228,7 @@ class _CardFloatState extends State<_CardFloat> with SingleTickerProviderStateMi
     return AnimatedBuilder(
       animation: _c,
       builder: (context, child) => Transform.translate(
-        offset: Offset(0, -2.5 + 5 * Curves.easeInOut.transform(_c.value)),
+        offset: Offset(0, -3.5 + 7 * Curves.easeInOut.transform(_c.value)),
         child: child,
       ),
       child: widget.child,

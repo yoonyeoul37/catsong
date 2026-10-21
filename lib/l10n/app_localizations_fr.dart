@@ -4583,11 +4583,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get introWish1 =>
-      'Le temps passé à écouter les sons que l’on aime est plus proche qu’on ne le pense : au début de la matinée, au milieu du travail, et pendant les soirées calmes, quand la journée s’achève.\n\nNous souhaitons que chacun puisse trouver facilement et sereinement les sons qu’il aime. C’est pourquoi nous réunissons toutes sortes de sons en un seul endroit, pour que vous profitiez pleinement de chaque moment d’écoute, sans complications.';
+      'Remplissez chaque moment de votre journée avec les sons que vous aimez.';
 
   @override
   String get introWish2 =>
-      'Lancée en Corée, l’application Paransori espère accompagner des personnes partout dans le monde et apporter à chaque quotidien un peu plus de joie et de sérénité.';
+      'Paransori est un espace où chacun peut profiter du son, simplement. Né en Corée, il apporte un peu de joie et de sérénité au quotidien, partout dans le monde.';
 
   @override
   String get introClosing1 =>

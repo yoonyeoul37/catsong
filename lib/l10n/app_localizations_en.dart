@@ -4550,11 +4550,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get introWish1 =>
-      'Time with the sounds we love is closer than we think — as the morning begins, in the middle of work, and on quiet nights as the day winds down.\n\nWe hope everyone can find the sounds they want, easily and comfortably. So we bring many kinds of sound together in one place, letting you simply enjoy every moment of listening, free from complexity.';
+      'Fill every moment of your day with the sounds you love.';
 
   @override
   String get introWish2 =>
-      'Paransori began in Korea, and we hope it can be part of people\'s lives around the world, adding a little joy and ease to every day.';
+      'Paransori is a place where anyone can enjoy sound, simply and without fuss. Born in Korea, it brings a little joy and ease to everyday life around the world.';
 
   @override
   String get introClosing1 =>

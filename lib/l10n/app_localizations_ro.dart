@@ -4591,11 +4591,11 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get introWish1 =>
-      'Timpul petrecut cu sunetele iubite e mai aproape decât credem — când începe dimineața, în mijlocul lucrului și în nopțile liniștite, la sfârșitul zilei.\n\nSperăm ca oricine să-și poată găsi sunetele dorite, ușor și comod. De aceea adunăm multe feluri de sunete într-un singur loc, ca să te bucuri de fiecare moment de ascultare, fără complicații.';
+      'Umple fiecare moment al zilei cu sunetele pe care le iubești.';
 
   @override
   String get introWish2 =>
-      'Paransori a pornit din Coreea și sperăm să facă parte din viața oamenilor din întreaga lume, aducând puțină bucurie și liniște în fiecare zi.';
+      'Paransori este un loc în care oricine se poate bucura de sunet, simplu și fără complicații. Născut în Coreea, aduce puțină bucurie și liniște în viața de zi cu zi, în întreaga lume.';
 
   @override
   String get introClosing1 =>

@@ -4589,12 +4589,11 @@ class AppLocalizationsCs extends AppLocalizations {
   String get introWishTitle => 'Co chce Paransori sdílet';
 
   @override
-  String get introWish1 =>
-      'Chvíle s oblíbenými zvuky jsou nám blíž, než si myslíme – když začíná ráno, uprostřed práce i za tichých nocí, kdy se den chýlí ke konci.\n\nPřejeme si, aby každý snadno a pohodlně našel zvuky, které chce. Proto spojujeme mnoho druhů zvuků na jednom místě, abyste si mohli každou chvíli poslechu jednoduše užít, bez složitostí.';
+  String get introWish1 => 'Naplňte každou chvíli dne zvuky, které máte rádi.';
 
   @override
   String get introWish2 =>
-      'Paransori vzniklo v Koreji a doufáme, že se stane součástí života lidí po celém světě a přidá každému dni trochu radosti a pohody.';
+      'Paransori je místo, kde si každý může jednoduše užívat zvuk. Vzniklo v Koreji a přináší trochu radosti a klidu do všedních dnů po celém světě.';
 
   @override
   String get introClosing1 =>

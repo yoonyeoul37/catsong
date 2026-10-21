@@ -4571,11 +4571,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get introWish1 =>
-      'El tiempo para escuchar los sonidos que nos gustan está más cerca de lo que pensamos: al empezar la mañana, en medio del trabajo y en las noches tranquilas al final del día.\n\nQueremos que cualquiera pueda encontrar los sonidos que busca de forma fácil y cómoda. Por eso reunimos sonidos de todo tipo en un solo lugar, para que disfrutes cada momento de escucha sin complicaciones.';
+      'Llena cada momento de tu día con los sonidos que te gustan.';
 
   @override
   String get introWish2 =>
-      'Paransori nació en Corea, y esperamos acompañar a personas de todo el mundo, sumando un poco de alegría y calma a su día a día.';
+      'Paransori es un lugar donde cualquiera puede disfrutar del sonido, sin complicaciones. Nació en Corea y lleva un poco de alegría y calma a la vida diaria en todo el mundo.';
 
   @override
   String get introClosing1 =>

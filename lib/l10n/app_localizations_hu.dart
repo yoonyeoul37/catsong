@@ -4570,11 +4570,11 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get introWish1 =>
-      'A kedvenc hangjainkkal töltött idő közelebb van, mint gondolnánk – amikor indul a reggel, munka közben, és a csendes estéken, amikor véget ér a nap.\n\nSzeretnénk, ha mindenki könnyen és kényelmesen megtalálná a kívánt hangokat. Ezért sokféle hangot gyűjtünk egy helyre, hogy bonyodalmak nélkül élvezhesd a hallgatás minden pillanatát.';
+      'Töltsd meg a nap minden pillanatát a kedvenc hangjaiddal.';
 
   @override
   String get introWish2 =>
-      'A Paransori Koreában indult, és reméljük, hogy szerte a világon az emberek életének része lehet, és egy kis örömet és nyugalmat ad minden napjukhoz.';
+      'A Paransori egy hely, ahol bárki egyszerűen élvezheti a hangokat. Koreából indult, és egy kis örömöt és nyugalmat visz a hétköznapokba szerte a világon.';
 
   @override
   String get introClosing1 =>

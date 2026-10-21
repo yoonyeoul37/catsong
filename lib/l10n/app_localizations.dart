@@ -8381,13 +8381,13 @@ abstract class AppLocalizations {
   /// No description provided for @introWish1.
   ///
   /// In ko, this message translates to:
-  /// **'좋아하는 소리를 듣는 시간은 생각보다 우리 가까이에 있습니다. 아침을 시작할 때도, 일하는 중에도, 하루를 마무리하는 조용한 밤에도.\n\n파란소리는 누구나 원하는 소리를 쉽고 편안하게 만날 수 있기를 바랍니다. 다양한 소리를 하나의 공간에 담고, 듣는 순간만큼은 복잡함 없이 온전히 즐길 수 있도록 만들어가고 있습니다.'**
+  /// **'하루의 모든 순간, 좋아하는 소리로 일상을 채워보세요.'**
   String get introWish1;
 
   /// No description provided for @introWish2.
   ///
   /// In ko, this message translates to:
-  /// **'한국에서 시작된 파란소리가 세계 여러 곳의 사람들과 함께하며, 저마다의 일상에 작은 즐거움과 여유를 더할 수 있기를 바랍니다.'**
+  /// **'파란소리는 누구나 복잡함 없이 소리를 즐길 수 있는 공간입니다. 한국에서 시작해 전 세계의 일상에 작은 즐거움과 여유를 전합니다.'**
   String get introWish2;
 
   /// No description provided for @introClosing1.

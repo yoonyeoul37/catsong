@@ -4358,11 +4358,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get introWishTitle => 'Paransori 想传达的心意';
 
   @override
-  String get introWish1 =>
-      '聆听喜欢的声音，其实离我们比想象中更近。开启早晨的时候，忙碌工作的时候，还有结束一天的安静夜晚。\n\n我们希望每个人都能轻松、舒适地遇见想听的声音。因此，Paransori 把各种声音汇集在同一个地方，让你在聆听的那一刻没有繁琐，尽情享受。';
+  String get introWish1 => '让喜欢的声音，填满一天中的每个时刻。';
 
   @override
-  String get introWish2 => '从韩国出发的 Paransori，希望能与世界各地的人们相伴，为每个人的日常增添一点小快乐与从容。';
+  String get introWish2 =>
+      'Paransori 是一个让每个人都能轻松享受声音的地方。它从韩国出发，为世界各地的日常带来小小的快乐与从容。';
 
   @override
   String get introClosing1 => '一个随时随地都能轻松找到的声音空间。';
@@ -8932,11 +8932,11 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get introWishTitle => 'Paransori 想傳達的心意';
 
   @override
-  String get introWish1 =>
-      '聆聽喜歡的聲音，其實離我們比想像中更近。開啟早晨的時候，忙碌工作的時候，還有結束一天的安靜夜晚。\n\n我們希望每個人都能輕鬆、舒適地遇見想聽的聲音。因此，Paransori 把各種聲音匯集在同一個地方，讓你在聆聽的那一刻沒有繁瑣，盡情享受。';
+  String get introWish1 => '讓喜歡的聲音，填滿一天中的每個時刻。';
 
   @override
-  String get introWish2 => '從韓國出發的 Paransori，希望能與世界各地的人們相伴，為每個人的日常增添一點小快樂與從容。';
+  String get introWish2 =>
+      'Paransori 是一個讓每個人都能輕鬆享受聲音的地方。它從韓國出發，為世界各地的日常帶來小小的快樂與從容。';
 
   @override
   String get introClosing1 => '一個隨時隨地都能輕鬆找到的聲音空間。';

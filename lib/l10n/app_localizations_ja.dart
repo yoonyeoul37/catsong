@@ -4365,12 +4365,11 @@ class AppLocalizationsJa extends AppLocalizations {
   String get introWishTitle => 'Paransoriが伝えたい想い';
 
   @override
-  String get introWish1 =>
-      '好きな音を聴く時間は、思っているよりずっと身近にあります。朝のはじまりにも、仕事の合間にも、一日を終える静かな夜にも。\n\n聴きたい音に、誰もが気軽に心地よく出会えるように。Paransoriはさまざまな音をひとつの場所に集め、聴いているあいだは何も気にせず、ただ楽しめる空間をつくっています。';
+  String get introWish1 => '一日のすべての瞬間を、好きな音で満たしてみませんか。';
 
   @override
   String get introWish2 =>
-      '韓国で生まれたParansoriが、世界のいろいろな場所で人々と出会い、それぞれの毎日に小さな楽しさとゆとりを添えられますように。';
+      'Paransoriは、誰もが迷わず気軽に音を楽しめる場所です。韓国から始まり、世界中の毎日に小さな楽しさとゆとりを届けます。';
 
   @override
   String get introClosing1 => 'いつでも、どこでも、気軽に立ち寄れる音の場所。';

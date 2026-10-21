@@ -4553,12 +4553,11 @@ class AppLocalizationsTr extends AppLocalizations {
   String get introWishTitle => 'Paransori\'nin paylaşmak istedikleri';
 
   @override
-  String get introWish1 =>
-      'Sevdiğimiz sesleri dinlediğimiz zaman sandığımızdan daha yakın: güne başlarken, çalışırken ve günün sona erdiği sakin gecelerde.\n\nHerkesin istediği seslere kolayca ve rahatça ulaşabilmesini istiyoruz. Bu yüzden birçok farklı sesi tek bir yerde topluyoruz; böylece dinlediğin her anın karmaşa olmadan tadını çıkarabilirsin.';
+  String get introWish1 => 'Gününün her anını sevdiğin seslerle doldur.';
 
   @override
   String get introWish2 =>
-      'Kore\'de başlayan Paransori\'nin dünyanın dört bir yanındaki insanlara eşlik etmesini ve her güne biraz neşe ve huzur katmasını diliyoruz.';
+      'Paransori, herkesin sesin tadını zahmetsizce çıkarabileceği bir alan. Kore\'de doğdu; dünyanın dört bir yanındaki gündelik hayata biraz neşe ve huzur katıyor.';
 
   @override
   String get introClosing1 =>

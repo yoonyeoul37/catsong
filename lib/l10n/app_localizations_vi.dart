@@ -4552,11 +4552,11 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get introWish1 =>
-      'Khoảng thời gian lắng nghe những âm thanh mình yêu thích gần hơn chúng ta tưởng: khi bắt đầu buổi sáng, giữa giờ làm việc, hay trong những đêm yên tĩnh khép lại một ngày.\n\nChúng tôi mong ai cũng có thể tìm thấy âm thanh mình muốn một cách dễ dàng và thoải mái. Vì vậy, chúng tôi gom nhiều loại âm thanh vào cùng một nơi, để bạn tận hưởng trọn vẹn từng khoảnh khắc lắng nghe mà không phải bận tâm điều gì.';
+      'Hãy lấp đầy từng khoảnh khắc trong ngày bằng những âm thanh bạn yêu thích.';
 
   @override
   String get introWish2 =>
-      'Bắt đầu từ Hàn Quốc, Paransori mong được đồng hành cùng mọi người trên khắp thế giới, mang thêm chút niềm vui và thư thái vào cuộc sống mỗi ngày.';
+      'Paransori là nơi ai cũng có thể tận hưởng âm thanh một cách đơn giản. Bắt đầu từ Hàn Quốc, Paransori mang niềm vui nhỏ và sự thư thái đến cuộc sống thường ngày trên khắp thế giới.';
 
   @override
   String get introClosing1 =>

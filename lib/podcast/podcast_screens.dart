@@ -1319,15 +1319,6 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
                       _PodFloat(
                         onTap: () {
                           _buzz();
-                          context.read<ThemeProvider>().setDarkMode(!dark);
-                        },
-                        child: Icon(dark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-                            color: _baseOf(dark), size: 13),
-                      ),
-                      const SizedBox(width: 10),
-                      _PodFloat(
-                        onTap: () {
-                          _buzz();
                           Navigator.of(context).popUntil((route) => route.isFirst);
                         },
                         child: Icon(Icons.home_rounded, color: _baseOf(dark), size: 13),

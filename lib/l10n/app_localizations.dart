@@ -2761,6 +2761,24 @@ abstract class AppLocalizations {
   /// **'다크 모드'**
   String get darkMode;
 
+  /// No description provided for @moreGroupTools.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 화면 · 기능'**
+  String get moreGroupTools;
+
+  /// No description provided for @moreGroupApp.
+  ///
+  /// In ko, this message translates to:
+  /// **'앱 설정'**
+  String get moreGroupApp;
+
+  /// No description provided for @moreGroupSupport.
+  ///
+  /// In ko, this message translates to:
+  /// **'파란소리 응원하기'**
+  String get moreGroupSupport;
+
   /// No description provided for @darkModeOn.
   ///
   /// In ko, this message translates to:

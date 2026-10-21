@@ -1351,6 +1351,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get darkMode => '深色模式';
 
   @override
+  String get moreGroupTools => '本页功能';
+
+  @override
+  String get moreGroupApp => '应用设置';
+
+  @override
+  String get moreGroupSupport => '支持 Paransori';
+
+  @override
   String get darkModeOn => '开启';
 
   @override
@@ -5914,6 +5923,15 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get darkMode => '深色模式';
+
+  @override
+  String get moreGroupTools => '本頁功能';
+
+  @override
+  String get moreGroupApp => '應用程式設定';
+
+  @override
+  String get moreGroupSupport => '支持 Paransori';
 
   @override
   String get darkModeOn => '開啟';

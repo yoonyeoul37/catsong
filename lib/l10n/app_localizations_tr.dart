@@ -1354,6 +1354,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get darkMode => 'Karanlık mod';
 
   @override
+  String get moreGroupTools => 'Özellikler';
+
+  @override
+  String get moreGroupApp => 'Uygulama ayarları';
+
+  @override
+  String get moreGroupSupport => 'Paransori\'yi destekle';
+
+  @override
   String get darkModeOn => 'Açık';
 
   @override

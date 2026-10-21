@@ -1354,6 +1354,15 @@ class AppLocalizationsRo extends AppLocalizations {
   String get darkMode => 'Mod întunecat';
 
   @override
+  String get moreGroupTools => 'Funcții';
+
+  @override
+  String get moreGroupApp => 'Setările aplicației';
+
+  @override
+  String get moreGroupSupport => 'Susține Paransori';
+
+  @override
   String get darkModeOn => 'Pornit';
 
   @override

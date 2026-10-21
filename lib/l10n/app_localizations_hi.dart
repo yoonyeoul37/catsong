@@ -1354,6 +1354,15 @@ class AppLocalizationsHi extends AppLocalizations {
   String get darkMode => 'डार्क मोड';
 
   @override
+  String get moreGroupTools => 'सुविधाएँ';
+
+  @override
+  String get moreGroupApp => 'ऐप सेटिंग्स';
+
+  @override
+  String get moreGroupSupport => 'Paransori का साथ दें';
+
+  @override
   String get darkModeOn => 'चालू';
 
   @override

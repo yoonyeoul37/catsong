@@ -1354,6 +1354,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get darkMode => 'الوضع الداكن';
 
   @override
+  String get moreGroupTools => 'الميزات';
+
+  @override
+  String get moreGroupApp => 'إعدادات التطبيق';
+
+  @override
+  String get moreGroupSupport => 'ادعم Paransori';
+
+  @override
   String get darkModeOn => 'تشغيل';
 
   @override

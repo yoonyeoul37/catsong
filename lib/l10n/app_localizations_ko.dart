@@ -1350,6 +1350,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get darkMode => '다크 모드';
 
   @override
+  String get moreGroupTools => '이 화면 · 기능';
+
+  @override
+  String get moreGroupApp => '앱 설정';
+
+  @override
+  String get moreGroupSupport => '파란소리 응원하기';
+
+  @override
   String get darkModeOn => '켜짐';
 
   @override

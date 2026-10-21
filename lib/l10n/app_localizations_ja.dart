@@ -1351,6 +1351,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get darkMode => 'ダークモード';
 
   @override
+  String get moreGroupTools => 'この画面の機能';
+
+  @override
+  String get moreGroupApp => 'アプリ設定';
+
+  @override
+  String get moreGroupSupport => 'Paransoriを応援';
+
+  @override
   String get darkModeOn => 'オン';
 
   @override

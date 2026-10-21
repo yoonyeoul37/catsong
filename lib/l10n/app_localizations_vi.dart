@@ -1355,6 +1355,15 @@ class AppLocalizationsVi extends AppLocalizations {
   String get darkMode => 'Chế độ tối';
 
   @override
+  String get moreGroupTools => 'Tính năng';
+
+  @override
+  String get moreGroupApp => 'Cài đặt ứng dụng';
+
+  @override
+  String get moreGroupSupport => 'Ủng hộ Paransori';
+
+  @override
   String get darkModeOn => 'Bật';
 
   @override

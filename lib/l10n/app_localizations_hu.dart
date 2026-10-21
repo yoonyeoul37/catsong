@@ -1354,6 +1354,15 @@ class AppLocalizationsHu extends AppLocalizations {
   String get darkMode => 'Sötét mód';
 
   @override
+  String get moreGroupTools => 'Funkciók';
+
+  @override
+  String get moreGroupApp => 'Alkalmazásbeállítások';
+
+  @override
+  String get moreGroupSupport => 'Támogasd a Paransorit';
+
+  @override
   String get darkModeOn => 'Be';
 
   @override

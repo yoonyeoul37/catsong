@@ -1355,6 +1355,15 @@ class AppLocalizationsUr extends AppLocalizations {
   String get darkMode => 'ڈارک موڈ';
 
   @override
+  String get moreGroupTools => 'خصوصیات';
+
+  @override
+  String get moreGroupApp => 'ایپ کی ترتیبات';
+
+  @override
+  String get moreGroupSupport => 'Paransori کا ساتھ دیں';
+
+  @override
   String get darkModeOn => 'آن';
 
   @override

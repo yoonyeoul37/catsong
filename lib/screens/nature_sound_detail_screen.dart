@@ -644,23 +644,10 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                         GestureDetector(
                           onTap: () {
                             const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                            context.read<ThemeProvider>().setDarkMode(!isDarkMode);
-                          },
-                          child: Container(
-                            width: 29,
-                            height: 29,
-                            decoration: BoxDecoration(color: Colors.black.withOpacity(0.38), shape: BoxShape.circle),
-                            child: Icon(isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-                                color: Colors.white, size: 13),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        GestureDetector(
-                          onTap: () {
-                            const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                             showMoreMenuSheet(
                               context,
                               shareText: tr.natureShareText,
+                              onExit: () => _showExitConfirmDialog(context),
                             );
                             return;
                             showModalBottomSheet(
@@ -866,16 +853,6 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
                             height: 29,
                             decoration: BoxDecoration(color: Colors.black.withOpacity(0.38), shape: BoxShape.circle),
                             child: const Icon(Icons.more_vert, color: Colors.white, size: 13),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        GestureDetector(
-                          onTap: () => _showExitConfirmDialog(context),
-                          child: Container(
-                            width: 29,
-                            height: 29,
-                            decoration: BoxDecoration(color: Colors.black.withOpacity(0.38), shape: BoxShape.circle),
-                            child: const Icon(Icons.power_settings_new_rounded, color: Colors.white, size: 13),
                           ),
                         ),
                       ],

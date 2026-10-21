@@ -1355,6 +1355,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get darkMode => 'Тёмная тема';
 
   @override
+  String get moreGroupTools => 'Функции';
+
+  @override
+  String get moreGroupApp => 'Настройки приложения';
+
+  @override
+  String get moreGroupSupport => 'Поддержать Paransori';
+
+  @override
   String get darkModeOn => 'Вкл.';
 
   @override

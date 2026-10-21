@@ -146,13 +146,7 @@ class OverseasRadioView extends StatelessWidget {
                                       color: Colors.white, size: 28),
                                 ),
                                 const Spacer(),
-                                // 전원: 종료 확인창
-                                if (onExit != null)
-                                  IconButton(
-                                    onPressed: onExit,
-                                    icon: const Icon(Icons.power_settings_new_rounded,
-                                        color: Color(0xFFE8877E), size: 20),
-                                  ),
+                                // (종료는 ⋮ 메뉴 안으로)
                                 // 홈: 처음 화면까지 한 번에
                                 IconButton(
                                   onPressed: () {
@@ -184,6 +178,7 @@ class OverseasRadioView extends StatelessWidget {
                                       shareText: tr.radioShareText(station.name),
                                       shareSubtitle: tr.radioShareSub,
                                       stationHomepage: station.homepage,
+                                      onExit: onExit,
                                     );
                                   },
                                   icon: const Icon(Icons.more_vert_rounded,

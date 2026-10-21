@@ -1355,6 +1355,15 @@ class AppLocalizationsUk extends AppLocalizations {
   String get darkMode => 'Темна тема';
 
   @override
+  String get moreGroupTools => 'Функції';
+
+  @override
+  String get moreGroupApp => 'Налаштування застосунку';
+
+  @override
+  String get moreGroupSupport => 'Підтримати Paransori';
+
+  @override
   String get darkModeOn => 'Увімк.';
 
   @override

@@ -1354,6 +1354,15 @@ class AppLocalizationsCs extends AppLocalizations {
   String get darkMode => 'Tmavý režim';
 
   @override
+  String get moreGroupTools => 'Funkce';
+
+  @override
+  String get moreGroupApp => 'Nastavení aplikace';
+
+  @override
+  String get moreGroupSupport => 'Podpořte Paransori';
+
+  @override
   String get darkModeOn => 'Zapnuto';
 
   @override

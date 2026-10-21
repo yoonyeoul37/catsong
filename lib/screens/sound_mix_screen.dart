@@ -17,6 +17,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../widgets/logo_eq_bars.dart';
 import '../widgets/exit_confirm_dialog.dart';
 import '../widgets/paran_dialog.dart';
+import '../widgets/more_menu_sheet.dart';
 import '../l10n/locale_holder.dart';
 import '../utils/nature_sound_catalog.dart';
 
@@ -502,28 +503,14 @@ class _SoundMixScreenState extends State<SoundMixScreen> {
             },
           ),
           const SizedBox(width: 6),
+          // 다크 모드·설정·종료는 ⋮ 메뉴 안에
           _iconBtn(
-            icon: isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+            icon: Icons.more_vert,
             baseColor: baseColor,
             onTap: () {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              context.read<ThemeProvider>().setDarkMode(!isDarkMode);
+              showMoreMenuSheet(context, onExit: () => _showExitConfirmDialog(context));
             },
-          ),
-          const SizedBox(width: 6),
-          _iconBtn(
-            icon: Icons.settings_outlined,
-            baseColor: baseColor,
-            onTap: () {
-              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen()));
-            },
-          ),
-          const SizedBox(width: 6),
-          _iconBtn(
-            icon: Icons.power_settings_new_rounded,
-            baseColor: baseColor,
-            onTap: () => _showExitConfirmDialog(context),
           ),
           const SizedBox(width: 8),
         ],

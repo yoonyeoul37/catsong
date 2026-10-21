@@ -1356,6 +1356,15 @@ class AppLocalizationsId extends AppLocalizations {
   String get darkMode => 'Mode gelap';
 
   @override
+  String get moreGroupTools => 'Fitur';
+
+  @override
+  String get moreGroupApp => 'Pengaturan aplikasi';
+
+  @override
+  String get moreGroupSupport => 'Dukung Paransori';
+
+  @override
   String get darkModeOn => 'Aktif';
 
   @override

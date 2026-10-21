@@ -1354,6 +1354,15 @@ class AppLocalizationsTh extends AppLocalizations {
   String get darkMode => 'โหมดมืด';
 
   @override
+  String get moreGroupTools => 'ฟีเจอร์';
+
+  @override
+  String get moreGroupApp => 'ตั้งค่าแอป';
+
+  @override
+  String get moreGroupSupport => 'สนับสนุน Paransori';
+
+  @override
   String get darkModeOn => 'เปิด';
 
   @override

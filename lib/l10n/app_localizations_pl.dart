@@ -1355,6 +1355,15 @@ class AppLocalizationsPl extends AppLocalizations {
   String get darkMode => 'Tryb ciemny';
 
   @override
+  String get moreGroupTools => 'Funkcje';
+
+  @override
+  String get moreGroupApp => 'Ustawienia aplikacji';
+
+  @override
+  String get moreGroupSupport => 'Wesprzyj Paransori';
+
+  @override
   String get darkModeOn => 'Wł.';
 
   @override

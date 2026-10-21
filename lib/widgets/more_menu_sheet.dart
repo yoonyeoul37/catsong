@@ -59,6 +59,11 @@ const String _kIconChat =
 const String _kIconClose =
     '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
 
+// 다크 모드: 달 / 종료: 전원
+const String _kIconMoon = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+const String _kIconPower =
+    '<path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/>';
+
 class _LineIcon extends StatelessWidget {
   final String body;
   final double size;
@@ -97,6 +102,7 @@ void showMoreMenuSheet(
       String? shareSubtitle,
       String? stationHomepage,
       bool showSongTools = false, // 홈에서만: 곡 정보 한꺼번에 정리
+      VoidCallback? onExit, // 있으면 맨 아래 '종료' 줄 (음악 화면)
     }) {
   final isDarkMode = context.read<ThemeProvider>().isDarkMode;
   HelpSeen.load();
@@ -111,6 +117,7 @@ void showMoreMenuSheet(
       shareSubtitle: shareSubtitle,
       stationHomepage: stationHomepage,
       showSongTools: showSongTools,
+      onExit: onExit,
     );
   }
 
@@ -132,6 +139,12 @@ void showMoreMenuSheet(
       shareSubtitle: shareSubtitle ?? tr.moreShareSub,
       hasHomepage: stationHomepage != null && stationHomepage.isNotEmpty,
       showSongTools: showSongTools,
+      onExit: onExit == null
+          ? null
+          : () {
+              Navigator.pop(ctx);
+              onExit();
+            },
       onCleanSongs: () => openPage(ctx, MaterialPageRoute(builder: (_) => const BulkCleanScreen())),
       onFindArt: () => openPage(ctx, MaterialPageRoute(builder: (_) => const BulkArtScreen())),
       onShare: () {
@@ -264,8 +277,10 @@ class _MoreMenuSheet extends StatelessWidget {
   final bool showSongTools;
   final VoidCallback onCleanSongs;
   final VoidCallback onFindArt;
+  final VoidCallback? onExit;
 
   const _MoreMenuSheet({
+    this.onExit,
     required this.showSongTools,
     required this.onCleanSongs,
     required this.onFindArt,
@@ -284,7 +299,8 @@ class _MoreMenuSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = isDarkMode ? _Pal.dark : _Pal.light;
+    final dark = context.watch<ThemeProvider>().isDarkMode; // 메뉴 안에서 바꿔도 바로
+    final p = dark ? _Pal.dark : _Pal.light;
     // 글자 크기를 크게 해둔 폰에서도 카드가 깨지지 않게 조금만 허용한다.
     final scaler = MediaQuery.textScalerOf(context)
         .clamp(minScaleFactor: 1.0, maxScaleFactor: 1.1);
@@ -292,12 +308,14 @@ class _MoreMenuSheet extends StatelessWidget {
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(textScaler: scaler),
       child: Container(
+        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.9),
         decoration: BoxDecoration(
           color: p.sheet,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(26)),
         ),
         child: SafeArea(
           top: false,
+          child: SingleChildScrollView( // 메뉴가 길면 위아래로 (작은 폰에서 잘리지 않게)
           child: Padding(
             padding: const EdgeInsets.fromLTRB(18, 8, 18, 16),
             child: Column(
@@ -305,7 +323,8 @@ class _MoreMenuSheet extends StatelessWidget {
               children: [
                 _TopBar(p: p),
                 _IntroCard(p: p, onTap: onIntro),
-                const SizedBox(height: 10),
+                // ① 이 화면 · 기능 (화면마다 다른 줄 + 아침 알람)
+                _GroupCap(p: p, text: tr.moreGroupTools),
                 _MenuGroup(p: p, children: [
                   if (showSongTools) ...[
                     _MenuCard(
@@ -323,6 +342,14 @@ class _MoreMenuSheet extends StatelessWidget {
                       onTap: onFindArt,
                     ),
                   ],
+                  if (hasHomepage)
+                    _MenuCard(
+                      p: p,
+                      icon: _kIconGlobe,
+                      title: tr.moreHomepageTitle,
+                      subtitle: tr.moreHomepageSub,
+                      onTap: onHomepage,
+                    ),
                   // 아침 알람 (켜져 있으면 다음 알람 시간)
                   ValueListenableBuilder<ParanAlarm?>(
                     valueListenable: AlarmService.alarm,
@@ -336,27 +363,18 @@ class _MoreMenuSheet extends StatelessWidget {
                       onTap: onAlarm,
                     ),
                   ),
+                ]),
+                // ② 앱 설정
+                _GroupCap(p: p, text: tr.moreGroupApp),
+                _MenuGroup(p: p, children: [
+                  // 다크 모드: 누르면 바로 켜고 끄기 (메뉴는 그대로)
                   _MenuCard(
                     p: p,
-                    icon: _kIconShare,
-                    title: tr.menuShareTitle,
-                    subtitle: shareSubtitle,
-                    onTap: onShare,
-                  ),
-                  _MenuCard(
-                    p: p,
-                    icon: _kIconStar,
-                    title: tr.menuRateTitle,
-                    subtitle: tr.moreRateSub,
-                    onTap: onRate,
-                  ),
-                  // 의견 보내기 (앱에 대해 말하는 줄끼리: 공유 · 평가 · 의견)
-                  _MenuCard(
-                    p: p,
-                    icon: _kIconChat,
-                    title: fbText('의견 보내기', 'Send feedback'),
-                    subtitle: fbText('파란소리에 바라는 점을 들려주세요.', 'Tell us what you’d like from Paransori.'),
-                    onTap: onFeedback,
+                    icon: _kIconMoon,
+                    title: tr.darkMode,
+                    subtitle: tr.darkModeInfo,
+                    onTap: () => context.read<ThemeProvider>().setDarkMode(!dark),
+                    trailing: _MiniToggle(on: dark, p: p),
                   ),
                   _MenuCard(
                     p: p,
@@ -377,20 +395,73 @@ class _MoreMenuSheet extends StatelessWidget {
                       dot: !seen,
                     ),
                   ),
-                  if (hasHomepage)
+                ]),
+                // ③ 파란소리 응원하기 (공유 · 평가 · 의견)
+                _GroupCap(p: p, text: tr.moreGroupSupport),
+                _MenuGroup(p: p, children: [
+                  _MenuCard(
+                    p: p,
+                    icon: _kIconShare,
+                    title: tr.menuShareTitle,
+                    subtitle: shareSubtitle,
+                    onTap: onShare,
+                  ),
+                  _MenuCard(
+                    p: p,
+                    icon: _kIconStar,
+                    title: tr.menuRateTitle,
+                    subtitle: tr.moreRateSub,
+                    onTap: onRate,
+                  ),
+                  _MenuCard(
+                    p: p,
+                    icon: _kIconChat,
+                    title: fbText('의견 보내기', 'Send feedback'),
+                    subtitle: fbText('파란소리에 바라는 점을 들려주세요.', 'Tell us what you’d like from Paransori.'),
+                    onTap: onFeedback,
+                  ),
+                ]),
+                // 종료: 맨 아래 따로 (실수로 누르지 않게)
+                if (onExit != null) ...[
+                  const SizedBox(height: 10),
+                  _MenuGroup(p: p, children: [
                     _MenuCard(
                       p: p,
-                      icon: _kIconGlobe,
-                      title: tr.moreHomepageTitle,
-                      subtitle: tr.moreHomepageSub,
-                      onTap: onHomepage,
+                      icon: _kIconPower,
+                      title: tr.exit,
+                      subtitle: '',
+                      onTap: onExit!,
                     ),
-                ]),
-                const SizedBox(height: 12),
-                _BrandCard(p: p),
+                  ]),
+                ],
+                const SizedBox(height: 4),
               ],
             ),
           ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// 묶음 제목 (작고 연한 글자)
+class _GroupCap extends StatelessWidget {
+  final _Pal p;
+  final String text;
+  const _GroupCap({required this.p, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(6, 14, 6, 6),
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: Text(
+          text,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(color: p.desc, fontSize: 12, fontWeight: FontWeight.w600),
         ),
       ),
     );
@@ -451,6 +522,7 @@ class _MenuCard extends StatelessWidget {
   final String subtitle;
   final VoidCallback onTap;
   final bool dot; // 안 열어본 새 항목 표시
+  final Widget? trailing; // 있으면 › 대신 (다크 모드 켜짐 표시)
 
   const _MenuCard({
     required this.p,
@@ -459,6 +531,7 @@ class _MenuCard extends StatelessWidget {
     required this.subtitle,
     required this.onTap,
     this.dot = false,
+    this.trailing,
   });
 
   @override
@@ -504,13 +577,15 @@ class _MenuCard extends StatelessWidget {
                         letterSpacing: -0.3,
                       ),
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: p.desc, fontSize: 11.5),
-                    ),
+                    if (subtitle.isNotEmpty) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        subtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: p.desc, fontSize: 11.5),
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -526,8 +601,9 @@ class _MenuCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
               ],
-              Transform.flip(flipX: Directionality.of(context) == TextDirection.rtl, // 아랍어에선 < 방향
-                  child: _LineIcon(_kIconChevron, size: 18, color: p.chevron, stroke: 2.0)),
+              trailing ??
+                  Transform.flip(flipX: Directionality.of(context) == TextDirection.rtl, // 아랍어에선 < 방향
+                      child: _LineIcon(_kIconChevron, size: 18, color: p.chevron, stroke: 2.0)),
             ],
           ),
         ),
@@ -536,7 +612,34 @@ class _MenuCard extends StatelessWidget {
   }
 }
 
-// 파란소리 소개 — 다른 메뉴와 살짝 다르게: 연한 포인트 색 카드 + 작은 소리 막대
+/// 작은 켜기·끄기 표시 (설정 화면 칸처럼 켜지면 먹색, 다크 모드는 크림색)
+class _MiniToggle extends StatelessWidget {
+  final bool on;
+  final _Pal p;
+  const _MiniToggle({required this.on, required this.p});
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 180),
+      width: 38,
+      height: 22,
+      padding: const EdgeInsets.all(3),
+      alignment: on ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
+      decoration: BoxDecoration(
+        color: on ? p.title : p.chevron.withOpacity(0.45),
+        borderRadius: BorderRadius.circular(11),
+      ),
+      child: Container(
+        width: 16,
+        height: 16,
+        decoration: BoxDecoration(color: p.card, shape: BoxShape.circle),
+      ),
+    );
+  }
+}
+
+// 파란소리 소개 — 맨 위 검정 카드 (예전 아래 브랜드 카드를 합침) · 누르면 소개 화면
 class _IntroCard extends StatelessWidget {
   final _Pal p;
   final VoidCallback onTap;
@@ -544,13 +647,15 @@ class _IntroCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final point = pointColorOf(context);
+    // 먹색 카드 (다크 모드는 크림색) — 설정 화면 맨 위 카드와 한 세트
     final dark = p.sheet.computeLuminance() < 0.5;
-    final bg = Color.alphaBlend(point.withOpacity(dark ? 0.16 : 0.10), p.card);
-    final (title, subtitle) = paranIntroMenuText();
+    final bg = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    final fg = dark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
+    final blue = pointColorOf(context, onDark: !dark); // 카드는 바탕과 반대 색
+    final (_, subtitle) = paranIntroMenuText();
     return Material(
       color: bg,
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(16),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
@@ -559,61 +664,43 @@ class _IntroCard extends StatelessWidget {
         },
         child: Container(
           constraints: const BoxConstraints(minHeight: 64),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+          padding: const EdgeInsetsDirectional.fromSTEB(16, 11, 12, 11),
           alignment: Alignment.center,
           child: Row(
             children: [
-              // 아이콘 칸: 흰 바탕 + 소리 막대 (로고 느낌)
-              Container(
-                width: 34,
-                height: 34,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(color: p.card, borderRadius: BorderRadius.circular(10)),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    for (final (i, h) in const [7.0, 12.0, 15.0, 10.0].indexed) ...[
-                      if (i > 0) const SizedBox(width: 2.5),
-                      Container(
-                        width: 3,
-                        height: h,
-                        decoration: BoxDecoration(color: point, borderRadius: BorderRadius.circular(2)),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: p.title,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0.3,
-                      ),
+                    Text.rich(
+                      TextSpan(children: [
+                        TextSpan(text: 'Paran', style: TextStyle(color: blue)),
+                        const TextSpan(text: 'sori'),
+                      ]),
+                      textDirection: TextDirection.ltr,
+                      style: GoogleFonts.quicksand(
+                          color: fg, fontSize: 15.5, fontWeight: FontWeight.w700, letterSpacing: 0.4),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: p.desc, fontSize: 11.5),
+                      style: TextStyle(color: fg.withOpacity(0.65), fontSize: 11.5),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 10),
+              // 작은 소리 막대 (움직임)
+              SizedBox(
+                height: 24,
+                child: FittedBox(child: _SoundBars(color: blue.withOpacity(0.8))),
+              ),
+              const SizedBox(width: 6),
               Transform.flip(flipX: Directionality.of(context) == TextDirection.rtl, // 아랍어에선 < 방향
-                  child: _LineIcon(_kIconChevron, size: 18, color: point.withOpacity(0.85), stroke: 2.0)),
+                  child: _LineIcon(_kIconChevron, size: 18, color: fg.withOpacity(0.5), stroke: 2.0)),
             ],
           ),
         ),
@@ -652,80 +739,7 @@ class _MenuGroup extends StatelessWidget {
   }
 }
 
-// 브랜드 영역 (문구 + 아주 은은한 음파 막대)
-class _BrandCard extends StatelessWidget {
-  final _Pal p;
-  const _BrandCard({required this.p});
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, c) {
-        // 좁은 폰에서는 음파 막대를 빼서 글자가 잘리지 않게 한다.
-        final showBars = c.maxWidth >= 300;
-        // 먹색 카드 (다크 모드는 크림색) — 설정 화면 맨 위 카드와 한 세트
-        final dark = p.sheet.computeLuminance() < 0.5;
-        final bg = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-        final fg = dark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
-        final blue = pointColorOf(context, onDark: !dark); // 카드는 바탕과 반대 색
-        return Container(
-          width: double.infinity,
-          constraints: const BoxConstraints(minHeight: 92),
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: bg,
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text.rich(
-                      TextSpan(children: [
-                        TextSpan(text: 'Paran', style: TextStyle(color: blue)),
-                        const TextSpan(text: 'sori'),
-                      ]),
-                      style: GoogleFonts.quicksand(
-                          color: fg, fontSize: 16, fontWeight: FontWeight.w700, letterSpacing: 0.4),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      tr.brandLine1,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: fg,
-                        fontSize: 14.5,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0.3,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      tr.brandLine2,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: fg.withOpacity(0.65), fontSize: 11.5),
-                    ),
-                  ],
-                ),
-              ),
-              if (showBars) ...[
-                const SizedBox(width: 12),
-                _SoundBars(color: blue.withOpacity(0.8)),
-              ],
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
+// 작은 소리 막대 (소개 카드)
 class _SoundBars extends StatefulWidget {
   final Color color;
   const _SoundBars({required this.color});

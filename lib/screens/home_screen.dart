@@ -1698,28 +1698,24 @@ class _HomeScreenState extends State<HomeScreen> {
             baseColor: baseColor,
           ),
           const SizedBox(width: 8),
+          // (다크 모드는 ⋮ 메뉴 안으로)
+          // 종료: 홈에서만 버튼 · 음악 화면은 ⋮ 메뉴 '종료'
+          if (!_showMusicLibrary) ...[
+            _AppBarCircleButton(
+              onTap: () {
+                const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+                _showExitConfirmDialog(context);
+              },
+              icon: Icons.power_settings_new_rounded,
+              baseColor: baseColor,
+            ),
+            const SizedBox(width: 8),
+          ],
           _AppBarCircleButton(
             onTap: () {
               const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              context.read<ThemeProvider>().setDarkMode(!isDarkMode);
-            },
-            icon: isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-            baseColor: baseColor,
-          ),
-          const SizedBox(width: 8),
-          _AppBarCircleButton(
-            onTap: () {
-              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              _showExitConfirmDialog(context);
-            },
-            icon: Icons.power_settings_new_rounded,
-            baseColor: baseColor,
-          ),
-          const SizedBox(width: 8),
-          _AppBarCircleButton(
-            onTap: () {
-              const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-              showMoreMenuSheet(context);
+              showMoreMenuSheet(context,
+                  onExit: _showMusicLibrary ? () => _showExitConfirmDialog(context) : null);
               return;
               showModalBottomSheet(
                 context: context,
@@ -3550,36 +3546,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     }),
                     Theme.of(context).colorScheme.primary,
                   ),
+                  // 녹음: 다른 탭과 같은 모양 (일반 음악과 따로 · 안드로이드만)
+                  if (Platform.isAndroid)
+                    _buildFilterTab(
+                      AppLocalizations.of(context)!.recordings,
+                      _showCalls,
+                          () => setState(() {
+                        _showFavorites = false;
+                        _showRecent = false;
+                        _showCalls = true;
+                      }),
+                      Theme.of(context).colorScheme.primary,
+                    ),
                         ],
                       ),
                     ),
                   ),
-                  // 녹음 (일반 음악과 따로) — 아이폰은 다른 앱 파일을 못 읽어서 안드로이드만
-                  if (Platform.isAndroid) const SizedBox(width: 10), // 통화녹음은 오른쪽 끝으로
-                  // 통화녹음: 탭이 아니라 "다른 곳으로 가는" 작은 버튼 (안드로이드만)
-                  if (Platform.isAndroid)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: GestureDetector(
-                        onTap: () {
-                          const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-                          setState(() {
-                            _showFavorites = false;
-                            _showRecent = false;
-                            _showCalls = true;
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 4),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: baseColor.withOpacity(0.18), width: 0.8),
-                          ),
-                          child: Text(tr.callRecordingsChip,
-                              style: TextStyle(color: baseColor.withOpacity(0.65), fontSize: 12)),
-                        ),
-                      ),
-                    ),
                 ],
               ),
             ),

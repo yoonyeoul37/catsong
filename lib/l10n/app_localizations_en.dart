@@ -1354,6 +1354,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get darkMode => 'Dark mode';
 
   @override
+  String get moreGroupTools => 'Tools';
+
+  @override
+  String get moreGroupApp => 'App settings';
+
+  @override
+  String get moreGroupSupport => 'Support Paransori';
+
+  @override
   String get darkModeOn => 'On';
 
   @override

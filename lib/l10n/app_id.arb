@@ -1510,5 +1510,7 @@
   "helpCarVoice1": "\"Putar (nama stasiun) di Paransori\"",
   "helpCarVoice2": "\"Putar Hujan di Paransori\"",
   "helpCarVoice3": "\"Putar Paransori\" → melanjutkan dari yang terakhir kamu dengarkan.",
-  "helpCarNote": "※ Mobil dan ponsel harus mendukung Android Auto. Cara menghubungkan dan menu yang tampil bisa berbeda tergantung perangkat."
+  "helpCarNote": "※ Mobil dan ponsel harus mendukung Android Auto. Cara menghubungkan dan menu yang tampil bisa berbeda tergantung perangkat.",
+  "homeTipCarTitle": "Dengarkan juga di mobil",
+  "homeTipCarSub": "Hubungkan ke Android Auto untuk tampil di layar mobil"
 }

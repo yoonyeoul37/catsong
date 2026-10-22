@@ -4969,4 +4969,11 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get helpCarNote =>
       '※ Mașina și telefonul trebuie să fie compatibile cu Android Auto. Modul de conectare și meniurile pot varia în funcție de dispozitiv.';
+
+  @override
+  String get homeTipCarTitle => 'Ascultă și în mașină';
+
+  @override
+  String get homeTipCarSub =>
+      'Conectează-te la Android Auto ca să apară pe ecranul mașinii';
 }

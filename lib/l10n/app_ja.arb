@@ -1510,5 +1510,7 @@
   "helpCarVoice1": "「Paransoriで(局名)を再生して」",
   "helpCarVoice2": "「Paransoriで雨の音を再生して」",
   "helpCarVoice3": "「Paransoriを再生して」→ 最後に聴いていたものの続きから再生します。",
-  "helpCarNote": "※ 車とスマホがAndroid Autoに対応している必要があります。接続方法や表示されるメニューは機器によって異なる場合があります。"
+  "helpCarNote": "※ 車とスマホがAndroid Autoに対応している必要があります。接続方法や表示されるメニューは機器によって異なる場合があります。",
+  "homeTipCarTitle": "車でも聴けます",
+  "homeTipCarSub": "Android Autoにつなぐと車の画面に表示されます"
 }

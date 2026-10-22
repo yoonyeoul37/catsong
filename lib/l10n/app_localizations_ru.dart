@@ -4983,4 +4983,11 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get helpCarNote =>
       '※ Машина и телефон должны поддерживать Android Auto. Способ подключения и меню могут отличаться в зависимости от устройства.';
+
+  @override
+  String get homeTipCarTitle => 'Слушайте и в машине';
+
+  @override
+  String get homeTipCarSub =>
+      'Подключите Android Auto — приложение появится на экране автомобиля';
 }

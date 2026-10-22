@@ -4947,4 +4947,11 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get helpCarNote =>
       '※ Az autónak és a telefonnak támogatnia kell az Android Autót. A csatlakozás módja és a menük eszközönként eltérhetnek.';
+
+  @override
+  String get homeTipCarTitle => 'Hallgasd az autóban is';
+
+  @override
+  String get homeTipCarSub =>
+      'Csatlakozz az Android Autóhoz, és megjelenik az autó kijelzőjén';
 }

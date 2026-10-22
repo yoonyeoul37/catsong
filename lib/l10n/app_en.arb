@@ -1601,5 +1601,7 @@
   "helpCarVoice1": "\"Play (station name) on Paransori\"",
   "helpCarVoice2": "\"Play Rain on Paransori\"",
   "helpCarVoice3": "\"Play Paransori\" → picks up where you left off.",
-  "helpCarNote": "※ Your car and phone must support Android Auto. Connection methods and menus may vary by device."
+  "helpCarNote": "※ Your car and phone must support Android Auto. Connection methods and menus may vary by device.",
+  "homeTipCarTitle": "Listen in your car too",
+  "homeTipCarSub": "Connect to Android Auto to see it on your car screen"
 }

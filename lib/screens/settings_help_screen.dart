@@ -136,7 +136,8 @@ List<_Guide> get _guides => [
 ];
 
 class SettingsHelpScreen extends StatefulWidget {
-  const SettingsHelpScreen({super.key});
+  const SettingsHelpScreen({super.key, this.openGuide});
+  final String? openGuide; // 홈 팁 [보기] → 이 안내 카드('widget' · 'car')를 펼친 채로 열기
 
   @override
   State<SettingsHelpScreen> createState() => _SettingsHelpScreenState();
@@ -146,6 +147,13 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
   int? _open; // 펼친 카드 (한 번에 하나만)
   final List<GlobalKey> _keys = List.generate(_topics.length + _guides.length, (_) => GlobalKey()); // 설정 카드 + 안내 카드
   Set<String> _seenNew = {}; // 한 번 펼쳐 본 안내 카드 ('새로' 표시 없앰)
+  final ScrollController _scroll = ScrollController();
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
   bool _newLoaded = false;
 
   // 돋보기: 이 화면 글자만 크게 (기본 → 크게 → 아주 크게, 기억)
@@ -170,6 +178,22 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
         });
       }
     });
+    // 홈 팁 [보기]로 왔으면: 안내 카드는 아래쪽이라 먼저 맨 아래로 → 펼치고 → 카드 위쪽이 보이게
+    final g = widget.openGuide;
+    if (g != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final gi = _guides.indexWhere((x) => x.id == g);
+        if (gi < 0 || !mounted) return;
+        if (_scroll.hasClients) _scroll.jumpTo(_scroll.position.maxScrollExtent);
+        _toggleGuide(gi);
+        Future.delayed(const Duration(milliseconds: 560), () {
+          final ctx = _keys[_topics.length + gi].currentContext;
+          if (ctx != null && mounted) {
+            Scrollable.ensureVisible(ctx, alignment: 0.02, duration: const Duration(milliseconds: 250), curve: Curves.easeOutCubic);
+          }
+        });
+      });
+    }
   }
 
   Future<void> _saveZoom() async {
@@ -546,6 +570,7 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
           child: MediaQuery(
             data: mq.copyWith(textScaler: TextScaler.linear(mq.textScaler.scale(1) * z)),
             child: ListView(
+              controller: _scroll,
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
               children: [
                 Padding(

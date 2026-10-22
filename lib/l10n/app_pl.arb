@@ -1510,5 +1510,7 @@
   "helpCarVoice1": "„Włącz (nazwa stacji) w Paransori”",
   "helpCarVoice2": "„Włącz Deszcz w Paransori”",
   "helpCarVoice3": "„Włącz Paransori” → słuchasz dalej od miejsca, w którym skończyłeś.",
-  "helpCarNote": "※ Samochód i telefon muszą obsługiwać Android Auto. Sposób połączenia i widoczne menu mogą się różnić w zależności od urządzenia."
+  "helpCarNote": "※ Samochód i telefon muszą obsługiwać Android Auto. Sposób połączenia i widoczne menu mogą się różnić w zależności od urządzenia.",
+  "homeTipCarTitle": "Słuchaj też w samochodzie",
+  "homeTipCarSub": "Połącz z Android Auto, a pojawi się na ekranie auta"
 }

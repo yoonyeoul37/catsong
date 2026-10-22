@@ -4928,4 +4928,11 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get helpCarNote =>
       '※ आपकी कार और फ़ोन में Android Auto सपोर्ट होना चाहिए। कनेक्ट करने का तरीका और दिखने वाले मेन्यू डिवाइस के हिसाब से अलग हो सकते हैं।';
+
+  @override
+  String get homeTipCarTitle => 'कार में भी सुनें';
+
+  @override
+  String get homeTipCarSub =>
+      'Android Auto से जोड़ें, कार की स्क्रीन पर दिखेगा';
 }

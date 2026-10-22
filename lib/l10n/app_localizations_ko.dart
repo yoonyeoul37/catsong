@@ -4719,4 +4719,10 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get helpCarNote =>
       '※ 차량과 휴대폰이 안드로이드 오토를 지원해야 해요. 연결 방식과 표시되는 메뉴는 기기에 따라 다를 수 있어요.';
+
+  @override
+  String get homeTipCarTitle => '자동차에서도 들어요';
+
+  @override
+  String get homeTipCarSub => '안드로이드 오토에 연결하면 차 화면에 나와요';
 }

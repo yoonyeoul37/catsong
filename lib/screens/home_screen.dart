@@ -46,6 +46,7 @@ import 'dart:io' show Platform;
 import 'call_recordings_screen.dart';
 import 'folder_screen.dart';
 import 'settings_screen.dart';
+import 'settings_help_screen.dart';
 import 'radio_home_screen.dart';
 import '../widgets/radio_mini_player.dart';
 import '../providers/radio_provider.dart';
@@ -632,6 +633,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ───── 메인 홈 카드: 나만의 색 → 지금 방송 → 오늘의 팁 (✕ 누르면 다음 카드, 내일 다시 처음부터) ─────
   Set<String> _homeClosed = {}; // 오늘 ✕로 닫은 카드 ('radio', 'tip')
+  Set<String> _guideSeen = {}; // 설정 도움말에서 펼쳐 본 안내 ('widget' · 'car')
+  bool _newTipsOn = false; // 새 기능 팁(위젯 · 자동차)을 먼저 보여 주는 기간인지
   final Set<String> _programAsked = {}; // 방송마다 편성표는 한 번만 받기
 
   static String _homeDay(DateTime d) =>
@@ -642,6 +645,20 @@ class _HomeScreenState extends State<HomeScreen> {
     final today = p.getString('main_card_closed_day') == _homeDay(DateTime.now());
     final list = today ? (p.getStringList('main_card_closed') ?? const <String>[]) : const <String>[];
     if (mounted) setState(() => _homeClosed = list.toSet());
+    // 새 기능 팁 (위젯 · 자동차): 처음 본 날부터 14일 동안 먼저 — 도움말에서 펼쳐 보면 그 팁은 그만
+    var since = p.getInt('new_tips_since');
+    if (since == null) {
+      since = DateTime.now().millisecondsSinceEpoch;
+      await p.setInt('new_tips_since', since);
+    }
+    final on = DateTime.now().millisecondsSinceEpoch - since < 14 * 86400000;
+    final seen = (p.getStringList('helpNewSeen') ?? const <String>[]).toSet();
+    if (mounted) {
+      setState(() {
+        _newTipsOn = on;
+        _guideSeen = seen;
+      });
+    }
   }
 
   /// ✕ → 오늘은 닫고 바로 다음 카드 (내일 다시 처음부터)
@@ -690,7 +707,15 @@ class _HomeScreenState extends State<HomeScreen> {
     (tr.homeTipCastTitle, tr.homeTipCastSub),
     (tr.homeTipSleepTitle, tr.homeTipSleepSub),
     (tr.homeTipNameTitle, tr.homeTipNameSub), // 왜 이름이 Paransori일까요? → 소개 화면
+    if (!Platform.isIOS) (tr.homeTipCarTitle, tr.homeTipCarSub), // 6 자동차에서 듣기 (안드로이드 오토) → 도움말
   ];
+
+  /// 설정 도움말 열고 그 안내 카드 펼치기 (홈 팁 [보기]) — 돌아오면 '먼저 보여 주기'에서 빼기
+  void _openGuide(String id) {
+    const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+    Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsHelpScreen(openGuide: id)))
+        .then((_) => _loadHomeClosed());
+  }
 
   /// 파란소리 소개 화면 열기 (홈 로고 누르기 · 이름 팁 '보기')
   void _openIntro() {
@@ -765,7 +790,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // ③ 오늘의 팁 (하루에 하나씩)
     final tips = _mainTips;
-    final i = day % tips.length;
+    var i = day % tips.length;
+    // 새 기능 팁 먼저 (0 위젯 · 6 자동차): 기간 안이고 아직 도움말에서 안 펼쳐 봤으면 번갈아
+    final fresh = <int>[
+      if (!Platform.isIOS && !_guideSeen.contains('widget')) 0,
+      if (tips.length > 6 && !_guideSeen.contains('car')) 6,
+    ];
+    if (_newTipsOn && fresh.isNotEmpty) i = fresh[day % fresh.length];
+
     final t = tips[i];
     return _homeInfoCard(
       isDark: isDark,
@@ -773,10 +805,16 @@ class _HomeScreenState extends State<HomeScreen> {
       label: tr.homeTodayTip,
       title: t.$1,
       sub: t.$2,
-      action: i == 1 ? tr.set : (i == 5 ? tr.homeTipNameAction : null),
+      action: i == 1 ? tr.set : ((i == 5 || (i == 0 && !Platform.isIOS) || i == 6) ? tr.homeTipNameAction : null), // [보기] (도움말 안내는 안드로이드만)
       onAction: i == 1
           ? () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AlarmScreen()))
-          : (i == 5 ? _openIntro : null),
+          : i == 5
+              ? _openIntro
+              : i == 0 && !Platform.isIOS
+                  ? () => _openGuide('widget')
+                  : i == 6
+                      ? () => _openGuide('car')
+                      : null,
       onClose: () => _closeHomeCard('tip'),
       dot: dot,
       dots: dots,

@@ -1510,5 +1510,7 @@
   "helpCarVoice1": "„Spiele (Sendername) auf Paransori“",
   "helpCarVoice2": "„Spiele Regen auf Paransori“",
   "helpCarVoice3": "„Spiele Paransori“ → macht da weiter, wo du aufgehört hast.",
-  "helpCarNote": "※ Auto und Handy müssen Android Auto unterstützen. Verbindungsart und angezeigte Menüs können je nach Gerät abweichen."
+  "helpCarNote": "※ Auto und Handy müssen Android Auto unterstützen. Verbindungsart und angezeigte Menüs können je nach Gerät abweichen.",
+  "homeTipCarTitle": "Auch im Auto hören",
+  "homeTipCarSub": "Mit Android Auto erscheint es auf dem Autodisplay"
 }

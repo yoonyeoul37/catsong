@@ -4716,4 +4716,10 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get helpCarNote =>
       '※ 車とスマホがAndroid Autoに対応している必要があります。接続方法や表示されるメニューは機器によって異なる場合があります。';
+
+  @override
+  String get homeTipCarTitle => '車でも聴けます';
+
+  @override
+  String get homeTipCarSub => 'Android Autoにつなぐと車の画面に表示されます';
 }

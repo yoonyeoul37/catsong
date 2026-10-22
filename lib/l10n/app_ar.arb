@@ -1510,5 +1510,7 @@
   "helpCarVoice1": "«شغّل (اسم المحطة) على Paransori»",
   "helpCarVoice2": "«شغّل المطر على Paransori»",
   "helpCarVoice3": "«شغّل Paransori» ← يكمل من حيث توقفت.",
-  "helpCarNote": "※ يجب أن تدعم السيارة والهاتف Android Auto. قد تختلف طريقة الاتصال والقوائم الظاهرة حسب الجهاز."
+  "helpCarNote": "※ يجب أن تدعم السيارة والهاتف Android Auto. قد تختلف طريقة الاتصال والقوائم الظاهرة حسب الجهاز.",
+  "homeTipCarTitle": "استمع في سيارتك أيضًا",
+  "homeTipCarSub": "اتصل بـ Android Auto ليظهر على شاشة السيارة"
 }

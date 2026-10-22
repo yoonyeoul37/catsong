@@ -4961,4 +4961,11 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get helpCarNote =>
       '※ Tu coche y tu teléfono deben ser compatibles con Android Auto. La forma de conexión y los menús pueden variar según el dispositivo.';
+
+  @override
+  String get homeTipCarTitle => 'Escucha también en el coche';
+
+  @override
+  String get homeTipCarSub =>
+      'Conéctate a Android Auto y aparecerá en la pantalla del coche';
 }

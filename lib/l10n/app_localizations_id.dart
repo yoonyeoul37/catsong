@@ -4946,4 +4946,11 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get helpCarNote =>
       '※ Mobil dan ponsel harus mendukung Android Auto. Cara menghubungkan dan menu yang tampil bisa berbeda tergantung perangkat.';
+
+  @override
+  String get homeTipCarTitle => 'Dengarkan juga di mobil';
+
+  @override
+  String get homeTipCarSub =>
+      'Hubungkan ke Android Auto untuk tampil di layar mobil';
 }

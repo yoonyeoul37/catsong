@@ -4964,4 +4964,11 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get helpCarNote =>
       '※ Auto i telefon musí podporovat Android Auto. Způsob připojení a zobrazené nabídky se mohou lišit podle zařízení.';
+
+  @override
+  String get homeTipCarTitle => 'Poslouchejte i v autě';
+
+  @override
+  String get homeTipCarSub =>
+      'Připojte Android Auto a aplikace se zobrazí na displeji auta';
 }

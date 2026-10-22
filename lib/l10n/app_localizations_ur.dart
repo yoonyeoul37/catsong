@@ -4936,4 +4936,11 @@ class AppLocalizationsUr extends AppLocalizations {
   @override
   String get helpCarNote =>
       '※ گاڑی اور فون دونوں کا Android Auto سپورٹ کرنا ضروری ہے۔ کنکشن کا طریقہ اور مینو ڈیوائس کے لحاظ سے مختلف ہو سکتے ہیں۔';
+
+  @override
+  String get homeTipCarTitle => 'گاڑی میں بھی سنیں';
+
+  @override
+  String get homeTipCarSub =>
+      'Android Auto سے جوڑیں، یہ گاڑی کی اسکرین پر نظر آئے گا';
 }

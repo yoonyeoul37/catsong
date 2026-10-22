@@ -1513,5 +1513,7 @@
   "helpCarVoice1": "“用Paransori播放(电台名称)”",
   "helpCarVoice2": "“用Paransori播放雨声”",
   "helpCarVoice3": "“播放Paransori” → 接着播放上次收听的内容。",
-  "helpCarNote": "※ 车辆和手机都需要支持Android Auto。连接方式和显示的菜单可能因设备而异。"
+  "helpCarNote": "※ 车辆和手机都需要支持Android Auto。连接方式和显示的菜单可能因设备而异。",
+  "homeTipCarTitle": "在车上也能听",
+  "homeTipCarSub": "连接 Android Auto 即可在车载屏幕上使用"
 }

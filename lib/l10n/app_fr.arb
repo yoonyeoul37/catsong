@@ -1510,5 +1510,7 @@
   "helpCarVoice1": "« Mets (nom de la station) sur Paransori »",
   "helpCarVoice2": "« Mets Pluie sur Paransori »",
   "helpCarVoice3": "« Mets Paransori » → reprend là où vous vous étiez arrêté.",
-  "helpCarNote": "※ Votre voiture et votre téléphone doivent être compatibles Android Auto. Le mode de connexion et les menus affichés peuvent varier selon l’appareil."
+  "helpCarNote": "※ Votre voiture et votre téléphone doivent être compatibles Android Auto. Le mode de connexion et les menus affichés peuvent varier selon l’appareil.",
+  "homeTipCarTitle": "Écoutez aussi en voiture",
+  "homeTipCarSub": "Connectez-vous à Android Auto pour l’afficher sur l’écran de la voiture"
 }

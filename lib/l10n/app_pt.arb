@@ -1510,5 +1510,7 @@
   "helpCarVoice1": "\"Tocar (nome da rádio) no Paransori\"",
   "helpCarVoice2": "\"Tocar Chuva no Paransori\"",
   "helpCarVoice3": "\"Tocar Paransori\" → continua de onde você parou.",
-  "helpCarNote": "※ O carro e o celular precisam ser compatíveis com Android Auto. O tipo de conexão e os menus podem variar conforme o aparelho."
+  "helpCarNote": "※ O carro e o celular precisam ser compatíveis com Android Auto. O tipo de conexão e os menus podem variar conforme o aparelho.",
+  "homeTipCarTitle": "Ouça também no carro",
+  "homeTipCarSub": "Conecte ao Android Auto para usar na tela do carro"
 }

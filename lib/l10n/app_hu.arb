@@ -1510,5 +1510,7 @@
   "helpCarVoice1": "„Játszd le a Paransorin: (adó neve)”",
   "helpCarVoice2": "„Játszd le a Paransorin: Eső”",
   "helpCarVoice3": "„Indítsd el a Paransorit” → onnan folytatja, ahol abbahagytad.",
-  "helpCarNote": "※ Az autónak és a telefonnak támogatnia kell az Android Autót. A csatlakozás módja és a menük eszközönként eltérhetnek."
+  "helpCarNote": "※ Az autónak és a telefonnak támogatnia kell az Android Autót. A csatlakozás módja és a menük eszközönként eltérhetnek.",
+  "homeTipCarTitle": "Hallgasd az autóban is",
+  "homeTipCarSub": "Csatlakozz az Android Autóhoz, és megjelenik az autó kijelzőjén"
 }

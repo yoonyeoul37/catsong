@@ -1510,5 +1510,7 @@
   "helpCarVoice1": "\"เปิด (ชื่อสถานี) บน Paransori\"",
   "helpCarVoice2": "\"เปิด ฝนตก บน Paransori\"",
   "helpCarVoice3": "\"เปิด Paransori\" → เล่นต่อจากที่ฟังค้างไว้",
-  "helpCarNote": "※ รถและโทรศัพท์ต้องรองรับ Android Auto วิธีเชื่อมต่อและเมนูที่แสดงอาจแตกต่างกันไปตามอุปกรณ์"
+  "helpCarNote": "※ รถและโทรศัพท์ต้องรองรับ Android Auto วิธีเชื่อมต่อและเมนูที่แสดงอาจแตกต่างกันไปตามอุปกรณ์",
+  "homeTipCarTitle": "ฟังในรถก็ได้",
+  "homeTipCarSub": "เชื่อมต่อ Android Auto เพื่อใช้บนหน้าจอรถ"
 }

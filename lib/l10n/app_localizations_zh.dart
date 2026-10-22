@@ -4702,6 +4702,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get helpCarNote => '※ 车辆和手机都需要支持Android Auto。连接方式和显示的菜单可能因设备而异。';
+
+  @override
+  String get homeTipCarTitle => '在车上也能听';
+
+  @override
+  String get homeTipCarSub => '连接 Android Auto 即可在车载屏幕上使用';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -9403,4 +9409,10 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get helpCarNote => '※ 車輛和手機都必須支援Android Auto。連線方式和顯示的選單可能因裝置而異。';
+
+  @override
+  String get homeTipCarTitle => '在車上也能聽';
+
+  @override
+  String get homeTipCarSub => '連接 Android Auto 即可在車用螢幕上使用';
 }

@@ -1510,5 +1510,7 @@
   "helpCarVoice1": "„Redă (numele postului) pe Paransori”",
   "helpCarVoice2": "„Redă Ploaie pe Paransori”",
   "helpCarVoice3": "„Redă Paransori” → continuă de unde ai rămas.",
-  "helpCarNote": "※ Mașina și telefonul trebuie să fie compatibile cu Android Auto. Modul de conectare și meniurile pot varia în funcție de dispozitiv."
+  "helpCarNote": "※ Mașina și telefonul trebuie să fie compatibile cu Android Auto. Modul de conectare și meniurile pot varia în funcție de dispozitiv.",
+  "homeTipCarTitle": "Ascultă și în mașină",
+  "homeTipCarSub": "Conectează-te la Android Auto ca să apară pe ecranul mașinii"
 }

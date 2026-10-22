@@ -4952,4 +4952,10 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get helpCarNote =>
       '※ يجب أن تدعم السيارة والهاتف Android Auto. قد تختلف طريقة الاتصال والقوائم الظاهرة حسب الجهاز.';
+
+  @override
+  String get homeTipCarTitle => 'استمع في سيارتك أيضًا';
+
+  @override
+  String get homeTipCarSub => 'اتصل بـ Android Auto ليظهر على شاشة السيارة';
 }

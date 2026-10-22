@@ -1510,5 +1510,7 @@
   "helpCarVoice1": "«Pon (nombre de la emisora) en Paransori»",
   "helpCarVoice2": "«Pon Lluvia en Paransori»",
   "helpCarVoice3": "«Pon Paransori» → sigue con lo último que estabas escuchando.",
-  "helpCarNote": "※ Tu coche y tu teléfono deben ser compatibles con Android Auto. La forma de conexión y los menús pueden variar según el dispositivo."
+  "helpCarNote": "※ Tu coche y tu teléfono deben ser compatibles con Android Auto. La forma de conexión y los menús pueden variar según el dispositivo.",
+  "homeTipCarTitle": "Escucha también en el coche",
+  "homeTipCarSub": "Conéctate a Android Auto y aparecerá en la pantalla del coche"
 }

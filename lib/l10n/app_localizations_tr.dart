@@ -4936,4 +4936,10 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get helpCarNote =>
       '※ Araban ve telefonun Android Auto\'yu desteklemeli. Bağlantı yöntemi ve görünen menüler cihaza göre değişebilir.';
+
+  @override
+  String get homeTipCarTitle => 'Arabada da dinle';
+
+  @override
+  String get homeTipCarSub => 'Android Auto’ya bağlan, araç ekranında görünsün';
 }

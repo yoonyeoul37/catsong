@@ -1510,5 +1510,7 @@
   "helpCarVoice1": "„Pusť (název stanice) v Paransori“",
   "helpCarVoice2": "„Pusť Déšť v Paransori“",
   "helpCarVoice3": "„Pusť Paransori“ → pokračuje tam, kde jste skončili.",
-  "helpCarNote": "※ Auto i telefon musí podporovat Android Auto. Způsob připojení a zobrazené nabídky se mohou lišit podle zařízení."
+  "helpCarNote": "※ Auto i telefon musí podporovat Android Auto. Způsob připojení a zobrazené nabídky se mohou lišit podle zařízení.",
+  "homeTipCarTitle": "Poslouchejte i v autě",
+  "homeTipCarSub": "Připojte Android Auto a aplikace se zobrazí na displeji auta"
 }

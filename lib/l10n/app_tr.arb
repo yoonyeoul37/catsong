@@ -1510,5 +1510,7 @@
   "helpCarVoice1": "\"Paransori'de (kanal adı) çal\"",
   "helpCarVoice2": "\"Paransori'de Yağmur çal\"",
   "helpCarVoice3": "\"Paransori'yi çal\" → kaldığın yerden devam eder.",
-  "helpCarNote": "※ Araban ve telefonun Android Auto'yu desteklemeli. Bağlantı yöntemi ve görünen menüler cihaza göre değişebilir."
+  "helpCarNote": "※ Araban ve telefonun Android Auto'yu desteklemeli. Bağlantı yöntemi ve görünen menüler cihaza göre değişebilir.",
+  "homeTipCarTitle": "Arabada da dinle",
+  "homeTipCarSub": "Android Auto’ya bağlan, araç ekranında görünsün"
 }

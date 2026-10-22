@@ -4937,4 +4937,10 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get helpCarNote =>
       '※ Ô tô và điện thoại phải hỗ trợ Android Auto. Cách kết nối và menu hiển thị có thể khác nhau tùy thiết bị.';
+
+  @override
+  String get homeTipCarTitle => 'Nghe cả trên ô tô';
+
+  @override
+  String get homeTipCarSub => 'Kết nối Android Auto để dùng trên màn hình ô tô';
 }

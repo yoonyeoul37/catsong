@@ -2728,6 +2728,8 @@ class RadioProvider extends ChangeNotifier {
     _playerState = state;
     if (state == RadioPlayerState.error) {
       _onStationFailed();
+      // 차 화면 · 알림창에도 "재생하지 못했어요" (차에서는 앱 화면을 볼 수 없어서)
+      _simpleHandler?.setRadioError((_errorMessage ?? tr.radioPlaybackFailed).replaceAll('\n', ' '));
     } else if (state == RadioPlayerState.loading) {
       _similar = null;
     }

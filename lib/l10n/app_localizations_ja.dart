@@ -4678,7 +4678,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get helpCarUse2 => '車の画面でParansoriを選びます。';
 
   @override
-  String get helpCarUse3 => '音楽 · ラジオ · Podcasts · 自然の音 のタブから聴きたいものを選びます。';
+  String get helpCarUse3 => '音楽 · ラジオ · ポッドキャスト · 自然の音 のタブから聴きたいものを選びます。';
 
   @override
   String get helpCarUse4 => '運転中は画面に触れずに、音声で再生できます。';

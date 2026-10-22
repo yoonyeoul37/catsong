@@ -4926,7 +4926,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get helpCarUse3 =>
-      'Scegli cosa ascoltare dalle schede Musica · Radio · Podcasts · Suoni della natura.';
+      'Scegli cosa ascoltare dalle schede Musica · Radio · Podcast · Suoni della natura.';
 
   @override
   String get helpCarUse4 =>

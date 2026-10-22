@@ -4895,7 +4895,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get helpCarUse3 =>
-      'Müzik · Radyo · Podcasts · Doğa sesleri sekmelerinden istediğini seç.';
+      'Müzik · Radyo · Podcastler · Doğa sesleri sekmelerinden istediğini seç.';
 
   @override
   String get helpCarUse4 =>

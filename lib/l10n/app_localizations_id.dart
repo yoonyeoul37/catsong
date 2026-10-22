@@ -4905,7 +4905,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get helpCarUse3 =>
-      'Pilih yang ingin kamu dengarkan di tab Musik · Radio · Podcasts · Suara alam.';
+      'Pilih yang ingin kamu dengarkan di tab Musik · Radio · Podcast · Suara alam.';
 
   @override
   String get helpCarUse4 =>

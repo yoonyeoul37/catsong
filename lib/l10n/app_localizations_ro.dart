@@ -4929,7 +4929,7 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get helpCarUse3 =>
-      'Alege ce vrei din filele Muzică · Radio · Podcasts · Sunete din natură.';
+      'Alege ce vrei din filele Muzică · Radio · Podcasturi · Sunete din natură.';
 
   @override
   String get helpCarUse4 =>

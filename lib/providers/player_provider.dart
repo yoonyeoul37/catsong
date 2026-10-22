@@ -963,6 +963,26 @@ class SimpleAudioHandler extends BaseAudioHandler {
     ));
   }
 
+  /// 라디오 연결 실패: 차 화면 · 알림창에 안내 글 (재생 버튼을 다시 누르면 다시 연결)
+  /// 다시 소리가 나면 setRadioPlaybackState가 보통 상태로 돌려놓음
+  void setRadioError(String message) {
+    if (!_radioMode) return;
+    playbackState.add(PlaybackState(
+      controls: [
+        MediaControl.skipToPrevious,
+        MediaControl.play,
+        MediaControl.skipToNext,
+      ],
+      androidCompactActionIndices: const [0, 1, 2],
+      playing: false,
+      processingState: AudioProcessingState.error,
+      errorCode: 1, // 앱 오류 (안드로이드 ERROR_CODE_APP_ERROR)
+      errorMessage: message,
+      updatePosition: const Duration(milliseconds: -1),
+      speed: 0.0,
+    ));
+  }
+
   // ───── 라디오 시간 줄: 지금 프로그램 시작~끝 (편성표) ─────
   String? _progFor; // 어느 방송의 프로그램 시간인지
   DateTime? _progStart;

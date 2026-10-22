@@ -4895,7 +4895,7 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get helpCarUse3 =>
-      'میوزک · ریڈیو · Podcasts · فطرت کی آوازیں ٹیبز سے اپنی پسند کی چیز چنیں۔';
+      'میوزک · ریڈیو · پوڈکاسٹ · فطرت کی آوازیں ٹیبز سے اپنی پسند کی چیز چنیں۔';
 
   @override
   String get helpCarUse4 =>

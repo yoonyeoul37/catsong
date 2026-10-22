@@ -4931,7 +4931,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get helpCarUse3 =>
-      'Виберіть потрібне на вкладках Музика · Радіо · Podcasts · Звуки природи.';
+      'Виберіть потрібне на вкладках Музика · Радіо · Подкасти · Звуки природи.';
 
   @override
   String get helpCarUse4 =>

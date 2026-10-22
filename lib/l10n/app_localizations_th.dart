@@ -4873,7 +4873,7 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get helpCarUse3 =>
-      'เลือกสิ่งที่อยากฟังจากแท็บ เพลง · วิทยุ · Podcasts · เสียงธรรมชาติ';
+      'เลือกสิ่งที่อยากฟังจากแท็บ เพลง · วิทยุ · พอดแคสต์ · เสียงธรรมชาติ';
 
   @override
   String get helpCarUse4 =>

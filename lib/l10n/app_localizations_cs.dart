@@ -4923,7 +4923,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get helpCarUse3 =>
-      'Vyberte, co chcete, na kartách Hudba · Rádio · Podcasts · Zvuky přírody.';
+      'Vyberte, co chcete, na kartách Hudba · Rádio · Podcasty · Zvuky přírody.';
 
   @override
   String get helpCarUse4 =>

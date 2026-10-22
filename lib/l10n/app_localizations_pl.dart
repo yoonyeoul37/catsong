@@ -4951,7 +4951,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get helpCarUse3 =>
-      'Wybierz, czego chcesz posłuchać, na kartach Muzyka · Radio · Podcasts · Odgłosy natury.';
+      'Wybierz, czego chcesz posłuchać, na kartach Muzyka · Radio · Podcasty · Odgłosy natury.';
 
   @override
   String get helpCarUse4 =>

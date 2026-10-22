@@ -4668,7 +4668,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get helpCarUse2 => '在车辆屏幕上选择Paransori。';
 
   @override
-  String get helpCarUse3 => '在 音乐 · 广播 · Podcasts · 自然声音 标签中选择想听的内容。';
+  String get helpCarUse3 => '在 音乐 · 广播 · 播客 · 自然声音 标签中选择想听的内容。';
 
   @override
   String get helpCarUse4 => '开车时无需触碰屏幕，用语音就能播放。';
@@ -9369,7 +9369,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get helpCarUse2 => '在車輛螢幕上選擇Paransori。';
 
   @override
-  String get helpCarUse3 => '在 音樂 · 廣播 · Podcasts · 自然聲音 分頁中選擇想聽的內容。';
+  String get helpCarUse3 => '在 音樂 · 廣播 · Podcast · 自然聲音 分頁中選擇想聽的內容。';
 
   @override
   String get helpCarUse4 => '開車時不必觸碰螢幕，用語音就能播放。';

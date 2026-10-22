@@ -4906,7 +4906,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get helpCarUse3 =>
-      'Válaszd ki, amit szeretnél, a Zene · Rádió · Podcasts · Természethangok lapokon.';
+      'Válaszd ki, amit szeretnél, a Zene · Rádió · Podcastok · Természethangok lapokon.';
 
   @override
   String get helpCarUse4 =>

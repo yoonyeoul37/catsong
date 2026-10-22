@@ -4920,7 +4920,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get helpCarUse3 =>
-      'Elige lo que quieras en las pestañas Música · Radio · Podcasts · Sonidos naturales.';
+      'Elige lo que quieras en las pestañas Música · Radio · Pódcasts · Sonidos naturales.';
 
   @override
   String get helpCarUse4 =>

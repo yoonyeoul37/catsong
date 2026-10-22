@@ -4942,7 +4942,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get helpCarUse3 =>
-      'Выберите то, что хотите послушать, на вкладках Музыка · Радио · Podcasts · Звуки природы.';
+      'Выберите то, что хотите послушать, на вкладках Музыка · Радио · Подкасты · Звуки природы.';
 
   @override
   String get helpCarUse4 =>

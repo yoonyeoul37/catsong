@@ -4896,7 +4896,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get helpCarUse3 =>
-      'Chọn nội dung bạn muốn ở các thẻ Nhạc · Radio · Podcasts · Âm thanh thiên nhiên.';
+      'Chọn nội dung bạn muốn ở các thẻ Nhạc · Radio · Podcast · Âm thanh thiên nhiên.';
 
   @override
   String get helpCarUse4 =>

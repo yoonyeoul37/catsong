@@ -4912,7 +4912,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get helpCarUse3 =>
-      'اختر ما تريد من تبويبات الموسيقى · الراديو · Podcasts · أصوات الطبيعة.';
+      'اختر ما تريد من تبويبات الموسيقى · الراديو · بودكاست · أصوات الطبيعة.';
 
   @override
   String get helpCarUse4 =>

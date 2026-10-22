@@ -1129,6 +1129,8 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           PopScope(
             canPop: _mode == _ViewMode.all,
             onPopInvokedWithResult: (didPop, _) {
+              // 팟캐스트에서 주제·검색 결과를 보는 중이면 → 팟캐스트 화면이 순위로 돌려놓음 (여기선 그대로)
+              if (_mode == _ViewMode.podcast && PodcastTab.inSearch) return;
               if (!didPop) setState(() => _mode = _ViewMode.all);
             },
             child: const SizedBox.shrink(),

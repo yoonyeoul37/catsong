@@ -115,6 +115,8 @@ class _SkipIcon extends StatelessWidget {
 // ───────────────────────── 라디오 안 '팟캐스트' 탭 ─────────────────────────
 
 class PodcastTab extends StatefulWidget {
+  /// 주제·검색 결과를 보는 중이면 true (바깥 라디오 화면의 뒤로가기가 끼어들지 않게)
+  static bool inSearch = false;
   final String country; // 'kr' · 'US' 등 (나라별 순위)
   const PodcastTab({super.key, required this.country});
 
@@ -172,6 +174,7 @@ class _PodcastTabState extends State<PodcastTab> {
 
   @override
   void dispose() {
+    PodcastTab.inSearch = false;
     _search.dispose();
     _searchFocus.dispose();
     super.dispose();
@@ -252,6 +255,7 @@ class _PodcastTabState extends State<PodcastTab> {
         ? (pod.lastShow!, pod.lastEpisode!)
         : null;
     final searching = _query.isNotEmpty;
+    PodcastTab.inSearch = searching || _searchOpen;
 
     // 주제·검색 결과를 보는 중이면 뒤로가기 → 인기 순위로 (화면을 나가지 않게)
     return PopScope(

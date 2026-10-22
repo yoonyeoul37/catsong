@@ -8815,6 +8815,258 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'우르두어'**
   String get langNameUr;
+
+  /// No description provided for @helpGuideHeader.
+  ///
+  /// In ko, this message translates to:
+  /// **'다양하게 즐기기'**
+  String get helpGuideHeader;
+
+  /// No description provided for @helpNewBadge.
+  ///
+  /// In ko, this message translates to:
+  /// **'new'**
+  String get helpNewBadge;
+
+  /// No description provided for @helpWidgetTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'홈 화면 위젯'**
+  String get helpWidgetTitle;
+
+  /// No description provided for @helpWidgetWhen.
+  ///
+  /// In ko, this message translates to:
+  /// **'앱을 열지 않고도 홈 화면에서 파란소리의 음악·라디오·자연소리를 바로 들을 수 있어요.'**
+  String get helpWidgetWhen;
+
+  /// No description provided for @helpWidgetAddHead.
+  ///
+  /// In ko, this message translates to:
+  /// **'위젯 추가 방법'**
+  String get helpWidgetAddHead;
+
+  /// No description provided for @helpWidgetAdd1.
+  ///
+  /// In ko, this message translates to:
+  /// **'홈 화면의 빈 곳을 길게 눌러요.'**
+  String get helpWidgetAdd1;
+
+  /// No description provided for @helpWidgetAdd2.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴에서 \'위젯\'을 선택하고 파란소리를 찾아요.'**
+  String get helpWidgetAdd2;
+
+  /// No description provided for @helpWidgetAdd3.
+  ///
+  /// In ko, this message translates to:
+  /// **'원하는 크기의 위젯을 길게 눌러 홈 화면에 놓아요.'**
+  String get helpWidgetAdd3;
+
+  /// No description provided for @helpWidgetSizeHead.
+  ///
+  /// In ko, this message translates to:
+  /// **'위젯 크기별 기능'**
+  String get helpWidgetSizeHead;
+
+  /// No description provided for @helpWidgetBasic.
+  ///
+  /// In ko, this message translates to:
+  /// **'① 기본형 (4×2)'**
+  String get helpWidgetBasic;
+
+  /// No description provided for @helpWidgetBasic1.
+  ///
+  /// In ko, this message translates to:
+  /// **'사진 위에 지금 듣는 곡이나 방송 이름이 표시돼요.'**
+  String get helpWidgetBasic1;
+
+  /// No description provided for @helpWidgetBasic2.
+  ///
+  /// In ko, this message translates to:
+  /// **'이전 · 재생/일시정지 · 다음 버튼을 이용할 수 있어요.'**
+  String get helpWidgetBasic2;
+
+  /// No description provided for @helpWidgetBasic3.
+  ///
+  /// In ko, this message translates to:
+  /// **'음악 · 라디오 · 자연 · 수면 바로가기를 이용할 수 있어요.'**
+  String get helpWidgetBasic3;
+
+  /// No description provided for @helpWidgetBasic4.
+  ///
+  /// In ko, this message translates to:
+  /// **'음악·라디오·자연은 바로 재생되고, 수면은 앱에서 열려요.'**
+  String get helpWidgetBasic4;
+
+  /// No description provided for @helpWidgetBig.
+  ///
+  /// In ko, this message translates to:
+  /// **'② 큰 화면형 (4×3)'**
+  String get helpWidgetBig;
+
+  /// No description provided for @helpWidgetBig1.
+  ///
+  /// In ko, this message translates to:
+  /// **'기본형의 모든 기능을 이용할 수 있어요.'**
+  String get helpWidgetBig1;
+
+  /// No description provided for @helpWidgetBig2.
+  ///
+  /// In ko, this message translates to:
+  /// **'하단에 최근에 들은 항목 3개가 표시돼요.'**
+  String get helpWidgetBig2;
+
+  /// No description provided for @helpWidgetBig3.
+  ///
+  /// In ko, this message translates to:
+  /// **'원하는 항목을 누르면 바로 재생할 수 있어요.'**
+  String get helpWidgetBig3;
+
+  /// No description provided for @helpWidgetTall.
+  ///
+  /// In ko, this message translates to:
+  /// **'③ 세로형 (2×3)'**
+  String get helpWidgetTall;
+
+  /// No description provided for @helpWidgetTall1.
+  ///
+  /// In ko, this message translates to:
+  /// **'상단에 사진, 하단에 재생 정보와 조작 버튼이 표시돼요.'**
+  String get helpWidgetTall1;
+
+  /// No description provided for @helpWidgetTall2.
+  ///
+  /// In ko, this message translates to:
+  /// **'음악 · 라디오 · 자연 · 수면 바로가기는 아이콘으로 표시돼요.'**
+  String get helpWidgetTall2;
+
+  /// No description provided for @helpWidgetAllHead.
+  ///
+  /// In ko, this message translates to:
+  /// **'모든 위젯 공통'**
+  String get helpWidgetAllHead;
+
+  /// No description provided for @helpWidgetAll1.
+  ///
+  /// In ko, this message translates to:
+  /// **'오른쪽 위 ⋮를 누르면 랜덤·반복, 수면 타이머, 위젯 사진 바꾸기를 할 수 있어요.'**
+  String get helpWidgetAll1;
+
+  /// No description provided for @helpWidgetAll2.
+  ///
+  /// In ko, this message translates to:
+  /// **'랜덤·반복은 음악을 들을 때만 나와요.'**
+  String get helpWidgetAll2;
+
+  /// No description provided for @helpWidgetNote.
+  ///
+  /// In ko, this message translates to:
+  /// **'※ 위젯의 크기와 배치는 휴대폰 및 홈 화면 설정에 따라 달라질 수 있어요.'**
+  String get helpWidgetNote;
+
+  /// No description provided for @helpCarTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'자동차에서 듣기 (안드로이드 오토)'**
+  String get helpCarTitle;
+
+  /// No description provided for @helpCarWhen.
+  ///
+  /// In ko, this message translates to:
+  /// **'안드로이드 오토를 지원하는 차에서 파란소리의 라디오·음악·자연소리·팟캐스트를 들을 수 있어요.'**
+  String get helpCarWhen;
+
+  /// No description provided for @helpCarUseHead.
+  ///
+  /// In ko, this message translates to:
+  /// **'이용 방법'**
+  String get helpCarUseHead;
+
+  /// No description provided for @helpCarUse1.
+  ///
+  /// In ko, this message translates to:
+  /// **'휴대폰을 차량에 USB 케이블 또는 무선으로 연결해요.'**
+  String get helpCarUse1;
+
+  /// No description provided for @helpCarUse2.
+  ///
+  /// In ko, this message translates to:
+  /// **'차량 화면에서 파란소리를 선택해요.'**
+  String get helpCarUse2;
+
+  /// No description provided for @helpCarUse3.
+  ///
+  /// In ko, this message translates to:
+  /// **'음악 · 라디오 · 팟캐스트 · 자연소리 탭에서 원하는 콘텐츠를 골라요.'**
+  String get helpCarUse3;
+
+  /// No description provided for @helpCarUse4.
+  ///
+  /// In ko, this message translates to:
+  /// **'운전 중에는 화면을 누르지 않고 음성으로 틀 수 있어요.'**
+  String get helpCarUse4;
+
+  /// No description provided for @helpCarFindHead.
+  ///
+  /// In ko, this message translates to:
+  /// **'쉽게 찾기'**
+  String get helpCarFindHead;
+
+  /// No description provided for @helpCarFind1.
+  ///
+  /// In ko, this message translates to:
+  /// **'라디오는 맨 위에 최근에 들은 방송과 즐겨찾기가 있고, 그 아래 방송사별(해외는 장르별)로 나뉘어 있어요.'**
+  String get helpCarFind1;
+
+  /// No description provided for @helpCarFind2.
+  ///
+  /// In ko, this message translates to:
+  /// **'음악 탭 맨 위 \'랜덤 재생\'을 누르면 내 곡을 섞어서 바로 들려줘요.'**
+  String get helpCarFind2;
+
+  /// No description provided for @helpCarFind3.
+  ///
+  /// In ko, this message translates to:
+  /// **'편성표가 있는 방송은 지금 프로그램 사진과 다음 방송이 함께 보여요.'**
+  String get helpCarFind3;
+
+  /// No description provided for @helpCarVoiceHead.
+  ///
+  /// In ko, this message translates to:
+  /// **'음성으로 틀기'**
+  String get helpCarVoiceHead;
+
+  /// No description provided for @helpCarVoiceHow.
+  ///
+  /// In ko, this message translates to:
+  /// **'핸들의 음성 버튼을 누르거나 \"Hey Google\"이라고 말한 뒤 이렇게 말해 보세요.'**
+  String get helpCarVoiceHow;
+
+  /// No description provided for @helpCarVoice1.
+  ///
+  /// In ko, this message translates to:
+  /// **'\"파란소리에서 MBC 틀어 줘\"'**
+  String get helpCarVoice1;
+
+  /// No description provided for @helpCarVoice2.
+  ///
+  /// In ko, this message translates to:
+  /// **'\"파란소리에서 빗소리 틀어 줘\"'**
+  String get helpCarVoice2;
+
+  /// No description provided for @helpCarVoice3.
+  ///
+  /// In ko, this message translates to:
+  /// **'\"파란소리 틀어 줘\" → 마지막에 듣던 것을 이어서 들려줘요.'**
+  String get helpCarVoice3;
+
+  /// No description provided for @helpCarNote.
+  ///
+  /// In ko, this message translates to:
+  /// **'※ 차량과 휴대폰이 안드로이드 오토를 지원해야 해요. 연결 방식과 표시되는 메뉴는 기기에 따라 다를 수 있어요.'**
+  String get helpCarNote;
 }
 
 class _AppLocalizationsDelegate

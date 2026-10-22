@@ -4822,4 +4822,154 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get langNameUr => 'Урду';
+
+  @override
+  String get helpGuideHeader => 'Більше способів насолоджуватися';
+
+  @override
+  String get helpNewBadge => 'Нове';
+
+  @override
+  String get helpWidgetTitle => 'Віджет на головному екрані';
+
+  @override
+  String get helpWidgetWhen =>
+      'Слухайте музику, радіо та звуки природи з Paransori прямо з головного екрана, не відкриваючи застосунок.';
+
+  @override
+  String get helpWidgetAddHead => 'Як додати віджет';
+
+  @override
+  String get helpWidgetAdd1 => 'Утримуйте порожнє місце на головному екрані.';
+
+  @override
+  String get helpWidgetAdd2 =>
+      'Виберіть у меню «Віджети» і знайдіть Paransori.';
+
+  @override
+  String get helpWidgetAdd3 =>
+      'Утримуйте віджет потрібного розміру та розмістіть його на головному екрані.';
+
+  @override
+  String get helpWidgetSizeHead => 'Функції за розміром віджета';
+
+  @override
+  String get helpWidgetBasic => '① Стандартний (4×2)';
+
+  @override
+  String get helpWidgetBasic1 =>
+      'Поверх фото показується назва пісні чи станції, яку ви слухаєте.';
+
+  @override
+  String get helpWidgetBasic2 =>
+      'Доступні кнопки Попередня · Відтворити/Пауза · Наступна.';
+
+  @override
+  String get helpWidgetBasic3 =>
+      'Доступні ярлики Музика · Радіо · Природа · Сон.';
+
+  @override
+  String get helpWidgetBasic4 =>
+      'Музика, Радіо й Природа вмикаються одразу, а Сон відкривається в застосунку.';
+
+  @override
+  String get helpWidgetBig => '② Великий (4×3)';
+
+  @override
+  String get helpWidgetBig1 => 'Має всі функції стандартного віджета.';
+
+  @override
+  String get helpWidgetBig2 =>
+      'Унизу показуються 3 останні прослухані елементи.';
+
+  @override
+  String get helpWidgetBig3 =>
+      'Торкніться елемента, щоб одразу його ввімкнути.';
+
+  @override
+  String get helpWidgetTall => '③ Вертикальний (2×3)';
+
+  @override
+  String get helpWidgetTall1 =>
+      'Угорі фото, а внизу інформація про відтворення та кнопки керування.';
+
+  @override
+  String get helpWidgetTall2 =>
+      'Ярлики Музика · Радіо · Природа · Сон показуються як значки.';
+
+  @override
+  String get helpWidgetAllHead => 'У всіх віджетах';
+
+  @override
+  String get helpWidgetAll1 =>
+      'Торкніться ⋮ угорі праворуч, щоб увімкнути перемішування й повтор, таймер сну або змінити фото віджета.';
+
+  @override
+  String get helpWidgetAll2 =>
+      'Перемішування й повтор з’являються лише під час прослуховування музики.';
+
+  @override
+  String get helpWidgetNote =>
+      '※ Розмір і розташування віджета можуть відрізнятися залежно від телефона та налаштувань головного екрана.';
+
+  @override
+  String get helpCarTitle => 'Слухайте в авто (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      'Слухайте радіо, музику, звуки природи та подкасти з Paransori в авто з підтримкою Android Auto.';
+
+  @override
+  String get helpCarUseHead => 'Як користуватися';
+
+  @override
+  String get helpCarUse1 =>
+      'Підключіть телефон до авто кабелем USB або бездротово.';
+
+  @override
+  String get helpCarUse2 => 'Виберіть Paransori на екрані авто.';
+
+  @override
+  String get helpCarUse3 =>
+      'Виберіть потрібне на вкладках Музика · Радіо · Podcasts · Звуки природи.';
+
+  @override
+  String get helpCarUse4 =>
+      'Під час руху можна вмикати відтворення голосом, не торкаючись екрана.';
+
+  @override
+  String get helpCarFindHead => 'Швидкий пошук';
+
+  @override
+  String get helpCarFind1 =>
+      'У Радіо вгорі — нещодавно слухані й улюблені станції, а нижче станції згруповано за мовниками (поза Кореєю — за жанрами).';
+
+  @override
+  String get helpCarFind2 =>
+      'Торкніться «Перемішати» вгорі вкладки Музика, щоб одразу слухати свої пісні впереміш.';
+
+  @override
+  String get helpCarFind3 =>
+      'Для станцій із програмою передач також показуються фото поточної передачі й що буде далі.';
+
+  @override
+  String get helpCarVoiceHead => 'Керування голосом';
+
+  @override
+  String get helpCarVoiceHow =>
+      'Натисніть голосову кнопку на кермі або скажіть «Hey Google», а тоді скажіть, наприклад:';
+
+  @override
+  String get helpCarVoice1 => '«Увімкни (назва станції) у Paransori»';
+
+  @override
+  String get helpCarVoice2 => '«Увімкни Дощ у Paransori»';
+
+  @override
+  String get helpCarVoice3 =>
+      '«Увімкни Paransori» → продовжить з місця, де ви зупинилися.';
+
+  @override
+  String get helpCarNote =>
+      '※ Авто й телефон мають підтримувати Android Auto. Спосіб підключення та меню можуть відрізнятися залежно від пристрою.';
 }

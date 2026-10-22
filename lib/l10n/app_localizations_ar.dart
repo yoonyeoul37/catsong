@@ -4807,4 +4807,149 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get langNameUr => 'الأردية';
+
+  @override
+  String get helpGuideHeader => 'طرق متنوعة للاستمتاع';
+
+  @override
+  String get helpNewBadge => 'جديد';
+
+  @override
+  String get helpWidgetTitle => 'أداة الشاشة الرئيسية';
+
+  @override
+  String get helpWidgetWhen =>
+      'استمع إلى موسيقى Paransori والراديو وأصوات الطبيعة مباشرة من الشاشة الرئيسية دون فتح التطبيق.';
+
+  @override
+  String get helpWidgetAddHead => 'طريقة إضافة الأداة';
+
+  @override
+  String get helpWidgetAdd1 => 'اضغط مطولًا على مكان فارغ في الشاشة الرئيسية.';
+
+  @override
+  String get helpWidgetAdd2 => 'اختر «الأدوات» من القائمة وابحث عن Paransori.';
+
+  @override
+  String get helpWidgetAdd3 =>
+      'اضغط مطولًا على الأداة بالحجم الذي تريده، ثم ضعها على الشاشة الرئيسية.';
+
+  @override
+  String get helpWidgetSizeHead => 'الميزات حسب حجم الأداة';
+
+  @override
+  String get helpWidgetBasic => '① العادية (4×2)';
+
+  @override
+  String get helpWidgetBasic1 =>
+      'يظهر اسم الأغنية أو المحطة التي تستمع إليها فوق الصورة.';
+
+  @override
+  String get helpWidgetBasic2 =>
+      'استخدم أزرار السابق · تشغيل/إيقاف مؤقت · التالي.';
+
+  @override
+  String get helpWidgetBasic3 =>
+      'استخدم اختصارات الموسيقى · الراديو · الطبيعة · النوم.';
+
+  @override
+  String get helpWidgetBasic4 =>
+      'تبدأ الموسيقى والراديو والطبيعة فورًا، أما النوم فيفتح في التطبيق.';
+
+  @override
+  String get helpWidgetBig => '② الكبيرة (4×3)';
+
+  @override
+  String get helpWidgetBig1 => 'تتضمن كل ميزات الأداة العادية.';
+
+  @override
+  String get helpWidgetBig2 => 'تعرض في الأسفل آخر 3 عناصر استمعت إليها.';
+
+  @override
+  String get helpWidgetBig3 => 'اضغط على أي عنصر لتشغيله فورًا.';
+
+  @override
+  String get helpWidgetTall => '③ الطولية (2×3)';
+
+  @override
+  String get helpWidgetTall1 =>
+      'صورة في الأعلى، ومعلومات التشغيل وأزرار التحكم في الأسفل.';
+
+  @override
+  String get helpWidgetTall2 =>
+      'تظهر اختصارات الموسيقى · الراديو · الطبيعة · النوم كأيقونات.';
+
+  @override
+  String get helpWidgetAllHead => 'في كل الأدوات';
+
+  @override
+  String get helpWidgetAll1 =>
+      'اضغط ⋮ أعلى اليمين للتشغيل العشوائي والتكرار ومؤقت النوم وتغيير صورة الأداة.';
+
+  @override
+  String get helpWidgetAll2 =>
+      'يظهر التشغيل العشوائي والتكرار فقط أثناء الاستماع إلى الموسيقى.';
+
+  @override
+  String get helpWidgetNote =>
+      '※ قد يختلف حجم الأداة وموضعها حسب الهاتف وإعدادات الشاشة الرئيسية.';
+
+  @override
+  String get helpCarTitle => 'الاستماع في السيارة (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      'استمع إلى راديو Paransori والموسيقى وأصوات الطبيعة والبودكاست في السيارات التي تدعم Android Auto.';
+
+  @override
+  String get helpCarUseHead => 'طريقة الاستخدام';
+
+  @override
+  String get helpCarUse1 => 'وصّل هاتفك بالسيارة بكابل USB أو لاسلكيًا.';
+
+  @override
+  String get helpCarUse2 => 'اختر Paransori على شاشة السيارة.';
+
+  @override
+  String get helpCarUse3 =>
+      'اختر ما تريد من تبويبات الموسيقى · الراديو · Podcasts · أصوات الطبيعة.';
+
+  @override
+  String get helpCarUse4 =>
+      'أثناء القيادة يمكنك بدء التشغيل بصوتك دون لمس الشاشة.';
+
+  @override
+  String get helpCarFindHead => 'العثور بسهولة';
+
+  @override
+  String get helpCarFind1 =>
+      'في الراديو تجد في الأعلى المحطات التي استمعت إليها مؤخرًا والمفضلة، وتحتها المحطات مقسّمة حسب جهة البث (وحسب النوع خارج كوريا).';
+
+  @override
+  String get helpCarFind2 =>
+      'اضغط «عشوائي» أعلى تبويب الموسيقى لتسمع أغانيك بترتيب عشوائي فورًا.';
+
+  @override
+  String get helpCarFind3 =>
+      'المحطات التي لها جدول برامج تعرض أيضًا صورة البرنامج الحالي والبرنامج التالي.';
+
+  @override
+  String get helpCarVoiceHead => 'التشغيل بالصوت';
+
+  @override
+  String get helpCarVoiceHow =>
+      'اضغط زر الصوت على المقود أو قل «Hey Google»، ثم جرّب أن تقول:';
+
+  @override
+  String get helpCarVoice1 => '«شغّل (اسم المحطة) على Paransori»';
+
+  @override
+  String get helpCarVoice2 => '«شغّل المطر على Paransori»';
+
+  @override
+  String get helpCarVoice3 => '«شغّل Paransori» ← يكمل من حيث توقفت.';
+
+  @override
+  String get helpCarNote =>
+      '※ يجب أن تدعم السيارة والهاتف Android Auto. قد تختلف طريقة الاتصال والقوائم الظاهرة حسب الجهاز.';
 }

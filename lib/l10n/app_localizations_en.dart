@@ -4781,4 +4781,154 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get langNameUr => 'Urdu';
+
+  @override
+  String get helpGuideHeader => 'More ways to enjoy';
+
+  @override
+  String get helpNewBadge => 'New';
+
+  @override
+  String get helpWidgetTitle => 'Home screen widget';
+
+  @override
+  String get helpWidgetWhen =>
+      'Listen to Paransori music, radio and nature sounds right from your home screen, without opening the app.';
+
+  @override
+  String get helpWidgetAddHead => 'How to add a widget';
+
+  @override
+  String get helpWidgetAdd1 =>
+      'Touch and hold an empty spot on your home screen.';
+
+  @override
+  String get helpWidgetAdd2 =>
+      'Choose \'Widgets\' from the menu and find Paransori.';
+
+  @override
+  String get helpWidgetAdd3 =>
+      'Touch and hold the widget size you want, then place it on your home screen.';
+
+  @override
+  String get helpWidgetSizeHead => 'Features by widget size';
+
+  @override
+  String get helpWidgetBasic => '① Standard (4×2)';
+
+  @override
+  String get helpWidgetBasic1 =>
+      'Shows the song or station you\'re listening to over the photo.';
+
+  @override
+  String get helpWidgetBasic2 =>
+      'Use the Previous · Play/Pause · Next buttons.';
+
+  @override
+  String get helpWidgetBasic3 =>
+      'Use the Music · Radio · Nature · Sleep shortcuts.';
+
+  @override
+  String get helpWidgetBasic4 =>
+      'Music, Radio and Nature start playing right away; Sleep opens in the app.';
+
+  @override
+  String get helpWidgetBig => '② Large (4×3)';
+
+  @override
+  String get helpWidgetBig1 => 'Includes everything in the standard widget.';
+
+  @override
+  String get helpWidgetBig2 =>
+      'Shows your 3 most recently played items at the bottom.';
+
+  @override
+  String get helpWidgetBig3 => 'Tap an item to play it right away.';
+
+  @override
+  String get helpWidgetTall => '③ Vertical (2×3)';
+
+  @override
+  String get helpWidgetTall1 =>
+      'A photo on top, with playback info and controls below.';
+
+  @override
+  String get helpWidgetTall2 =>
+      'The Music · Radio · Nature · Sleep shortcuts appear as icons.';
+
+  @override
+  String get helpWidgetAllHead => 'On every widget';
+
+  @override
+  String get helpWidgetAll1 =>
+      'Tap ⋮ at the top right for shuffle and repeat, the sleep timer, and changing the widget photo.';
+
+  @override
+  String get helpWidgetAll2 =>
+      'Shuffle and repeat appear only while you\'re listening to music.';
+
+  @override
+  String get helpWidgetNote =>
+      '※ Widget sizes and placement may vary depending on your phone and home screen settings.';
+
+  @override
+  String get helpCarTitle => 'Listen in the car (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      'Listen to Paransori radio, music, nature sounds and podcasts in cars that support Android Auto.';
+
+  @override
+  String get helpCarUseHead => 'How to use';
+
+  @override
+  String get helpCarUse1 =>
+      'Connect your phone to the car with a USB cable or wirelessly.';
+
+  @override
+  String get helpCarUse2 => 'Select Paransori on the car screen.';
+
+  @override
+  String get helpCarUse3 =>
+      'Pick what you want from the Music · Radio · Podcasts · Nature sounds tabs.';
+
+  @override
+  String get helpCarUse4 =>
+      'While driving, you can start playback by voice without touching the screen.';
+
+  @override
+  String get helpCarFindHead => 'Find things quickly';
+
+  @override
+  String get helpCarFind1 =>
+      'In Radio, recently played stations and favorites are at the top, and stations below are grouped by broadcaster (by genre outside Korea).';
+
+  @override
+  String get helpCarFind2 =>
+      'Tap \'Shuffle\' at the top of the Music tab to shuffle your songs right away.';
+
+  @override
+  String get helpCarFind3 =>
+      'Stations with a program schedule also show the current program\'s photo and what\'s on next.';
+
+  @override
+  String get helpCarVoiceHead => 'Play by voice';
+
+  @override
+  String get helpCarVoiceHow =>
+      'Press the voice button on your steering wheel or say \"Hey Google\", then try saying:';
+
+  @override
+  String get helpCarVoice1 => '\"Play (station name) on Paransori\"';
+
+  @override
+  String get helpCarVoice2 => '\"Play Rain on Paransori\"';
+
+  @override
+  String get helpCarVoice3 =>
+      '\"Play Paransori\" → picks up where you left off.';
+
+  @override
+  String get helpCarNote =>
+      '※ Your car and phone must support Android Auto. Connection methods and menus may vary by device.';
 }

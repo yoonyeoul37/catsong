@@ -4790,4 +4790,151 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get langNameUr => 'Tiếng Urdu';
+
+  @override
+  String get helpGuideHeader => 'Thưởng thức theo nhiều cách';
+
+  @override
+  String get helpNewBadge => 'Mới';
+
+  @override
+  String get helpWidgetTitle => 'Tiện ích màn hình chính';
+
+  @override
+  String get helpWidgetWhen =>
+      'Nghe nhạc, radio và âm thanh thiên nhiên của Paransori ngay trên màn hình chính, không cần mở ứng dụng.';
+
+  @override
+  String get helpWidgetAddHead => 'Cách thêm tiện ích';
+
+  @override
+  String get helpWidgetAdd1 => 'Nhấn giữ vào chỗ trống trên màn hình chính.';
+
+  @override
+  String get helpWidgetAdd2 => 'Chọn \'Tiện ích\' trong menu và tìm Paransori.';
+
+  @override
+  String get helpWidgetAdd3 =>
+      'Nhấn giữ tiện ích có kích thước bạn muốn rồi đặt lên màn hình chính.';
+
+  @override
+  String get helpWidgetSizeHead => 'Tính năng theo kích thước';
+
+  @override
+  String get helpWidgetBasic => '① Tiêu chuẩn (4×2)';
+
+  @override
+  String get helpWidgetBasic1 =>
+      'Hiển thị tên bài hát hoặc kênh bạn đang nghe trên ảnh.';
+
+  @override
+  String get helpWidgetBasic2 =>
+      'Dùng các nút Trước đó · Phát/Tạm dừng · Tiếp theo.';
+
+  @override
+  String get helpWidgetBasic3 =>
+      'Dùng các lối tắt Nhạc · Radio · Thiên nhiên · Ngủ.';
+
+  @override
+  String get helpWidgetBasic4 =>
+      'Nhạc, Radio và Thiên nhiên phát ngay; Ngủ sẽ mở trong ứng dụng.';
+
+  @override
+  String get helpWidgetBig => '② Lớn (4×3)';
+
+  @override
+  String get helpWidgetBig1 => 'Có đầy đủ tính năng của tiện ích tiêu chuẩn.';
+
+  @override
+  String get helpWidgetBig2 => 'Hiển thị 3 mục nghe gần đây ở phía dưới.';
+
+  @override
+  String get helpWidgetBig3 => 'Nhấn vào một mục để phát ngay.';
+
+  @override
+  String get helpWidgetTall => '③ Dọc (2×3)';
+
+  @override
+  String get helpWidgetTall1 =>
+      'Ảnh ở trên, thông tin phát và nút điều khiển ở dưới.';
+
+  @override
+  String get helpWidgetTall2 =>
+      'Các lối tắt Nhạc · Radio · Thiên nhiên · Ngủ hiển thị dạng biểu tượng.';
+
+  @override
+  String get helpWidgetAllHead => 'Chung cho mọi tiện ích';
+
+  @override
+  String get helpWidgetAll1 =>
+      'Nhấn ⋮ ở góc trên bên phải để trộn bài và lặp lại, hẹn giờ tắt và đổi ảnh tiện ích.';
+
+  @override
+  String get helpWidgetAll2 =>
+      'Trộn bài và lặp lại chỉ hiện khi bạn đang nghe nhạc.';
+
+  @override
+  String get helpWidgetNote =>
+      '※ Kích thước và vị trí tiện ích có thể khác nhau tùy điện thoại và cài đặt màn hình chính.';
+
+  @override
+  String get helpCarTitle => 'Nghe trên ô tô (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      'Nghe radio, nhạc, âm thanh thiên nhiên và podcast của Paransori trên ô tô hỗ trợ Android Auto.';
+
+  @override
+  String get helpCarUseHead => 'Cách dùng';
+
+  @override
+  String get helpCarUse1 =>
+      'Kết nối điện thoại với ô tô bằng cáp USB hoặc không dây.';
+
+  @override
+  String get helpCarUse2 => 'Chọn Paransori trên màn hình ô tô.';
+
+  @override
+  String get helpCarUse3 =>
+      'Chọn nội dung bạn muốn ở các thẻ Nhạc · Radio · Podcasts · Âm thanh thiên nhiên.';
+
+  @override
+  String get helpCarUse4 =>
+      'Khi lái xe, bạn có thể phát bằng giọng nói mà không cần chạm vào màn hình.';
+
+  @override
+  String get helpCarFindHead => 'Tìm nhanh';
+
+  @override
+  String get helpCarFind1 =>
+      'Trong Radio, kênh nghe gần đây và yêu thích ở trên cùng, bên dưới các kênh được chia theo đài (ngoài Hàn Quốc thì theo thể loại).';
+
+  @override
+  String get helpCarFind2 =>
+      'Nhấn \'Trộn bài\' ở đầu thẻ Nhạc để phát ngẫu nhiên bài hát của bạn ngay.';
+
+  @override
+  String get helpCarFind3 =>
+      'Kênh có lịch phát sóng sẽ hiện cả ảnh chương trình hiện tại và chương trình tiếp theo.';
+
+  @override
+  String get helpCarVoiceHead => 'Phát bằng giọng nói';
+
+  @override
+  String get helpCarVoiceHow =>
+      'Nhấn nút giọng nói trên vô lăng hoặc nói \"Hey Google\", rồi thử nói:';
+
+  @override
+  String get helpCarVoice1 => '\"Phát (tên kênh) trên Paransori\"';
+
+  @override
+  String get helpCarVoice2 => '\"Phát Tiếng mưa trên Paransori\"';
+
+  @override
+  String get helpCarVoice3 =>
+      '\"Phát Paransori\" → tiếp tục phát nội dung bạn nghe lần trước.';
+
+  @override
+  String get helpCarNote =>
+      '※ Ô tô và điện thoại phải hỗ trợ Android Auto. Cách kết nối và menu hiển thị có thể khác nhau tùy thiết bị.';
 }

@@ -4576,6 +4576,132 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get langNameUr => '乌尔都语';
+
+  @override
+  String get helpGuideHeader => '多种方式畅享';
+
+  @override
+  String get helpNewBadge => '新';
+
+  @override
+  String get helpWidgetTitle => '桌面小组件';
+
+  @override
+  String get helpWidgetWhen => '无需打开应用，就能在桌面上直接收听Paransori的音乐、广播和自然声音。';
+
+  @override
+  String get helpWidgetAddHead => '如何添加小组件';
+
+  @override
+  String get helpWidgetAdd1 => '长按桌面上的空白处。';
+
+  @override
+  String get helpWidgetAdd2 => '在菜单中选择“小组件”，找到Paransori。';
+
+  @override
+  String get helpWidgetAdd3 => '长按想要的小组件尺寸，放到桌面上。';
+
+  @override
+  String get helpWidgetSizeHead => '不同尺寸的功能';
+
+  @override
+  String get helpWidgetBasic => '① 标准 (4×2)';
+
+  @override
+  String get helpWidgetBasic1 => '照片上会显示正在收听的歌曲或电台名称。';
+
+  @override
+  String get helpWidgetBasic2 => '可使用 上一首 · 播放/暂停 · 下一首 按钮。';
+
+  @override
+  String get helpWidgetBasic3 => '可使用 音乐 · 广播 · 自然 · 睡眠 快捷方式。';
+
+  @override
+  String get helpWidgetBasic4 => '音乐、广播和自然会直接播放，睡眠会在应用中打开。';
+
+  @override
+  String get helpWidgetBig => '② 大尺寸 (4×3)';
+
+  @override
+  String get helpWidgetBig1 => '包含标准小组件的全部功能。';
+
+  @override
+  String get helpWidgetBig2 => '底部会显示最近收听的3个项目。';
+
+  @override
+  String get helpWidgetBig3 => '点一下即可直接播放。';
+
+  @override
+  String get helpWidgetTall => '③ 竖版 (2×3)';
+
+  @override
+  String get helpWidgetTall1 => '上方显示照片，下方显示播放信息和控制按钮。';
+
+  @override
+  String get helpWidgetTall2 => '音乐 · 广播 · 自然 · 睡眠 快捷方式以图标显示。';
+
+  @override
+  String get helpWidgetAllHead => '所有小组件通用';
+
+  @override
+  String get helpWidgetAll1 => '点右上角的⋮，可以设置随机播放和重复、睡眠计时器，以及更换小组件照片。';
+
+  @override
+  String get helpWidgetAll2 => '随机播放和重复仅在听音乐时显示。';
+
+  @override
+  String get helpWidgetNote => '※ 小组件的尺寸和摆放方式可能因手机和桌面设置而不同。';
+
+  @override
+  String get helpCarTitle => '在车上收听 (Android Auto)';
+
+  @override
+  String get helpCarWhen => '在支持Android Auto的车上，可以收听Paransori的广播、音乐、自然声音和播客。';
+
+  @override
+  String get helpCarUseHead => '使用方法';
+
+  @override
+  String get helpCarUse1 => '用USB数据线或无线方式将手机连接到车辆。';
+
+  @override
+  String get helpCarUse2 => '在车辆屏幕上选择Paransori。';
+
+  @override
+  String get helpCarUse3 => '在 音乐 · 广播 · Podcasts · 自然声音 标签中选择想听的内容。';
+
+  @override
+  String get helpCarUse4 => '开车时无需触碰屏幕，用语音就能播放。';
+
+  @override
+  String get helpCarFindHead => '轻松查找';
+
+  @override
+  String get helpCarFind1 => '广播页最上方是最近收听的电台和收藏，下方按电台机构分类（韩国以外按类型分类）。';
+
+  @override
+  String get helpCarFind2 => '点音乐标签最上方的“随机播放”，即可随机播放你的歌曲。';
+
+  @override
+  String get helpCarFind3 => '有节目表的电台还会显示当前节目的照片和下一个节目。';
+
+  @override
+  String get helpCarVoiceHead => '语音播放';
+
+  @override
+  String get helpCarVoiceHow => '按下方向盘上的语音按钮或说“Hey Google”，然后试着说：';
+
+  @override
+  String get helpCarVoice1 => '“用Paransori播放(电台名称)”';
+
+  @override
+  String get helpCarVoice2 => '“用Paransori播放雨声”';
+
+  @override
+  String get helpCarVoice3 => '“播放Paransori” → 接着播放上次收听的内容。';
+
+  @override
+  String get helpCarNote => '※ 车辆和手机都需要支持Android Auto。连接方式和显示的菜单可能因设备而异。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -9150,4 +9276,131 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get langNameUr => '烏爾都文';
+
+  @override
+  String get helpGuideHeader => '多種方式暢享';
+
+  @override
+  String get helpNewBadge => '新';
+
+  @override
+  String get helpWidgetTitle => '主畫面小工具';
+
+  @override
+  String get helpWidgetWhen => '不用開啟應用程式，就能在主畫面直接收聽Paransori的音樂、廣播和自然聲音。';
+
+  @override
+  String get helpWidgetAddHead => '如何新增小工具';
+
+  @override
+  String get helpWidgetAdd1 => '長按主畫面上的空白處。';
+
+  @override
+  String get helpWidgetAdd2 => '在選單中選擇「小工具」，找到Paransori。';
+
+  @override
+  String get helpWidgetAdd3 => '長按想要的小工具尺寸，放到主畫面上。';
+
+  @override
+  String get helpWidgetSizeHead => '各尺寸的功能';
+
+  @override
+  String get helpWidgetBasic => '① 標準 (4×2)';
+
+  @override
+  String get helpWidgetBasic1 => '相片上會顯示正在收聽的歌曲或電台名稱。';
+
+  @override
+  String get helpWidgetBasic2 => '可使用 上一首 · 播放/暫停 · 下一首 按鈕。';
+
+  @override
+  String get helpWidgetBasic3 => '可使用 音樂 · 廣播 · 自然 · 睡眠 捷徑。';
+
+  @override
+  String get helpWidgetBasic4 => '音樂、廣播和自然會直接播放，睡眠會在應用程式中開啟。';
+
+  @override
+  String get helpWidgetBig => '② 大尺寸 (4×3)';
+
+  @override
+  String get helpWidgetBig1 => '包含標準小工具的所有功能。';
+
+  @override
+  String get helpWidgetBig2 => '下方會顯示最近收聽的3個項目。';
+
+  @override
+  String get helpWidgetBig3 => '點一下即可直接播放。';
+
+  @override
+  String get helpWidgetTall => '③ 直式 (2×3)';
+
+  @override
+  String get helpWidgetTall1 => '上方顯示相片，下方顯示播放資訊和控制按鈕。';
+
+  @override
+  String get helpWidgetTall2 => '音樂 · 廣播 · 自然 · 睡眠 捷徑以圖示顯示。';
+
+  @override
+  String get helpWidgetAllHead => '所有小工具通用';
+
+  @override
+  String get helpWidgetAll1 => '點右上角的⋮，可以設定隨機播放和重複、睡眠計時器，以及更換小工具相片。';
+
+  @override
+  String get helpWidgetAll2 => '隨機播放和重複只在聽音樂時顯示。';
+
+  @override
+  String get helpWidgetNote => '※ 小工具的尺寸和擺放方式可能因手機和主畫面設定而不同。';
+
+  @override
+  String get helpCarTitle => '在車上收聽 (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      '在支援Android Auto的車上，可以收聽Paransori的廣播、音樂、自然聲音和Podcast。';
+
+  @override
+  String get helpCarUseHead => '使用方式';
+
+  @override
+  String get helpCarUse1 => '用USB傳輸線或無線方式將手機連接到車輛。';
+
+  @override
+  String get helpCarUse2 => '在車輛螢幕上選擇Paransori。';
+
+  @override
+  String get helpCarUse3 => '在 音樂 · 廣播 · Podcasts · 自然聲音 分頁中選擇想聽的內容。';
+
+  @override
+  String get helpCarUse4 => '開車時不必觸碰螢幕，用語音就能播放。';
+
+  @override
+  String get helpCarFindHead => '輕鬆找到';
+
+  @override
+  String get helpCarFind1 => '廣播頁最上方是最近收聽的電台和我的最愛，下方依電台業者分類（韓國以外依類型分類）。';
+
+  @override
+  String get helpCarFind2 => '點音樂分頁最上方的「隨機播放」，就能隨機播放你的歌曲。';
+
+  @override
+  String get helpCarFind3 => '有節目表的電台還會顯示目前節目的相片和下一個節目。';
+
+  @override
+  String get helpCarVoiceHead => '用語音播放';
+
+  @override
+  String get helpCarVoiceHow => '按下方向盤上的語音按鈕或說「Hey Google」，然後試著說：';
+
+  @override
+  String get helpCarVoice1 => '「用Paransori播放(電台名稱)」';
+
+  @override
+  String get helpCarVoice2 => '「用Paransori播放雨聲」';
+
+  @override
+  String get helpCarVoice3 => '「播放Paransori」→ 接著播放上次收聽的內容。';
+
+  @override
+  String get helpCarNote => '※ 車輛和手機都必須支援Android Auto。連線方式和顯示的選單可能因裝置而異。';
 }

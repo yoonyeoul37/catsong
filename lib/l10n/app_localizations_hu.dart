@@ -4798,4 +4798,153 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get langNameUr => 'Urdu';
+
+  @override
+  String get helpGuideHeader => 'Élvezd többféleképpen';
+
+  @override
+  String get helpNewBadge => 'Új';
+
+  @override
+  String get helpWidgetTitle => 'Kezdőképernyő-widget';
+
+  @override
+  String get helpWidgetWhen =>
+      'Hallgasd a Paransori zenéit, rádióit és természethangjait közvetlenül a kezdőképernyőről, az app megnyitása nélkül.';
+
+  @override
+  String get helpWidgetAddHead => 'Widget hozzáadása';
+
+  @override
+  String get helpWidgetAdd1 =>
+      'Nyomj hosszan egy üres helyet a kezdőképernyőn.';
+
+  @override
+  String get helpWidgetAdd2 =>
+      'Válaszd a menüben a „Widgetek” lehetőséget, és keresd meg a Paransorit.';
+
+  @override
+  String get helpWidgetAdd3 =>
+      'Nyomd hosszan a kívánt méretű widgetet, és tedd ki a kezdőképernyőre.';
+
+  @override
+  String get helpWidgetSizeHead => 'Funkciók widgetméret szerint';
+
+  @override
+  String get helpWidgetBasic => '① Alap (4×2)';
+
+  @override
+  String get helpWidgetBasic1 =>
+      'A fotón látszik az éppen hallgatott dal vagy adó neve.';
+
+  @override
+  String get helpWidgetBasic2 =>
+      'Használhatod az Előző · Lejátszás/Szünet · Következő gombokat.';
+
+  @override
+  String get helpWidgetBasic3 =>
+      'Használhatod a Zene · Rádió · Természet · Alvás parancsikonokat.';
+
+  @override
+  String get helpWidgetBasic4 =>
+      'A Zene, a Rádió és a Természet azonnal szól, az Alvás az appban nyílik meg.';
+
+  @override
+  String get helpWidgetBig => '② Nagy (4×3)';
+
+  @override
+  String get helpWidgetBig1 => 'Az alap widget minden funkcióját tudja.';
+
+  @override
+  String get helpWidgetBig2 => 'Alul látod a 3 legutóbb hallgatott elemet.';
+
+  @override
+  String get helpWidgetBig3 => 'Koppints egy elemre, és azonnal szól.';
+
+  @override
+  String get helpWidgetTall => '③ Álló (2×3)';
+
+  @override
+  String get helpWidgetTall1 =>
+      'Felül egy fotó, alatta a lejátszási adatok és a vezérlőgombok.';
+
+  @override
+  String get helpWidgetTall2 =>
+      'A Zene · Rádió · Természet · Alvás parancsikonok ikonként jelennek meg.';
+
+  @override
+  String get helpWidgetAllHead => 'Minden widgeten';
+
+  @override
+  String get helpWidgetAll1 =>
+      'Koppints a jobb felső ⋮ ikonra a keveréshez és ismétléshez, az elalvásidőzítőhöz vagy a widget fotójának cseréjéhez.';
+
+  @override
+  String get helpWidgetAll2 =>
+      'A keverés és az ismétlés csak zenehallgatás közben jelenik meg.';
+
+  @override
+  String get helpWidgetNote =>
+      '※ A widget mérete és elhelyezése a telefontól és a kezdőképernyő beállításaitól függően eltérhet.';
+
+  @override
+  String get helpCarTitle => 'Hallgasd az autóban (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      'Hallgasd a Paransori rádióit, zenéit, természethangjait és podcastjait Android Autót támogató autókban.';
+
+  @override
+  String get helpCarUseHead => 'Használat';
+
+  @override
+  String get helpCarUse1 =>
+      'Csatlakoztasd a telefont az autóhoz USB-kábellel vagy vezeték nélkül.';
+
+  @override
+  String get helpCarUse2 => 'Válaszd ki a Paransorit az autó képernyőjén.';
+
+  @override
+  String get helpCarUse3 =>
+      'Válaszd ki, amit szeretnél, a Zene · Rádió · Podcasts · Természethangok lapokon.';
+
+  @override
+  String get helpCarUse4 =>
+      'Vezetés közben hanggal is indíthatod a lejátszást, a képernyő érintése nélkül.';
+
+  @override
+  String get helpCarFindHead => 'Gyors keresés';
+
+  @override
+  String get helpCarFind1 =>
+      'A Rádióban felül a legutóbb hallgatott és a kedvenc adók vannak, alattuk az adók műsorszolgáltató szerint (Koreán kívül műfaj szerint) csoportosítva.';
+
+  @override
+  String get helpCarFind2 =>
+      'Koppints a Zene lap tetején a „Keverés” gombra, és azonnal szólnak a dalaid keverve.';
+
+  @override
+  String get helpCarFind3 =>
+      'A műsorrenddel rendelkező adóknál az aktuális műsor fotója és a következő műsor is látszik.';
+
+  @override
+  String get helpCarVoiceHead => 'Lejátszás hanggal';
+
+  @override
+  String get helpCarVoiceHow =>
+      'Nyomd meg a kormányon a hangvezérlés gombját, vagy mondd, hogy „Hey Google”, majd próbáld ezt:';
+
+  @override
+  String get helpCarVoice1 => '„Játszd le a Paransorin: (adó neve)”';
+
+  @override
+  String get helpCarVoice2 => '„Játszd le a Paransorin: Eső”';
+
+  @override
+  String get helpCarVoice3 =>
+      '„Indítsd el a Paransorit” → onnan folytatja, ahol abbahagytad.';
+
+  @override
+  String get helpCarNote =>
+      '※ Az autónak és a telefonnak támogatnia kell az Android Autót. A csatlakozás módja és a menük eszközönként eltérhetnek.';
 }

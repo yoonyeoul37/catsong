@@ -4815,4 +4815,153 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get langNameUr => 'Urdština';
+
+  @override
+  String get helpGuideHeader => 'Další způsoby, jak si to užít';
+
+  @override
+  String get helpNewBadge => 'Nové';
+
+  @override
+  String get helpWidgetTitle => 'Widget na ploše';
+
+  @override
+  String get helpWidgetWhen =>
+      'Poslouchejte hudbu, rádio a zvuky přírody z Paransori přímo z plochy, bez otevírání aplikace.';
+
+  @override
+  String get helpWidgetAddHead => 'Jak přidat widget';
+
+  @override
+  String get helpWidgetAdd1 => 'Podržte prst na prázdném místě plochy.';
+
+  @override
+  String get helpWidgetAdd2 =>
+      'V nabídce vyberte „Widgety“ a najděte Paransori.';
+
+  @override
+  String get helpWidgetAdd3 =>
+      'Podržte widget v požadované velikosti a umístěte ho na plochu.';
+
+  @override
+  String get helpWidgetSizeHead => 'Funkce podle velikosti widgetu';
+
+  @override
+  String get helpWidgetBasic => '① Základní (4×2)';
+
+  @override
+  String get helpWidgetBasic1 =>
+      'Na fotce se zobrazuje skladba nebo stanice, kterou posloucháte.';
+
+  @override
+  String get helpWidgetBasic2 =>
+      'Můžete používat tlačítka Předchozí · Přehrát/Pozastavit · Další.';
+
+  @override
+  String get helpWidgetBasic3 =>
+      'Můžete používat zkratky Hudba · Rádio · Příroda · Spánek.';
+
+  @override
+  String get helpWidgetBasic4 =>
+      'Hudba, Rádio a Příroda se spustí hned, Spánek se otevře v aplikaci.';
+
+  @override
+  String get helpWidgetBig => '② Velký (4×3)';
+
+  @override
+  String get helpWidgetBig1 => 'Obsahuje vše, co základní widget.';
+
+  @override
+  String get helpWidgetBig2 =>
+      'Dole se zobrazují 3 naposledy přehrané položky.';
+
+  @override
+  String get helpWidgetBig3 => 'Klepnutím na položku ji hned přehrajete.';
+
+  @override
+  String get helpWidgetTall => '③ Svislý (2×3)';
+
+  @override
+  String get helpWidgetTall1 =>
+      'Nahoře fotka, pod ní informace o přehrávání a ovládací tlačítka.';
+
+  @override
+  String get helpWidgetTall2 =>
+      'Zkratky Hudba · Rádio · Příroda · Spánek se zobrazují jako ikony.';
+
+  @override
+  String get helpWidgetAllHead => 'Ve všech widgetech';
+
+  @override
+  String get helpWidgetAll1 =>
+      'Klepnutím na ⋮ vpravo nahoře zapnete náhodné přehrávání a opakování, časovač spánku nebo změníte fotku widgetu.';
+
+  @override
+  String get helpWidgetAll2 =>
+      'Náhodné přehrávání a opakování se zobrazí jen při poslechu hudby.';
+
+  @override
+  String get helpWidgetNote =>
+      '※ Velikost a rozmístění widgetu se mohou lišit podle telefonu a nastavení plochy.';
+
+  @override
+  String get helpCarTitle => 'Poslech v autě (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      'Poslouchejte rádio, hudbu, zvuky přírody a podcasty z Paransori v autech s podporou Android Auto.';
+
+  @override
+  String get helpCarUseHead => 'Jak na to';
+
+  @override
+  String get helpCarUse1 =>
+      'Připojte telefon k autu kabelem USB nebo bezdrátově.';
+
+  @override
+  String get helpCarUse2 => 'Na obrazovce auta vyberte Paransori.';
+
+  @override
+  String get helpCarUse3 =>
+      'Vyberte, co chcete, na kartách Hudba · Rádio · Podcasts · Zvuky přírody.';
+
+  @override
+  String get helpCarUse4 =>
+      'Během jízdy můžete přehrávání spustit hlasem, bez dotyku obrazovky.';
+
+  @override
+  String get helpCarFindHead => 'Snadné hledání';
+
+  @override
+  String get helpCarFind1 =>
+      'V Rádiu jsou nahoře nedávno přehrávané a oblíbené stanice, pod nimi stanice podle vysílatele (mimo Koreu podle žánru).';
+
+  @override
+  String get helpCarFind2 =>
+      'Klepněte na „Náhodně“ nahoře na kartě Hudba a hned si pusťte své skladby v náhodném pořadí.';
+
+  @override
+  String get helpCarFind3 =>
+      'U stanic s programem se zobrazuje i fotka aktuálního pořadu a co bude dál.';
+
+  @override
+  String get helpCarVoiceHead => 'Ovládání hlasem';
+
+  @override
+  String get helpCarVoiceHow =>
+      'Stiskněte hlasové tlačítko na volantu nebo řekněte „Hey Google“ a pak zkuste říct:';
+
+  @override
+  String get helpCarVoice1 => '„Pusť (název stanice) v Paransori“';
+
+  @override
+  String get helpCarVoice2 => '„Pusť Déšť v Paransori“';
+
+  @override
+  String get helpCarVoice3 =>
+      '„Pusť Paransori“ → pokračuje tam, kde jste skončili.';
+
+  @override
+  String get helpCarNote =>
+      '※ Auto i telefon musí podporovat Android Auto. Způsob připojení a zobrazené nabídky se mohou lišit podle zařízení.';
 }

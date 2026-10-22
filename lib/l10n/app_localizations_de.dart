@@ -4822,4 +4822,153 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get langNameUr => 'Urdu';
+
+  @override
+  String get helpGuideHeader => 'Mehr Möglichkeiten zum Genießen';
+
+  @override
+  String get helpNewBadge => 'Neu';
+
+  @override
+  String get helpWidgetTitle => 'Startbildschirm-Widget';
+
+  @override
+  String get helpWidgetWhen =>
+      'Hör Musik, Radio und Naturklänge von Paransori direkt auf dem Startbildschirm, ohne die App zu öffnen.';
+
+  @override
+  String get helpWidgetAddHead => 'So fügst du ein Widget hinzu';
+
+  @override
+  String get helpWidgetAdd1 =>
+      'Halte eine freie Stelle auf dem Startbildschirm gedrückt.';
+
+  @override
+  String get helpWidgetAdd2 => 'Wähle im Menü \'Widgets\' und suche Paransori.';
+
+  @override
+  String get helpWidgetAdd3 =>
+      'Halte das Widget in der gewünschten Größe gedrückt und platziere es auf dem Startbildschirm.';
+
+  @override
+  String get helpWidgetSizeHead => 'Funktionen je nach Widget-Größe';
+
+  @override
+  String get helpWidgetBasic => '① Standard (4×2)';
+
+  @override
+  String get helpWidgetBasic1 =>
+      'Zeigt über dem Foto den Song oder Sender, den du gerade hörst.';
+
+  @override
+  String get helpWidgetBasic2 =>
+      'Nutze die Tasten Zurück · Wiedergabe/Pause · Weiter.';
+
+  @override
+  String get helpWidgetBasic3 =>
+      'Nutze die Verknüpfungen Musik · Radio · Natur · Schlaf.';
+
+  @override
+  String get helpWidgetBasic4 =>
+      'Musik, Radio und Natur starten sofort; Schlaf öffnet sich in der App.';
+
+  @override
+  String get helpWidgetBig => '② Groß (4×3)';
+
+  @override
+  String get helpWidgetBig1 => 'Enthält alles vom Standard-Widget.';
+
+  @override
+  String get helpWidgetBig2 => 'Zeigt unten deine 3 zuletzt gehörten Einträge.';
+
+  @override
+  String get helpWidgetBig3 =>
+      'Tippe auf einen Eintrag, um ihn sofort abzuspielen.';
+
+  @override
+  String get helpWidgetTall => '③ Hochformat (2×3)';
+
+  @override
+  String get helpWidgetTall1 =>
+      'Oben ein Foto, darunter Wiedergabe-Infos und Steuerung.';
+
+  @override
+  String get helpWidgetTall2 =>
+      'Die Verknüpfungen Musik · Radio · Natur · Schlaf erscheinen als Symbole.';
+
+  @override
+  String get helpWidgetAllHead => 'Bei allen Widgets';
+
+  @override
+  String get helpWidgetAll1 =>
+      'Tippe oben rechts auf ⋮ für Zufall und Wiederholen, den Sleep-Timer und zum Ändern des Widget-Fotos.';
+
+  @override
+  String get helpWidgetAll2 =>
+      'Zufall und Wiederholen erscheinen nur, während du Musik hörst.';
+
+  @override
+  String get helpWidgetNote =>
+      '※ Größe und Anordnung der Widgets können je nach Handy und Startbildschirm-Einstellungen abweichen.';
+
+  @override
+  String get helpCarTitle => 'Im Auto hören (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      'Hör Radio, Musik, Naturklänge und Podcasts von Paransori in Autos, die Android Auto unterstützen.';
+
+  @override
+  String get helpCarUseHead => 'So geht\'s';
+
+  @override
+  String get helpCarUse1 =>
+      'Verbinde dein Handy per USB-Kabel oder kabellos mit dem Auto.';
+
+  @override
+  String get helpCarUse2 => 'Wähle Paransori auf dem Autodisplay.';
+
+  @override
+  String get helpCarUse3 =>
+      'Wähle in den Tabs Musik · Radio · Podcasts · Naturklänge aus, was du hören möchtest.';
+
+  @override
+  String get helpCarUse4 =>
+      'Beim Fahren kannst du per Sprache abspielen, ohne den Bildschirm zu berühren.';
+
+  @override
+  String get helpCarFindHead => 'Schnell finden';
+
+  @override
+  String get helpCarFind1 =>
+      'Unter Radio stehen oben zuletzt gehörte Sender und Favoriten, darunter sind die Sender nach Sendeanstalt gruppiert (außerhalb Koreas nach Genre).';
+
+  @override
+  String get helpCarFind2 =>
+      'Tippe oben im Tab Musik auf \'Zufällig\', um deine Songs sofort gemischt abzuspielen.';
+
+  @override
+  String get helpCarFind3 =>
+      'Sender mit Programmplan zeigen auch das Foto der aktuellen Sendung und was als Nächstes kommt.';
+
+  @override
+  String get helpCarVoiceHead => 'Per Sprache abspielen';
+
+  @override
+  String get helpCarVoiceHow =>
+      'Drück die Sprachtaste am Lenkrad oder sag \"Hey Google\" und sag dann zum Beispiel:';
+
+  @override
+  String get helpCarVoice1 => '„Spiele (Sendername) auf Paransori“';
+
+  @override
+  String get helpCarVoice2 => '„Spiele Regen auf Paransori“';
+
+  @override
+  String get helpCarVoice3 =>
+      '„Spiele Paransori“ → macht da weiter, wo du aufgehört hast.';
+
+  @override
+  String get helpCarNote =>
+      '※ Auto und Handy müssen Android Auto unterstützen. Verbindungsart und angezeigte Menüs können je nach Gerät abweichen.';
 }

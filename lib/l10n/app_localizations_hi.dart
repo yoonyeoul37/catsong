@@ -4780,4 +4780,152 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get langNameUr => 'उर्दू';
+
+  @override
+  String get helpGuideHeader => 'कई तरीकों से आनंद लें';
+
+  @override
+  String get helpNewBadge => 'नया';
+
+  @override
+  String get helpWidgetTitle => 'होम स्क्रीन विजेट';
+
+  @override
+  String get helpWidgetWhen =>
+      'ऐप खोले बिना होम स्क्रीन से ही Paransori का म्यूज़िक, रेडियो और प्रकृति की आवाज़ें सुनें।';
+
+  @override
+  String get helpWidgetAddHead => 'विजेट कैसे जोड़ें';
+
+  @override
+  String get helpWidgetAdd1 => 'होम स्क्रीन पर किसी खाली जगह को दबाकर रखें।';
+
+  @override
+  String get helpWidgetAdd2 =>
+      'मेन्यू में \'विजेट\' चुनें और Paransori ढूँढें।';
+
+  @override
+  String get helpWidgetAdd3 =>
+      'अपनी पसंद के साइज़ वाले विजेट को दबाकर रखें और होम स्क्रीन पर रखें।';
+
+  @override
+  String get helpWidgetSizeHead => 'विजेट साइज़ के हिसाब से फ़ीचर';
+
+  @override
+  String get helpWidgetBasic => '① स्टैंडर्ड (4×2)';
+
+  @override
+  String get helpWidgetBasic1 =>
+      'फ़ोटो पर अभी चल रहे गाने या स्टेशन का नाम दिखता है।';
+
+  @override
+  String get helpWidgetBasic2 =>
+      'पिछला · चलाएँ/रोकें · अगला बटन इस्तेमाल करें।';
+
+  @override
+  String get helpWidgetBasic3 =>
+      'म्यूज़िक · रेडियो · प्रकृति · स्लीप शॉर्टकट इस्तेमाल करें।';
+
+  @override
+  String get helpWidgetBasic4 =>
+      'म्यूज़िक, रेडियो और प्रकृति तुरंत चलने लगते हैं; स्लीप ऐप में खुलता है।';
+
+  @override
+  String get helpWidgetBig => '② बड़ा (4×3)';
+
+  @override
+  String get helpWidgetBig1 => 'स्टैंडर्ड विजेट के सभी फ़ीचर मिलते हैं।';
+
+  @override
+  String get helpWidgetBig2 => 'नीचे हाल में सुने गए 3 आइटम दिखते हैं।';
+
+  @override
+  String get helpWidgetBig3 => 'किसी आइटम पर टैप करके उसे तुरंत चलाएँ।';
+
+  @override
+  String get helpWidgetTall => '③ वर्टिकल (2×3)';
+
+  @override
+  String get helpWidgetTall1 =>
+      'ऊपर फ़ोटो, नीचे प्लेबैक जानकारी और कंट्रोल बटन दिखते हैं।';
+
+  @override
+  String get helpWidgetTall2 =>
+      'म्यूज़िक · रेडियो · प्रकृति · स्लीप शॉर्टकट आइकन के रूप में दिखते हैं।';
+
+  @override
+  String get helpWidgetAllHead => 'सभी विजेट में';
+
+  @override
+  String get helpWidgetAll1 =>
+      'ऊपर दाईं ओर ⋮ पर टैप करके शफ़ल और रिपीट, स्लीप टाइमर और विजेट फ़ोटो बदलना चुनें।';
+
+  @override
+  String get helpWidgetAll2 =>
+      'शफ़ल और रिपीट सिर्फ़ म्यूज़िक सुनते समय दिखते हैं।';
+
+  @override
+  String get helpWidgetNote =>
+      '※ विजेट का साइज़ और जगह आपके फ़ोन और होम स्क्रीन सेटिंग्स के हिसाब से अलग हो सकती है।';
+
+  @override
+  String get helpCarTitle => 'कार में सुनें (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      'Android Auto सपोर्ट करने वाली कारों में Paransori का रेडियो, म्यूज़िक, प्रकृति की आवाज़ें और पॉडकास्ट सुनें।';
+
+  @override
+  String get helpCarUseHead => 'इस्तेमाल कैसे करें';
+
+  @override
+  String get helpCarUse1 =>
+      'फ़ोन को USB केबल से या वायरलेस तरीके से कार से कनेक्ट करें।';
+
+  @override
+  String get helpCarUse2 => 'कार की स्क्रीन पर Paransori चुनें।';
+
+  @override
+  String get helpCarUse3 =>
+      'म्यूज़िक · रेडियो · Podcasts · प्रकृति की आवाज़ें टैब में से जो सुनना है चुनें।';
+
+  @override
+  String get helpCarUse4 =>
+      'गाड़ी चलाते समय स्क्रीन छुए बिना आवाज़ से चला सकते हैं।';
+
+  @override
+  String get helpCarFindHead => 'जल्दी ढूँढें';
+
+  @override
+  String get helpCarFind1 =>
+      'रेडियो में सबसे ऊपर हाल में सुने गए स्टेशन और पसंदीदा होते हैं, और नीचे स्टेशन ब्रॉडकास्टर के हिसाब से (कोरिया के बाहर शैली के हिसाब से) बँटे होते हैं।';
+
+  @override
+  String get helpCarFind2 =>
+      'म्यूज़िक टैब में सबसे ऊपर \'शफ़ल\' पर टैप करें, आपके गाने तुरंत शफ़ल होकर चलेंगे।';
+
+  @override
+  String get helpCarFind3 =>
+      'जिन स्टेशनों का प्रोग्राम शेड्यूल है, उनमें अभी चल रहे प्रोग्राम की फ़ोटो और अगला प्रोग्राम भी दिखता है।';
+
+  @override
+  String get helpCarVoiceHead => 'आवाज़ से चलाएँ';
+
+  @override
+  String get helpCarVoiceHow =>
+      'स्टीयरिंग व्हील पर वॉइस बटन दबाएँ या \"Hey Google\" बोलें, फिर ऐसे बोलकर देखें:';
+
+  @override
+  String get helpCarVoice1 => '\"Paransori पर (स्टेशन का नाम) चलाओ\"';
+
+  @override
+  String get helpCarVoice2 => '\"Paransori पर बारिश चलाओ\"';
+
+  @override
+  String get helpCarVoice3 =>
+      '\"Paransori चलाओ\" → जहाँ छोड़ा था वहीं से चलने लगेगा।';
+
+  @override
+  String get helpCarNote =>
+      '※ आपकी कार और फ़ोन में Android Auto सपोर्ट होना चाहिए। कनेक्ट करने का तरीका और दिखने वाले मेन्यू डिवाइस के हिसाब से अलग हो सकते हैं।';
 }

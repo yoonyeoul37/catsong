@@ -4823,4 +4823,156 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get langNameUr => 'Ourdou';
+
+  @override
+  String get helpGuideHeader => 'Plus de façons d’en profiter';
+
+  @override
+  String get helpNewBadge => 'Nouveau';
+
+  @override
+  String get helpWidgetTitle => 'Widget de l’écran d’accueil';
+
+  @override
+  String get helpWidgetWhen =>
+      'Écoutez la musique, la radio et les sons de la nature de Paransori directement depuis l’écran d’accueil, sans ouvrir l’app.';
+
+  @override
+  String get helpWidgetAddHead => 'Ajouter un widget';
+
+  @override
+  String get helpWidgetAdd1 =>
+      'Appuyez de manière prolongée sur un espace vide de l’écran d’accueil.';
+
+  @override
+  String get helpWidgetAdd2 =>
+      'Choisissez « Widgets » dans le menu et cherchez Paransori.';
+
+  @override
+  String get helpWidgetAdd3 =>
+      'Appuyez de manière prolongée sur le widget de la taille voulue, puis placez-le sur l’écran d’accueil.';
+
+  @override
+  String get helpWidgetSizeHead => 'Fonctions selon la taille';
+
+  @override
+  String get helpWidgetBasic => '① Standard (4×2)';
+
+  @override
+  String get helpWidgetBasic1 =>
+      'Affiche sur la photo le titre ou la station que vous écoutez.';
+
+  @override
+  String get helpWidgetBasic2 =>
+      'Utilisez les boutons Précédent · Lecture/Pause · Suivant.';
+
+  @override
+  String get helpWidgetBasic3 =>
+      'Utilisez les raccourcis Musique · Radio · Nature · Sommeil.';
+
+  @override
+  String get helpWidgetBasic4 =>
+      'Musique, Radio et Nature se lancent tout de suite ; Sommeil s’ouvre dans l’app.';
+
+  @override
+  String get helpWidgetBig => '② Grand (4×3)';
+
+  @override
+  String get helpWidgetBig1 =>
+      'Comprend tout ce que propose le widget standard.';
+
+  @override
+  String get helpWidgetBig2 =>
+      'Affiche en bas vos 3 derniers éléments écoutés.';
+
+  @override
+  String get helpWidgetBig3 =>
+      'Touchez un élément pour le lancer tout de suite.';
+
+  @override
+  String get helpWidgetTall => '③ Vertical (2×3)';
+
+  @override
+  String get helpWidgetTall1 =>
+      'Une photo en haut, avec les infos de lecture et les commandes en dessous.';
+
+  @override
+  String get helpWidgetTall2 =>
+      'Les raccourcis Musique · Radio · Nature · Sommeil s’affichent sous forme d’icônes.';
+
+  @override
+  String get helpWidgetAllHead => 'Sur tous les widgets';
+
+  @override
+  String get helpWidgetAll1 =>
+      'Touchez ⋮ en haut à droite pour la lecture aléatoire et la répétition, le minuteur de veille et le changement de photo du widget.';
+
+  @override
+  String get helpWidgetAll2 =>
+      'Aléatoire et répétition n’apparaissent que pendant l’écoute de musique.';
+
+  @override
+  String get helpWidgetNote =>
+      '※ La taille et l’emplacement des widgets peuvent varier selon votre téléphone et les réglages de l’écran d’accueil.';
+
+  @override
+  String get helpCarTitle => 'Écouter en voiture (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      'Écoutez la radio, la musique, les sons de la nature et les podcasts de Paransori dans les voitures compatibles Android Auto.';
+
+  @override
+  String get helpCarUseHead => 'Utilisation';
+
+  @override
+  String get helpCarUse1 =>
+      'Connectez votre téléphone à la voiture avec un câble USB ou sans fil.';
+
+  @override
+  String get helpCarUse2 => 'Sélectionnez Paransori sur l’écran de la voiture.';
+
+  @override
+  String get helpCarUse3 =>
+      'Choisissez ce que vous voulez dans les onglets Musique · Radio · Podcasts · Sons de la nature.';
+
+  @override
+  String get helpCarUse4 =>
+      'En conduisant, vous pouvez lancer la lecture à la voix, sans toucher l’écran.';
+
+  @override
+  String get helpCarFindHead => 'Trouver vite';
+
+  @override
+  String get helpCarFind1 =>
+      'Dans Radio, les stations récentes et les favoris sont en haut, et en dessous les stations sont classées par diffuseur (par genre hors de Corée).';
+
+  @override
+  String get helpCarFind2 =>
+      'Touchez « Aléatoire » en haut de l’onglet Musique pour écouter vos titres mélangés tout de suite.';
+
+  @override
+  String get helpCarFind3 =>
+      'Les stations avec une grille de programmes affichent aussi la photo du programme en cours et la suite.';
+
+  @override
+  String get helpCarVoiceHead => 'Lancer à la voix';
+
+  @override
+  String get helpCarVoiceHow =>
+      'Appuyez sur le bouton vocal du volant ou dites « Hey Google », puis essayez de dire :';
+
+  @override
+  String get helpCarVoice1 => '« Mets (nom de la station) sur Paransori »';
+
+  @override
+  String get helpCarVoice2 => '« Mets Pluie sur Paransori »';
+
+  @override
+  String get helpCarVoice3 =>
+      '« Mets Paransori » → reprend là où vous vous étiez arrêté.';
+
+  @override
+  String get helpCarNote =>
+      '※ Votre voiture et votre téléphone doivent être compatibles Android Auto. Le mode de connexion et les menus affichés peuvent varier selon l’appareil.';
 }

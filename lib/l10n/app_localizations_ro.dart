@@ -4821,4 +4821,152 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get langNameUr => 'Urdu';
+
+  @override
+  String get helpGuideHeader => 'Mai multe moduri de a te bucura';
+
+  @override
+  String get helpNewBadge => 'Nou';
+
+  @override
+  String get helpWidgetTitle => 'Widget pe ecranul principal';
+
+  @override
+  String get helpWidgetWhen =>
+      'Ascultă muzică, radio și sunete din natură din Paransori direct de pe ecranul principal, fără să deschizi aplicația.';
+
+  @override
+  String get helpWidgetAddHead => 'Cum adaugi un widget';
+
+  @override
+  String get helpWidgetAdd1 =>
+      'Ține apăsat pe un loc liber de pe ecranul principal.';
+
+  @override
+  String get helpWidgetAdd2 =>
+      'Alege „Widgeturi” din meniu și caută Paransori.';
+
+  @override
+  String get helpWidgetAdd3 =>
+      'Ține apăsat widgetul de mărimea dorită și pune-l pe ecranul principal.';
+
+  @override
+  String get helpWidgetSizeHead => 'Funcții după mărimea widgetului';
+
+  @override
+  String get helpWidgetBasic => '① Standard (4×2)';
+
+  @override
+  String get helpWidgetBasic1 =>
+      'Peste fotografie apare melodia sau postul pe care îl asculți.';
+
+  @override
+  String get helpWidgetBasic2 =>
+      'Folosește butoanele Anterior · Redare/Pauză · Următor.';
+
+  @override
+  String get helpWidgetBasic3 =>
+      'Folosește scurtăturile Muzică · Radio · Natură · Somn.';
+
+  @override
+  String get helpWidgetBasic4 =>
+      'Muzică, Radio și Natură pornesc imediat, iar Somn se deschide în aplicație.';
+
+  @override
+  String get helpWidgetBig => '② Mare (4×3)';
+
+  @override
+  String get helpWidgetBig1 => 'Include tot ce are widgetul standard.';
+
+  @override
+  String get helpWidgetBig2 => 'Jos apar ultimele 3 elemente ascultate.';
+
+  @override
+  String get helpWidgetBig3 => 'Atinge un element ca să-l redai imediat.';
+
+  @override
+  String get helpWidgetTall => '③ Vertical (2×3)';
+
+  @override
+  String get helpWidgetTall1 =>
+      'Sus e o fotografie, iar dedesubt informațiile de redare și butoanele.';
+
+  @override
+  String get helpWidgetTall2 =>
+      'Scurtăturile Muzică · Radio · Natură · Somn apar ca pictograme.';
+
+  @override
+  String get helpWidgetAllHead => 'La toate widgeturile';
+
+  @override
+  String get helpWidgetAll1 =>
+      'Atinge ⋮ din dreapta sus pentru amestecare și repetare, temporizatorul de somn și schimbarea fotografiei widgetului.';
+
+  @override
+  String get helpWidgetAll2 =>
+      'Amestecarea și repetarea apar doar când asculți muzică.';
+
+  @override
+  String get helpWidgetNote =>
+      '※ Mărimea și așezarea widgetului pot varia în funcție de telefon și de setările ecranului principal.';
+
+  @override
+  String get helpCarTitle => 'Ascultă în mașină (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      'Ascultă radio, muzică, sunete din natură și podcasturi din Paransori în mașinile compatibile cu Android Auto.';
+
+  @override
+  String get helpCarUseHead => 'Cum se folosește';
+
+  @override
+  String get helpCarUse1 =>
+      'Conectează telefonul la mașină prin cablu USB sau wireless.';
+
+  @override
+  String get helpCarUse2 => 'Selectează Paransori pe ecranul mașinii.';
+
+  @override
+  String get helpCarUse3 =>
+      'Alege ce vrei din filele Muzică · Radio · Podcasts · Sunete din natură.';
+
+  @override
+  String get helpCarUse4 =>
+      'În timp ce conduci, poți porni redarea vocal, fără să atingi ecranul.';
+
+  @override
+  String get helpCarFindHead => 'Găsești ușor';
+
+  @override
+  String get helpCarFind1 =>
+      'La Radio, sus sunt posturile ascultate recent și favoritele, iar dedesubt posturile sunt grupate pe radiodifuzori (în afara Coreei, pe genuri).';
+
+  @override
+  String get helpCarFind2 =>
+      'Atinge „Amestecă” din partea de sus a filei Muzică ca să-ți asculți imediat melodiile amestecate.';
+
+  @override
+  String get helpCarFind3 =>
+      'Posturile cu program afișează și fotografia emisiunii curente și ce urmează.';
+
+  @override
+  String get helpCarVoiceHead => 'Redare vocală';
+
+  @override
+  String get helpCarVoiceHow =>
+      'Apasă butonul vocal de pe volan sau spune „Hey Google”, apoi încearcă să spui:';
+
+  @override
+  String get helpCarVoice1 => '„Redă (numele postului) pe Paransori”';
+
+  @override
+  String get helpCarVoice2 => '„Redă Ploaie pe Paransori”';
+
+  @override
+  String get helpCarVoice3 => '„Redă Paransori” → continuă de unde ai rămas.';
+
+  @override
+  String get helpCarNote =>
+      '※ Mașina și telefonul trebuie să fie compatibile cu Android Auto. Modul de conectare și meniurile pot varia în funcție de dispozitiv.';
 }

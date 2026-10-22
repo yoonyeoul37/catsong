@@ -4788,4 +4788,152 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get langNameUr => 'Urduca';
+
+  @override
+  String get helpGuideHeader => 'Farklı şekillerde keyfini çıkar';
+
+  @override
+  String get helpNewBadge => 'Yeni';
+
+  @override
+  String get helpWidgetTitle => 'Ana ekran widget\'ı';
+
+  @override
+  String get helpWidgetWhen =>
+      'Uygulamayı açmadan Paransori\'nin müziğini, radyosunu ve doğa seslerini doğrudan ana ekrandan dinle.';
+
+  @override
+  String get helpWidgetAddHead => 'Widget nasıl eklenir';
+
+  @override
+  String get helpWidgetAdd1 => 'Ana ekranda boş bir yere basılı tut.';
+
+  @override
+  String get helpWidgetAdd2 =>
+      'Menüden \'Widget\'lar\'ı seç ve Paransori\'yi bul.';
+
+  @override
+  String get helpWidgetAdd3 =>
+      'İstediğin boyuttaki widget\'a basılı tut ve ana ekrana yerleştir.';
+
+  @override
+  String get helpWidgetSizeHead => 'Widget boyutuna göre özellikler';
+
+  @override
+  String get helpWidgetBasic => '① Standart (4×2)';
+
+  @override
+  String get helpWidgetBasic1 =>
+      'Fotoğrafın üzerinde dinlediğin şarkı veya kanal gösterilir.';
+
+  @override
+  String get helpWidgetBasic2 =>
+      'Önceki · Oynat/Duraklat · Sonraki düğmelerini kullanabilirsin.';
+
+  @override
+  String get helpWidgetBasic3 =>
+      'Müzik · Radyo · Doğa · Uyku kısayollarını kullanabilirsin.';
+
+  @override
+  String get helpWidgetBasic4 =>
+      'Müzik, Radyo ve Doğa hemen çalmaya başlar; Uyku uygulamada açılır.';
+
+  @override
+  String get helpWidgetBig => '② Büyük (4×3)';
+
+  @override
+  String get helpWidgetBig1 => 'Standart widget\'taki her şeyi içerir.';
+
+  @override
+  String get helpWidgetBig2 => 'Altta en son dinlediğin 3 öğe gösterilir.';
+
+  @override
+  String get helpWidgetBig3 => 'Bir öğeye dokunarak hemen çalabilirsin.';
+
+  @override
+  String get helpWidgetTall => '③ Dikey (2×3)';
+
+  @override
+  String get helpWidgetTall1 =>
+      'Üstte fotoğraf, altta çalma bilgisi ve kontroller yer alır.';
+
+  @override
+  String get helpWidgetTall2 =>
+      'Müzik · Radyo · Doğa · Uyku kısayolları simge olarak gösterilir.';
+
+  @override
+  String get helpWidgetAllHead => 'Tüm widget\'larda';
+
+  @override
+  String get helpWidgetAll1 =>
+      'Karıştırma ve tekrar, uyku zamanlayıcı ve widget fotoğrafını değiştirmek için sağ üstteki ⋮ simgesine dokun.';
+
+  @override
+  String get helpWidgetAll2 =>
+      'Karıştırma ve tekrar yalnızca müzik dinlerken görünür.';
+
+  @override
+  String get helpWidgetNote =>
+      '※ Widget boyutu ve yerleşimi telefonuna ve ana ekran ayarlarına göre değişebilir.';
+
+  @override
+  String get helpCarTitle => 'Arabada dinle (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      'Android Auto destekleyen arabalarda Paransori\'nin radyosunu, müziğini, doğa seslerini ve podcast\'lerini dinle.';
+
+  @override
+  String get helpCarUseHead => 'Nasıl kullanılır';
+
+  @override
+  String get helpCarUse1 =>
+      'Telefonunu arabaya USB kablosuyla veya kablosuz olarak bağla.';
+
+  @override
+  String get helpCarUse2 => 'Araba ekranında Paransori\'yi seç.';
+
+  @override
+  String get helpCarUse3 =>
+      'Müzik · Radyo · Podcasts · Doğa sesleri sekmelerinden istediğini seç.';
+
+  @override
+  String get helpCarUse4 =>
+      'Sürüş sırasında ekrana dokunmadan sesle çaldırabilirsin.';
+
+  @override
+  String get helpCarFindHead => 'Kolayca bul';
+
+  @override
+  String get helpCarFind1 =>
+      'Radyo\'da en üstte son dinlenen kanallar ve favoriler bulunur, altında kanallar yayıncıya göre (Kore dışında türe göre) gruplanır.';
+
+  @override
+  String get helpCarFind2 =>
+      'Şarkılarını hemen karışık dinlemek için Müzik sekmesinin en üstündeki \'Karıştır\'a dokun.';
+
+  @override
+  String get helpCarFind3 =>
+      'Yayın akışı olan kanallarda şu anki programın fotoğrafı ve sıradaki yayın da görünür.';
+
+  @override
+  String get helpCarVoiceHead => 'Sesle çaldır';
+
+  @override
+  String get helpCarVoiceHow =>
+      'Direksiyondaki ses düğmesine bas veya \"Hey Google\" de, sonra şöyle söylemeyi dene:';
+
+  @override
+  String get helpCarVoice1 => '\"Paransori\'de (kanal adı) çal\"';
+
+  @override
+  String get helpCarVoice2 => '\"Paransori\'de Yağmur çal\"';
+
+  @override
+  String get helpCarVoice3 =>
+      '\"Paransori\'yi çal\" → kaldığın yerden devam eder.';
+
+  @override
+  String get helpCarNote =>
+      '※ Araban ve telefonun Android Auto\'yu desteklemeli. Bağlantı yöntemi ve görünen menüler cihaza göre değişebilir.';
 }

@@ -4817,4 +4817,154 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get langNameUr => 'Urdu';
+
+  @override
+  String get helpGuideHeader => 'Più modi per divertirti';
+
+  @override
+  String get helpNewBadge => 'Novità';
+
+  @override
+  String get helpWidgetTitle => 'Widget della schermata Home';
+
+  @override
+  String get helpWidgetWhen =>
+      'Ascolta musica, radio e suoni della natura di Paransori direttamente dalla schermata Home, senza aprire l’app.';
+
+  @override
+  String get helpWidgetAddHead => 'Come aggiungere un widget';
+
+  @override
+  String get helpWidgetAdd1 =>
+      'Tieni premuto uno spazio vuoto della schermata Home.';
+
+  @override
+  String get helpWidgetAdd2 => 'Scegli \'Widget\' dal menu e cerca Paransori.';
+
+  @override
+  String get helpWidgetAdd3 =>
+      'Tieni premuto il widget della dimensione che preferisci e posizionalo nella schermata Home.';
+
+  @override
+  String get helpWidgetSizeHead => 'Funzioni per dimensione';
+
+  @override
+  String get helpWidgetBasic => '① Standard (4×2)';
+
+  @override
+  String get helpWidgetBasic1 =>
+      'Mostra sulla foto il brano o il canale che stai ascoltando.';
+
+  @override
+  String get helpWidgetBasic2 =>
+      'Usa i pulsanti Precedente · Riproduci/Pausa · Successivo.';
+
+  @override
+  String get helpWidgetBasic3 =>
+      'Usa le scorciatoie Musica · Radio · Natura · Sonno.';
+
+  @override
+  String get helpWidgetBasic4 =>
+      'Musica, Radio e Natura partono subito; Sonno si apre nell’app.';
+
+  @override
+  String get helpWidgetBig => '② Grande (4×3)';
+
+  @override
+  String get helpWidgetBig1 =>
+      'Include tutto ciò che offre il widget standard.';
+
+  @override
+  String get helpWidgetBig2 =>
+      'Mostra in basso i 3 elementi ascoltati più di recente.';
+
+  @override
+  String get helpWidgetBig3 => 'Tocca un elemento per riprodurlo subito.';
+
+  @override
+  String get helpWidgetTall => '③ Verticale (2×3)';
+
+  @override
+  String get helpWidgetTall1 =>
+      'Una foto in alto, con informazioni di riproduzione e controlli sotto.';
+
+  @override
+  String get helpWidgetTall2 =>
+      'Le scorciatoie Musica · Radio · Natura · Sonno appaiono come icone.';
+
+  @override
+  String get helpWidgetAllHead => 'In tutti i widget';
+
+  @override
+  String get helpWidgetAll1 =>
+      'Tocca ⋮ in alto a destra per casuale e ripeti, il timer di spegnimento e cambiare la foto del widget.';
+
+  @override
+  String get helpWidgetAll2 =>
+      'Casuale e ripeti compaiono solo mentre ascolti musica.';
+
+  @override
+  String get helpWidgetNote =>
+      '※ Dimensioni e posizione dei widget possono variare in base al telefono e alle impostazioni della schermata Home.';
+
+  @override
+  String get helpCarTitle => 'Ascolta in auto (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      'Ascolta radio, musica, suoni della natura e podcast di Paransori nelle auto compatibili con Android Auto.';
+
+  @override
+  String get helpCarUseHead => 'Come si usa';
+
+  @override
+  String get helpCarUse1 =>
+      'Collega il telefono all’auto con un cavo USB o in wireless.';
+
+  @override
+  String get helpCarUse2 => 'Seleziona Paransori sullo schermo dell’auto.';
+
+  @override
+  String get helpCarUse3 =>
+      'Scegli cosa ascoltare dalle schede Musica · Radio · Podcasts · Suoni della natura.';
+
+  @override
+  String get helpCarUse4 =>
+      'Mentre guidi puoi avviare la riproduzione con la voce, senza toccare lo schermo.';
+
+  @override
+  String get helpCarFindHead => 'Trova tutto subito';
+
+  @override
+  String get helpCarFind1 =>
+      'In Radio, in alto trovi i canali ascoltati di recente e i preferiti, e sotto i canali raggruppati per emittente (per genere fuori dalla Corea).';
+
+  @override
+  String get helpCarFind2 =>
+      'Tocca \'Casuale\' in cima alla scheda Musica per ascoltare subito i tuoi brani in ordine casuale.';
+
+  @override
+  String get helpCarFind3 =>
+      'I canali con palinsesto mostrano anche la foto del programma in onda e cosa c’è dopo.';
+
+  @override
+  String get helpCarVoiceHead => 'Avvia con la voce';
+
+  @override
+  String get helpCarVoiceHow =>
+      'Premi il pulsante vocale sul volante o di\' \"Hey Google\", poi prova a dire:';
+
+  @override
+  String get helpCarVoice1 => '«Riproduci (nome del canale) su Paransori»';
+
+  @override
+  String get helpCarVoice2 => '«Riproduci Pioggia su Paransori»';
+
+  @override
+  String get helpCarVoice3 =>
+      '«Riproduci Paransori» → riprende da dove avevi lasciato.';
+
+  @override
+  String get helpCarNote =>
+      '※ Auto e telefono devono essere compatibili con Android Auto. Il tipo di connessione e i menu visualizzati possono variare in base al dispositivo.';
 }

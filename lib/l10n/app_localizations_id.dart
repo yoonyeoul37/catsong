@@ -4798,4 +4798,152 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get langNameUr => 'Urdu';
+
+  @override
+  String get helpGuideHeader => 'Nikmati dengan berbagai cara';
+
+  @override
+  String get helpNewBadge => 'Baru';
+
+  @override
+  String get helpWidgetTitle => 'Widget layar utama';
+
+  @override
+  String get helpWidgetWhen =>
+      'Dengarkan musik, radio, dan suara alam Paransori langsung dari layar utama tanpa membuka aplikasi.';
+
+  @override
+  String get helpWidgetAddHead => 'Cara menambahkan widget';
+
+  @override
+  String get helpWidgetAdd1 => 'Sentuh lama area kosong di layar utama.';
+
+  @override
+  String get helpWidgetAdd2 => 'Pilih \'Widget\' dari menu dan cari Paransori.';
+
+  @override
+  String get helpWidgetAdd3 =>
+      'Sentuh lama widget dengan ukuran yang kamu mau, lalu letakkan di layar utama.';
+
+  @override
+  String get helpWidgetSizeHead => 'Fitur menurut ukuran widget';
+
+  @override
+  String get helpWidgetBasic => '① Standar (4×2)';
+
+  @override
+  String get helpWidgetBasic1 =>
+      'Menampilkan nama lagu atau stasiun yang sedang kamu dengarkan di atas foto.';
+
+  @override
+  String get helpWidgetBasic2 =>
+      'Gunakan tombol Sebelumnya · Putar/Jeda · Berikutnya.';
+
+  @override
+  String get helpWidgetBasic3 =>
+      'Gunakan pintasan Musik · Radio · Alam · Tidur.';
+
+  @override
+  String get helpWidgetBasic4 =>
+      'Musik, Radio, dan Alam langsung diputar; Tidur dibuka di aplikasi.';
+
+  @override
+  String get helpWidgetBig => '② Besar (4×3)';
+
+  @override
+  String get helpWidgetBig1 => 'Semua fitur widget standar tersedia.';
+
+  @override
+  String get helpWidgetBig2 =>
+      'Menampilkan 3 item yang terakhir diputar di bagian bawah.';
+
+  @override
+  String get helpWidgetBig3 => 'Ketuk item untuk langsung memutarnya.';
+
+  @override
+  String get helpWidgetTall => '③ Vertikal (2×3)';
+
+  @override
+  String get helpWidgetTall1 =>
+      'Foto di atas, info pemutaran dan tombol kontrol di bawah.';
+
+  @override
+  String get helpWidgetTall2 =>
+      'Pintasan Musik · Radio · Alam · Tidur ditampilkan sebagai ikon.';
+
+  @override
+  String get helpWidgetAllHead => 'Di semua widget';
+
+  @override
+  String get helpWidgetAll1 =>
+      'Ketuk ⋮ di kanan atas untuk acak dan ulangi, timer tidur, dan mengganti foto widget.';
+
+  @override
+  String get helpWidgetAll2 =>
+      'Acak dan ulangi hanya muncul saat kamu mendengarkan musik.';
+
+  @override
+  String get helpWidgetNote =>
+      '※ Ukuran dan posisi widget bisa berbeda tergantung ponsel dan pengaturan layar utama.';
+
+  @override
+  String get helpCarTitle => 'Dengarkan di mobil (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      'Dengarkan radio, musik, suara alam, dan podcast Paransori di mobil yang mendukung Android Auto.';
+
+  @override
+  String get helpCarUseHead => 'Cara pakai';
+
+  @override
+  String get helpCarUse1 =>
+      'Hubungkan ponsel ke mobil dengan kabel USB atau tanpa kabel.';
+
+  @override
+  String get helpCarUse2 => 'Pilih Paransori di layar mobil.';
+
+  @override
+  String get helpCarUse3 =>
+      'Pilih yang ingin kamu dengarkan di tab Musik · Radio · Podcasts · Suara alam.';
+
+  @override
+  String get helpCarUse4 =>
+      'Saat menyetir, kamu bisa memutar dengan suara tanpa menyentuh layar.';
+
+  @override
+  String get helpCarFindHead => 'Cari dengan mudah';
+
+  @override
+  String get helpCarFind1 =>
+      'Di Radio, stasiun yang terakhir didengarkan dan favorit ada di paling atas, dan di bawahnya stasiun dikelompokkan per penyiar (per genre di luar Korea).';
+
+  @override
+  String get helpCarFind2 =>
+      'Ketuk \'Acak\' di bagian atas tab Musik untuk langsung memutar lagu-lagumu secara acak.';
+
+  @override
+  String get helpCarFind3 =>
+      'Stasiun yang punya jadwal acara juga menampilkan foto acara saat ini dan acara berikutnya.';
+
+  @override
+  String get helpCarVoiceHead => 'Putar dengan suara';
+
+  @override
+  String get helpCarVoiceHow =>
+      'Tekan tombol suara di setir atau ucapkan \"Hey Google\", lalu coba ucapkan:';
+
+  @override
+  String get helpCarVoice1 => '\"Putar (nama stasiun) di Paransori\"';
+
+  @override
+  String get helpCarVoice2 => '\"Putar Hujan di Paransori\"';
+
+  @override
+  String get helpCarVoice3 =>
+      '\"Putar Paransori\" → melanjutkan dari yang terakhir kamu dengarkan.';
+
+  @override
+  String get helpCarNote =>
+      '※ Mobil dan ponsel harus mendukung Android Auto. Cara menghubungkan dan menu yang tampil bisa berbeda tergantung perangkat.';
 }

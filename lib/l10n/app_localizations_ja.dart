@@ -4583,4 +4583,137 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get langNameUr => 'ウルドゥー語';
+
+  @override
+  String get helpGuideHeader => 'いろいろな楽しみ方';
+
+  @override
+  String get helpNewBadge => 'NEW';
+
+  @override
+  String get helpWidgetTitle => 'ホーム画面ウィジェット';
+
+  @override
+  String get helpWidgetWhen =>
+      'アプリを開かなくても、ホーム画面からParansoriの音楽・ラジオ・自然の音をすぐに聴けます。';
+
+  @override
+  String get helpWidgetAddHead => 'ウィジェットの追加方法';
+
+  @override
+  String get helpWidgetAdd1 => 'ホーム画面の空いている所を長押しします。';
+
+  @override
+  String get helpWidgetAdd2 => 'メニューから「ウィジェット」を選び、Paransoriを探します。';
+
+  @override
+  String get helpWidgetAdd3 => '使いたいサイズのウィジェットを長押しして、ホーム画面に置きます。';
+
+  @override
+  String get helpWidgetSizeHead => 'サイズ別の機能';
+
+  @override
+  String get helpWidgetBasic => '① 標準 (4×2)';
+
+  @override
+  String get helpWidgetBasic1 => '写真の上に、今聴いている曲や放送局の名前が表示されます。';
+
+  @override
+  String get helpWidgetBasic2 => '前へ · 再生/一時停止 · 次へ ボタンが使えます。';
+
+  @override
+  String get helpWidgetBasic3 => '音楽 · ラジオ · 自然 · スリープ のショートカットが使えます。';
+
+  @override
+  String get helpWidgetBasic4 => '音楽・ラジオ・自然はすぐに再生され、スリープはアプリで開きます。';
+
+  @override
+  String get helpWidgetBig => '② 大きいサイズ (4×3)';
+
+  @override
+  String get helpWidgetBig1 => '標準ウィジェットのすべての機能が使えます。';
+
+  @override
+  String get helpWidgetBig2 => '下に最近聴いた3件が表示されます。';
+
+  @override
+  String get helpWidgetBig3 => '項目をタップするとすぐに再生できます。';
+
+  @override
+  String get helpWidgetTall => '③ 縦長 (2×3)';
+
+  @override
+  String get helpWidgetTall1 => '上に写真、下に再生情報と操作ボタンが表示されます。';
+
+  @override
+  String get helpWidgetTall2 => '音楽 · ラジオ · 自然 · スリープ のショートカットはアイコンで表示されます。';
+
+  @override
+  String get helpWidgetAllHead => 'すべてのウィジェット共通';
+
+  @override
+  String get helpWidgetAll1 =>
+      '右上の⋮をタップすると、シャッフル・リピート、スリープタイマー、ウィジェット写真の変更ができます。';
+
+  @override
+  String get helpWidgetAll2 => 'シャッフル・リピートは音楽を聴いているときだけ表示されます。';
+
+  @override
+  String get helpWidgetNote => '※ ウィジェットのサイズや配置は、スマホやホーム画面の設定によって異なる場合があります。';
+
+  @override
+  String get helpCarTitle => '車で聴く (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      'Android Auto対応の車で、Paransoriのラジオ・音楽・自然の音・ポッドキャストを聴けます。';
+
+  @override
+  String get helpCarUseHead => '使い方';
+
+  @override
+  String get helpCarUse1 => 'スマホを車にUSBケーブルまたはワイヤレスで接続します。';
+
+  @override
+  String get helpCarUse2 => '車の画面でParansoriを選びます。';
+
+  @override
+  String get helpCarUse3 => '音楽 · ラジオ · Podcasts · 自然の音 のタブから聴きたいものを選びます。';
+
+  @override
+  String get helpCarUse4 => '運転中は画面に触れずに、音声で再生できます。';
+
+  @override
+  String get helpCarFindHead => 'かんたんに探す';
+
+  @override
+  String get helpCarFind1 =>
+      'ラジオでは、いちばん上に最近聴いた放送局とお気に入りがあり、その下は放送局ごと(韓国以外はジャンルごと)に分かれています。';
+
+  @override
+  String get helpCarFind2 =>
+      '音楽タブのいちばん上の「シャッフル再生」をタップすると、自分の曲をシャッフルしてすぐに再生します。';
+
+  @override
+  String get helpCarFind3 => '番組表がある放送局は、今の番組の写真と次の番組も表示されます。';
+
+  @override
+  String get helpCarVoiceHead => '音声で再生';
+
+  @override
+  String get helpCarVoiceHow =>
+      'ハンドルの音声ボタンを押すか「Hey Google」と話しかけてから、こう言ってみてください。';
+
+  @override
+  String get helpCarVoice1 => '「Paransoriで(局名)を再生して」';
+
+  @override
+  String get helpCarVoice2 => '「Paransoriで雨の音を再生して」';
+
+  @override
+  String get helpCarVoice3 => '「Paransoriを再生して」→ 最後に聴いていたものの続きから再生します。';
+
+  @override
+  String get helpCarNote =>
+      '※ 車とスマホがAndroid Autoに対応している必要があります。接続方法や表示されるメニューは機器によって異なる場合があります。';
 }

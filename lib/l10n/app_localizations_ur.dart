@@ -4788,4 +4788,152 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get langNameUr => 'اردو';
+
+  @override
+  String get helpGuideHeader => 'لطف اٹھانے کے مختلف طریقے';
+
+  @override
+  String get helpNewBadge => 'نیا';
+
+  @override
+  String get helpWidgetTitle => 'ہوم اسکرین وجیٹ';
+
+  @override
+  String get helpWidgetWhen =>
+      'ایپ کھولے بغیر ہوم اسکرین سے ہی Paransori کا میوزک، ریڈیو اور فطرت کی آوازیں سنیں۔';
+
+  @override
+  String get helpWidgetAddHead => 'وجیٹ شامل کرنے کا طریقہ';
+
+  @override
+  String get helpWidgetAdd1 => 'ہوم اسکرین پر کسی خالی جگہ کو دیر تک دبائیں۔';
+
+  @override
+  String get helpWidgetAdd2 =>
+      'مینو سے \'وجیٹس\' منتخب کریں اور Paransori تلاش کریں۔';
+
+  @override
+  String get helpWidgetAdd3 =>
+      'اپنی پسند کے سائز والے وجیٹ کو دیر تک دبائیں اور ہوم اسکرین پر رکھ دیں۔';
+
+  @override
+  String get helpWidgetSizeHead => 'وجیٹ کے سائز کے لحاظ سے فیچرز';
+
+  @override
+  String get helpWidgetBasic => '① عام (4×2)';
+
+  @override
+  String get helpWidgetBasic1 =>
+      'تصویر پر وہ گانا یا اسٹیشن دکھتا ہے جو آپ سن رہے ہیں۔';
+
+  @override
+  String get helpWidgetBasic2 =>
+      'پچھلا · چلائیں/روکیں · اگلا بٹن استعمال کریں۔';
+
+  @override
+  String get helpWidgetBasic3 =>
+      'میوزک · ریڈیو · فطرت · نیند شارٹ کٹس استعمال کریں۔';
+
+  @override
+  String get helpWidgetBasic4 =>
+      'میوزک، ریڈیو اور فطرت فوراً چلنے لگتے ہیں، جبکہ نیند ایپ میں کھلتی ہے۔';
+
+  @override
+  String get helpWidgetBig => '② بڑا (4×3)';
+
+  @override
+  String get helpWidgetBig1 => 'عام وجیٹ کی تمام سہولیات شامل ہیں۔';
+
+  @override
+  String get helpWidgetBig2 =>
+      'نیچے آپ کے حال ہی میں سنے گئے 3 آئٹمز دکھتے ہیں۔';
+
+  @override
+  String get helpWidgetBig3 => 'کسی آئٹم کو دبا کر فوراً چلائیں۔';
+
+  @override
+  String get helpWidgetTall => '③ عمودی (2×3)';
+
+  @override
+  String get helpWidgetTall1 =>
+      'اوپر تصویر، اور نیچے پلے بیک کی معلومات اور کنٹرول بٹن۔';
+
+  @override
+  String get helpWidgetTall2 =>
+      'میوزک · ریڈیو · فطرت · نیند شارٹ کٹس آئیکنز کی صورت میں دکھتے ہیں۔';
+
+  @override
+  String get helpWidgetAllHead => 'تمام وجیٹس میں';
+
+  @override
+  String get helpWidgetAll1 =>
+      'اوپر دائیں ⋮ دبا کر شفل اور دہرانا، سلیپ ٹائمر اور وجیٹ کی تصویر بدلنا استعمال کریں۔';
+
+  @override
+  String get helpWidgetAll2 => 'شفل اور دہرانا صرف میوزک سنتے وقت نظر آتے ہیں۔';
+
+  @override
+  String get helpWidgetNote =>
+      '※ وجیٹ کا سائز اور جگہ آپ کے فون اور ہوم اسکرین کی سیٹنگز کے لحاظ سے مختلف ہو سکتی ہے۔';
+
+  @override
+  String get helpCarTitle => 'گاڑی میں سنیں (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      'Android Auto سپورٹ کرنے والی گاڑیوں میں Paransori کا ریڈیو، میوزک، فطرت کی آوازیں اور پوڈکاسٹس سنیں۔';
+
+  @override
+  String get helpCarUseHead => 'استعمال کا طریقہ';
+
+  @override
+  String get helpCarUse1 =>
+      'فون کو USB کیبل یا وائرلیس طریقے سے گاڑی سے جوڑیں۔';
+
+  @override
+  String get helpCarUse2 => 'گاڑی کی اسکرین پر Paransori منتخب کریں۔';
+
+  @override
+  String get helpCarUse3 =>
+      'میوزک · ریڈیو · Podcasts · فطرت کی آوازیں ٹیبز سے اپنی پسند کی چیز چنیں۔';
+
+  @override
+  String get helpCarUse4 =>
+      'گاڑی چلاتے ہوئے آپ اسکرین چھوئے بغیر آواز سے پلے بیک شروع کر سکتے ہیں۔';
+
+  @override
+  String get helpCarFindHead => 'آسانی سے تلاش کریں';
+
+  @override
+  String get helpCarFind1 =>
+      'ریڈیو میں سب سے اوپر حال ہی میں سنے گئے اور پسندیدہ اسٹیشن ہیں، اور نیچے اسٹیشن براڈکاسٹر کے لحاظ سے (کوریا سے باہر صنف کے لحاظ سے) تقسیم ہیں۔';
+
+  @override
+  String get helpCarFind2 =>
+      'میوزک ٹیب کے اوپر \'شفل\' دبائیں اور فوراً اپنے گانے ملا کر سنیں۔';
+
+  @override
+  String get helpCarFind3 =>
+      'جن اسٹیشنز کا پروگرام شیڈول ہے، ان میں موجودہ پروگرام کی تصویر اور اگلا پروگرام بھی دکھتا ہے۔';
+
+  @override
+  String get helpCarVoiceHead => 'آواز سے چلائیں';
+
+  @override
+  String get helpCarVoiceHow =>
+      'اسٹیئرنگ وہیل پر آواز کا بٹن دبائیں یا \"Hey Google\" کہیں، پھر یوں کہہ کر دیکھیں:';
+
+  @override
+  String get helpCarVoice1 => '\"Paransori پر (اسٹیشن کا نام) چلائیں\"';
+
+  @override
+  String get helpCarVoice2 => '\"Paransori پر بارش چلائیں\"';
+
+  @override
+  String get helpCarVoice3 =>
+      '\"Paransori چلائیں\" → وہیں سے جاری رکھتا ہے جہاں آپ نے چھوڑا تھا۔';
+
+  @override
+  String get helpCarNote =>
+      '※ گاڑی اور فون دونوں کا Android Auto سپورٹ کرنا ضروری ہے۔ کنکشن کا طریقہ اور مینو ڈیوائس کے لحاظ سے مختلف ہو سکتے ہیں۔';
 }

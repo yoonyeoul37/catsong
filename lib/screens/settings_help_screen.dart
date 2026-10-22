@@ -15,6 +15,7 @@ import '../l10n/locale_holder.dart';
 import 'feedback_screen.dart';
 
 /// 설정 도움말을 한 번이라도 열어봤는지 (⋮ 메뉴의 작은 점 표시용)
+/// 'helpSeen2': 위젯 · 안드로이드 오토 안내가 생겨서, 예전에 열어 본 사람에게도 점을 한 번 더 보여 줌
 class HelpSeen {
   static final seen = ValueNotifier<bool>(true);
   static bool _loaded = false;
@@ -23,13 +24,13 @@ class HelpSeen {
     if (_loaded) return;
     _loaded = true;
     final p = await SharedPreferences.getInstance();
-    seen.value = p.getBool('helpSeen') ?? false;
+    seen.value = p.getBool('helpSeen2') ?? false;
   }
 
   static Future<void> mark() async {
     seen.value = true;
     final p = await SharedPreferences.getInstance();
-    await p.setBool('helpSeen', true);
+    await p.setBool('helpSeen2', true);
   }
 }
 
@@ -96,6 +97,44 @@ List<_HelpTopic> get _topics => [
   ),
 ];
 
+/// 쓰는 방법 안내 (위젯 · 안드로이드 오토) — 설정이 아니라서 '설정 열기' 버튼 없음
+class _GuideSec {
+  final String? head; // 굵은 제목 (위젯 추가 방법 등)
+  final String? sub; // 작은 제목 (① 기본형 …)
+  final String? lead; // 회색 칸 위 한 줄 (음성 예시 설명)
+  final List<String> items;
+  final bool numbered; // 1 2 3 동그라미 (아니면 작은 점)
+  final bool box; // 회색 칸 안에 (음성 예시)
+  const _GuideSec({this.head, this.sub, this.lead, this.items = const [], this.numbered = false, this.box = false});
+}
+
+class _Guide {
+  final String id; // '새로' 표시 기억용
+  final IconData icon;
+  final String title;
+  final String when;
+  final List<_GuideSec> secs;
+  final String note;
+  const _Guide(this.id, this.icon, this.title, this.when, this.secs, this.note);
+}
+
+List<_Guide> get _guides => [
+  _Guide('widget', Icons.widgets_outlined, tr.helpWidgetTitle, tr.helpWidgetWhen, [
+    _GuideSec(head: tr.helpWidgetAddHead, items: [tr.helpWidgetAdd1, tr.helpWidgetAdd2, tr.helpWidgetAdd3], numbered: true),
+    _GuideSec(head: tr.helpWidgetSizeHead, sub: tr.helpWidgetBasic,
+        items: [tr.helpWidgetBasic1, tr.helpWidgetBasic2, tr.helpWidgetBasic3, tr.helpWidgetBasic4]),
+    _GuideSec(sub: tr.helpWidgetBig, items: [tr.helpWidgetBig1, tr.helpWidgetBig2, tr.helpWidgetBig3]),
+    _GuideSec(sub: tr.helpWidgetTall, items: [tr.helpWidgetTall1, tr.helpWidgetTall2]),
+    _GuideSec(head: tr.helpWidgetAllHead, items: [tr.helpWidgetAll1, tr.helpWidgetAll2]),
+  ], tr.helpWidgetNote),
+  _Guide('car', Icons.directions_car_outlined, tr.helpCarTitle, tr.helpCarWhen, [
+    _GuideSec(head: tr.helpCarUseHead, items: [tr.helpCarUse1, tr.helpCarUse2, tr.helpCarUse3, tr.helpCarUse4], numbered: true),
+    _GuideSec(head: tr.helpCarFindHead, items: [tr.helpCarFind1, tr.helpCarFind2, tr.helpCarFind3]),
+    _GuideSec(head: tr.helpCarVoiceHead, lead: tr.helpCarVoiceHow,
+        items: [tr.helpCarVoice1, tr.helpCarVoice2, tr.helpCarVoice3], box: true),
+  ], tr.helpCarNote),
+];
+
 class SettingsHelpScreen extends StatefulWidget {
   const SettingsHelpScreen({super.key});
 
@@ -105,7 +144,9 @@ class SettingsHelpScreen extends StatefulWidget {
 
 class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
   int? _open; // 펼친 카드 (한 번에 하나만)
-  final List<GlobalKey> _keys = List.generate(_topics.length, (_) => GlobalKey());
+  final List<GlobalKey> _keys = List.generate(_topics.length + _guides.length, (_) => GlobalKey()); // 설정 카드 + 안내 카드
+  Set<String> _seenNew = {}; // 한 번 펼쳐 본 안내 카드 ('새로' 표시 없앰)
+  bool _newLoaded = false;
 
   // 돋보기: 이 화면 글자만 크게 (기본 → 크게 → 아주 크게, 기억)
   static const _levels = [1.0, 1.2, 1.4];
@@ -122,6 +163,12 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
     SharedPreferences.getInstance().then((p) {
       final z = p.getDouble('helpZoom');
       if (z != null && mounted) setState(() => _zoom = z.clamp(1.0, 1.6));
+      if (mounted) {
+        setState(() {
+          _seenNew = (p.getStringList('helpNewSeen') ?? const <String>[]).toSet();
+          _newLoaded = true;
+        });
+      }
     });
   }
 
@@ -193,6 +240,195 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
         }
       });
     }
+  }
+
+  /// 안내 카드 펼치기 (처음 펼치면 '새로' 표시 없앰)
+  void _toggleGuide(int gi) {
+    final id = _guides[gi].id;
+    if (!_seenNew.contains(id)) {
+      setState(() => _seenNew.add(id));
+      SharedPreferences.getInstance().then((p) => p.setStringList('helpNewSeen', _seenNew.toList()));
+    }
+    _toggle(_topics.length + gi);
+  }
+
+  /// 안내 카드 한 장 (위의 설정 카드와 같은 모양 · 펼치면 순서 · 설명 · 음성 예시)
+  Widget _guideCard(int gi,
+      {required Color card,
+      required Color ink,
+      required Color sub,
+      required Color hint,
+      required Color iconBg,
+      required Color line,
+      required Color bg,
+      required double z}) {
+    final g = _guides[gi];
+    final ki = _topics.length + gi;
+    final open = _open == ki;
+    final isNew = _newLoaded && !_seenNew.contains(g.id);
+    // 줄 앞 표시: 순서는 먹색 동그라미 숫자, 나머지는 작은 점 (같은 폭이라 글자 줄이 맞음)
+    Widget mark(int? n) => SizedBox(
+          width: 22 * z,
+          height: 22 * z,
+          child: n != null
+              ? Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(color: ink, shape: BoxShape.circle),
+                  child: Text('$n', style: TextStyle(color: bg, fontSize: 11.5, fontWeight: FontWeight.w700)),
+                )
+              : Center(
+                  child: Container(
+                    width: 5 * z,
+                    height: 5 * z,
+                    decoration: BoxDecoration(color: hint, shape: BoxShape.circle),
+                  ),
+                ),
+        );
+    Widget row(String text, int? n) => Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(width: 3),
+              mark(n),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 2 * z),
+                  child: Text(text, style: TextStyle(color: sub, fontSize: 13.5, height: 1.4)),
+                ),
+              ),
+            ],
+          ),
+        );
+    return Container(
+      key: _keys[ki],
+      decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(16)),
+      child: Material(
+        type: MaterialType.transparency,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 제목 줄 (설정 카드와 같게)
+            InkWell(
+              borderRadius: BorderRadius.circular(16),
+              onTap: () => _toggleGuide(gi),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 14, 12, 14),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 30 * z,
+                      height: 30 * z,
+                      decoration: BoxDecoration(color: iconBg, borderRadius: BorderRadius.circular(9)),
+                      child: Icon(g.icon, size: 17 * z, color: sub),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text(g.title,
+                                    style: TextStyle(color: ink, fontSize: 14.5, fontWeight: FontWeight.w700)),
+                              ),
+                              if (isNew)
+                                Container(
+                                  margin: const EdgeInsets.only(left: 6),
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                                  decoration: BoxDecoration(
+                                      color: const Color(0xFF2F7DE8), borderRadius: BorderRadius.circular(6)),
+                                  child: Text(tr.helpNewBadge,
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700)),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
+                          Text(g.when, style: TextStyle(color: hint, fontSize: 12, height: 1.4)),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    AnimatedRotation(
+                      turns: open ? 0.5 : 0,
+                      duration: const Duration(milliseconds: 230),
+                      curve: Curves.easeOutCubic,
+                      child: Icon(Icons.keyboard_arrow_down_rounded, color: hint, size: 24 * z),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // 펼친 내용
+            AnimatedSize(
+              duration: const Duration(milliseconds: 230),
+              curve: Curves.easeOutCubic,
+              alignment: Alignment.topCenter,
+              child: !open
+                  ? const SizedBox(width: double.infinity)
+                  : Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Divider(height: 1, thickness: 0.5, color: line),
+                          const SizedBox(height: 14),
+                          for (final s in g.secs) ...[
+                            if (s.head != null)
+                              Padding(
+                                padding: const EdgeInsets.only(left: 3, bottom: 10),
+                                child: Text(s.head!,
+                                    style: TextStyle(color: ink, fontSize: 13.5, fontWeight: FontWeight.w700)),
+                              ),
+                            if (s.sub != null)
+                              Padding(
+                                padding: const EdgeInsets.only(left: 3, bottom: 8),
+                                child: Text(s.sub!,
+                                    style: TextStyle(color: sub, fontSize: 13, fontWeight: FontWeight.w700)),
+                              ),
+                            if (s.box)
+                              Container(
+                                width: double.infinity,
+                                margin: const EdgeInsets.only(bottom: 10),
+                                padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+                                decoration:
+                                    BoxDecoration(color: iconBg, borderRadius: BorderRadius.circular(10)),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (s.lead != null) ...[
+                                      Text(s.lead!,
+                                          style: TextStyle(
+                                              color: hint, fontSize: 11.5, fontWeight: FontWeight.w600, height: 1.4)),
+                                      const SizedBox(height: 6),
+                                    ],
+                                    for (final it in s.items)
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 2),
+                                        child: Text(it, style: TextStyle(color: sub, fontSize: 13, height: 1.5)),
+                                      ),
+                                  ],
+                                ),
+                              )
+                            else
+                              for (var i = 0; i < s.items.length; i++) row(s.items[i], s.numbered ? i + 1 : null),
+                            const SizedBox(height: 4),
+                          ],
+                          Padding(
+                            padding: const EdgeInsets.only(left: 3),
+                            child: Text(g.note, style: TextStyle(color: hint, fontSize: 12, height: 1.5)),
+                          ),
+                        ],
+                      ),
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   /// 설정 열기: 안 열리면 앱 정보 화면으로, 그것도 안 되면 안내
@@ -464,6 +700,19 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
                     }),
                     const SizedBox(height: 10),
                   ],
+                // ── 이렇게도 들을 수 있어요: 위젯 · 안드로이드 오토 (둘 다 안드로이드 기능이라 아이폰에선 안 보임) ──
+                if (!isIos) ...[
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(4, 10, 4, 10),
+                    child: Text(tr.helpGuideHeader,
+                        style: TextStyle(color: sub, fontSize: 12.5, fontWeight: FontWeight.w700)),
+                  ),
+                  for (var gi = 0; gi < _guides.length; gi++) ...[
+                    _guideCard(gi,
+                        card: card, ink: ink, sub: sub, hint: hint, iconBg: iconBg, line: line, bg: bg, z: z),
+                    const SizedBox(height: 10),
+                  ],
+                ],
                 // ── 그래도 안 되면: 문의하기 (펼치지 않는 카드) ──
                 const SizedBox(height: 8),
                 Container(

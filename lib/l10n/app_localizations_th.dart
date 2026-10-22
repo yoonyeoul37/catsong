@@ -4770,4 +4770,147 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get langNameUr => 'อูรดู';
+
+  @override
+  String get helpGuideHeader => 'เพลิดเพลินได้หลายแบบ';
+
+  @override
+  String get helpNewBadge => 'ใหม่';
+
+  @override
+  String get helpWidgetTitle => 'วิดเจ็ตหน้าจอหลัก';
+
+  @override
+  String get helpWidgetWhen =>
+      'ฟังเพลง วิทยุ และเสียงธรรมชาติของ Paransori ได้ทันทีจากหน้าจอหลัก โดยไม่ต้องเปิดแอป';
+
+  @override
+  String get helpWidgetAddHead => 'วิธีเพิ่มวิดเจ็ต';
+
+  @override
+  String get helpWidgetAdd1 => 'แตะค้างที่พื้นที่ว่างบนหน้าจอหลัก';
+
+  @override
+  String get helpWidgetAdd2 => 'เลือก \'วิดเจ็ต\' จากเมนู แล้วหา Paransori';
+
+  @override
+  String get helpWidgetAdd3 =>
+      'แตะค้างที่วิดเจ็ตขนาดที่ต้องการ แล้ววางบนหน้าจอหลัก';
+
+  @override
+  String get helpWidgetSizeHead => 'ฟีเจอร์ตามขนาดวิดเจ็ต';
+
+  @override
+  String get helpWidgetBasic => '① มาตรฐาน (4×2)';
+
+  @override
+  String get helpWidgetBasic1 => 'แสดงชื่อเพลงหรือสถานีที่กำลังฟังอยู่บนรูปภาพ';
+
+  @override
+  String get helpWidgetBasic2 =>
+      'ใช้ปุ่ม ก่อนหน้า · เล่น/หยุดชั่วคราว · ถัดไป ได้';
+
+  @override
+  String get helpWidgetBasic3 =>
+      'ใช้ทางลัด เพลง · วิทยุ · ธรรมชาติ · นอนหลับ ได้';
+
+  @override
+  String get helpWidgetBasic4 =>
+      'เพลง วิทยุ และธรรมชาติจะเล่นทันที ส่วนนอนหลับจะเปิดในแอป';
+
+  @override
+  String get helpWidgetBig => '② ขนาดใหญ่ (4×3)';
+
+  @override
+  String get helpWidgetBig1 => 'ใช้ฟีเจอร์ทั้งหมดของวิดเจ็ตมาตรฐานได้';
+
+  @override
+  String get helpWidgetBig2 => 'แสดง 3 รายการที่ฟังล่าสุดด้านล่าง';
+
+  @override
+  String get helpWidgetBig3 => 'แตะรายการเพื่อเล่นได้ทันที';
+
+  @override
+  String get helpWidgetTall => '③ แนวตั้ง (2×3)';
+
+  @override
+  String get helpWidgetTall1 =>
+      'รูปภาพอยู่ด้านบน ข้อมูลการเล่นและปุ่มควบคุมอยู่ด้านล่าง';
+
+  @override
+  String get helpWidgetTall2 =>
+      'ทางลัด เพลง · วิทยุ · ธรรมชาติ · นอนหลับ แสดงเป็นไอคอน';
+
+  @override
+  String get helpWidgetAllHead => 'ใช้ได้กับทุกวิดเจ็ต';
+
+  @override
+  String get helpWidgetAll1 =>
+      'แตะ ⋮ ที่มุมขวาบนเพื่อสุ่มและเล่นซ้ำ ตั้งเวลาปิด และเปลี่ยนรูปวิดเจ็ต';
+
+  @override
+  String get helpWidgetAll2 => 'สุ่มและเล่นซ้ำจะแสดงเฉพาะตอนฟังเพลง';
+
+  @override
+  String get helpWidgetNote =>
+      '※ ขนาดและตำแหน่งของวิดเจ็ตอาจแตกต่างกันไปตามโทรศัพท์และการตั้งค่าหน้าจอหลัก';
+
+  @override
+  String get helpCarTitle => 'ฟังในรถ (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      'ฟังวิทยุ เพลง เสียงธรรมชาติ และพอดแคสต์ของ Paransori ได้ในรถที่รองรับ Android Auto';
+
+  @override
+  String get helpCarUseHead => 'วิธีใช้';
+
+  @override
+  String get helpCarUse1 => 'เชื่อมต่อโทรศัพท์กับรถด้วยสาย USB หรือแบบไร้สาย';
+
+  @override
+  String get helpCarUse2 => 'เลือก Paransori บนหน้าจอรถ';
+
+  @override
+  String get helpCarUse3 =>
+      'เลือกสิ่งที่อยากฟังจากแท็บ เพลง · วิทยุ · Podcasts · เสียงธรรมชาติ';
+
+  @override
+  String get helpCarUse4 =>
+      'ระหว่างขับรถ สั่งเล่นด้วยเสียงได้โดยไม่ต้องแตะหน้าจอ';
+
+  @override
+  String get helpCarFindHead => 'หาได้ง่าย';
+
+  @override
+  String get helpCarFind1 =>
+      'ในวิทยุ สถานีที่ฟังล่าสุดและรายการโปรดอยู่ด้านบนสุด ด้านล่างแบ่งตามผู้ให้บริการกระจายเสียง (นอกเกาหลีแบ่งตามแนว)';
+
+  @override
+  String get helpCarFind2 =>
+      'แตะ \'สุ่มเพลง\' ด้านบนสุดของแท็บเพลง เพื่อสุ่มเล่นเพลงของคุณทันที';
+
+  @override
+  String get helpCarFind3 =>
+      'สถานีที่มีผังรายการจะแสดงรูปรายการปัจจุบันและรายการถัดไปด้วย';
+
+  @override
+  String get helpCarVoiceHead => 'สั่งเล่นด้วยเสียง';
+
+  @override
+  String get helpCarVoiceHow =>
+      'กดปุ่มสั่งงานด้วยเสียงบนพวงมาลัย หรือพูดว่า \"Hey Google\" แล้วลองพูดว่า:';
+
+  @override
+  String get helpCarVoice1 => '\"เปิด (ชื่อสถานี) บน Paransori\"';
+
+  @override
+  String get helpCarVoice2 => '\"เปิด ฝนตก บน Paransori\"';
+
+  @override
+  String get helpCarVoice3 => '\"เปิด Paransori\" → เล่นต่อจากที่ฟังค้างไว้';
+
+  @override
+  String get helpCarNote =>
+      '※ รถและโทรศัพท์ต้องรองรับ Android Auto วิธีเชื่อมต่อและเมนูที่แสดงอาจแตกต่างกันไปตามอุปกรณ์';
 }

@@ -4845,4 +4845,151 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get langNameUr => 'Urdu';
+
+  @override
+  String get helpGuideHeader => 'Korzystaj na różne sposoby';
+
+  @override
+  String get helpNewBadge => 'Nowość';
+
+  @override
+  String get helpWidgetTitle => 'Widżet na ekranie głównym';
+
+  @override
+  String get helpWidgetWhen =>
+      'Słuchaj muzyki, radia i odgłosów natury z Paransori prosto z ekranu głównego, bez otwierania aplikacji.';
+
+  @override
+  String get helpWidgetAddHead => 'Jak dodać widżet';
+
+  @override
+  String get helpWidgetAdd1 => 'Przytrzymaj puste miejsce na ekranie głównym.';
+
+  @override
+  String get helpWidgetAdd2 => 'Wybierz z menu „Widżety” i znajdź Paransori.';
+
+  @override
+  String get helpWidgetAdd3 =>
+      'Przytrzymaj widżet w wybranym rozmiarze i umieść go na ekranie głównym.';
+
+  @override
+  String get helpWidgetSizeHead => 'Funkcje według rozmiaru widżetu';
+
+  @override
+  String get helpWidgetBasic => '① Standardowy (4×2)';
+
+  @override
+  String get helpWidgetBasic1 =>
+      'Na zdjęciu widać nazwę utworu lub stacji, której słuchasz.';
+
+  @override
+  String get helpWidgetBasic2 =>
+      'Korzystaj z przycisków Poprzedni · Odtwórz/Pauza · Następny.';
+
+  @override
+  String get helpWidgetBasic3 =>
+      'Korzystaj ze skrótów Muzyka · Radio · Natura · Sen.';
+
+  @override
+  String get helpWidgetBasic4 =>
+      'Muzyka, Radio i Natura grają od razu, a Sen otwiera się w aplikacji.';
+
+  @override
+  String get helpWidgetBig => '② Duży (4×3)';
+
+  @override
+  String get helpWidgetBig1 => 'Ma wszystkie funkcje widżetu standardowego.';
+
+  @override
+  String get helpWidgetBig2 => 'Na dole widać 3 ostatnio odtwarzane pozycje.';
+
+  @override
+  String get helpWidgetBig3 => 'Stuknij pozycję, aby od razu ją odtworzyć.';
+
+  @override
+  String get helpWidgetTall => '③ Pionowy (2×3)';
+
+  @override
+  String get helpWidgetTall1 =>
+      'Na górze zdjęcie, a pod nim informacje o odtwarzaniu i przyciski.';
+
+  @override
+  String get helpWidgetTall2 =>
+      'Skróty Muzyka · Radio · Natura · Sen są widoczne jako ikony.';
+
+  @override
+  String get helpWidgetAllHead => 'We wszystkich widżetach';
+
+  @override
+  String get helpWidgetAll1 =>
+      'Stuknij ⋮ w prawym górnym rogu, aby włączyć odtwarzanie losowe i powtarzanie, minutnik uśpienia lub zmienić zdjęcie widżetu.';
+
+  @override
+  String get helpWidgetAll2 =>
+      'Odtwarzanie losowe i powtarzanie pojawiają się tylko podczas słuchania muzyki.';
+
+  @override
+  String get helpWidgetNote =>
+      '※ Rozmiar i układ widżetu mogą się różnić w zależności od telefonu i ustawień ekranu głównego.';
+
+  @override
+  String get helpCarTitle => 'Słuchaj w samochodzie (Android Auto)';
+
+  @override
+  String get helpCarWhen =>
+      'Słuchaj radia, muzyki, odgłosów natury i podcastów z Paransori w samochodach obsługujących Android Auto.';
+
+  @override
+  String get helpCarUseHead => 'Jak korzystać';
+
+  @override
+  String get helpCarUse1 =>
+      'Połącz telefon z samochodem kablem USB lub bezprzewodowo.';
+
+  @override
+  String get helpCarUse2 => 'Wybierz Paransori na ekranie samochodu.';
+
+  @override
+  String get helpCarUse3 =>
+      'Wybierz, czego chcesz posłuchać, na kartach Muzyka · Radio · Podcasts · Odgłosy natury.';
+
+  @override
+  String get helpCarUse4 =>
+      'Podczas jazdy możesz włączać odtwarzanie głosem, bez dotykania ekranu.';
+
+  @override
+  String get helpCarFindHead => 'Szybkie wyszukiwanie';
+
+  @override
+  String get helpCarFind1 =>
+      'W Radiu na górze są ostatnio słuchane i ulubione stacje, a poniżej stacje pogrupowane według nadawcy (poza Koreą według gatunku).';
+
+  @override
+  String get helpCarFind2 =>
+      'Stuknij „Losowo” na górze karty Muzyka, aby od razu odtworzyć swoje utwory w losowej kolejności.';
+
+  @override
+  String get helpCarFind3 =>
+      'Przy stacjach z ramówką widać też zdjęcie bieżącej audycji i to, co będzie dalej.';
+
+  @override
+  String get helpCarVoiceHead => 'Sterowanie głosem';
+
+  @override
+  String get helpCarVoiceHow =>
+      'Naciśnij przycisk głosowy na kierownicy lub powiedz „Hey Google”, a potem powiedz na przykład:';
+
+  @override
+  String get helpCarVoice1 => '„Włącz (nazwa stacji) w Paransori”';
+
+  @override
+  String get helpCarVoice2 => '„Włącz Deszcz w Paransori”';
+
+  @override
+  String get helpCarVoice3 =>
+      '„Włącz Paransori” → słuchasz dalej od miejsca, w którym skończyłeś.';
+
+  @override
+  String get helpCarNote =>
+      '※ Samochód i telefon muszą obsługiwać Android Auto. Sposób połączenia i widoczne menu mogą się różnić w zależności od urządzenia.';
 }

@@ -2282,7 +2282,7 @@ void _showSmsSheet(BuildContext context, String number) {
               ),
               Row(
                 children: [
-                  Icon(Icons.sms_outlined, size: 18, color: strong),
+                  Icon(CupertinoIcons.paperplane, size: 18, color: strong), // 아래 줄 '문자 참여'와 같은 종이비행기
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(t[0], style: TextStyle(color: strong, fontSize: 16, fontWeight: FontWeight.w800)),
@@ -2409,19 +2409,17 @@ class _NowProgramStripState extends State<_NowProgramStrip> {
                     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
                     _showSmsSheet(context, sms);
                   },
-                  child: Container(
-                    height: 22,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: line),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
+                  // 테두리·바탕 없이: 종이비행기 + "문자 참여 #9730" + › (누르는 버튼인 게 보이게)
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4), // 누르는 자리 위아래로 넉넉히
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.sms_outlined, size: 12, color: muted),
+                        Icon(CupertinoIcons.paperplane, size: 13, color: muted),
                         const SizedBox(width: 4),
-                        Text(sms, style: TextStyle(color: strong, fontSize: 11, fontWeight: FontWeight.w700)),
+                        Text(tr.smsJoin(sms.replaceAll('#', '')),
+                            style: TextStyle(color: strong, fontSize: 12, fontWeight: FontWeight.w700)),
+                        Icon(Icons.chevron_right_rounded, size: 15, color: muted),
                       ],
                     ),
                   ),

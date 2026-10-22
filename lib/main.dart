@@ -529,6 +529,11 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       _checkForUpdate();
+      // 위젯·차 화면으로 먼저 켜졌을 때 세로 고정이 안 걸릴 때가 있어서, 화면에 나올 때마다 한 번 더
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
     }
   }
 

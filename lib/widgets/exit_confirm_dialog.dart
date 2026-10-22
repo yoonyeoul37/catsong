@@ -25,7 +25,11 @@ Future<bool> showExitConfirm(BuildContext context) async {
         insetPadding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        child: Column(
+        // 가로 화면: 창이 너무 넓어지지 않게 + 그래도 모자라면 스크롤 (종료 버튼이 밀려나지 않게)
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420),
+          child: SingleChildScrollView(
+            child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             // 그림 + 경계 가운데 Paransori (업데이트·리뷰 창과 같은 부품)
@@ -111,6 +115,8 @@ Future<bool> showExitConfirm(BuildContext context) async {
               ),
             ),
           ],
+        ),
+          ),
         ),
       );
     },

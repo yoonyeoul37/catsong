@@ -31,7 +31,11 @@ Future<bool> showPhotoDialog(
         insetPadding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        child: Column(
+        // 가로 화면: 창이 너무 넓어지지 않게 + 그래도 모자라면 스크롤 (버튼이 밀려나지 않게)
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420),
+          child: SingleChildScrollView(
+            child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ParanBanner(image: image, bg: bg, isDark: isDark),
@@ -100,6 +104,8 @@ Future<bool> showPhotoDialog(
             ),
           ],
         ),
+          ),
+        ),
       );
     },
   );
@@ -119,8 +125,11 @@ Widget build(BuildContext context) {
 return Column(
 mainAxisSize: MainAxisSize.min,
 children: [
-AspectRatio(
-aspectRatio: 2.2,
+// 그림 높이: 폭에 맞춘 높이(2.2:1) — 단 가로 화면처럼 낮은 화면에서는 화면 높이의 22%까지만
+LayoutBuilder(
+builder: (context, c) => SizedBox(
+width: double.infinity,
+height: (c.maxWidth / 2.2).clamp(0.0, MediaQuery.of(context).size.height * 0.22).toDouble(),
 child: Stack(
 fit: StackFit.expand,
 children: [
@@ -138,6 +147,7 @@ stops: const [0.0, 0.6, 1.0],
 ),
 ),
 ],
+),
 ),
 ),
 // 경계 가운데 Paransori (그림 끝에 살짝 걸치게)

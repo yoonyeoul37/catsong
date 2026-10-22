@@ -1125,6 +1125,14 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
       ),
       body: Stack(
         children: [
+          // 시스템 뒤로가기: '전체'가 아닌 탭이면 화면을 닫지 않고 '전체' 탭으로 (전체에서 한 번 더 누르면 닫힘)
+          PopScope(
+            canPop: _mode == _ViewMode.all,
+            onPopInvokedWithResult: (didPop, _) {
+              if (!didPop) setState(() => _mode = _ViewMode.all);
+            },
+            child: const SizedBox.shrink(),
+          ),
           SafeArea(
             top: false,
             child: switch (_mode) {

@@ -1471,6 +1471,30 @@ List<(RadioStation, String, String, int)> koreanStationsForCar() => [
         ),
     ];
 
+/// 차 화면(안드로이드 오토) 방송사별 폴더: (묶음 키, 이름, 칸 색) — 앱 '방송사별' 화면과 같은 묶음 · 순서
+List<(String, String, int)> koreanCarGroups() => [
+      for (final key in _BroadcasterGridScreen._order)
+        (
+          key,
+          switch (key) {
+            '기타' => tr.categoryEtc,
+            '종교' => tr.stationCatReligion,
+            '공동체' => tr.stationCatCommunity,
+            '지역민방' => tr.stationCatPrivate,
+            _ => key,
+          },
+          (_BroadcasterGridScreen._cardColors[key] ?? const Color(0xFF3A342A)).value,
+        ),
+    ];
+
+/// 국내 방송 이름 → 방송사별 묶음 키 (KBS · MBC · … · 종교 · 지역민방 · 공동체 · 기타)
+String koreanCarGroupOf(String name) {
+  for (final k in koreanStations) {
+    if (k.name == name) return _BroadcasterGridScreen._keyOf(k.broadcaster);
+  }
+  return '기타';
+}
+
 RadioStation? niceKoreanStationNow({Set<String> skip = const {}, int day = 0}) {
   final h = DateTime.now().hour;
   final s = (h >= 5 && h < 11) ? 0 : (h >= 11 && h < 17) ? 1 : (h >= 17 && h < 22) ? 2 : 3;

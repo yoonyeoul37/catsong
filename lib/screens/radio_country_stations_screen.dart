@@ -26,6 +26,50 @@ import '../l10n/app_localizations.dart';
 import '../providers/theme_provider.dart';
 import '../l10n/locale_holder.dart';
 
+/// 방송 하나의 장르 (해외 라디오 '장르' 칩 · 차 화면 장르 폴더가 같이 씀)
+Set<String> radioGenresOf(RadioStation s) {
+  final tags = (s.tags ?? '')
+      .toLowerCase()
+      .split(',')
+      .map((t) => t.trim())
+      .where((t) => t.isNotEmpty)
+      .toList();
+  final out = <String>{};
+  if (tags.isEmpty) return out;
+  for (final g in _RadioCountryStationsScreenState._genreMap) {
+    if (tags.any((t) => g.$2.any((k) => t.contains(k)))) out.add(g.$1);
+  }
+  return out;
+}
+
+/// 장르 이름 (저장은 한국어 그대로, 보이는 건 앱 언어로) — 차 화면 장르 폴더용
+String radioGenreLabel(String v) => switch (v) {
+      '뉴스' => tr.genreNews,
+      '토크' => tr.genreTalk,
+      '스포츠' => tr.genreSports,
+      '팝' => tr.genrePop,
+      '인기곡' => tr.genreHits,
+      '록' => tr.genreRock,
+      '재즈' => tr.genreJazz,
+      '클래식' => tr.genreClassical,
+      '댄스·일렉' => tr.genreDance,
+      '힙합' => tr.genreHiphop,
+      'R&B·소울' => tr.genreRnb,
+      '라틴' => tr.genreLatin,
+      '컨트리' => tr.genreCountry,
+      '올디스' => tr.genreOldies,
+      '라운지' => tr.genreLounge,
+      '포크' => tr.genreFolk,
+      '블루스' => tr.genreBlues,
+      '레게' => tr.genreReggae,
+      '메탈' => tr.genreMetal,
+      '종교' => tr.genreReligious,
+      '어린이' => tr.genreKids,
+      '볼리우드' => tr.genreBollywood,
+      '세르타네주' => tr.genreSertanejo,
+      _ => v,
+    };
+
 class RadioCountryStationsScreen extends StatefulWidget {
   final RadioCountry country;
   const RadioCountryStationsScreen({super.key, required this.country});
@@ -267,20 +311,7 @@ class _RadioCountryStationsScreenState
     ('J-POP', ['jpop', 'j-pop', 'anime']),
   ];
 
-  Set<String> _genresOf(RadioStation s) {
-    final tags = (s.tags ?? '')
-        .toLowerCase()
-        .split(',')
-        .map((t) => t.trim())
-        .where((t) => t.isNotEmpty)
-        .toList();
-    final out = <String>{};
-    if (tags.isEmpty) return out;
-    for (final g in _genreMap) {
-      if (tags.any((t) => g.$2.any((k) => t.contains(k)))) out.add(g.$1);
-    }
-    return out;
-  }
+  Set<String> _genresOf(RadioStation s) => radioGenresOf(s); // 차 화면 장르 폴더와 같은 규칙
 
   static const Map<String, String> _langKo = {
     'english': '영어', 'spanish': '스페인어', 'portuguese': '포르투갈어', 'french': '프랑스어',

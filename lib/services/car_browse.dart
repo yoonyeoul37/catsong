@@ -11,7 +11,8 @@ import '../podcast/podcast.dart';
 import '../providers/music_provider.dart';
 import '../providers/player_provider.dart';
 import '../providers/radio_provider.dart';
-import '../screens/radio_korea_screen2.dart' show koreanStationsForCar;
+import '../screens/radio_korea_screen2.dart' show koreanStationsForCar, koreanCarGroups, koreanCarGroupOf;
+import '../screens/radio_country_stations_screen.dart' show radioGenresOf, radioGenreLabel;
 import '../utils/device_country.dart';
 import '../utils/nature_sound_catalog.dart';
 import 'headset_resume.dart';
@@ -93,6 +94,7 @@ class CarBrowse {
       if (parent == tabNature) return _natureTab();
       if (parent == tabPodcast) return await _podcastTab();
       if (parent.startsWith('ml:')) return await _musicList(parent.substring(3));
+      if (parent.startsWith('rb:') || parent.startsWith('rg:')) return await _radioFolder(parent);
       if (parent.startsWith('ps:')) return await _episodes(parent.substring(3));
     } catch (e) {
       debugPrint('차 화면 목록 오류($parent): $e');
@@ -167,38 +169,116 @@ class CarBrowse {
 
   static String get _country => (DeviceCountry.radioCountry() ?? 'US').toUpperCase();
 
+  /// 라디오 탭: 최근에 들었어요 → 즐겨찾기 → 폴더 (국내 방송사별 · 해외 장르)
+  /// 운전 중에는 차 화면이 목록을 짧게만 보여 줘서, 한 줄로 길게 두지 않고 폴더로 나눔
+  /// (최근·즐겨찾기가 없으면 그 줄은 안 보임)
   static Future<List<MediaItem>> _radioTab() async {
     final radio = _radio;
     if (radio == null) return const [];
     final items = <MediaItem>[];
     final kr = _country == 'KR';
-    final korean = kr ? _korean() : const <RadioStation>[];
-    // 즐겨찾기 먼저
-    final favs = radio.favorites.toList();
-    for (final s in favs) {
-      if (s.countryCode == 'KR') {
+    final korean = _korean(); // 국내 방송은 해외에서도 최근·즐겨찾기에 있으면 방송사별 칸 그림으로
+    void krArt(List<RadioStation> list) {
+      for (final s in list) {
+        if (s.countryCode != 'KR') continue;
         final i = korean.indexWhere((k) => k.name == s.name);
         if (i >= 0) _krArt[s.stationUuid] = _krArt[korean[i].stationUuid]!;
       }
     }
+
+    // 최근에 들었어요 (5개까지)
+    final recent = radio.recentlyListened.take(5).toList();
+    krArt(recent);
+    _radioLists['rr'] = recent;
+    for (final s in recent) {
+      items.add(_stationItem(s, 'rr', group: tr.homeRecentHeader));
+    }
+    // 즐겨찾기
+    final favs = radio.favorites.toList();
+    krArt(favs);
     _radioLists['rf'] = favs;
     for (final s in favs) {
       items.add(_stationItem(s, 'rf', group: tr.favorites));
     }
-    // 그다음: 국내 방송 전체 / 해외는 고른 나라 인기 방송
     if (kr) {
+      // 국내: 방송사별 폴더 (KBS · MBC · SBS · EBS · CBS · TBN · 종교 · 지역 민방 · 공동체)
       _radioLists['rk'] = korean;
+      final byKey = <String, List<RadioStation>>{};
       for (final s in korean) {
-        items.add(_stationItem(s, 'rk', group: tr.all));
+        byKey.putIfAbsent(koreanCarGroupOf(s.name), () => []).add(s);
+      }
+      for (final (key, label, color) in koreanCarGroups()) {
+        final list = byKey[key];
+        if (list == null || list.isEmpty) continue;
+        _radioLists['rb:$key'] = list;
+        items.add(_folderItem('rb:$key', label, list.length, _tile(label, '', color), tr.byBroadcaster));
       }
     } else {
+      // 해외: 장르 폴더 (앱 해외 라디오 '장르' 칩과 같은 묶음 · 방송 많은 장르부터 10개 · 나머지는 기타)
       final top = await _overseasTop(_country);
       _radioLists['ro'] = top;
+      final byG = <String, List<RadioStation>>{};
       for (final s in top) {
-        items.add(_stationItem(s, 'ro', group: tr.popularTab, sub: s.genre.isEmpty ? null : s.genre));
+        for (final g in radioGenresOf(s)) {
+          byG.putIfAbsent(g, () => []).add(s);
+        }
+      }
+      final keys = byG.keys.where((k) => byG[k]!.length >= 2).toList()
+        ..sort((a, b) => byG[b]!.length.compareTo(byG[a]!.length));
+      final shown = keys.take(10).toList();
+      if (shown.isEmpty) {
+        // 장르 정보가 거의 없는 나라: 예전처럼 인기 방송 한 묶음
+        for (final s in top) {
+          items.add(_stationItem(s, 'ro', group: tr.popularTab, sub: s.genre.isEmpty ? null : s.genre));
+        }
+        return items;
+      }
+      final inFolder = <String>{
+        for (final k in shown)
+          for (final s in byG[k]!) s.stationUuid,
+      };
+      for (final k in shown) {
+        final label = radioGenreLabel(k);
+        _radioLists['rg:$k'] = byG[k]!;
+        items.add(_folderItem('rg:$k', label, byG[k]!.length, _tile(label, '', _colorOf(k)), tr.genre));
+      }
+      final etc = top.where((s) => !inFolder.contains(s.stationUuid)).toList();
+      if (etc.isNotEmpty) {
+        _radioLists['rg:기타'] = etc;
+        items.add(_folderItem('rg:기타', tr.categoryEtc, etc.length, _tile(tr.categoryEtc, '', 0xFF3A342A), tr.genre));
       }
     }
     return items;
+  }
+
+  /// 폴더 칸 (누르면 그 방송사·장르 방송만 — 칸 모양으로)
+  static MediaItem _folderItem(String id, String title, int n, Uri art, String group) => MediaItem(
+        id: id,
+        title: title,
+        displaySubtitle: '$n',
+        artist: '$n',
+        playable: false,
+        artUri: art,
+        extras: {_group: group, ..._style(playable: _grid)},
+      );
+
+  /// 폴더 안 (방송사별 · 장르)
+  static Future<List<MediaItem>> _radioFolder(String key) async {
+    var list = _radioLists[key];
+    if (list == null) {
+      await _radioTab(); // 앱이 막 켜졌으면 목록부터
+      list = _radioLists[key] ?? const <RadioStation>[];
+    }
+    final genre = key.startsWith('rg:');
+    return [for (final s in list) _stationItem(s, key, sub: genre && s.genre.isNotEmpty ? s.genre : null)];
+  }
+
+  /// 라디오 목록이 바뀌면 라디오 탭 + 열어 둔 장르 폴더도 다시
+  static void _changedRadio() {
+    _changed(tabRadio);
+    for (final k in _subjects.keys.where((k) => k.startsWith('rg:')).toList()) {
+      _changed(k);
+    }
   }
 
   /// 해외 인기 방송: 폰에 저장해 둔 것 바로 → 뒤에서 새로 받아 바꿔 끼움 (저장된 게 없으면 6초까지 기다림)
@@ -231,7 +311,7 @@ class CarBrowse {
     });
     if (slow) {
       f.then((l) {
-        if (l.isNotEmpty) _changed(tabRadio); // 늦게 오면 그때 바꿔 끼우기
+        if (l.isNotEmpty) _changedRadio(); // 늦게 오면 그때 바꿔 끼우기
       });
     }
     return got;
@@ -248,7 +328,7 @@ class CarBrowse {
           (await SharedPreferences.getInstance()).setString('car_top_$cc',
               jsonEncode({'at': DateTime.now().millisecondsSinceEpoch, 'list': [for (final s in list) s.toJson()]}));
         } catch (_) {}
-        if (had) _changed(tabRadio); // 저장된 걸 먼저 보여 줬으면 → 새 목록으로 바꿔 끼우기
+        if (had) _changedRadio(); // 저장된 걸 먼저 보여 줬으면 → 새 목록으로 바꿔 끼우기
       }
       return list;
     } catch (_) {
@@ -277,6 +357,11 @@ class CarBrowse {
         extras: _style(browsable: _list, playable: _list));
     final all = m?.allSongs.length ?? 0;
     return [
+      // 맨 위: 랜덤 재생 (누르면 내 곡 전체를 섞어서 바로 — 음악 화면 랜덤 듣기와 같음, 곡이 없으면 안 보임)
+      if (all > 0)
+        MediaItem(
+            id: 'mshuffle', title: tr.shufflePlay, displaySubtitle: '$all', artist: '$all', playable: true,
+            artUri: _icon('paran_ic_shuffle')),
       folder('recent', tr.homeRecentHeader),
       folder('fav', tr.favorites),
       folder('all', tr.all, sub: all > 0 ? '$all' : null),
@@ -480,6 +565,9 @@ class CarBrowse {
         if (i < 0) return;
         radio.setQueue(list, i); // 앞뒤 버튼 → 같은 묶음 안에서
         await radio.playStation(list[i]);
+      } else if (id == 'mshuffle') {
+        final songs = List<Song>.from(await _songsOf('all'))..shuffle();
+        if (songs.isNotEmpty) await pp.playFromList(songs, 0);
       } else if (id.startsWith('m:')) {
         final rest = id.substring(2);
         final bar = rest.indexOf('|');
@@ -545,7 +633,7 @@ class CarBrowse {
     if (radio != null) {
       if (_radioLists.isEmpty) await _radioTab();
       final seen = <String>{};
-      for (final key in ['rf', 'rk', 'ro']) {
+      for (final key in ['rr', 'rf', 'rk', 'ro']) {
         for (final s in _radioLists[key] ?? const <RadioStation>[]) {
           if (!seen.add(s.stationUuid)) continue;
           add(_score(query, s.name) + 3, _stationItem(s, key)); // 라디오를 조금 먼저

@@ -204,14 +204,17 @@ class RadioProvider extends ChangeNotifier {
           debugPrint('오디오 인터럽트 발생 - 라디오 정지');
           if (_playerState == RadioPlayerState.playing) {
           _player.pause();
+          _pausedByInterrupt = true; // 전화 등으로 멈춘 것만 나중에 다시 틀기
           _setPlayerState(RadioPlayerState.paused);
           _updateForeground(false);
           }
         } else {
           debugPrint('오디오 인터럽트 종료 - 라디오 재개');
-          if (_currentStation != null && _playerState == RadioPlayerState.paused) {
+          // 내가 직접 멈춰 둔 거면 그대로 (전화 끝나고 저절로 틀어지지 않게)
+          if (_pausedByInterrupt && _currentStation != null && _playerState == RadioPlayerState.paused) {
             playStation(_currentStation!);
           }
+          _pausedByInterrupt = false;
         }
       });
       session.becomingNoisyEventStream.listen((_) {
@@ -224,6 +227,7 @@ class RadioProvider extends ChangeNotifier {
   }
 
   bool _pausedByFocusLoss = false;
+  bool _pausedByInterrupt = false; // 전화 등(인터럽트)으로 멈췄는지
 
   void _listenNativeAudioFocus() {
     // 신호 받는 곳은 음악 쪽 하나로 합치고, 라디오는 넘겨받기만

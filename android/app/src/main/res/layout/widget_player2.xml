@@ -139,9 +139,9 @@
 
             <ImageView
                 android:id="@+id/widget_prev"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:padding="9dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="11dp"
                 android:src="@drawable/paran_ic_prev"
                 android:tint="#FFFFFF" />
 
@@ -149,8 +149,8 @@
                 android:id="@+id/widget_play_pause"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:background="@drawable/paran_widget_play"
                 android:padding="11dp"
                 android:src="@drawable/paran_ic_play"
@@ -158,9 +158,9 @@
 
             <ImageView
                 android:id="@+id/widget_next"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:padding="9dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="11dp"
                 android:src="@drawable/paran_ic_next"
                 android:tint="#FFFFFF" />
         </LinearLayout>

@@ -148,6 +148,8 @@ class PlayerProvider extends ChangeNotifier {
   // 라디오도 같은 통로로 신호를 받아서, 받는 곳을 하나로 합침 (둘이 따로 받으면 하나가 묻힘)
   static Future<void> Function(MethodCall call)? extraHandler;
 
+  bool _pausedByFocus = false; // 다른 소리(전화 등) 때문에 멈췄는지
+
   void _initWidgetChannel() {
     _channel.setMethodCallHandler((call) async {
       switch (call.method) {
@@ -168,6 +170,7 @@ class PlayerProvider extends ChangeNotifier {
           // 방금 곡을 틀었으면 무시 (라디오가 잡고 있던 소리 주도권이 넘어오면서 오는 신호라서)
           if (_isPlaying && DateTime.now().difference(_startedAt).inSeconds >= 2) {
             await _player.pause();
+            _pausedByFocus = true;
           }
           break;
         case 'widgetPlayKind':
@@ -187,9 +190,11 @@ class PlayerProvider extends ChangeNotifier {
           WidgetGo.target.value = call.arguments as String?; // 홈 위젯 바로가기
           break;
         case 'onAudioFocusGain':
-          if (!_isPlaying && _currentIndex >= 0) {
+          // 다른 소리 때문에 멈춘 것만 다시 (내가 멈춰 둔 건 그대로)
+          if (_pausedByFocus && !_isPlaying && (_currentIndex >= 0 || _natureSoundName != null)) {
             await _player.play();
           }
+          _pausedByFocus = false;
           break;
       }
       await extraHandler?.call(call); // 라디오에도 전달

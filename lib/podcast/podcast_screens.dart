@@ -164,7 +164,10 @@ class _PodcastTabState extends State<PodcastTab> {
   }
 
   void _loadChart() {
-    _chart = PodcastApi.top(_cc).catchError((_) => PodcastApi.top('us'));
+    // 처음엔 느려서 못 받을 때가 있어서 → 내 나라 한 번 더 → 그래도 안 되면(순위 없는 나라) 미국 순위
+    _chart = PodcastApi.top(_cc)
+        .catchError((_) => PodcastApi.top(_cc))
+        .catchError((_) => PodcastApi.top('us'));
   }
 
   @override

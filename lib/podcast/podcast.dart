@@ -160,7 +160,7 @@ class PodcastApi {
   static Future<List<PodcastShow>> _fetchTop(String cc, int n) async {
     final r = await http
         .get(Uri.parse('https://rss.applemarketingtools.com/api/v2/$cc/podcasts/top/$n/podcasts.json'), headers: _ua)
-        .timeout(const Duration(seconds: 6)); // 순위가 없는 나라는 빨리 미국 순위로
+        .timeout(const Duration(seconds: 12)); // 처음 연결은 느릴 때가 있어서 넉넉히
     if (r.statusCode != 200) throw Exception('chart ${r.statusCode}');
     final res = (jsonDecode(utf8.decode(r.bodyBytes))['feed']['results'] as List?) ?? const [];
     final list = <PodcastShow>[

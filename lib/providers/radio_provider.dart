@@ -507,7 +507,12 @@ class RadioProvider extends ChangeNotifier {
       final st = _currentStation;
       if (st == null || _userPaused || _isActuallyPlaying) return;
       if (_playerState == RadioPlayerState.idle) return;
-      if (_stallRetries >= 3) return; // 계속 안 되면 그만 (방송 자체 문제일 수 있음)
+      if (_stallRetries >= 3) {
+        // 계속 안 되면 그만하고 안내 (방송 자체 문제일 수 있음)
+        _errorMessage = tr.stationLoadFailed;
+        _setPlayerState(RadioPlayerState.error);
+        return;
+      }
       // 해외 방송이면 다음 연결은 재생기 이름표로 (옛날 방송 서버는 브라우저에겐 웹페이지를 줌)
       if ((st.countryCode ?? '') != 'KR') _playerUa.add(st.stationUuid);
       _stallRetries++;
@@ -593,6 +598,18 @@ class RadioProvider extends ChangeNotifier {
       _currentQueueIndex = qIdx;
       _startSchedule(station); // 편성표는 소리 연결을 기다리지 않고 바로 받기 시작
       notifyListeners();
+
+      // 인터넷이 아예 없으면 바로 안내 (차 화면 · 알림창이 '재생 중'으로 멈춰 있지 않게)
+      final net = await Connectivity().checkConnectivity();
+      if (gen != _playGen) return;
+      if (net.isEmpty || net.every((r) => r == ConnectivityResult.none)) {
+        _stallTimer?.cancel();
+        _simpleHandler?.setRadioMediaItem(title: station.name, artist: _mediaSubtitle(station), url: station.streamUrl);
+        _simpleHandler?.setRadioMode(true);
+        _errorMessage = tr.checkInternet;
+        _setPlayerState(RadioPlayerState.error);
+        return;
+      }
 
       _onStopMusic?.call();
       await Future.delayed(const Duration(milliseconds: 200));

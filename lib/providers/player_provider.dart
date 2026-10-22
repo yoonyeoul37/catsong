@@ -425,7 +425,12 @@ class PlayerProvider extends ChangeNotifier {
 
       _startListen(song); // 틀자마자 세지 않고, 30초 이상 들으면 기록
       onSongChanged?.call(song);
-      await _player.setAudioSource(AudioSource.uri(Uri.parse(song.uri!)));
+      _switching = true;
+      try {
+        await _player.setAudioSource(AudioSource.uri(Uri.parse(song.uri!)));
+      } finally {
+        _switching = false;
+      }
       // 자연소리가 남긴 "무한반복" 설정을 꺼준다 (반복은 앱이 직접 처리함)
       await _player.setLoopMode(LoopMode.off);
       if (_player.speed != _playbackSpeed) await _player.setSpeed(_playbackSpeed); // 팟캐스트 속도가 음악에 남지 않게
@@ -572,7 +577,10 @@ class PlayerProvider extends ChangeNotifier {
       handler.setMixMode(false);
       handler.setNatureMode(true);
       handler.setPodcastMode(false);
-      handler.onNaturePlay = () => resumeNatureSound();
+      // 못 받아 와서 멈춰 있으면(인터넷 없음 등) 재생 버튼 → 다시 받아 오기
+      handler.onNaturePlay = () => _player.processingState == ProcessingState.idle
+          ? playNatureSound(assetPath, displayName)
+          : resumeNatureSound();
       handler.onNaturePause = () => pauseNatureSound();
       handler.onNatureNext = () => playAdjacentNatureSound(1);
       handler.onNaturePrevious = () => playAdjacentNatureSound(-1);
@@ -588,7 +596,12 @@ class PlayerProvider extends ChangeNotifier {
       final source = assetPath.startsWith('http')
           ? LockCachingAudioSource(Uri.parse(assetPath))
           : AudioSource.asset(assetPath);
-      await _player.setAudioSource(source);
+      _switching = true;
+      try {
+        await _player.setAudioSource(source).timeout(const Duration(seconds: 15)); // 인터넷 없으면 오래 기다리지 않게
+      } finally {
+        _switching = false;
+      }
       await _player.setLoopMode(LoopMode.one);
       await _player.setSpeed(1.0);
       _setNorm(1.0); // 자연은 크기 맞추기 안 함
@@ -596,6 +609,11 @@ class PlayerProvider extends ChangeNotifier {
       await WakelockPlus.enable().catchError((Object _) {});
     } catch (e) {
       debugPrint('자연소리 재생 오류: $e');
+      // 차 화면 · 알림창에도 안내 (재생 중처럼 멈춰 있지 않게)
+      if (handler is SimpleAudioHandler && _natureSoundName == displayName) {
+        handler.showError(tr.checkInternet); // 먼저 안내를 띄우고 멈추기 (멈출 때 '정지'로 바뀌지 않게)
+        await _player.stop().catchError((Object _) {});
+      }
     }
     _isLoading = false;
     notifyListeners();
@@ -670,6 +688,7 @@ class PlayerProvider extends ChangeNotifier {
   }
 
   bool _isChangingSong = false;
+  bool _switching = false; // 곡 바꾸는 중 (차 화면에 '정지'로 알리지 않게)
   DateTime _startedAt = DateTime(2000); // 곡을 막 튼 시각
 
   // ───── 들은 기록: 30초 이상(1분보다 짧은 곡은 절반 이상) 들어야 재생 횟수·최근에 넣음 ─────
@@ -891,6 +910,9 @@ class SimpleAudioHandler extends BaseAudioHandler {
   SimpleAudioHandler(this._provider) : _player = _provider.player {
     _player.playbackEventStream.listen((event) {
       if (!_radioMode) {
+        // 안내 글을 띄운 뒤 멈춰 있는 동안은 그대로 (다시 틀기 시작하면 보통 상태로)
+        if (_holdError && _player.processingState == ProcessingState.idle) return;
+        _holdError = false;
         playbackState.add(_transformEvent(event));
       }
     });
@@ -904,6 +926,27 @@ class SimpleAudioHandler extends BaseAudioHandler {
 
   void setRadioMode(bool enabled) {
     _radioMode = enabled;
+  }
+
+  bool _holdError = false; // 안내 글을 띄워 둔 동안 true
+
+  /// 못 틀었을 때 (인터넷 없음 등): 차 화면 · 알림창에 안내 글 — 재생 버튼을 다시 누르면 다시
+  void showError(String message) {
+    _holdError = true;
+    playbackState.add(PlaybackState(
+      controls: [
+        MediaControl.skipToPrevious,
+        MediaControl.play,
+        MediaControl.skipToNext,
+      ],
+      androidCompactActionIndices: const [0, 1, 2],
+      playing: false,
+      processingState: AudioProcessingState.error,
+      errorCode: 1, // 앱 오류 (안드로이드 ERROR_CODE_APP_ERROR)
+      errorMessage: message,
+      updatePosition: Duration.zero,
+      speed: 0.0,
+    ));
   }
 
   void setMixMode(bool enabled) {
@@ -1058,6 +1101,15 @@ class SimpleAudioHandler extends BaseAudioHandler {
   }
 
   PlaybackState _transformEvent(PlaybackEvent event) {
+    var ps = const {
+      ProcessingState.idle: AudioProcessingState.idle,
+      ProcessingState.loading: AudioProcessingState.loading,
+      ProcessingState.buffering: AudioProcessingState.buffering,
+      ProcessingState.ready: AudioProcessingState.ready,
+      ProcessingState.completed: AudioProcessingState.completed,
+    }[_player.processingState]!;
+    // 곡 바꾸는 순간의 '정지'는 '불러오는 중'으로 (차가 재생 끝난 줄 알고 목록으로 돌아가지 않게)
+    if (ps == AudioProcessingState.idle && _provider._switching) ps = AudioProcessingState.loading;
     return PlaybackState(
       controls: [
         // 팟캐스트: 15초 뒤로 · 30초 앞으로 모양 (차 화면 · 알림창 둘 다)
@@ -1066,13 +1118,7 @@ class SimpleAudioHandler extends BaseAudioHandler {
         _podcastMode ? _fwd30 : MediaControl.skipToNext,
       ],
       androidCompactActionIndices: const [0, 1, 2],
-      processingState: const {
-        ProcessingState.idle: AudioProcessingState.idle,
-        ProcessingState.loading: AudioProcessingState.loading,
-        ProcessingState.buffering: AudioProcessingState.buffering,
-        ProcessingState.ready: AudioProcessingState.ready,
-        ProcessingState.completed: AudioProcessingState.completed,
-      }[_player.processingState]!,
+      processingState: ps,
       playing: _player.playing,
       updatePosition: _player.position,
       bufferedPosition: _player.bufferedPosition,

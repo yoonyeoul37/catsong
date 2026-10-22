@@ -520,8 +520,17 @@ class CarBrowse {
       _shows[s.id] = s;
       items.add(_showItem(s, podText('인기 팟캐스트', 'Top podcasts')));
     }
+    if (items.isEmpty) return [_offlineItem()]; // 못 받았으면 "항목 없음" 대신 안내
     return items;
   }
+
+  /// 인터넷이 없어서 목록을 못 받았을 때 보이는 칸 (누르면 차 화면에 같은 안내)
+  static MediaItem _offlineItem() => MediaItem(
+        id: 'offline',
+        title: tr.checkInternet,
+        playable: true,
+        artUri: _tile('!', '', 0xFF33405A),
+      );
 
   static MediaItem _showItem(PodcastShow s, String group) => MediaItem(
         id: 'ps:${s.id}',
@@ -580,6 +589,7 @@ class CarBrowse {
       }
       if (eps.isNotEmpty) _eps[showId] = eps; // 못 받았으면 다음에 다시 받기
     }
+    if (eps.isEmpty) return [_offlineItem()]; // 못 받았으면 "항목 없음" 대신 안내
     return [for (final e in eps.take(100)) _episodeItem(s, e)];
   }
 
@@ -601,6 +611,13 @@ class CarBrowse {
         if (i < 0) return;
         radio.setQueue(list, i); // 앞뒤 버튼 → 같은 묶음 안에서
         await radio.playStation(list[i]);
+      } else if (id == 'offline') {
+        // "인터넷 연결을 확인해 주세요" 칸: 아무것도 안 나오는 중일 때만 재생 화면에 안내 (듣던 건 그대로)
+        final h = pp.audioHandler;
+        if (h is SimpleAudioHandler && !pp.isPlaying && !radio.isPlaying && !radio.isLoading) {
+          h.mediaItem.add(MediaItem(id: 'offline', title: podText('팟캐스트', 'Podcasts')));
+          h.showError(tr.checkInternet);
+        }
       } else if (id == 'mshuffle') {
         final songs = List<Song>.from(await _songsOf('all'))..shuffle();
         if (songs.isNotEmpty) await pp.playFromList(songs, 0);
@@ -704,8 +721,6 @@ class CarBrowse {
     _lastAsk = DateTime.now();
     try {
       final list = [for (final r in (await _find(query)).take(30)) r.$2];
-      // 확인용: 차 화면이 보낸 글자(글자 번호까지)와 찾은 개수
-      debugPrint('차 화면 검색: "$query" [${query.runes.map((r) => r.toRadixString(16)).join(' ')}] → ${list.length}개');
       return list;
     } catch (e) {
       debugPrint('차 화면 검색 오류: $e');

@@ -17,6 +17,7 @@ import '../models/radio_country.dart';
 import 'player_provider.dart' show SimpleAudioHandler, PlayerProvider;
 import '../services/schedule_service.dart';
 import '../services/headset_resume.dart' show HeadsetResume;
+import '../services/car_browse.dart' show CarBrowse;
 import '../l10n/locale_holder.dart';
 import '../screens/radio_korea_screen2.dart' show koreanStationDesc, koreanRadioStations;
 import '../l10n/locale_holder.dart';
@@ -317,6 +318,8 @@ class RadioProvider extends ChangeNotifier {
         url: url,
       );
       _simpleHandler?.setRadioPlaybackState(playing: true);
+      // 편성표를 이미 받았으면 둘째 줄을 프로그램으로 다시 (방송 설명으로 덮이지 않게)
+      _updateNotification(station.name);
       debugPrint('포그라운드 서비스 시작');
     } catch (e) {
       debugPrint('포그라운드 서비스 오류: $e');
@@ -1837,6 +1840,70 @@ class RadioProvider extends ChangeNotifier {
   /// 위젯 둘째 줄에 쓸 지금 프로그램 (방송 이름 → "프로그램 9:00~11:00")
   final Map<String, String> _widgetProgram = {};
 
+  /// 차 화면 재생 화면 둘째 줄: "지금 프로그램 · 다음 방송 12:00 다음 프로그램"
+  /// 차에 연결돼 있을 때만 (아니면 null → 지금 글자 그대로) — 앱 재생 화면 '다음 방송'과 같은 규칙
+  /// (편성표에서 지금 방송 다음 칸 · 오늘 마지막이면 첫 칸)
+  String? _carLine(String stationName, String nowTitle, String nowStart) {
+    if (!CarBrowse.inCarRecently || nowTitle.isEmpty) return null;
+    final list = _scheduleListMap[stationName];
+    if (list == null || list.length < 2) return null;
+    String titleOf(Map<String, dynamic> p) => (p['program_title'] ?? p['Title'] ?? p['title'] ?? '').toString();
+    String startOf(Map<String, dynamic> p) {
+      for (final k in ['program_planned_start_time', 'StartTime', 'start_time']) {
+        final v = p[k]?.toString() ?? '';
+        if (v.isNotEmpty) return v;
+      }
+      return '';
+    }
+
+    var i = nowStart.isEmpty ? -1 : list.indexWhere((p) => titleOf(p) == nowTitle && startOf(p) == nowStart);
+    if (i < 0) i = list.indexWhere((p) => titleOf(p) == nowTitle);
+    if (i < 0) return null;
+    final next = list[(i + 1) % list.length];
+    final t = titleOf(next);
+    if (t.isEmpty || t == nowTitle) return null;
+    var s = startOf(next);
+    if (!s.contains(':')) {
+      if (s.length >= 4) {
+        var h = int.tryParse(s.substring(0, 2)) ?? 0;
+        if (h >= 24) h -= 24;
+        s = '${h.toString().padLeft(2, '0')}:${s.substring(2, 4)}';
+      } else {
+        s = '';
+      }
+    }
+    return '$nowTitle\n[${tr.radioNextProgram}] ${s.isEmpty ? '' : '$s · '}$t'; // 다음 방송은 줄을 바꿔서, [다음 방송] 칸처럼 (지금 방송과 안 섞이게)
+  }
+
+  /// 편성표 시간("11050000" · "1100" · "11:00", 24시 넘는 것도) → 지금 프로그램의 (시작, 끝) — 지금이 그 안이 아니면 null
+  (DateTime, DateTime)? _programSpan(String start, String end) {
+    (int, int)? hm(String t) {
+      final s = t.trim();
+      if (s.contains(':')) {
+        final p = s.split(':');
+        final h = int.tryParse(p[0].replaceAll(RegExp(r'[^0-9]'), ''));
+        final m = int.tryParse(p.length > 1 ? p[1].replaceAll(RegExp(r'[^0-9]'), '') : '');
+        return (h == null || m == null) ? null : (h, m);
+      }
+      if (s.length < 4) return null;
+      final h = int.tryParse(s.substring(0, 2));
+      final m = int.tryParse(s.substring(2, 4));
+      return (h == null || m == null) ? null : (h, m);
+    }
+
+    final a = hm(start), b = hm(end);
+    if (a == null || b == null) return null;
+    final now = DateTime.now();
+    var st = DateTime(now.year, now.month, now.day, a.$1, a.$2);
+    if (st.isAfter(now)) st = st.subtract(const Duration(days: 1)); // 어제 시작한 밤 프로그램
+    var en = DateTime(st.year, st.month, st.day, b.$1, b.$2);
+    while (!en.isAfter(st)) {
+      en = en.add(const Duration(days: 1)); // 자정 넘어 끝나는 프로그램
+    }
+    if (now.isBefore(st) || !now.isBefore(en) || en.difference(st) > const Duration(hours: 12)) return null;
+    return (st, en);
+  }
+
   void _updateNotification(String stationName) {
     if (_currentStation?.name != stationName) return;
     final program = _currentProgramMap[stationName];
@@ -1878,9 +1945,12 @@ class RadioProvider extends ChangeNotifier {
       }
       artist = '$programTitle ${fmtTime(start)}~${fmtTime(end)}';
     }
+    // 시간 줄: 지금 프로그램 시작~끝 (편성표 시간 그대로)
+    final span = _programSpan(start, end);
+    _simpleHandler?.setRadioProgramTime(stationName, span?.$1, span?.$2);
     _simpleHandler?.setRadioMediaItem(
       title: stationName,
-      artist: artist,
+      artist: _carLine(stationName, programTitle, start) ?? artist, // 차에선 다음 방송까지
       url: _currentStation?.streamUrl ?? '',
     );
     // 위젯에도 지금 하는 프로그램 (늦게 도착해도 바로 바뀌게)
@@ -1918,7 +1988,7 @@ class RadioProvider extends ChangeNotifier {
       if (programTitle.isNotEmpty) {
         _simpleHandler?.setRadioMediaItem(
           title: title,
-          artist: programTitle,
+          artist: _carLine(title, programTitle, '') ?? programTitle, // 차에선 다음 방송까지
           url: '',
         );
       }

@@ -15,6 +15,7 @@ import '../screens/radio_korea_screen2.dart' show koreanStationsForCar, koreanCa
 import '../screens/radio_country_stations_screen.dart' show radioGenresOf, radioGenreLabel;
 import '../utils/device_country.dart';
 import '../utils/nature_sound_catalog.dart';
+import '../utils/no_album_helper.dart';
 import 'headset_resume.dart';
 
 /// 안드로이드 오토(차 화면) 목록 · 재생 · 음성 명령
@@ -78,6 +79,22 @@ class CarBrowse {
   static Uri _web(String url, String name, int color) => Uri.parse(
       '$_auth/web?u=${Uri.encodeQueryComponent(url)}&t=${Uri.encodeQueryComponent(name)}&c=${color.toRadixString(16)}');
   static Uri _asset(String asset) => Uri.parse('$_auth/asset?p=${Uri.encodeQueryComponent(asset)}');
+  /// 색 칸 + 흰 아이콘 (음악 탭 폴더)
+  static Uri _iconTile(String kind, int color) => Uri.parse('$_auth/icon?k=$kind&c=${color.toRadixString(16)}');
+
+  /// 곡 앨범 사진 (k: 앱에서 바꾼 사진 파일 이름 · v: 사진이 바뀌면 새로 그리게 · p: 사진 없을 때 고양이 사진)
+  static Uri _songArt(Song s) {
+    final u = s.uri ?? '';
+    return Uri.parse('$_auth/song?u=${Uri.encodeQueryComponent(u)}&k=${u.hashCode.abs()}'
+        '&v=${s.albumArt?.length ?? 0}&p=${Uri.encodeQueryComponent(noAlbumImagePath(u.isEmpty ? s.title : u))}');
+  }
+
+  /// 음악 탭 폴더 색 (앱 포인트 색과 어울리는 차분한 색)
+  static const _musicColors = {
+    'shuffle': 0xFF4B56B8, 'recent': 0xFF2E6B5E, 'fav': 0xFF9C3D52,
+    'all': 0xFF2F5E9E, 'artist': 0xFF7A5230, 'genre': 0xFF5E4785,
+  };
+  static Uri _musicIcon(String kind) => _iconTile(kind, _musicColors[kind]!);
 
   /// 해외 방송·팟캐스트처럼 정해진 색이 없을 때: 이름으로 차분한 색 하나 (방송사별 색과 어울리는 톤)
   static const _calm = [0xFF14356B, 0xFF4A1E5C, 0xFF7A1F1F, 0xFF0D4C6E, 0xFF1E4A2E, 0xFF6B4A12, 0xFF33405A, 0xFF6A3B22];
@@ -102,15 +119,16 @@ class CarBrowse {
     return const [];
   }
 
+  // 탭 순서: 앱 화면과 같게 (음악 · 라디오 · 팟캐스트 · 자연소리)
   static List<MediaItem> _root() => [
-        MediaItem(id: tabRadio, title: tr.catRadio, playable: false, artUri: _icon('paran_ic_radio'),
-            extras: _style(playable: _grid)),
         MediaItem(id: tabMusic, title: tr.catMusic, playable: false, artUri: _icon('paran_ic_music'),
             extras: _style(browsable: _list, playable: _list)),
-        MediaItem(id: tabNature, title: tr.natureSounds, playable: false, artUri: _icon('paran_ic_leaf'),
+        MediaItem(id: tabRadio, title: tr.catRadio, playable: false, artUri: _icon('paran_ic_radio'),
             extras: _style(playable: _grid)),
         MediaItem(id: tabPodcast, title: podText('팟캐스트', 'Podcasts'), playable: false,
             artUri: _icon('paran_ic_podcast'), extras: _style(browsable: _grid, playable: _list)),
+        MediaItem(id: tabNature, title: tr.natureSounds, playable: false, artUri: _icon('paran_ic_leaf'),
+            extras: _style(playable: _grid)),
       ];
 
   /// 차 화면 '최근' (구글이 처음에 이어서 듣기로 보여 줄 때) — 마지막에 듣던 것 하나
@@ -147,6 +165,22 @@ class CarBrowse {
     final c = _colorOf(s.name);
     if (logo.startsWith('http')) return _web(logo, s.name, c);
     return _tile(_initials(s.name), '', c);
+  }
+
+  /// 차 화면 재생 화면 그림: 차에 연결돼 있으면 지금 방송의 목록 그림(방송사 색 칸 · 로고), 아니면 null (시간대 사진)
+  static Uri? nowPlayingArt() {
+    if (!inCarRecently) return null;
+    final st = _radio?.currentStation;
+    if (st == null) return null;
+    // 앱 라디오 재생 화면과 같게: 지금 하는 프로그램 사진이 있으면 그 사진 (편성표에서 받은 것)
+    final img = _radio?.currentProgram?['image'];
+    if (img is String && img.startsWith('http')) return _web(img, st.name, _colorOf(st.name));
+    if (st.countryCode == 'KR' && !_krArt.containsKey(st.stationUuid)) {
+      final korean = _korean();
+      final i = korean.indexWhere((k) => k.name == st.name);
+      if (i >= 0) _krArt[st.stationUuid] = _krArt[korean[i].stationUuid]!;
+    }
+    return _stationArt(st);
   }
 
   static String _initials(String name) {
@@ -344,6 +378,7 @@ class CarBrowse {
         title: s.titleDisplay,
         artist: s.artistDisplay,
         playable: true,
+        artUri: _songArt(s),
         extras: group == null ? null : {_group: group},
       );
 
@@ -352,21 +387,21 @@ class CarBrowse {
     if (m != null && m.allSongs.isEmpty && !m.isLoading) {
       m.initialize().then((_) => _changed(tabMusic)); // 처음이면 곡 불러오고 다시
     }
-    MediaItem folder(String id, String title, {String? sub}) => MediaItem(
+    MediaItem folder(String id, String title, String icon, {String? sub}) => MediaItem(
         id: 'ml:$id', title: title, displaySubtitle: sub, artist: sub, playable: false,
-        extras: _style(browsable: _list, playable: _list));
+        artUri: _musicIcon(icon), extras: _style(browsable: _list, playable: _list));
     final all = m?.allSongs.length ?? 0;
     return [
       // 맨 위: 랜덤 재생 (누르면 내 곡 전체를 섞어서 바로 — 음악 화면 랜덤 듣기와 같음, 곡이 없으면 안 보임)
       if (all > 0)
         MediaItem(
             id: 'mshuffle', title: tr.shufflePlay, displaySubtitle: '$all', artist: '$all', playable: true,
-            artUri: _icon('paran_ic_shuffle')),
-      folder('recent', tr.homeRecentHeader),
-      folder('fav', tr.favorites),
-      folder('all', tr.all, sub: all > 0 ? '$all' : null),
-      folder('artists', tr.artists),
-      folder('genres', tr.genre),
+            artUri: _musicIcon('shuffle')),
+      folder('recent', tr.homeRecentHeader, 'recent'),
+      folder('fav', tr.favorites, 'fav'),
+      folder('all', tr.all, 'all', sub: all > 0 ? '$all' : null),
+      folder('artists', tr.artists, 'artist'),
+      folder('genres', tr.genre, 'genre'),
     ];
   }
 
@@ -413,6 +448,7 @@ class CarBrowse {
               displaySubtitle: '${counts[n]}',
               artist: '${counts[n]}',
               playable: false,
+              artUri: _tile(key == 'artists' ? _initials(n) : n, '', _colorOf(n)), // 이름 글자 색 칸
               extras: _style(playable: _list)),
       ];
     }

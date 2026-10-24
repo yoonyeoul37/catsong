@@ -6161,7 +6161,7 @@
         "image": "https://www.obs.co.kr/admin/data/program/_radio_poster/R001_2305081916.png"
       },
       {
-        "title": "신나는 공유학교 - 의정부1기 오전",
+        "title": "신나는 공유학교 - 용인1기 오전",
         "start": "07:00",
         "end": "09:00",
         "image": "https://www.obs.co.kr/admin/data/program/_radio_poster/R065_2305081916.png"
@@ -6197,7 +6197,7 @@
         "image": "https://www.obs.co.kr/admin/data/program/_radio_poster/R053_2305081916.png"
       },
       {
-        "title": "신나는 공유학교 - 의정부1기 오후",
+        "title": "신나는 공유학교 - 용인1기 오후",
         "start": "17:30",
         "end": "19:30",
         "image": "https://www.obs.co.kr/admin/data/program/_radio_poster/R065_2305081916.png"
@@ -6470,19 +6470,18 @@
       {
         "title": "경전공부",
         "start": "01:00",
-        "end": "01:25",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/b24f68fc6a61e94052e4.png"
+        "end": "01:25"
       },
       {
         "title": "우리들의 아침, 운성입니다",
         "start": "01:25",
-        "end": "01:45"
+        "end": "01:45",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
       },
       {
         "title": "혜주스님의 생명을 위한 명상",
         "start": "01:45",
-        "end": "02:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/adc7e863a5dde2c19717.png"
+        "end": "02:00"
       },
       {
         "title": "새벽 명상",
@@ -6493,8 +6492,7 @@
       {
         "title": "행복을 찾는 108배",
         "start": "04:30",
-        "end": "05:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/d3e9de787d79d4476a9f.jpg"
+        "end": "05:00"
       },
       {
         "title": "아침 예불",
@@ -6505,8 +6503,7 @@
       {
         "title": "경전공부",
         "start": "05:25",
-        "end": "05:50",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/b24f68fc6a61e94052e4.png"
+        "end": "05:50"
       },
       {
         "title": "불교의 숨결",
@@ -6522,7 +6519,8 @@
       {
         "title": "우리들의 아침, 운성입니다",
         "start": "06:40",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
       },
       {
         "title": "BBS 뉴스",
@@ -6548,7 +6546,8 @@
       {
         "title": "거룩한 만남",
         "start": "10:00",
-        "end": "10:55"
+        "end": "10:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/3f1712f6eb08ff02f27c.png"
       },
       {
         "title": "신행 365일",
@@ -6559,8 +6558,7 @@
       {
         "title": "무명을 밝히고",
         "start": "11:00",
-        "end": "12:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/d8b61aa3ff9116c7c15c.jpg"
+        "end": "12:00"
       },
       {
         "title": "정오종합뉴스",
@@ -6586,7 +6584,8 @@
       {
         "title": "팝 포 유",
         "start": "16:00",
-        "end": "17:00"
+        "end": "17:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/20d8fb5ccd5b6b72f450.jpg"
       },
       {
         "title": "경제와 생활뉴스",
@@ -6596,7 +6595,8 @@
       {
         "title": "팝 포 유",
         "start": "17:05",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/20d8fb5ccd5b6b72f450.jpg"
       },
       {
         "title": "운문사 우리말 저녁예불",
@@ -6612,8 +6612,7 @@
       {
         "title": "별빛 아름다운 저녁, 주석입니다",
         "start": "19:00",
-        "end": "20:55",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/5e83e5d261ec1fa21e43.jpg"
+        "end": "20:55"
       },
       {
         "title": "각밀스님의 염화미소",
@@ -6653,19 +6652,18 @@
       {
         "title": "경전공부",
         "start": "01:00",
-        "end": "01:25",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/b24f68fc6a61e94052e4.png"
+        "end": "01:25"
       },
       {
         "title": "우리들의 아침, 운성입니다",
         "start": "01:25",
-        "end": "01:45"
+        "end": "01:45",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
       },
       {
         "title": "혜주스님의 생명을 위한 명상",
         "start": "01:45",
-        "end": "02:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/adc7e863a5dde2c19717.png"
+        "end": "02:00"
       },
       {
         "title": "새벽 명상",
@@ -6676,8 +6674,7 @@
       {
         "title": "행복을 찾는 108배",
         "start": "04:30",
-        "end": "05:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/d3e9de787d79d4476a9f.jpg"
+        "end": "05:00"
       },
       {
         "title": "아침 예불",
@@ -6688,8 +6685,7 @@
       {
         "title": "경전공부",
         "start": "05:25",
-        "end": "05:50",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/b24f68fc6a61e94052e4.png"
+        "end": "05:50"
       },
       {
         "title": "불교의 숨결",
@@ -6705,7 +6701,8 @@
       {
         "title": "우리들의 아침, 운성입니다",
         "start": "06:40",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
       },
       {
         "title": "대행스님의 행복한 삶을 위한 법문",
@@ -6745,8 +6742,7 @@
       {
         "title": "아름다운 초대",
         "start": "11:00",
-        "end": "12:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/48979fe29732e192a568.png"
+        "end": "12:00"
       },
       {
         "title": "이효주의 싱싱라디오",
@@ -6757,8 +6753,7 @@
       {
         "title": "김중연의 트로트 연구소",
         "start": "14:00",
-        "end": "15:55",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0b6cc302151c7f8140df.jpg"
+        "end": "15:55"
       },
       {
         "title": "5분 명상",
@@ -6792,13 +6787,13 @@
       {
         "title": "달빛, 뮤직 만다라",
         "start": "19:00",
-        "end": "21:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/bd2873c7e3491a7f397a.jpg"
+        "end": "21:00"
       },
       {
         "title": "세계음악여행",
         "start": "21:00",
-        "end": "23:00"
+        "end": "23:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/a8258a732ae75a3ea90b.png"
       },
       {
         "title": "한밤의 BGM",
@@ -6827,19 +6822,18 @@
       {
         "title": "경전공부",
         "start": "01:00",
-        "end": "01:25",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/b24f68fc6a61e94052e4.png"
+        "end": "01:25"
       },
       {
         "title": "우리들의 아침, 운성입니다",
         "start": "01:25",
-        "end": "01:45"
+        "end": "01:45",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
       },
       {
         "title": "혜주스님의 생명을 위한 명상",
         "start": "01:45",
-        "end": "02:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/adc7e863a5dde2c19717.png"
+        "end": "02:00"
       },
       {
         "title": "새벽 명상",
@@ -6850,8 +6844,7 @@
       {
         "title": "행복을 찾는 108배",
         "start": "04:30",
-        "end": "05:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/d3e9de787d79d4476a9f.jpg"
+        "end": "05:00"
       },
       {
         "title": "아침 예불",
@@ -6862,8 +6855,7 @@
       {
         "title": "경전공부",
         "start": "05:25",
-        "end": "05:50",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/b24f68fc6a61e94052e4.png"
+        "end": "05:50"
       },
       {
         "title": "불교의 숨결",
@@ -6879,7 +6871,8 @@
       {
         "title": "우리들의 아침, 운성입니다",
         "start": "06:40",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
       },
       {
         "title": "BBS초대석",
@@ -6907,8 +6900,7 @@
       {
         "title": "라디오 법회",
         "start": "10:00",
-        "end": "10:55",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/7454185848c0fd9734df.png"
+        "end": "10:55"
       },
       {
         "title": "신행 365일",
@@ -6919,8 +6911,7 @@
       {
         "title": "아름다운 초대",
         "start": "11:00",
-        "end": "12:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/48979fe29732e192a568.png"
+        "end": "12:00"
       },
       {
         "title": "이효주의 싱싱라디오",
@@ -6931,8 +6922,7 @@
       {
         "title": "김중연의 트로트 연구소",
         "start": "14:00",
-        "end": "15:55",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0b6cc302151c7f8140df.jpg"
+        "end": "15:55"
       },
       {
         "title": "5분 명상",
@@ -6953,7 +6943,8 @@
       {
         "title": "장병의 시간",
         "start": "17:30",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/25c79ee166aad47eeb6d.jpg"
       },
       {
         "title": "운문사 우리말 저녁예불",
@@ -6964,19 +6955,18 @@
       {
         "title": "BBS 낭독살롱",
         "start": "18:20",
-        "end": "19:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/404063023455ba1cb1ce.jpg"
+        "end": "19:00"
       },
       {
         "title": "달빛, 뮤직 만다라",
         "start": "19:00",
-        "end": "21:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/bd2873c7e3491a7f397a.jpg"
+        "end": "21:00"
       },
       {
         "title": "세계음악여행",
         "start": "21:00",
-        "end": "23:00"
+        "end": "23:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/a8258a732ae75a3ea90b.png"
       },
       {
         "title": "한밤의 BGM",
@@ -7005,19 +6995,18 @@
       {
         "title": "경전공부",
         "start": "01:00",
-        "end": "01:25",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/b24f68fc6a61e94052e4.png"
+        "end": "01:25"
       },
       {
         "title": "우리들의 아침, 운성입니다",
         "start": "01:25",
-        "end": "01:45"
+        "end": "01:45",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
       },
       {
         "title": "혜주스님의 생명을 위한 명상",
         "start": "01:45",
-        "end": "02:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/adc7e863a5dde2c19717.png"
+        "end": "02:00"
       },
       {
         "title": "새벽 명상",
@@ -7028,8 +7017,7 @@
       {
         "title": "행복을 찾는 108배",
         "start": "04:30",
-        "end": "05:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/d3e9de787d79d4476a9f.jpg"
+        "end": "05:00"
       },
       {
         "title": "아침 예불",
@@ -7040,8 +7028,7 @@
       {
         "title": "경전공부",
         "start": "05:25",
-        "end": "05:50",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/b24f68fc6a61e94052e4.png"
+        "end": "05:50"
       },
       {
         "title": "불교의 숨결",
@@ -7057,7 +7044,8 @@
       {
         "title": "우리들의 아침, 운성입니다",
         "start": "06:40",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
       },
       {
         "title": "BBS 뉴스",
@@ -7094,8 +7082,7 @@
       {
         "title": "무명을 밝히고",
         "start": "11:00",
-        "end": "12:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/d8b61aa3ff9116c7c15c.jpg"
+        "end": "12:00"
       },
       {
         "title": "정오종합뉴스",
@@ -7121,7 +7108,8 @@
       {
         "title": "팝 포 유",
         "start": "16:00",
-        "end": "17:00"
+        "end": "17:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/20d8fb5ccd5b6b72f450.jpg"
       },
       {
         "title": "경제와 생활뉴스",
@@ -7131,7 +7119,8 @@
       {
         "title": "팝 포 유",
         "start": "17:05",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/20d8fb5ccd5b6b72f450.jpg"
       },
       {
         "title": "운문사 우리말 저녁예불",
@@ -7147,8 +7136,7 @@
       {
         "title": "별빛 아름다운 저녁, 주석입니다",
         "start": "19:00",
-        "end": "20:55",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/5e83e5d261ec1fa21e43.jpg"
+        "end": "20:55"
       },
       {
         "title": "각밀스님의 염화미소",
@@ -7353,22 +7341,16 @@
     ],
     "saturday": [
       {
-        "title": "라디오 고해소 비밀번호 1053",
+        "title": "선물 같은 하루, 신나라입니다 1부(재)",
         "start": "00:00",
         "end": "01:00",
-        "image": "https://img.cpbc.co.kr/cpbc_cms/2025/07/09/JZH1752026615052-1280-720.jpg"
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/10/23/UFJ1792719736438.jpg"
       },
       {
-        "title": "그대에게 평화를 김슬애입니다(재)",
-        "start": "01:03",
-        "end": "01:45",
-        "image": "https://img.cpbc.co.kr/cpbc_cms/2026/04/26/kix1777202951678-1280-720.jpg"
-      },
-      {
-        "title": "묵주기도",
-        "start": "01:45",
+        "title": "선물 같은 하루, 신나라입니다 2부(재)",
+        "start": "01:00",
         "end": "02:00",
-        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/S9l1784849297482.jpg"
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/10/23/UFJ1792719736438.jpg"
       },
       {
         "title": "매일미사",
@@ -7383,10 +7365,10 @@
         "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/EAt1784849082479.jpg"
       },
       {
-        "title": "그대에게 평화를 김슬애입니다",
+        "title": "그대에게 평화를 김지현입니다",
         "start": "06:03",
         "end": "06:50",
-        "image": "https://img.cpbc.co.kr/cpbc_cms/2026/04/26/kix1777202951678-1280-720.jpg"
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/10/23/vOh1792738263510.jpg"
       },
       {
         "title": "오늘의 강론",
@@ -7395,16 +7377,16 @@
         "image": "https://img.cpbc.co.kr/cpbc_cms/2022/11/16/N8W1668579687696-1280-720.jpg"
       },
       {
-        "title": "오수진의 행복을 여는 아침",
+        "title": "오수진의 행복을 여는 아침 1부",
         "start": "07:00",
         "end": "08:00",
         "image": "https://img.cpbc.co.kr/cpbc_cms/2023/10/29/jHV1698553416330-1280-720.png"
       },
       {
-        "title": "특집다큐 <당신의 계절>",
+        "title": "오수진의 행복을 여는 아침 2부",
         "start": "08:00",
         "end": "09:00",
-        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/10/22/PQU1792644370185.jpg"
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2023/10/29/jHV1698553416330-1280-720.png"
       },
       {
         "title": "참 좋은 오늘, 은빛수녀입니다",
@@ -7413,13 +7395,13 @@
         "image": "https://img.cpbc.co.kr/cpbc_cms/2024/04/28/J5X1714291774256-1280-720.jpg"
       },
       {
-        "title": "장일범의 유쾌한 클래식 6주년 기념 음악회 <ON AIR> 1부",
+        "title": "장일범의 유쾌한 클래식 1부",
         "start": "10:00",
-        "end": "12:00",
+        "end": "11:00",
         "image": "https://img.cpbc.co.kr/cpbc_cms/2022/12/02/uZo1669945230080-1280-720.jpg"
       },
       {
-        "title": "장일범의 유쾌한 클래식 6주년 기념 음악회 <ON AIR> 2부",
+        "title": "장일범의 유쾌한 클래식 2부",
         "start": "11:00",
         "end": "12:00",
         "image": "https://img.cpbc.co.kr/cpbc_cms/2022/12/02/uZo1669945230080-1280-720.jpg"
@@ -7437,16 +7419,16 @@
         "image": "https://img.cpbc.co.kr/cpbc_cms/2022/12/30/kSP1672362835879-1280-720.jpg"
       },
       {
-        "title": "2시N뮤직 김빛나입니다",
+        "title": "선물 같은 하루, 신나라입니다 1부",
         "start": "14:00",
         "end": "15:00",
-        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/10/27/8x41730007010053-1280-720.jpg"
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/10/23/UFJ1792719736438.jpg"
       },
       {
-        "title": "2시N뮤직 김빛나입니다",
+        "title": "선물 같은 하루, 신나라입니다 2부",
         "start": "15:00",
         "end": "16:00",
-        "image": "https://img.cpbc.co.kr/cpbc_cms/2024/10/27/8x41730007010053-1280-720.jpg"
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/10/23/UFJ1792719736438.jpg"
       },
       {
         "title": "기도의 오솔길 이헌준 신부입니다",
@@ -7461,16 +7443,16 @@
         "image": "https://img.cpbc.co.kr/cpbc_cms/2022/11/16/N8W1668579687696-1280-720.jpg"
       },
       {
-        "title": "cpbc오디오드라마, 성인이 된 미디어 사도 카를로 아쿠티스(재)",
+        "title": "오석준 신부의 생명은 사랑입니다",
         "start": "17:00",
         "end": "18:00",
-        "image": "https://img.cpbc.co.kr/cpbc_cms/2026/09/30/ogt1790730630426-1280-720.jpg"
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2025/12/03/Gfe1764736607297-1280-720.jpg"
       },
       {
-        "title": "평화의 기도",
+        "title": "삼종기도",
         "start": "18:00",
         "end": "18:03",
-        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/PzD1784849189755.jpg"
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/EAt1784849082479.jpg"
       },
       {
         "title": "이웃집 라디오",
@@ -7479,13 +7461,13 @@
         "image": "https://img.cpbc.co.kr/cpbc_cms/2025/10/26/z3J1761455826846-1280-720.jpg"
       },
       {
-        "title": "성기완의 명동연가",
+        "title": "성기완의 명동연가 1부",
         "start": "19:00",
         "end": "20:00",
         "image": "https://img.cpbc.co.kr/cpbc_cms/2022/12/29/zcA1672300316748-1280-720.jpg"
       },
       {
-        "title": "성기완의 명동연가",
+        "title": "성기완의 명동연가 2부",
         "start": "20:00",
         "end": "21:00",
         "image": "https://img.cpbc.co.kr/cpbc_cms/2022/12/29/zcA1672300316748-1280-720.jpg"
@@ -7497,25 +7479,31 @@
         "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/Nnm1784849237369.jpg"
       },
       {
-        "title": "당신을 위한 BGM",
+        "title": "라디오 고해소 비밀번호 1053",
         "start": "21:02",
         "end": "22:00",
-        "image": "https://img.cpbc.co.kr/cpbc_cms/2023/12/08/tV41702021948899-1280-720.png"
+        "image": "https://img.cpbc.co.kr/cpbc_cms/2025/07/09/JZH1752026615052-1280-720.jpg"
       },
       {
-        "title": "당신을 위한 BGM",
+        "title": "그대에게 평화를 김지현입니다(재)",
         "start": "22:00",
-        "end": "23:00",
-        "image": "https://img.cpbc.co.kr/cpbc_cms/2023/12/08/tV41702021948899-1280-720.png"
+        "end": "22:45",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/10/23/0su1792738318502.jpg"
       },
       {
-        "title": "기도의 오솔길 이헌준 신부입니다(재)",
+        "title": "묵주기도",
+        "start": "22:45",
+        "end": "23:00",
+        "image": "https://img.cpbc.co.kr/img/cpbc_cms/2026/07/24/S9l1784849297482.jpg"
+      },
+      {
+        "title": "주말 기도의 오솔길 이헌준 신부입니다(재)",
         "start": "23:00",
         "end": "23:50",
         "image": "https://img.cpbc.co.kr/cpbc_cms/2025/10/27/6pc1761530599737-1280-720.jpg"
       },
       {
-        "title": "오늘의 강론(재)",
+        "title": "오늘의 강론(삼)",
         "start": "23:50",
         "end": "00:00",
         "image": "https://img.cpbc.co.kr/cpbc_cms/2022/11/16/N8W1668579687696-1280-720.jpg"
@@ -22001,16 +21989,9 @@
         "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2024/08/02/Pc31722560981948-640-360.jpg"
       },
       {
-        "title": "두시탈출 컬투쇼",
+        "title": "TBC스포츠 2026 프로야구",
         "start": "14:00",
-        "end": "16:00",
-        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2026/05/12/Z5h1778559530785-640-360.jpg"
-      },
-      {
-        "title": "황제성의 황제파워",
-        "start": "16:00",
-        "end": "18:00",
-        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2026/09/01/j9a1788220734412-640-360.jpg"
+        "end": "18:00"
       },
       {
         "title": "박소현의 러브게임",

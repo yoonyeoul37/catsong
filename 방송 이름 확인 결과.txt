@@ -1,0 +1,26 @@
+없는 이름(시험)              http://115.85.182.39/zz_test_123
+    → icy-name=mapofm / icy-genre=Misc / icy-url=http://www.shoutcast.com
+관악FM?                  http://115.85.182.39/gfm
+    → icy-name=mapofm / icy-genre=Misc / icy-url=http://www.shoutcast.com
+관악FM?                  http://115.85.182.39/gwanakfm
+    → icy-name=mapofm / icy-genre=Misc / icy-url=http://www.shoutcast.com
+성남FM?                  http://115.85.182.39/snfm
+    → icy-name=mapofm / icy-genre=Misc / icy-url=http://www.shoutcast.com
+성남FM?                  http://115.85.182.39/sbnfm
+    → icy-name=mapofm / icy-genre=Misc / icy-url=http://www.shoutcast.com
+서대문FM?                 http://115.85.182.39/sdmfm
+    → icy-name=mapofm / icy-genre=Misc / icy-url=http://www.shoutcast.com
+서대문FM?                 http://115.85.182.39/myfm
+    → icy-name=mapofm / icy-genre=Misc / icy-url=http://www.shoutcast.com
+구리FM?                  http://115.85.182.39/gurifm
+    → icy-name=mapofm / icy-genre=Misc / icy-url=http://www.shoutcast.com
+서대문FM(공식 듣기 링크)        http://115.68.193.176:8000/sdmfm
+    → icy-name=no name
+단원FM                   http://radiostream.communityradio.kr/dwfm1
+    → icy-name=RadioBOSS Stream / icy-genre=Other / icy-url=http://www.example.com
+(비교) 수원 SoneFM         http://115.85.182.39/sonefm
+    → icy-name=sonefm / icy-genre=Misc / icy-url=http://www.mapofm.net
+(비교) 성서공동체FM           http://115.85.182.39/scnfm
+    → icy-name=SCNFM Radio Station / icy-genre=Misc / icy-url=http://www.scnfm.or.kr
+라디오서울                  https://onair1.radioseoul1650.com/radioseoul.mp3
+    → icy-name=radioseoul / icy-description=radioseoul / icy-genre=Korean / icy-url=http://45.58.8.69:8000/radioseoul.mp3

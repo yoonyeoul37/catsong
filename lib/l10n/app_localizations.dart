@@ -3886,7 +3886,7 @@ abstract class AppLocalizations {
   /// No description provided for @pickedPhotos.
   ///
   /// In ko, this message translates to:
-  /// **'고른 사진'**
+  /// **'선택한 사진'**
   String get pickedPhotos;
 
   /// No description provided for @paranPhotoSub.
@@ -4630,7 +4630,7 @@ abstract class AppLocalizations {
   /// No description provided for @pickRightArt.
   ///
   /// In ko, this message translates to:
-  /// **'맞는 앨범 사진을 골라 주세요'**
+  /// **'맞는 앨범 사진을 선택해 주세요'**
   String get pickRightArt;
 
   /// No description provided for @artAdded.
@@ -5735,7 +5735,7 @@ abstract class AppLocalizations {
   /// No description provided for @savePart.
   ///
   /// In ko, this message translates to:
-  /// **'구간 골라서 저장'**
+  /// **'구간 선택해서 저장'**
   String get savePart;
 
   /// No description provided for @trimFailed2.
@@ -5771,7 +5771,7 @@ abstract class AppLocalizations {
   /// No description provided for @saveMusicNote.
   ///
   /// In ko, this message translates to:
-  /// **'고른 구간의 소리만 음악 목록에 저장해요 (Music/Paransori · M4A)'**
+  /// **'선택한 구간의 소리만 음악 목록에 저장해요 (Music/Paransori · M4A)'**
   String get saveMusicNote;
 
   /// No description provided for @trimVideoNote.
@@ -6077,7 +6077,7 @@ abstract class AppLocalizations {
   /// No description provided for @pickTime.
   ///
   /// In ko, this message translates to:
-  /// **'시간 고르기'**
+  /// **'시간 선택'**
   String get pickTime;
 
   /// No description provided for @quick30min.
@@ -6107,7 +6107,7 @@ abstract class AppLocalizations {
   /// No description provided for @pickFromSchedule.
   ///
   /// In ko, this message translates to:
-  /// **'편성표에서 프로그램으로 고르기'**
+  /// **'편성표에서 프로그램 선택'**
   String get pickFromSchedule;
 
   /// No description provided for @scheduleAction.
@@ -6629,7 +6629,7 @@ abstract class AppLocalizations {
   /// No description provided for @pickVersion.
   ///
   /// In ko, this message translates to:
-  /// **'{name} 버전 고르기'**
+  /// **'{name} 버전 선택'**
   String pickVersion(String name);
 
   /// No description provided for @natureShareText.
@@ -6827,7 +6827,7 @@ abstract class AppLocalizations {
   /// No description provided for @pickType.
   ///
   /// In ko, this message translates to:
-  /// **'종류 고르기'**
+  /// **'종류 선택'**
   String get pickType;
 
   /// No description provided for @favoritesTitle.
@@ -7151,7 +7151,7 @@ abstract class AppLocalizations {
   /// No description provided for @infoTodaySongD.
   ///
   /// In ko, this message translates to:
-  /// **'내 음악에서 매일 한 곡을 골라 줘요'**
+  /// **'내 음악에서 매일 한 곡을 추천해 줘요'**
   String get infoTodaySongD;
 
   /// No description provided for @infoLongTime.
@@ -7799,7 +7799,7 @@ abstract class AppLocalizations {
   /// No description provided for @pickAlarmSong.
   ///
   /// In ko, this message translates to:
-  /// **'알람 곡 고르기'**
+  /// **'알람 곡 선택'**
   String get pickAlarmSong;
 
   /// No description provided for @searchTitleOrArtist.
@@ -7817,7 +7817,7 @@ abstract class AppLocalizations {
   /// No description provided for @pickPlaylist.
   ///
   /// In ko, this message translates to:
-  /// **'재생목록 고르기'**
+  /// **'재생목록 선택'**
   String get pickPlaylist;
 
   /// No description provided for @addFavStationFirst.
@@ -7829,13 +7829,13 @@ abstract class AppLocalizations {
   /// No description provided for @pickRadioChannel.
   ///
   /// In ko, this message translates to:
-  /// **'라디오 채널 고르기'**
+  /// **'라디오 채널 선택'**
   String get pickRadioChannel;
 
   /// No description provided for @pickNatureSound.
   ///
   /// In ko, this message translates to:
-  /// **'자연 소리 고르기'**
+  /// **'자연 소리 선택'**
   String get pickNatureSound;
 
   /// No description provided for @alarmPermTitle.
@@ -7913,7 +7913,7 @@ abstract class AppLocalizations {
   /// No description provided for @noDaysOnce.
   ///
   /// In ko, this message translates to:
-  /// **'요일을 하나도 안 고르면 한 번만 울려요'**
+  /// **'요일을 하나도 선택하지 않으면 한 번만 울려요'**
   String get noDaysOnce;
 
   /// No description provided for @alarmSound.
@@ -7931,7 +7931,7 @@ abstract class AppLocalizations {
   /// No description provided for @oneSongSub.
   ///
   /// In ko, this message translates to:
-  /// **'고른 노래 하나를 반복해서'**
+  /// **'선택한 노래 하나를 반복해서'**
   String get oneSongSub;
 
   /// No description provided for @favChannels.
@@ -8999,7 +8999,7 @@ abstract class AppLocalizations {
   /// No description provided for @helpCarUse3.
   ///
   /// In ko, this message translates to:
-  /// **'음악 · 라디오 · 팟캐스트 · 자연소리 탭에서 원하는 콘텐츠를 골라요.'**
+  /// **'음악 · 라디오 · 팟캐스트 · 자연소리 탭에서 원하는 콘텐츠를 선택해요.'**
   String get helpCarUse3;
 
   /// No description provided for @helpCarUse4.

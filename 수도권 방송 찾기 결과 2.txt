@@ -1,0 +1,115 @@
+■ WBS 원음방송 서울 89.7
+  (소리 나오는 주소 없음)
+
+■ 관악FM 100.3
+  ❌ http://radiostream.communityradio.kr/gfm1
+      추측 · 연결 안 됨 (HTTP Error 404: File Not Found)
+  ❌ http://radiostream.communityradio.kr/gafm1
+      추측 · 연결 안 됨 (HTTP Error 404: File Not Found)
+  ✔ http://115.85.182.39/gfm
+      추측 · 소리 (audio/mpeg)
+  ✔ http://115.85.182.39/gwanakfm
+      추측 · 소리 (audio/mpeg)
+
+■ 성남FM 90.7
+  ❌ http://radiostream.communityradio.kr/snfm1
+      추측 · 연결 안 됨 (HTTP Error 404: File Not Found)
+  ✔ http://115.85.182.39/snfm
+      추측 · 소리 (audio/mpeg)
+  ✔ http://115.85.182.39/sbnfm
+      추측 · 소리 (audio/mpeg)
+
+■ 서대문FM(MyFM) 91.3
+  ✔ http://115.68.193.176:8000/sdmfm
+      홈페이지:http://bit.ly/sdmfmnow · 소리 (audio/mpeg)
+  ❌ http://radiostream.communityradio.kr/sdmfm1
+      추측 · 연결 안 됨 (HTTP Error 404: File Not Found)
+  ✔ http://115.85.182.39/sdmfm
+      추측 · 소리 (audio/mpeg)
+  ✔ http://115.85.182.39/myfm
+      추측 · 소리 (audio/mpeg)
+
+■ 구리FM 105.7
+  ❌ http://radiostream.communityradio.kr/gurifm1
+      추측 · 연결 안 됨 (HTTP Error 404: File Not Found)
+  ❌ http://radiostream.communityradio.kr/grfm1
+      추측 · 연결 안 됨 (HTTP Error 404: File Not Found)
+  ✔ http://115.85.182.39/gurifm
+      추측 · 소리 (audio/mpeg)
+
+■ 광주FM 88.9 (공동체, 덤)
+  ❌ http://localhost:8084/uat/uia/kakaoAccessToken.do
+      홈페이지:https://kjfm.communityradio.kr/ · 연결 안 됨 (<urlopen error [WinError 10061] 대상 컴퓨터에서 연결을 거부했으므로 연결하지 못했습)
+  ❌ http://localhost:8090/loadLog/
+      홈페이지:https://kjfm.communityradio.kr/ · 연결 안 됨 (<urlopen error [WinError 10061] 대상 컴퓨터에서 연결을 거부했으므로 연결하지 못했습)
+  ❌ https://chat.communityradio.kr:452/loadLog/
+      홈페이지:https://kjfm.communityradio.kr/ · 연결 안 됨 (HTTP Error 404: )
+  ❌ https://chat.kbizit.kr:8090/loadLog/
+      홈페이지:https://kjfm.communityradio.kr/ · 연결 안 됨 (<urlopen error timed out>)
+  ❌ https://simin.kbizit.kr:451/uat/uia/appleAccessToken.do
+      홈페이지:https://kjfm.communityradio.kr/ · 연결 안 됨 (<urlopen error timed out>)
+  ❌ https://simin.kbizit.kr:451/uat/uia/kakaoAccessToken.do
+      홈페이지:https://kjfm.communityradio.kr/ · 연결 안 됨 (<urlopen error timed out>)
+  ❌ http://radiostream.communityradio.kr/kjfm1
+      추측 · 연결 안 됨 (HTTP Error 404: File Not Found)
+  (소리 나오는 주소 없음)
+
+■ 단원FM (안산 공동체, 덤)
+  ❌ http://localhost:8084/uat/uia/kakaoAccessToken.do
+      홈페이지:https://dwfm.communityradio.kr/ · 연결 안 됨 (<urlopen error [WinError 10061] 대상 컴퓨터에서 연결을 거부했으므로 연결하지 못했습)
+  ❌ http://localhost:8090/loadLog/
+      홈페이지:https://dwfm.communityradio.kr/ · 연결 안 됨 (<urlopen error [WinError 10061] 대상 컴퓨터에서 연결을 거부했으므로 연결하지 못했습)
+  ❌ https://chat.communityradio.kr:452/loadLog/
+      홈페이지:https://dwfm.communityradio.kr/ · 연결 안 됨 (HTTP Error 404: )
+  ❌ https://chat.kbizit.kr:8090/loadLog/
+      홈페이지:https://dwfm.communityradio.kr/ · 연결 안 됨 (<urlopen error timed out>)
+  ❌ https://simin.kbizit.kr:451/uat/uia/appleAccessToken.do
+      홈페이지:https://dwfm.communityradio.kr/ · 연결 안 됨 (<urlopen error timed out>)
+  ❌ https://simin.kbizit.kr:451/uat/uia/kakaoAccessToken.do
+      홈페이지:https://dwfm.communityradio.kr/ · 연결 안 됨 (<urlopen error timed out>)
+  ✔ http://radiostream.communityradio.kr/dwfm1
+      추측 · 소리 (audio/mpeg)
+
+■ 라디오코리아 AM1540 (LA)
+  ❌ https://m.radiokorea.com:443/community/
+      홈페이지:https://www.radiokorea.com/ · 소리 아님 (text/html; charset=UTF-8)
+  ❌ https://m.radiokorea.com:443/homeshopping/
+      홈페이지:https://www.radiokorea.com/ · 소리 아님 (text/html; charset=UTF-8)
+  ❌ https://m.radiokorea.com:443/market/
+      홈페이지:https://www.radiokorea.com/ · 소리 아님 (text/html; charset=UTF-8)
+  ❌ https://m.radiokorea.com:443/news/
+      홈페이지:https://www.radiokorea.com/ · 소리 아님 (text/html; charset=UTF-8)
+  ❌ https://m.radiokorea.com:443/radio/
+      홈페이지:https://www.radiokorea.com/ · 소리 아님 (text/html; charset=UTF-8)
+  ❌ https://m.radiokorea.com:443/towninfo/
+      홈페이지:https://www.radiokorea.com/ · 소리 아님 (text/html; charset=UTF-8)
+  ✔ https://rk-aod-news.s3.us-west-2.amazonaws.com/2026/10/23/507679/1.mp3
+      홈페이지:https://www.radiokorea.com/ · 데이터 (application/octet-stream)
+  ✔ https://rk-aod-radio.s3.us-west-2.amazonaws.com/market/2026/hannam_903_552.mp3
+      홈페이지:https://www.radiokorea.com/ · 소리 (audio/mpeg)
+  ✔ https://rk-aod-radio.s3.us-west-2.amazonaws.com/market/2026/hmart_879_927.mp3
+      홈페이지:https://www.radiokorea.com/ · 소리 (audio/mpeg)
+  ❌ https://www.radiokorea.com:443/rakotel/
+      홈페이지:https://www.radiokorea.com/ · 소리 아님 (text/html; charset=UTF-8)
+  ❌ https://www.radiokorea.com:443/account/
+      홈페이지:https://www.radiokorea.com/radio/ · 소리 아님 (text/html; charset=UTF-8)
+  ❌ https://www.radiokorea.com:443/bulletin/bbs/board.php?bo_table=o_obituaries
+      홈페이지:https://www.radiokorea.com/radio/ · 소리 아님 (text/html; charset=utf-8)
+  ❌ https://www.radiokorea.com:443/community/
+      홈페이지:https://www.radiokorea.com/radio/ · 소리 아님 (text/html; charset=UTF-8)
+  ❌ https://www.radiokorea.com:443/homeshopping/
+      홈페이지:https://www.radiokorea.com/radio/ · 소리 아님 (text/html; charset=UTF-8)
+  ❌ https://www.radiokorea.com:443/market/
+      홈페이지:https://www.radiokorea.com/radio/ · 소리 아님 (text/html; charset=UTF-8)
+  ❌ https://www.radiokorea.com:443/news/
+      홈페이지:https://www.radiokorea.com/radio/ · 소리 아님 (text/html; charset=UTF-8)
+  ❌ https://www.radiokorea.com:443/radio/
+      홈페이지:https://www.radiokorea.com/radio/ · 소리 아님 (text/html; charset=UTF-8)
+  ❌ https://www.radiokorea.com:443/towninfo/
+      홈페이지:https://www.radiokorea.com/radio/ · 소리 아님 (text/html; charset=UTF-8)
+  ❌ https://www.radiokorea.com:443/travel/
+      홈페이지:https://www.radiokorea.com/radio/ · 소리 아님 (text/html; charset=UTF-8)
+  ❌ https://www.radiokorea.com:443/tv/
+      홈페이지:https://www.radiokorea.com/radio/ · 소리 아님 (text/html; charset=UTF-8)
+  ❌ https://www.radiokorea.com:443/uslife/
+      홈페이지:https://www.radiokorea.com/radio/ · 소리 아님 (text/html; charset=UTF-8)

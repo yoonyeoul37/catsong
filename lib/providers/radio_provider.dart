@@ -422,10 +422,11 @@ class RadioProvider extends ChangeNotifier {
       }
 
       // MBC 표준FM/FM4U/올댓뮤직: 개인 중계 서버(serpent0) 대신 iMBC 공식 토큰 API 직접 호출
-      if (url.contains('mbcsfm.pls') || url.contains('mbcfm.pls') || url.contains('mbcatm.pls')) {
-        final channel = url.contains('mbcsfm.pls')
+      if (url.contains('mbcsfm.pls') || url.contains('mbcfm.pls') || url.contains('mbcatm.pls') ||
+          url.contains('sminiplay.imbc.com')) {
+        final channel = (url.contains('mbcsfm.pls') || url.contains('channel=sfm'))
             ? 'sfm'
-            : url.contains('mbcatm.pls')
+            : (url.contains('mbcatm.pls') || url.contains('channel=chm'))
                 ? 'chm'
                 : 'mfm';
         try {
@@ -440,6 +441,45 @@ class RadioProvider extends ChangeNotifier {
           }
         } catch (e) {
           debugPrint('MBC 토큰 발급 오류: $e');
+        }
+        return null;
+      }
+
+      // SBS 파워FM/러브FM: 개인 중계 서버 대신 SBS 공식 주소 (틀 때마다 새로 받음 · 시간이 지나면 못 쓰는 주소)
+      if (url.contains('sbsfm.pls') || url.contains('sbs2fm.pls') || url.contains('apis.sbs.co.kr')) {
+        final love = url.contains('sbs2fm.pls') || url.contains('lovefm');
+        final api = love
+            ? 'https://apis.sbs.co.kr/play-api/1.0/livestream/lovepc/lovefm?protocol=hls&ssl=Y'
+            : 'https://apis.sbs.co.kr/play-api/1.0/livestream/powerpc/powerfm?protocol=hls&ssl=Y';
+        try {
+          final response = await http.get(Uri.parse(api), headers: {
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36',
+            'Referer': 'https://www.sbs.co.kr/',
+          }).timeout(const Duration(seconds: 10));
+          if (response.statusCode == 200) {
+            final fresh = response.body.trim();
+            if (fresh.startsWith('http')) return fresh;
+          }
+        } catch (e) {
+          debugPrint('SBS 주소 받기 오류: $e');
+        }
+        return null;
+      }
+
+      // CPBC 가톨릭평화방송(서울): 개인 중계 서버 대신 공식 주소 (틀 때마다 새로 받음)
+      if (url.contains('cpbc.pls') || url.contains('apis.cpbc.co.kr')) {
+        try {
+          final response = await http.get(Uri.parse('https://apis.cpbc.co.kr/play-api/2.0/onair/channel/radio'), headers: {
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36',
+            'Referer': 'https://www.cpbc.co.kr/',
+          }).timeout(const Duration(seconds: 10));
+          if (response.statusCode == 200) {
+            final data = json.decode(utf8.decode(response.bodyBytes));
+            final fresh = data['onair']?['source']?['mediasource']?['mediaurl'];
+            if (fresh is String && fresh.startsWith('http')) return fresh;
+          }
+        } catch (e) {
+          debugPrint('CPBC 주소 받기 오류: $e');
         }
         return null;
       }
@@ -629,6 +669,9 @@ class RadioProvider extends ChangeNotifier {
           station.streamUrl.contains('mbcfm.pls') ||
           station.streamUrl.contains('mbcatm.pls') ||
           station.streamUrl.contains('sbs.co.kr') ||
+          station.streamUrl.contains('sbsfm.pls') ||
+          station.streamUrl.contains('sbs2fm.pls') ||
+          station.streamUrl.contains('cpbc') ||
           station.streamUrl.contains('ebs.co.kr');
 
       try {
@@ -662,6 +705,13 @@ class RadioProvider extends ChangeNotifier {
       }
 
       if (gen != _playGen) return; // 주소 찾는 사이 다른 방송을 눌렀으면 이건 그만
+      // 예전에 저장된 개인 중계 서버 주소로는 틀지 않음 (공식 주소를 못 받았으면 '불러올 수 없어요')
+      if (playUrl.contains('duckdns.org')) {
+        _stallTimer?.cancel();
+        _errorMessage = tr.stationLoadFailed;
+        _setPlayerState(RadioPlayerState.error);
+        return;
+      }
       debugPrint('FINAL_URL: $playUrl');
       _lastPlayUrl = playUrl;
       _lastPlayStationId = station.stationUuid;
@@ -770,6 +820,7 @@ class RadioProvider extends ChangeNotifier {
     if (url.contains('kbs')) return 'https://www.kbs.co.kr/';
     if (url.contains('imbc') || url.contains('mbc')) return 'https://www.imbc.com/';
     if (url.contains('sbs')) return 'https://www.sbs.co.kr/';
+    if (url.contains('cpbc')) return 'https://www.cpbc.co.kr/';
     if (url.contains('ebs')) return 'https://www.ebs.co.kr/';
     if (url.contains('ytn')) return 'https://www.ytn.co.kr/';
     if (url.contains('cbs')) return 'https://www.cbs.co.kr/';
@@ -782,6 +833,7 @@ class RadioProvider extends ChangeNotifier {
     if (url.contains('kbs')) return 'https://www.kbs.co.kr';
     if (url.contains('imbc') || url.contains('mbc')) return 'https://www.imbc.com';
     if (url.contains('sbs')) return 'https://www.sbs.co.kr';
+    if (url.contains('cpbc')) return 'https://www.cpbc.co.kr';
     if (url.contains('ebs')) return 'https://www.ebs.co.kr';
     if (url.contains('ytn')) return 'https://www.ytn.co.kr';
     if (url.contains('cbs')) return 'https://www.cbs.co.kr';

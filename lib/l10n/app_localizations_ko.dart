@@ -1929,7 +1929,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get myPhotos => '내 사진';
 
   @override
-  String get pickedPhotos => '고른 사진';
+  String get pickedPhotos => '선택한 사진';
 
   @override
   String get paranPhotoSub => '나만의 재생 화면 꾸미기';
@@ -2326,7 +2326,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get pickRightArt => '맞는 앨범 사진을 골라 주세요';
+  String get pickRightArt => '맞는 앨범 사진을 선택해 주세요';
 
   @override
   String artAdded(int count) {
@@ -2963,7 +2963,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get saveWhole => '전체 저장';
 
   @override
-  String get savePart => '구간 골라서 저장';
+  String get savePart => '구간 선택해서 저장';
 
   @override
   String get trimFailed2 => '자르지 못했어요';
@@ -2981,7 +2981,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get saveOnly => '저장만';
 
   @override
-  String get saveMusicNote => '고른 구간의 소리만 음악 목록에 저장해요 (Music/Paransori · M4A)';
+  String get saveMusicNote => '선택한 구간의 소리만 음악 목록에 저장해요 (Music/Paransori · M4A)';
 
   @override
   String get trimVideoNote =>
@@ -3153,7 +3153,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get whatTime => '몇 시에?';
 
   @override
-  String get pickTime => '시간 고르기';
+  String get pickTime => '시간 선택';
 
   @override
   String get quick30min => '30분 뒤';
@@ -3168,7 +3168,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get whichStation => '어떤 방송?';
 
   @override
-  String get pickFromSchedule => '편성표에서 프로그램으로 고르기';
+  String get pickFromSchedule => '편성표에서 프로그램 선택';
 
   @override
   String get scheduleAction => '예약하기';
@@ -3448,7 +3448,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String pickVersion(String name) {
-    return '$name 버전 고르기';
+    return '$name 버전 선택';
   }
 
   @override
@@ -3558,7 +3558,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get turnBackOn => '다시 켜기';
 
   @override
-  String get pickType => '종류 고르기';
+  String get pickType => '종류 선택';
 
   @override
   String get favoritesTitle => '즐겨찾기';
@@ -3725,7 +3725,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get infoTodaySong => '오늘의 한 곡';
 
   @override
-  String get infoTodaySongD => '내 음악에서 매일 한 곡을 골라 줘요';
+  String get infoTodaySongD => '내 음악에서 매일 한 곡을 추천해 줘요';
 
   @override
   String get infoLongTime => '오랜만에 듣기';
@@ -4060,7 +4060,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get noSongsOnPhone => '휴대폰에 저장된 음악이 없어요';
 
   @override
-  String get pickAlarmSong => '알람 곡 고르기';
+  String get pickAlarmSong => '알람 곡 선택';
 
   @override
   String get searchTitleOrArtist => '제목이나 가수로 찾기';
@@ -4069,16 +4069,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get makePlaylistFirst => '재생목록을 먼저 만들어 주세요';
 
   @override
-  String get pickPlaylist => '재생목록 고르기';
+  String get pickPlaylist => '재생목록 선택';
 
   @override
   String get addFavStationFirst => '라디오 즐겨찾기에 채널을 먼저 담아 주세요';
 
   @override
-  String get pickRadioChannel => '라디오 채널 고르기';
+  String get pickRadioChannel => '라디오 채널 선택';
 
   @override
-  String get pickNatureSound => '자연 소리 고르기';
+  String get pickNatureSound => '자연 소리 선택';
 
   @override
   String get alarmPermTitle => '알람 권한이 필요해요';
@@ -4124,7 +4124,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get repeatLabel => '반복';
 
   @override
-  String get noDaysOnce => '요일을 하나도 안 고르면 한 번만 울려요';
+  String get noDaysOnce => '요일을 하나도 선택하지 않으면 한 번만 울려요';
 
   @override
   String get alarmSound => '알람 소리';
@@ -4133,7 +4133,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get oneSong => '한 곡';
 
   @override
-  String get oneSongSub => '고른 노래 하나를 반복해서';
+  String get oneSongSub => '선택한 노래 하나를 반복해서';
 
   @override
   String get favChannels => '즐겨찾기한 채널';
@@ -4682,7 +4682,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get helpCarUse2 => '차량 화면에서 파란소리를 선택해요.';
 
   @override
-  String get helpCarUse3 => '음악 · 라디오 · 팟캐스트 · 자연소리 탭에서 원하는 콘텐츠를 골라요.';
+  String get helpCarUse3 => '음악 · 라디오 · 팟캐스트 · 자연소리 탭에서 원하는 콘텐츠를 선택해요.';
 
   @override
   String get helpCarUse4 => '운전 중에는 화면을 누르지 않고 음성으로 틀 수 있어요.';

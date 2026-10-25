@@ -1,0 +1,62 @@
+■ WBS 원음방송 서울 89.7
+  ❌ http://playerservices.streamtheworld.com/api/livestream-redirect/WBSXFM.mp3
+      목록:97.9x WBSX-FM · 연결 안 됨 (HTTP Error 403: Forbidden)
+  ✔ http://ipr.streamguys1.com/aac
+      목록:Indiana Public Radio WBST · 소리 응답 (audio/aac)
+  ✔ http://lifesongs.streamguys1.com/lifesongs-aac
+      목록:WBSN 89.1 FM LifeSongs · 소리 응답 (audio/aac)
+  ✔ https://18183.live.streamtheworld.com/WMEAFM_SC
+      목록:WBSP-FM 90.1 - Maine Public Radio · 소리 응답 (audio/mpeg)
+  ✔ https://wpnn.fastserv.com/foxsports
+      목록:WBSR · 소리 응답 (audio/mpeg)
+  ❌ http://15693.live.streamtheworld.com/WBSXFMAAC_SC
+      목록:WBSX "97.9 X" Hazelton, PA · 연결 안 됨 (HTTP Error 403: Forbidden)
+  ✔ https://c7.radioboss.fm:8441/stream
+      목록:WBSY 98.5 FM · 소리 응답 (audio/mpeg)
+
+■ 관악FM 100.3
+  ✔ http://stream02.iloveradio.de/iloveradio1.mp3
+      목록:BigFM · 소리 응답 (audio/mpeg)
+  ✔ http://streams.bigfm.de/bigfm-bw-128-mp3
+      목록:bigFM Baden-Württemberg · 소리 응답 (audio/mpeg)
+  ✔ http://streams.bigfm.de/bigfm-balkan-64-aac
+      목록:bigFM bigBalkan · 소리 응답 (audio/aac)
+  ✔ http://streams.bigfm.de/bigfm-balkan-128-mp3
+      목록:bigFM bigBalkan · 소리 응답 (audio/mpeg)
+  ✔ http://streams.bigfm.de/bigfm-turkey-128-mp3
+      목록:bigFM bigSES · 소리 응답 (audio/mpeg)
+  ✔ http://streams.bigfm.de/bigfm-turkey-64-aac
+      목록:bigFM bigSES · 소리 응답 (audio/aac)
+  ✔ http://streams.bigfm.de/bigfm-charts-128-mp3
+      목록:bigFM Charts · 소리 응답 (audio/mpeg)
+  ✔ http://streams.bigfm.de/bigfm-charts-64-aac
+      목록:bigFM Charts · 소리 응답 (audio/aac)
+  ✔ http://streams.bigfm.de/bigfm-dance-64-aac
+      목록:bigFM Dance · 소리 응답 (audio/aac)
+  ✔ http://streams.bigfm.de/bigfm-dance-128-mp3
+      목록:bigFM Dance · 소리 응답 (audio/mpeg)
+
+■ 성남FM 90.7
+  ❌ 주소를 못 찾았어요
+
+■ 서대문FM(MyFM) 91.3
+  ✔ https://stream.revma.ihrhls.com/zc173
+      목록:1043 MYfm · 소리 응답 (audio/aac)
+  ✔ https://ice64.securenetsystems.net/WMRC
+      목록:MyFM 101.3 · 소리 응답 (audio/aac)
+
+■ 구리FM 105.7
+  ❌ 주소를 못 찾았어요
+
+■ 라디오코리아 AM1540 (LA)
+  ❌ 주소를 못 찾았어요
+
+■ 라디오서울 AM1650 (LA)
+  ❌ https://bonneville.cdnstream1.com/2620_48.aac?aw_0_1st.playerid=Tuner
+      목록:98.5 KFox San Jose, California · 연결 안 됨 (HTTP Error 502: Bad Gateway)
+  ✔ http://onair1.radioseoul1650.com:8000/radioseoul.mp3
+      홈페이지:https://www.radioseoul1650.com/ · 소리 응답 (audio/mpeg)
+  ✔ https://onair1.radioseoul1650.com/radioseoul.mp3
+      홈페이지:https://www.radioseoul1650.com/ · 소리 응답 (audio/mpeg)
+  ✔ https://onair1.radioseoul1650.com/rainfm.mp3
+      홈페이지:https://www.radioseoul1650.com/ · 소리 응답 (audio/mpeg)

@@ -281,7 +281,9 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         (name.contains('MBC') &&
             (name == 'MBC 표준FM' || name == 'MBC FM4U' || context.read<RadioProvider>().hasFileSchedule(name))) ||
         name.contains('SBS') ||
-        name.contains('CBS') ||
+        name == 'CBS 표준FM' ||
+        name == 'CBS 음악FM' ||
+        name == 'CBS JOY4U' ||
         name == '국방FM' ||
         name == 'EBS 반디' ||
         name == 'EBS FM' ||

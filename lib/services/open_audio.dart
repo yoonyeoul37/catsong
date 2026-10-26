@@ -6,6 +6,7 @@ import '../providers/music_provider.dart';
 import '../providers/player_provider.dart';
 import '../screens/player_screen.dart';
 import 'alarm_service.dart';
+import 'headset_resume.dart';
 
 /// 다른 앱(DownKit · 파일 앱 · 카톡 등)에서 "파란소리로 열기" → 바로 재생 화면 + 그 노래
 /// - 앱이 꺼져 있어도, 켜져 있어도 (안드로이드 쪽 MainActivity가 'openAudio'로 주소를 보내 줌)
@@ -59,7 +60,7 @@ class OpenAudio {
           }
         }
         for (final s in music.allSongs) {
-          if ((libId != null && s.id == libId) || (libPath != null && s.uri == libPath)) {
+          if (libPath != null && s.uri == libPath) {
             song = s;
             break;
           }
@@ -81,7 +82,28 @@ class OpenAudio {
         );
       }
       if (song == null || uri != target.value) return;
-      await pp.playFromList([song], 0);
+      final picked = song;
+      // 다음·이전: 내 음악 목록 순서대로 (목록에 있는 곡은 그 자리부터 · 없는 곡은 맨 앞에 두고 목록 처음부터 이어서)
+      if (music.allSongs.isEmpty) {
+        if (!music.isLoading) music.initialize();
+        for (var k = 0; k < 20 && music.allSongs.isEmpty; k++) {
+          await Future.delayed(const Duration(milliseconds: 250)); // 5초까지
+        }
+      }
+      var list = <Song>[picked];
+      var start = 0;
+      try {
+        final order = (await HeadsetResume.screenOrder(music.allSongs)).where((x) => x.uri != null).toList();
+        final i = order.indexWhere((x) => identical(x, picked) || x.uri == picked.uri);
+        if (i >= 0) {
+          list = order;
+          start = i;
+        } else {
+          list = [picked, ...order];
+        }
+      } catch (_) {}
+      if (uri != target.value) return; // 그사이 다른 노래를 열었으면 그만
+      await pp.playFromList(list, start);
       _showPlayer();
     } catch (e) {
       debugPrint('다른 앱에서 연 노래 재생 오류: $e');

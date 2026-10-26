@@ -73,6 +73,7 @@ import '../widgets/action_feedback.dart';
 import '../widgets/paran_toast.dart';
 import '../widgets/paran_dialog.dart';
 import '../services/alarm_service.dart';
+import '../services/open_audio.dart';
 import 'alarm_screen.dart';
 import '../utils/home_card_pref.dart';
 import 'sleep_focus_screen.dart';
@@ -1137,7 +1138,9 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     });
-    final savedStart = context.read<StartScreenProvider>().startScreen;
+    final savedStart = OpenAudio.target.value != null
+        ? null // 다른 앱에서 노래를 열어서 켜졌으면 시작 화면 대신 재생 화면
+        : context.read<StartScreenProvider>().startScreen;
     if (savedStart == StartScreenType.music) {
       _showMusicLibrary = true;
     } else if (savedStart == StartScreenType.radio || savedStart == StartScreenType.nature) {
@@ -1154,7 +1157,9 @@ class _HomeScreenState extends State<HomeScreen> {
       await _checkThemeHint();
       await _checkColorTip();
       // 위젯 바로가기로 켜졌으면 그 화면으로, 아니면 정해 둔 시작 화면으로
-      if (WidgetGo.target.value != null) {
+      if (OpenAudio.target.value != null) {
+        // 다른 앱에서 연 노래: 재생 화면이 열려 있으니 시작 화면(라디오 등)으로 덮지 않음
+      } else if (WidgetGo.target.value != null) {
         await _handleWidgetGo();
       } else {
         await _navigateToSavedStartScreen();

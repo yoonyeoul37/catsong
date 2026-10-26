@@ -1333,6 +1333,8 @@ class _PlayerScreenState extends State<PlayerScreen>
 
 
 
+  bool _autoClosed = false; // 노래가 닫혀서 이 화면을 저절로 닫는 중
+
   @override
   Widget build(BuildContext context) {
     final playerProvider = context.watch<PlayerProvider>();
@@ -1341,15 +1343,25 @@ class _PlayerScreenState extends State<PlayerScreen>
     final primaryColor = Theme.of(context).colorScheme.primary;
 
     if (song == null) {
-      final baseColorEmpty = context.watch<ThemeProvider>().isDarkMode ? Colors.white : Colors.black;
-      return Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Center(
-          child: Text('No song is playing',
-              style: TextStyle(color: baseColorEmpty.withOpacity(0.6))),
-        ),
-      );
+      // 미니플레이어 ✕ 등으로 노래를 닫으면: 빈 재생 화면('No song is playing')을 남기지 않고 이 화면만 닫기
+      // (위에 다른 화면이 있어도 이 화면만 빼기 — 맨 위 화면을 잘못 닫지 않게)
+      if (!_autoClosed) {
+        _autoClosed = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          final route = ModalRoute.of(context);
+          final nav = Navigator.of(context);
+          if (route == null || route.isFirst) return;
+          if (route.isCurrent) {
+            nav.pop();
+          } else {
+            nav.removeRoute(route);
+          }
+        });
+      }
+      return const Scaffold(backgroundColor: Colors.transparent, body: SizedBox.shrink());
     }
+    _autoClosed = false;
 
     // (TV로 보내기·TV 재생/일시정지는 player_provider가 알아서 처리)
     _syncTvArt(); // 파란포토면 보이는 사진 그대로 TV에

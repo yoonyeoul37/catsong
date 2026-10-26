@@ -56,6 +56,10 @@ class MainActivity : AudioServiceActivity() {
     private var pendingAlarm = false // 알람 때문에 켜졌는지 (앱이 물어보면 알려주고 지움)
     private var pendingWidgetGo: String? = null // 홈 위젯 바로가기로 켜졌으면 어느 화면인지
     private var pendingOpenAudio: String? = null // 다른 앱에서 '파란소리로 열기'로 넘겨받은 노래 주소
+    // 폰에 음악 파일이 생기거나 지워지면 → 2초 뒤 한 번만 앱에 알리기 (다운로드 중 여러 번 와도 한 번)
+    private var musicObserver: android.database.ContentObserver? = null
+    private val musicHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val musicChangedRun = Runnable { flutterMethodChannel?.invokeMethod("musicChanged", null) }
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         // 홈 위젯으로 켜졌는지: 앱(다트)이 물어보기 전에 먼저 기억 (늦으면 첫인사가 나와 버림)
@@ -77,6 +81,9 @@ class MainActivity : AudioServiceActivity() {
     override fun onDestroy() {
         // 앱을 완전히 끄면: 위젯 재생 버튼을 '앱 열면서 이어 듣기'로
         activityAlive = false
+        musicObserver?.let { try { contentResolver.unregisterContentObserver(it) } catch (_: Exception) {} }
+        musicObserver = null
+        musicHandler.removeCallbacks(musicChangedRun)
         // (mediaChannel 은 그대로: 화면만 닫히고 재생 엔진은 살아 있을 수 있어서)
         PlayerWidget.refreshAll(this)
         super.onDestroy()
@@ -455,6 +462,18 @@ class MainActivity : AudioServiceActivity() {
         val channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
         flutterMethodChannel = channel
         mediaChannel = channel
+        if (musicObserver == null) {
+            val ob = object : android.database.ContentObserver(musicHandler) {
+                override fun onChange(selfChange: Boolean) {
+                    musicHandler.removeCallbacks(musicChangedRun)
+                    musicHandler.postDelayed(musicChangedRun, 2000)
+                }
+            }
+            try {
+                contentResolver.registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, ob)
+                musicObserver = ob
+            } catch (_: Exception) {}
+        }
         HeadsetWatch.start(this, channel) // 이어폰·블루투스 연결 알아채기
         recordingChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "kr.ssing.catsong/recording")
         // 아침 알람 통로

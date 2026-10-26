@@ -148,6 +148,7 @@ class PlayerProvider extends ChangeNotifier {
 
   // 라디오도 같은 통로로 신호를 받아서, 받는 곳을 하나로 합침 (둘이 따로 받으면 하나가 묻힘)
   static Future<void> Function(MethodCall call)? extraHandler;
+  static VoidCallback? onMusicChanged; // 폰에 음악 파일이 생기거나 지워짐 → 새 곡 찾기 (main.dart가 채움)
 
   bool _pausedByFocus = false; // 다른 소리(전화 등) 때문에 멈췄는지
 
@@ -185,6 +186,9 @@ class PlayerProvider extends ChangeNotifier {
           break;
         case 'widgetSleep':
           HeadsetResume.widgetSleep(call.arguments as int? ?? 0); // 위젯 ⋮ → 수면 타이머 (0이면 끄기)
+          break;
+        case 'musicChanged':
+          onMusicChanged?.call(); // 쓸어내리지 않아도 새 곡이 목록에
           break;
         case 'openAudio':
           OpenAudio.request(call.arguments as String); // 다른 앱에서 '파란소리로 열기'

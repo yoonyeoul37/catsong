@@ -161,6 +161,7 @@ void main() async {
   HeadsetResume.attachRecent(recentContentProvider, musicProvider); // 위젯 재생: 마지막에 듣던 것
   CarBrowse.init(playerProvider, radioProvider, musicProvider); // 안드로이드 오토 (차 화면)
   OpenAudio.init(playerProvider, musicProvider); // 다른 앱에서 '파란소리로 열기' → 바로 재생
+  PlayerProvider.onMusicChanged = musicProvider.refreshNewSongs; // 폰에 새 노래가 생기면 목록에 바로
   LyricsProvider.shared.attachWidget(playerProvider); // 위젯에 지금 가사 한 줄
   // 앱이 꺼져 있을 때 위젯 재생을 눌렀으면 (화면 없이 엔진만 켜짐) → 마지막에 듣던 것 바로
   try {
@@ -542,6 +543,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       _checkForUpdate();
+      context.read<MusicProvider>().refreshNewSongs(); // 다른 앱에서 받은 노래가 있으면 목록에 바로
       // 위젯·차 화면으로 먼저 켜졌을 때 세로 고정이 안 걸릴 때가 있어서, 화면에 나올 때마다 한 번 더
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,

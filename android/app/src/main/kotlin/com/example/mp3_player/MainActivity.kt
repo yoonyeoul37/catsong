@@ -55,6 +55,7 @@ class MainActivity : AudioServiceActivity() {
     private var alarmChannel: MethodChannel? = null
     private var pendingAlarm = false // 알람 때문에 켜졌는지 (앱이 물어보면 알려주고 지움)
     private var pendingWidgetGo: String? = null // 홈 위젯 바로가기로 켜졌으면 어느 화면인지
+    private var pendingOpenAudio: String? = null // 다른 앱에서 '파란소리로 열기'로 넘겨받은 노래 주소
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         // 홈 위젯으로 켜졌는지: 앱(다트)이 물어보기 전에 먼저 기억 (늦으면 첫인사가 나와 버림)
@@ -62,11 +63,13 @@ class MainActivity : AudioServiceActivity() {
             pendingWidgetGo = it
             intent.removeExtra("widgetGo")
         }
+        takeOpenAudio(intent) // 다른 앱에서 연 노래 (플러터가 주소를 화면 이름으로 착각하지 않게 먼저 빼 둠)
         super.onCreate(savedInstanceState)
         handleAlarmIntent(intent)
         handleHeadsetIntent(intent)
         handleWidgetGo(intent, false)
         pushPendingWidgetGo(0)
+        pushPendingOpenAudio(0)
         activityAlive = true
         PlayerWidget.refreshAll(this)
     }
@@ -80,12 +83,14 @@ class MainActivity : AudioServiceActivity() {
     }
 
     override fun onNewIntent(intent: android.content.Intent) {
+        takeOpenAudio(intent) // 다른 앱에서 연 노래
         super.onNewIntent(intent)
         setIntent(intent)
         handleAlarmIntent(intent)
         handleHeadsetIntent(intent)
         handleHomeIntent(intent)
         handleWidgetGo(intent, true)
+        pushPendingOpenAudio(0)
     }
 
     /// 앱(다트)이 화면 없이 살아 있다가 다시 열린 경우에도 위젯 바로가기 전달
@@ -108,6 +113,98 @@ class MainActivity : AudioServiceActivity() {
                 retry() // 다트가 아직 준비 중
             }
         })
+    }
+
+    /// 다른 앱에서 '파란소리로 열기' (content:// · file:// 음악 파일) → 주소만 기억하고 인텐트에서 빼기
+    private fun takeOpenAudio(i: android.content.Intent?) {
+        if (i == null || i.action != android.content.Intent.ACTION_VIEW) return
+        val u = i.data ?: return
+        if (u.scheme != "content" && u.scheme != "file") return
+        pendingOpenAudio = u.toString()
+        i.action = android.content.Intent.ACTION_MAIN // 화면을 다시 그릴 때 또 열지 않게
+        i.data = null
+    }
+
+    /// 앱(다트)에 '이 노래 틀어 줘' (다트가 아직 준비 전이면 0.1초마다 다시 · 4초까지)
+    private fun pushPendingOpenAudio(tries: Int) {
+        val u = pendingOpenAudio ?: return
+        if (tries > 40) return
+        val retry = { android.os.Handler(mainLooper).postDelayed({ pushPendingOpenAudio(tries + 1) }, 100) }
+        val ch = flutterMethodChannel
+        if (ch == null) {
+            retry()
+            return
+        }
+        ch.invokeMethod("openAudio", u, object : MethodChannel.Result {
+            override fun success(result: Any?) {
+                if (pendingOpenAudio == u) pendingOpenAudio = null
+            }
+            override fun error(code: String, msg: String?, details: Any?) {}
+            override fun notImplemented() {
+                retry() // 다트가 아직 준비 중
+            }
+        })
+    }
+
+    /// 넘겨받은 노래: 내 음악에 같은 파일이 있으면 그 곡 번호 · 그리고 앱 안에 잠깐 복사 (넘겨준 앱의 허락이 곧 끝나서)
+    @Suppress("DEPRECATION")
+    private fun prepareOpenAudio(u: android.net.Uri): HashMap<String, Any?>? {
+        return try {
+            var name: String? = null
+            var size = -1L
+            if (u.scheme == "content") {
+                contentResolver.query(u, arrayOf(android.provider.OpenableColumns.DISPLAY_NAME, android.provider.OpenableColumns.SIZE), null, null, null)?.use { c ->
+                    if (c.moveToFirst()) {
+                        name = c.getString(0)
+                        if (!c.isNull(1)) size = c.getLong(1)
+                    }
+                }
+            }
+            if (name.isNullOrBlank()) name = u.lastPathSegment?.substringAfterLast('/')
+            val out = HashMap<String, Any?>()
+            val n = name
+            if (!n.isNullOrBlank()) {
+                out["name"] = n
+                var sel = "${MediaStore.Audio.Media.DISPLAY_NAME}=?"
+                val args = mutableListOf(n)
+                if (size > 0) {
+                    sel += " AND ${MediaStore.Audio.Media.SIZE}=?"
+                    args.add(size.toString())
+                }
+                try {
+                    contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        arrayOf(MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA), sel, args.toTypedArray(), null)?.use { c ->
+                        if (c.moveToFirst()) {
+                            out["libId"] = c.getLong(0)
+                            out["libPath"] = c.getString(1)
+                        }
+                    }
+                } catch (_: Exception) {}
+            }
+            val dir = File(cacheDir, "opened_audio")
+            dir.mkdirs()
+            dir.listFiles()?.forEach { it.delete() } // 지난번에 연 노래는 지우기
+            val safe = (n ?: "audio.mp3").replace(Regex("[\\\\/:*?\"<>|]"), "_")
+            val f = File(dir, "${System.currentTimeMillis()}_$safe")
+            val input = contentResolver.openInputStream(u) ?: return null
+            input.use { inp -> f.outputStream().use { inp.copyTo(it) } }
+            out["path"] = f.absolutePath
+            val r = MediaMetadataRetriever()
+            try {
+                r.setDataSource(f.absolutePath)
+                out["title"] = r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
+                out["artist"] = r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
+                out["album"] = r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
+                out["duration"] = r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLongOrNull()
+                out["art"] = r.embeddedPicture
+            } catch (_: Exception) {
+            } finally {
+                try { r.release() } catch (_: Exception) {}
+            }
+            out
+        } catch (e: Exception) {
+            null
+        }
     }
 
     /// 홈 위젯 바로가기 (음악·라디오·자연·수면)
@@ -1081,6 +1178,17 @@ class MainActivity : AudioServiceActivity() {
                 "cancelHeadsetAsk" -> {
                     cancelHeadsetAsk()
                     result.success(true)
+                }
+                "prepareOpenAudio" -> {
+                    val s = call.argument<String>("uri")
+                    if (s == null) {
+                        result.success(null)
+                    } else {
+                        Thread {
+                            val out = prepareOpenAudio(android.net.Uri.parse(s))
+                            runOnUiThread { result.success(out) }
+                        }.start()
+                    }
                 }
                 "vibrate" -> {
                     try {

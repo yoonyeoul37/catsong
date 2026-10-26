@@ -29,6 +29,7 @@ import 'screens/home_screen.dart';
 import 'services/alarm_service.dart';
 import 'services/headset_resume.dart';
 import 'services/car_browse.dart';
+import 'services/open_audio.dart';
 import 'services/sos_service.dart';
 import 'widgets/photo_dialog.dart';
 import 'theme/app_theme.dart';
@@ -75,6 +76,7 @@ void main() async {
   final recentContentProvider = RecentContentProvider();
   final soundMixProvider = SoundMixProvider();
   playerProvider.onSongPlayed = (song) {
+    if (OpenAudio.isTemp(song)) return; // 다른 앱에서 잠깐 연 노래(복사본)는 최근에 안 남김
     musicProvider.addToRecent(song);
     recentContentProvider.addMusic(song);
   };
@@ -158,6 +160,7 @@ void main() async {
   HeadsetResume.init(playerProvider, radioProvider); // 이어폰 연결하면 이어서 듣기
   HeadsetResume.attachRecent(recentContentProvider, musicProvider); // 위젯 재생: 마지막에 듣던 것
   CarBrowse.init(playerProvider, radioProvider, musicProvider); // 안드로이드 오토 (차 화면)
+  OpenAudio.init(playerProvider, musicProvider); // 다른 앱에서 '파란소리로 열기' → 바로 재생
   LyricsProvider.shared.attachWidget(playerProvider); // 위젯에 지금 가사 한 줄
   // 앱이 꺼져 있을 때 위젯 재생을 눌렀으면 (화면 없이 엔진만 켜짐) → 마지막에 듣던 것 바로
   try {
@@ -380,7 +383,7 @@ class AppInitializer extends StatefulWidget {
 
 class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObserver {
   // 알람이나 홈 위젯 바로가기로 켜졌으면 첫인사 없이 바로
-  bool _showIntro = !AlarmService.launchedByAlarm && WidgetGo.target.value == null;
+  bool _showIntro = !AlarmService.launchedByAlarm && WidgetGo.target.value == null && OpenAudio.target.value == null;
   bool _introCleared = false; // 첫인사 사진을 램에서 비웠는지
 
   AudioPlayer? _welcomePlayer; // 첫인사 전용 작은 재생기
@@ -395,6 +398,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
     }
     if (!mounted || AlarmService.launchedByAlarm) return;
     if (WidgetGo.launched || WidgetGo.target.value != null) return; // 위젯으로 켜졌으면 인삿말 없이
+    if (OpenAudio.target.value != null) return; // 다른 앱에서 노래를 열었으면 인삿말 없이
     if (!context.read<ThemeProvider>().voiceGreetingEnabled) return;
     const welcomeAsset = 'assets/greet_intro.mp3'; // 첫인사: 어느 언어나 멜로디 (한국어 목소리는 '파란소리 자료'에 보관)
 
@@ -440,6 +444,13 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
     if (_showIntro) setState(() => _showIntro = false);
   }
 
+  /// 첫인사 중에 다른 앱에서 노래가 넘어오면 → 첫인사를 바로 끄고 재생 화면으로
+  void _onOpenAudioIntro() {
+    if (OpenAudio.target.value == null || !mounted) return;
+    _stopWelcome();
+    if (_showIntro) setState(() => _showIntro = false);
+  }
+
   /// 첫인사 멈추고 재생기 정리
   void _stopWelcome() {
     final p = _welcomePlayer;
@@ -456,6 +467,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
     WidgetsBinding.instance.addObserver(this);
     AlarmService.onRingStart = _stopWelcome; // 알람이 울리면 첫인삿말 바로 멈춤
     WidgetGo.target.addListener(_onWidgetGoIntro); // 첫인사 중에 위젯 바로가기 → 첫인사 끄기
+    OpenAudio.target.addListener(_onOpenAudioIntro); // 첫인사 중에 다른 앱에서 노래 → 첫인사 끄기
     if (AlarmService.launchedByAlarm) {
       WidgetsBinding.instance.addPostFrameCallback((_) => AlarmService.showRing());
     }
@@ -521,6 +533,7 @@ class _AppInitializerState extends State<AppInitializer> with WidgetsBindingObse
     WidgetsBinding.instance.removeObserver(this);
     AlarmService.onRingStart = null;
     WidgetGo.target.removeListener(_onWidgetGoIntro);
+    OpenAudio.target.removeListener(_onOpenAudioIntro);
     _stopWelcome();
     super.dispose();
   }

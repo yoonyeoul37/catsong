@@ -13,6 +13,7 @@ import '../services/cast_service.dart';
 import '../services/loudness.dart';
 import '../services/headset_resume.dart';
 import '../services/car_browse.dart';
+import '../services/open_audio.dart';
 import 'package:rxdart/rxdart.dart' show ValueStream;
 import '../utils/no_album_helper.dart';
 import '../utils/widget_go.dart';
@@ -184,6 +185,9 @@ class PlayerProvider extends ChangeNotifier {
           break;
         case 'widgetSleep':
           HeadsetResume.widgetSleep(call.arguments as int? ?? 0); // 위젯 ⋮ → 수면 타이머 (0이면 끄기)
+          break;
+        case 'openAudio':
+          OpenAudio.request(call.arguments as String); // 다른 앱에서 '파란소리로 열기'
           break;
         case 'widgetGo':
           WidgetGo.launched = true; // 위젯으로 켜졌으면 인삿말 목소리 안 함

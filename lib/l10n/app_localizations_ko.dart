@@ -900,7 +900,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get regionAll => '전체';
 
   @override
-  String get regionCapital => '수도권';
+  String get regionCapital => '서울/경기/인천';
 
   @override
   String get regionBusanGyeongnam => '부산/경남';

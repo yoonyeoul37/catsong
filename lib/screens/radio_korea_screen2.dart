@@ -891,8 +891,11 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
       '수도권', '부산/경남', '대구/경북', '광주/전남',
       '전북', '대전/충남', '충북', '강원', '제주',
     ];
-    return GridView.builder(
-      padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
+    return CustomScrollView(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+          sliver: SliverGrid.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 10,
@@ -988,6 +991,16 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           ),
         );
       },
+          ),
+        ),
+        // 지역별 맨 아래: ● 전체 채널 수 (방송사별과 같은 모양)
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(24, 22, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
+            child: _TotalChannels(isDarkMode: isDarkMode),
+          ),
+        ),
+      ],
     );
   }
 
@@ -1839,6 +1852,35 @@ class _PlayingBarsState extends State<_PlayingBars>
 // 방송사별 카드 격자 화면
 // ══════════════════════════════════════════
 /// 생방송 빨간 점 — 천천히 밝게·흐리게 (애니메이션 줄이기를 켜면 그대로)
+/// 방송사별 맨 아래: ● 163 채널 (라디오 목록 위 사진과 같은 빨간 점 · 숫자 글꼴)
+class _TotalChannels extends StatelessWidget {
+  final bool isDarkMode;
+  const _TotalChannels({required this.isDarkMode});
+
+  @override
+  Widget build(BuildContext context) {
+    final lang = Localizations.localeOf(context).languageCode;
+    final ink = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const _LiveDot(size: 7),
+        const SizedBox(width: 6),
+        Text('${koreanStations.length}',
+            textScaler: TextScaler.noScaling,
+            style: GoogleFonts.quicksand(color: ink, fontSize: 14, fontWeight: FontWeight.w700)),
+        // 단위는 위쪽 사진과 같게: 한국어 '채널' · 일본어 '局', 나머지는 숫자만
+        if (lang == 'ko' || lang == 'ja') ...[
+          const SizedBox(width: 2),
+          Text(lang == 'ja' ? '局' : '채널',
+              textScaler: TextScaler.noScaling,
+              style: TextStyle(color: ink.withOpacity(0.6), fontSize: 12, fontWeight: FontWeight.w700)),
+        ],
+      ],
+    );
+  }
+}
+
 class _LiveDot extends StatefulWidget {
   final double size;
   const _LiveDot({this.size = 7});
@@ -1961,8 +2003,11 @@ class _BroadcasterGridScreen extends StatelessWidget {
     final grouped = _grouped();
     final keys = _order.where((k) => grouped.containsKey(k)).toList();
 
-    return GridView.builder(
-      padding: EdgeInsets.fromLTRB(24, 8, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
+    return CustomScrollView(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+          sliver: SliverGrid.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 10,
@@ -2063,6 +2108,16 @@ class _BroadcasterGridScreen extends StatelessWidget {
           ),
         );
       },
+          ),
+        ),
+        // 맨 아래: ● 전체 채널 수 (라디오 목록 위 사진의 표시와 같은 모양 · 바탕이 밝아서 먹색 글자)
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(24, 22, 24, 90 + MediaQuery.of(context).viewPadding.bottom),
+            child: _TotalChannels(isDarkMode: isDarkMode),
+          ),
+        ),
+      ],
     );
   }
 }

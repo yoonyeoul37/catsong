@@ -1900,7 +1900,7 @@ abstract class AppLocalizations {
   /// No description provided for @regionCapital.
   ///
   /// In ko, this message translates to:
-  /// **'수도권'**
+  /// **'서울/경기/인천'**
   String get regionCapital;
 
   /// No description provided for @regionBusanGyeongnam.

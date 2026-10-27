@@ -398,7 +398,7 @@ const Map<String, Map<String, String>> _fbTr = {
     'ar': 'إرسال ملاحظات',
     'ur': 'رائے بھیجیں',
   },
-  '파란소리에 바라는 점을 들려주세요.': {
+  '서비스 이용 중 개선점이나 건의사항을 전달합니다.': {
     'ja': 'Paransoriへのご要望をお聞かせください',
     'zh': '告诉我们你对 Paransori 的期待',
     'zh_Hant': '告訴我們你對 Paransori 的期待',

@@ -19,6 +19,7 @@ import '../screens/paran_intro_screen.dart';
 import '../screens/feedback_screen.dart';
 import '../services/alarm_service.dart';
 import '../l10n/locale_holder.dart';
+import '../utils/rate_app.dart';
 
 const String _kStoreUrl =
     'https://play.google.com/store/apps/details?id=kr.ssing.catsong';
@@ -153,10 +154,7 @@ void showMoreMenuSheet(
       },
       onRate: () async {
         Navigator.pop(ctx);
-        final uri = Uri.parse(_kStoreUrl);
-        if (await canLaunchUrl(uri)) {
-          await launchUrl(uri, mode: LaunchMode.externalApplication);
-        }
+        await RateApp.open(); // 앱 안에서 바로 별점 (안 뜨면 플레이 스토어로)
       },
       onSettings: () => openPage(
         ctx,
@@ -417,7 +415,7 @@ class _MoreMenuSheet extends StatelessWidget {
                     p: p,
                     icon: _kIconChat,
                     title: fbText('의견 보내기', 'Send feedback'),
-                    subtitle: fbText('파란소리에 바라는 점을 들려주세요.', 'Tell us what you’d like from Paransori.'),
+                    subtitle: fbText('서비스 이용 중 개선점이나 건의사항을 전달합니다.', 'Tell us what you’d like from Paransori.'),
                     onTap: onFeedback,
                   ),
                 ]),
@@ -581,7 +579,7 @@ class _MenuCard extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         subtitle,
-                        maxLines: 1,
+                        maxLines: 2, // 긴 설명은 두 줄까지 (… 로 잘리지 않게)
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(color: p.desc, fontSize: 11.5),
                       ),

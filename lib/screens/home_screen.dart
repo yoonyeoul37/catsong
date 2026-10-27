@@ -85,6 +85,7 @@ import '../podcast/podcast_screens.dart' show PodcastMiniPlayer;
 import 'paran_intro_screen.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:permission_handler/permission_handler.dart';
+import '../utils/rate_app.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -1898,10 +1899,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   subtitle: tr.menuRateSub,
                                   onTap: () async {
                                     Navigator.pop(ctx);
-                                    final uri = Uri.parse('https://play.google.com/store/apps/details?id=kr.ssing.catsong');
-                                    if (await canLaunchUrl(uri)) {
-                                      await launchUrl(uri, mode: LaunchMode.externalApplication);
-                                    }
+                                    await RateApp.open(); // 앱 안에서 바로 별점 (안 뜨면 플레이 스토어로)
                                   },
                                 ),
                               ],

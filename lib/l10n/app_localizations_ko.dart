@@ -1790,7 +1790,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get moreShareSub => '파란소리를 소개해보세요.';
+  String get moreShareSub => '지인에게 파란소리 앱을 추천합니다.';
 
   @override
   String get moreCleanTitle => '음악 정보 일괄 정리';
@@ -1808,19 +1808,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String get moreAlarmTitle => '아침 알람';
 
   @override
-  String get moreAlarmSub => '좋아하는 노래·라디오·자연으로 깨워 드려요';
+  String get moreAlarmSub => '좋아하는 노래, 라디오, 자연의 소리로 기분 좋은 아침을 시작하세요.';
 
   @override
-  String get moreRateSub => '좋은 평가가 큰 힘이 됩니다.';
+  String get moreRateSub => '스토어에 별점과 리뷰를 남겨주세요.';
 
   @override
-  String get moreSettingsSub => '앱 환경을 설정해요.';
+  String get moreSettingsSub => '앱 내 환경을 맞춤 설정합니다.';
 
   @override
   String get moreHelpTitle => '설정 도움말';
 
   @override
-  String get moreHelpSub => '권한·배터리·알림 설정 방법을 알려드려요.';
+  String get moreHelpSub => '앱 권한, 배터리 최적화, 알림 설정 방법에 대한 가이드를 제공합니다.';
 
   @override
   String get moreHomepageTitle => '방송국 홈페이지';
@@ -3706,7 +3706,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get inUse => '사용 중';
 
   @override
-  String get darkModeInfo => '화면을 어둡게 바꿔요. 밤에 눈이 편해요.';
+  String get darkModeInfo => '화면을 어두운 톤으로 변경하여 야간 시청 시 눈의 피로를 줄여줍니다.';
 
   @override
   String get soundEffect => '효과음';
@@ -4000,7 +4000,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get needMoreHelp => '추가 도움이 필요하신가요?';
 
   @override
-  String get tellUsModel => '휴대폰 모델과 문제가 발생한 상황을 알려 주세요.';
+  String get tellUsModel => '사용 중인 기기 모델명과 오류 발생 상황을 알려주시기 바랍니다.';
 
   @override
   String get emailUs => '이메일 문의';
@@ -4595,23 +4595,23 @@ class AppLocalizationsKo extends AppLocalizations {
   String get helpNewBadge => 'new';
 
   @override
-  String get helpWidgetTitle => '홈 화면 위젯';
+  String get helpWidgetTitle => '홈 화면 위젯 안내';
 
   @override
   String get helpWidgetWhen =>
-      '앱을 열지 않고도 홈 화면에서 파란소리의 음악·라디오·자연소리를 바로 들을 수 있어요.';
+      '앱을 직접 실행하지 않고도 홈 화면에서 파란소리의 음악, 라디오, 자연의 소리를 바로 감상하실 수 있습니다.';
 
   @override
   String get helpWidgetAddHead => '위젯 추가 방법';
 
   @override
-  String get helpWidgetAdd1 => '홈 화면의 빈 곳을 길게 눌러요.';
+  String get helpWidgetAdd1 => '홈 화면의 빈 공간을 길게 누릅니다.';
 
   @override
-  String get helpWidgetAdd2 => '메뉴에서 \'위젯\'을 선택하고 파란소리를 찾아요.';
+  String get helpWidgetAdd2 => '메뉴에서 [위젯]을 선택한 후 파란소리를 찾습니다.';
 
   @override
-  String get helpWidgetAdd3 => '원하는 크기의 위젯을 길게 눌러 홈 화면에 놓아요.';
+  String get helpWidgetAdd3 => '원하는 크기의 위젯을 길게 눌러 홈 화면에 배치합니다.';
 
   @override
   String get helpWidgetSizeHead => '위젯 크기별 기능';
@@ -4620,16 +4620,17 @@ class AppLocalizationsKo extends AppLocalizations {
   String get helpWidgetBasic => '① 기본형 (4×2)';
 
   @override
-  String get helpWidgetBasic1 => '사진 위에 지금 듣는 곡이나 방송 이름이 표시돼요.';
+  String get helpWidgetBasic1 => '이미지 위에 현재 재생 중인 곡명 또는 방송 프로그램명이 표시됩니다.';
 
   @override
-  String get helpWidgetBasic2 => '이전 · 재생/일시정지 · 다음 버튼을 이용할 수 있어요.';
+  String get helpWidgetBasic2 => '이전 곡, 재생/일시정지, 다음 곡 제어 버튼을 이용하실 수 있습니다.';
 
   @override
-  String get helpWidgetBasic3 => '음악 · 라디오 · 자연 · 수면 바로가기를 이용할 수 있어요.';
+  String get helpWidgetBasic3 => '음악, 라디오, 자연의 소리, 수면 기능 바로가기를 지원합니다.';
 
   @override
-  String get helpWidgetBasic4 => '음악·라디오·자연은 바로 재생되고, 수면은 앱에서 열려요.';
+  String get helpWidgetBasic4 =>
+      '음악, 라디오, 자연의 소리는 즉시 재생되며, 수면 위젯은 앱 화면으로 연결됩니다.';
 
   @override
   String get helpWidgetBig => '② 큰 화면형 (4×3)';
@@ -4638,16 +4639,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get helpWidgetBig1 => '기본형의 모든 기능을 이용할 수 있어요.';
 
   @override
-  String get helpWidgetBig2 => '하단에 최근에 들은 항목 3개가 표시돼요.';
+  String get helpWidgetBig2 => '하단에 최근 청취한 항목 3개가 표시됩니다.';
 
   @override
-  String get helpWidgetBig3 => '원하는 항목을 누르면 바로 재생할 수 있어요.';
+  String get helpWidgetBig3 => '원하는 항목을 선택하면 즉시 재생됩니다.';
 
   @override
   String get helpWidgetTall => '③ 세로형 (2×3)';
 
   @override
-  String get helpWidgetTall1 => '상단에 사진, 하단에 재생 정보와 조작 버튼이 표시돼요.';
+  String get helpWidgetTall1 => '상단에는 이미지가, 하단에는 재생 정보와 조작 버튼이 표시됩니다.';
 
   @override
   String get helpWidgetTall2 => '음악 · 라디오 · 자연 · 수면 바로가기는 아이콘으로 표시돼요.';
@@ -4657,55 +4658,56 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get helpWidgetAll1 =>
-      '오른쪽 위 ⋮를 누르면 랜덤·반복, 수면 타이머, 위젯 사진 바꾸기를 할 수 있어요.';
+      '우측 상단의 메뉴 버튼(⋮)을 통해 반복·랜덤 재생, 수면 타이머 설정 및 위젯 이미지 변경이 가능합니다.';
 
   @override
-  String get helpWidgetAll2 => '랜덤·반복은 음악을 들을 때만 나와요.';
+  String get helpWidgetAll2 => '반복 및 랜덤 재생 기능은 음악 재생 중에만 활성화됩니다.';
 
   @override
-  String get helpWidgetNote => '※ 위젯의 크기와 배치는 휴대폰 및 홈 화면 설정에 따라 달라질 수 있어요.';
+  String get helpWidgetNote =>
+      '※ 위젯의 크기와 배치 형태는 기기 및 홈 화면 설정에 따라 일부 다를 수 있습니다.';
 
   @override
   String get helpCarTitle => '자동차에서 듣기 (안드로이드 오토)';
 
   @override
   String get helpCarWhen =>
-      '안드로이드 오토를 지원하는 차에서 파란소리의 라디오·음악·자연소리·팟캐스트를 들을 수 있어요.';
+      '안드로이드 오토 지원 차량에서 파란소리의 라디오, 음악, 자연의 소리, 팟캐스트를 감상하실 수 있습니다.';
 
   @override
   String get helpCarUseHead => '이용 방법';
 
   @override
-  String get helpCarUse1 => '휴대폰을 차량에 USB 케이블 또는 무선으로 연결해요.';
+  String get helpCarUse1 => '휴대폰을 차량에 USB 케이블 또는 무선으로 연결합니다.';
 
   @override
-  String get helpCarUse2 => '차량 화면에서 파란소리를 선택해요.';
+  String get helpCarUse2 => '차량 디스플레이에서 파란소리를 선택합니다.';
 
   @override
-  String get helpCarUse3 => '음악 · 라디오 · 팟캐스트 · 자연소리 탭에서 원하는 콘텐츠를 선택해요.';
+  String get helpCarUse3 => '라디오, 음악, 팟캐스트, 자연의 소리 탭에서 원하는 콘텐츠를 선택합니다.';
 
   @override
-  String get helpCarUse4 => '운전 중에는 화면을 누르지 않고 음성으로 틀 수 있어요.';
+  String get helpCarUse4 => '운전 중에는 화면을 직접 조작하지 않고 음성으로 편리하게 제어할 수 있습니다.';
 
   @override
   String get helpCarFindHead => '쉽게 찾기';
 
   @override
   String get helpCarFind1 =>
-      '라디오는 맨 위에 최근에 들은 방송과 즐겨찾기가 있고, 그 아래 방송사별(해외는 장르별)로 나뉘어 있어요.';
+      '라디오: 상단에 최근 청취 방송과 즐겨찾기가 배치되며, 하단에는 방송사별(해외는 장르별) 카테고리가 제공됩니다.';
 
   @override
-  String get helpCarFind2 => '음악 탭 맨 위 \'랜덤 재생\'을 누르면 내 곡을 섞어서 바로 들려줘요.';
+  String get helpCarFind2 => '음악: 상단의 [랜덤 재생] 선택 시 전체 음원이 무작위로 재생됩니다.';
 
   @override
-  String get helpCarFind3 => '편성표가 있는 방송은 지금 프로그램 사진과 다음 방송이 함께 보여요.';
+  String get helpCarFind3 => '편성표: 방송 중인 프로그램의 이미지와 다음 방송 정보가 함께 표시됩니다.';
 
   @override
-  String get helpCarVoiceHead => '음성으로 틀기';
+  String get helpCarVoiceHead => '음성 명령 이용 안내';
 
   @override
   String get helpCarVoiceHow =>
-      '핸들의 음성 버튼을 누르거나 \"Hey Google\"이라고 말한 뒤 이렇게 말해 보세요.';
+      '스티어링 휠의 음성 인식 버튼을 누르거나 \"Hey Google\"을 호출한 후 다음과 같이 말씀해 주세요.';
 
   @override
   String get helpCarVoice1 => '\"파란소리에서 MBC 틀어 줘\"';
@@ -4714,11 +4716,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get helpCarVoice2 => '\"파란소리에서 빗소리 틀어 줘\"';
 
   @override
-  String get helpCarVoice3 => '\"파란소리 틀어 줘\" → 마지막에 듣던 것을 이어서 들려줘요.';
+  String get helpCarVoice3 => '\"파란소리 재생해 줘\" → 최근 청취하던 콘텐츠를 이어서 재생합니다.';
 
   @override
   String get helpCarNote =>
-      '※ 차량과 휴대폰이 안드로이드 오토를 지원해야 해요. 연결 방식과 표시되는 메뉴는 기기에 따라 다를 수 있어요.';
+      '※ 차량 및 휴대폰이 안드로이드 오토를 지원해야 합니다. 연결 방식과 메뉴 구성은 기기 사양에 따라 다를 수 있습니다.';
 
   @override
   String get homeTipCarTitle => '자동차에서도 들어요';

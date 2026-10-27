@@ -46,6 +46,7 @@ import '../widgets/paran_toast.dart';
 import '../widgets/action_feedback.dart';
 import '../widgets/paran_dialog.dart';
 import '../l10n/locale_holder.dart';
+import '../utils/rate_app.dart';
 
 double? _parseFrequency(String? freq) {
   if (freq == null || freq.isEmpty) return null;
@@ -888,10 +889,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                                           subtitle: '좋은 평가가\n큰 힘이 됩니다.',
                                                           onTap: () async {
                                                             Navigator.pop(sheetCtx);
-                                                            final uri = Uri.parse('https://play.google.com/store/apps/details?id=kr.ssing.catsong');
-                                                            if (await canLaunchUrl(uri)) {
-                                                              await launchUrl(uri, mode: LaunchMode.externalApplication);
-                                                            }
+                                                            await RateApp.open(); // 앱 안에서 바로 별점 (안 뜨면 플레이 스토어로)
                                                           },
                                                         ),
                                                       ],

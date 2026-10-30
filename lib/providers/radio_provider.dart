@@ -653,9 +653,10 @@ class RadioProvider extends ChangeNotifier {
 
       _onStopMusic?.call();
       await Future.delayed(const Duration(milliseconds: 200));
-      try {
-        const MethodChannel('kr.ssing.catsong/media').invokeMethod('requestAudioFocus');
-      } catch (e) {}
+      // 차·위젯처럼 앱 화면이 없을 때도 오류 안 나게 (기다리지 않고 오류만 조용히 넘김)
+      const MethodChannel('kr.ssing.catsong/media')
+          .invokeMethod('requestAudioFocus')
+          .catchError((Object _) => null);
 
       debugPrint('=== 라디오 재생 시작 ===');
       debugPrint('방송국: ${station.name}');

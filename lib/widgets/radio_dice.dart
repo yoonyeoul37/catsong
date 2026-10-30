@@ -76,14 +76,17 @@ class _DiceSound {
       });
     }
     try {
-      _p ??= AudioPlayer(handleInterruptions: false, handleAudioSessionActivation: false);
-      await _p!.setAndroidAudioAttributes(const AndroidAudioAttributes(
-        contentType: AndroidAudioContentType.sonification,
-        usage: AndroidAudioUsage.assistanceSonification,
-      ));
-      await _p!.setAsset('assets/dice_roll.mp3');
+      // 소리 파일은 처음 한 번만 불러오고, 다음부터는 되감아서 다시 틀기 (빠르게 연달아 굴려도 오류 안 나게)
+      if (_p == null) {
+        _p = AudioPlayer(handleInterruptions: false, handleAudioSessionActivation: false);
+        await _p!.setAndroidAudioAttributes(const AndroidAudioAttributes(
+          contentType: AndroidAudioContentType.sonification,
+          usage: AndroidAudioUsage.assistanceSonification,
+        ));
+        await _p!.setAsset('assets/dice_roll.mp3');
+      }
       await _p!.seek(Duration.zero);
-      _p!.play();
+      _p!.play().catchError((Object _) {});
     } catch (_) {}
   }
 }

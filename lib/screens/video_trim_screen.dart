@@ -215,11 +215,11 @@ class _VideoTrimScreenState extends State<VideoTrimScreen> {
   Widget build(BuildContext context) {
     final isDark = context.watch<ThemeProvider>().isDarkMode;
     // ── 벨소리·녹음 자르기 화면과 같은 모양 (베이지 바탕 · 흰 카드 · 먹색 큰 버튼) ──
-    final bg = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
-    final card = isDark ? const Color(0xFF32302C) : Colors.white;
+    final bg = isDark ? const Color(0xFF242424) : const Color(0xFFF4EFE5);
+    final card = isDark ? const Color(0xFF323232) : Colors.white;
     final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final sub = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
-    final line = isDark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
+    final line = isDark ? const Color(0xFF4A4A4A) : const Color(0xFFE2DACB);
     final point = context.watch<ThemeProvider>().primaryColor;
     final ready = _ctrl.value.isInitialized;
     final l = AppLocalizations.of(context)!;

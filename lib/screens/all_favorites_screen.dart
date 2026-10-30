@@ -95,7 +95,7 @@ class _AllFavoritesScreenState extends State<AllFavoritesScreen>
     final baseColor = isDarkMode ? Colors.white : Colors.black;
     // 고른 탭: 포인트 색 말고 먹색(다크는 크림색)으로 고정
     final ink = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final bgColor = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA);
+    final bgColor = isDarkMode ? const Color(0xFF242424) : const Color(0xFFEDE7DA);
 
     final natureFavList =
     _natureSoundData.where((s) => _natureFavorites.contains(s['name'])).toList();

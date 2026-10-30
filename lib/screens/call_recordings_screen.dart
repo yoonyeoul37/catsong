@@ -69,7 +69,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
     final soft = isDark ? Colors.white.withOpacity(0.08) : const Color(0xFFE2DACB);
     final muted = isDark ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
     final selBg = isDark ? Colors.white.withOpacity(0.9) : _ink;
-    final selFg = isDark ? const Color(0xFF24221F) : Colors.white;
+    final selFg = isDark ? const Color(0xFF242424) : Colors.white;
     var list = all;
     // 검색 (이름·번호·내가 바꾼 제목)
     if (_query.isNotEmpty) {
@@ -421,11 +421,11 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
   /// ⋮ 창: 정렬(한 줄 버튼) + 여러 개 선택하기 · 전체 삭제(빨강)
   void _showMoreSheet(List<CallRecording> list, bool isDark) {
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
-    final bg = isDark ? const Color(0xFF32302C) : const Color(0xFFF4EFE5);
-    final card = isDark ? const Color(0xFF3E3B37) : Colors.white;
+    final bg = isDark ? const Color(0xFF323232) : const Color(0xFFF4EFE5);
+    final card = isDark ? const Color(0xFF3E3E3E) : Colors.white;
     final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final sub = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
-    final line = isDark ? const Color(0xFF4A4640) : const Color(0xFFEFE9DE);
+    final line = isDark ? const Color(0xFF4A4A4A) : const Color(0xFFEFE9DE);
     const red = Color(0xFFD84A3A);
 
     showModalBottomSheet(
@@ -521,7 +521,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
 
     // 먹색 바 (다크 모드는 크림색 바) — 정리 알림 바와 같은 식구
     final barBg = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final barFg = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
+    final barFg = isDark ? const Color(0xFF242424) : const Color(0xFFF4EFE5);
     final barRed = isDark ? const Color(0xFFD84A3A) : const Color(0xFFFF8A7A);
 
     Widget btn(IconData icon, String label, VoidCallback onTap, {Color? color}) {
@@ -826,7 +826,7 @@ class _CallRecordingsScreenState extends State<CallRecordingsScreen> {
           child: Text(label,
               style: TextStyle(
                   color: selected
-                      ? (isDark ? const Color(0xFF24221F) : Colors.white)
+                      ? (isDark ? const Color(0xFF242424) : Colors.white)
                       : baseColor.withOpacity(0.7),
                   fontSize: 13,
                   fontWeight: FontWeight.w600)), // 굵기를 항상 같게 → 글자가 안 흔들림

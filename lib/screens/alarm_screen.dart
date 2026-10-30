@@ -77,11 +77,11 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
     }
     final d = context.read<ThemeProvider>().isDarkMode;
     final point = context.read<ThemeProvider>().primaryColor;
-    final sheet = d ? const Color(0xFF2B2926) : const Color(0xFFF4EFE5);
-    final card = d ? const Color(0xFF32302C) : Colors.white;
+    final sheet = d ? const Color(0xFF2B2B2B) : const Color(0xFFF4EFE5);
+    final card = d ? const Color(0xFF323232) : Colors.white;
     final ink = d ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final hint = d ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
-    final line = d ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
+    final line = d ? const Color(0xFF4A4A4A) : const Color(0xFFE2DACB);
     var q = '';
     showModalBottomSheet(
       context: context,
@@ -358,12 +358,12 @@ class _AlarmScreenState extends State<AlarmScreen> with WidgetsBindingObserver {
     final theme = context.watch<ThemeProvider>();
     final d = theme.isDarkMode;
     final point = theme.primaryColor;
-    final bg = d ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
-    final card = d ? const Color(0xFF32302C) : Colors.white;
+    final bg = d ? const Color(0xFF242424) : const Color(0xFFF4EFE5);
+    final card = d ? const Color(0xFF323232) : Colors.white;
     final ink = d ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final onInk = d ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
     final hint = d ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
-    final line = d ? const Color(0xFF4A4640) : const Color(0xFFEEE9DF);
+    final line = d ? const Color(0xFF4A4A4A) : const Color(0xFFEEE9DF);
     final iconBg = d ? Colors.white.withOpacity(0.08) : const Color(0xFFF4EFE5);
 
     Widget box(List<Widget> children, {EdgeInsets? padding}) => Container(

@@ -389,8 +389,8 @@ class _LyricsScreenState extends State<LyricsScreen> {
         final dark = context.read<ThemeProvider>().isDarkMode;
         final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
         final onInk = dark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
-        final card = dark ? const Color(0xFF32302C) : Colors.white;
-        final line = dark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
+        final card = dark ? const Color(0xFF323232) : Colors.white;
+        final line = dark ? const Color(0xFF4A4A4A) : const Color(0xFFE2DACB);
         final labels = [tr.small, tr.sizeMedium, tr.large];
         const sample = [15.0, 19.0, 23.0];
         return Padding(
@@ -540,9 +540,9 @@ class _LyricsScreenState extends State<LyricsScreen> {
     final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final sub = dark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
     final onInk = dark ? const Color(0xFF17140F) : const Color(0xFFF4EFE5);
-    final card = dark ? const Color(0xFF32302C) : Colors.white;
-    final line = dark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
-    final sheet = dark ? const Color(0xFF2B2926) : const Color(0xFFF4EFE5);
+    final card = dark ? const Color(0xFF323232) : Colors.white;
+    final line = dark ? const Color(0xFF4A4A4A) : const Color(0xFFE2DACB);
+    final sheet = dark ? const Color(0xFF2B2B2B) : const Color(0xFFF4EFE5);
     final saved = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
@@ -720,7 +720,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: dark ? const Color(0xFF3E3B37) : Colors.white,
+                  color: dark ? const Color(0xFF3E3E3E) : Colors.white,
                   borderRadius: BorderRadius.circular(11),
                 ),
                 child: Icon(Icons.photo_camera_outlined, size: 20,
@@ -844,9 +844,9 @@ class _LyricsScreenState extends State<LyricsScreen> {
               onTap: () => _addMyPhotos(setSheet),
               child: Container(
                 decoration: BoxDecoration(
-                  color: dark ? const Color(0xFF32302C) : Colors.white,
+                  color: dark ? const Color(0xFF323232) : Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: dark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB), width: 1.2),
+                  border: Border.all(color: dark ? const Color(0xFF4A4A4A) : const Color(0xFFE2DACB), width: 1.2),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1283,13 +1283,13 @@ class _LyricsScreenState extends State<LyricsScreen> {
         statusBarIconBrightness: _light ? Brightness.dark : Brightness.light,
         statusBarBrightness: _light ? Brightness.light : Brightness.dark,
         // 버튼 3개 폰(노트20·A9 프로)은 투명이면 흰 배경이 깔려서 → 사진에 맞는 색을 직접 칠함
-        systemNavigationBarColor: _light ? const Color(0xFFF4EFE5) : const Color(0xFF14110C),
+        systemNavigationBarColor: _light ? const Color(0xFFF4EFE5) : const Color(0xFF141414),
         systemNavigationBarDividerColor: Colors.transparent,
         systemNavigationBarContrastEnforced: false, // 안드로이드가 억지로 까는 흰 배경 끄기
         systemNavigationBarIconBrightness: _light ? Brightness.dark : Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: const Color(0xFF14110C), // 사진 뜨기 전 파랗게 보이지 않게
+        backgroundColor: const Color(0xFF141414), // 사진 뜨기 전 파랗게 보이지 않게
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -1326,7 +1326,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                     fit: BoxFit.cover,
                     cacheWidth: 1080,
                     gaplessPlayback: true,
-                    errorBuilder: (_, __, ___) => Container(color: const Color(0xFF14110C)))),
+                    errorBuilder: (_, __, ___) => Container(color: const Color(0xFF141414)))),
               )
             else if (_bg != 0)
               // 배경 사진은 한 번만 그리고 고정 (가사가 바뀔 때마다 다시 안 그리게) + 고른 색감
@@ -1337,8 +1337,8 @@ class _LyricsScreenState extends State<LyricsScreen> {
                   memCacheWidth: 1080, // 화면 크기만큼만
                   useOldImageOnUrlChange: true,
                   fadeInDuration: const Duration(milliseconds: 250),
-                  placeholder: (_, __) => Container(color: const Color(0xFF14110C)),
-                  errorWidget: (_, __, ___) => Container(color: const Color(0xFF14110C)),
+                  placeholder: (_, __) => Container(color: const Color(0xFF141414)),
+                  errorWidget: (_, __, ___) => Container(color: const Color(0xFF141414)),
                 )),
               ),
             // 글자가 잘 보이게 얇은 막 (밝은 사진은 크림색, 어두운 사진은 검은색)

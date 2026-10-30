@@ -27,8 +27,8 @@ import '../widgets/paran_dialog.dart' show ParanCloseX;
 // 색: 파란소리 공통 (라이트 베이지·흰 카드·먹색 / 다크 갈색·진한 카드·크림색)
 const _ink = Color(0xFF17140F);
 const _cream = Color(0xFFF4EFE5);
-Color _card(bool dark) => dark ? const Color(0xFF32302C) : const Color(0xFFFBF8F2);
-Color _bg(bool dark) => dark ? const Color(0xFF24221F) : const Color(0xFFEDE7DA);
+Color _card(bool dark) => dark ? const Color(0xFF323232) : const Color(0xFFFBF8F2);
+Color _bg(bool dark) => dark ? const Color(0xFF242424) : const Color(0xFFEDE7DA);
 Color _text(bool dark) => dark ? const Color(0xFFF3EFE7) : _ink;
 Color _sub(bool dark) => dark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
 Color _line(bool dark) => dark ? const Color(0x14FFFFFF) : const Color(0x123C2D14);
@@ -59,7 +59,7 @@ class PodcastArt extends StatelessWidget {
     final fallback = Container(
       width: size,
       height: size,
-      color: dark ? const Color(0xFF45413B) : const Color(0xFFE2D9C8),
+      color: dark ? const Color(0xFF454545) : const Color(0xFFE2D9C8),
       alignment: Alignment.center,
       child: Text(
         title.isEmpty ? '·' : title.characters.first,
@@ -601,7 +601,7 @@ class _PodcastTabState extends State<PodcastTab> {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(color: dark ? const Color(0xFFF3EFE7) : _ink, shape: BoxShape.circle),
-                child: Icon(Icons.play_arrow_rounded, color: dark ? const Color(0xFF24221F) : _cream, size: 20),
+                child: Icon(Icons.play_arrow_rounded, color: dark ? const Color(0xFF242424) : _cream, size: 20),
               ),
             ],
           ),
@@ -613,7 +613,7 @@ class _PodcastTabState extends State<PodcastTab> {
   // 1위 큰 카드 (먹색, 다크는 크림색)
   Widget _topCard(PodcastShow s, bool dark) {
     final bg = dark ? const Color(0xFFF3EFE7) : _ink;
-    final fg = dark ? const Color(0xFF24221F) : _cream;
+    final fg = dark ? const Color(0xFF242424) : _cream;
     return Material(
       color: bg,
       borderRadius: BorderRadius.circular(10),
@@ -934,7 +934,7 @@ class _PodcastShowScreenState extends State<PodcastShowScreen> {
                         style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: dark ? const Color(0xFFF3EFE7) : _ink,
-                      foregroundColor: dark ? const Color(0xFF24221F) : _cream,
+                      foregroundColor: dark ? const Color(0xFF242424) : _cream,
                       elevation: 0,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
@@ -1116,7 +1116,7 @@ class PodcastMiniPlayer extends StatelessWidget {
         children: [
           Container(
             height: 72,
-            color: dark ? const Color(0xFF3A3631) : _ink,
+            color: dark ? const Color(0xFF3A3A3A) : _ink,
             child: Column(
               children: [
                 // 위 가는 줄 = 들은 만큼
@@ -1432,7 +1432,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
                             child: CircularProgressIndicator(strokeWidth: 2.4, color: dark ? _ink : _cream),
                           )
                         : Icon(pod.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                            color: dark ? const Color(0xFF24221F) : _cream, size: 36),
+                            color: dark ? const Color(0xFF242424) : _cream, size: 36),
                   ),
                 ),
                 const SizedBox(width: 14),
@@ -1463,7 +1463,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
         decoration: BoxDecoration(
           color: _bg(dark),
           border: Border(
-              top: BorderSide(color: dark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB), width: 0.5)),
+              top: BorderSide(color: dark ? const Color(0xFF4A4A4A) : const Color(0xFFE2DACB), width: 0.5)),
         ),
         child: SafeArea(
           top: false,
@@ -1939,10 +1939,10 @@ class _PodSubsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = context.watch<ThemeProvider>().isDarkMode;
     final pod = context.watch<PodcastPlayer>();
-    final bg = dark ? const Color(0xFF32302C) : const Color(0xFFF4EFE5);
+    final bg = dark ? const Color(0xFF323232) : const Color(0xFFF4EFE5);
     final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final sub = dark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
-    final line = dark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
+    final line = dark ? const Color(0xFF4A4A4A) : const Color(0xFFE2DACB);
     final list = pod.subs.values.toList().reversed.toList(); // 최근에 구독한 것부터
     final curId = pod.show?.id;
     final current = list.where((x) => x.id == curId).toList();

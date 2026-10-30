@@ -57,11 +57,11 @@ double? _parseFrequency(String? freq) {
 
 // ── 라디오 창 색 (라이트: 베이지 · 다크: 어두운 갈색) — 창을 그릴 때마다 다크 모드인지 맞춤 ──
 bool _rdDark = false;
-Color get _rBg => _rdDark ? const Color(0xFF32302C) : const Color(0xFFF4EFE5);
-Color get _rCard => _rdDark ? const Color(0xFF3E3B37) : Colors.white;
+Color get _rBg => _rdDark ? const Color(0xFF323232) : const Color(0xFFF4EFE5);
+Color get _rCard => _rdDark ? const Color(0xFF3E3E3E) : Colors.white;
 Color get _rInk => _rdDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
 Color get _rSub => _rdDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
-Color get _rLine => _rdDark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
+Color get _rLine => _rdDark ? const Color(0xFF4A4A4A) : const Color(0xFFE2DACB);
 
 class RadioPlayerScreen extends StatefulWidget {
   final RadioStation station;
@@ -359,7 +359,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: Color(0xFF24221F),
+          systemNavigationBarColor: Color(0xFF242424),
           systemNavigationBarIconBrightness: Brightness.light,
         )
             : const SystemUiOverlayStyle(
@@ -454,7 +454,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
         if (!didPop) goToList();
       },
       child: Scaffold(
-      backgroundColor: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
+      backgroundColor: isDarkMode ? const Color(0xFF242424) : const Color(0xFFEDE7DA),
       bottomNavigationBar: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onHorizontalDragEnd: (details) {
@@ -478,10 +478,10 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
             // 하단바: 바닥에 붙은 미니멀 (베이지 · 얇은 선)
             Container(
               decoration: BoxDecoration(
-                color: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFF4EFE5),
+                color: isDarkMode ? const Color(0xFF242424) : const Color(0xFFF4EFE5),
                 border: Border(
                     top: BorderSide(
-                        color: isDarkMode ? const Color(0xFF4A4640) : const Color(0xFFE2DACB), width: 0.5)),
+                        color: isDarkMode ? const Color(0xFF4A4A4A) : const Color(0xFFE2DACB), width: 0.5)),
               ),
               child: SafeArea(
                 top: false,
@@ -969,7 +969,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                   ? Container(
                                 width: double.infinity,
                                 height: imgH,
-                                color: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
+                                color: isDarkMode ? const Color(0xFF242424) : const Color(0xFFEDE7DA),
                                 alignment: Alignment.center,
                                 child: SizedBox(
                                   width: 24,
@@ -991,7 +991,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                                     ? Container(
                                         width: double.infinity,
                                         height: imgH,
-                                        color: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
+                                        color: isDarkMode ? const Color(0xFF242424) : const Color(0xFFEDE7DA),
                                       )
                                     : child,
                                 errorBuilder: (errCtx, err, stack) {
@@ -2214,7 +2214,7 @@ class _BottomBarItem extends StatelessWidget {
                   decoration: BoxDecoration(color: strong, borderRadius: BorderRadius.circular(8)),
                   child: Text('$badge',
                       style: TextStyle(
-                          color: isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5),
+                          color: isDark ? const Color(0xFF242424) : const Color(0xFFF4EFE5),
                           fontSize: 9.5,
                           fontWeight: FontWeight.w700)),
                 ),
@@ -2256,10 +2256,10 @@ void _showSmsSheet(BuildContext context, String number) {
   final a = AppLocalizations.of(context)!;
   final t = [a.smsSheetTitle, a.smsSheetDesc, a.smsSheetFee, a.smsSheetSend];
   final isDark = context.read<ThemeProvider>().isDarkMode;
-  final bg = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
+  final bg = isDark ? const Color(0xFF242424) : const Color(0xFFF4EFE5);
   final strong = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
   final muted = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF5A5348);
-  final line = isDark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB); // 아래 줄 진행 막대와 같은 연한 선
+  final line = isDark ? const Color(0xFF4A4A4A) : const Color(0xFFE2DACB); // 아래 줄 진행 막대와 같은 연한 선
   // 번호 밑 작은 글자: 어느 방송·프로그램에 보내는지 (예: KBS 제1라디오 · 전격시사)
   final radio = context.read<RadioProvider>();
   final where = [
@@ -2401,7 +2401,7 @@ class _NowProgramStripState extends State<_NowProgramStrip> {
     final isDark = context.watch<ThemeProvider>().isDarkMode;
     final strong = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final muted = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF5A5348);
-    final line = isDark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
+    final line = isDark ? const Color(0xFF4A4A4A) : const Color(0xFFE2DACB);
     final sms = _smsNumbers[radioProvider.currentStation?.name]; // 문자 참여 번호 (없으면 칩 안 보임)
 
     final now = DateTime.now();

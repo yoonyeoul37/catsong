@@ -728,7 +728,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildHomeCard(bool isDark) {
     if (!MainCardPref.on.value) return const SizedBox.shrink(); // 설정에서 끔
     final isKo = Localizations.localeOf(context).languageCode == 'ko';
-    final card = isDark ? const Color(0xFF32302C) : const Color(0xFFFBF8F2);
+    final card = isDark ? const Color(0xFF323232) : const Color(0xFFFBF8F2);
     final now = DateTime.now();
     final day = DateTime(now.year, now.month, now.day).difference(DateTime(2024, 1, 1)).inDays;
 
@@ -866,7 +866,7 @@ class _HomeScreenState extends State<HomeScreen> {
     int dot = 0,
     int dots = 1,
   }) {
-    final card = isDark ? const Color(0xFF32302C) : const Color(0xFFFBF8F2);
+    final card = isDark ? const Color(0xFF323232) : const Color(0xFFFBF8F2);
     final ink = isDark ? const Color(0xFFF4EFE5) : const Color(0xFF17140F);
     final subC = isDark ? const Color(0xFFA29A8B) : const Color(0xFF746C60);
     final showDots = dots > 1; // 색은 왼쪽 동그라미 그림만 (이름표·점은 회색·먹색)
@@ -963,7 +963,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// 나만의 색 카드 (메인 홈 카드와 같은 모양 · 색 고리 + [꾸미기])
   Widget _buildColorTip(bool isDark, {int dot = 0, int dots = 1}) {
-    final card = isDark ? const Color(0xFF32302C) : const Color(0xFFFBF8F2);
+    final card = isDark ? const Color(0xFF323232) : const Color(0xFFFBF8F2);
     return _homeInfoCard(
       isDark: isDark,
       lead: _SpinRing(hole: card),
@@ -987,7 +987,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final dark = t.isDarkMode;
     final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final sub = dark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
-    final sheetBg = dark ? const Color(0xFF32302C) : const Color(0xFFF4EFE5);
+    final sheetBg = dark ? const Color(0xFF323232) : const Color(0xFFF4EFE5);
     await showParanSheet(
       context,
       title: tr.accentColor,
@@ -1517,7 +1517,7 @@ class _HomeScreenState extends State<HomeScreen> {
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: Color(0xFF24221F),
+          systemNavigationBarColor: Color(0xFF242424),
           systemNavigationBarIconBrightness: Brightness.light,
         )
             : const SystemUiOverlayStyle(
@@ -1545,7 +1545,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
+        backgroundColor: isDarkMode ? const Color(0xFF242424) : const Color(0xFFEDE7DA),
         appBar: _buildAppBar(primaryColor),
         body: Column(
           children: [
@@ -1591,7 +1591,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final logoInk = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final logoShine = isDarkMode ? const Color(0xFFA8A29A) : const Color(0xFF968F85); // 다크: 라디오·자연 제목과 같은 회색 빛 (흰 빛은 크림 글자 위에서 안 보임)
     return AppBar(
-      backgroundColor: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
+      backgroundColor: isDarkMode ? const Color(0xFF242424) : const Color(0xFFEDE7DA),
       elevation: 0,
       titleSpacing: 20,
       title: _isSearching
@@ -1999,7 +1999,7 @@ class _HomeScreenState extends State<HomeScreen> {
           borderSide: BorderSide.none,
         ),
         filled: true,
-        fillColor: dark ? const Color(0xFF34312C) : const Color(0xFFFBF8F2),
+        fillColor: dark ? const Color(0xFF343434) : const Color(0xFFFBF8F2),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
         prefixIcon: const Icon(Icons.search, color: iconColor, size: 20),
         // 글자가 있으면 ✕(글자만 지우기), 없으면 마이크
@@ -2014,7 +2014,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 18,
                   height: 18,
                   decoration: BoxDecoration(color: ink.withOpacity(0.2), shape: BoxShape.circle),
-                  child: Icon(Icons.close_rounded, size: 12, color: dark ? const Color(0xFF24221F) : Colors.white),
+                  child: Icon(Icons.close_rounded, size: 12, color: dark ? const Color(0xFF242424) : Colors.white),
                 ),
               )
             : IconButton(
@@ -3013,10 +3013,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final n = _messyCount!;
     if (n < 3) return const SizedBox.shrink(); // 몇 곡 안 되면 안 띄움
     // 오늘의 카드와 같은 띠: 바탕보다 한 톤 진한 베이지 (다크는 바탕보다 한 톤 밝게)
-    final card = isDark ? const Color(0xFF302D29) : const Color(0xFFDDD4C3);
+    final card = isDark ? const Color(0xFF303030) : const Color(0xFFDDD4C3);
     final ink = isDark ? const Color(0xFFF4EFE5) : const Color(0xFF17140F);
     final sub = isDark ? const Color(0xFFA29A8B) : const Color(0xFF746C60);
-    final bg = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5); // [정리하기] 버튼 글자색
+    final bg = isDark ? const Color(0xFF242424) : const Color(0xFFF4EFE5); // [정리하기] 버튼 글자색
     final point = context.read<ThemeProvider>().primaryColor;
     final accent = _readable(
         point.value == 0xFF2589E8
@@ -3034,7 +3034,7 @@ class _HomeScreenState extends State<HomeScreen> {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF3A3631) : const Color(0x8CFFFFFF),
+              color: isDark ? const Color(0xFF3A3A3A) : const Color(0x8CFFFFFF),
               borderRadius: BorderRadius.circular(9),
             ),
             child: Icon(Icons.auto_fix_high_rounded, size: 19, color: ink),
@@ -3125,10 +3125,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildDailyCard(MusicProvider music, bool isDark) {
     // 양옆 끝까지 꽉 찬 띠: 바탕보다 한 톤 진한 베이지 (다크는 바탕보다 한 톤 밝게)
-    final card = isDark ? const Color(0xFF302D29) : const Color(0xFFDDD4C3);
+    final card = isDark ? const Color(0xFF303030) : const Color(0xFFDDD4C3);
     final ink = isDark ? const Color(0xFFF4EFE5) : const Color(0xFF17140F);
     final sub = isDark ? const Color(0xFFA29A8B) : const Color(0xFF746C60);
-    final circle = isDark ? const Color(0xFF3A3631) : const Color(0x80FFFFFF);
+    final circle = isDark ? const Color(0xFF3A3A3A) : const Color(0x80FFFFFF);
 
     final now = DateTime.now();
     final day = DateTime(now.year, now.month, now.day).difference(DateTime(2024, 1, 1)).inDays;
@@ -3161,7 +3161,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ? (isDark ? const Color(0xFF6FB0FF) : const Color(0xFF2F7DE8))
             : point,
         isDark);
-    final softBox = isDark ? const Color(0xFF3A3631) : const Color(0x8CFFFFFF);
+    final softBox = isDark ? const Color(0xFF3A3A3A) : const Color(0x8CFFFFFF);
 
     if (kind == 0) {
       // ① 오늘의 한 곡: 듣기 기록으로 고르기
@@ -4396,7 +4396,7 @@ Widget _recentTile(bool isDarkMode, Color pastel, IconData icon) {
   return Container(
     width: 72,
     height: 72,
-    color: isDarkMode ? const Color(0xFF3A3631) : pastel,
+    color: isDarkMode ? const Color(0xFF3A3A3A) : pastel,
     child: Icon(
       icon,
       size: 26,

@@ -60,7 +60,7 @@ class RadioBroadcasterScreen extends StatelessWidget {
     final broadcasters = country.broadcasters;
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
-    final bgColor = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA);
+    final bgColor = isDarkMode ? const Color(0xFF242424) : const Color(0xFFEDE7DA);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       SystemChrome.setSystemUIOverlayStyle(
@@ -69,7 +69,7 @@ class RadioBroadcasterScreen extends StatelessWidget {
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: Color(0xFF24221F),
+          systemNavigationBarColor: Color(0xFF242424),
           systemNavigationBarIconBrightness: Brightness.light,
         )
             : const SystemUiOverlayStyle(

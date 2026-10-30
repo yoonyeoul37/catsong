@@ -27,7 +27,7 @@ class _PolicyWebScreenState extends State<PolicyWebScreen> {
     final dark = context.read<ThemeProvider>().isDarkMode;
     _c = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(dark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5))
+      ..setBackgroundColor(dark ? const Color(0xFF242424) : const Color(0xFFF4EFE5))
       ..setNavigationDelegate(NavigationDelegate(
         onPageFinished: (_) {
           if (mounted) setState(() => _loading = false);
@@ -65,7 +65,7 @@ class _PolicyWebScreenState extends State<PolicyWebScreen> {
   @override
   Widget build(BuildContext context) {
     final dark = context.watch<ThemeProvider>().isDarkMode;
-    final bg = dark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
+    final bg = dark ? const Color(0xFF242424) : const Color(0xFFF4EFE5);
     final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     return PopScope(
       canPop: false,

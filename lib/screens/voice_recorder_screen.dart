@@ -490,7 +490,7 @@ class _VoiceRecorderScreenState extends State<VoiceRecorderScreen> with SingleTi
             margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
             decoration: BoxDecoration(
-              color: const Color(0xFF26221C), // 다른 고르는 창(다크)과 같은 색
+              color: const Color(0xFF262626), // 다른 고르는 창(다크)과 같은 색
               borderRadius: BorderRadius.circular(22),
             ),
             child: Column(

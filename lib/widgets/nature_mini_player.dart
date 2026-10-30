@@ -110,7 +110,7 @@ class NatureMiniPlayer extends StatelessWidget {
             height: 72, // 음악·라디오 미니플레이어와 같은 높이 (예전 80)
             decoration: BoxDecoration(
               // 진한 띠 (어두운 화면에서는 바탕보다 한 톤 밝게)
-              color: isDarkMode ? const Color(0xFF3A3631) : ink,
+              color: isDarkMode ? const Color(0xFF3A3A3A) : ink,
             ),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(12, 0, 22, 0), // 버튼은 오른쪽으로 · ✕는 오른쪽 위 작게

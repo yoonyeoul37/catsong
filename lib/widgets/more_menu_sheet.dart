@@ -131,7 +131,7 @@ void showMoreMenuSheet(
       // 메뉴가 열려 있는 동안 하단 시스템바를 메뉴 색에 맞춤
       value: SystemUiOverlayStyle(
         systemNavigationBarColor:
-            isDarkMode ? const Color(0xFF2B2926) : const Color(0xFFF4EFE5),
+            isDarkMode ? const Color(0xFF2B2B2B) : const Color(0xFFF4EFE5),
         systemNavigationBarIconBrightness:
             isDarkMode ? Brightness.light : Brightness.dark,
       ),
@@ -240,8 +240,8 @@ class _Pal {
   );
 
   static const dark = _Pal(
-    sheet: Color(0xFF2B2926),
-    card: Color(0xFF353330),
+    sheet: Color(0xFF2B2B2B),
+    card: Color(0xFF353535),
     cardBorder: Color(0x12FFFFFF),
     cardShadow: Color(0x59000000),
     iconBg: Color(0x1F6FB0FF),
@@ -252,7 +252,7 @@ class _Pal {
     handle: Color(0x33FFFFFF),
     closeBg: Color(0x14FFFFFF),
     closeIcon: Color(0xFFE8E2D6),
-    brandBg: Color(0xFF32302C),
+    brandBg: Color(0xFF323232),
     bars: Color(0x856FB0FF),
   );
 }
@@ -648,7 +648,7 @@ class _IntroCard extends StatelessWidget {
     // 먹색 카드 (다크 모드는 크림색) — 설정 화면 맨 위 카드와 한 세트
     final dark = p.sheet.computeLuminance() < 0.5;
     final bg = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final fg = dark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
+    final fg = dark ? const Color(0xFF242424) : const Color(0xFFF4EFE5);
     final blue = pointColorOf(context, onDark: !dark); // 카드는 바탕과 반대 색
     final (_, subtitle) = paranIntroMenuText();
     return Material(

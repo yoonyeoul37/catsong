@@ -807,7 +807,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
   Widget _regionBrandCard(BuildContext context, bool isDarkMode) {
     // 라이트: 먹색 카드 · 크림 글자 / 다크: 크림 카드 · 먹색 글자 (바탕과 반대)
     final bg = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
-    final fg = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
+    final fg = isDarkMode ? const Color(0xFF242424) : const Color(0xFFF4EFE5);
     final blue = pointColorOf(context, onDark: !isDarkMode);
     final n = koreanStations.length;
     final line = AppLocalizations.of(context)!.regionBrandLine(n);
@@ -1018,7 +1018,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: Color(0xFF24221F),
+          systemNavigationBarColor: Color(0xFF242424),
           systemNavigationBarIconBrightness: Brightness.light,
         )
             : const SystemUiOverlayStyle(
@@ -1032,7 +1032,7 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
     });
 
     return Scaffold(
-      backgroundColor: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
+      backgroundColor: isDarkMode ? const Color(0xFF242424) : const Color(0xFFEDE7DA),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -2243,7 +2243,7 @@ class _BroadcasterStationList extends StatelessWidget {
         statusBarBrightness: Brightness.dark,
       ),
       child: Scaffold(
-      backgroundColor: isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA),
+      backgroundColor: isDarkMode ? const Color(0xFF242424) : const Color(0xFFEDE7DA),
       body: Column(
         children: [
           _header(context),
@@ -2575,8 +2575,8 @@ Color _brandPastel(String b, bool dark) {
   final box = _BroadcasterGridScreen._cardColors[_BroadcasterGridScreen._keyOf(b)];
   if (dark) {
     // 다크: 어두운 바탕에 차분하게 줄인 박스 색을 섞기 (글자는 밝게)
-    const bg = Color(0xFF24221F);
-    if (box == null) return const Color(0xFF3A3732);
+    const bg = Color(0xFF242424);
+    if (box == null) return const Color(0xFF3A3A3A);
     return Color.lerp(bg, _softDark(box, true), 0.45)!;
   }
   const bg = Color(0xFFEDE7DA); // 라디오 화면 바탕 (베이지)

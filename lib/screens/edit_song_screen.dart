@@ -127,7 +127,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
             constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.7),
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF32302C) : const Color(0xFFF4EFE5), // 다른 고르는 창과 같은 베이지
+              color: isDark ? const Color(0xFF323232) : const Color(0xFFF4EFE5), // 다른 고르는 창과 같은 베이지
               borderRadius: BorderRadius.circular(22),
             ),
             child: Column(
@@ -251,11 +251,11 @@ class _EditSongScreenState extends State<EditSongScreen> {
   Widget build(BuildContext context) {
     final isDark = context.watch<ThemeProvider>().isDarkMode;
     // ── 화면 공통 모양 (베이지 바탕 · 흰 카드 · 먹색 큰 버튼) ──
-    final bg = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
-    final card = isDark ? const Color(0xFF32302C) : Colors.white;
+    final bg = isDark ? const Color(0xFF242424) : const Color(0xFFF4EFE5);
+    final card = isDark ? const Color(0xFF323232) : Colors.white;
     final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final sub = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
-    final line = isDark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
+    final line = isDark ? const Color(0xFF4A4A4A) : const Color(0xFFE2DACB);
 
     Widget section(String text) => Padding(
           padding: const EdgeInsets.fromLTRB(4, 16, 4, 8),
@@ -474,8 +474,8 @@ class _EditSongScreenState extends State<EditSongScreen> {
     FocusManager.instance.primaryFocus?.unfocus();
     const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
     final isDark = context.read<ThemeProvider>().isDarkMode;
-    final card = isDark ? const Color(0xFF24221F) : Colors.white;
-    final onInk = isDark ? const Color(0xFF24221F) : Colors.white;
+    final card = isDark ? const Color(0xFF242424) : Colors.white;
+    final onInk = isDark ? const Color(0xFF242424) : Colors.white;
     final curName = Song.genreNameOf(_genre); // 지금 장르 (같은 이름 칸을 진하게)
     final typed = TextEditingController();
     final picked = await showModalBottomSheet<String>(
@@ -512,7 +512,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
               constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.75),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF32302C) : const Color(0xFFF4EFE5), // 다른 고르는 창과 같은 베이지
+                color: isDark ? const Color(0xFF323232) : const Color(0xFFF4EFE5), // 다른 고르는 창과 같은 베이지
                 borderRadius: BorderRadius.circular(22),
               ),
               child: Column(

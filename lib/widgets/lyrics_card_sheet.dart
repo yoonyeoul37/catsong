@@ -148,8 +148,8 @@ Future<void> _useMine(String path) async {
 Future<void> _editText() async {
   _vib();
   final dark = context.read<ThemeProvider>().isDarkMode;
-  final bg = dark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
-  final card = dark ? const Color(0xFF332E26) : Colors.white;
+  final bg = dark ? const Color(0xFF262626) : const Color(0xFFF4EFE5);
+  final card = dark ? const Color(0xFF333333) : Colors.white;
   final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
   final sub = dark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
   final line = dark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);
@@ -320,8 +320,8 @@ bg = CachedNetworkImage(
 imageUrl: widget.photos[_photo].url,
 fit: BoxFit.cover,
 memCacheWidth: 1080,
-placeholder: (_, __) => Container(color: const Color(0xFF14110C)),
-errorWidget: (_, __, ___) => Container(color: const Color(0xFF14110C)),
+placeholder: (_, __) => Container(color: const Color(0xFF141414)),
+errorWidget: (_, __, ___) => Container(color: const Color(0xFF141414)),
 );
 break;
 case _BgKind.color:
@@ -339,7 +339,7 @@ bg = _color < _kCardColors.length
 break;
 case _BgKind.mine:
 bg = _mine == null
-? Container(color: const Color(0xFF14110C))
+? Container(color: const Color(0xFF141414))
 : Image.file(File(_mine!), fit: BoxFit.cover, cacheWidth: 1080);
 break;
 }
@@ -492,8 +492,8 @@ if (mounted) showParanToast(context, tr.photoLoadFailed, error: true);
 @override
 Widget build(BuildContext context) {
 final dark = context.watch<ThemeProvider>().isDarkMode;
-final bg = dark ? const Color(0xFF26221C) : const Color(0xFFF4EFE5);
-final card = dark ? const Color(0xFF332E26) : Colors.white;
+final bg = dark ? const Color(0xFF262626) : const Color(0xFFF4EFE5);
+final card = dark ? const Color(0xFF333333) : Colors.white;
 final ink = dark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
 final sub = dark ? const Color(0xFFA29A8B) : const Color(0xFF8A8378);
 final line = dark ? const Color(0xFF3A342B) : const Color(0xFFE2DACB);

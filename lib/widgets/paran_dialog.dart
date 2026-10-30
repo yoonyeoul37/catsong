@@ -33,7 +33,7 @@ class _Pal {
       dark = context.read<ThemeProvider>().isDarkMode;
     } catch (_) {}
     return dark
-        ? const _Pal(Color(0xFF32302C), Color(0xFF3E3B37), Color(0xFFF3EFE7), Color(0xFFB8B0A2), Color(0x22FFFFFF))
+        ? const _Pal(Color(0xFF323232), Color(0xFF3E3E3E), Color(0xFFF3EFE7), Color(0xFFB8B0A2), Color(0x22FFFFFF))
         : const _Pal(Color(0xFFF4EFE5), Colors.white, Color(0xFF17140F), Color(0xFF8A8378), Color(0xFFE2DACB));
   }
 }

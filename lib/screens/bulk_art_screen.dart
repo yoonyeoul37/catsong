@@ -102,7 +102,7 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
           constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.7),
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF32302C) : const Color(0xFFF4EFE5), // 다른 고르는 창과 같은 베이지
+            color: isDark ? const Color(0xFF323232) : const Color(0xFFF4EFE5), // 다른 고르는 창과 같은 베이지
             borderRadius: BorderRadius.circular(22),
           ),
           child: Column(
@@ -215,8 +215,8 @@ class _BulkArtScreenState extends State<BulkArtScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = context.watch<ThemeProvider>().isDarkMode;
-    final bg = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
-    final card = isDark ? const Color(0xFF32302C) : Colors.white;
+    final bg = isDark ? const Color(0xFF242424) : const Color(0xFFF4EFE5);
+    final card = isDark ? const Color(0xFF323232) : Colors.white;
     final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final sub = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
     final music = context.watch<MusicProvider>();

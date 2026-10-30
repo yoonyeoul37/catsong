@@ -25,8 +25,8 @@ class AlarmRingScreen extends StatefulWidget {
 }
 
 class _AlarmRingScreenState extends State<AlarmRingScreen> {
-  static const _bg1 = Color(0xFF2B2926);
-  static const _bg2 = Color(0xFF1C1A17);
+  static const _bg1 = Color(0xFF2B2B2B);
+  static const _bg2 = Color(0xFF1C1C1C);
   static const _cream = Color(0xFFF3EFE7);
   static const _ink = Color(0xFF17140F);
   static const _sub = Color(0xFFB8B0A2);

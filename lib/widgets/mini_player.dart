@@ -106,7 +106,7 @@ class MiniPlayer extends StatelessWidget {
             height: 72, // 살짝 낮게 (예전 80)
             decoration: BoxDecoration(
               // 진한 띠 (어두운 화면에서는 바탕보다 한 톤 밝게)
-              color: isDarkMode ? const Color(0xFF3A3631) : ink,
+              color: isDarkMode ? const Color(0xFF3A3A3A) : ink,
             ),
             child: Column(
               children: [

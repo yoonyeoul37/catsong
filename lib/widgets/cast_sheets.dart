@@ -9,10 +9,10 @@ import '../l10n/locale_holder.dart';
 
 // ── TV 창 색 (라이트: 베이지 · 다크: 어두운 갈색) — 창을 열 때 다크 모드인지 맞춤 ──
 bool _tvDark = false;
-Color get _cBg => _tvDark ? const Color(0xFF32302C) : const Color(0xFFF4EFE5);
+Color get _cBg => _tvDark ? const Color(0xFF323232) : const Color(0xFFF4EFE5);
 Color get _cInk => _tvDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
 Color get _cSub => _tvDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A857B);
-Color get _cLine => _tvDark ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
+Color get _cLine => _tvDark ? const Color(0xFF4A4A4A) : const Color(0xFFE2DACB);
 
 
 /// TV 찾아서 고르기 (라디오 화면에서 사용)

@@ -37,14 +37,14 @@ class _ParanIntroScreenState extends State<ParanIntroScreen> {
     final point = pointColorOf(context);
 
     // ── 화면 공통 색 (곡 정보 수정 화면 등과 같은 베이지 · 흰 카드 · 먹색) ──
-    final bg = isDark ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
-    final card = isDark ? const Color(0xFF32302C) : Colors.white;
+    final bg = isDark ? const Color(0xFF242424) : const Color(0xFFF4EFE5);
+    final card = isDark ? const Color(0xFF323232) : Colors.white;
     final ink = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final body = isDark ? const Color(0xFFDCD5C8) : const Color(0xFF3A342B);
     final soft = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF5A5348);
     final sub = isDark ? const Color(0xFF9C9486) : const Color(0xFF8A8378);
-    final line = isDark ? const Color(0xFF433F39) : const Color(0xFFEFE8DB);
-    final band = isDark ? const Color(0xFF2C2A26) : const Color(0xFFEDE5D6);
+    final line = isDark ? const Color(0xFF434343) : const Color(0xFFEFE8DB);
+    final band = isDark ? const Color(0xFF2C2C2C) : const Color(0xFFEDE5D6);
 
     final top = MediaQuery.paddingOf(context).top;
     const heroH = 230.0;

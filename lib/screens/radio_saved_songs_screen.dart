@@ -17,7 +17,7 @@ class RadioSavedSongsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
-    final bgColor = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA);
+    final bgColor = isDarkMode ? const Color(0xFF242424) : const Color(0xFFEDE7DA);
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
@@ -89,7 +89,7 @@ class _RadioSavedSongsListState extends State<RadioSavedSongsList> {
     final title = (m['title'] ?? '').toString();
     showModalBottomSheet(
       context: context,
-      backgroundColor: isDark ? const Color(0xFF2A2724) : const Color(0xFFF7F3EA),
+      backgroundColor: isDark ? const Color(0xFF2A2A2A) : const Color(0xFFF7F3EA),
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) {
         Widget item(IconData icon, String label, VoidCallback onTap, {Color? color}) => ListTile(

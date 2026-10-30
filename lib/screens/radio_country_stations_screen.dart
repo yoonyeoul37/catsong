@@ -1380,7 +1380,7 @@ class _RadioCountryStationsScreenState
     final localTime = _localTimeText(widget.country.code);
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
-    final bgColor = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA);
+    final bgColor = isDarkMode ? const Color(0xFF242424) : const Color(0xFFEDE7DA);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       SystemChrome.setSystemUIOverlayStyle(
@@ -1389,7 +1389,7 @@ class _RadioCountryStationsScreenState
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: Color(0xFF24221F),
+          systemNavigationBarColor: Color(0xFF242424),
           systemNavigationBarIconBrightness: Brightness.light,
         )
             : const SystemUiOverlayStyle(
@@ -2039,7 +2039,7 @@ class _GroupedStationListScreen extends StatelessWidget {
     final current = radioProvider.currentStation;
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
-    final bgColor = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA);
+    final bgColor = isDarkMode ? const Color(0xFF242424) : const Color(0xFFEDE7DA);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       SystemChrome.setSystemUIOverlayStyle(
@@ -2048,7 +2048,7 @@ class _GroupedStationListScreen extends StatelessWidget {
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: Color(0xFF24221F),
+          systemNavigationBarColor: Color(0xFF242424),
           systemNavigationBarIconBrightness: Brightness.light,
         )
             : const SystemUiOverlayStyle(

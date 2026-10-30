@@ -284,7 +284,7 @@ class SongListTile extends StatelessWidget {
     bool showNew = !(prefs.getBool('hasSeenParanPhoto') ?? false);
     if (!context.mounted) return;
     final isDarkMode = context.read<ThemeProvider>().isDarkMode;
-    final sheetColor = isDarkMode ? const Color(0xFF353330) : const Color(0xFFF4EFE5);
+    final sheetColor = isDarkMode ? const Color(0xFF353535) : const Color(0xFFF4EFE5);
     final baseColor = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF1A1A1A);
     final descColor = isDarkMode ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
     const accent = Color(0xFF8A8378); // 메뉴 아이콘은 차분한 회색 (재생화면 메뉴와 통일)

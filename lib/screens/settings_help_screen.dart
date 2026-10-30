@@ -517,14 +517,14 @@ class _SettingsHelpScreenState extends State<SettingsHelpScreen> {
   @override
   Widget build(BuildContext context) {
     final d = context.watch<ThemeProvider>().isDarkMode;
-    final bg = d ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
-    final card = d ? const Color(0xFF32302C) : Colors.white;
+    final bg = d ? const Color(0xFF242424) : const Color(0xFFF4EFE5);
+    final card = d ? const Color(0xFF323232) : Colors.white;
     final ink = d ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final sub = d ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
     final hint = d ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
     final iconBg = d ? Colors.white.withOpacity(0.08) : const Color(0xFFF4EFE5);
-    final line = d ? const Color(0xFF4A4640) : const Color(0xFFEEE9DF);
-    final line2 = d ? const Color(0xFF4A4640) : const Color(0xFFE2DACB);
+    final line = d ? const Color(0xFF4A4A4A) : const Color(0xFFEEE9DF);
+    final line2 = d ? const Color(0xFF4A4A4A) : const Color(0xFFE2DACB);
     final isIos = Platform.isIOS;
     final mq = MediaQuery.of(context);
     final z = _zoom;

@@ -74,7 +74,7 @@ class _SleepFocusScreenState extends State<SleepFocusScreen> {
   Widget build(BuildContext context) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final baseColor = isDarkMode ? Colors.white : Colors.black;
-    final bgColor = isDarkMode ? const Color(0xFF24221F) : const Color(0xFFEDE7DA);
+    final bgColor = isDarkMode ? const Color(0xFF242424) : const Color(0xFFEDE7DA);
 
     final categories = ['전체', '휴식', '집중', '백색소음', '기타'];
 

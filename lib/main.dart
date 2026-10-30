@@ -322,10 +322,15 @@ class MyApp extends StatelessWidget {
               // 제목 줄이 화면을 다시 그릴 때마다 시스템 바 색을 덮어쓰므로, 라이트/다크에 맞는 값을 쥐여준다
               appBarTheme: AppTheme.buildTheme(themeProvider.primaryColor)
                   .appBarTheme
-                  .copyWith(systemOverlayStyle: themeProvider.systemBarStyle),
+                  .copyWith(
+                    systemOverlayStyle: themeProvider.systemBarStyle,
+                    // 목록을 내려도 제목 줄이 푸르스름하게 바뀌지 않게 (본문과 같은 색 한 가지로)
+                    scrolledUnderElevation: 0,
+                    surfaceTintColor: Colors.transparent,
+                  ),
               // ⋮ 메뉴 공통 모양: 둥근 카드 + 부드러운 그림자 (다크면 어두운 카드)
               popupMenuTheme: PopupMenuThemeData(
-                color: themeProvider.isDarkMode ? const Color(0xFF32302C) : Colors.white,
+                color: themeProvider.isDarkMode ? const Color(0xFF323232) : Colors.white,
                 surfaceTintColor: Colors.transparent,
                 elevation: 10,
                 shadowColor: Colors.black.withOpacity(themeProvider.isDarkMode ? 0.5 : 0.18),

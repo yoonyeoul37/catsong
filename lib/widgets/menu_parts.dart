@@ -24,7 +24,7 @@ class MenuSongCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cardColor = isDark ? const Color(0xFF403D39) : Colors.white;
+    final cardColor = isDark ? const Color(0xFF404040) : Colors.white;
     final line = isDark ? Colors.white.withOpacity(0.08) : const Color(0xFFEEE9DF);
     final titleColor = isDark ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final subColor = isDark ? const Color(0xFFB8B0A2) : const Color(0xFF8A857B);
@@ -116,7 +116,7 @@ class MenuCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(top: 10),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF403D39) : Colors.white,
+        color: isDark ? const Color(0xFF404040) : Colors.white,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(

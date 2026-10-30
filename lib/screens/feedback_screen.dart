@@ -166,12 +166,12 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   Widget build(BuildContext context) {
     final d = context.watch<ThemeProvider>().isDarkMode;
     // 색: 도움말 화면과 같게
-    final bg = d ? const Color(0xFF24221F) : const Color(0xFFF4EFE5);
-    final card = d ? const Color(0xFF32302C) : Colors.white;
+    final bg = d ? const Color(0xFF242424) : const Color(0xFFF4EFE5);
+    final card = d ? const Color(0xFF323232) : Colors.white;
     final ink = d ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
     final sub = d ? const Color(0xFFCFC8BB) : const Color(0xFF5A5348);
     final hint = d ? const Color(0xFFB8B0A2) : const Color(0xFF8A8378);
-    final line = d ? const Color(0xFF4A4640) : const Color(0xFFEEE9DF);
+    final line = d ? const Color(0xFF4A4A4A) : const Color(0xFFEEE9DF);
     final ready = _msg.text.trim().length >= 2;
 
     InputDecoration deco(String h) => InputDecoration(

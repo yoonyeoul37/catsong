@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,9 +27,24 @@ class RateApp {
         shown = sw.elapsedMilliseconds > 1200;
       }
     } catch (_) {}
-    if (shown) return;
+    if (shown) {
+      await _restoreSystemBars(); // 평가 창이 바꿔 놓은 상단 아이콘 색을 원래대로
+      return;
+    }
     try {
       await launchUrl(Uri.parse(_store), mode: LaunchMode.externalApplication);
     } catch (_) {}
+  }
+
+  /// 구글 평가 창이 상단 아이콘을 하얗게 바꿔 놓고 닫혀도, 플러터는 "같은 색 부탁은 다시 안 보냄"
+  /// → 아주 살짝 다른 값을 한 번 보냈다가 원래 값을 다시 보내서 확실히 되돌림
+  static Future<void> _restoreSystemBars() async {
+    // ignore: invalid_use_of_visible_for_testing_member
+    final style = SystemChrome.latestStyle;
+    if (style == null) return;
+    await Future.delayed(const Duration(milliseconds: 400)); // 평가 창이 다 닫힐 때까지
+    SystemChrome.setSystemUIOverlayStyle(style.copyWith(statusBarColor: const Color(0x01000000)));
+    await Future.delayed(const Duration(milliseconds: 60));
+    SystemChrome.setSystemUIOverlayStyle(style);
   }
 }

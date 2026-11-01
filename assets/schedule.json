@@ -2981,10 +2981,10 @@
         "image": "https://www.ifm.kr/uploads/files/202507/02/be0cbf510c304095be069a8a09205dec.jpg"
       },
       {
-        "title": "K-POP AI MUSIC GUIDE",
+        "title": "기사님은 AI(재)",
         "start": "06:00",
         "end": "07:00",
-        "image": "https://www.ifm.kr/uploads/files/202601/04/ee3fed1e70bbb8506b2f6d13fe62ec59.png"
+        "image": "https://www.ifm.kr/uploads/files/202610/30/45760d0aecf22e71e4bfd2056707d07d.png"
       },
       {
         "title": "굿모닝 인천, 박주언입니다(재)",
@@ -6218,10 +6218,10 @@
         "image": "https://www.obs.co.kr/admin/data/program/_radio_poster/R001_2305081916.png"
       },
       {
-        "title": "신나는 공유학교 - 안성1기 오전",
+        "title": "김준호의 굿모닝 OBS 스페셜",
         "start": "07:00",
         "end": "09:00",
-        "image": "https://www.obs.co.kr/admin/data/program/_radio_poster/R065_2305081916.png"
+        "image": "https://www.obs.co.kr/admin/data/program/_radio_poster/R003_2305081916.png"
       },
       {
         "title": "모닝브레이크",
@@ -6250,14 +6250,14 @@
       {
         "title": "파워라이브",
         "start": "16:00",
-        "end": "17:30",
+        "end": "18:00",
         "image": "https://www.obs.co.kr/admin/data/program/_radio_poster/R053_2305081916.png"
       },
       {
-        "title": "신나는 공유학교 - 안성1기 오후",
-        "start": "17:30",
+        "title": "오늘의 기후 스페셜",
+        "start": "18:00",
         "end": "19:30",
-        "image": "https://www.obs.co.kr/admin/data/program/_radio_poster/R065_2305081916.png"
+        "image": "https://www.obs.co.kr/admin/data/program/_radio_poster/R005_2305081916.png"
       },
       {
         "title": "뉴스 730",
@@ -6418,7 +6418,8 @@
       {
         "title": "송담스님의 현대인을 위한 참선(재)",
         "start": "00:00",
-        "end": "00:40"
+        "end": "00:40",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/ab133502fde151c39faa.png"
       },
       {
         "title": "영인스님의 천수경(재)",
@@ -6441,7 +6442,8 @@
       {
         "title": "혜주스님의 생명을 위한 명상",
         "start": "01:45",
-        "end": "02:00"
+        "end": "02:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/adc7e863a5dde2c19717.png"
       },
       {
         "title": "새벽 명상",
@@ -6452,7 +6454,8 @@
       {
         "title": "행복을 찾는 108배",
         "start": "04:30",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/d3e9de787d79d4476a9f.jpg"
       },
       {
         "title": "아침 예불",
@@ -6475,7 +6478,8 @@
       {
         "title": "송담스님의 현대인을 위한 참선",
         "start": "06:00",
-        "end": "06:40"
+        "end": "06:40",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/ab133502fde151c39faa.png"
       },
       {
         "title": "우리들의 아침, 운성입니다",
@@ -6496,7 +6500,8 @@
       {
         "title": "좋은 아침 성전입니다",
         "start": "09:00",
-        "end": "09:55"
+        "end": "09:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/492a4257b283bd83d0f5.jpg"
       },
       {
         "title": "5분 명상",
@@ -6512,7 +6517,8 @@
       {
         "title": "신행 365일",
         "start": "10:55",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/d5b01daef672568d9b8d.png"
       },
       {
         "title": "무명을 밝히고",
@@ -6534,7 +6540,8 @@
       {
         "title": "송봉주의 음악 두시",
         "start": "14:00",
-        "end": "15:55"
+        "end": "15:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
       },
       {
         "title": "5분 명상",
@@ -6561,7 +6568,8 @@
       {
         "title": "운문사 우리말 저녁예불",
         "start": "18:00",
-        "end": "18:20"
+        "end": "18:20",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/1500258c1675475cb5a6.png"
       },
       {
         "title": "뉴스의 정석",
@@ -6571,7 +6579,8 @@
       {
         "title": "별빛 아름다운 저녁, 주석입니다",
         "start": "19:00",
-        "end": "20:55"
+        "end": "20:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/5e83e5d261ec1fa21e43.jpg"
       },
       {
         "title": "각밀스님의 염화미소",
@@ -6601,7 +6610,8 @@
       {
         "title": "송담스님의 현대인을 위한 참선(재)",
         "start": "00:00",
-        "end": "00:40"
+        "end": "00:40",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/ab133502fde151c39faa.png"
       },
       {
         "title": "영인스님의 천수경(재)",
@@ -6624,7 +6634,8 @@
       {
         "title": "혜주스님의 생명을 위한 명상",
         "start": "01:45",
-        "end": "02:00"
+        "end": "02:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/adc7e863a5dde2c19717.png"
       },
       {
         "title": "새벽 명상",
@@ -6635,7 +6646,8 @@
       {
         "title": "행복을 찾는 108배",
         "start": "04:30",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/d3e9de787d79d4476a9f.jpg"
       },
       {
         "title": "아침 예불",
@@ -6658,7 +6670,8 @@
       {
         "title": "송담스님의 현대인을 위한 참선",
         "start": "06:00",
-        "end": "06:40"
+        "end": "06:40",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/ab133502fde151c39faa.png"
       },
       {
         "title": "우리들의 아침, 운성입니다",
@@ -6681,7 +6694,8 @@
       {
         "title": "좋은 아침 성전입니다",
         "start": "09:00",
-        "end": "09:55"
+        "end": "09:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/492a4257b283bd83d0f5.jpg"
       },
       {
         "title": "5분 명상",
@@ -6697,7 +6711,8 @@
       {
         "title": "신행 365일",
         "start": "10:55",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/d5b01daef672568d9b8d.png"
       },
       {
         "title": "아름다운 초대",
@@ -6737,7 +6752,8 @@
       {
         "title": "운문사 우리말 저녁예불",
         "start": "18:00",
-        "end": "18:20"
+        "end": "18:20",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/1500258c1675475cb5a6.png"
       },
       {
         "title": "배재수의 사람과 세상",
@@ -6748,12 +6764,14 @@
       {
         "title": "달빛, 뮤직 만다라",
         "start": "19:00",
-        "end": "21:00"
+        "end": "21:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/bd2873c7e3491a7f397a.jpg"
       },
       {
         "title": "세계음악여행",
         "start": "21:00",
-        "end": "23:00"
+        "end": "23:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/a8258a732ae75a3ea90b.png"
       },
       {
         "title": "한밤의 BGM",
@@ -6769,34 +6787,6 @@
     ],
     "sunday": [
       {
-        "title": "송담스님의 현대인을 위한 참선(재)",
-        "start": "00:00",
-        "end": "00:40"
-      },
-      {
-        "title": "영인스님의 천수경(재)",
-        "start": "00:40",
-        "end": "01:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/6e8e0a8c36d815d471a5.png"
-      },
-      {
-        "title": "경전공부",
-        "start": "01:00",
-        "end": "01:25",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/b24f68fc6a61e94052e4.png"
-      },
-      {
-        "title": "우리들의 아침, 운성입니다",
-        "start": "01:25",
-        "end": "01:45",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
-      },
-      {
-        "title": "혜주스님의 생명을 위한 명상",
-        "start": "01:45",
-        "end": "02:00"
-      },
-      {
         "title": "새벽 명상",
         "start": "04:00",
         "end": "04:30",
@@ -6805,7 +6795,8 @@
       {
         "title": "행복을 찾는 108배",
         "start": "04:30",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/d3e9de787d79d4476a9f.jpg"
       },
       {
         "title": "아침 예불",
@@ -6828,7 +6819,8 @@
       {
         "title": "송담스님의 현대인을 위한 참선",
         "start": "06:00",
-        "end": "06:40"
+        "end": "06:40",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/ab133502fde151c39faa.png"
       },
       {
         "title": "우리들의 아침, 운성입니다",
@@ -6839,17 +6831,20 @@
       {
         "title": "BBS초대석",
         "start": "07:00",
-        "end": "08:00"
+        "end": "08:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/259b9800cd13cd1c85ac.jpg"
       },
       {
         "title": "인생은 아름다워",
         "start": "08:00",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/a2bf06be350d7804ce51.png"
       },
       {
         "title": "좋은 아침 성전입니다",
         "start": "09:00",
-        "end": "09:55"
+        "end": "09:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/492a4257b283bd83d0f5.jpg"
       },
       {
         "title": "5분 명상",
@@ -6865,7 +6860,8 @@
       {
         "title": "신행 365일",
         "start": "10:55",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/d5b01daef672568d9b8d.png"
       },
       {
         "title": "아름다운 초대",
@@ -6899,7 +6895,8 @@
       {
         "title": "룸비니 동산",
         "start": "17:00",
-        "end": "17:30"
+        "end": "17:30",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/41035f4215d7f9bebfab.jpg"
       },
       {
         "title": "장병의 시간",
@@ -6910,7 +6907,8 @@
       {
         "title": "운문사 우리말 저녁예불",
         "start": "18:00",
-        "end": "18:20"
+        "end": "18:20",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/1500258c1675475cb5a6.png"
       },
       {
         "title": "BBS 낭독살롱",
@@ -6921,12 +6919,14 @@
       {
         "title": "달빛, 뮤직 만다라",
         "start": "19:00",
-        "end": "21:00"
+        "end": "21:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/bd2873c7e3491a7f397a.jpg"
       },
       {
         "title": "세계음악여행",
         "start": "21:00",
-        "end": "23:00"
+        "end": "23:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/a8258a732ae75a3ea90b.png"
       },
       {
         "title": "한밤의 BGM",
@@ -6944,7 +6944,8 @@
       {
         "title": "송담스님의 현대인을 위한 참선(재)",
         "start": "00:00",
-        "end": "00:45"
+        "end": "00:45",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/ab133502fde151c39faa.png"
       },
       {
         "title": "영인스님의 천수경(재)",
@@ -6967,7 +6968,8 @@
       {
         "title": "혜주스님의 생명을 위한 명상",
         "start": "01:45",
-        "end": "02:00"
+        "end": "02:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/adc7e863a5dde2c19717.png"
       },
       {
         "title": "새벽 명상",
@@ -6978,7 +6980,8 @@
       {
         "title": "행복을 찾는 108배",
         "start": "04:30",
-        "end": "05:00"
+        "end": "05:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/d3e9de787d79d4476a9f.jpg"
       },
       {
         "title": "아침 예불",
@@ -7001,7 +7004,8 @@
       {
         "title": "송담스님의 현대인을 위한 참선",
         "start": "06:00",
-        "end": "06:40"
+        "end": "06:40",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/ab133502fde151c39faa.png"
       },
       {
         "title": "우리들의 아침, 운성입니다",
@@ -7022,7 +7026,8 @@
       {
         "title": "좋은 아침 성전입니다",
         "start": "09:00",
-        "end": "09:55"
+        "end": "09:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/492a4257b283bd83d0f5.jpg"
       },
       {
         "title": "5분 명상",
@@ -7038,7 +7043,8 @@
       {
         "title": "신행 365일",
         "start": "10:55",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/d5b01daef672568d9b8d.png"
       },
       {
         "title": "무명을 밝히고",
@@ -7060,7 +7066,8 @@
       {
         "title": "송봉주의 음악 두시",
         "start": "14:00",
-        "end": "15:55"
+        "end": "15:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/448a368bb4713986d52d.jpg"
       },
       {
         "title": "5분 명상",
@@ -7087,7 +7094,8 @@
       {
         "title": "운문사 우리말 저녁예불",
         "start": "18:00",
-        "end": "18:20"
+        "end": "18:20",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/1500258c1675475cb5a6.png"
       },
       {
         "title": "뉴스의 정석",
@@ -7097,7 +7105,8 @@
       {
         "title": "별빛 아름다운 저녁, 주석입니다",
         "start": "19:00",
-        "end": "20:55"
+        "end": "20:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/5e83e5d261ec1fa21e43.jpg"
       },
       {
         "title": "각밀스님의 염화미소",
@@ -12138,11 +12147,11 @@
       {
         "title": "푸른 바다 은혜의 땅, 제주를 위한 기도",
         "start": "12:00",
-        "end": "12:05"
+        "end": "12:01"
       },
       {
         "title": "교계뉴스",
-        "start": "12:05",
+        "start": "12:01",
         "end": "12:10"
       },
       {
@@ -12727,18 +12736,19 @@
         "title": "김종배의 시선집중 1,2 부",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "김종배의 시선집중 3 부",
         "start": "08:00",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "이진우의 손에 잡히는 경제",
         "start": "08:30",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -12770,7 +12780,8 @@
       {
         "title": "오승훈의 이과학 저과학 1,2부",
         "start": "11:05",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -12803,7 +12814,7 @@
         "title": "트로트 라디오 1,2부",
         "start": "14:20",
         "end": "15:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -12814,7 +12825,7 @@
         "title": "트로트 라디오 3,4부",
         "start": "15:05",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -12857,7 +12868,8 @@
       {
         "title": "조승원의 뉴스하이킥 3,4부",
         "start": "19:10",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -12949,7 +12961,7 @@
         "title": "김종배의 시선집중 1,2 부",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -12959,8 +12971,7 @@
       {
         "title": "권용주, 강다솜의 차카차카 1,2부",
         "start": "08:05",
-        "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "end": "09:00"
       },
       {
         "title": "뉴스",
@@ -12992,8 +13003,7 @@
       {
         "title": "정치인싸 1,2부",
         "start": "11:05",
-        "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "end": "12:00"
       },
       {
         "title": "뉴스",
@@ -13026,7 +13036,7 @@
         "title": "트로트 라디오 1,2부",
         "start": "14:10",
         "end": "15:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -13037,7 +13047,7 @@
         "title": "트로트 라디오 3,4부",
         "start": "15:05",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -13080,8 +13090,7 @@
       {
         "title": "김치형의 뉴스하이킥 3,4부",
         "start": "19:10",
-        "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "end": "20:00"
       },
       {
         "title": "뉴스",
@@ -13173,7 +13182,7 @@
         "title": "김종배의 시선집중 1,2 부",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -13183,8 +13192,7 @@
       {
         "title": "권용주, 강다솜의 차카차카 1,2부",
         "start": "08:05",
-        "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "end": "09:00"
       },
       {
         "title": "뉴스",
@@ -13216,8 +13224,7 @@
       {
         "title": "정치인싸 1,2부",
         "start": "11:05",
-        "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "end": "12:00"
       },
       {
         "title": "뉴스",
@@ -13250,7 +13257,7 @@
         "title": "트로트 라디오 1,2부",
         "start": "14:10",
         "end": "15:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -13261,7 +13268,7 @@
         "title": "트로트 라디오 3,4부",
         "start": "15:05",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -13304,8 +13311,7 @@
       {
         "title": "김치형의 뉴스하이킥 3,4부",
         "start": "19:10",
-        "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "end": "20:00"
       },
       {
         "title": "뉴스",
@@ -13398,18 +13404,19 @@
         "title": "김종배의 시선집중 1,2 부",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "김종배의 시선집중 3 부",
         "start": "08:00",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "이진우의 손에 잡히는 경제",
         "start": "08:30",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -13441,7 +13448,8 @@
       {
         "title": "오승훈의 이과학 저과학 1,2부",
         "start": "11:05",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -13474,7 +13482,7 @@
         "title": "트로트 라디오 1,2부",
         "start": "14:20",
         "end": "15:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -13485,7 +13493,7 @@
         "title": "트로트 라디오 3,4부",
         "start": "15:05",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -13528,7 +13536,8 @@
       {
         "title": "조승원의 뉴스하이킥 3,4부",
         "start": "19:10",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -13744,8 +13753,7 @@
       {
         "title": "스포왕 고영배",
         "start": "22:00",
-        "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "end": "00:00"
       }
     ],
     "sunday": [
@@ -13830,8 +13838,7 @@
       {
         "title": "스포왕 고영배",
         "start": "22:00",
-        "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "end": "00:00"
       }
     ],
     "weekday": [
@@ -13967,12 +13974,13 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "이진우의 손에 잡히는 경제",
         "start": "08:30",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "뉴스(09:00)",
@@ -13993,7 +14001,8 @@
       {
         "title": "오승훈의 이과학 저과학",
         "start": "11:05",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "뉴스(정오 뉴스)",
@@ -14069,7 +14078,8 @@
       {
         "title": "조승원의 뉴스하이킥 3,4부",
         "start": "19:10",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "뉴스(20:00)",
@@ -14150,7 +14160,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스(08:00)",
@@ -14160,8 +14170,7 @@
       {
         "title": "권용주, 강다솜의 차카차카",
         "start": "08:05",
-        "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "end": "09:00"
       },
       {
         "title": "뉴스(09:00)",
@@ -14182,8 +14191,7 @@
       {
         "title": "이정민의 정치인싸",
         "start": "11:05",
-        "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "end": "12:00"
       },
       {
         "title": "뉴스(정오 뉴스)",
@@ -14205,7 +14213,7 @@
         "title": "손태진의 트로트라디오",
         "start": "14:10",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스(16:00)",
@@ -14226,8 +14234,7 @@
       {
         "title": "김치형의 뉴스 하이킥",
         "start": "18:05",
-        "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "end": "20:00"
       },
       {
         "title": "뉴스(20:00)",
@@ -14308,7 +14315,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스(08:00)",
@@ -14318,8 +14325,7 @@
       {
         "title": "권용주, 강다솜의 차카차카",
         "start": "08:05",
-        "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "end": "09:00"
       },
       {
         "title": "뉴스(09:00)",
@@ -14340,8 +14346,7 @@
       {
         "title": "이정민의 정치인싸",
         "start": "11:05",
-        "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "end": "12:00"
       },
       {
         "title": "뉴스(정오 뉴스)",
@@ -14363,7 +14368,7 @@
         "title": "손태진의 트로트라디오",
         "start": "14:10",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스(16:00)",
@@ -14384,8 +14389,7 @@
       {
         "title": "김치형의 뉴스 하이킥",
         "start": "18:05",
-        "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "end": "20:00"
       },
       {
         "title": "뉴스(20:00)",
@@ -14467,12 +14471,13 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "이진우의 손에 잡히는 경제",
         "start": "08:30",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "뉴스(09:00)",
@@ -14493,7 +14498,8 @@
       {
         "title": "오승훈의 이과학 저과학",
         "start": "11:05",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "뉴스(정오 뉴스)",
@@ -14569,7 +14575,8 @@
       {
         "title": "조승원의 뉴스하이킥 3,4부",
         "start": "19:10",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "뉴스(20:00)",
@@ -14778,8 +14785,7 @@
       {
         "title": "스포왕 고영배",
         "start": "22:00",
-        "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "end": "00:00"
       }
     ],
     "sunday": [
@@ -14866,8 +14872,7 @@
       {
         "title": "스포왕 고영배",
         "start": "22:00",
-        "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "end": "00:00"
       }
     ],
     "weekday": [
@@ -14954,7 +14959,8 @@
       {
         "title": "제로베이스원의 친한친구",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ]
   },
@@ -15005,7 +15011,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "건강한 아침 한주희입니다",
@@ -15049,7 +15055,8 @@
       {
         "title": "오승훈의 이과학 저과학",
         "start": "11:05",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -15125,7 +15132,8 @@
       {
         "title": "조승원의 뉴스하이킥",
         "start": "18:05",
-        "end": "19:00"
+        "end": "19:00",
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "저녁앤뉴스",
@@ -15135,7 +15143,8 @@
       {
         "title": "조승원의 뉴스하이킥",
         "start": "19:10",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -15227,7 +15236,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -15237,8 +15246,7 @@
       {
         "title": "권용주, 강다솜의 차카차카",
         "start": "08:05",
-        "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "end": "09:00"
       },
       {
         "title": "뉴스",
@@ -15270,8 +15278,7 @@
       {
         "title": "정치인싸",
         "start": "11:05",
-        "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "end": "12:00"
       },
       {
         "title": "뉴스",
@@ -15304,7 +15311,7 @@
         "title": "손태진의 트로트 라디오",
         "start": "14:10",
         "end": "15:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -15315,7 +15322,7 @@
         "title": "손태진의 트로트 라디오",
         "start": "15:05",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -15347,8 +15354,7 @@
       {
         "title": "김치형의 뉴스하이킥",
         "start": "18:05",
-        "end": "19:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "end": "19:00"
       },
       {
         "title": "뉴스",
@@ -15358,8 +15364,7 @@
       {
         "title": "김치형의 뉴스하이킥",
         "start": "19:10",
-        "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "end": "20:00"
       },
       {
         "title": "뉴스",
@@ -15451,7 +15456,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -15461,8 +15466,7 @@
       {
         "title": "권용주, 강다솜의 차카차카",
         "start": "08:05",
-        "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "end": "09:00"
       },
       {
         "title": "뉴스",
@@ -15494,8 +15498,7 @@
       {
         "title": "정치인싸",
         "start": "11:05",
-        "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "end": "12:00"
       },
       {
         "title": "뉴스",
@@ -15528,7 +15531,7 @@
         "title": "손태진의 트로트 라디오",
         "start": "14:10",
         "end": "15:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -15539,7 +15542,7 @@
         "title": "손태진의 트로트 라디오",
         "start": "15:05",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -15571,8 +15574,7 @@
       {
         "title": "김치형의 뉴스하이킥",
         "start": "18:05",
-        "end": "19:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "end": "19:00"
       },
       {
         "title": "뉴스",
@@ -15582,8 +15584,7 @@
       {
         "title": "김치형의 뉴스하이킥",
         "start": "19:10",
-        "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "end": "20:00"
       },
       {
         "title": "뉴스",
@@ -15676,7 +15677,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "건강한 아침 한주희입니다",
@@ -15720,7 +15721,8 @@
       {
         "title": "오승훈의 이과학 저과학",
         "start": "11:05",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -15796,7 +15798,8 @@
       {
         "title": "조승원의 뉴스하이킥",
         "start": "18:05",
-        "end": "19:00"
+        "end": "19:00",
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "저녁앤뉴스",
@@ -15806,7 +15809,8 @@
       {
         "title": "조승원의 뉴스하이킥",
         "start": "19:10",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -15901,12 +15905,13 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "이진우의 손에 잡히는 경제",
         "start": "08:30",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "광주MBC 9시 뉴스",
@@ -15939,7 +15944,8 @@
       {
         "title": "오승훈의 이과학 저과학",
         "start": "11:05",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "뉴스(12:00)",
@@ -15972,7 +15978,7 @@
         "title": "손태진의 트로트 라디오",
         "start": "14:20",
         "end": "15:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스(15:00)",
@@ -16026,7 +16032,8 @@
       {
         "title": "조승원의 뉴스하이킥",
         "start": "19:10",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "뉴스(20:00)",
@@ -16118,7 +16125,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스(08:00)",
@@ -16128,8 +16135,7 @@
       {
         "title": "권용주, 강다솜의 차카차카",
         "start": "08:05",
-        "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "end": "09:00"
       },
       {
         "title": "뉴스(09:00)",
@@ -16161,8 +16167,7 @@
       {
         "title": "정치인싸",
         "start": "11:05",
-        "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "end": "12:00"
       },
       {
         "title": "뉴스(12:00)",
@@ -16195,7 +16200,7 @@
         "title": "손태진의 트로트 라디오",
         "start": "14:10",
         "end": "15:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스(15:00)",
@@ -16206,7 +16211,7 @@
         "title": "손태진의 트로트 라디오",
         "start": "15:05",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스(16:00)",
@@ -16238,8 +16243,7 @@
       {
         "title": "김치형의 뉴스 하이킥",
         "start": "18:05",
-        "end": "19:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "end": "19:00"
       },
       {
         "title": "뉴스(19:00)",
@@ -16249,8 +16253,7 @@
       {
         "title": "김치형의 뉴스하이킥",
         "start": "19:10",
-        "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "end": "20:00"
       },
       {
         "title": "뉴스(20:00)",
@@ -16342,7 +16345,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스(08:00)",
@@ -16352,8 +16355,7 @@
       {
         "title": "권용주, 강다솜의 차카차카",
         "start": "08:05",
-        "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "end": "09:00"
       },
       {
         "title": "뉴스(09:00)",
@@ -16385,8 +16387,7 @@
       {
         "title": "정치인싸",
         "start": "11:05",
-        "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "end": "12:00"
       },
       {
         "title": "뉴스(12:00)",
@@ -16419,7 +16420,7 @@
         "title": "손태진의 트로트 라디오",
         "start": "14:10",
         "end": "15:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스(15:00)",
@@ -16430,7 +16431,7 @@
         "title": "손태진의 트로트 라디오",
         "start": "15:05",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스(16:00)",
@@ -16462,8 +16463,7 @@
       {
         "title": "김치형의 뉴스 하이킥",
         "start": "18:05",
-        "end": "19:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "end": "19:00"
       },
       {
         "title": "뉴스(19:00)",
@@ -16473,8 +16473,7 @@
       {
         "title": "김치형의 뉴스하이킥",
         "start": "19:10",
-        "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "end": "20:00"
       },
       {
         "title": "뉴스(20:00)",
@@ -16557,12 +16556,13 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "이진우의 손에 잡히는 경제",
         "start": "08:30",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "광주MBC 9시 뉴스",
@@ -16595,7 +16595,8 @@
       {
         "title": "오승훈의 이과학 저과학",
         "start": "11:05",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "뉴스(12:00)",
@@ -16628,7 +16629,7 @@
         "title": "손태진의 트로트 라디오",
         "start": "14:20",
         "end": "15:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스(15:00)",
@@ -16682,7 +16683,8 @@
       {
         "title": "조승원의 뉴스하이킥",
         "start": "19:10",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "뉴스(20:00)",
@@ -16902,8 +16904,7 @@
       {
         "title": "스포왕 고영배",
         "start": "22:00",
-        "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "end": "00:00"
       }
     ],
     "sunday": [
@@ -16990,8 +16991,7 @@
       {
         "title": "스포왕 고영배",
         "start": "22:00",
-        "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "end": "00:00"
       }
     ],
     "weekday": [
@@ -17068,7 +17068,8 @@
       {
         "title": "친한친구",
         "start": "22:00",
-        "end": "00:00"
+        "end": "00:00",
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ]
   },
@@ -17119,12 +17120,13 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "이진우의 손에 잡히는 경제",
         "start": "08:30",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "뉴스(09:00)",
@@ -17145,7 +17147,8 @@
       {
         "title": "오승훈의 이과학 저과학",
         "start": "11:05",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "12시 뉴스",
@@ -17221,7 +17224,8 @@
       {
         "title": "조승원의 뉴스하이킥",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "뉴스(20:00)",
@@ -17302,7 +17306,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스(08:00)",
@@ -17312,8 +17316,7 @@
       {
         "title": "권용주, 강다솜의 차카차카",
         "start": "08:05",
-        "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "end": "09:00"
       },
       {
         "title": "뉴스(09:00)",
@@ -17334,8 +17337,7 @@
       {
         "title": "정치인싸",
         "start": "11:05",
-        "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "end": "12:00"
       },
       {
         "title": "12시 뉴스",
@@ -17368,7 +17370,7 @@
         "title": "손태진의 트로트 라디오",
         "start": "14:10",
         "end": "15:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스(15:00)",
@@ -17379,7 +17381,7 @@
         "title": "손태진의 트로트 라디오",
         "start": "15:05",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스(16:00)",
@@ -17411,8 +17413,7 @@
       {
         "title": "김치형의 뉴스 하이킥",
         "start": "18:05",
-        "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "end": "20:00"
       },
       {
         "title": "뉴스(20:00)",
@@ -17493,7 +17494,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스(08:00)",
@@ -17503,8 +17504,7 @@
       {
         "title": "권용주, 강다솜의 차카차카",
         "start": "08:05",
-        "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "end": "09:00"
       },
       {
         "title": "뉴스(09:00)",
@@ -17525,8 +17525,7 @@
       {
         "title": "정치인싸",
         "start": "11:05",
-        "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "end": "12:00"
       },
       {
         "title": "12시 뉴스",
@@ -17559,7 +17558,7 @@
         "title": "손태진의 트로트 라디오",
         "start": "14:10",
         "end": "15:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스(15:00)",
@@ -17570,7 +17569,7 @@
         "title": "손태진의 트로트 라디오",
         "start": "15:05",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "뉴스(16:00)",
@@ -17602,8 +17601,7 @@
       {
         "title": "김치형의 뉴스 하이킥",
         "start": "18:05",
-        "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "end": "20:00"
       },
       {
         "title": "뉴스(20:00)",
@@ -17680,12 +17678,13 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "이진우의 손에 잡히는 경제",
         "start": "08:30",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "뉴스(09:00)",
@@ -17706,7 +17705,8 @@
       {
         "title": "오승훈의 이과학 저과학",
         "start": "11:05",
-        "end": "12:00"
+        "end": "12:00",
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "12시 뉴스",
@@ -17782,7 +17782,8 @@
       {
         "title": "조승원의 뉴스하이킥",
         "start": "18:05",
-        "end": "20:00"
+        "end": "20:00",
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "뉴스(20:00)",
@@ -17831,7 +17832,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "생방송 자갈치 아지매",
@@ -17845,10 +17846,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -17858,9 +17859,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "15:05",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "오후만세",
@@ -17879,10 +17880,10 @@
         "end": "19:00"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "19:00",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -17913,8 +17914,8 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:05",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "우리 영화볼래요?",
@@ -17927,10 +17928,10 @@
         "end": "08:57"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
+        "title": "이진우의 손에 잡히는 경제",
         "start": "08:57",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -17939,10 +17940,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -17952,9 +17953,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "15:05",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "오후만세",
@@ -17968,10 +17969,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -18002,14 +18003,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -18018,10 +18019,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -18031,9 +18032,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "15:05",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "오후만세",
@@ -18047,10 +18048,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -18082,7 +18083,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "생방송 자갈치 아지매",
@@ -18096,10 +18097,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -18109,9 +18110,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "15:05",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "오후만세",
@@ -18130,10 +18131,10 @@
         "end": "19:00"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "19:00",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -18217,10 +18218,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ],
     "saturday": [
@@ -18284,10 +18285,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ],
     "sunday": [
@@ -18351,10 +18352,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ],
     "weekday": [
@@ -18418,10 +18419,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ]
   },
@@ -18436,14 +18437,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -18452,10 +18453,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -18465,9 +18466,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -18482,10 +18483,10 @@
         "image": "https://www.phmbc.co.kr/contents/program_info/open_world/1585542303.jpg"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "19:00",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -18516,14 +18517,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -18532,10 +18533,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -18545,9 +18546,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -18556,10 +18557,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -18590,14 +18591,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -18606,10 +18607,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -18619,9 +18620,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -18630,10 +18631,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -18664,14 +18665,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -18680,10 +18681,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -18693,9 +18694,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -18710,10 +18711,10 @@
         "image": "https://www.phmbc.co.kr/contents/program_info/open_world/1585542303.jpg"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "19:00",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -18760,21 +18761,21 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "정오의 희망곡 김군입니다",
         "start": "12:00",
-        "end": "14:10"
+        "end": "14:20"
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "15:05",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "The 즐거운 오후 3시",
@@ -18821,14 +18822,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -18837,10 +18838,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -18850,9 +18851,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -18861,10 +18862,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -18895,14 +18896,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -18911,10 +18912,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -18924,9 +18925,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -18935,10 +18936,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -18983,21 +18984,21 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "정오의 희망곡 김군입니다",
         "start": "12:00",
-        "end": "14:10"
+        "end": "14:20"
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "15:05",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "The 즐거운 오후 3시",
@@ -19046,14 +19047,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -19067,10 +19068,10 @@
         "end": "11:57"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:57",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -19080,9 +19081,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -19124,14 +19125,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -19140,10 +19141,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -19153,9 +19154,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -19164,10 +19165,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -19198,14 +19199,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -19214,10 +19215,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -19227,9 +19228,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -19238,10 +19239,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -19272,14 +19273,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -19293,10 +19294,10 @@
         "end": "11:57"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:57",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -19306,9 +19307,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -19409,10 +19410,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ],
     "saturday": [
@@ -19481,10 +19482,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ],
     "sunday": [
@@ -19553,10 +19554,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ],
     "weekday": [
@@ -19626,10 +19627,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ]
   },
@@ -19644,14 +19645,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -19660,10 +19661,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -19673,9 +19674,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -19689,10 +19690,10 @@
         "end": "19:00"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "19:00",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -19723,14 +19724,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -19739,10 +19740,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -19762,10 +19763,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -19796,14 +19797,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -19812,10 +19813,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -19835,10 +19836,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -19869,14 +19870,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -19885,10 +19886,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -19898,9 +19899,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -19914,10 +19915,10 @@
         "end": "19:00"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "19:00",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -19950,14 +19951,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -19966,22 +19967,16 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
         "start": "12:05",
         "end": "14:00",
         "image": "https://img.imbc.com/adams/Program/20266/134266534050317340_Big_C.png"
-      },
-      {
-        "title": "손태진의 트로트라디오",
-        "start": "14:10",
-        "end": "14:20",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
       },
       {
         "title": "배윤호, 이남미의 확깨는 라디오",
@@ -20002,10 +19997,10 @@
         "image": "https://www.usmbc.co.kr/storage/program/controller/usmbc/2020/03/02/101655-6B56-E495-4006-9QAH2BZKSSRQU48YYSP5.jpg"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "19:00",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -20036,14 +20031,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -20052,10 +20047,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -20065,9 +20060,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -20076,10 +20071,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -20110,14 +20105,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -20126,10 +20121,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -20139,9 +20134,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -20150,10 +20145,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -20184,14 +20179,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -20200,22 +20195,16 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
         "start": "12:05",
         "end": "14:00",
         "image": "https://img.imbc.com/adams/Program/20266/134266534050317340_Big_C.png"
-      },
-      {
-        "title": "손태진의 트로트라디오",
-        "start": "14:10",
-        "end": "14:20",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
       },
       {
         "title": "배윤호, 이남미의 확깨는 라디오",
@@ -20236,10 +20225,10 @@
         "image": "https://www.usmbc.co.kr/storage/program/controller/usmbc/2020/03/02/101655-6B56-E495-4006-9QAH2BZKSSRQU48YYSP5.jpg"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "19:00",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -20324,10 +20313,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ],
     "saturday": [
@@ -20392,10 +20381,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ],
     "sunday": [
@@ -20460,10 +20449,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ],
     "weekday": [
@@ -20528,10 +20517,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ]
   },
@@ -20546,14 +20535,8 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
-      },
-      {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "달구벌만평",
@@ -20574,22 +20557,16 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
         "start": "12:05",
         "end": "14:00",
         "image": "https://img.imbc.com/adams/Program/20266/134266534050317340_Big_C.png"
-      },
-      {
-        "title": "손태진의 트로트라디오",
-        "start": "14:10",
-        "end": "14:20",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
       },
       {
         "title": "즐거운 오후2시",
@@ -20604,10 +20581,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -20638,14 +20615,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -20654,10 +20631,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -20667,9 +20644,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -20678,10 +20655,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -20712,14 +20689,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -20728,10 +20705,10 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -20741,9 +20718,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -20752,10 +20729,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -20786,14 +20763,8 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
-      },
-      {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "달구벌만평",
@@ -20814,22 +20785,16 @@
         "image": "https://img.imbc.com/adams/Program/20236/133318006207356740_Big_C.png"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
         "start": "12:05",
         "end": "14:00",
         "image": "https://img.imbc.com/adams/Program/20266/134266534050317340_Big_C.png"
-      },
-      {
-        "title": "손태진의 트로트라디오",
-        "start": "14:10",
-        "end": "14:20",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
       },
       {
         "title": "즐거운 오후2시",
@@ -20844,10 +20809,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -20931,10 +20896,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ],
     "saturday": [
@@ -20998,10 +20963,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ],
     "sunday": [
@@ -21065,10 +21030,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ],
     "weekday": [
@@ -21132,10 +21097,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ]
   },
@@ -21150,14 +21115,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -21185,9 +21150,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -21202,10 +21167,10 @@
         "image": "https://www.jmbc.co.kr/uploads/pgm/sfm_000007_top_m.jpg"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "19:00",
         "end": "19:20",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "뉴스 & 이슈",
@@ -21214,10 +21179,10 @@
         "image": "https://www.jmbc.co.kr/uploads/pgm/sfm_000006_top_m.jpg"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "19:50",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -21248,14 +21213,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -21270,10 +21235,10 @@
         "image": "https://www.jmbc.co.kr/uploads/pgm/sfm_000002_top_m.jpg"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -21283,9 +21248,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -21294,10 +21259,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -21328,14 +21293,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -21350,10 +21315,10 @@
         "image": "https://www.jmbc.co.kr/uploads/pgm/sfm_000002_top_m.jpg"
       },
       {
-        "title": "이정민의 정치인싸",
+        "title": "오승훈의 이과학 저과학",
         "start": "11:05",
         "end": "12:00",
-        "image": "https://img.imbc.com/adams/Program/20266/134271630658414793_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20266/134249302825421098_Big_C.png"
       },
       {
         "title": "손석희의 12시",
@@ -21363,9 +21328,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -21374,10 +21339,10 @@
         "image": "https://img.imbc.com/adams/Program/20174/131358464227896486_Big_C.png"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "18:05",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -21408,14 +21373,14 @@
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
-        "title": "권용주, 강다솜의 차카차카",
-        "start": "08:05",
+        "title": "이진우의 손에 잡히는 경제",
+        "start": "08:30",
         "end": "09:00",
-        "image": "https://img.imbc.com/adams/Program/20261/134118026975857047_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20231/133182578836314707_Big_C.png"
       },
       {
         "title": "여성시대 양희은, 김일중입니다",
@@ -21443,9 +21408,9 @@
       },
       {
         "title": "손태진의 트로트라디오",
-        "start": "14:10",
+        "start": "14:20",
         "end": "16:00",
-        "image": "https://img.imbc.com/adams/Program/20268/134323499322779164.jpg"
+        "image": "https://img.imbc.com/adams/Program/20246/133617635530291247_Big_C.png"
       },
       {
         "title": "정선희, 문천식의 지금은 라디오시대",
@@ -21460,10 +21425,10 @@
         "image": "https://www.jmbc.co.kr/uploads/pgm/sfm_000007_top_m.jpg"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "19:00",
         "end": "19:20",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "뉴스 & 이슈",
@@ -21472,10 +21437,10 @@
         "image": "https://www.jmbc.co.kr/uploads/pgm/sfm_000006_top_m.jpg"
       },
       {
-        "title": "김치형의 뉴스 하이킥",
+        "title": "조승원의 뉴스하이킥",
         "start": "19:50",
         "end": "20:00",
-        "image": "https://img.imbc.com/adams/Program/20229/133083946752746611_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20267/134277679606310094_Big_C.png"
       },
       {
         "title": "오늘도 당신 편 이재은입니다",
@@ -21560,10 +21525,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ],
     "saturday": [
@@ -21628,10 +21593,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ],
     "sunday": [
@@ -21702,10 +21667,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ],
     "weekday": [
@@ -21770,10 +21735,10 @@
         "image": "https://img.imbc.com/adams/Program/20205/132336308707614628_Big_C.png"
       },
       {
-        "title": "스포왕 고영배",
+        "title": "제로베이스원의 친한친구",
         "start": "22:00",
         "end": "00:00",
-        "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20268/134323695629205579_Big_C.png"
       }
     ]
   },

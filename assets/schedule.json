@@ -6126,10 +6126,10 @@
         "image": "https://www.obs.co.kr/admin/data/program/_radio_poster/R001_2305081916.png"
       },
       {
-        "title": "김준호의 굿모닝 OBS 스페셜",
+        "title": "신나는 공유학교 - 고양2기 오전",
         "start": "07:00",
         "end": "09:00",
-        "image": "https://www.obs.co.kr/admin/data/program/_radio_poster/R003_2305081916.png"
+        "image": "https://www.obs.co.kr/admin/data/program/_radio_poster/R065_2305081916.png"
       },
       {
         "title": "모닝브레이크",
@@ -6158,14 +6158,14 @@
       {
         "title": "파워라이브",
         "start": "16:00",
-        "end": "18:00",
+        "end": "17:30",
         "image": "https://www.obs.co.kr/admin/data/program/_radio_poster/R053_2305081916.png"
       },
       {
-        "title": "오늘의 기후 스페셜",
-        "start": "18:00",
+        "title": "신나는 공유학교 - 고양2기 오후",
+        "start": "17:30",
         "end": "19:30",
-        "image": "https://www.obs.co.kr/admin/data/program/_radio_poster/R005_2305081916.png"
+        "image": "https://www.obs.co.kr/admin/data/program/_radio_poster/R065_2305081916.png"
       },
       {
         "title": "뉴스 730",
@@ -6517,7 +6517,8 @@
       {
         "title": "거룩한 만남",
         "start": "10:00",
-        "end": "10:55"
+        "end": "10:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/3f1712f6eb08ff02f27c.png"
       },
       {
         "title": "신행 365일",
@@ -6556,7 +6557,8 @@
       {
         "title": "팝 포 유",
         "start": "16:00",
-        "end": "17:00"
+        "end": "17:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/20d8fb5ccd5b6b72f450.jpg"
       },
       {
         "title": "경제와 생활뉴스",
@@ -6566,7 +6568,8 @@
       {
         "title": "팝 포 유",
         "start": "17:05",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/20d8fb5ccd5b6b72f450.jpg"
       },
       {
         "title": "운문사 우리말 저녁예불",
@@ -6691,7 +6694,8 @@
       {
         "title": "세계는 한 가족",
         "start": "08:00",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/7eec1f528cd722c51e81.png"
       },
       {
         "title": "좋은 아침 성전입니다",
@@ -6707,7 +6711,8 @@
       {
         "title": "다시 듣고 싶은 명법문",
         "start": "10:00",
-        "end": "10:55"
+        "end": "10:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/2800d02b962232f785cd.png"
       },
       {
         "title": "신행 365일",
@@ -6730,7 +6735,8 @@
       {
         "title": "김중연의 트로트 연구소",
         "start": "14:00",
-        "end": "15:55"
+        "end": "15:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0b6cc302151c7f8140df.jpg"
       },
       {
         "title": "5분 명상",
@@ -6758,7 +6764,8 @@
       {
         "title": "배재수의 사람과 세상",
         "start": "18:20",
-        "end": "19:00"
+        "end": "19:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/ac8f576ec4dd22263446.jpg"
       },
       {
         "title": "달빛, 뮤직 만다라",
@@ -6785,6 +6792,36 @@
       }
     ],
     "sunday": [
+      {
+        "title": "송담스님의 현대인을 위한 참선(재)",
+        "start": "00:00",
+        "end": "00:40",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/ab133502fde151c39faa.png"
+      },
+      {
+        "title": "영인스님의 천수경(재)",
+        "start": "00:40",
+        "end": "01:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/6e8e0a8c36d815d471a5.png"
+      },
+      {
+        "title": "경전공부",
+        "start": "01:00",
+        "end": "01:25",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/b24f68fc6a61e94052e4.png"
+      },
+      {
+        "title": "우리들의 아침, 운성입니다",
+        "start": "01:25",
+        "end": "01:45",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0e4ca830ddfdb3e172e6.jpg"
+      },
+      {
+        "title": "혜주스님의 생명을 위한 명상",
+        "start": "01:45",
+        "end": "02:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/adc7e863a5dde2c19717.png"
+      },
       {
         "title": "새벽 명상",
         "start": "04:00",
@@ -6830,13 +6867,13 @@
       {
         "title": "BBS초대석",
         "start": "07:00",
-        "end": "08:00",
-        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/259b9800cd13cd1c85ac.jpg"
+        "end": "08:00"
       },
       {
         "title": "인생은 아름다워",
         "start": "08:00",
-        "end": "09:00"
+        "end": "09:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/a2bf06be350d7804ce51.png"
       },
       {
         "title": "좋은 아침 성전입니다",
@@ -6876,7 +6913,8 @@
       {
         "title": "김중연의 트로트 연구소",
         "start": "14:00",
-        "end": "15:55"
+        "end": "15:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/0b6cc302151c7f8140df.jpg"
       },
       {
         "title": "5분 명상",
@@ -6892,7 +6930,8 @@
       {
         "title": "룸비니 동산",
         "start": "17:00",
-        "end": "17:30"
+        "end": "17:30",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/41035f4215d7f9bebfab.jpg"
       },
       {
         "title": "장병의 시간",
@@ -6940,7 +6979,7 @@
       {
         "title": "송담스님의 현대인을 위한 참선(재)",
         "start": "00:00",
-        "end": "00:40",
+        "end": "00:45",
         "image": "https://m.bbsi.co.kr/M/UploadProgramImg/ab133502fde151c39faa.png"
       },
       {
@@ -7033,7 +7072,8 @@
       {
         "title": "원영스님의 마음 Talk",
         "start": "10:00",
-        "end": "10:55"
+        "end": "10:55",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/097011b4e4bef9f825b4.jpg"
       },
       {
         "title": "신행 365일",
@@ -7072,7 +7112,8 @@
       {
         "title": "팝 포 유",
         "start": "16:00",
-        "end": "17:00"
+        "end": "17:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/20d8fb5ccd5b6b72f450.jpg"
       },
       {
         "title": "경제와 생활뉴스",
@@ -7082,7 +7123,8 @@
       {
         "title": "팝 포 유",
         "start": "17:05",
-        "end": "18:00"
+        "end": "18:00",
+        "image": "https://m.bbsi.co.kr/M/UploadProgramImg/20d8fb5ccd5b6b72f450.jpg"
       },
       {
         "title": "운문사 우리말 저녁예불",
@@ -12717,7 +12759,8 @@
       {
         "title": "아침 & 뉴스 , 류수민입니다 1,2 부",
         "start": "06:15",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -12728,13 +12771,13 @@
         "title": "김종배의 시선집중 1,2 부",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "김종배의 시선집중 3 부",
         "start": "08:00",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "이진우의 손에 잡히는 경제",
@@ -12950,7 +12993,7 @@
         "title": "김종배의 시선집중 1,2 부",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -13175,7 +13218,7 @@
         "title": "김종배의 시선집중 1,2 부",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -13959,7 +14002,8 @@
       {
         "title": "아침&뉴스, 류수민입니다",
         "start": "06:15",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "뉴스(07:00)",
@@ -13970,7 +14014,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "이진우의 손에 잡히는 경제",
@@ -14153,7 +14197,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스(08:00)",
@@ -14300,8 +14344,7 @@
       {
         "title": "라디오 북클럽 고아성입니다",
         "start": "06:05",
-        "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "end": "07:00"
       },
       {
         "title": "뉴스(07:00)",
@@ -14312,7 +14355,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스(08:00)",
@@ -14459,7 +14502,8 @@
       {
         "title": "아침&뉴스, 류수민입니다",
         "start": "06:15",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "뉴스(07:00)",
@@ -14470,7 +14514,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "이진우의 손에 잡히는 경제",
@@ -14996,7 +15040,8 @@
       {
         "title": "아침&뉴스 류수민입니다",
         "start": "06:15",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -15007,7 +15052,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "건강한 아침 한주희입니다",
@@ -15229,7 +15274,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -15442,8 +15487,7 @@
       {
         "title": "라디오 북클럽",
         "start": "06:05",
-        "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "end": "07:00"
       },
       {
         "title": "뉴스",
@@ -15454,7 +15498,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -15667,7 +15711,8 @@
       {
         "title": "아침&뉴스 류수민입니다",
         "start": "06:15",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "뉴스",
@@ -15678,7 +15723,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "건강한 아침 한주희입니다",
@@ -16304,21 +16349,6 @@
     ],
     "sunday": [
       {
-        "title": "낭만가요",
-        "start": "00:00",
-        "end": "02:00"
-      },
-      {
-        "title": "꿈의팝송",
-        "start": "02:00",
-        "end": "04:00"
-      },
-      {
-        "title": "가요 1999",
-        "start": "04:00",
-        "end": "05:00"
-      },
-      {
         "title": "오늘의 문화방송",
         "start": "05:00",
         "end": "05:05"
@@ -16347,7 +16377,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스(08:00)",
@@ -16522,7 +16552,7 @@
       {
         "title": "신혜림의 골든디스크",
         "start": "23:05",
-        "end": "00:00",
+        "end": "05:00",
         "image": "https://img.imbc.com/adams/Program/202311/133448560915178965_Big_C.png"
       }
     ],
@@ -16926,22 +16956,6 @@
     ],
     "sunday": [
       {
-        "title": "FM영화음악 김세윤입니다",
-        "start": "00:00",
-        "end": "01:00",
-        "image": "https://img.imbc.com/adams/Program/202610/134369282644773640_Big_C.png"
-      },
-      {
-        "title": "아이돌 라디오 핫트랙",
-        "start": "01:00",
-        "end": "03:00"
-      },
-      {
-        "title": "음악의 발견",
-        "start": "03:00",
-        "end": "05:00"
-      },
-      {
         "title": "여기는 MBC-FM4U",
         "start": "05:00",
         "end": "05:05"
@@ -17008,7 +17022,7 @@
       {
         "title": "스포왕 고영배",
         "start": "22:00",
-        "end": "00:00",
+        "end": "05:00",
         "image": "https://img.imbc.com/adams/Program/20235/133276345269461524_Big_C.png"
       }
     ],
@@ -17135,7 +17149,8 @@
       {
         "title": "아침&뉴스, 류수민입니다",
         "start": "06:15",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "뉴스(07:00)",
@@ -17146,7 +17161,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "이진우의 손에 잡히는 경제",
@@ -17329,7 +17344,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스(08:00)",
@@ -17509,8 +17524,7 @@
       {
         "title": "라디오 북클럽 고아성입니다",
         "start": "06:05",
-        "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "end": "07:00"
       },
       {
         "title": "뉴스(07:00)",
@@ -17521,7 +17535,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "뉴스(08:00)",
@@ -17701,7 +17715,8 @@
       {
         "title": "아침&뉴스, 류수민입니다",
         "start": "06:15",
-        "end": "07:00"
+        "end": "07:00",
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "뉴스(07:00)",
@@ -17712,7 +17727,7 @@
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:30",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "이진우의 손에 잡히는 경제",
@@ -17854,16 +17869,16 @@
   "부산MBC 표준FM": {
     "friday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "생방송 자갈치 아지매",
@@ -17937,16 +17952,16 @@
     ],
     "saturday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:05",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "우리 영화볼래요?",
@@ -18026,16 +18041,16 @@
     ],
     "sunday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -18105,16 +18120,16 @@
     ],
     "weekday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
         "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "생방송 자갈치 아지매",
@@ -18460,16 +18475,16 @@
   "포항MBC 표준FM": {
     "friday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -18540,16 +18555,16 @@
     ],
     "saturday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -18614,16 +18629,16 @@
     ],
     "sunday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -18688,16 +18703,16 @@
     ],
     "weekday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -18770,10 +18785,10 @@
   "MBC경남 표준FM": {
     "friday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "FM 아침의 행진",
@@ -18845,16 +18860,16 @@
     ],
     "saturday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -18919,16 +18934,16 @@
     ],
     "sunday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -18993,10 +19008,10 @@
     ],
     "weekday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "FM 아침의 행진",
@@ -19070,16 +19085,16 @@
   "MBC충북 표준FM": {
     "friday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -19148,16 +19163,16 @@
     ],
     "saturday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -19222,16 +19237,16 @@
     ],
     "sunday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -19296,16 +19311,16 @@
     ],
     "weekday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -19668,16 +19683,16 @@
   "안동MBC 표준FM": {
     "friday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -19747,16 +19762,16 @@
     ],
     "saturday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -19820,16 +19835,16 @@
     ],
     "sunday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -19893,16 +19908,16 @@
     ],
     "weekday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -19974,16 +19989,16 @@
   "울산MBC 표준FM": {
     "friday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -20060,16 +20075,16 @@
     ],
     "saturday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -20134,16 +20149,16 @@
     ],
     "sunday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -20208,16 +20223,16 @@
     ],
     "weekday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -20570,16 +20585,16 @@
   "대구MBC 표준FM": {
     "friday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -20662,16 +20677,16 @@
     ],
     "saturday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -20736,16 +20751,16 @@
     ],
     "sunday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -20810,16 +20825,16 @@
     ],
     "weekday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -21174,16 +21189,16 @@
   "전주MBC 표준FM": {
     "friday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -21272,16 +21287,16 @@
     ],
     "saturday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -21352,16 +21367,16 @@
     ],
     "sunday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -21432,16 +21447,16 @@
     ],
     "weekday": [
       {
-        "title": "라디오 북클럽 고아성입니다",
-        "start": "06:05",
+        "title": "아침&뉴스, 류수민입니다",
+        "start": "06:15",
         "end": "07:00",
-        "image": "https://img.imbc.com/adams/Program/20253/133867355374642253_Big_C.png"
+        "image": "https://img.imbc.com/adams/Program/202511/134068786584519045_Big_C.png"
       },
       {
         "title": "김종배의 시선집중",
         "start": "07:05",
-        "end": "08:00",
-        "image": "https://img.imbc.com/adams/Program/20227/133017129433196592_Big_C.png"
+        "end": "08:30",
+        "image": "https://img.imbc.com/adams/Program/20227/133017128834888391_Big_C.png"
       },
       {
         "title": "권용주, 강다솜의 차카차카",
@@ -21938,9 +21953,10 @@
         "image": "http://img2.sbs.co.kr/img/sbs_cms/PG/2020/07/06/PG72653161_w640_h360.jpg"
       },
       {
-        "title": "아름다운 이 아침, 봉태규입니다 파워FM 30주년 특집 <파워30>",
+        "title": "아름다운 이 아침, 봉태규입니다",
         "start": "09:00",
-        "end": "11:00"
+        "end": "11:00",
+        "image": "https://img2.sbs.co.kr/img/sbs_cms/WE/2024/03/13/X1S1710304371178-640-360.jpg"
       },
       {
         "title": "돈워리, 비해피",

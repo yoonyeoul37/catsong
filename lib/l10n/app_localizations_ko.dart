@@ -1528,7 +1528,37 @@ class AppLocalizationsKo extends AppLocalizations {
   String get menuHeadMusic => '내 음악';
 
   @override
-  String get catRestSub => '백색소음 · 집중 소리 (준비 중)';
+  String get catRestSub => '잠들기 · 집중 · 쉼 음악';
+
+  @override
+  String get sleepTabLabel => '잠들기';
+
+  @override
+  String get breakTabLabel => '쉼';
+
+  @override
+  String get rest01Title => '포근한 펠트 피아노';
+
+  @override
+  String get rest02Title => '고요한 밤 피아노';
+
+  @override
+  String get rest03Title => '한밤의 녹턴';
+
+  @override
+  String get rest04Title => '오르골 자장가';
+
+  @override
+  String get rest05Title => '떠다니는 음표';
+
+  @override
+  String get rest06Title => '구름 위를 걷는 밤';
+
+  @override
+  String get rest07Title => '잔잔한 저녁 피아노';
+
+  @override
+  String get rest08Title => '꿈결 피아노';
 
   @override
   String get homeSoundsHeader => '이런 소리는 어때요?';
@@ -4518,6 +4548,66 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get nature15Desc => '넓은 강물이 잔잔하게 흐르는 소리로 편안한 휴식을 느껴보세요';
+
+  @override
+  String get nature16Name => '딱따구리와 봄 숲';
+
+  @override
+  String get nature16Desc => '나무를 두드리는 딱따구리와 봄 숲 새소리로 상쾌한 아침을 느껴보세요';
+
+  @override
+  String get nature17Name => '숲속 뻐꾸기';
+
+  @override
+  String get nature17Desc => '여름 숲에 울려 퍼지는 뻐꾸기 소리로 한가로운 시골을 느껴보세요';
+
+  @override
+  String get nature18Name => '바람 부는 숲';
+
+  @override
+  String get nature18Desc => '나뭇잎을 스치는 바람과 멀리서 들리는 새소리로 차분하게 쉬어가요';
+
+  @override
+  String get nature19Name => '타닥이는 장작불';
+
+  @override
+  String get nature19Desc => '타닥타닥 장작이 타는 소리로 따뜻하고 아늑한 밤을 보내세요';
+
+  @override
+  String get nature20Name => '벽난로';
+
+  @override
+  String get nature20Desc => '벽난로 장작이 은은하게 타는 소리로 포근한 휴식을 느껴보세요';
+
+  @override
+  String get nature21Name => '졸졸 흐르는 개울';
+
+  @override
+  String get nature21Desc => '일정하게 졸졸 흐르는 개울물 소리로 편안하게 잠들어보세요';
+
+  @override
+  String get nature22Name => '숲속 개울';
+
+  @override
+  String get nature22Desc => '숲속 작은 개울이 돌 사이로 흐르는 생생한 물소리를 느껴보세요';
+
+  @override
+  String get nature23Name => '바위에 찰랑이는 물결';
+
+  @override
+  String get nature23Desc => '바위에 부드럽게 찰랑이는 물결 소리로 마음을 편안하게 해줘요';
+
+  @override
+  String get nature24Name => '아침 바다와 새소리';
+
+  @override
+  String get nature24Desc => '잔잔한 아침 바다와 새소리가 어우러져 상쾌한 하루를 열어줘요';
+
+  @override
+  String get nature25Name => '해변의 갈매기';
+
+  @override
+  String get nature25Desc => '파도 소리와 갈매기 울음이 어우러진 한적한 해변을 느껴보세요';
 
   @override
   String get langNameKo => '한국어';

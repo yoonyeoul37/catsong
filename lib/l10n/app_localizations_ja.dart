@@ -1529,7 +1529,37 @@ class AppLocalizationsJa extends AppLocalizations {
   String get menuHeadMusic => 'マイミュージック';
 
   @override
-  String get catRestSub => 'ホワイトノイズ・集中（準備中）';
+  String get catRestSub => '眠り・集中・くつろぎの音楽';
+
+  @override
+  String get sleepTabLabel => '眠り';
+
+  @override
+  String get breakTabLabel => 'くつろぎ';
+
+  @override
+  String get rest01Title => 'やわらかなフェルトピアノ';
+
+  @override
+  String get rest02Title => '静かな夜のピアノ';
+
+  @override
+  String get rest03Title => '真夜中のノクターン';
+
+  @override
+  String get rest04Title => 'オルゴールの子守唄';
+
+  @override
+  String get rest05Title => '浮かぶ音符';
+
+  @override
+  String get rest06Title => '雲の上を歩く夜';
+
+  @override
+  String get rest07Title => 'おだやかな夕べのピアノ';
+
+  @override
+  String get rest08Title => '夢見るピアノ';
 
   @override
   String get homeSoundsHeader => 'こんな音はいかが？';
@@ -4514,6 +4544,66 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get nature15Desc => '広い川が静かに流れる音で、ゆったり休めます';
+
+  @override
+  String get nature16Name => 'キツツキと春の森';
+
+  @override
+  String get nature16Desc => '木をつつくキツツキと春の森の鳥の声';
+
+  @override
+  String get nature17Name => '森のカッコウ';
+
+  @override
+  String get nature17Desc => '夏の森に響くカッコウの声';
+
+  @override
+  String get nature18Name => '風の森';
+
+  @override
+  String get nature18Desc => '木の葉を揺らす風と遠くの鳥の声';
+
+  @override
+  String get nature19Name => 'パチパチ薪の火';
+
+  @override
+  String get nature19Desc => '薪がパチパチ燃える温かな音';
+
+  @override
+  String get nature20Name => '暖炉';
+
+  @override
+  String get nature20Desc => '静かに燃える暖炉でほっとひと息';
+
+  @override
+  String get nature21Name => 'さらさら小川';
+
+  @override
+  String get nature21Desc => '一定に流れる小川の音でぐっすり';
+
+  @override
+  String get nature22Name => '森の小川';
+
+  @override
+  String get nature22Desc => '石の間を流れる森の小さな小川';
+
+  @override
+  String get nature23Name => '岩に寄せるさざ波';
+
+  @override
+  String get nature23Desc => '岩にやさしく寄せるさざ波の音';
+
+  @override
+  String get nature24Name => '朝の海と鳥の声';
+
+  @override
+  String get nature24Desc => '穏やかな朝の海と鳥のさえずり';
+
+  @override
+  String get nature25Name => '浜辺のカモメ';
+
+  @override
+  String get nature25Desc => '波とカモメの声が響く静かな浜辺';
 
   @override
   String get langNameKo => '韓国語';

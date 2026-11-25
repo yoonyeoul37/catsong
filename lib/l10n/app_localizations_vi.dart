@@ -1548,7 +1548,37 @@ class AppLocalizationsVi extends AppLocalizations {
   String get menuHeadMusic => 'Nhạc của tôi';
 
   @override
-  String get catRestSub => 'Tiếng ồn trắng · Tập trung (sắp có)';
+  String get catRestSub => 'Nhạc ngủ · tập trung · thư giãn';
+
+  @override
+  String get sleepTabLabel => 'Ngủ';
+
+  @override
+  String get breakTabLabel => 'Thư giãn';
+
+  @override
+  String get rest01Title => 'Piano nỉ ấm áp';
+
+  @override
+  String get rest02Title => 'Piano đêm yên tĩnh';
+
+  @override
+  String get rest03Title => 'Dạ khúc nửa đêm';
+
+  @override
+  String get rest04Title => 'Hộp nhạc ru ngủ';
+
+  @override
+  String get rest05Title => 'Nốt nhạc bồng bềnh';
+
+  @override
+  String get rest06Title => 'Dạo bước trên mây';
+
+  @override
+  String get rest07Title => 'Piano chiều êm dịu';
+
+  @override
+  String get rest08Title => 'Piano mộng mơ';
 
   @override
   String get homeSoundsHeader => 'Nghe thử những âm thanh này?';
@@ -4721,6 +4751,66 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get nature15Desc =>
       'Dòng sông rộng chảy êm đềm cho giây phút nghỉ ngơi bình yên';
+
+  @override
+  String get nature16Name => 'Chim gõ kiến rừng xuân';
+
+  @override
+  String get nature16Desc => 'Chim gõ kiến giữa tiếng chim rừng mùa xuân';
+
+  @override
+  String get nature17Name => 'Chim cu gáy trong rừng';
+
+  @override
+  String get nature17Desc => 'Tiếng chim cu vang khắp rừng mùa hè';
+
+  @override
+  String get nature18Name => 'Rừng lộng gió';
+
+  @override
+  String get nature18Desc => 'Gió lùa qua lá và tiếng chim xa xa';
+
+  @override
+  String get nature19Name => 'Củi cháy lách tách';
+
+  @override
+  String get nature19Desc => 'Tiếng củi cháy lách tách ấm áp';
+
+  @override
+  String get nature20Name => 'Lò sưởi';
+
+  @override
+  String get nature20Desc => 'Lò sưởi cháy nhẹ cho giây phút ấm cúng';
+
+  @override
+  String get nature21Name => 'Suối róc rách';
+
+  @override
+  String get nature21Desc => 'Tiếng suối chảy đều giúp bạn dễ ngủ';
+
+  @override
+  String get nature22Name => 'Suối trong rừng';
+
+  @override
+  String get nature22Desc => 'Dòng suối nhỏ chảy qua những hòn đá';
+
+  @override
+  String get nature23Name => 'Nước vỗ vào đá';
+
+  @override
+  String get nature23Desc => 'Nước vỗ nhẹ nhàng vào những tảng đá';
+
+  @override
+  String get nature24Name => 'Biển sáng và tiếng chim';
+
+  @override
+  String get nature24Desc => 'Biển sáng yên bình cùng tiếng chim';
+
+  @override
+  String get nature25Name => 'Hải âu trên bãi biển';
+
+  @override
+  String get nature25Desc => 'Sóng và hải âu trên bãi biển yên tĩnh';
 
   @override
   String get langNameKo => 'Tiếng Hàn';

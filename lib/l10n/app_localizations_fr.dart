@@ -1550,7 +1550,37 @@ class AppLocalizationsFr extends AppLocalizations {
   String get menuHeadMusic => 'Ma musique';
 
   @override
-  String get catRestSub => 'Bruit blanc · Concentration (bientôt)';
+  String get catRestSub => 'Musique pour dormir · se concentrer · se détendre';
+
+  @override
+  String get sleepTabLabel => 'Dormir';
+
+  @override
+  String get breakTabLabel => 'Détente';
+
+  @override
+  String get rest01Title => 'Piano feutré tout doux';
+
+  @override
+  String get rest02Title => 'Piano de nuit calme';
+
+  @override
+  String get rest03Title => 'Nocturne de minuit';
+
+  @override
+  String get rest04Title => 'Berceuse en boîte à musique';
+
+  @override
+  String get rest05Title => 'Notes flottantes';
+
+  @override
+  String get rest06Title => 'Marcher sur les nuages';
+
+  @override
+  String get rest07Title => 'Piano du soir paisible';
+
+  @override
+  String get rest08Title => 'Piano rêveur';
 
   @override
   String get homeSoundsHeader => 'Et si vous écoutiez ces sons ?';
@@ -4754,6 +4784,70 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get nature15Desc =>
       'Une large rivière qui coule paisiblement pour un repos serein';
+
+  @override
+  String get nature16Name => 'Pic dans les bois au printemps';
+
+  @override
+  String get nature16Desc =>
+      'Un pic qui tambourine parmi les oiseaux du printemps';
+
+  @override
+  String get nature17Name => 'Coucou en forêt';
+
+  @override
+  String get nature17Desc => 'Un coucou qui chante dans la forêt d\'été';
+
+  @override
+  String get nature18Name => 'Forêt venteuse';
+
+  @override
+  String get nature18Desc =>
+      'Le vent dans les feuilles et des chants lointains';
+
+  @override
+  String get nature19Name => 'Bois qui crépite';
+
+  @override
+  String get nature19Desc => 'Le doux crépitement du bois qui brûle';
+
+  @override
+  String get nature20Name => 'Cheminée';
+
+  @override
+  String get nature20Desc =>
+      'Une cheminée qui brûle doucement pour se détendre';
+
+  @override
+  String get nature21Name => 'Ruisseau qui murmure';
+
+  @override
+  String get nature21Desc => 'Un ruisseau régulier pour s\'endormir';
+
+  @override
+  String get nature22Name => 'Ruisseau en forêt';
+
+  @override
+  String get nature22Desc => 'Un petit ruisseau qui coule entre les pierres';
+
+  @override
+  String get nature23Name => 'Clapotis sur les rochers';
+
+  @override
+  String get nature23Desc => 'L\'eau qui clapote doucement contre les rochers';
+
+  @override
+  String get nature24Name => 'Mer du matin et oiseaux';
+
+  @override
+  String get nature24Desc =>
+      'Une mer calme au matin avec des chants d\'oiseaux';
+
+  @override
+  String get nature25Name => 'Mouettes sur la plage';
+
+  @override
+  String get nature25Desc => 'Vagues et mouettes sur une plage tranquille';
 
   @override
   String get langNameKo => 'Coréen';

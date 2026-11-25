@@ -52,7 +52,7 @@ class ArtProvider : ContentProvider() {
             val bmp = try {
                 when (uri.path?.trim('/')) {
                     "tile" -> tile(uri.getQueryParameter("t") ?: "", uri.getQueryParameter("s") ?: "", color(uri))
-                    "web" -> web(uri.getQueryParameter("u") ?: "", color(uri))
+                    "web" -> web(uri.getQueryParameter("u") ?: "", color(uri), uri.getQueryParameter("f") == "1")
                         ?: tile(initials(uri.getQueryParameter("t") ?: ""), "", color(uri))
                     "asset" -> asset(uri.getQueryParameter("p") ?: "")
                     "icon" -> icon(uri.getQueryParameter("k") ?: "", color(uri))
@@ -219,7 +219,7 @@ class ArtProvider : ContentProvider() {
     }
 
     /// 인터넷 그림 받기 (4초 안에, 2MB까지) — 작은 로고는 색 칸 가운데에 얹기
-    private fun web(url: String, c: Int): Bitmap? {
+    private fun web(url: String, c: Int, fit: Boolean = false): Bitmap? {
         if (!url.startsWith("http://") && !url.startsWith("https://")) return null
         val con = (URL(url).openConnection() as HttpURLConnection).apply {
             connectTimeout = 4000; readTimeout = 4000; instanceFollowRedirects = true
@@ -248,7 +248,33 @@ class ArtProvider : ContentProvider() {
         while (maxOf(o.outWidth, o.outHeight) / (s * 2) >= 512) s *= 2
         val src = BitmapFactory.decodeByteArray(bytes, 0, bytes.size,
             BitmapFactory.Options().apply { inSampleSize = s }) ?: return null
-        return if (maxOf(src.width, src.height) < 160) onTile(src, c) else square(src, 512)
+        return if (maxOf(src.width, src.height) < 160) onTile(src, c) else if (fit) fitSquare(src, 512) else square(src, 512)
+    }
+
+    /// 사진 전체를 네모 안에 (안 잘리게) — 남는 곳은 같은 사진을 흐리게 크게 깔아 채움
+    private fun fitSquare(src: Bitmap, max: Int): Bitmap {
+        val n = minOf(max, maxOf(src.width, src.height))
+        val b = Bitmap.createBitmap(n, n, Bitmap.Config.ARGB_8888)
+        val cv = Canvas(b)
+        val paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.ANTI_ALIAS_FLAG)
+        // 뒤: 가운데를 아주 작게 줄였다가 크게 늘리면 흐린 사진이 됨
+        val side = minOf(src.width, src.height)
+        val l = (src.width - side) / 2
+        val t = (src.height - side) / 2
+        val tiny = Bitmap.createBitmap(12, 12, Bitmap.Config.ARGB_8888)
+        Canvas(tiny).drawBitmap(src, Rect(l, t, l + side, t + side), Rect(0, 0, 12, 12), paint)
+        val mid = Bitmap.createScaledBitmap(tiny, 48, 48, true) // 두 번 늘려서 더 부드럽게
+        cv.drawBitmap(mid, null, Rect(0, 0, n, n), paint)
+        tiny.recycle()
+        mid.recycle()
+        cv.drawColor(0x33000000) // 흐린 배경 살짝 어둡게 (앞 사진이 또렷하게)
+        // 앞: 사진 전체
+        val k = n.toFloat() / maxOf(src.width, src.height)
+        val w = src.width * k
+        val h = src.height * k
+        cv.drawBitmap(src, null, RectF((n - w) / 2f, (n - h) / 2f, (n + w) / 2f, (n + h) / 2f), paint)
+        src.recycle()
+        return b
     }
 
     /// 작은 로고: 흰 칸 가운데에 (로고가 잘 보이게)

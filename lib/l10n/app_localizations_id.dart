@@ -1550,7 +1550,37 @@ class AppLocalizationsId extends AppLocalizations {
   String get menuHeadMusic => 'Musikku';
 
   @override
-  String get catRestSub => 'White noise · Fokus (segera)';
+  String get catRestSub => 'Musik tidur · fokus · santai';
+
+  @override
+  String get sleepTabLabel => 'Tidur';
+
+  @override
+  String get breakTabLabel => 'Santai';
+
+  @override
+  String get rest01Title => 'Piano felt yang hangat';
+
+  @override
+  String get rest02Title => 'Piano malam yang tenang';
+
+  @override
+  String get rest03Title => 'Nokturno tengah malam';
+
+  @override
+  String get rest04Title => 'Nina bobo kotak musik';
+
+  @override
+  String get rest05Title => 'Nada yang melayang';
+
+  @override
+  String get rest06Title => 'Berjalan di atas awan';
+
+  @override
+  String get rest07Title => 'Piano senja yang tenang';
+
+  @override
+  String get rest08Title => 'Piano mimpi';
 
   @override
   String get homeSoundsHeader => 'Bagaimana dengan suara ini?';
@@ -4729,6 +4759,66 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get nature15Desc =>
       'Sungai lebar yang mengalir tenang untuk istirahat yang damai';
+
+  @override
+  String get nature16Name => 'Pelatuk di hutan musim semi';
+
+  @override
+  String get nature16Desc => 'Pelatuk mematuk di antara burung musim semi';
+
+  @override
+  String get nature17Name => 'Burung kukuk di hutan';
+
+  @override
+  String get nature17Desc => 'Burung kukuk berkicau di hutan musim panas';
+
+  @override
+  String get nature18Name => 'Hutan berangin';
+
+  @override
+  String get nature18Desc => 'Angin di dedaunan dan kicau burung di kejauhan';
+
+  @override
+  String get nature19Name => 'Kayu bakar berderak';
+
+  @override
+  String get nature19Desc => 'Derak hangat kayu bakar yang menyala';
+
+  @override
+  String get nature20Name => 'Perapian';
+
+  @override
+  String get nature20Desc => 'Perapian yang menyala tenang untuk bersantai';
+
+  @override
+  String get nature21Name => 'Sungai kecil gemericik';
+
+  @override
+  String get nature21Desc => 'Aliran sungai yang tenang untuk tidur nyenyak';
+
+  @override
+  String get nature22Name => 'Sungai di hutan';
+
+  @override
+  String get nature22Desc => 'Sungai kecil mengalir di antara bebatuan';
+
+  @override
+  String get nature23Name => 'Air di bebatuan';
+
+  @override
+  String get nature23Desc => 'Air yang menepuk lembut bebatuan';
+
+  @override
+  String get nature24Name => 'Laut pagi dan burung';
+
+  @override
+  String get nature24Desc => 'Laut pagi yang tenang dengan kicau burung';
+
+  @override
+  String get nature25Name => 'Camar di pantai';
+
+  @override
+  String get nature25Desc => 'Ombak dan camar di pantai yang sepi';
 
   @override
   String get langNameKo => 'Korea';

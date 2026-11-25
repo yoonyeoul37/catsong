@@ -3112,8 +3112,68 @@ abstract class AppLocalizations {
   /// No description provided for @catRestSub.
   ///
   /// In ko, this message translates to:
-  /// **'백색소음 · 집중 소리 (준비 중)'**
+  /// **'잠들기 · 집중 · 쉼 음악'**
   String get catRestSub;
+
+  /// No description provided for @sleepTabLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'잠들기'**
+  String get sleepTabLabel;
+
+  /// No description provided for @breakTabLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'쉼'**
+  String get breakTabLabel;
+
+  /// No description provided for @rest01Title.
+  ///
+  /// In ko, this message translates to:
+  /// **'포근한 펠트 피아노'**
+  String get rest01Title;
+
+  /// No description provided for @rest02Title.
+  ///
+  /// In ko, this message translates to:
+  /// **'고요한 밤 피아노'**
+  String get rest02Title;
+
+  /// No description provided for @rest03Title.
+  ///
+  /// In ko, this message translates to:
+  /// **'한밤의 녹턴'**
+  String get rest03Title;
+
+  /// No description provided for @rest04Title.
+  ///
+  /// In ko, this message translates to:
+  /// **'오르골 자장가'**
+  String get rest04Title;
+
+  /// No description provided for @rest05Title.
+  ///
+  /// In ko, this message translates to:
+  /// **'떠다니는 음표'**
+  String get rest05Title;
+
+  /// No description provided for @rest06Title.
+  ///
+  /// In ko, this message translates to:
+  /// **'구름 위를 걷는 밤'**
+  String get rest06Title;
+
+  /// No description provided for @rest07Title.
+  ///
+  /// In ko, this message translates to:
+  /// **'잔잔한 저녁 피아노'**
+  String get rest07Title;
+
+  /// No description provided for @rest08Title.
+  ///
+  /// In ko, this message translates to:
+  /// **'꿈결 피아노'**
+  String get rest08Title;
 
   /// No description provided for @homeSoundsHeader.
   ///
@@ -8677,6 +8737,126 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'넓은 강물이 잔잔하게 흐르는 소리로 편안한 휴식을 느껴보세요'**
   String get nature15Desc;
+
+  /// No description provided for @nature16Name.
+  ///
+  /// In ko, this message translates to:
+  /// **'딱따구리와 봄 숲'**
+  String get nature16Name;
+
+  /// No description provided for @nature16Desc.
+  ///
+  /// In ko, this message translates to:
+  /// **'나무를 두드리는 딱따구리와 봄 숲 새소리로 상쾌한 아침을 느껴보세요'**
+  String get nature16Desc;
+
+  /// No description provided for @nature17Name.
+  ///
+  /// In ko, this message translates to:
+  /// **'숲속 뻐꾸기'**
+  String get nature17Name;
+
+  /// No description provided for @nature17Desc.
+  ///
+  /// In ko, this message translates to:
+  /// **'여름 숲에 울려 퍼지는 뻐꾸기 소리로 한가로운 시골을 느껴보세요'**
+  String get nature17Desc;
+
+  /// No description provided for @nature18Name.
+  ///
+  /// In ko, this message translates to:
+  /// **'바람 부는 숲'**
+  String get nature18Name;
+
+  /// No description provided for @nature18Desc.
+  ///
+  /// In ko, this message translates to:
+  /// **'나뭇잎을 스치는 바람과 멀리서 들리는 새소리로 차분하게 쉬어가요'**
+  String get nature18Desc;
+
+  /// No description provided for @nature19Name.
+  ///
+  /// In ko, this message translates to:
+  /// **'타닥이는 장작불'**
+  String get nature19Name;
+
+  /// No description provided for @nature19Desc.
+  ///
+  /// In ko, this message translates to:
+  /// **'타닥타닥 장작이 타는 소리로 따뜻하고 아늑한 밤을 보내세요'**
+  String get nature19Desc;
+
+  /// No description provided for @nature20Name.
+  ///
+  /// In ko, this message translates to:
+  /// **'벽난로'**
+  String get nature20Name;
+
+  /// No description provided for @nature20Desc.
+  ///
+  /// In ko, this message translates to:
+  /// **'벽난로 장작이 은은하게 타는 소리로 포근한 휴식을 느껴보세요'**
+  String get nature20Desc;
+
+  /// No description provided for @nature21Name.
+  ///
+  /// In ko, this message translates to:
+  /// **'졸졸 흐르는 개울'**
+  String get nature21Name;
+
+  /// No description provided for @nature21Desc.
+  ///
+  /// In ko, this message translates to:
+  /// **'일정하게 졸졸 흐르는 개울물 소리로 편안하게 잠들어보세요'**
+  String get nature21Desc;
+
+  /// No description provided for @nature22Name.
+  ///
+  /// In ko, this message translates to:
+  /// **'숲속 개울'**
+  String get nature22Name;
+
+  /// No description provided for @nature22Desc.
+  ///
+  /// In ko, this message translates to:
+  /// **'숲속 작은 개울이 돌 사이로 흐르는 생생한 물소리를 느껴보세요'**
+  String get nature22Desc;
+
+  /// No description provided for @nature23Name.
+  ///
+  /// In ko, this message translates to:
+  /// **'바위에 찰랑이는 물결'**
+  String get nature23Name;
+
+  /// No description provided for @nature23Desc.
+  ///
+  /// In ko, this message translates to:
+  /// **'바위에 부드럽게 찰랑이는 물결 소리로 마음을 편안하게 해줘요'**
+  String get nature23Desc;
+
+  /// No description provided for @nature24Name.
+  ///
+  /// In ko, this message translates to:
+  /// **'아침 바다와 새소리'**
+  String get nature24Name;
+
+  /// No description provided for @nature24Desc.
+  ///
+  /// In ko, this message translates to:
+  /// **'잔잔한 아침 바다와 새소리가 어우러져 상쾌한 하루를 열어줘요'**
+  String get nature24Desc;
+
+  /// No description provided for @nature25Name.
+  ///
+  /// In ko, this message translates to:
+  /// **'해변의 갈매기'**
+  String get nature25Name;
+
+  /// No description provided for @nature25Desc.
+  ///
+  /// In ko, this message translates to:
+  /// **'파도 소리와 갈매기 울음이 어우러진 한적한 해변을 느껴보세요'**
+  String get nature25Desc;
 
   /// No description provided for @langNameKo.
   ///

@@ -8,6 +8,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/song.dart';
 import '../services/nature_overlay.dart';
+import '../services/nature_cache.dart';
 import '../services/sound_effects.dart';
 import '../services/cast_service.dart';
 import '../services/loudness.dart';
@@ -19,6 +20,7 @@ import '../utils/no_album_helper.dart';
 import '../utils/widget_go.dart';
 import '../l10n/locale_holder.dart';
 import '../utils/nature_sound_catalog.dart';
+import '../utils/rest_music_catalog.dart';
 
 class PlayerProvider extends ChangeNotifier {
   final AudioPlayer _player = AudioPlayer(handleInterruptions: false);
@@ -237,6 +239,10 @@ class PlayerProvider extends ChangeNotifier {
   Future<void> Function()? natureResumer() {
     final name = _natureSoundName;
     if (name == null) return null;
+    if (isRestPlaying) {
+      final l = _restList, i = _restIndex;
+      return () => playRest(l, i); // 휴식 곡이면 그 곡 다시
+    }
     final i = natureSoundOrder.indexWhere((s) => s['name'] == name);
     if (i < 0) return null;
     final path = natureSoundOrder[i]['assetPath']!;
@@ -369,6 +375,10 @@ class PlayerProvider extends ChangeNotifier {
   }
 
   void _onSongCompleted() {
+    if (isRestPlaying) {
+      playAdjacentNatureSound(1); // 휴식 곡이 끝나면 다음 곡
+      return;
+    }
     if (podcastActive) return; // 팟캐스트는 끝나면 그대로 (podcast.dart가 정리)
     switch (_loopMode) {
       case LoopMode.one:
@@ -499,6 +509,27 @@ class PlayerProvider extends ChangeNotifier {
 
   String? _natureSoundName;
   String? get natureSoundName => _natureSoundName;
+
+  // ───── 휴식·집중 곡: 탭 안 곡을 차례로 (자연소리 재생기를 같이 씀) ─────
+  List<RestTrack> _restList = const [];
+  int _restIndex = -1;
+  bool _restStarting = false;
+  bool get isRestPlaying => _restIndex >= 0 && _natureSoundName != null;
+  RestTrack? get restTrack => isRestPlaying ? _restList[_restIndex] : null;
+
+  /// 휴식 곡 틀기: 끝나면 같은 목록의 다음 곡 (마지막 다음은 처음)
+  Future<void> playRest(List<RestTrack> list, int index) async {
+    if (list.isEmpty) return;
+    _restList = List.of(list);
+    _restIndex = index % _restList.length;
+    final t = _restList[_restIndex];
+    _restStarting = true;
+    try {
+      await playNatureSound(t.url, t.title);
+    } finally {
+      _restStarting = false;
+    }
+  }
   void Function(String assetPath, String displayName)? onNaturePlayed;
 
   void clearNatureSoundState() {
@@ -544,18 +575,33 @@ class PlayerProvider extends ChangeNotifier {
     {'name': '바위에 부딪히는 파도', 'assetPath': 'https://files.ssing.kr/nature-sounds/wave_rocks_sound.mp3'},
     {'name': '멀리서 들리는 갈매기', 'assetPath': 'https://files.ssing.kr/nature-sounds/wave_distant_seagull_sound.mp3'},
     {'name': '거친 파도', 'assetPath': 'https://files.ssing.kr/nature-sounds/wave_rough_sound.mp3'},
+    {'name': '바위에 찰랑이는 물결', 'assetPath': 'https://files.ssing.kr/nature-sounds/wave_lap_rocks_sound.mp3'},
+    {'name': '아침 바다와 새소리', 'assetPath': 'https://files.ssing.kr/nature-sounds/wave_morning_birds_sound.mp3'},
+    {'name': '해변의 갈매기', 'assetPath': 'https://files.ssing.kr/nature-sounds/wave_beach_gulls_sound.mp3'},
     {'name': '빗소리', 'assetPath': 'https://files.ssing.kr/nature-sounds/rain_sound.mp3'},
     {'name': '창문에 떨어지는 비', 'assetPath': 'https://files.ssing.kr/nature-sounds/rain_window_sound.mp3'},
     {'name': '숲속의 비와 새소리', 'assetPath': 'https://files.ssing.kr/nature-sounds/rain_forest_sound.mp3'},
     {'name': '숲속의 거센 밤비', 'assetPath': 'https://files.ssing.kr/nature-sounds/rain_night_forest_sound.mp3'},
     {'name': '새소리', 'assetPath': 'https://files.ssing.kr/nature-sounds/bird_sound.mp3'},
     {'name': '뻐꾸기와 숲속 새소리', 'assetPath': 'https://files.ssing.kr/nature-sounds/bird_forest_cuckoo_sound.mp3'},
+    {'name': '딱따구리와 봄 숲', 'assetPath': 'https://files.ssing.kr/nature-sounds/bird_woodpecker_sound.mp3'},
+    {'name': '숲속 뻐꾸기', 'assetPath': 'https://files.ssing.kr/nature-sounds/bird_cuckoo_forest_sound.mp3'},
+    {'name': '바람 부는 숲', 'assetPath': 'https://files.ssing.kr/nature-sounds/bird_cuckoo_wind_sound.mp3'},
     {'name': '모닥불', 'assetPath': 'https://files.ssing.kr/nature-sounds/campfire_sound.mp3'},
+    {'name': '타닥이는 장작불', 'assetPath': 'https://files.ssing.kr/nature-sounds/fire_crackling_sound.mp3'},
+    {'name': '벽난로', 'assetPath': 'https://files.ssing.kr/nature-sounds/fire_fireplace_sound.mp3'},
     {'name': '시냇물', 'assetPath': 'https://files.ssing.kr/nature-sounds/stream_sound.mp3'},
     {'name': '잔잔한 강물', 'assetPath': 'https://files.ssing.kr/nature-sounds/stream_river_sound.mp3'},
+    {'name': '졸졸 흐르는 개울', 'assetPath': 'https://files.ssing.kr/nature-sounds/stream_gentle_sound.mp3'},
+    {'name': '숲속 개울', 'assetPath': 'https://files.ssing.kr/nature-sounds/stream_forest_sound.mp3'},
   ];
 
   Future<void> playAdjacentNatureSound(int direction) async {
+    if (isRestPlaying) {
+      // 휴식 곡: 같은 목록 안에서 이전·다음
+      await playRest(_restList, (_restIndex + direction + _restList.length) % _restList.length);
+      return;
+    }
     final idx = natureSoundOrder.indexWhere((s) => s['name'] == _natureSoundName);
     if (idx == -1) return;
     final nextIdx = (idx + direction + natureSoundOrder.length) % natureSoundOrder.length;
@@ -565,12 +611,13 @@ class PlayerProvider extends ChangeNotifier {
 
   Future<void> playNatureSound(String assetPath, String displayName) async {
     _onStopRadio?.call();
+    if (!_restStarting) _restIndex = -1; // 자연소리를 틀면 휴식 곡 목록은 끝
     _natureSoundName = displayName;
     podcastActive = false;
     _listenSong = null;
     // 30초 이상 들었을 때만 "최근에 들었어요"에 넣기
     _natureTimer?.cancel();
-    _natureTimer = Timer(const Duration(seconds: 30), () {
+    if (_restIndex < 0) _natureTimer = Timer(const Duration(seconds: 30), () { // 휴식 곡은 자연 '최근'에 안 넣음
       if (_natureSoundName == displayName && _player.playing) {
         onNaturePlayed?.call(assetPath, displayName);
       }
@@ -587,7 +634,7 @@ class PlayerProvider extends ChangeNotifier {
       handler.setPodcastMode(false);
       // 못 받아 와서 멈춰 있으면(인터넷 없음 등) 재생 버튼 → 다시 받아 오기
       handler.onNaturePlay = () => _player.processingState == ProcessingState.idle
-          ? playNatureSound(assetPath, displayName)
+          ? (_restIndex >= 0 ? playRest(_restList, _restIndex) : playNatureSound(assetPath, displayName))
           : resumeNatureSound();
       handler.onNaturePause = () => pauseNatureSound();
       handler.onNatureNext = () => playAdjacentNatureSound(1);
@@ -595,14 +642,14 @@ class PlayerProvider extends ChangeNotifier {
       handler.updateMediaItem(MediaItem(
         id: assetPath,
         title: natureName(displayName),
-        artist: tr.natureSounds,
+        artist: _restIndex >= 0 ? tr.catRest : tr.natureSounds,
       ));
-      MediaArt.attachAsset(handler, MediaArt.natureImage(displayName), assetPath, displayName);
+      MediaArt.attachAsset(handler, _restIndex >= 0 ? 'assets/sleep_bg.jpg' : MediaArt.natureImage(displayName), assetPath, displayName);
     }
 
     try {
       final source = assetPath.startsWith('http')
-          ? LockCachingAudioSource(Uri.parse(assetPath))
+          ? await NatureCache.source(assetPath) // 받아 둔 파일 · 없으면 바로 틀고 뒤에서 한 번만 받기
           : AudioSource.asset(assetPath);
       _switching = true;
       try {
@@ -610,7 +657,7 @@ class PlayerProvider extends ChangeNotifier {
       } finally {
         _switching = false;
       }
-      await _player.setLoopMode(LoopMode.one);
+      await _player.setLoopMode(_restIndex >= 0 ? LoopMode.off : LoopMode.one); // 휴식 곡은 끝나면 다음 곡
       await _player.setSpeed(1.0);
       _setNorm(1.0); // 자연은 크기 맞추기 안 함
       await _player.play();
@@ -629,6 +676,7 @@ class PlayerProvider extends ChangeNotifier {
 
   Future<void> stopNatureSound() async {
     _natureSoundName = null;
+    _restIndex = -1;
     final handler = _audioHandler;
     if (handler is SimpleAudioHandler) {
       handler.setNatureMode(false);
@@ -1360,6 +1408,10 @@ class MediaArt {
   /// 자연소리: 이름에 맞는 사진
   static String natureImage(String name) {
     if (name.contains('비')) return 'assets/rest_rain.jpg';
+    if (name.contains('바다') || name.contains('물결')) return 'assets/rest_wave.jpg';
+    if (name.contains('장작') || name.contains('벽난로')) return 'assets/rest_fire.jpg';
+    if (name.contains('개울')) return 'assets/rest_stream.jpg';
+    if (name.contains('딱따구리') || name.contains('숲')) return 'assets/rest_bird.jpg';
     if (name.contains('파도') || name.contains('갈매기')) return 'assets/rest_wave.jpg';
     if (name.contains('모닥불')) return 'assets/rest_fire.jpg';
     if (name.contains('시냇물') || name.contains('강물')) return 'assets/rest_stream.jpg';

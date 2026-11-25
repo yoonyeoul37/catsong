@@ -328,6 +328,30 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'image': null,
     },
     {
+      'name': '바위에 찰랑이는 물결',
+      'icon': Icons.waves,
+      'color': Color(0xFF3D6E8C),
+      'description': '바위에 부드럽게 찰랑이는 물결 소리로 마음을 편안하게 해줘요',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/wave_lap_rocks_sound.mp3',
+      'image': null,
+    },
+    {
+      'name': '아침 바다와 새소리',
+      'icon': Icons.waves,
+      'color': Color(0xFF5B8FB0),
+      'description': '잔잔한 아침 바다와 새소리가 어우러져 상쾌한 하루를 열어줘요',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/wave_morning_birds_sound.mp3',
+      'image': null,
+    },
+    {
+      'name': '해변의 갈매기',
+      'icon': Icons.waves,
+      'color': Color(0xFF4A7BA6),
+      'description': '파도 소리와 갈매기 울음이 어우러진 한적한 해변을 느껴보세요',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/wave_beach_gulls_sound.mp3',
+      'image': null,
+    },
+    {
       'name': '빗소리',
       'icon': Icons.water_drop_outlined,
       'color': Color(0xFF3E5A78),
@@ -376,11 +400,51 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'image': 'assets/bird2.png',
     },
     {
+      'name': '딱따구리와 봄 숲',
+      'icon': Icons.forest_outlined,
+      'color': Color(0xFF5C7A5E),
+      'description': '나무를 두드리는 딱따구리와 봄 숲 새소리로 상쾌한 아침을 느껴보세요',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/bird_woodpecker_sound.mp3',
+      'image': 'assets/nature_bird_bg.png',
+    },
+    {
+      'name': '숲속 뻐꾸기',
+      'icon': Icons.forest_outlined,
+      'color': Color(0xFF5C7A5E),
+      'description': '여름 숲에 울려 퍼지는 뻐꾸기 소리로 한가로운 시골을 느껴보세요',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/bird_cuckoo_forest_sound.mp3',
+      'image': 'assets/bird2.png',
+    },
+    {
+      'name': '바람 부는 숲',
+      'icon': Icons.forest_outlined,
+      'color': Color(0xFF5C7A5E),
+      'description': '나뭇잎을 스치는 바람과 멀리서 들리는 새소리로 차분하게 쉬어가요',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/bird_cuckoo_wind_sound.mp3',
+      'image': 'assets/bird2.png',
+    },
+    {
       'name': '모닥불',
       'icon': Icons.local_fire_department_outlined,
       'color': Color(0xFFC97B4A),
       'description': '타닥타닥 장작 타는 소리는 아늑하고 포근한 분위기를 만들어줘요',
       'assetPath': 'https://files.ssing.kr/nature-sounds/campfire_sound.mp3',
+      'image': 'assets/nature_fire_bg.png',
+    },
+    {
+      'name': '타닥이는 장작불',
+      'icon': Icons.local_fire_department_outlined,
+      'color': Color(0xFFC97B4A),
+      'description': '타닥타닥 장작이 타는 소리로 따뜻하고 아늑한 밤을 보내세요',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/fire_crackling_sound.mp3',
+      'image': 'assets/nature_fire_bg.png',
+    },
+    {
+      'name': '벽난로',
+      'icon': Icons.local_fire_department_outlined,
+      'color': Color(0xFFC97B4A),
+      'description': '벽난로 장작이 은은하게 타는 소리로 포근한 휴식을 느껴보세요',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/fire_fireplace_sound.mp3',
       'image': 'assets/nature_fire_bg.png',
     },
     {
@@ -397,6 +461,22 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
       'color': Color(0xFF2C6BB3),
       'description': '넓은 강물이 잔잔하게 흐르는 소리로 편안한 휴식을 느껴보세요',
       'assetPath': 'https://files.ssing.kr/nature-sounds/stream_river_sound.mp3',
+      'image': 'assets/stream2.png',
+    },
+    {
+      'name': '졸졸 흐르는 개울',
+      'icon': Icons.water_outlined,
+      'color': Color(0xFF2C6BB3),
+      'description': '일정하게 졸졸 흐르는 개울물 소리로 편안하게 잠들어보세요',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/stream_gentle_sound.mp3',
+      'image': 'assets/nature_stream_bg.png',
+    },
+    {
+      'name': '숲속 개울',
+      'icon': Icons.water_outlined,
+      'color': Color(0xFF2C6BB3),
+      'description': '숲속 작은 개울이 돌 사이로 흐르는 생생한 물소리를 느껴보세요',
+      'assetPath': 'https://files.ssing.kr/nature-sounds/stream_forest_sound.mp3',
       'image': 'assets/stream2.png',
     },
   ];
@@ -436,7 +516,7 @@ class _NatureSoundDetailScreenState extends State<NatureSoundDetailScreen> {
     const farewellAsset = 'assets/greet_outro.mp3'; // 끝인사: 어느 언어나 멜로디 (한국어 목소리는 '파란소리 자료'에 보관)
     if (context.read<ThemeProvider>().voiceGreetingEnabled) { // 어느 언어나 멜로디
       final farewellPlayer = AudioPlayer();
-      farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
+      farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play()).catchError((Object _) {}); // 앱이 먼저 닫혀서 끊겨도 조용히 넘어가기
     }
 
     context.read<PlayerProvider>().player.setVolume(0.12);

@@ -1548,7 +1548,37 @@ class AppLocalizationsAr extends AppLocalizations {
   String get menuHeadMusic => 'موسيقاي';
 
   @override
-  String get catRestSub => 'ضوضاء بيضاء · تركيز (قريبًا)';
+  String get catRestSub => 'موسيقى للنوم · التركيز · الاسترخاء';
+
+  @override
+  String get sleepTabLabel => 'النوم';
+
+  @override
+  String get breakTabLabel => 'الاسترخاء';
+
+  @override
+  String get rest01Title => 'بيانو اللباد الدافئ';
+
+  @override
+  String get rest02Title => 'بيانو الليل الهادئ';
+
+  @override
+  String get rest03Title => 'نوكتورن منتصف الليل';
+
+  @override
+  String get rest04Title => 'تهويدة صندوق الموسيقى';
+
+  @override
+  String get rest05Title => 'نغمات عائمة';
+
+  @override
+  String get rest06Title => 'سير فوق الغيوم';
+
+  @override
+  String get rest07Title => 'بيانو المساء الهادئ';
+
+  @override
+  String get rest08Title => 'بيانو الأحلام';
 
   @override
   String get homeSoundsHeader => 'ما رأيك بهذه الأصوات؟';
@@ -4738,6 +4768,66 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get nature15Desc => 'نهر بطيء يتدفق عبر منظر هادئ';
+
+  @override
+  String get nature16Name => 'نقار الخشب في غابة الربيع';
+
+  @override
+  String get nature16Desc => 'نقار خشب ينقر بين طيور الربيع';
+
+  @override
+  String get nature17Name => 'الوقواق في الغابة';
+
+  @override
+  String get nature17Desc => 'صوت الوقواق في غابة صيفية';
+
+  @override
+  String get nature18Name => 'غابة عاصفة';
+
+  @override
+  String get nature18Desc => 'ريح بين الأوراق وتغريد بعيد';
+
+  @override
+  String get nature19Name => 'حطب يطقطق';
+
+  @override
+  String get nature19Desc => 'طقطقة دافئة لحطب مشتعل';
+
+  @override
+  String get nature20Name => 'المدفأة';
+
+  @override
+  String get nature20Desc => 'مدفأة هادئة لراحة دافئة';
+
+  @override
+  String get nature21Name => 'جدول خرير';
+
+  @override
+  String get nature21Desc => 'جدول يجري بهدوء ليساعدك على النوم';
+
+  @override
+  String get nature22Name => 'جدول الغابة';
+
+  @override
+  String get nature22Desc => 'جدول صغير يجري بين الحجارة';
+
+  @override
+  String get nature23Name => 'ماء على الصخور';
+
+  @override
+  String get nature23Desc => 'ماء يلامس الصخور بلطف';
+
+  @override
+  String get nature24Name => 'بحر الصباح والطيور';
+
+  @override
+  String get nature24Desc => 'بحر هادئ صباحًا مع تغريد الطيور';
+
+  @override
+  String get nature25Name => 'نوارس الشاطئ';
+
+  @override
+  String get nature25Desc => 'أمواج ونوارس على شاطئ هادئ';
 
   @override
   String get langNameKo => 'الكورية';

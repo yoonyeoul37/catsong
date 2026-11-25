@@ -7,6 +7,7 @@ import '../models/song.dart';
 import '../utils/nature_sound_catalog.dart';
 import '../l10n/locale_holder.dart';
 import 'player_provider.dart';
+import '../services/nature_cache.dart';
 
 /// 자연소리 5개(각자 반복 재생, 동시에 섞임) + 선택한 노래들(순서대로 이어서 재생, 끝나면 처음으로)
 /// 을 함께 트는 믹스 Provider.
@@ -268,10 +269,19 @@ class SoundMixProvider extends ChangeNotifier {
       final String? assetPath = _urlFor(key);
       if (assetPath == null) return;
       final source = assetPath.startsWith('http')
-          ? LockCachingAudioSource(Uri.parse(assetPath))
+          ? await NatureCache.source(assetPath) // 받아 둔 파일 · 없으면 바로 틀고 뒤에서 한 번만 받기
           : AudioSource.asset(assetPath);
-      await player.setAudioSource(source);
-      await player.setLoopMode(LoopMode.one);
+      try {
+        await player.setAudioSource(source);
+        await player.setLoopMode(LoopMode.one);
+      } catch (_) {
+        // 인터넷이 끊겨 못 불러오면 이 칸만 빼고 넘어감 (다음에 틀 때 다시)
+        _natureLayers.remove(key);
+        try {
+          await player.dispose();
+        } catch (_) {}
+        return;
+      }
     }
 
     if (!_isPlaying) return;

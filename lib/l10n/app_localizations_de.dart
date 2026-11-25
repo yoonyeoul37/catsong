@@ -1551,7 +1551,37 @@ class AppLocalizationsDe extends AppLocalizations {
   String get menuHeadMusic => 'Meine Musik';
 
   @override
-  String get catRestSub => 'Weißes Rauschen · Fokus (bald)';
+  String get catRestSub => 'Musik zum Schlafen · Fokus · Entspannen';
+
+  @override
+  String get sleepTabLabel => 'Schlafen';
+
+  @override
+  String get breakTabLabel => 'Entspannen';
+
+  @override
+  String get rest01Title => 'Sanftes Filzklavier';
+
+  @override
+  String get rest02Title => 'Stilles Nachtklavier';
+
+  @override
+  String get rest03Title => 'Mitternachtsnocturne';
+
+  @override
+  String get rest04Title => 'Spieluhr-Wiegenlied';
+
+  @override
+  String get rest05Title => 'Schwebende Töne';
+
+  @override
+  String get rest06Title => 'Über den Wolken';
+
+  @override
+  String get rest07Title => 'Ruhiges Abendklavier';
+
+  @override
+  String get rest08Title => 'Traumklavier';
 
   @override
   String get homeSoundsHeader => 'Wie wäre es mit diesen Klängen?';
@@ -4753,6 +4783,66 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get nature15Desc =>
       'Ein breiter, ruhig fließender Fluss für eine friedliche Pause';
+
+  @override
+  String get nature16Name => 'Specht im Frühlingswald';
+
+  @override
+  String get nature16Desc => 'Ein klopfender Specht zwischen Frühlingsvögeln';
+
+  @override
+  String get nature17Name => 'Kuckuck im Wald';
+
+  @override
+  String get nature17Desc => 'Ein Kuckuck ruft durch den Sommerwald';
+
+  @override
+  String get nature18Name => 'Wind im Wald';
+
+  @override
+  String get nature18Desc => 'Wind in den Blättern und ferner Vogelgesang';
+
+  @override
+  String get nature19Name => 'Knisterndes Holzfeuer';
+
+  @override
+  String get nature19Desc => 'Das warme Knistern von brennendem Holz';
+
+  @override
+  String get nature20Name => 'Kaminfeuer';
+
+  @override
+  String get nature20Desc => 'Ein sanft brennender Kamin zum Entspannen';
+
+  @override
+  String get nature21Name => 'Plätschernder Bach';
+
+  @override
+  String get nature21Desc => 'Ein gleichmäßiger Bach zum Einschlafen';
+
+  @override
+  String get nature22Name => 'Waldbach';
+
+  @override
+  String get nature22Desc => 'Ein kleiner Waldbach fließt über Steine';
+
+  @override
+  String get nature23Name => 'Wellen an Felsen';
+
+  @override
+  String get nature23Desc => 'Sanfte Wellen plätschern an die Felsen';
+
+  @override
+  String get nature24Name => 'Morgenmeer und Vögel';
+
+  @override
+  String get nature24Desc => 'Ruhiges Meer am Morgen mit Vogelgesang';
+
+  @override
+  String get nature25Name => 'Möwen am Strand';
+
+  @override
+  String get nature25Desc => 'Wellen und Möwen an einem ruhigen Strand';
 
   @override
   String get langNameKo => 'Koreanisch';

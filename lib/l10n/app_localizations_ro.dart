@@ -1548,7 +1548,37 @@ class AppLocalizationsRo extends AppLocalizations {
   String get menuHeadMusic => 'Muzica mea';
 
   @override
-  String get catRestSub => 'Zgomot alb · Concentrare (în curând)';
+  String get catRestSub => 'Muzică pentru somn · concentrare · relaxare';
+
+  @override
+  String get sleepTabLabel => 'Somn';
+
+  @override
+  String get breakTabLabel => 'Relaxare';
+
+  @override
+  String get rest01Title => 'Pian cu fetru liniștitor';
+
+  @override
+  String get rest02Title => 'Pian de noapte liniștită';
+
+  @override
+  String get rest03Title => 'Nocturnă de miezul nopții';
+
+  @override
+  String get rest04Title => 'Cântec de leagăn cu cutie muzicală';
+
+  @override
+  String get rest05Title => 'Note plutitoare';
+
+  @override
+  String get rest06Title => 'Plimbare pe nori';
+
+  @override
+  String get rest07Title => 'Pian de seară liniștită';
+
+  @override
+  String get rest08Title => 'Pian de vis';
 
   @override
   String get homeSoundsHeader => 'Ce zici de aceste sunete?';
@@ -4752,6 +4782,66 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get nature15Desc => 'Un râu lent care curge printr-un peisaj liniștit';
+
+  @override
+  String get nature16Name => 'Ciocănitoare în pădure';
+
+  @override
+  String get nature16Desc => 'O ciocănitoare printre păsările primăverii';
+
+  @override
+  String get nature17Name => 'Cuc în pădure';
+
+  @override
+  String get nature17Desc => 'Un cuc cântă în pădurea de vară';
+
+  @override
+  String get nature18Name => 'Pădure în vânt';
+
+  @override
+  String get nature18Desc => 'Vânt prin frunze și păsări în depărtare';
+
+  @override
+  String get nature19Name => 'Lemne care trosnesc';
+
+  @override
+  String get nature19Desc => 'Trosnetul cald al lemnelor care ard';
+
+  @override
+  String get nature20Name => 'Șemineu';
+
+  @override
+  String get nature20Desc => 'Un șemineu care arde liniștit pentru relaxare';
+
+  @override
+  String get nature21Name => 'Pârâu susurând';
+
+  @override
+  String get nature21Desc => 'Un pârâu constant care te ajută să adormi';
+
+  @override
+  String get nature22Name => 'Pârâu de pădure';
+
+  @override
+  String get nature22Desc => 'Un mic pârâu care curge printre pietre';
+
+  @override
+  String get nature23Name => 'Apă pe stânci';
+
+  @override
+  String get nature23Desc => 'Apa care se lovește ușor de stânci';
+
+  @override
+  String get nature24Name => 'Mare dimineața și păsări';
+
+  @override
+  String get nature24Desc => 'Mare liniștită dimineața cu cântec de păsări';
+
+  @override
+  String get nature25Name => 'Pescăruși pe plajă';
+
+  @override
+  String get nature25Desc => 'Valuri și pescăruși pe o plajă liniștită';
 
   @override
   String get langNameKo => 'Coreeană';

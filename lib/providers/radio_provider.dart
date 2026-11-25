@@ -638,6 +638,10 @@ class RadioProvider extends ChangeNotifier {
       _currentQueueIndex = qIdx;
       _startSchedule(station); // 편성표는 소리 연결을 기다리지 않고 바로 받기 시작
       notifyListeners();
+      // 라디오끼리 넘길 때: 차 화면 · 알림창 방송 이름부터 바로 (소리 연결을 기다리면 이름이 늦게 바뀜)
+      if (_simpleHandler?.isRadioMode == true) {
+        _simpleHandler?.setRadioMediaItem(title: station.name, artist: _mediaSubtitle(station), url: station.streamUrl);
+      }
 
       // 인터넷이 아예 없으면 바로 안내 (차 화면 · 알림창이 '재생 중'으로 멈춰 있지 않게)
       final net = await Connectivity().checkConnectivity();
@@ -1913,8 +1917,22 @@ class RadioProvider extends ChangeNotifier {
   /// 차 화면 재생 화면 둘째 줄: "지금 프로그램 · 다음 방송 12:00 다음 프로그램"
   /// 차에 연결돼 있을 때만 (아니면 null → 지금 글자 그대로) — 앱 재생 화면 '다음 방송'과 같은 규칙
   /// (편성표에서 지금 방송 다음 칸 · 오늘 마지막이면 첫 칸)
+  /// 차 화면 둘째 줄 (지금 방송 + [다음 방송]) — 한 번 나온 줄은 기억해 두고,
+  /// 편성표를 잠깐 다시 받는 중이어도 같은 줄 그대로 (나왔다 안 나왔다 안 하게)
+  final Map<String, String> _carLineCache = {};
   String? _carLine(String stationName, String nowTitle, String nowStart) {
-    if (!CarBrowse.inCarRecently || nowTitle.isEmpty) return null;
+    if (!CarBrowse.inCarDisplay || nowTitle.isEmpty) return null;
+    final key = '$stationName|$nowTitle';
+    final line = _carLineCalc(stationName, nowTitle, nowStart);
+    if (line != null) {
+      if (_carLineCache.length > 200) _carLineCache.clear();
+      _carLineCache[key] = line;
+      return line;
+    }
+    return _carLineCache[key];
+  }
+
+  String? _carLineCalc(String stationName, String nowTitle, String nowStart) {
     final list = _scheduleListMap[stationName];
     if (list == null || list.length < 2) return null;
     String titleOf(Map<String, dynamic> p) => (p['program_title'] ?? p['Title'] ?? p['title'] ?? '').toString();

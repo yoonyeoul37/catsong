@@ -1545,7 +1545,37 @@ class AppLocalizationsTh extends AppLocalizations {
   String get menuHeadMusic => 'เพลงของฉัน';
 
   @override
-  String get catRestSub => 'ไวต์นอยส์ · โฟกัส (เร็วๆ นี้)';
+  String get catRestSub => 'เพลงนอนหลับ · โฟกัส · ผ่อนคลาย';
+
+  @override
+  String get sleepTabLabel => 'นอนหลับ';
+
+  @override
+  String get breakTabLabel => 'ผ่อนคลาย';
+
+  @override
+  String get rest01Title => 'เปียโนสักหลาดแสนอบอุ่น';
+
+  @override
+  String get rest02Title => 'เปียโนยามค่ำคืนเงียบสงบ';
+
+  @override
+  String get rest03Title => 'เพลงราตรีเที่ยงคืน';
+
+  @override
+  String get rest04Title => 'เพลงกล่อมกล่องดนตรี';
+
+  @override
+  String get rest05Title => 'ตัวโน้ตล่องลอย';
+
+  @override
+  String get rest06Title => 'เดินบนก้อนเมฆ';
+
+  @override
+  String get rest07Title => 'เปียโนยามเย็นสงบ';
+
+  @override
+  String get rest08Title => 'เปียโนแห่งความฝัน';
 
   @override
   String get homeSoundsHeader => 'ลองฟังเสียงเหล่านี้ไหม';
@@ -4701,6 +4731,66 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get nature15Desc =>
       'แม่น้ำกว้างไหลเอื่อยอย่างสงบ เพื่อการพักผ่อนที่ผ่อนคลาย';
+
+  @override
+  String get nature16Name => 'นกหัวขวานในป่าฤดูใบไม้ผลิ';
+
+  @override
+  String get nature16Desc => 'นกหัวขวานเคาะต้นไม้ท่ามกลางเสียงนกในป่า';
+
+  @override
+  String get nature17Name => 'นกคุกคูในป่า';
+
+  @override
+  String get nature17Desc => 'เสียงนกคุกคูก้องในป่าฤดูร้อน';
+
+  @override
+  String get nature18Name => 'ป่าลมพัด';
+
+  @override
+  String get nature18Desc => 'ลมพัดผ่านใบไม้กับเสียงนกไกล ๆ';
+
+  @override
+  String get nature19Name => 'ฟืนปะทุ';
+
+  @override
+  String get nature19Desc => 'เสียงฟืนลุกไหม้ปะทุอย่างอบอุ่น';
+
+  @override
+  String get nature20Name => 'เตาผิง';
+
+  @override
+  String get nature20Desc => 'เตาผิงที่ลุกไหม้เบา ๆ ให้ผ่อนคลาย';
+
+  @override
+  String get nature21Name => 'ลำธารไหลริน';
+
+  @override
+  String get nature21Desc => 'เสียงลำธารไหลสม่ำเสมอช่วยให้หลับง่าย';
+
+  @override
+  String get nature22Name => 'ลำธารในป่า';
+
+  @override
+  String get nature22Desc => 'ลำธารเล็ก ๆ ไหลผ่านก้อนหิน';
+
+  @override
+  String get nature23Name => 'น้ำกระทบโขดหิน';
+
+  @override
+  String get nature23Desc => 'เสียงน้ำกระทบโขดหินเบา ๆ';
+
+  @override
+  String get nature24Name => 'ทะเลยามเช้ากับเสียงนก';
+
+  @override
+  String get nature24Desc => 'ทะเลยามเช้าสงบกับเสียงนก';
+
+  @override
+  String get nature25Name => 'นกนางนวลชายหาด';
+
+  @override
+  String get nature25Desc => 'คลื่นและนกนางนวลบนชายหาดเงียบสงบ';
 
   @override
   String get langNameKo => 'เกาหลี';

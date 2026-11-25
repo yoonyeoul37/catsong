@@ -1546,7 +1546,37 @@ class AppLocalizationsHu extends AppLocalizations {
   String get menuHeadMusic => 'Saját zenék';
 
   @override
-  String get catRestSub => 'Fehérzaj · Fókusz (hamarosan)';
+  String get catRestSub => 'Zene alváshoz · fókuszhoz · pihenéshez';
+
+  @override
+  String get sleepTabLabel => 'Alvás';
+
+  @override
+  String get breakTabLabel => 'Pihenés';
+
+  @override
+  String get rest01Title => 'Meghitt filces zongora';
+
+  @override
+  String get rest02Title => 'Csendes éjszakai zongora';
+
+  @override
+  String get rest03Title => 'Éjféli noktürn';
+
+  @override
+  String get rest04Title => 'Zenedobozos altató';
+
+  @override
+  String get rest05Title => 'Lebegő hangok';
+
+  @override
+  String get rest06Title => 'Séta a felhőkön';
+
+  @override
+  String get rest07Title => 'Nyugodt esti zongora';
+
+  @override
+  String get rest08Title => 'Álomszerű zongora';
 
   @override
   String get homeSoundsHeader => 'Milyenek ezek a hangok?';
@@ -4729,6 +4759,66 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get nature15Desc =>
       'Lassan, egyenletesen hömpölygő folyó egy csendes tájon';
+
+  @override
+  String get nature16Name => 'Harkály a tavaszi erdőben';
+
+  @override
+  String get nature16Desc => 'Kopogó harkály a tavaszi madarak között';
+
+  @override
+  String get nature17Name => 'Kakukk az erdőben';
+
+  @override
+  String get nature17Desc => 'Kakukk szól a nyári erdőben';
+
+  @override
+  String get nature18Name => 'Szeles erdő';
+
+  @override
+  String get nature18Desc => 'Szél a levelek közt és távoli madárdal';
+
+  @override
+  String get nature19Name => 'Pattogó tűzifa';
+
+  @override
+  String get nature19Desc => 'Az égő tűzifa meleg pattogása';
+
+  @override
+  String get nature20Name => 'Kandalló';
+
+  @override
+  String get nature20Desc => 'Csendesen égő kandalló a meghitt pihenéshez';
+
+  @override
+  String get nature21Name => 'Csobogó patak';
+
+  @override
+  String get nature21Desc => 'Egyenletes patakhang az elalváshoz';
+
+  @override
+  String get nature22Name => 'Erdei patak';
+
+  @override
+  String get nature22Desc => 'Kövek közt folyó kis erdei patak';
+
+  @override
+  String get nature23Name => 'Sziklákat nyaldosó víz';
+
+  @override
+  String get nature23Desc => 'A víz lágyan csapkodja a sziklákat';
+
+  @override
+  String get nature24Name => 'Reggeli tenger és madarak';
+
+  @override
+  String get nature24Desc => 'Nyugodt reggeli tenger madárdallal';
+
+  @override
+  String get nature25Name => 'Sirályok a parton';
+
+  @override
+  String get nature25Desc => 'Hullámok és sirályok egy csendes parton';
 
   @override
   String get langNameKo => 'Koreai';

@@ -1529,7 +1529,37 @@ class AppLocalizationsZh extends AppLocalizations {
   String get menuHeadMusic => '我的音乐';
 
   @override
-  String get catRestSub => '白噪音 · 专注（准备中）';
+  String get catRestSub => '入睡・专注・放松音乐';
+
+  @override
+  String get sleepTabLabel => '入睡';
+
+  @override
+  String get breakTabLabel => '放松';
+
+  @override
+  String get rest01Title => '温暖的毛毡钢琴';
+
+  @override
+  String get rest02Title => '宁静夜晚钢琴';
+
+  @override
+  String get rest03Title => '午夜夜曲';
+
+  @override
+  String get rest04Title => '音乐盒摇篮曲';
+
+  @override
+  String get rest05Title => '漂浮的音符';
+
+  @override
+  String get rest06Title => '漫步云端之夜';
+
+  @override
+  String get rest07Title => '平静的傍晚钢琴';
+
+  @override
+  String get rest08Title => '梦境钢琴';
 
   @override
   String get homeSoundsHeader => '来听听这些声音吧';
@@ -4509,6 +4539,66 @@ class AppLocalizationsZh extends AppLocalizations {
   String get nature15Desc => '宽阔河流平静流淌的声音，助你安心休息';
 
   @override
+  String get nature16Name => '春林啄木鸟';
+
+  @override
+  String get nature16Desc => '啄木鸟轻敲树干，伴着春天森林的鸟鸣';
+
+  @override
+  String get nature17Name => '林间布谷鸟';
+
+  @override
+  String get nature17Desc => '夏日森林里回荡的布谷鸟叫声';
+
+  @override
+  String get nature18Name => '风吹森林';
+
+  @override
+  String get nature18Desc => '风拂树叶，远处传来鸟鸣';
+
+  @override
+  String get nature19Name => '噼啪柴火';
+
+  @override
+  String get nature19Desc => '木柴噼啪燃烧的温暖声音';
+
+  @override
+  String get nature20Name => '壁炉';
+
+  @override
+  String get nature20Desc => '壁炉柴火静静燃烧，温暖放松';
+
+  @override
+  String get nature21Name => '潺潺小溪';
+
+  @override
+  String get nature21Desc => '稳定流淌的小溪声，帮助入眠';
+
+  @override
+  String get nature22Name => '林间小溪';
+
+  @override
+  String get nature22Desc => '森林小溪流过石间的清新水声';
+
+  @override
+  String get nature23Name => '拍打岩石的水波';
+
+  @override
+  String get nature23Desc => '水波轻轻拍打岩石的声音';
+
+  @override
+  String get nature24Name => '清晨海边与鸟鸣';
+
+  @override
+  String get nature24Desc => '平静的清晨海面与鸟鸣';
+
+  @override
+  String get nature25Name => '海滩海鸥';
+
+  @override
+  String get nature25Desc => '海浪与海鸥交织的宁静海滩';
+
+  @override
   String get langNameKo => '韩语';
 
   @override
@@ -6235,7 +6325,37 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get menuHeadMusic => '我的音樂';
 
   @override
-  String get catRestSub => '白噪音 · 專注（準備中）';
+  String get catRestSub => '入睡・專注・放鬆音樂';
+
+  @override
+  String get sleepTabLabel => '入睡';
+
+  @override
+  String get breakTabLabel => '放鬆';
+
+  @override
+  String get rest01Title => '溫暖的毛氈鋼琴';
+
+  @override
+  String get rest02Title => '寧靜夜晚鋼琴';
+
+  @override
+  String get rest03Title => '午夜夜曲';
+
+  @override
+  String get rest04Title => '音樂盒搖籃曲';
+
+  @override
+  String get rest05Title => '漂浮的音符';
+
+  @override
+  String get rest06Title => '漫步雲端之夜';
+
+  @override
+  String get rest07Title => '平靜的傍晚鋼琴';
+
+  @override
+  String get rest08Title => '夢境鋼琴';
 
   @override
   String get homeSoundsHeader => '來聽聽這些聲音吧';
@@ -9213,6 +9333,66 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get nature15Desc => '寬闊河流平靜流淌的聲音，助你安心休息';
+
+  @override
+  String get nature16Name => '春林啄木鳥';
+
+  @override
+  String get nature16Desc => '啄木鳥輕敲樹幹，伴著春天森林的鳥鳴';
+
+  @override
+  String get nature17Name => '林間布穀鳥';
+
+  @override
+  String get nature17Desc => '夏日森林裡迴盪的布穀鳥叫聲';
+
+  @override
+  String get nature18Name => '風吹森林';
+
+  @override
+  String get nature18Desc => '風拂樹葉，遠處傳來鳥鳴';
+
+  @override
+  String get nature19Name => '劈啪柴火';
+
+  @override
+  String get nature19Desc => '木柴劈啪燃燒的溫暖聲音';
+
+  @override
+  String get nature20Name => '壁爐';
+
+  @override
+  String get nature20Desc => '壁爐柴火靜靜燃燒，溫暖放鬆';
+
+  @override
+  String get nature21Name => '潺潺小溪';
+
+  @override
+  String get nature21Desc => '穩定流淌的小溪聲，幫助入眠';
+
+  @override
+  String get nature22Name => '林間小溪';
+
+  @override
+  String get nature22Desc => '森林小溪流過石間的清新水聲';
+
+  @override
+  String get nature23Name => '拍打岩石的水波';
+
+  @override
+  String get nature23Desc => '水波輕輕拍打岩石的聲音';
+
+  @override
+  String get nature24Name => '清晨海邊與鳥鳴';
+
+  @override
+  String get nature24Desc => '平靜的清晨海面與鳥鳴';
+
+  @override
+  String get nature25Name => '海灘海鷗';
+
+  @override
+  String get nature25Desc => '海浪與海鷗交織的寧靜海灘';
 
   @override
   String get langNameKo => '韓文';

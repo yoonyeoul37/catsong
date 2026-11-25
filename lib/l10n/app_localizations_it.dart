@@ -1551,7 +1551,37 @@ class AppLocalizationsIt extends AppLocalizations {
   String get menuHeadMusic => 'La mia musica';
 
   @override
-  String get catRestSub => 'Rumore bianco · Focus (presto)';
+  String get catRestSub => 'Musica per dormire · concentrarsi · rilassarsi';
+
+  @override
+  String get sleepTabLabel => 'Dormire';
+
+  @override
+  String get breakTabLabel => 'Relax';
+
+  @override
+  String get rest01Title => 'Pianoforte in feltro';
+
+  @override
+  String get rest02Title => 'Piano della notte quieta';
+
+  @override
+  String get rest03Title => 'Notturno di mezzanotte';
+
+  @override
+  String get rest04Title => 'Ninna nanna del carillon';
+
+  @override
+  String get rest05Title => 'Note fluttuanti';
+
+  @override
+  String get rest06Title => 'Camminando sulle nuvole';
+
+  @override
+  String get rest07Title => 'Piano della sera tranquilla';
+
+  @override
+  String get rest08Title => 'Piano sognante';
 
   @override
   String get homeSoundsHeader => 'Che ne dici di questi suoni?';
@@ -4748,6 +4778,67 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get nature15Desc =>
       'Un ampio fiume che scorre tranquillo per un riposo sereno';
+
+  @override
+  String get nature16Name => 'Picchio nel bosco';
+
+  @override
+  String get nature16Desc =>
+      'Un picchio tra gli uccelli del bosco in primavera';
+
+  @override
+  String get nature17Name => 'Cuculo nel bosco';
+
+  @override
+  String get nature17Desc => 'Un cuculo che canta nel bosco d\'estate';
+
+  @override
+  String get nature18Name => 'Bosco nel vento';
+
+  @override
+  String get nature18Desc => 'Vento tra le foglie e uccelli in lontananza';
+
+  @override
+  String get nature19Name => 'Legna scoppiettante';
+
+  @override
+  String get nature19Desc => 'Il caldo scoppiettio della legna che brucia';
+
+  @override
+  String get nature20Name => 'Camino';
+
+  @override
+  String get nature20Desc => 'Un camino acceso per un riposo accogliente';
+
+  @override
+  String get nature21Name => 'Ruscello gorgogliante';
+
+  @override
+  String get nature21Desc => 'Un ruscello costante per addormentarsi';
+
+  @override
+  String get nature22Name => 'Ruscello nel bosco';
+
+  @override
+  String get nature22Desc => 'Un piccolo ruscello che scorre tra i sassi';
+
+  @override
+  String get nature23Name => 'Acqua sugli scogli';
+
+  @override
+  String get nature23Desc => 'L\'acqua che sciaborda dolce sugli scogli';
+
+  @override
+  String get nature24Name => 'Mare al mattino e uccelli';
+
+  @override
+  String get nature24Desc => 'Mare calmo al mattino con il canto degli uccelli';
+
+  @override
+  String get nature25Name => 'Gabbiani in spiaggia';
+
+  @override
+  String get nature25Desc => 'Onde e gabbiani su una spiaggia tranquilla';
 
   @override
   String get langNameKo => 'Coreano';

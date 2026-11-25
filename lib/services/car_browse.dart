@@ -32,6 +32,10 @@ class CarBrowse {
   static DateTime _lastAsk = DateTime(2000);
   static bool get inCarRecently => DateTime.now().difference(_lastAsk) < const Duration(minutes: 30);
 
+  /// 차 화면에 보여 줄 것(다음 방송 글자 · 프로그램 사진)은 더 넉넉하게 (오래 운전하며 목록을 안 열어도 그대로)
+  /// 차에서 방송을 고르거나 목록을 열 때마다 다시 3시간
+  static bool get inCarDisplay => DateTime.now().difference(_lastAsk) < const Duration(hours: 3);
+
   static void init(PlayerProvider pp, RadioProvider radio, MusicProvider music) {
     _pp = pp;
     _radio = radio;
@@ -76,8 +80,9 @@ class CarBrowse {
   static Uri _icon(String drawable) => Uri.parse('android.resource://kr.ssing.catsong/drawable/$drawable');
   static Uri _tile(String big, String small, int color) => Uri.parse(
       '$_auth/tile?t=${Uri.encodeQueryComponent(big)}&s=${Uri.encodeQueryComponent(small)}&c=${color.toRadixString(16)}');
-  static Uri _web(String url, String name, int color) => Uri.parse(
-      '$_auth/web?u=${Uri.encodeQueryComponent(url)}&t=${Uri.encodeQueryComponent(name)}&c=${color.toRadixString(16)}');
+  static Uri _web(String url, String name, int color, {bool fit = false}) => Uri.parse(
+      '$_auth/web?u=${Uri.encodeQueryComponent(url)}&t=${Uri.encodeQueryComponent(name)}&c=${color.toRadixString(16)}'
+      '${fit ? '&f=1' : ''}'); // f=1: 사진 전체를 안 잘리게 (남는 곳은 흐리게)
   static Uri _asset(String asset) => Uri.parse('$_auth/asset?p=${Uri.encodeQueryComponent(asset)}');
   /// 색 칸 + 흰 아이콘 (음악 탭 폴더)
   static Uri _iconTile(String kind, int color) => Uri.parse('$_auth/icon?k=$kind&c=${color.toRadixString(16)}');
@@ -124,7 +129,7 @@ class CarBrowse {
         MediaItem(id: tabMusic, title: tr.catMusic, playable: false, artUri: _icon('paran_ic_music'),
             extras: _style(browsable: _list, playable: _list)),
         MediaItem(id: tabRadio, title: tr.catRadio, playable: false, artUri: _icon('paran_ic_radio'),
-            extras: _style(playable: _grid)),
+            extras: _style(playable: _list)), // 최근 · 즐겨찾기 방송: 목록 모양
         MediaItem(id: tabPodcast, title: podText('팟캐스트', 'Podcasts'), playable: false,
             artUri: _icon('paran_ic_podcast'), extras: _style(browsable: _grid, playable: _list)),
         MediaItem(id: tabNature, title: tr.natureSounds, playable: false, artUri: _icon('paran_ic_leaf'),
@@ -148,17 +153,35 @@ class CarBrowse {
   /// 라디오 목록 (아이디 → 방송) — 누르면 같은 묶음 안에서 앞뒤로 넘기기
   static final Map<String, List<RadioStation>> _radioLists = {};
 
-  static MediaItem _stationItem(RadioStation s, String listKey, {String? group, Uri? art, String? sub}) => MediaItem(
+  static MediaItem _stationItem(RadioStation s, String listKey, {String? group, Uri? art, String? sub}) {
+    final line2 = sub ?? _nowTitleOf(s); // 둘째 줄: 지금 프로그램 이름 (모르면 없음)
+    return MediaItem(
         id: 'r:$listKey|${s.stationUuid}',
         title: s.name,
-        displaySubtitle: sub,
-        artist: sub,
+        displaySubtitle: line2,
+        artist: line2,
         playable: true,
         artUri: art ?? _stationArt(s),
         extras: group == null ? null : {_group: group},
       );
+  }
+
+  /// 지금 프로그램 이름 (편성표에서) — 없으면 null
+  static String? _nowTitleOf(RadioStation s) {
+    final radio = _radio;
+    if (radio == null) return null;
+    var t = radio.nowPlayingFor(s.name)?.trim() ?? '';
+    if (t.isEmpty) {
+      final p = radio.currentProgramFor(s.name);
+      t = (p?['program_title'] ?? p?['Title'] ?? p?['title'] ?? '').toString().trim();
+    }
+    return t.isEmpty ? null : t;
+  }
 
   static Uri _stationArt(RadioStation s) {
+    // 지금 프로그램 사진이 있으면 그 사진 (잘리지 않게 · 남는 곳은 흐리게) — 없으면 아래 방송사 색 칸
+    final img = _radio?.currentProgramFor(s.name)?['image'];
+    if (img is String && img.startsWith('http')) return _web(img, s.name, _colorOf(s.name), fit: true);
     final k = _krArt[s.stationUuid];
     if (k != null) return k;
     final logo = s.logoUrl ?? '';
@@ -169,12 +192,12 @@ class CarBrowse {
 
   /// 차 화면 재생 화면 그림: 차에 연결돼 있으면 지금 방송의 목록 그림(방송사 색 칸 · 로고), 아니면 null (시간대 사진)
   static Uri? nowPlayingArt() {
-    if (!inCarRecently) return null;
+    if (!inCarDisplay) return null;
     final st = _radio?.currentStation;
     if (st == null) return null;
     // 앱 라디오 재생 화면과 같게: 지금 하는 프로그램 사진이 있으면 그 사진 (편성표에서 받은 것)
     final img = _radio?.currentProgram?['image'];
-    if (img is String && img.startsWith('http')) return _web(img, st.name, _colorOf(st.name));
+    if (img is String && img.startsWith('http')) return _web(img, st.name, _colorOf(st.name), fit: true); // 프로그램 사진은 안 잘리게
     if (st.countryCode == 'KR' && !_krArt.containsKey(st.stationUuid)) {
       final korean = _korean();
       final i = korean.indexWhere((k) => k.name == st.name);
@@ -191,6 +214,46 @@ class CarBrowse {
   }
 
   static final Map<String, Uri> _krArt = {};
+
+  /// 차에서 목록을 열 때: 그 방송들 편성표를 받아서 프로그램 사진 준비 (방송마다 10분에 한 번만)
+  /// 사진이 새로 생기면 그 목록을 다시 그리게 알림
+  static final Map<String, DateTime> _warmAt = {};
+  static void _warmSchedules(List<RadioStation> list, String parent) {
+    final radio = _radio;
+    if (radio == null) return;
+    final now = DateTime.now();
+    String? imgOf(RadioStation s) {
+      final v = radio.currentProgramFor(s.name)?['image'];
+      return v is String && v.startsWith('http') ? v : null;
+    }
+    final before = {for (final s in list) s.name: '${imgOf(s)}|${_nowTitleOf(s)}'};
+    final jobs = <Future<void>>[];
+    var ebs = false;
+    for (final s in list) {
+      if (s.countryCode != 'KR') continue;
+      final last = _warmAt[s.name];
+      if (last != null && now.difference(last) < const Duration(minutes: 10)) continue;
+      _warmAt[s.name] = now;
+      final n = s.name;
+      if (s.streamUrl.contains('cfpwwwapi.kbs.co.kr')) jobs.add(radio.fetchScheduleByUrl(n, s.streamUrl));
+      if (n == 'MBC 표준FM' || n == 'MBC FM4U') jobs.add(radio.fetchMbcSchedule(n));
+      if (n == 'SBS 파워FM' || n == 'SBS 러브FM') jobs.add(radio.fetchSbsSchedule(n));
+      if ((n == 'EBS FM' || n == 'EBS 반디') && !ebs) {
+        ebs = true;
+        jobs.add(radio.fetchEbsFmSchedule());
+        jobs.add(radio.fetchEbsBandiSchedule());
+      }
+      if (n == '국방FM') jobs.add(radio.fetchKfnSchedule());
+      jobs.add(radio.fetchJsonSchedule(n)); // 편성표 파일에 있는 방송 (없으면 알아서 건너뜀)
+    }
+    if (jobs.isEmpty) return;
+    Future.wait(jobs.map((j) => j.catchError((Object _) {})))
+        .timeout(const Duration(seconds: 12), onTimeout: () => const [])
+        .then((_) {
+      final changed = list.any((s) => '${imgOf(s)}|${_nowTitleOf(s)}' != before[s.name]);
+      if (changed) _changed(parent); // 사진이 생겼으면 칸 다시 그리기
+    }).catchError((Object _) {});
+  }
 
   static List<RadioStation> _korean() {
     final out = <RadioStation>[];
@@ -231,6 +294,7 @@ class CarBrowse {
     final favs = radio.favorites.toList();
     krArt(favs);
     _radioLists['rf'] = favs;
+    _warmSchedules([...recent, ...favs], tabRadio); // 최근 · 즐겨찾기 칸에 프로그램 사진
     for (final s in favs) {
       items.add(_stationItem(s, 'rf', group: tr.favorites));
     }
@@ -293,7 +357,7 @@ class CarBrowse {
         artist: '$n',
         playable: false,
         artUri: art,
-        extras: {_group: group, ..._style(playable: _grid)},
+        extras: {_group: group, ..._style(playable: _list)}, // 폴더 안 방송: 목록 모양
       );
 
   /// 폴더 안 (방송사별 · 장르)
@@ -304,6 +368,7 @@ class CarBrowse {
       list = _radioLists[key] ?? const <RadioStation>[];
     }
     final genre = key.startsWith('rg:');
+    if (!genre) _warmSchedules(list, key); // 방송사 폴더: 프로그램 사진 준비
     return [for (final s in list) _stationItem(s, key, sub: genre && s.genre.isNotEmpty ? s.genre : null)];
   }
 
@@ -595,6 +660,7 @@ class CarBrowse {
 
   // ═════════ 재생 (사용자가 누른 것만) ═════════
   static Future<void> play(String id) async {
+    _lastAsk = DateTime.now(); // 차에서 골랐으면 차 화면 표시 시간 다시
     final pp = _pp, radio = _radio;
     if (pp == null || radio == null) return;
     try {

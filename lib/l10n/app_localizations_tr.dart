@@ -1546,7 +1546,37 @@ class AppLocalizationsTr extends AppLocalizations {
   String get menuHeadMusic => 'Müziğim';
 
   @override
-  String get catRestSub => 'Beyaz gürültü · Odak (yakında)';
+  String get catRestSub => 'Uyku · odak · dinlenme müziği';
+
+  @override
+  String get sleepTabLabel => 'Uyku';
+
+  @override
+  String get breakTabLabel => 'Dinlenme';
+
+  @override
+  String get rest01Title => 'Yumuşak keçe piyano';
+
+  @override
+  String get rest02Title => 'Sakin gece piyanosu';
+
+  @override
+  String get rest03Title => 'Gece yarısı noktürnü';
+
+  @override
+  String get rest04Title => 'Müzik kutusu ninnisi';
+
+  @override
+  String get rest05Title => 'Süzülen notalar';
+
+  @override
+  String get rest06Title => 'Bulutlarda yürüyüş';
+
+  @override
+  String get rest07Title => 'Sakin akşam piyanosu';
+
+  @override
+  String get rest08Title => 'Rüya gibi piyano';
 
   @override
   String get homeSoundsHeader => 'Bu seslere ne dersin?';
@@ -4719,6 +4749,66 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get nature15Desc =>
       'Huzurlu bir dinlenme için sakince akan geniş bir nehir';
+
+  @override
+  String get nature16Name => 'Bahar ormanında ağaçkakan';
+
+  @override
+  String get nature16Desc => 'Bahar kuşları arasında tıklayan bir ağaçkakan';
+
+  @override
+  String get nature17Name => 'Ormanda guguk kuşu';
+
+  @override
+  String get nature17Desc => 'Yaz ormanında öten bir guguk kuşu';
+
+  @override
+  String get nature18Name => 'Rüzgârlı orman';
+
+  @override
+  String get nature18Desc => 'Yapraklarda rüzgâr ve uzaktan kuş sesleri';
+
+  @override
+  String get nature19Name => 'Çıtırdayan odun';
+
+  @override
+  String get nature19Desc => 'Yanan odunların sıcak çıtırtısı';
+
+  @override
+  String get nature20Name => 'Şömine';
+
+  @override
+  String get nature20Desc => 'Huzurlu bir dinlenme için sakin yanan şömine';
+
+  @override
+  String get nature21Name => 'Şırıldayan dere';
+
+  @override
+  String get nature21Desc => 'Uykuya dalmak için düzenli akan dere';
+
+  @override
+  String get nature22Name => 'Orman deresi';
+
+  @override
+  String get nature22Desc => 'Taşların arasından akan küçük orman deresi';
+
+  @override
+  String get nature23Name => 'Kayalara vuran su';
+
+  @override
+  String get nature23Desc => 'Kayalara yavaşça vuran su sesi';
+
+  @override
+  String get nature24Name => 'Sabah denizi ve kuşlar';
+
+  @override
+  String get nature24Desc => 'Sakin sabah denizi ve kuş sesleri';
+
+  @override
+  String get nature25Name => 'Sahilde martılar';
+
+  @override
+  String get nature25Desc => 'Sessiz bir sahilde dalgalar ve martılar';
 
   @override
   String get langNameKo => 'Korece';

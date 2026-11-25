@@ -7,6 +7,7 @@ import '../utils/paran_photo.dart';
 import '../providers/player_provider.dart';
 import '../providers/theme_provider.dart';
 import '../screens/nature_sound_detail_screen.dart';
+import '../screens/sleep_focus_screen.dart';
 import '../l10n/locale_holder.dart';
 import '../utils/nature_sound_catalog.dart';
 
@@ -63,9 +64,15 @@ class NatureMiniPlayer extends StatelessWidget {
     final meta = _natureSoundMeta[name];
     final accent = (meta?['color'] as Color?) ?? const Color(0xFF3E9C7E);
     final icon = (meta?['icon'] as IconData?) ?? Icons.eco_rounded;
+    final isRest = playerProvider.isRestPlaying; // 휴식 · 집중 곡 듣는 중
 
     // ⏮ ⏭ : 자연소리 목록에서 이전·다음 (끝이면 처음으로)
     void step(int d) {
+      if (isRest) {
+        const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+        context.read<PlayerProvider>().playAdjacentNatureSound(d); // 휴식 곡 안에서 이전·다음
+        return;
+      }
       final order = PlayerProvider.natureSoundOrder;
       if (order.isEmpty) return;
       const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
@@ -83,6 +90,10 @@ class NatureMiniPlayer extends StatelessWidget {
       },
       onTap: () {
         const MethodChannel('kr.ssing.catsong/media').invokeMethod('vibrate');
+        if (isRest) {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => const SleepFocusScreen()));
+          return;
+        }
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -119,7 +130,7 @@ class NatureMiniPlayer extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: paranPhoto(
-                      _natureMiniImage(name),
+                      isRest ? 'assets/sleep_bg.jpg' : _natureMiniImage(name),
                       thumb: true,
                       width: 44,
                       height: 44,
@@ -143,7 +154,7 @@ class NatureMiniPlayer extends StatelessWidget {
                             const TextStyle(
                                 color: baseColor, fontSize: 14, fontWeight: FontWeight.w600)),
                         const SizedBox(height: 2),
-                        Text(tr.natureSounds, style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 12)),
+                        Text(isRest ? tr.catRest : tr.natureSounds, style: TextStyle(color: baseColor.withOpacity(0.6), fontSize: 12)),
                       ],
                     ),
                   ),

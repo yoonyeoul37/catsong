@@ -1552,7 +1552,37 @@ class AppLocalizationsPl extends AppLocalizations {
   String get menuHeadMusic => 'Moja muzyka';
 
   @override
-  String get catRestSub => 'Biały szum · Skupienie (wkrótce)';
+  String get catRestSub => 'Muzyka do snu · skupienia · relaksu';
+
+  @override
+  String get sleepTabLabel => 'Sen';
+
+  @override
+  String get breakTabLabel => 'Relaks';
+
+  @override
+  String get rest01Title => 'Przytulne pianino filcowe';
+
+  @override
+  String get rest02Title => 'Pianino cichej nocy';
+
+  @override
+  String get rest03Title => 'Nokturn o północy';
+
+  @override
+  String get rest04Title => 'Kołysanka z pozytywki';
+
+  @override
+  String get rest05Title => 'Unoszące się nuty';
+
+  @override
+  String get rest06Title => 'Spacer po chmurach';
+
+  @override
+  String get rest07Title => 'Spokojne wieczorne pianino';
+
+  @override
+  String get rest08Title => 'Senne pianino';
 
   @override
   String get homeSoundsHeader => 'Może te dźwięki?';
@@ -4776,6 +4806,66 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get nature15Desc =>
       'Szeroka rzeka płynąca spokojnie na błogi odpoczynek';
+
+  @override
+  String get nature16Name => 'Dzięcioł w wiosennym lesie';
+
+  @override
+  String get nature16Desc => 'Dzięcioł stuka wśród wiosennych ptaków';
+
+  @override
+  String get nature17Name => 'Kukułka w lesie';
+
+  @override
+  String get nature17Desc => 'Kukułka kuka w letnim lesie';
+
+  @override
+  String get nature18Name => 'Wietrzny las';
+
+  @override
+  String get nature18Desc => 'Wiatr w liściach i dalekie ptaki';
+
+  @override
+  String get nature19Name => 'Trzaskające drewno';
+
+  @override
+  String get nature19Desc => 'Ciepły trzask palącego się drewna';
+
+  @override
+  String get nature20Name => 'Kominek';
+
+  @override
+  String get nature20Desc => 'Spokojnie płonący kominek do odpoczynku';
+
+  @override
+  String get nature21Name => 'Szemrzący strumyk';
+
+  @override
+  String get nature21Desc => 'Równy strumyk, przy którym łatwo zasnąć';
+
+  @override
+  String get nature22Name => 'Leśny strumyk';
+
+  @override
+  String get nature22Desc => 'Mały strumyk płynący między kamieniami';
+
+  @override
+  String get nature23Name => 'Woda o skały';
+
+  @override
+  String get nature23Desc => 'Woda delikatnie uderza o skały';
+
+  @override
+  String get nature24Name => 'Poranne morze i ptaki';
+
+  @override
+  String get nature24Desc => 'Spokojne poranne morze i śpiew ptaków';
+
+  @override
+  String get nature25Name => 'Mewy na plaży';
+
+  @override
+  String get nature25Desc => 'Fale i mewy na cichej plaży';
 
   @override
   String get langNameKo => 'Koreański';

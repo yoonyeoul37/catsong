@@ -51,6 +51,9 @@ const Map<String, String> _natureImageByName = {
   '숲속의 거센 밤비': 'assets/rain4.png',
   '뻐꾸기와 숲속 새소리': 'assets/bird2.png',
   '잔잔한 강물': 'assets/stream2.png',
+  '숲속 뻐꾸기': 'assets/bird2.png',
+  '바람 부는 숲': 'assets/bird2.png',
+  '숲속 개울': 'assets/stream2.png',
 };
 
 String _natureThumbImage(String name, String category, String assetPath) {

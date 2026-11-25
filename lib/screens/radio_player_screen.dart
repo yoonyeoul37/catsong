@@ -130,7 +130,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
     const farewellAsset = 'assets/greet_outro.mp3'; // 끝인사: 어느 언어나 멜로디 (한국어 목소리는 '파란소리 자료'에 보관)
     if (context.read<ThemeProvider>().voiceGreetingEnabled) { // 어느 언어나 멜로디
       final farewellPlayer = AudioPlayer();
-      farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
+      farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play()).catchError((Object _) {}); // 앱이 먼저 닫혀서 끊겨도 조용히 넘어가기
     }
     final overlay = Overlay.of(context);
     late OverlayEntry entry;
@@ -448,7 +448,24 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
       );
     }
 
-    return PopScope(
+    // 이 화면이 보이는 동안 상단·하단 아이콘 색 — 소개·설정 등 다른 화면에 갔다 와도 자동으로 다시 맞춰짐
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: isDarkMode
+          ? const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light,
+              statusBarBrightness: Brightness.dark,
+              systemNavigationBarColor: Color(0xFF242424),
+              systemNavigationBarIconBrightness: Brightness.light,
+            )
+          : const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark,
+              statusBarBrightness: Brightness.light,
+              systemNavigationBarColor: Color(0xFFEDE7DA),
+              systemNavigationBarIconBrightness: Brightness.dark,
+            ),
+      child: PopScope(
       canPop: widget.openedFromList,
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) goToList();
@@ -489,7 +506,8 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                   padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                   // 지금 프로그램 한 줄 (한국 방송일 때)
-                  if (_isKoreanBroadcast(current.name)) const _NowProgramStrip(),
+                  // 편성표 없는 방송도 같은 높이로 비워 둠 (다음 방송으로 넘어갈 때 화면이 위아래로 안 움직이게)
+                  _NowProgramStrip(blank: !_isKoreanBroadcast(current.name)),
                   Row(
                     children: [
                       Expanded(
@@ -1118,32 +1136,50 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
 
                       SizedBox(height: (h * 0.02).clamp(8.0, 16.0)),
 
-                      if (_parseFrequency(freq) != null)
-                        Padding(
+                      // 주파수 눈금: 주파수 없는 방송도 같은 자리 (안 보이게) — 방송이 바뀌어도 안 움직이게
+                      Visibility(
+                        visible: _parseFrequency(freq) != null,
+                        maintainSize: true,
+                        maintainAnimation: true,
+                        maintainState: true,
+                        child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: FrequencyRuler(
-                            frequency: _parseFrequency(freq),
+                            frequency: _parseFrequency(freq) ?? 98.0,
                             primaryColor: primaryColor,
                             // AM 방송(kHz)이면 AM 눈금으로
                             minFreq: freq.contains('kHz') ? 531 : 88.0,
                             maxFreq: freq.contains('kHz') ? 1602 : 108.0,
                           ),
                         ),
+                      ),
 
                       // ── 편성표 (편성 정보가 있을 때만 자리를 차지하게, 높이도 화면 비율) ──
-                      if (radioProvider.currentProgram != null)
-                        SizedBox(
-                          height: (h * 0.09).clamp(48.0, 68.0),
-                          child: Center(
-                            child: _ProgramCard(
-                              program: radioProvider.currentProgram!,
-                              primaryColor: primaryColor,
-                              radioProvider: radioProvider,
-                              freq: freq,
-                            ),
-                          ),
-                        ),
+                      // 편성표 칸: 받는 중·없는 방송도 같은 높이 (내용만 나타났다 사라짐)
+                      SizedBox(
+                        height: (h * 0.09).clamp(48.0, 68.0),
+                        child: radioProvider.currentProgram == null
+                            ? null
+                            : Center(
+                                child: _ProgramCard(
+                                  program: radioProvider.currentProgram!,
+                                  primaryColor: primaryColor,
+                                  radioProvider: radioProvider,
+                                  freq: freq,
+                                ),
+                              ),
+                      ),
 
+                      // 다음 방송 · 방송 소개 칸: 늘 같은 높이 (받는 중·없는 방송도 자리는 그대로)
+                      SizedBox(
+                        height: (h * 0.005).clamp(2.0, 4.0) + (compact ? 74.0 : 104.0),
+                        child: OverflowBox(
+                          alignment: Alignment.topCenter,
+                          minHeight: 0,
+                          maxHeight: double.infinity,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
                       if (radioProvider.currentProgram != null &&
                           radioProvider.scheduleList.isNotEmpty) ...[
                         SizedBox(height: (h * 0.005).clamp(2.0, 4.0)),
@@ -1192,17 +1228,31 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                           ),
                         ),
                       ],
+                            ],
+                          ),
+                        ),
+                      ),
 
                       SizedBox(height: (h * 0.008).clamp(3.0, 8.0)),
 
                       // 해외·음악 화면과 같은 산 모양 (정지 중엔 낮게 멈춤)
                       SizedBox(height: (h * 0.008).clamp(3.0, 8.0) + 8), // 이퀄라이저·재생 버튼 살짝 아래로
-                      MountainEqBars(isPlaying: isPlaying, color: primaryColor),
-                      const SizedBox(height: 6),
-
-                      // ── 상태 뱃지 ──
-                      // TV로 듣는 중이면 "OO에서 재생 중" (폰은 멈춰 있어도 '일시정지'로 안 보이게)
-                      CastService.instance.isConnected
+                      // 상태 표시: 이퀄라이저 위에 겹쳐서 (따로 자리를 안 차지 → 위쪽 사진이 안 작아지고 재생 버튼도 안 움직임)
+                      Stack(
+                        alignment: Alignment.center,
+                        clipBehavior: Clip.none,
+                        children: [
+                          MountainEqBars(isPlaying: isPlaying, color: primaryColor),
+                          // ── 상태 뱃지 ──
+                          // TV로 듣는 중이면 "OO에서 재생 중" (폰은 멈춰 있어도 '일시정지'로 안 보이게)
+                          // 겹친 표시는 이퀄라이저 크기를 바꾸지 않게 (넘쳐도 자리 그대로)
+                          Positioned.fill(
+                            child: OverflowBox(
+                              minWidth: 0, // 표시는 글자 크기만큼만 (화면 너비로 안 늘어나게)
+                              minHeight: 0,
+                              maxWidth: double.infinity,
+                              maxHeight: double.infinity,
+                              child: CastService.instance.isConnected
                           ? Container(
                               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
                               decoration: BoxDecoration(
@@ -1223,6 +1273,11 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
                               ]),
                             )
                           : _StatusBadge(state: state),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
 
                       if (isError)
                         Padding(
@@ -1324,6 +1379,7 @@ class _RadioPlayerScreenState extends State<RadioPlayerScreen>
 
         ],
       ),
+    ),
     ),
     );
   }
@@ -2002,9 +2058,7 @@ class _StatusBadge extends StatelessWidget {
         color = Colors.redAccent;
         break;
       case RadioPlayerState.paused:
-        label = AppLocalizations.of(context)!.radioStatusPaused;
-        color = mutedColor;
-        break;
+        return const SizedBox.shrink(); // 일시정지는 표시 안 함 (가운데 ▶ 버튼으로 충분)
       default:
         return const SizedBox(height: 28);
     }
@@ -2371,7 +2425,14 @@ void _showSmsSheet(BuildContext context, String number) {
 }
 
 class _NowProgramStrip extends StatefulWidget {
-  const _NowProgramStrip();
+  final bool blank; // true면 내용 없이 자리만
+  const _NowProgramStrip({this.blank = false});
+
+  /// 한 줄 높이 (문자 참여 칸 기준 · 글자 크기 따라)
+  static double rowHeight(BuildContext context) => MediaQuery.textScalerOf(context).scale(12) * 1.45 + 8;
+
+  /// 내용이 없을 때도 같은 높이 (위 8 + 줄 + 7 + 막대 2 + 아래 2)
+  static double blankHeight(BuildContext context) => 8 + rowHeight(context) + 7 + 2 + 2;
 
   @override
   State<_NowProgramStrip> createState() => _NowProgramStripState();
@@ -2423,14 +2484,20 @@ class _NowProgramStripState extends State<_NowProgramStrip> {
         break;
       }
     }
-    if (title == null || start == null || end == null) return const SizedBox(height: 4);
+    // 편성표 받는 중이거나 없는 방송: 자리는 그대로 두고 비워 둠 (화면이 안 움직이게)
+    if (widget.blank || title == null || start == null || end == null) {
+      return SizedBox(height: _NowProgramStrip.blankHeight(context));
+    }
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(18, 8, 18, 2),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
+          ConstrainedBox(
+            // 문자 참여 칸이 없는 방송도 같은 줄 높이
+            constraints: BoxConstraints(minHeight: _NowProgramStrip.rowHeight(context)),
+            child: Row(
             children: [
               Container(
                 width: 6,
@@ -2472,6 +2539,7 @@ class _NowProgramStripState extends State<_NowProgramStrip> {
                 ),
               ],
             ],
+          ),
           ),
           const SizedBox(height: 7),
           ClipRRect(

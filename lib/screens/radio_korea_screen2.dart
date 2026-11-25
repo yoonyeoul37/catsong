@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:ui' show ImageFilter;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +66,8 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
         if (mounted) setState(() => _diceWiggle = w);
       });
     }
-    Future.delayed(const Duration(seconds: 3), () {
+    // 읽고 누를 여유가 있게 5초 동안 보여주기
+    Future.delayed(const Duration(seconds: 5), () {
       if (mounted) setState(() => _diceTip = false);
     });
   }
@@ -503,10 +506,10 @@ class _RadioKoreaScreenState extends State<RadioKoreaScreen> {
                             child: IgnorePointer(
                               child: AnimatedOpacity(
                                 opacity: _diceTip ? 1 : 0,
-                                duration: const Duration(milliseconds: 280),
+                                duration: Duration(milliseconds: _diceTip ? 280 : 700), // 나올 땐 빠르게 · 사라질 땐 천천히
                                 child: AnimatedSlide(
                                   offset: _diceTip ? Offset.zero : const Offset(0.08, 0),
-                                  duration: const Duration(milliseconds: 280),
+                                  duration: Duration(milliseconds: _diceTip ? 280 : 700),
                                   curve: Curves.easeOutCubic,
                                   child: Center(
                                     child: Row(
@@ -1236,31 +1239,9 @@ class _StationTile extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 14),
           child: Row(
             children: [
-              Container(
-                width: 40,
-                height: 40,
-                // 홈 '최근에 들었어요'와 같은 파스텔 (듣는 중이면 강조 색 테두리)
-                decoration: BoxDecoration(
-                  color: _brandPastel(station.broadcaster, isDarkMode), // 방송사별 박스와 같은 색 계열
-                  borderRadius: BorderRadius.circular(10),
-                  // (듣는 중이어도 테두리 없이 파스텔 그대로)
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  station.broadcaster,
-                  textScaler: TextScaler.noScaling,
-                  style: TextStyle(
-                    color: isDarkMode ? const Color(0xFFF3EFE7).withOpacity(0.85) : const Color(0xFF17140F).withOpacity(0.8),
-                    fontSize: station.broadcaster.length > 3 ? 10 : 12,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.2,
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(width: 16),
+              // 지금 프로그램 사진 (없으면 파스텔 칸) — 크기는 늘 같아서 사진이 와도 줄이 안 움직임
+              _StationThumb(station: station, isDarkMode: isDarkMode),
+              const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1279,7 +1260,12 @@ class _StationTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 2),
-                    Builder(
+                    Row(
+                      children: [
+                        _BrandChip(name: station.broadcaster, isDarkMode: isDarkMode), // 방송사 이름 (작은 글씨)
+                        const SizedBox(width: 5),
+                        Expanded(
+                          child: Builder(
                       builder: (ctx) {
                         final isKbs = station.broadcaster == 'KBS';
                         const mbcNames = ['MBC 표준FM', 'MBC FM4U'];
@@ -1383,6 +1369,9 @@ class _StationTile extends StatelessWidget {
                           ],
                         );
                       },
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -4053,3 +4042,113 @@ const Map<String, Map<String, String>> _kDescI18n = {
     'ur': 'مسیحی موسیقی',
   },
 };
+
+
+/// 라디오 목록 왼쪽 칸: 지금 프로그램 사진
+// 16:9 칸 (가로 78 × 세로 44) — 방송 배너 사진이 잘리지 않고 꽉 맞음
+// 16:9가 아닌 사진은 전체를 보여 주고 남는 곳은 같은 사진을 흐리게 깔아 채움
+class _StationThumb extends StatelessWidget {
+  final _KStation station;
+  final bool isDarkMode;
+  const _StationThumb({required this.station, required this.isDarkMode});
+
+  static const double w = 78;
+  static const double h = 44;
+  static const _ua = {
+    'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Mobile Safari/537.36',
+  }; // 일부 방송국은 브라우저처럼 물어봐야 사진을 줌
+
+  /// 사진이 없을 때: 파스텔 칸 + 방송사 이름
+  Widget _pastel() => Container(
+        width: w,
+        height: h,
+        alignment: Alignment.center,
+        color: _brandPastel(station.broadcaster, isDarkMode),
+        child: Text(
+          station.broadcaster,
+          textScaler: TextScaler.noScaling,
+          style: TextStyle(
+            color: isDarkMode ? const Color(0xFFF3EFE7).withOpacity(0.85) : const Color(0xFF17140F).withOpacity(0.8),
+            fontSize: station.broadcaster.length > 3 ? 11 : 13,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.2,
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    // 이 방송 사진 주소가 바뀔 때만 다시 그림 (스크롤 중 버벅이지 않게)
+    final img = context.select<RadioProvider, String?>((r) {
+      final v = (r.currentProgramFor(station.name)?['image'] ?? '').toString().trim();
+      return v.startsWith('http') ? v : null;
+    });
+    final pastel = _pastel();
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(9),
+      child: SizedBox(
+        width: w,
+        height: h,
+        child: img == null
+            ? pastel
+            : Stack(
+                fit: StackFit.expand,
+                children: [
+                  // 뒤: 같은 사진을 흐리게 꽉 채움 (16:9가 아닐 때 남는 곳)
+                  ImageFiltered(
+                    imageFilter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                    child: CachedNetworkImage(
+                      imageUrl: img,
+                      httpHeaders: _ua,
+                      fit: BoxFit.cover,
+                      memCacheWidth: 120,
+                      fadeInDuration: Duration.zero,
+                      placeholder: (_, __) => pastel,
+                      errorWidget: (_, __, ___) => pastel,
+                      errorListener: (_) {},
+                    ),
+                  ),
+                  // 앞: 사진 전체 (안 잘림)
+                  CachedNetworkImage(
+                    imageUrl: img,
+                    httpHeaders: _ua,
+                    fit: BoxFit.contain,
+                    memCacheWidth: 260, // 칸 크기만큼만 (램 아끼기)
+                    fadeInDuration: const Duration(milliseconds: 200),
+                    placeholder: (_, __) => const SizedBox.shrink(),
+                    errorWidget: (_, __, ___) => pastel,
+                    errorListener: (_) {},
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+}
+
+/// 둘째 줄 앞 작은 방송사 이름 (KBS · MBC …)
+class _BrandChip extends StatelessWidget {
+  final String name;
+  final bool isDarkMode;
+  const _BrandChip({required this.name, required this.isDarkMode});
+
+  @override
+  Widget build(BuildContext context) {
+    final ink = isDarkMode ? const Color(0xFFF3EFE7) : const Color(0xFF17140F);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+      decoration: BoxDecoration(
+        color: ink.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        name,
+        maxLines: 1,
+        style: TextStyle(color: ink.withOpacity(0.65), fontSize: 9.5, fontWeight: FontWeight.w800),
+      ),
+    );
+  }
+}

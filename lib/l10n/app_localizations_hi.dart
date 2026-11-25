@@ -1545,7 +1545,37 @@ class AppLocalizationsHi extends AppLocalizations {
   String get menuHeadMusic => 'मेरा म्यूज़िक';
 
   @override
-  String get catRestSub => 'व्हाइट नॉइज़ · फ़ोकस (जल्द)';
+  String get catRestSub => 'नींद · फ़ोकस · आराम संगीत';
+
+  @override
+  String get sleepTabLabel => 'नींद';
+
+  @override
+  String get breakTabLabel => 'आराम';
+
+  @override
+  String get rest01Title => 'आरामदायक फेल्ट पियानो';
+
+  @override
+  String get rest02Title => 'शांत रात का पियानो';
+
+  @override
+  String get rest03Title => 'आधी रात का नॉक्टर्न';
+
+  @override
+  String get rest04Title => 'म्यूज़िक बॉक्स लोरी';
+
+  @override
+  String get rest05Title => 'तैरते सुर';
+
+  @override
+  String get rest06Title => 'बादलों पर सैर';
+
+  @override
+  String get rest07Title => 'शांत शाम का पियानो';
+
+  @override
+  String get rest08Title => 'सपनों का पियानो';
 
   @override
   String get homeSoundsHeader => 'ये आवाज़ें कैसी रहेंगी?';
@@ -4711,6 +4741,66 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get nature15Desc => 'शांत नज़ारे में धीरे-धीरे बहती नदी';
+
+  @override
+  String get nature16Name => 'वसंत वन में कठफोड़वा';
+
+  @override
+  String get nature16Desc => 'वसंत के पक्षियों के बीच पेड़ ठोकता कठफोड़वा';
+
+  @override
+  String get nature17Name => 'जंगल में कोयल';
+
+  @override
+  String get nature17Desc => 'गर्मियों के जंगल में गूंजती कोयल की आवाज़';
+
+  @override
+  String get nature18Name => 'हवा वाला जंगल';
+
+  @override
+  String get nature18Desc => 'पत्तों में हवा और दूर पक्षियों की आवाज़';
+
+  @override
+  String get nature19Name => 'चटकती लकड़ी';
+
+  @override
+  String get nature19Desc => 'जलती लकड़ी की गर्म चटक';
+
+  @override
+  String get nature20Name => 'अंगीठी';
+
+  @override
+  String get nature20Desc => 'आरामदायक पलों के लिए धीमे जलती अंगीठी';
+
+  @override
+  String get nature21Name => 'कलकल बहता झरना';
+
+  @override
+  String get nature21Desc => 'नींद के लिए लगातार बहती धारा';
+
+  @override
+  String get nature22Name => 'जंगल की धारा';
+
+  @override
+  String get nature22Desc => 'पत्थरों के बीच बहती छोटी जंगली धारा';
+
+  @override
+  String get nature23Name => 'चट्टानों से टकराता पानी';
+
+  @override
+  String get nature23Desc => 'चट्टानों से धीरे टकराता पानी';
+
+  @override
+  String get nature24Name => 'सुबह का समुद्र और पक्षी';
+
+  @override
+  String get nature24Desc => 'शांत सुबह का समुद्र और पक्षियों की आवाज़';
+
+  @override
+  String get nature25Name => 'तट पर सीगल';
+
+  @override
+  String get nature25Desc => 'शांत तट पर लहरें और सीगल';
 
   @override
   String get langNameKo => 'कोरियन';

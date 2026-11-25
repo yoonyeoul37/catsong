@@ -1552,7 +1552,37 @@ class AppLocalizationsPt extends AppLocalizations {
   String get menuHeadMusic => 'Minhas músicas';
 
   @override
-  String get catRestSub => 'Ruído branco · Foco (em breve)';
+  String get catRestSub => 'Música para dormir · focar · relaxar';
+
+  @override
+  String get sleepTabLabel => 'Dormir';
+
+  @override
+  String get breakTabLabel => 'Relaxar';
+
+  @override
+  String get rest01Title => 'Piano de feltro aconchegante';
+
+  @override
+  String get rest02Title => 'Piano da noite tranquila';
+
+  @override
+  String get rest03Title => 'Noturno da meia-noite';
+
+  @override
+  String get rest04Title => 'Canção de ninar de caixinha de música';
+
+  @override
+  String get rest05Title => 'Notas flutuantes';
+
+  @override
+  String get rest06Title => 'Caminhando nas nuvens';
+
+  @override
+  String get rest07Title => 'Piano de fim de tarde';
+
+  @override
+  String get rest08Title => 'Piano dos sonhos';
 
   @override
   String get homeSoundsHeader => 'Que tal estes sons?';
@@ -4744,6 +4774,66 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get nature15Desc =>
       'Um rio largo correndo devagar para um descanso tranquilo';
+
+  @override
+  String get nature16Name => 'Pica-pau na floresta';
+
+  @override
+  String get nature16Desc => 'Um pica-pau entre os pássaros da primavera';
+
+  @override
+  String get nature17Name => 'Cuco na floresta';
+
+  @override
+  String get nature17Desc => 'Um cuco cantando na floresta de verão';
+
+  @override
+  String get nature18Name => 'Floresta ao vento';
+
+  @override
+  String get nature18Desc => 'Vento nas folhas e pássaros ao longe';
+
+  @override
+  String get nature19Name => 'Lenha crepitando';
+
+  @override
+  String get nature19Desc => 'O estalar quente da lenha queimando';
+
+  @override
+  String get nature20Name => 'Lareira';
+
+  @override
+  String get nature20Desc => 'Uma lareira acesa para um descanso aconchegante';
+
+  @override
+  String get nature21Name => 'Riacho murmurante';
+
+  @override
+  String get nature21Desc => 'Um riacho constante para pegar no sono';
+
+  @override
+  String get nature22Name => 'Riacho na floresta';
+
+  @override
+  String get nature22Desc => 'Um pequeno riacho correndo entre pedras';
+
+  @override
+  String get nature23Name => 'Água nas rochas';
+
+  @override
+  String get nature23Desc => 'Água batendo suavemente nas rochas';
+
+  @override
+  String get nature24Name => 'Mar de manhã e pássaros';
+
+  @override
+  String get nature24Desc => 'Mar calmo de manhã com pássaros';
+
+  @override
+  String get nature25Name => 'Gaivotas na praia';
+
+  @override
+  String get nature25Desc => 'Ondas e gaivotas numa praia tranquila';
 
   @override
   String get langNameKo => 'Coreano';

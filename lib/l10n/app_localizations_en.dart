@@ -1546,7 +1546,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuHeadMusic => 'My Music';
 
   @override
-  String get catRestSub => 'White noise · Focus (soon)';
+  String get catRestSub => 'Sleep · Focus · Calm music';
+
+  @override
+  String get sleepTabLabel => 'Sleep';
+
+  @override
+  String get breakTabLabel => 'Calm';
+
+  @override
+  String get rest01Title => 'Cozy Felt Piano';
+
+  @override
+  String get rest02Title => 'Quiet Night Piano';
+
+  @override
+  String get rest03Title => 'Midnight Nocturne';
+
+  @override
+  String get rest04Title => 'Music Box Lullaby';
+
+  @override
+  String get rest05Title => 'Floating Notes';
+
+  @override
+  String get rest06Title => 'Walking on Clouds';
+
+  @override
+  String get rest07Title => 'Calm Evening Piano';
+
+  @override
+  String get rest08Title => 'Dreamy Piano';
 
   @override
   String get homeSoundsHeader => 'How about these sounds?';
@@ -4712,6 +4742,66 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get nature15Desc =>
       'A slow, steady river flowing through a quiet landscape';
+
+  @override
+  String get nature16Name => 'Woodpecker in spring woods';
+
+  @override
+  String get nature16Desc => 'A woodpecker tapping among spring forest birds';
+
+  @override
+  String get nature17Name => 'Forest cuckoo';
+
+  @override
+  String get nature17Desc => 'A cuckoo calling across a quiet summer forest';
+
+  @override
+  String get nature18Name => 'Windy forest';
+
+  @override
+  String get nature18Desc => 'Wind in the leaves with distant birdsong';
+
+  @override
+  String get nature19Name => 'Crackling firewood';
+
+  @override
+  String get nature19Desc => 'The warm crackle of burning firewood';
+
+  @override
+  String get nature20Name => 'Fireplace';
+
+  @override
+  String get nature20Desc => 'A softly burning fireplace for a cozy rest';
+
+  @override
+  String get nature21Name => 'Babbling brook';
+
+  @override
+  String get nature21Desc => 'A steady, gentle brook to help you fall asleep';
+
+  @override
+  String get nature22Name => 'Forest brook';
+
+  @override
+  String get nature22Desc => 'A small forest brook flowing over stones';
+
+  @override
+  String get nature23Name => 'Water lapping on rocks';
+
+  @override
+  String get nature23Desc => 'Gentle water lapping against the rocks';
+
+  @override
+  String get nature24Name => 'Morning sea and birds';
+
+  @override
+  String get nature24Desc => 'A calm morning sea with birdsong';
+
+  @override
+  String get nature25Name => 'Beach gulls';
+
+  @override
+  String get nature25Desc => 'Waves and gulls on a quiet beach';
 
   @override
   String get langNameKo => 'Korean';

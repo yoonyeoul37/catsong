@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/player_provider.dart';
 import '../providers/sound_mix_provider.dart';
 import 'cast_service.dart';
+import 'nature_cache.dart';
 import '../l10n/locale_holder.dart';
 import '../utils/nature_sound_catalog.dart';
 
@@ -161,7 +162,7 @@ class NatureOverlay extends ChangeNotifier {
       _starting.add(k);
       try {
         p = AudioPlayer(handleInterruptions: false);
-        await p.setAudioSource(LockCachingAudioSource(Uri.parse(_urlFor(k))));
+        await p.setAudioSource(await NatureCache.source(_urlFor(k))); // 받아 둔 파일 · 없으면 바로 틀고 뒤에서 받기
         await p.setLoopMode(LoopMode.one);
         _players[k] = p;
       } catch (_) {

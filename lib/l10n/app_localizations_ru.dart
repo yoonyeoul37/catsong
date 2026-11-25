@@ -1551,7 +1551,37 @@ class AppLocalizationsRu extends AppLocalizations {
   String get menuHeadMusic => 'Моя музыка';
 
   @override
-  String get catRestSub => 'Белый шум · Фокус (скоро)';
+  String get catRestSub => 'Музыка для сна · фокуса · отдыха';
+
+  @override
+  String get sleepTabLabel => 'Сон';
+
+  @override
+  String get breakTabLabel => 'Отдых';
+
+  @override
+  String get rest01Title => 'Уютное фетровое пианино';
+
+  @override
+  String get rest02Title => 'Пианино тихой ночи';
+
+  @override
+  String get rest03Title => 'Полуночный ноктюрн';
+
+  @override
+  String get rest04Title => 'Колыбельная музыкальной шкатулки';
+
+  @override
+  String get rest05Title => 'Парящие ноты';
+
+  @override
+  String get rest06Title => 'Прогулка по облакам';
+
+  @override
+  String get rest07Title => 'Спокойное вечернее пианино';
+
+  @override
+  String get rest08Title => 'Пианино грёз';
 
   @override
   String get homeSoundsHeader => 'Как насчёт этих звуков?';
@@ -4766,6 +4796,66 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get nature15Desc => 'Широкая река спокойно течёт — для мирного отдыха';
+
+  @override
+  String get nature16Name => 'Дятел в весеннем лесу';
+
+  @override
+  String get nature16Desc => 'Дятел стучит среди весенних птиц';
+
+  @override
+  String get nature17Name => 'Кукушка в лесу';
+
+  @override
+  String get nature17Desc => 'Кукушка кукует в летнем лесу';
+
+  @override
+  String get nature18Name => 'Ветер в лесу';
+
+  @override
+  String get nature18Desc => 'Ветер в листве и далёкое пение птиц';
+
+  @override
+  String get nature19Name => 'Треск дров';
+
+  @override
+  String get nature19Desc => 'Тёплый треск горящих дров';
+
+  @override
+  String get nature20Name => 'Камин';
+
+  @override
+  String get nature20Desc => 'Тихо горящий камин для уютного отдыха';
+
+  @override
+  String get nature21Name => 'Журчащий ручей';
+
+  @override
+  String get nature21Desc => 'Ровное журчание ручья для сна';
+
+  @override
+  String get nature22Name => 'Лесной ручей';
+
+  @override
+  String get nature22Desc => 'Маленький ручей течёт меж камней';
+
+  @override
+  String get nature23Name => 'Плеск о камни';
+
+  @override
+  String get nature23Desc => 'Вода мягко плещется о камни';
+
+  @override
+  String get nature24Name => 'Утреннее море и птицы';
+
+  @override
+  String get nature24Desc => 'Спокойное утреннее море и пение птиц';
+
+  @override
+  String get nature25Name => 'Чайки на пляже';
+
+  @override
+  String get nature25Desc => 'Волны и чайки на тихом пляже';
 
   @override
   String get langNameKo => 'Корейский';

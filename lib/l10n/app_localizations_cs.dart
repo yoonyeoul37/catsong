@@ -1549,7 +1549,37 @@ class AppLocalizationsCs extends AppLocalizations {
   String get menuHeadMusic => 'Moje hudba';
 
   @override
-  String get catRestSub => 'Bílý šum · Soustředění (brzy)';
+  String get catRestSub => 'Hudba ke spánku · soustředění · odpočinku';
+
+  @override
+  String get sleepTabLabel => 'Spánek';
+
+  @override
+  String get breakTabLabel => 'Odpočinek';
+
+  @override
+  String get rest01Title => 'Útulný plstěný klavír';
+
+  @override
+  String get rest02Title => 'Klavír tiché noci';
+
+  @override
+  String get rest03Title => 'Půlnoční nokturno';
+
+  @override
+  String get rest04Title => 'Ukolébavka z hrací skříňky';
+
+  @override
+  String get rest05Title => 'Vznášející se tóny';
+
+  @override
+  String get rest06Title => 'Procházka po oblacích';
+
+  @override
+  String get rest07Title => 'Klidný večerní klavír';
+
+  @override
+  String get rest08Title => 'Snový klavír';
 
   @override
   String get homeSoundsHeader => 'Co třeba tyto zvuky?';
@@ -4746,6 +4776,66 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get nature15Desc => 'Pomalá, klidná řeka plynoucí tichou krajinou';
+
+  @override
+  String get nature16Name => 'Datel v jarním lese';
+
+  @override
+  String get nature16Desc => 'Datel ťuká mezi jarními ptáky';
+
+  @override
+  String get nature17Name => 'Kukačka v lese';
+
+  @override
+  String get nature17Desc => 'Kukačka kuká v letním lese';
+
+  @override
+  String get nature18Name => 'Větrný les';
+
+  @override
+  String get nature18Desc => 'Vítr v listí a vzdálený zpěv ptáků';
+
+  @override
+  String get nature19Name => 'Praskající dřevo';
+
+  @override
+  String get nature19Desc => 'Hřejivé praskání hořícího dřeva';
+
+  @override
+  String get nature20Name => 'Krb';
+
+  @override
+  String get nature20Desc => 'Tiše hořící krb pro útulný odpočinek';
+
+  @override
+  String get nature21Name => 'Bublající potůček';
+
+  @override
+  String get nature21Desc => 'Klidný potůček pro snadné usínání';
+
+  @override
+  String get nature22Name => 'Lesní potok';
+
+  @override
+  String get nature22Desc => 'Malý potok tekoucí mezi kameny';
+
+  @override
+  String get nature23Name => 'Šplouchání o skály';
+
+  @override
+  String get nature23Desc => 'Voda jemně šplouchá o skály';
+
+  @override
+  String get nature24Name => 'Ranní moře a ptáci';
+
+  @override
+  String get nature24Desc => 'Klidné ranní moře a zpěv ptáků';
+
+  @override
+  String get nature25Name => 'Racci na pláži';
+
+  @override
+  String get nature25Desc => 'Vlny a racci na klidné pláži';
 
   @override
   String get langNameKo => 'Korejština';

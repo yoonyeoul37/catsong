@@ -1369,7 +1369,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const farewellAsset = 'assets/greet_outro.mp3'; // 끝인사: 어느 언어나 멜로디 (한국어 목소리는 '파란소리 자료'에 보관)
     if (context.read<ThemeProvider>().voiceGreetingEnabled) { // 어느 언어나 멜로디
       final farewellPlayer = AudioPlayer();
-      farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
+      farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play()).catchError((Object _) {}); // 앱이 먼저 닫혀서 끊겨도 조용히 넘어가기
     }
 
     // 끝인사 동안 음악·라디오 소리를 1.5초에 걸쳐 천천히 작게 (목소리가 잘 들리게)

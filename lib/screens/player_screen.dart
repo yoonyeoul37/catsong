@@ -2977,7 +2977,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     context.read<PlayerProvider>().player.setVolume(0.12);
     if (context.read<ThemeProvider>().voiceGreetingEnabled) { // 한국어는 목소리 · 해외는 멜로디
       final farewellPlayer = AudioPlayer();
-      farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play());
+      farewellPlayer.setAsset(farewellAsset).then((_) => farewellPlayer.play()).catchError((Object _) {}); // 앱이 먼저 닫혀서 끊겨도 조용히 넘어가기
     }
     final overlay = Overlay.of(context);
     late OverlayEntry entry;
